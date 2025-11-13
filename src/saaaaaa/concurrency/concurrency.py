@@ -359,7 +359,7 @@ class WorkerPool:
 
         Args:
             task_id: Task identifier returned by submit_task
-            timeout: Maximum time to wait for result (None = wait forever)
+            timeout: Maximum time to wait for result in seconds (None = wait forever)
 
         Returns:
             TaskResult with execution metrics

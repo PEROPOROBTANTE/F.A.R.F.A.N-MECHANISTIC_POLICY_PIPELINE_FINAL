@@ -108,6 +108,11 @@ class EvidenceRecord:
         - Deterministic ordering for nested structures
         - Unicode normalization
 
+        Uses a custom JSON serialization handler to support non-standard types
+        commonly found in evidence payloads (dataclasses, NumPy arrays, custom objects).
+        The handler converts objects to dicts via __dict__ or falls back to string
+        representation, ensuring all evidence can be serialized without exceptions.
+
         Args:
             obj: Object to serialize
 
@@ -116,7 +121,7 @@ class EvidenceRecord:
         """
         # Use separators with no spaces and sort keys for determinism
         # ensure_ascii=True ensures consistent output across platforms
-        # Default handler for non-serializable types
+        # Custom handler for non-serializable types (dataclasses, NumPy arrays, etc.)
         def default_handler(o):
             if hasattr(o, '__dict__'):
                 return o.__dict__
