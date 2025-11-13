@@ -89,7 +89,10 @@ jobs:
 
           # Find all Python files that directly access questionnaire_monolith.json
           # EXCEPT questionnaire.py (the only authorized loader)
-          VIOLATIONS=$(grep -r "questionnaire_monolith\.json" \
+          # Look for actual file I/O patterns: constructing paths with the filename
+          # Pattern matches: Path(...) / "questionnaire_monolith.json" or similar
+          # Does NOT match: docstrings, comments, or string comparisons
+          VIOLATIONS=$(grep -rE '(Path|/).*["\x27]questionnaire_monolith\.json["\x27]' \
             --include="*.py" \
             --exclude="questionnaire.py" \
             --exclude="*test*.py" \
