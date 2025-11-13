@@ -124,7 +124,12 @@ jobs:
           echo "════════════════════════════════════════════════════════════════"
 
           python -c "
-          from saaaaaa.core.orchestrator.questionnaire import load_questionnaire, EXPECTED_HASH
+          from saaaaaa.core.orchestrator.questionnaire import (
+              load_questionnaire,
+              EXPECTED_HASH,
+              EXPECTED_MICRO_QUESTION_COUNT,
+              EXPECTED_TOTAL_QUESTION_COUNT
+          )
 
           # Load questionnaire
           q = load_questionnaire()
@@ -138,8 +143,8 @@ jobs:
           assert q.sha256 == EXPECTED_HASH, f'Hash mismatch: {q.sha256[:16]}... != {EXPECTED_HASH[:16]}...'
 
           # Verify question count
-          assert q.micro_question_count == 300, f'Expected 300 micro questions, got {q.micro_question_count}'
-          assert q.total_question_count == 305, f'Expected 305 total questions, got {q.total_question_count}'
+          assert q.micro_question_count == EXPECTED_MICRO_QUESTION_COUNT, f'Expected {EXPECTED_MICRO_QUESTION_COUNT} micro questions, got {q.micro_question_count}'
+          assert q.total_question_count == EXPECTED_TOTAL_QUESTION_COUNT, f'Expected {EXPECTED_TOTAL_QUESTION_COUNT} total questions, got {q.total_question_count}'
 
           # Verify immutability
           from types import MappingProxyType
