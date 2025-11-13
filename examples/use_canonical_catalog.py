@@ -9,7 +9,7 @@ para orquestación inteligente, análisis de cobertura y optimización.
 
 import json
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from collections import Counter, defaultdict
 
 
@@ -119,7 +119,7 @@ class CanonicalCatalogManager:
             "total_unique_methods": len(method_usage),
             "total_method_calls": sum(method_usage.values()),
             "top_10_methods": [
-                {"method": method, "uses": count, "percentage": f"{(count/30)*100:.1f}%"}
+                {"method": method, "uses": count, "percentage": f"{(count/self.catalog['metadata']['total_executors'])*100:.1f}%"}
                 for method, count in top_methods
             ],
             "usage_by_file": {
@@ -273,7 +273,7 @@ class CanonicalCatalogManager:
     # MÉTODOS AUXILIARES
     # ========================================================================
 
-    def _find_question(self, question_id: str) -> Dict[str, Any] | None:
+    def _find_question(self, question_id: str) -> Optional[Dict[str, Any]]:
         """Busca una pregunta por su ID en el catálogo."""
         for executor in self.catalog['executors']:
             if executor['q'] == question_id:
