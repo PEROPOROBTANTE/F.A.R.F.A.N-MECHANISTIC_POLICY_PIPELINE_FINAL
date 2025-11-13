@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This report provides comprehensive audit findings for the FARFAN (Framework for Advanced Retrieval of Administrativa Narratives) Mechanistic Policy Pipeline. All critical architectural requirements have been verified and documented for auditor review.
+This report provides comprehensive audit findings for the FARFAN (Framework for Advanced Retrieval of Administrativas Narratives) Mechanistic Policy Pipeline. All critical architectural requirements have been verified and documented for auditor review.
 
 **Overall Status:** ✅ **COMPLIANT**
 
