@@ -1,0 +1,1065 @@
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;700&display=swap');
+        
+        :root {
+            --atroz-red-900: #3A0E0E;
+            --atroz-red-700: #7A0F0F;
+            --atroz-red-500: #C41E3A;
+            --atroz-blood: #8B0000;
+            --atroz-blue-900: #04101A;
+            --atroz-blue-700: #102F56;
+            --atroz-blue-electric: #00D4FF;
+            --atroz-green-900: #0B231B;
+            --atroz-green-300: #BFEFCB;
+            --atroz-green-toxic: #39FF14;
+            --atroz-copper-700: #7B3F1D;
+            --atroz-copper-500: #B2642E;
+            --atroz-copper-oxide: #17A589;
+            --ink: #E5E7EB;
+            --bg: #0A0A0A;
+            --membrane: rgba(122, 15, 15, 0.1);
+            --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--membrane) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(16, 47, 86, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(11, 35, 27, 0.05) 0%, transparent 50%);
+            animation: organicPulse 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes organicPulse {
+            0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.7; }
+            25% { transform: rotate(90deg) scale(1.1); opacity: 0.8; }
+            50% { transform: rotate(180deg) scale(0.95); opacity: 0.6; }
+            75% { transform: rotate(270deg) scale(1.05); opacity: 0.9; }
+        }
+
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 50px, var(--atroz-red-700) 50px, var(--atroz-red-700) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, var(--atroz-blue-700) 50px, var(--atroz-blue-700) 51px);
+            animation: neuralFlow 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes neuralFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .atlas-container {
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 80px 1fr 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            background: linear-gradient(180deg, rgba(4,16,26,0.9) 0%, transparent 100%);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid transparent;
+            background-image: linear-gradient(90deg, transparent, var(--atroz-copper-500), transparent);
+            background-position: 0% 100%;
+            background-repeat: no-repeat;
+            background-size: 100% 1px;
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { background-position: -100% 100%; }
+            100% { background-position: 200% 100%; }
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 200;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            position: relative;
+            background: linear-gradient(90deg, var(--ink), var(--atroz-green-toxic));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .logo::before {
+            content: 'ATROZ';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--atroz-red-700);
+            animation: glitch 5s infinite;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        @keyframes glitch {
+            0%, 100% { 
+                clip-path: inset(0 0 0 0); 
+                transform: translate(0);
+            }
+            5% { 
+                clip-path: inset(15% 0 30% 0); 
+                transform: translate(5px, 3px);
+            }
+            10% { 
+                clip-path: inset(30% 0 15% 0); 
+                transform: translate(-3px, -5px);
+            }
+            15% { 
+                clip-path: inset(10% 0 40% 0); 
+                transform: translate(2px, -2px);
+            }
+            20% { 
+                clip-path: inset(40% 0 10% 0); 
+                transform: translate(-5px, 5px);
+            }
+            50% { 
+                clip-path: inset(0 0 0 0); 
+                transform: translate(0);
+            }
+        }
+
+        .nav-pills {
+            display: flex;
+            gap: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 4px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(178, 100, 46, 0.2);
+        }
+
+        .nav-pill {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--ink);
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 20px;
+            transition: var(--transition-slow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-pill::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--atroz-copper-oxide);
+            transition: var(--transition-slow);
+            transform: translate(-50%, -50%);
+        }
+
+        .nav-pill:hover::before,
+        .nav-pill.active::before {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .nav-pill.active {
+            color: var(--bg);
+        }
+
+        .nav-pill span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .viz-container {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .constellation-map {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(4,16,26,0.5) 0%, transparent 70%);
+        }
+
+        .constellation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pdet-node {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transition: var(--transition-slow);
+            z-index: 20;
+            transform-origin: center;
+        }
+
+        .pdet-core {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateZ(0deg); }
+            50% { transform: translateY(-10px) rotateZ(2deg); }
+        }
+
+        .pdet-hexagon {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: var(--atroz-red-900);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            opacity: 0.8;
+            transition: var(--transition-slow);
+        }
+
+        .pdet-node:hover .pdet-hexagon {
+            background: var(--atroz-copper-500);
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(178,100,46,0.8);
+        }
+
+        .pdet-inner {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background: rgba(0,0,0,0.8);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .pdet-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--atroz-green-toxic);
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .pdet-name {
+            font-size: 8px;
+            text-align: center;
+            margin-top: 4px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .pdet-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            border: 1px solid var(--atroz-copper-500);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            transform: translate(-50%, -50%);
+            animation: pulsate 2s ease-out infinite;
+        }
+
+        @keyframes pulsate {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+        .neural-connection {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, var(--atroz-blue-electric), transparent);
+            height: 1px;
+            transform-origin: left center;
+            animation: dataFlow 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes dataFlow {
+            0% { opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0; }
+        }
+
+        .data-panel {
+            width: 400px;
+            background: linear-gradient(180deg, rgba(4,16,26,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            border-left: 1px solid var(--atroz-copper-700);
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .data-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--atroz-copper-500), transparent, var(--atroz-copper-500));
+            animation: verticalScan 4s linear infinite;
+        }
+
+        @keyframes verticalScan {
+            0%, 100% { transform: translateY(-100%); }
+            50% { transform: translateY(100%); }
+        }
+
+        .level-viz {
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .macro-phylogram {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .phylo-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--atroz-copper-oxide), transparent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotate 20s linear infinite;
+        }
+
+        .phylo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(178,100,46,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .phylo-ring:nth-child(1) { width: 120px; height: 120px; animation: counter-rotate 15s linear infinite; }
+        .phylo-ring:nth-child(2) { width: 160px; height: 160px; animation: rotate 20s linear infinite; }
+        .phylo-ring:nth-child(3) { width: 200px; height: 200px; animation: counter-rotate 25s linear infinite; }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes counter-rotate {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+
+        .phylo-branch {
+            position: absolute;
+            background: var(--atroz-green-toxic);
+            height: 1px;
+            transform-origin: left center;
+        }
+
+        .meso-mesh {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .mesh-cluster {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16,47,86,0.8), transparent);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-slow);
+        }
+
+        .mesh-cluster::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--atroz-blue-electric);
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .mesh-cluster:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 0 40px var(--atroz-blue-electric);
+        }
+
+        .cluster-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--atroz-blue-electric);
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .cluster-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            white-space: nowrap;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .micro-helix {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 20px 0;
+            perspective: 600px;
+        }
+
+        .helix-strand {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: helixRotate 20s linear infinite;
+        }
+
+        @keyframes helixRotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .helix-point {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--atroz-green-toxic);
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .helix-connector {
+            position: absolute;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--atroz-green-toxic), transparent, var(--atroz-green-toxic));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .question-card {
+            position: absolute;
+            background: rgba(11,35,27,0.8);
+            border: 1px solid var(--atroz-green-300);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            backdrop-filter: blur(5px);
+        }
+
+        .question-card:hover {
+            transform: scale(1.1) translateZ(20px);
+            box-shadow: 0 10px 30px rgba(57,255,20,0.3);
+            z-index: 100;
+        }
+
+        .q-score {
+            display: inline-block;
+            padding: 2px 6px;
+            background: var(--atroz-green-toxic);
+            color: var(--bg);
+            border-radius: 2px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+        .evidence-stream {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, transparent, rgba(4,16,26,0.9));
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            overflow: hidden;
+            z-index: 50;
+        }
+
+        .evidence-ticker {
+            display: flex;
+            gap: 40px;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .evidence-item {
+            white-space: nowrap;
+            font-size: 11px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .evidence-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--atroz-copper-500);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .muni-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .muni-overlay.active {
+            display: flex;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .overlay-content {
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background: var(--bg);
+            border: 1px solid var(--atroz-copper-700);
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overlay-header {
+            height: 60px;
+            background: linear-gradient(90deg, var(--atroz-red-900), var(--atroz-blue-900));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .overlay-body {
+            height: calc(100% - 60px);
+            padding: 30px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .viz-card {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(178,100,46,0.2);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--membrane), transparent);
+            animation: organicMove 10s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes organicMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 20px); }
+        }
+
+        .radar-container {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .radar-web {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .radar-polygon {
+            fill: none;
+            stroke: var(--atroz-copper-500);
+            stroke-width: 0.5;
+            opacity: 0.3;
+        }
+
+        .radar-data {
+            fill: var(--atroz-green-toxic);
+            fill-opacity: 0.3;
+            stroke: var(--atroz-green-toxic);
+            stroke-width: 2;
+            filter: blur(0.5px);
+            animation: radarPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes radarPulse {
+            0%, 100% { fill-opacity: 0.3; }
+            50% { fill-opacity: 0.5; }
+        }
+
+        .rec-pill {
+            background: linear-gradient(135deg, var(--atroz-red-900), var(--atroz-red-700));
+            border-left: 3px solid var(--atroz-blood);
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .rec-pill:hover {
+            transform: translateX(10px);
+            box-shadow: -10px 0 20px rgba(139,0,0,0.5);
+        }
+
+        .rec-priority {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 8px;
+            color: var(--atroz-copper-500);
+            letter-spacing: 1px;
+        }
+
+        .close-overlay {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 1px solid var(--atroz-red-700);
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            font-size: 20px;
+        }
+
+        .close-overlay:hover {
+            background: var(--atroz-red-700);
+            transform: rotate(90deg);
+        }
+
+        .comparison-matrix {
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            width: 300px;
+            background: rgba(4,16,26,0.9);
+            border: 1px solid var(--atroz-copper-700);
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            display: none;
+            z-index: 100;
+        }
+
+        .comparison-matrix.active {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(178,100,46,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .matrix-cell:hover {
+            background: var(--atroz-copper-oxide);
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .loading-dna {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 2000;
+        }
+
+        .loading-dna.active {
+            display: block;
+        }
+
+        .dna-strand {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            animation: dnaRotate 2s linear infinite;
+        }
+
+        @keyframes dnaRotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .dna-bar {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--atroz-green-toxic), var(--atroz-copper-500));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dna-bar:nth-child(1) { transform: translateX(-50%) rotateY(0deg) translateZ(20px); }
+        .dna-bar:nth-child(2) { transform: translateX(-50%) rotateY(60deg) translateZ(20px); }
+        .dna-bar:nth-child(3) { transform: translateX(-50%) rotateY(120deg) translateZ(20px); }
+        .dna-bar:nth-child(4) { transform: translateX(-50%) rotateY(180deg) translateZ(20px); }
+        .dna-bar:nth-child(5) { transform: translateX(-50%) rotateY(240deg) translateZ(20px); }
+        .dna-bar:nth-child(6) { transform: translateX(-50%) rotateY(300deg) translateZ(20px); }
+
+        .control-interface {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--atroz-copper-700);
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            font-size: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--atroz-copper-oxide);
+            transition: left 0.3s;
+        }
+
+        .control-btn:hover::before {
+            left: 0;
+        }
+
+        .control-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .radial-menu {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .radial-menu.active {
+            display: block;
+        }
+
+        .radial-item {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--atroz-red-900);
+            border: 1px solid var(--atroz-copper-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            transform-origin: center;
+        }
+
+        .radial-item:hover {
+            background: var(--atroz-copper-500);
+            transform: scale(1.2);
+        }
+
+        .timeline {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 20px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--atroz-copper-700);
+            border-radius: 10px;
+            display: none;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+
+        .timeline.active {
+            display: block;
+        }
+
+        .timeline-scrubber {
+            position: absolute;
+            width: 10px;
+            height: 30px;
+            background: var(--atroz-copper-500);
+            top: -5px;
+            left: 0;
+            cursor: grab;
+            border-radius: 2px;
+        }
+
+        .timeline-years {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        body.focus-mode .pdet-node:not(.focused),
+        body.focus-mode .mesh-cluster:not(.focused),
+        body.focus-mode .question-card:not(.focused) {
+            opacity: 0.2;
+            filter: blur(2px);
+        }
+
+        .tooltip {
+            position: fixed;
+            background: rgba(4,16,26,0.9);
+            border: 1px solid var(--atroz-copper-500);
+            padding: 10px;
+            font-size: 11px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            max-width: 300px;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            background: rgba(4,16,26,0.9);
+            border: 1px solid var(--atroz-copper-500);
+            backdrop-filter: blur(10px);
+            transform: translateX(100%);
+            transition: transform 0.5s;
+            z-index: 2000;
+            max-width: 300px;
+        }
+
+        .notification.active {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 1200px) {
+            .data-panel {
+                width: 350px;
+            }
+            
+            .overlay-body {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .viz-container {
+                flex-direction: column;
+            }
+            
+            .data-panel {
+                width: 100%;
+                height: 40%;
+                border-left: none;
+                border-top: 1px solid var(--atroz-copper-700);
+            }
+            
+            .header {
+                padding: 0 20px;
+            }
+            
+            .nav-pills {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .overlay-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .performance-optimized {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }

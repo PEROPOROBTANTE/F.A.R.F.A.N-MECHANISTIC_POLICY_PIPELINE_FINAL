@@ -1,0 +1,383 @@
+{
+  "qmcm_records": [
+    {
+      "record_id": "r1",
+      "level": "micro",
+      "dimension": "D1",
+      "question_id": "P1-D1-Q1",
+      "method_id": "ReportAssembler.generate_micro_answer",
+      "hash_output": "4f3a7c6b",
+      "parent_record": null,
+      "weight": 0.32,
+      "normalized_time": 0.82,
+      "depth": 1
+    },
+    {
+      "record_id": "r2",
+      "level": "micro",
+      "dimension": "D1",
+      "question_id": "P1-D1-Q1",
+      "method_id": "ReportAssembler.generate_micro_answer",
+      "hash_output": "4f3a7c6b",
+      "parent_record": null,
+      "weight": 0.34,
+      "normalized_time": 0.8,
+      "depth": 1
+    },
+    {
+      "record_id": "r3",
+      "level": "micro",
+      "dimension": "D1",
+      "question_id": "P1-D1-Q1",
+      "method_id": "IndustrialPolicyProcessor.process",
+      "hash_output": "9a22bd11",
+      "parent_record": "r1",
+      "weight": 0.28,
+      "normalized_time": 0.75,
+      "depth": 2
+    },
+    {
+      "record_id": "r4",
+      "level": "micro",
+      "dimension": "D2",
+      "question_id": "P1-D2-Q5",
+      "method_id": "PolicyAnalysisEmbedder.process_document",
+      "hash_output": "a18b4c02",
+      "parent_record": null,
+      "weight": 0.3,
+      "normalized_time": 0.7,
+      "depth": 1
+    },
+    {
+      "record_id": "r5",
+      "level": "meso",
+      "dimension": null,
+      "question_id": "CL02",
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "hash_output": "bb12ee45",
+      "parent_record": "r1",
+      "weight": 0.45,
+      "normalized_time": 0.78,
+      "depth": 2
+    },
+    {
+      "record_id": "r6",
+      "level": "meso",
+      "dimension": null,
+      "question_id": "CL02",
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "hash_output": "bb12ee45",
+      "parent_record": "r4",
+      "weight": 0.46,
+      "normalized_time": 0.79,
+      "depth": 2
+    },
+    {
+      "record_id": "r7",
+      "level": "macro",
+      "dimension": null,
+      "question_id": "GLOBAL",
+      "method_id": "ReportAssembler.generate_macro_convergence",
+      "hash_output": "ff9801aa",
+      "parent_record": "r5",
+      "weight": 0.6,
+      "normalized_time": 0.9,
+      "depth": 3
+    },
+    {
+      "record_id": "r8",
+      "level": "macro",
+      "dimension": null,
+      "question_id": "GLOBAL",
+      "method_id": "ReportAssembler.generate_macro_convergence",
+      "hash_output": "ff9801aa",
+      "parent_record": "r6",
+      "weight": 0.58,
+      "normalized_time": 0.88,
+      "depth": 3
+    },
+    {
+      "record_id": "r9",
+      "level": "micro",
+      "dimension": "D3",
+      "question_id": "P2-D3-Q7",
+      "method_id": "CDAFFramework.extract_causal_mechanisms",
+      "hash_output": "09ad5510",
+      "parent_record": "r4",
+      "weight": 0.27,
+      "normalized_time": 0.72,
+      "depth": 2
+    },
+    {
+      "record_id": "r10",
+      "level": "micro",
+      "dimension": "D4",
+      "question_id": "P2-D4-Q9",
+      "method_id": "TeoriaCambio.validacion_completa",
+      "hash_output": "84bcd220",
+      "parent_record": "r9",
+      "weight": 0.31,
+      "normalized_time": 0.85,
+      "depth": 3
+    },
+    {
+      "record_id": "r11",
+      "level": "meso",
+      "dimension": null,
+      "question_id": "CL03",
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "hash_output": "ca44ed58",
+      "parent_record": "r9",
+      "weight": 0.39,
+      "normalized_time": 0.74,
+      "depth": 2
+    },
+    {
+      "record_id": "r12",
+      "level": "micro",
+      "dimension": "D5",
+      "question_id": "P2-D5-Q12",
+      "method_id": "PDETMunicipalPlanAnalyzer.analyze_municipal_plan",
+      "hash_output": "bbccdde1",
+      "parent_record": "r10",
+      "weight": 0.33,
+      "normalized_time": 0.81,
+      "depth": 4
+    },
+    {
+      "record_id": "r13",
+      "level": "micro",
+      "dimension": "D6",
+      "question_id": "P2-D6-Q14",
+      "method_id": "PolicyContradictionDetector._calculate_global_semantic_coherence",
+      "hash_output": "ccddee21",
+      "parent_record": "r12",
+      "weight": 0.29,
+      "normalized_time": 0.77,
+      "depth": 5
+    }
+  ],
+  "method_coverage": [
+    {
+      "method_id": "ReportAssembler.generate_micro_answer",
+      "dimension": "D1",
+      "cluster": "CL02",
+      "invocations": 24,
+      "tests_executed": 12
+    },
+    {
+      "method_id": "ReportAssembler.generate_micro_answer",
+      "dimension": "D2",
+      "cluster": "CL02",
+      "invocations": 16,
+      "tests_executed": 6
+    },
+    {
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "dimension": "D1",
+      "cluster": "CL02",
+      "invocations": 10,
+      "tests_executed": 4
+    },
+    {
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "dimension": "D3",
+      "cluster": "CL03",
+      "invocations": 14,
+      "tests_executed": 7
+    },
+    {
+      "method_id": "ReportAssembler.generate_macro_convergence",
+      "dimension": "D4",
+      "cluster": "CL04",
+      "invocations": 8,
+      "tests_executed": 2
+    },
+    {
+      "method_id": "IndustrialPolicyProcessor.process",
+      "dimension": "D1",
+      "cluster": "CL02",
+      "invocations": 20,
+      "tests_executed": 10
+    },
+    {
+      "method_id": "PolicyAnalysisEmbedder.process_document",
+      "dimension": "D2",
+      "cluster": "CL02",
+      "invocations": 18,
+      "tests_executed": 8
+    },
+    {
+      "method_id": "CDAFFramework.extract_causal_mechanisms",
+      "dimension": "D3",
+      "cluster": "CL03",
+      "invocations": 12,
+      "tests_executed": 5
+    },
+    {
+      "method_id": "TeoriaCambio.validacion_completa",
+      "dimension": "D4",
+      "cluster": "CL03",
+      "invocations": 11,
+      "tests_executed": 3
+    },
+    {
+      "method_id": "PDETMunicipalPlanAnalyzer.analyze_municipal_plan",
+      "dimension": "D5",
+      "cluster": "CL04",
+      "invocations": 9,
+      "tests_executed": 4
+    },
+    {
+      "method_id": "PolicyContradictionDetector._calculate_global_semantic_coherence",
+      "dimension": "D6",
+      "cluster": "CL01",
+      "invocations": 7,
+      "tests_executed": 2
+    }
+  ],
+  "contract_failures": [
+    {
+      "level": "micro",
+      "severity": "critical",
+      "method_id": "ReportAssembler.generate_micro_answer",
+      "question_id": "P1-D1-Q1",
+      "count": 3
+    },
+    {
+      "level": "micro",
+      "severity": "high",
+      "method_id": "IndustrialPolicyProcessor.process",
+      "question_id": "P2-D1-Q2",
+      "count": 4
+    },
+    {
+      "level": "micro",
+      "severity": "medium",
+      "method_id": "PolicyAnalysisEmbedder.process_document",
+      "question_id": "P2-D2-Q3",
+      "count": 2
+    },
+    {
+      "level": "meso",
+      "severity": "critical",
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "question_id": "CL02",
+      "count": 2
+    },
+    {
+      "level": "meso",
+      "severity": "high",
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "question_id": "CL03",
+      "count": 3
+    },
+    {
+      "level": "macro",
+      "severity": "critical",
+      "method_id": "ReportAssembler.generate_macro_convergence",
+      "question_id": "GLOBAL",
+      "count": 1
+    },
+    {
+      "level": "macro",
+      "severity": "medium",
+      "method_id": "ReportAssembler.generate_macro_convergence",
+      "question_id": "GLOBAL",
+      "count": 1
+    },
+    {
+      "level": "micro",
+      "severity": "critical",
+      "method_id": "TeoriaCambio.validacion_completa",
+      "question_id": "P2-D4-Q9",
+      "count": 1
+    },
+    {
+      "level": "meso",
+      "severity": "medium",
+      "method_id": "ReportAssembler.generate_meso_cluster",
+      "question_id": "CL04",
+      "count": 1
+    },
+    {
+      "level": "micro",
+      "severity": "high",
+      "method_id": "PDETMunicipalPlanAnalyzer.analyze_municipal_plan",
+      "question_id": "P3-D5-Q11",
+      "count": 2
+    },
+    {
+      "level": "macro",
+      "severity": "high",
+      "method_id": "PolicyContradictionDetector._calculate_global_semantic_coherence",
+      "question_id": "GLOBAL",
+      "count": 1
+    }
+  ],
+  "funnel_inputs": {
+    "micro": 120,
+    "meso": 48,
+    "macro": 18
+  },
+  "causal_paths": [
+    {
+      "path_id": "Plan-01",
+      "sequence": [
+        "P1-D1-Q1",
+        "P1-D2-Q5",
+        "P1-D3-Q7",
+        "P1-D4-Q10",
+        "P1-D5-Q12",
+        "P1-D6-Q15"
+      ],
+      "dimensions": ["D1", "D2", "D3", "D4", "D5", "D6"]
+    },
+    {
+      "path_id": "Plan-02",
+      "sequence": [
+        "P2-D1-Q2",
+        "P2-D2-Q6",
+        "P2-D4-Q11",
+        "P2-D5-Q13",
+        "P2-D6-Q16"
+      ],
+      "dimensions": ["D1", "D2", "D4", "D5", "D6"]
+    },
+    {
+      "path_id": "Plan-03",
+      "sequence": [
+        "P3-D1-Q3",
+        "P3-D3-Q8",
+        "P3-D4-Q11",
+        "P3-D5-Q14",
+        "P3-D6-Q17"
+      ],
+      "dimensions": ["D1", "D3", "D4", "D5", "D6"]
+    },
+    {
+      "path_id": "Plan-04",
+      "sequence": [
+        "P4-D1-Q4",
+        "P4-D2-Q9",
+        "P4-D3-Q12",
+        "P4-D4-Q18",
+        "P4-D6-Q21"
+      ],
+      "dimensions": ["D1", "D2", "D3", "D4", "D6"]
+    },
+    {
+      "path_id": "Plan-05",
+      "sequence": [
+        "P5-D1-Q5",
+        "P5-D2-Q10",
+        "P5-D3-Q13",
+        "P5-D4-Q19",
+        "P5-D5-Q22",
+        "P5-D6-Q24"
+      ],
+      "dimensions": ["D1", "D2", "D3", "D4", "D5", "D6"]
+    }
+  ],
+  "dimension_sequence": ["D1", "D2", "D3", "D4", "D5", "D6"]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/financiero_viabilidad/responsible_entity.schema.json",
+  "title": "ResponsibleEntity",
+  "description": "Entidad responsable identificada en el plan con métricas de especificidad y trazabilidad",
+  "type": "object",
+  "required": ["name", "entity_type", "specificity_score", "mentioned_count", "associated_programs", "associated_indicators"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre de la entidad responsable",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["secretaría", "oficina", "dirección", "alcaldía", "externo"],
+      "description": "Tipo de entidad según estructura administrativa municipal colombiana"
+    },
+    "specificity_score": {
+      "type": "number",
+      "description": "Score de especificidad de la identificación (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "mentioned_count": {
+      "type": "integer",
+      "description": "Número de veces que se menciona la entidad en el documento",
+      "minimum": 0
+    },
+    "associated_programs": {
+      "type": "array",
+      "description": "Programas asociados a la entidad",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    },
+    "associated_indicators": {
+      "type": "array",
+      "description": "Indicadores asociados a la entidad",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    },
+    "budget_allocated": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d{1,2})?$",
+          "description": "Presupuesto asignado en COP (como string decimal)"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

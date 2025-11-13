@@ -1,0 +1,30 @@
+{
+  "registry_version": "1.0.0",
+  "last_updated": "2025-11-11",
+  "methods": {
+    "pattern_extractor_v2": {
+      "output_range": [0.0, 1.0],
+      "semantic_tags": ["text_analysis", "pattern_matching", "entity_extraction", "validation", "textual_quality"],
+      "fusion_requirements": ["extracted_text", "question_id"],
+      "description": "Extracts patterns and entities from text using regex and NLP"
+    },
+    "coherence_validator": {
+      "output_range": [0.0, 1.0],
+      "semantic_tags": ["text_analysis", "textual_quality", "validation", "pattern_matching"],
+      "fusion_requirements": ["extracted_text", "question_id", "reference_corpus"],
+      "description": "Validates textual coherence and consistency"
+    },
+    "semantic_analyzer": {
+      "output_range": [0.0, 1.0],
+      "semantic_tags": ["semantics", "meaning", "context", "nlp"],
+      "fusion_requirements": ["text", "context"],
+      "description": "Performs semantic analysis of text"
+    },
+    "structural_scorer": {
+      "output_range": [0.0, 1.0],
+      "semantic_tags": ["structure", "format", "organization", "text_analysis"],
+      "fusion_requirements": ["document_structure"],
+      "description": "Scores document structural quality"
+    }
+  }
+}

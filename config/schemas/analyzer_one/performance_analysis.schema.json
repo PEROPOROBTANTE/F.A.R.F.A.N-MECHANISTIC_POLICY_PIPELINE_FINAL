@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/analyzer_one/performance_analysis.schema.json",
+  "title": "PerformanceAnalysis",
+  "description": "Análisis de rendimiento de indicadores a través de enlaces de cadena de valor",
+  "type": "object",
+  "required": ["value_chain_metrics", "bottleneck_analysis", "operational_loss_functions", "optimization_recommendations"],
+  "properties": {
+    "value_chain_metrics": {
+      "type": "object",
+      "description": "Métricas de rendimiento por enlace de cadena de valor",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["throughput", "efficiency_score", "capacity_utilization"],
+        "properties": {
+          "throughput": {
+            "type": "number",
+            "description": "Tasa de procesamiento del enlace",
+            "minimum": 0.0
+          },
+          "efficiency_score": {
+            "type": "number",
+            "description": "Puntaje de eficiencia (0.0-1.0)",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "capacity_utilization": {
+            "type": "number",
+            "description": "Utilización de capacidad (0.0-1.0)",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "segment_count": {
+            "type": "integer",
+            "description": "Número de segmentos procesados",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "bottleneck_analysis": {
+      "type": "object",
+      "description": "Análisis de cuellos de botella por enlace de cadena de valor",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "capacity_constraints": {
+            "type": "object",
+            "description": "Restricciones de capacidad identificadas",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "constraint_value": {
+                  "type": "number",
+                  "description": "Valor de la restricción",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high", "critical"],
+                  "description": "Severidad de la restricción"
+                }
+              }
+            }
+          },
+          "bottleneck_scores": {
+            "type": "object",
+            "description": "Puntajes de cuello de botella por tipo",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0.0
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "operational_loss_functions": {
+      "type": "object",
+      "description": "Funciones de pérdida operacional por enlace",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "total_loss": {
+            "type": "number",
+            "description": "Pérdida total acumulada",
+            "minimum": 0.0
+          },
+          "loss_components": {
+            "type": "object",
+            "description": "Componentes de pérdida desagregados",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0.0
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "optimization_recommendations": {
+      "type": "array",
+      "description": "Recomendaciones de optimización generadas",
+      "items": {
+        "type": "object",
+        "required": ["link_name", "recommendation", "priority", "expected_impact"],
+        "properties": {
+          "link_name": {
+            "type": "string",
+            "description": "Nombre del enlace de cadena de valor afectado"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "Texto de la recomendación",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Prioridad de implementación"
+          },
+          "expected_impact": {
+            "type": "number",
+            "description": "Impacto esperado (0.0-1.0)",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "implementation_complexity": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "Complejidad de implementación"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/policy_processor/evidence_bundle.schema.json",
+  "title": "EvidenceBundle",
+  "description": "Contenedor estructurado de evidencia con metadatos de procedencia y confianza",
+  "type": "object",
+  "required": ["dimension", "category", "matches", "confidence", "context_windows", "match_positions"],
+  "properties": {
+    "dimension": {
+      "type": "string",
+      "enum": ["insumos", "actividades", "productos", "resultados", "impactos", "supuestos"],
+      "description": "Dimensión causal del Marco Lógico (DNP Colombia)"
+    },
+    "category": {
+      "type": "string",
+      "description": "Categoría de evidencia identificada",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "matches": {
+      "type": "array",
+      "description": "Lista de coincidencias textuales encontradas",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 5000
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "description": "Nivel de confianza de la evidencia (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "context_windows": {
+      "type": "array",
+      "description": "Ventanas de contexto textual para las coincidencias",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 10000
+      }
+    },
+    "match_positions": {
+      "type": "array",
+      "description": "Posiciones de caracteres donde se encontraron las coincidencias",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "additionalProperties": false
+}

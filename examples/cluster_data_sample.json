@@ -1,0 +1,21 @@
+{
+  "CL01": {
+    "score": 68.5,
+    "variance": 0.22,
+    "weak_pa": "PA02"
+  },
+  "CL02": {
+    "score": 58.3,
+    "variance": 0.15
+  },
+  "CL03": {
+    "score": 72.1,
+    "variance": 0.26,
+    "weak_pa": "PA04"
+  },
+  "CL04": {
+    "score": 65.8,
+    "variance": 0.28,
+    "weak_pa": "PA09"
+  }
+}

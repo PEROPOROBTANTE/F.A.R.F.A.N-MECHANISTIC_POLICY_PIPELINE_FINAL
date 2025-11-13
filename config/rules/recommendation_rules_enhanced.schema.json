@@ -1,0 +1,436 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/recommendation_rules_enhanced.schema.json",
+  "title": "Enhanced Recommendation Rules Schema v2.0",
+  "description": "Schema supporting 7 advanced features: template parameterization, execution logic, measurable indicators, time horizons, testable verification, cost tracking, and authority mapping",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": ["1.0", "2.0"]
+    },
+    "enhanced_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule_id": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "enum": ["MICRO", "MESO", "MACRO"]
+          },
+          "when": {
+            "type": "object"
+          },
+          "execution": {
+            "type": "object",
+            "properties": {
+              "trigger_condition": {
+                "type": "string",
+                "description": "Boolean expression defining when rule activates"
+              },
+              "blocking": {
+                "type": "boolean",
+                "description": "Whether this rule blocks other actions"
+              },
+              "auto_apply": {
+                "type": "boolean",
+                "description": "Whether recommendation is applied automatically"
+              },
+              "requires_approval": {
+                "type": "boolean",
+                "description": "Whether manual approval is required"
+              },
+              "approval_roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Roles that can approve this recommendation"
+              }
+            },
+            "required": ["trigger_condition", "blocking", "auto_apply", "requires_approval", "approval_roles"]
+          },
+          "budget": {
+            "type": "object",
+            "properties": {
+              "estimated_cost_cop": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Total estimated cost in Colombian Pesos"
+              },
+              "cost_breakdown": {
+                "type": "object",
+                "properties": {
+                  "personal": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "consultancy": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "technology": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                },
+                "required": ["personal", "consultancy", "technology"]
+              },
+              "funding_sources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "confirmed": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["source", "amount", "confirmed"]
+                },
+                "minItems": 1
+              },
+              "fiscal_year": {
+                "type": "integer",
+                "minimum": 2024,
+                "maximum": 2030
+              }
+            },
+            "required": ["estimated_cost_cop", "cost_breakdown", "funding_sources", "fiscal_year"]
+          },
+          "template": {
+            "type": "object",
+            "properties": {
+              "template_id": {
+                "type": "string",
+                "description": "Unique template identifier"
+              },
+              "template_params": {
+                "type": "object",
+                "description": "Parameters for template substitution"
+              },
+              "problem": {
+                "type": "string"
+              },
+              "intervention": {
+                "type": "string"
+              },
+              "indicator": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "baseline": {
+                    "type": ["number", "null"]
+                  },
+                  "target": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "formula": {
+                    "type": "string",
+                    "description": "Calculation method for the indicator"
+                  },
+                  "acceptable_range": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max] acceptable values"
+                  },
+                  "baseline_measurement_date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date of baseline measurement"
+                  },
+                  "measurement_frequency": {
+                    "type": "string",
+                    "enum": ["diaria", "semanal", "mensual", "trimestral", "semestral", "anual"],
+                    "description": "How often the indicator is measured"
+                  },
+                  "data_source": {
+                    "type": "string",
+                    "description": "Where data comes from"
+                  },
+                  "data_source_query": {
+                    "type": "string",
+                    "description": "SQL or API query to retrieve data"
+                  },
+                  "responsible_measurement": {
+                    "type": "string",
+                    "description": "Who is responsible for measurement"
+                  },
+                  "escalation_if_below": {
+                    "type": "number",
+                    "description": "Threshold value that triggers escalation"
+                  }
+                },
+                "required": [
+                  "name",
+                  "baseline",
+                  "target",
+                  "unit",
+                  "formula",
+                  "acceptable_range",
+                  "baseline_measurement_date",
+                  "measurement_frequency",
+                  "data_source",
+                  "data_source_query",
+                  "responsible_measurement",
+                  "escalation_if_below"
+                ]
+              },
+              "responsible": {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "partners": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  },
+                  "legal_mandate": {
+                    "type": "string",
+                    "description": "Legal basis for responsibility"
+                  },
+                  "approval_chain": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "level": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "decision": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["level", "role", "decision"]
+                    },
+                    "minItems": 1
+                  },
+                  "escalation_path": {
+                    "type": "object",
+                    "properties": {
+                      "threshold_days_delay": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "escalate_to": {
+                        "type": "string"
+                      },
+                      "final_escalation": {
+                        "type": "string"
+                      },
+                      "consequences": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": ["threshold_days_delay", "escalate_to", "final_escalation", "consequences"]
+                  }
+                },
+                "required": [
+                  "entity",
+                  "role",
+                  "partners",
+                  "legal_mandate",
+                  "approval_chain",
+                  "escalation_path"
+                ]
+              },
+              "horizon": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "enum": ["T0"]
+                  },
+                  "end": {
+                    "type": "string",
+                    "enum": ["T1", "T2", "T3"]
+                  },
+                  "start_type": {
+                    "type": "string",
+                    "enum": ["plan_approval_date", "project_start_date", "fiscal_year_start"],
+                    "description": "What T0 represents"
+                  },
+                  "duration_months": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 48,
+                    "description": "Duration in months from start to end"
+                  },
+                  "milestones": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "offset_months": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "deliverables": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "verification_required": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": ["name", "offset_months", "deliverables", "verification_required"]
+                    }
+                  },
+                  "dependencies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "IDs of rules that must complete first"
+                  },
+                  "critical_path": {
+                    "type": "boolean",
+                    "description": "Whether this is on the critical path"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end",
+                  "start_type",
+                  "duration_months",
+                  "milestones",
+                  "dependencies",
+                  "critical_path"
+                ]
+              },
+              "verification": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "Legacy simple verification string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique verification artifact ID"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": ["DOCUMENT", "SYSTEM_STATE"],
+                          "description": "Type of verification artifact"
+                        },
+                        "artifact": {
+                          "type": "string",
+                          "description": "Description of the artifact"
+                        },
+                        "format": {
+                          "type": "string",
+                          "description": "Expected format (PDF, DATABASE_QUERY, etc.)"
+                        },
+                        "required_sections": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Required sections for documents"
+                        },
+                        "approval_required": {
+                          "type": "boolean"
+                        },
+                        "approver": {
+                          "type": "string"
+                        },
+                        "due_date": {
+                          "type": "string",
+                          "description": "When artifact is due (T0, T1, T2, T3)"
+                        },
+                        "validation_query": {
+                          "type": "string",
+                          "description": "SQL query to validate system state"
+                        },
+                        "pass_condition": {
+                          "type": "string",
+                          "description": "Condition that must be true"
+                        },
+                        "automated_check": {
+                          "type": "boolean",
+                          "description": "Whether verification can be automated"
+                        }
+                      },
+                      "required": ["id", "type", "artifact", "format", "approval_required", "approver", "due_date", "automated_check"]
+                    }
+                  ]
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "problem",
+              "intervention",
+              "indicator",
+              "responsible",
+              "horizon",
+              "verification"
+            ]
+          }
+        },
+        "required": [
+          "rule_id",
+          "level",
+          "when",
+          "execution",
+          "budget",
+          "template"
+        ]
+      }
+    }
+  },
+  "required": [
+    "version",
+    "rules"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/financiero_viabilidad/extracted_table.schema.json",
+  "title": "ExtractedTable",
+  "description": "Tabla extraída de documento PDF con metadatos de extracción y calidad",
+  "type": "object",
+  "required": ["df", "page_number", "extraction_method", "confidence_score", "is_fragmented"],
+  "properties": {
+    "df": {
+      "type": "object",
+      "description": "Representación serializada del DataFrame (columns, data, index)",
+      "required": ["columns", "data"],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "description": "Nombres de columnas",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "array",
+          "description": "Datos de la tabla (array de filas)",
+          "items": {
+            "type": "array",
+            "description": "Fila de datos"
+          }
+        },
+        "index": {
+          "type": "array",
+          "description": "Índice del DataFrame (opcional)",
+          "items": {}
+        }
+      },
+      "additionalProperties": true
+    },
+    "page_number": {
+      "type": "integer",
+      "description": "Número de página donde se encontró la tabla",
+      "minimum": 1
+    },
+    "table_type": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Tipo de tabla identificado (presupuesto, cronograma, indicadores, etc.)",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "extraction_method": {
+      "type": "string",
+      "enum": ["camelot_lattice", "camelot_stream", "tabula", "pdfplumber"],
+      "description": "Método utilizado para extraer la tabla del PDF"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "Score de confianza de la extracción (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "is_fragmented": {
+      "type": "boolean",
+      "description": "Indica si la tabla está fragmentada en múltiples páginas"
+    },
+    "continuation_of": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "description": "Número de página de la tabla original si es continuación",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

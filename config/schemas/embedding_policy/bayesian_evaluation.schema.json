@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/embedding_policy/bayesian_evaluation.schema.json",
+  "title": "BayesianEvaluation",
+  "description": "Resultado de evaluación bayesiana con análisis de incertidumbre para scoring de políticas",
+  "type": "object",
+  "required": ["point_estimate", "credible_interval_95", "posterior_samples", "evidence_strength", "numerical_coherence"],
+  "properties": {
+    "point_estimate": {
+      "type": "number",
+      "description": "Estimación puntual del score (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "credible_interval_95": {
+      "type": "array",
+      "description": "Intervalo de credibilidad al 95% [lower, upper]",
+      "items": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "posterior_samples": {
+      "type": "array",
+      "description": "Muestras de la distribución posterior (MCMC/variational inference)",
+      "items": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0
+      },
+      "minItems": 1
+    },
+    "evidence_strength": {
+      "type": "string",
+      "enum": ["weak", "moderate", "strong", "very_strong"],
+      "description": "Clasificación de la fuerza de evidencia basada en tamaño de muestra y coherencia"
+    },
+    "numerical_coherence": {
+      "type": "number",
+      "description": "Score de coherencia numérica/estadística (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "additionalProperties": false
+}

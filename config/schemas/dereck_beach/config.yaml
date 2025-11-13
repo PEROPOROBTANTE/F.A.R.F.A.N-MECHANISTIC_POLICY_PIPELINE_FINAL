@@ -1,0 +1,111 @@
+# Derek Beach CDAF Framework Configuration
+# Causal Deconstruction and Audit Framework v2.0
+# This configuration file contains all required fields for the CDAF framework
+
+patterns:
+  section_titles: '^(?:CAPÍTULO|ARTÍCULO|PARTE)\s+[\dIVX]+'
+  goal_codes: '[MP][RIP]-\d{3}'
+  numeric_formats: '[\d,]+(?:\.\d+)?%?'
+  table_headers: '(?:PROGRAMA|META|INDICADOR|LÍNEA BASE|VALOR ESPERADO)'
+  financial_headers: '(?:PRESUPUESTO|VALOR|MONTO|INVERSIÓN)'
+
+lexicons:
+  causal_logic:
+    - gracias a
+    - con el fin de
+    - para lograr
+    - mediante
+    - a través de
+    - como resultado de
+    - debido a
+    - porque
+    - por medio de
+    - permitirá
+    - contribuirá a
+  
+  goal_classification:
+    tasa: decreciente
+    índice: constante
+    número: suma
+    porcentaje: constante
+    cantidad: suma
+    cobertura: suma
+  
+  contextual_factors:
+    - riesgo
+    - amenaza
+    - obstáculo
+    - limitación
+    - restricción
+    - desafío
+    - brecha
+    - déficit
+    - vulnerabilidad
+    - hipótesis alternativa
+  
+  administrative_keywords:
+    - gestión
+    - administración
+    - coordinación
+    - regulación
+    - normativa
+    - institucional
+    - gobernanza
+    - reglamento
+    - decreto
+    - resolución
+    - acuerdo
+
+entity_aliases:
+  SEC GOB: Secretaría de Gobierno
+  SEC PLAN: Secretaría de Planeación
+  SEC HAC: Secretaría de Hacienda
+  SEC SALUD: Secretaría de Salud
+  SEC EDU: Secretaría de Educación
+  SEC INFRA: Secretaría de Infraestructura
+  SEC MUJER: Secretaría de la Mujer
+  SEC DEPORTE: Secretaría de Deporte y Recreación
+  SEC CULTURA: Secretaría de Cultura
+  SEC AMBIENTE: Secretaría de Ambiente
+  SEC MOVILIDAD: Secretaría de Movilidad
+  SEC DESARROLLO: Secretaría de Desarrollo Económico
+  FISCALIA: Fiscalía General de la Nación
+  PERSONERIA: Personería Municipal
+  CONTRALORIA: Contraloría Municipal
+
+verb_sequences:
+  diagnosticar: 1
+  identificar: 2
+  analizar: 3
+  diseñar: 4
+  planificar: 5
+  implementar: 6
+  ejecutar: 7
+  monitorear: 8
+  evaluar: 9
+
+bayesian_thresholds:
+  kl_divergence: 0.01
+  convergence_min_evidence: 2
+  prior_alpha: 2.0
+  prior_beta: 2.0
+  laplace_smoothing: 1.0
+
+mechanism_type_priors:
+  administrativo: 0.30
+  tecnico: 0.25
+  financiero: 0.20
+  politico: 0.15
+  mixto: 0.10
+
+performance:
+  enable_vectorized_ops: true
+  enable_async_processing: false
+  max_context_length: 1000
+  cache_embeddings: true
+
+self_reflection:
+  enable_prior_learning: false
+  feedback_weight: 0.1
+  prior_history_path: null
+  min_documents_for_learning: 5

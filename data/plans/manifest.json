@@ -1,0 +1,1670 @@
+{
+  "manifest_metadata": {
+    "version": "2.0.0",
+    "schema_version": "2.0",
+    "manifest_id": "PDM-FARFAN-COL-2025-001",
+    "created_at": "2025-10-26T00:00:00Z",
+    "last_updated": "2025-10-26T00:00:00Z",
+    "title": "Sistema de Evaluación Causal FARFAN 3.0 - Planes de Desarrollo Municipal Colombia",
+    "description": "Comprehensive unified manifest for Colombian municipal development plans (PDM) using FARFAN 3.0 causal evaluation framework with 300 intelligent questions across 10 policy areas and 6 causal dimensions",
+    "system_version": "3.0.0",
+    "author": "JCRR",
+    "maintainer": {
+      "organization": "Colombian Territorial Development Analysis Initiative",
+      "lead_researcher": "JCRR",
+      "contact": "analysis@pdm-colombia.gov.co",
+      "last_review_date": "2025-10-26"
+    },
+    "notation_format": "P#-D#-Q#",
+    "total_questions": 300,
+    "base_questions": 30,
+    "policy_areas": 10,
+    "dimensions": 6,
+    "clusters": 4,
+    "meso_enabled": true,
+    "changelog": [
+      {
+        "version": "3.0.0",
+        "date": "2025-10-26",
+        "changes": [
+          "Integrated FARFAN 3.0 causal evaluation framework",
+          "Added 300-question configuration",
+          "Implemented 10 policy areas (Decálogo)",
+          "Configured 6 causal dimensions",
+          "Added 4 thematic clusters",
+          "Enhanced DNP indicators integration",
+          "Added causal verification patterns"
+        ]
+      },
+      {
+        "version": "2.0.0",
+        "date": "2025-10-20",
+        "changes": [
+          "Comprehensive schema expansion",
+          "Enhanced metadata structure"
+        ]
+      },
+      {
+        "version": "1.0.0",
+        "date": "2025-10-14",
+        "changes": [
+          "Initial manifest creation",
+          "Basic plan metadata"
+        ]
+      }
+    ]
+  },
+  "evaluation_framework": {
+    "name": "FARFAN 3.0",
+    "full_name": "Framework for Assessment of Results-based Financing and Articulated Networks 3.0",
+    "version": "3.0.0",
+    "description": "Sistema de Evaluación Causal con 300 preguntas inteligentes, patrones de verificación saturados e indicadores DNP exhaustivos para evaluación de Planes de Desarrollo Territorial",
+    "methodology": "Results-based causal evaluation with theory of change verification",
+    "framework_type": "Causal-evaluative",
+    "evaluation_approach": "Multi-dimensional causal chain analysis (Inputs → Activities → Products → Results → Impacts)",
+    "total_evaluation_points": 300,
+    "structure": {
+      "base_questions": 30,
+      "policy_areas": 10,
+      "dimensions": 6,
+      "clusters": 4,
+      "calculation": "30 base questions × 10 policy areas = 300 total questions"
+    },
+    "key_features": [
+      "Causal chain verification (Theory of Change)",
+      "DNP indicator saturation",
+      "Differential approach integration",
+      "Budget-outcome traceability",
+      "Risk and sustainability assessment",
+      "Multi-level governance evaluation",
+      "Territorial equity analysis"
+    ]
+  },
+  "clusters": [
+    {
+      "cluster_id": "CL01",
+      "code": "SEC-PAZ",
+      "name": "Seguridad y Paz",
+      "name_en": "Security and Peace",
+      "rationale": "Seguridad humana, protección de la vida y paz territorial",
+      "description": "Agrupa áreas de política relacionadas con seguridad, justicia, victimas y construcción de paz territorial",
+      "policy_areas": [
+        "PA02",
+        "PA03",
+        "PA07"
+      ],
+      "policy_area_names": [
+        "Seguridad y Convivencia Ciudadana",
+        "Víctimas del Conflicto Armado",
+        "Transparencia, Acceso a la Información y Lucha contra la Corrupción"
+      ],
+      "weight": 0.25,
+      "strategic_priority": "high",
+      "cross_cutting_themes": [
+        "Human rights",
+        "Transitional justice",
+        "Institutional integrity"
+      ]
+    },
+    {
+      "cluster_id": "CL02",
+      "code": "GP",
+      "name": "Grupos Poblacionales",
+      "name_en": "Population Groups",
+      "rationale": "Enfoque diferencial y derechos de grupos específicos",
+      "description": "Enfoque diferencial para primera infancia, juventud, mujeres, personas con discapacidad, adultos mayores, LGBTIQ+, grupos étnicos",
+      "policy_areas": [
+        "PA01",
+        "PA05",
+        "PA06"
+      ],
+      "policy_area_names": [
+        "Primera Infancia, Niñez, Adolescencia y Familia",
+        "Mujeres y Equidad de Género",
+        "Grupos Étnicos"
+      ],
+      "weight": 0.3,
+      "strategic_priority": "critical",
+      "cross_cutting_themes": [
+        "Differential approach",
+        "Social inclusion",
+        "Cultural rights"
+      ]
+    },
+    {
+      "cluster_id": "CL03",
+      "code": "TERR-AMB",
+      "name": "Territorio-Ambiente",
+      "name_en": "Territory-Environment",
+      "rationale": "Sostenibilidad territorial y gestión ambiental",
+      "description": "Ordenamiento territorial, gestión del riesgo y sostenibilidad ambiental",
+      "policy_areas": [
+        "PA04",
+        "PA08"
+      ],
+      "policy_area_names": [
+        "Ordenamiento Territorial y Gestión del Riesgo",
+        "Ambiente y Desarrollo Sostenible"
+      ],
+      "weight": 0.22,
+      "strategic_priority": "high",
+      "cross_cutting_themes": [
+        "Climate change",
+        "Disaster risk management",
+        "Sustainable development"
+      ]
+    },
+    {
+      "cluster_id": "CL04",
+      "code": "DESC-CRISIS",
+      "name": "Derechos Sociales & Crisis",
+      "name_en": "Social Rights & Crisis",
+      "rationale": "DESC (Derechos Económicos, Sociales y Culturales) y gestión de crisis migratoria",
+      "description": "Salud, educación, vivienda, empleo, migración y atención humanitaria",
+      "policy_areas": [
+        "PA09",
+        "PA10"
+      ],
+      "policy_area_names": [
+        "Salud, Educación, Vivienda, Agua Potable y Saneamiento Básico",
+        "Migrantes y Crisis Humanitaria"
+      ],
+      "weight": 0.23,
+      "strategic_priority": "critical",
+      "cross_cutting_themes": [
+        "Social protection",
+        "Basic services",
+        "Humanitarian action"
+      ]
+    }
+  ],
+  "policy_areas": [
+    {
+      "policy_area_id": "PA01",
+      "code": "INFANCIA",
+      "legacy_code": "PA01",
+      "name": "Primera Infancia, Niñez, Adolescencia y Familia",
+      "name_en": "Early Childhood, Children, Adolescents and Family",
+      "cluster": "CL02",
+      "description": "Garantía integral de derechos para primera infancia (0-5 años), niñez (6-11 años), adolescencia (12-17 años) y fortalecimiento familiar",
+      "strategic_framework": "Código de Infancia y Adolescencia (Ley 1098/2006), Política Nacional de Primera Infancia",
+      "population_focus": [
+        "0-5 years",
+        "6-11 years",
+        "12-17 years",
+        "Families"
+      ],
+      "key_dimensions": [
+        "Desarrollo integral",
+        "Protección",
+        "Participación",
+        "Prevención de violencias",
+        "Nutrición",
+        "Educación inicial"
+      ],
+      "dnp_indicators": [
+        "Tasa de mortalidad infantil",
+        "Desnutrición crónica menores de 5 años",
+        "Cobertura educación inicial",
+        "Embarazo adolescente",
+        "Trabajo infantil",
+        "Violencias contra NNA"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.2,
+        "D2": 0.2,
+        "D3": 0.15,
+        "D4": 0.2,
+        "D5": 0.15,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.5
+    },
+    {
+      "policy_area_id": "PA02",
+      "code": "SEGURIDAD",
+      "legacy_code": "PA02",
+      "name": "Seguridad y Convivencia Ciudadana",
+      "name_en": "Security and Citizen Coexistence",
+      "cluster": "CL01",
+      "description": "Prevención de violencias, seguridad ciudadana, justicia comunitaria y convivencia pacífica",
+      "strategic_framework": "Política Nacional de Seguridad y Convivencia Ciudadana",
+      "population_focus": [
+        "General population",
+        "High-risk communities",
+        "Youth at risk"
+      ],
+      "key_dimensions": [
+        "Prevención del delito",
+        "Violencia intrafamiliar",
+        "Justicia comunitaria",
+        "Cultura de la legalidad",
+        "Desarme comunitario",
+        "Espacios públicos seguros"
+      ],
+      "dnp_indicators": [
+        "Tasa de homicidios",
+        "Hurtos",
+        "Violencia intrafamiliar",
+        "Lesiones personales",
+        "Percepción de seguridad",
+        "Casos de justicia comunitaria"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.25,
+        "D2": 0.2,
+        "D3": 0.15,
+        "D4": 0.2,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.55
+    },
+    {
+      "policy_area_id": "PA03",
+      "code": "VICTIMAS",
+      "legacy_code": "PA03",
+      "name": "Víctimas del Conflicto Armado",
+      "name_en": "Victims of Armed Conflict",
+      "cluster": "CL01",
+      "description": "Atención, asistencia y reparación integral a víctimas del conflicto armado, restitución de tierras y garantías de no repetición",
+      "strategic_framework": "Ley 1448 de 2011 (Ley de Víctimas), Acuerdo de Paz 2016",
+      "population_focus": [
+        "Conflict victims",
+        "Displaced population",
+        "Land claimants"
+      ],
+      "key_dimensions": [
+        "Atención humanitaria",
+        "Reparación integral",
+        "Restitución de tierras",
+        "Memoria histórica",
+        "Reconciliación",
+        "Garantías de no repetición"
+      ],
+      "dnp_indicators": [
+        "Víctimas registradas RUV",
+        "Hogares con atención humanitaria",
+        "Tierras restituidas",
+        "Indemnizaciones pagadas",
+        "Cobertura PAPSIVI",
+        "Planes de retorno ejecutados"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.2,
+        "D2": 0.15,
+        "D3": 0.2,
+        "D4": 0.2,
+        "D5": 0.15,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D3",
+      "minimum_score": 0.5
+    },
+    {
+      "policy_area_id": "PA04",
+      "code": "OT-RIESGO",
+      "legacy_code": "PA04",
+      "name": "Ordenamiento Territorial y Gestión del Riesgo",
+      "name_en": "Territorial Planning and Risk Management",
+      "cluster": "CL03",
+      "description": "Planificación del uso del suelo, gestión del riesgo de desastres, adaptación al cambio climático y ordenamiento territorial sostenible",
+      "strategic_framework": "Ley 388/1997 (Desarrollo Territorial), Ley 1523/2012 (Gestión del Riesgo)",
+      "population_focus": [
+        "General population",
+        "Communities at risk",
+        "Rural settlements"
+      ],
+      "key_dimensions": [
+        "POT/PBOT/EOT actualizado",
+        "Conocimiento del riesgo",
+        "Reducción del riesgo",
+        "Manejo de desastres",
+        "Suelo rural y urbano",
+        "Espacio público"
+      ],
+      "dnp_indicators": [
+        "POT vigente y ajustado",
+        "Población en alto riesgo",
+        "Viviendas reubicadas",
+        "Emergencias atendidas",
+        "Hectáreas de suelo protegido",
+        "m² espacio público per cápita"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.2,
+        "D2": 0.15,
+        "D3": 0.2,
+        "D4": 0.25,
+        "D5": 0.15,
+        "D6": 0.05
+      },
+      "total_questions": 30,
+      "critical_dimension": "D4",
+      "minimum_score": 0.5
+    },
+    {
+      "policy_area_id": "PA05",
+      "code": "MUJER",
+      "legacy_code": "PA05",
+      "name": "Mujeres y Equidad de Género",
+      "name_en": "Women and Gender Equity",
+      "cluster": "CL02",
+      "description": "Autonomía económica, prevención de violencias basadas en género, participación política y corresponsabilidad en el cuidado",
+      "strategic_framework": "CONPES 161 Equidad de Género, Ley 1257/2008 (Violencias de Género)",
+      "population_focus": [
+        "Women",
+        "LGBTIQ+ population",
+        "Gender-diverse persons"
+      ],
+      "key_dimensions": [
+        "Autonomía económica",
+        "Prevención VBG",
+        "Salud sexual y reproductiva",
+        "Participación política",
+        "Sistema de cuidado",
+        "Educación no sexista"
+      ],
+      "dnp_indicators": [
+        "Tasa de feminicidios",
+        "Violencia de pareja",
+        "Brecha salarial de género",
+        "Participación política mujeres",
+        "Embarazo adolescente",
+        "Comisarías de familia"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.25,
+        "D2": 0.2,
+        "D3": 0.15,
+        "D4": 0.2,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.55
+    },
+    {
+      "policy_area_id": "PA06",
+      "code": "ETNIAS",
+      "legacy_code": "PA06",
+      "name": "Grupos Étnicos",
+      "name_en": "Ethnic Groups",
+      "cluster": "CL02",
+      "description": "Consulta previa, autonomía territorial, derechos colectivos, gobiernos propios y protección de territorios ancestrales (indígenas, afrodescendientes, raizales, ROM)",
+      "strategic_framework": "Convenio 169 OIT, Constitución 1991 (Art. 7, 330), Sentencia T-025",
+      "population_focus": [
+        "Indigenous peoples",
+        "Afro-descendants",
+        "Raizal people",
+        "ROM people"
+      ],
+      "key_dimensions": [
+        "Consulta previa",
+        "Gobierno propio",
+        "Territorio ancestral",
+        "Educación propia",
+        "Salud intercultural",
+        "Economías tradicionales"
+      ],
+      "dnp_indicators": [
+        "Resguardos constituidos",
+        "Consejos comunitarios titulados",
+        "Consultas previas realizadas",
+        "Proyectos etno-educativos",
+        "Cobertura salud intercultural",
+        "Conflictos territoriales"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.2,
+        "D2": 0.2,
+        "D3": 0.15,
+        "D4": 0.25,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D4",
+      "minimum_score": 0.5
+    },
+    {
+      "policy_area_id": "PA07",
+      "code": "TRANSPARENCIA",
+      "legacy_code": "PA07",
+      "name": "Transparencia, Acceso a la Información y Lucha contra la Corrupción",
+      "name_en": "Transparency, Access to Information and Anti-Corruption",
+      "cluster": "CL01",
+      "description": "Gobierno abierto, rendición de cuentas, integridad pública, prevención y sanción de corrupción, control ciudadano",
+      "strategic_framework": "Ley 1712/2014 (Transparencia), CONPES 167 (Política Anticorrupción)",
+      "population_focus": [
+        "General population",
+        "Civil society organizations",
+        "Public servants"
+      ],
+      "key_dimensions": [
+        "Transparencia activa",
+        "Rendición de cuentas",
+        "Participación ciudadana",
+        "Control social",
+        "Integridad pública",
+        "Compras públicas"
+      ],
+      "dnp_indicators": [
+        "Índice de Transparencia Nacional",
+        "Denuncias de corrupción",
+        "Sanciones disciplinarias",
+        "Participación audiencias públicas",
+        "Portal web actualizado",
+        "SECOP II implementado"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.25,
+        "D2": 0.15,
+        "D3": 0.2,
+        "D4": 0.2,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.5
+    },
+    {
+      "policy_area_id": "PA08",
+      "code": "AMBIENTE",
+      "legacy_code": "PA08",
+      "name": "Ambiente y Desarrollo Sostenible",
+      "name_en": "Environment and Sustainable Development",
+      "cluster": "CL03",
+      "description": "Conservación de ecosistemas, cambio climático, economía circular, gestión de residuos, biodiversidad y servicios ecosistémicos",
+      "strategic_framework": "Política Nacional de Cambio Climático, ODS, Acuerdo de Escazú",
+      "population_focus": [
+        "General population",
+        "Rural communities",
+        "Environmental defenders"
+      ],
+      "key_dimensions": [
+        "Mitigación cambio climático",
+        "Adaptación climática",
+        "Gestión de residuos",
+        "Conservación biodiversidad",
+        "Economía circular",
+        "Educación ambiental"
+      ],
+      "dnp_indicators": [
+        "Emisiones GEI",
+        "Deforestación",
+        "Áreas protegidas",
+        "Cobertura reciclaje",
+        "Calidad del agua",
+        "Conflictos ambientales"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.25,
+        "D2": 0.2,
+        "D3": 0.15,
+        "D4": 0.2,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.55
+    },
+    {
+      "policy_area_id": "PA09",
+      "code": "DESC",
+      "legacy_code": "PA09",
+      "name": "Salud, Educación, Vivienda, Agua Potable y Saneamiento Básico",
+      "name_en": "Health, Education, Housing, Water and Sanitation",
+      "cluster": "CL04",
+      "description": "Derechos Económicos, Sociales y Culturales (DESC): acceso universal a servicios básicos de calidad",
+      "strategic_framework": "Constitución 1991 (DESC), Ley 1753/2015, ODS 3,4,6,11",
+      "population_focus": [
+        "General population",
+        "Vulnerable populations",
+        "Rural communities"
+      ],
+      "key_dimensions": [
+        "Salud universal",
+        "Educación de calidad",
+        "Vivienda digna",
+        "Agua potable",
+        "Saneamiento básico",
+        "Empleo decente"
+      ],
+      "dnp_indicators": [
+        "Cobertura salud",
+        "Cobertura educativa neta",
+        "Déficit habitacional",
+        "Cobertura acueducto",
+        "Cobertura alcantarillado",
+        "Tasa de desempleo"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.2,
+        "D2": 0.2,
+        "D3": 0.2,
+        "D4": 0.2,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.5
+    },
+    {
+      "policy_area_id": "PA10",
+      "code": "MIGRANTES",
+      "legacy_code": "PA10",
+      "name": "Migrantes y Crisis Humanitaria",
+      "name_en": "Migrants and Humanitarian Crisis",
+      "cluster": "CL04",
+      "description": "Atención humanitaria, integración socioeconómica, regularización migratoria y cohesión social en contextos de migración mixta",
+      "strategic_framework": "CONPES 3950 (Migración Venezuela), Marco Normativo Internacional (ACNUR)",
+      "population_focus": [
+        "Migrants",
+        "Refugees",
+        "Returnees",
+        "Host communities"
+      ],
+      "key_dimensions": [
+        "Atención humanitaria",
+        "Regularización migratoria",
+        "Integración laboral",
+        "Acceso a servicios",
+        "Cohesión social",
+        "Protección internacional"
+      ],
+      "dnp_indicators": [
+        "Migrantes registrados",
+        "Permisos de trabajo",
+        "Niños migrantes escolarizados",
+        "Acceso a salud",
+        "Xenofobia reportada",
+        "Ayuda humanitaria entregada"
+      ],
+      "weight_by_dimension": {
+        "D1": 0.25,
+        "D2": 0.2,
+        "D3": 0.15,
+        "D4": 0.2,
+        "D5": 0.1,
+        "D6": 0.1
+      },
+      "total_questions": 30,
+      "critical_dimension": "D1",
+      "minimum_score": 0.55
+    }
+  ],
+  "dimensions": [
+    {
+      "dimension_id": "D1",
+      "code": "INS",
+      "name": "Insumos (Diagnóstico y Líneas Base)",
+      "name_en": "Inputs (Diagnosis and Baselines)",
+      "description": "Evalúa la calidad del diagnóstico territorial, líneas base cuantitativas, identificación de brechas y suficiencia de recursos",
+      "position_in_chain": 1,
+      "causal_role": "Foundation",
+      "evaluation_focus": [
+        "Calidad y profundidad del diagnóstico territorial",
+        "Disponibilidad de líneas base cuantificadas",
+        "Identificación de brechas y necesidades",
+        "Análisis de capacidades institucionales",
+        "Suficiencia presupuestal proyectada",
+        "Fuentes de financiación identificadas"
+      ],
+      "questions_per_policy": 5,
+      "total_questions": 50,
+      "minimum_threshold": 0.5,
+      "critical_for_policies": [
+        "PA01",
+        "PA02",
+        "PA05",
+        "PA07",
+        "PA08",
+        "PA09",
+        "PA10"
+      ],
+      "weight_by_policy": {
+        "PA01": 0.2,
+        "PA02": 0.25,
+        "PA03": 0.2,
+        "PA04": 0.2,
+        "PA05": 0.25,
+        "PA06": 0.2,
+        "PA07": 0.25,
+        "PA08": 0.25,
+        "PA09": 0.2,
+        "PA10": 0.25
+      },
+      "verification_patterns": [
+        "Tablas con datos desagregados",
+        "Citas de fuentes oficiales (DANE, DNP, SISBEN)",
+        "Comparaciones temporales (línea base vs actual)",
+        "Mapas de distribución territorial",
+        "Identificación explícita de brechas"
+      ]
+    },
+    {
+      "dimension_id": "D2",
+      "code": "ACT",
+      "name": "Actividades (Diseño de Intervención)",
+      "name_en": "Activities (Intervention Design)",
+      "description": "Evalúa la formalización de actividades con estructura clara, responsables, cronogramas, costos y mecanismos causales",
+      "position_in_chain": 2,
+      "causal_role": "Mechanisms",
+      "evaluation_focus": [
+        "Especificación clara de actividades",
+        "Asignación de responsables institucionales",
+        "Cronogramas y plazos definidos",
+        "Costeo por actividad",
+        "Articulación con productos esperados",
+        "Viabilidad técnica y operativa"
+      ],
+      "questions_per_policy": 5,
+      "total_questions": 50,
+      "minimum_threshold": 0.5,
+      "critical_for_policies": [
+        "PA01",
+        "PA05",
+        "PA08",
+        "PA10"
+      ],
+      "weight_by_policy": {
+        "PA01": 0.2,
+        "PA02": 0.2,
+        "PA03": 0.15,
+        "PA04": 0.15,
+        "PA05": 0.2,
+        "PA06": 0.2,
+        "PA07": 0.15,
+        "PA08": 0.2,
+        "PA09": 0.2,
+        "PA10": 0.2
+      },
+      "verification_patterns": [
+        "Matrices de marco lógico",
+        "Cronogramas de ejecución",
+        "Fichas de proyecto",
+        "Presupuesto detallado por actividad",
+        "Cadenas de valor explícitas"
+      ]
+    },
+    {
+      "dimension_id": "D3",
+      "code": "PRO",
+      "name": "Productos (Verificables)",
+      "name_en": "Products (Verifiable)",
+      "description": "Evalúa la especificación de productos (bienes y servicios) con indicadores verificables, fórmulas, fuentes y trazabilidad presupuestal",
+      "position_in_chain": 3,
+      "causal_role": "Outputs",
+      "evaluation_focus": [
+        "Productos claramente especificados",
+        "Indicadores de producto con fórmula",
+        "Metas cuantificadas",
+        "Fuentes de verificación definidas",
+        "Trazabilidad presupuestal",
+        "Frecuencia de medición"
+      ],
+      "questions_per_policy": 5,
+      "total_questions": 50,
+      "minimum_threshold": 0.5,
+      "critical_for_policies": [
+        "PA03",
+        "PA04",
+        "PA07",
+        "PA09"
+      ],
+      "weight_by_policy": {
+        "PA01": 0.15,
+        "PA02": 0.15,
+        "PA03": 0.2,
+        "PA04": 0.2,
+        "PA05": 0.15,
+        "PA06": 0.15,
+        "PA07": 0.2,
+        "PA08": 0.15,
+        "PA09": 0.2,
+        "PA10": 0.15
+      },
+      "verification_patterns": [
+        "Banco de indicadores de producto",
+        "Fichas técnicas de indicadores",
+        "Plan de adquisiciones",
+        "Sistema de información georeferenciado",
+        "Metas anualizadas"
+      ]
+    },
+    {
+      "dimension_id": "D4",
+      "code": "RES",
+      "name": "Resultados (Medibles)",
+      "name_en": "Results (Measurable)",
+      "description": "Evalúa la definición de resultados (cambios en la población) con métricas, líneas base, metas y encadenamiento causal",
+      "position_in_chain": 4,
+      "causal_role": "Outcomes",
+      "evaluation_focus": [
+        "Resultados formulados como cambios poblacionales",
+        "Indicadores de resultado con línea base",
+        "Metas SMART (específicas, medibles, alcanzables)",
+        "Cadena causal explícita (productos → resultados)",
+        "Desagregación por poblaciones",
+        "Análisis de atribución"
+      ],
+      "questions_per_policy": 5,
+      "total_questions": 50,
+      "minimum_threshold": 0.5,
+      "critical_for_policies": [
+        "PA01",
+        "PA03",
+        "PA04",
+        "PA06",
+        "PA09"
+      ],
+      "weight_by_policy": {
+        "PA01": 0.2,
+        "PA02": 0.2,
+        "PA03": 0.2,
+        "PA04": 0.25,
+        "PA05": 0.2,
+        "PA06": 0.25,
+        "PA07": 0.2,
+        "PA08": 0.2,
+        "PA09": 0.2,
+        "PA10": 0.2
+      },
+      "verification_patterns": [
+        "Marco de resultados",
+        "Teorías de cambio diagramadas",
+        "Indicadores ODS localizados",
+        "Sistemas de monitoreo",
+        "Estudios de línea base"
+      ]
+    },
+    {
+      "dimension_id": "D5",
+      "code": "IMP",
+      "name": "Impactos (Largo Plazo)",
+      "name_en": "Impacts (Long-term)",
+      "description": "Evalúa la proyección de impactos (transformaciones estructurales) con rutas de transmisión, rezagos temporales y consideración de riesgos sistémicos",
+      "position_in_chain": 5,
+      "causal_role": "Impacts",
+      "evaluation_focus": [
+        "Impactos de largo plazo identificados",
+        "Rutas de transmisión causal",
+        "Rezagos temporales considerados",
+        "Análisis de sostenibilidad",
+        "Efectos multiplicadores",
+        "Riesgos sistémicos evaluados"
+      ],
+      "questions_per_policy": 5,
+      "total_questions": 50,
+      "minimum_threshold": 0.45,
+      "critical_for_policies": [],
+      "weight_by_policy": {
+        "PA01": 0.15,
+        "PA02": 0.1,
+        "PA03": 0.15,
+        "PA04": 0.15,
+        "PA05": 0.1,
+        "PA06": 0.1,
+        "PA07": 0.1,
+        "PA08": 0.1,
+        "PA09": 0.1,
+        "PA10": 0.1
+      },
+      "verification_patterns": [
+        "Modelos de largo plazo",
+        "Análisis de sostenibilidad financiera",
+        "Escenarios prospectivos",
+        "Articulación con planes de orden superior",
+        "Evaluación de externalidades"
+      ]
+    },
+    {
+      "dimension_id": "D6",
+      "code": "CAU",
+      "name": "Causalidad (Teoría de Cambio Explícita)",
+      "name_en": "Causality (Explicit Theory of Change)",
+      "description": "Evalúa la explicitación de teorías de cambio, identificación de causas raíz, mediadores, moderadores y supuestos verificables",
+      "position_in_chain": 6,
+      "causal_role": "Theory",
+      "evaluation_focus": [
+        "Teoría de cambio explícita y diagramada",
+        "Identificación de causas raíz",
+        "Variables mediadoras y moderadoras",
+        "Supuestos críticos verificables",
+        "Riesgos y factores externos",
+        "Evidencia de intervenciones similares"
+      ],
+      "questions_per_policy": 5,
+      "total_questions": 50,
+      "minimum_threshold": 0.45,
+      "critical_for_policies": [
+        "PA02",
+        "PA08"
+      ],
+      "weight_by_policy": {
+        "PA01": 0.1,
+        "PA02": 0.1,
+        "PA03": 0.1,
+        "PA04": 0.05,
+        "PA05": 0.1,
+        "PA06": 0.1,
+        "PA07": 0.1,
+        "PA08": 0.1,
+        "PA09": 0.1,
+        "PA10": 0.1
+      },
+      "verification_patterns": [
+        "Diagramas de teoría de cambio",
+        "Matrices de supuestos y riesgos",
+        "Referencias a evidencia internacional",
+        "Análisis de causalidad inversa",
+        "Modelos lógicos completos"
+      ]
+    }
+  ],
+  "question_structure": {
+    "total_questions": 300,
+    "distribution": {
+      "by_policy_area": 30,
+      "by_dimension": 50,
+      "base_template": 30
+    },
+    "notation": "PAxx-DIMxx-Qxxx",
+    "notation_explanation": {
+      "PAxx": "Policy Area (PA01-PA10)",
+      "DIMxx": "Dimension (DIM01-DIM06)",
+      "Qxxx": "Question number within dimension (Q001-Q005)"
+    },
+    "example_questions": [
+      {
+        "question_id": "PA01-DIM01-Q001",
+        "policy_area": "PA01",
+        "dimension": "DIM01",
+        "question_number": 1,
+        "text": "¿El plan incluye diagnóstico cuantificado sobre situación de primera infancia con línea base (desnutrición, mortalidad infantil, cobertura educación inicial)?",
+        "verification_type": "Quantitative data presence",
+        "dnp_indicators": [
+          "Desnutrición crónica <5 años",
+          "Tasa mortalidad infantil",
+          "Cobertura educación inicial"
+        ],
+        "weight": 0.2,
+        "criticality": "high"
+      },
+      {
+        "question_id": "PA02-DIM02-Q003",
+        "policy_area": "PA02",
+        "dimension": "DIM02",
+        "question_number": 3,
+        "text": "¿Las actividades de prevención del delito tienen cronograma, responsables y presupuesto asignado?",
+        "verification_type": "Activity structure",
+        "dnp_indicators": [
+          "Presupuesto prevención",
+          "Cronograma actividades"
+        ],
+        "weight": 0.2,
+        "criticality": "medium"
+      },
+      {
+        "question_id": "PA08-DIM03-Q002",
+        "policy_area": "PA08",
+        "dimension": "DIM03",
+        "question_number": 2,
+        "text": "¿Los productos ambientales (ej: hectáreas reforestadas, residuos reciclados) tienen metas cuantificadas e indicadores con fórmula?",
+        "verification_type": "Product specification",
+        "dnp_indicators": [
+          "Hectáreas reforestadas",
+          "Toneladas recicladas"
+        ],
+        "weight": 0.15,
+        "criticality": "high"
+      }
+    ],
+    "question_generation_logic": "Each of 10 policy areas receives 30 questions (5 per dimension). Questions are contextualized to the specific policy area while maintaining consistent evaluation criteria across dimensions."
+  },
+  "scoring_system": {
+    "scale": {
+      "min": 0.0,
+      "max": 1.0,
+      "interpretation": {
+        "0.0-0.4": "Deficiente - Critical gaps in planning",
+        "0.4-0.5": "Insuficiente - Below minimum standards",
+        "0.5-0.7": "Aceptable - Meets basic standards",
+        "0.7-0.85": "Bueno - Good planning quality",
+        "0.85-1.0": "Excelente - Outstanding planning"
+      }
+    },
+    "aggregation_levels": [
+      {
+        "level": "Question",
+        "score_type": "Binary or scaled (0-1)",
+        "description": "Individual question assessment"
+      },
+      {
+        "level": "Dimension per Policy",
+        "score_type": "Weighted average",
+        "calculation": "Σ(question_score × question_weight) / Σ(question_weight)",
+        "example": "PA01-DIM01 score = average of PA01-DIM01-Q001 through PA01-DIM01-Q005"
+      },
+      {
+        "level": "Policy Area",
+        "score_type": "Weighted average across dimensions",
+        "calculation": "Σ(dimension_score × dimension_weight) / Σ(dimension_weight)",
+        "example": "PA01 score = weighted average of DIM01-DIM06 for PA01"
+      },
+      {
+        "level": "Cluster",
+        "score_type": "Average of policy areas",
+        "calculation": "Σ(policy_score) / number_of_policies_in_cluster",
+        "example": "CL02 score = average of P1, P5, P6"
+      },
+      {
+        "level": "Overall Plan",
+        "score_type": "Weighted average of all policies",
+        "calculation": "Σ(policy_score × policy_weight) / Σ(policy_weight)",
+        "notes": "Can apply differential weights if strategic priorities differ"
+      }
+    ],
+    "thresholds": {
+      "dimension_minimum": 0.5,
+      "dimension_minimum_critical": 0.55,
+      "policy_minimum": 0.5,
+      "cluster_minimum": 0.55,
+      "overall_minimum": 0.6,
+      "excellence_threshold": 0.85
+    },
+    "penalties": {
+      "missing_critical_dimension": -0.1,
+      "below_minimum_threshold": -0.05,
+      "inconsistent_data": -0.03,
+      "no_verification_source": -0.02
+    }
+  },
+  "plans": [
+    {
+      "plan_id": "plan_001",
+      "plan_code": "CAUCA-TIMBIQUI-2012",
+      "file": "data/plans/Plan_1.pdf",
+      "municipality": {
+        "name": "Timbiquí",
+        "dane_code": "19807",
+        "type": "Municipio",
+        "category": "Sexta",
+        "population_2012": 19212,
+        "area_km2": 1713,
+        "density_per_km2": 11.2,
+        "urban_population_pct": 12.3,
+        "rural_population_pct": 87.7
+      },
+      "department": "Cauca",
+      "region": "ALTO PATÍA Y NORTE DEL CAUCA",
+      "subregion": "Costa Pacífica Caucana",
+      "period": {
+        "start": "2012-01-01",
+        "end": "2015-12-31",
+        "duration_years": 4,
+        "administration": "Alcaldía 2012-2015"
+      },
+      "document_metadata": {
+        "pages": 78,
+        "size_bytes": 962809,
+        "size_mb": 0.94,
+        "format": "PDF",
+        "ocr_required": false,
+        "language": "es",
+        "encoding": "utf-8",
+        "creation_date": "2012-06-01",
+        "last_modified": "2012-06-15"
+      },
+      "status": "ready",
+      "processing_status": {
+        "text_extraction": "complete",
+        "structure_analysis": "pending",
+        "evaluation_status": "not_started",
+        "last_processed": null
+      },
+      "document_type": "PDM",
+      "plan_characteristics": {
+        "has_diagnostic": true,
+        "has_strategic_axes": true,
+        "has_programs": true,
+        "has_pluriannual_plan": true,
+        "has_indicators": true,
+        "has_monitoring_system": false,
+        "participatory_process": true,
+        "ethnic_consultation": true
+      },
+      "territorial_context": {
+        "ethnic_composition": {
+          "afrodescendant_pct": 97.2,
+          "indigenous_pct": 2.1,
+          "mestizo_pct": 0.7
+        },
+        "socioeconomic": {
+          "nbi_pct": 94.3,
+          "poverty_multidimensional": 91.2,
+          "gini_coefficient": null
+        },
+        "conflict_context": {
+          "conflict_affected": true,
+          "victims_registered": 1847,
+          "displacement_events": true
+        },
+        "environmental": {
+          "protected_areas": false,
+          "deforestation_risk": "high",
+          "climate_vulnerability": "high"
+        }
+      },
+      "evaluation_metadata": {
+        "evaluator": null,
+        "evaluation_date": null,
+        "farfan_version": "3.0",
+        "scores": {
+          "overall": null,
+          "by_cluster": {},
+          "by_policy": {},
+          "by_dimension": {}
+        },
+        "quality_flags": [],
+        "recommendations": []
+      }
+    },
+    {
+      "plan_id": "plan_002",
+      "plan_code": "CAUCA-FLORENCIA-2024",
+      "file": "data/plans/Plan_2.pdf",
+      "municipality": {
+        "name": "Florencia",
+        "dane_code": "19290",
+        "type": "Municipio",
+        "category": "Sexta",
+        "population_2024": 8146,
+        "area_km2": 627,
+        "density_per_km2": 13.0,
+        "urban_population_pct": 28.4,
+        "rural_population_pct": 71.6
+      },
+      "department": "Cauca",
+      "region": "ALTO PATÍA Y NORTE DEL CAUCA",
+      "subregion": "Macizo Colombiano",
+      "period": {
+        "start": "2024-01-01",
+        "end": "2027-12-31",
+        "duration_years": 4,
+        "administration": "Alcaldía 2024-2027"
+      },
+      "document_metadata": {
+        "pages": 327,
+        "size_bytes": 5489846,
+        "size_mb": 5.24,
+        "format": "PDF",
+        "ocr_required": false,
+        "language": "es",
+        "encoding": "utf-8",
+        "creation_date": "2024-05-20",
+        "last_modified": "2024-05-25"
+      },
+      "status": "ready",
+      "processing_status": {
+        "text_extraction": "complete",
+        "structure_analysis": "pending",
+        "evaluation_status": "not_started",
+        "last_processed": null
+      },
+      "document_type": "PDM",
+      "plan_characteristics": {
+        "has_diagnostic": true,
+        "has_strategic_axes": true,
+        "has_programs": true,
+        "has_pluriannual_plan": true,
+        "has_indicators": true,
+        "has_monitoring_system": true,
+        "participatory_process": true,
+        "ethnic_consultation": true
+      },
+      "territorial_context": {
+        "ethnic_composition": {
+          "afrodescendant_pct": 4.2,
+          "indigenous_pct": 41.3,
+          "mestizo_pct": 54.5
+        },
+        "socioeconomic": {
+          "nbi_pct": 69.8,
+          "poverty_multidimensional": 58.4,
+          "gini_coefficient": null
+        },
+        "conflict_context": {
+          "conflict_affected": true,
+          "victims_registered": 2341,
+          "displacement_events": true
+        },
+        "environmental": {
+          "protected_areas": true,
+          "deforestation_risk": "medium",
+          "climate_vulnerability": "high"
+        }
+      },
+      "evaluation_metadata": {
+        "evaluator": null,
+        "evaluation_date": null,
+        "farfan_version": "3.0",
+        "scores": {
+          "overall": null,
+          "by_cluster": {},
+          "by_policy": {},
+          "by_dimension": {}
+        },
+        "quality_flags": [],
+        "recommendations": []
+      }
+    },
+    {
+      "plan_id": "plan_003",
+      "plan_code": "CAUCA-CALOTO-2024",
+      "file": "data/plans/Plan_3.pdf",
+      "municipality": {
+        "name": "San Esteban de Caloto",
+        "dane_code": "19137",
+        "type": "Municipio",
+        "category": "Quinta",
+        "population_2024": 16821,
+        "area_km2": 201,
+        "density_per_km2": 83.7,
+        "urban_population_pct": 44.2,
+        "rural_population_pct": 55.8
+      },
+      "department": "Cauca",
+      "region": "ALTO PATÍA Y NORTE DEL CAUCA",
+      "subregion": "Norte del Cauca",
+      "period": {
+        "start": "2024-01-01",
+        "end": "2027-12-31",
+        "duration_years": 4,
+        "administration": "Alcaldía 2024-2027"
+      },
+      "document_metadata": {
+        "pages": 170,
+        "size_bytes": 5313153,
+        "size_mb": 5.07,
+        "format": "PDF",
+        "ocr_required": false,
+        "language": "es",
+        "encoding": "utf-8",
+        "creation_date": "2024-05-15",
+        "last_modified": "2024-05-22"
+      },
+      "status": "ready",
+      "processing_status": {
+        "text_extraction": "complete",
+        "structure_analysis": "pending",
+        "evaluation_status": "not_started",
+        "last_processed": null
+      },
+      "document_type": "PDM",
+      "plan_characteristics": {
+        "has_diagnostic": true,
+        "has_strategic_axes": true,
+        "has_programs": true,
+        "has_pluriannual_plan": true,
+        "has_indicators": true,
+        "has_monitoring_system": true,
+        "participatory_process": true,
+        "ethnic_consultation": true
+      },
+      "territorial_context": {
+        "ethnic_composition": {
+          "afrodescendant_pct": 76.8,
+          "indigenous_pct": 12.4,
+          "mestizo_pct": 10.8
+        },
+        "socioeconomic": {
+          "nbi_pct": 52.3,
+          "poverty_multidimensional": 44.7,
+          "gini_coefficient": 0.54
+        },
+        "conflict_context": {
+          "conflict_affected": true,
+          "victims_registered": 4892,
+          "displacement_events": true
+        },
+        "environmental": {
+          "protected_areas": false,
+          "deforestation_risk": "low",
+          "climate_vulnerability": "medium"
+        }
+      },
+      "evaluation_metadata": {
+        "evaluator": null,
+        "evaluation_date": null,
+        "farfan_version": "3.0",
+        "scores": {
+          "overall": null,
+          "by_cluster": {},
+          "by_policy": {},
+          "by_dimension": {}
+        },
+        "quality_flags": [],
+        "recommendations": []
+      }
+    }
+  ],
+  "aggregate_statistics": {
+    "corpus_overview": {
+      "total_plans": 3,
+      "total_pages": 575,
+      "total_size_mb": 11.25,
+      "avg_pages_per_plan": 191.67,
+      "avg_size_mb_per_plan": 3.75
+    },
+    "geographic_coverage": {
+      "regions": 1,
+      "region_list": [
+        "ALTO PATÍA Y NORTE DEL CAUCA"
+      ],
+      "departments": 1,
+      "department_list": [
+        "Cauca"
+      ],
+      "municipalities": 3,
+      "municipality_list": [
+        "Timbiquí",
+        "Florencia",
+        "San Esteban de Caloto"
+      ],
+      "total_population_covered": 44179,
+      "total_area_km2": 2541
+    },
+    "temporal_coverage": {
+      "periods": 2,
+      "period_list": [
+        "2012-2015",
+        "2024-2027"
+      ],
+      "earliest_plan": "2012",
+      "latest_plan": "2024",
+      "time_span_years": 12,
+      "allows_temporal_analysis": true
+    },
+    "sociodemographic_patterns": {
+      "avg_afrodescendant_pct": 59.4,
+      "avg_indigenous_pct": 18.6,
+      "avg_nbi_pct": 72.1,
+      "avg_conflict_victims": 3027,
+      "conflict_affected_municipalities": 3,
+      "municipalities_with_ethnic_consultation": 3
+    },
+    "document_quality": {
+      "plans_with_diagnostic": 3,
+      "plans_with_indicators": 3,
+      "plans_with_monitoring": 2,
+      "plans_with_pluriannual": 3,
+      "participatory_processes": 3
+    },
+    "evaluation_readiness": {
+      "ready_for_evaluation": 3,
+      "text_extraction_complete": 3,
+      "structure_analysis_pending": 3,
+      "evaluation_started": 0,
+      "evaluation_complete": 0
+    }
+  },
+  "standard_pdm_structure": {
+    "description": "Standard structure for Colombian Municipal Development Plans following national regulations",
+    "regulatory_framework": [
+      "Constitución Política 1991 (Art. 339-344)",
+      "Ley 152 de 1994 (Organic Planning Law)",
+      "Ley 1098 de 2006 (Children's Code)",
+      "DNP Guidelines for Territorial Planning",
+      "CONPES Social policies integration"
+    ],
+    "typical_sections": [
+      {
+        "section_id": "S01",
+        "name": "Presentación y Marco Legal",
+        "description": "Introduction, legal framework, and planning process",
+        "typical_subsections": [
+          "Mayor's message",
+          "Legal basis",
+          "Participatory process"
+        ]
+      },
+      {
+        "section_id": "S02",
+        "name": "Diagnóstico Territorial",
+        "description": "Comprehensive territorial diagnosis",
+        "typical_subsections": [
+          "Demographic profile",
+          "Socioeconomic situation",
+          "Public services coverage",
+          "Institutional capacity",
+          "Environmental conditions",
+          "Conflict analysis (if applicable)"
+        ],
+        "evaluation_relevance": "Critical for D1 (Inputs/Diagnosis)"
+      },
+      {
+        "section_id": "S03",
+        "name": "Visión y Objetivos",
+        "description": "Vision, mission, and strategic objectives",
+        "typical_subsections": [
+          "Long-term vision",
+          "General objectives",
+          "Specific objectives per axis"
+        ]
+      },
+      {
+        "section_id": "S04",
+        "name": "Ejes Estratégicos o Dimensiones",
+        "description": "Strategic axes structuring the plan",
+        "typical_subsections": [
+          "Social dimension",
+          "Economic dimension",
+          "Environmental dimension",
+          "Institutional dimension"
+        ]
+      },
+      {
+        "section_id": "S05",
+        "name": "Programas y Subprogramas",
+        "description": "Programs, sub-programs, and projects",
+        "typical_subsections": [
+          "Program description",
+          "Projects",
+          "Beneficiaries",
+          "Budget allocation"
+        ],
+        "evaluation_relevance": "Critical for D2 (Activities) and D3 (Products)"
+      },
+      {
+        "section_id": "S06",
+        "name": "Plan Plurianual de Inversiones",
+        "description": "Multi-year investment plan",
+        "typical_subsections": [
+          "Budget by year",
+          "Financing sources",
+          "Investment priorities"
+        ],
+        "evaluation_relevance": "Critical for D1 (Resources) and budget traceability"
+      },
+      {
+        "section_id": "S07",
+        "name": "Indicadores y Metas",
+        "description": "Indicators, baselines, and targets",
+        "typical_subsections": [
+          "Indicator bank",
+          "Baselines",
+          "4-year targets",
+          "Measurement methodology"
+        ],
+        "evaluation_relevance": "Critical for D3 (Products) and D4 (Results)"
+      },
+      {
+        "section_id": "S08",
+        "name": "Sistema de Seguimiento y Evaluación",
+        "description": "Monitoring and evaluation system",
+        "typical_subsections": [
+          "Monitoring mechanisms",
+          "Reporting frequency",
+          "Accountability processes"
+        ]
+      }
+    ],
+    "common_structural_variations": [
+      "Some plans organize by population groups instead of dimensions",
+      "Post-2016 plans often include specific Peace Agreement chapter",
+      "Plans in ethnic territories may include chapter on own government",
+      "2024-2027 plans must include SDG localization"
+    ]
+  },
+  "analysis_capabilities": {
+    "comparative_analysis": {
+      "temporal_comparison": {
+        "description": "Compare plans from different periods (2012-2015 vs 2024-2027)",
+        "analysis_dimensions": [
+          "Evolution of diagnostic quality",
+          "Improvement in causal articulation",
+          "Budget allocation changes",
+          "Indicator sophistication",
+          "Inclusion of new policy areas (e.g., migration, climate)"
+        ]
+      },
+      "inter_municipal_comparison": {
+        "description": "Compare plans across municipalities within same region",
+        "analysis_dimensions": [
+          "Planning quality by municipality size",
+          "Differential approach implementation",
+          "Budget efficiency patterns",
+          "Innovation in participatory mechanisms"
+        ]
+      },
+      "cluster_analysis": {
+        "description": "Aggregate analysis by policy clusters",
+        "clusters_available": [
+          "CL01: Security-Peace",
+          "CL02: Population Groups",
+          "CL03: Territory-Environment",
+          "CL04: Social Rights-Crisis"
+        ]
+      }
+    },
+    "causal_evaluation": {
+      "theory_of_change_verification": "Verify presence and quality of causal chains",
+      "results_chain_analysis": "Evaluate Input→Activity→Product→Result→Impact logic",
+      "assumption_testing": "Identify and assess critical assumptions",
+      "risk_analysis": "Evaluate risk identification and mitigation strategies"
+    },
+    "policy_saturation_analysis": {
+      "coverage_assessment": "Measure which policy areas are well/poorly addressed",
+      "gap_identification": "Identify missing or weak policy components",
+      "priority_alignment": "Check alignment with national/departmental priorities"
+    },
+    "budget_outcome_traceability": {
+      "description": "Trace budget allocations to expected outcomes",
+      "metrics": [
+        "Budget per policy area",
+        "Cost per beneficiary",
+        "Investment efficiency ratios"
+      ]
+    },
+    "differential_approach_evaluation": {
+      "description": "Assess quality of differential approach for specific populations",
+      "populations": [
+        "Children",
+        "Women",
+        "Ethnic groups",
+        "Victims",
+        "Migrants",
+        "LGBTIQ+",
+        "Persons with disabilities"
+      ],
+      "evaluation_criteria": [
+        "Specific diagnosis",
+        "Targeted activities",
+        "Disaggregated indicators",
+        "Budget allocation"
+      ]
+    },
+    "dnp_indicator_compliance": {
+      "description": "Verify alignment with DNP official indicators",
+      "indicator_categories": [
+        "Social",
+        "Economic",
+        "Environmental",
+        "Institutional",
+        "Security"
+      ],
+      "compliance_check": "Presence, formula, baseline, target, verification source"
+    }
+  },
+  "data_integration": {
+    "external_data_sources": {
+      "dane": {
+        "name": "Departamento Administrativo Nacional de Estadística",
+        "data_types": [
+          "Census",
+          "Vital statistics",
+          "Poverty indicators",
+          "NBI"
+        ],
+        "update_frequency": "Variable by indicator"
+      },
+      "dnp": {
+        "name": "Departamento Nacional de Planeación",
+        "data_types": [
+          "Fiscal performance",
+          "Institutional capacity",
+          "Royalties",
+          "SDG monitoring"
+        ],
+        "systems": [
+          "SISMEG",
+          "Terridata",
+          "SICODIS"
+        ]
+      },
+      "ruv": {
+        "name": "Registro Único de Víctimas",
+        "data_types": [
+          "Victim registration",
+          "Events",
+          "Humanitarian assistance"
+        ],
+        "managed_by": "Unidad para las Víctimas"
+      },
+      "sisben": {
+        "name": "Sistema de Identificación de Potenciales Beneficiarios",
+        "data_types": [
+          "Socioeconomic classification",
+          "Vulnerability indicators"
+        ],
+        "version": "SISBEN IV"
+      },
+      "ideam": {
+        "name": "Instituto de Hidrología, Meteorología y Estudios Ambientales",
+        "data_types": [
+          "Climate data",
+          "Deforestation",
+          "Water quality",
+          "Environmental risks"
+        ]
+      }
+    },
+    "indicator_harmonization": {
+      "description": "Standardized mapping between plan indicators and official sources",
+      "benefits": [
+        "Verify baseline accuracy",
+        "Enable comparative analysis",
+        "Track implementation"
+      ]
+    }
+  },
+  "output_formats": {
+    "evaluation_report": {
+      "format": "PDF",
+      "sections": [
+        "Executive summary with scores",
+        "Detailed evaluation by policy area",
+        "Dimension-by-dimension analysis",
+        "Comparative benchmarks",
+        "Recommendations"
+      ]
+    },
+    "score_dashboard": {
+      "format": "Interactive visualization",
+      "visualizations": [
+        "Overall score gauge",
+        "Radar chart by policy area",
+        "Heatmap dimension × policy",
+        "Trend analysis (if temporal data)"
+      ]
+    },
+    "data_exports": {
+      "formats": [
+        "CSV",
+        "JSON",
+        "Excel"
+      ],
+      "data_levels": [
+        "Question-level scores",
+        "Aggregated by dimension/policy",
+        "Comparative tables"
+      ]
+    },
+    "narrative_summary": {
+      "format": "Markdown/HTML",
+      "content": "AI-generated narrative highlighting strengths, weaknesses, and strategic recommendations"
+    }
+  },
+  "quality_control": {
+    "data_validation": {
+      "rules": [
+        "All scores between 0-1",
+        "Required fields present for each plan",
+        "Geographic codes (DANE) valid",
+        "Date ranges consistent"
+      ]
+    },
+    "evaluation_consistency": {
+      "inter_rater_reliability": "If multiple evaluators, measure agreement",
+      "calibration_sessions": "Periodic review of scoring criteria",
+      "version_control": "Track changes to framework and methodology"
+    },
+    "documentation_requirements": {
+      "evidence_logging": "Document specific text/pages supporting each score",
+      "assumption_recording": "Note interpretation decisions when ambiguous",
+      "update_tracking": "Maintain audit trail of data changes"
+    }
+  },
+  "usage_instructions": {
+    "for_researchers": "Use this manifest to understand the corpus structure, access specific plans, and design comparative analyses",
+    "for_evaluators": "Follow the FARFAN 3.0 framework to systematically score each plan across 300 questions",
+    "for_policymakers": "Review evaluation results to identify planning gaps and improve future PDM formulation",
+    "for_developers": "Use structured data to build analysis tools, dashboards, and automated evaluation pipelines"
+  },
+  "technical_specifications": {
+    "file_format": "JSON",
+    "encoding": "UTF-8",
+    "json_schema_version": "2.0",
+    "compatibility": {
+      "python": "3.8+",
+      "pandas": "Compatible for DataFrame conversion",
+      "gis": "Geographic codes enable spatial analysis",
+      "nlp": "Text data suitable for NLP processing"
+    },
+    "recommended_tools": [
+      "pandas (data manipulation)",
+      "plotly/matplotlib (visualization)",
+      "scikit-learn (comparative analysis)",
+      "spacy (NLP for text analysis)",
+      "geopandas (spatial analysis)"
+    ]
+  },
+  "future_expansions": {
+    "planned_additions": [
+      "Expand corpus to all 33 Cauca municipalities",
+      "Include departmental and national development plans",
+      "Add execution/monitoring data (not just planning documents)",
+      "Integrate real-time DNP indicator updates",
+      "Machine learning for automated preliminary evaluation",
+      "Natural language processing for automatic clause extraction"
+    ],
+    "versioning_strategy": "Semantic versioning (MAJOR.MINOR.PATCH) - current is 2.0.0"
+  },
+  "license_and_attribution": {
+    "data_license": "Public domain - Colombian PDM are public documents",
+    "framework_license": "FARFAN 3.0 methodology © JCRR - Academic use permitted with attribution",
+    "citation": "Colombian Territorial Development Analysis Initiative. (2025). FARFAN 3.0 Evaluation Framework for Municipal Development Plans. Sistema de Evaluación Causal.",
+    "contact": "analysis@pdm-colombia.gov.co"
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/teoria_cambio/monte_carlo_result.schema.json",
+  "title": "MonteCarloAdvancedResult",
+  "description": "Resultado exhaustivo de simulación Monte Carlo con análisis de robustez estocástica, inferencia bayesiana y análisis de sensibilidad determinista. Audit Point 1.1: Garantiza reproducibilidad mediante seeding determinista.",
+  "type": "object",
+  "required": [
+    "plan_name",
+    "seed",
+    "timestamp",
+    "total_iterations",
+    "acyclic_count",
+    "p_value",
+    "bayesian_posterior",
+    "confidence_interval",
+    "statistical_power",
+    "edge_sensitivity",
+    "node_importance",
+    "robustness_score",
+    "reproducible",
+    "convergence_achieved",
+    "adequate_power",
+    "computation_time",
+    "graph_statistics",
+    "test_parameters"
+  ],
+  "properties": {
+    "plan_name": {
+      "type": "string",
+      "description": "Nombre del plan de desarrollo evaluado",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Semilla determinista del generador de números aleatorios (Audit 1.1: generada mediante _create_advanced_seed para reproducibilidad bit-a-bit)",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp ISO 8601 de la ejecución"
+    },
+    "total_iterations": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Número total de iteraciones Monte Carlo ejecutadas"
+    },
+    "acyclic_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Número de grafos acíclicos encontrados en las iteraciones"
+    },
+    "p_value": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Valor p de la prueba de aciclicidad (H0: el grafo es cíclico)"
+    },
+    "bayesian_posterior": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Probabilidad posterior bayesiana de que el grafo sea un DAG válido (con priors informados)"
+    },
+    "confidence_interval": {
+      "type": "array",
+      "items": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Intervalo de confianza al 95% para la proporción de aciclicidad: [lower, upper]"
+    },
+    "statistical_power": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Poder estadístico de la prueba (1-β), probabilidad de detectar un efecto real si existe. Umbral recomendado: ≥0.8"
+    },
+    "edge_sensitivity": {
+      "type": "object",
+      "description": "Análisis de sensibilidad por arista: impacto de remover cada arista en la aciclicidad",
+      "patternProperties": {
+        "^.+$": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Cambio en la probabilidad de aciclicidad al remover esta arista (0=sin impacto, 1=crítica)"
+        }
+      }
+    },
+    "node_importance": {
+      "type": "object",
+      "description": "Importancia relativa de cada nodo basada en centralidad y rol estructural",
+      "patternProperties": {
+        "^.+$": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Puntuación de importancia (0=periférico, 1=crítico)"
+        }
+      }
+    },
+    "robustness_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Puntuación global de robustez estructural (agregación de sensibilidad y poder estadístico)"
+    },
+    "reproducible": {
+      "type": "boolean",
+      "description": "TRUE cuando se usó seed determinista (Audit 1.1: garantiza reproducibilidad bit-a-bit con mismos inputs)"
+    },
+    "convergence_achieved": {
+      "type": "boolean",
+      "description": "TRUE si las iteraciones convergieron a una distribución estable (criterio: cambio < 1% en últimas 10% iteraciones)"
+    },
+    "adequate_power": {
+      "type": "boolean",
+      "description": "TRUE si el poder estadístico ≥ 0.8 (umbral estándar Cohen)"
+    },
+    "computation_time": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Tiempo de cómputo total en segundos"
+    },
+    "graph_statistics": {
+      "type": "object",
+      "required": ["nodes", "edges", "density", "avg_degree"],
+      "properties": {
+        "nodes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de nodos en el grafo"
+        },
+        "edges": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de aristas en el grafo"
+        },
+        "density": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Densidad del grafo (edges / max_possible_edges)"
+        },
+        "avg_degree": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Grado promedio de los nodos"
+        },
+        "max_in_degree": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Grado de entrada máximo"
+        },
+        "max_out_degree": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Grado de salida máximo"
+        },
+        "longest_path": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Longitud del camino más largo (si es DAG)"
+            }
+          ]
+        },
+        "strongly_connected_components": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Número de componentes fuertemente conexos"
+        },
+        "clustering_coefficient": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Coeficiente de clustering global"
+        }
+      },
+      "additionalProperties": true
+    },
+    "test_parameters": {
+      "type": "object",
+      "required": ["alpha", "effect_size"],
+      "properties": {
+        "alpha": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Nivel de significancia (típicamente 0.05)"
+        },
+        "effect_size": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Tamaño del efecto esperado (Cohen's h para proporciones)"
+        },
+        "min_iterations": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Número mínimo de iteraciones requeridas"
+        },
+        "max_iterations": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Número máximo de iteraciones permitidas"
+        },
+        "convergence_threshold": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Umbral de convergencia (típicamente 0.01 = 1%)"
+        },
+        "perturbation_strength": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Fuerza de la perturbación en el análisis de sensibilidad"
+        }
+      },
+      "additionalProperties": false
+    },
+    "bayesian_metadata": {
+      "type": "object",
+      "description": "Metadatos completos de la inferencia bayesiana",
+      "properties": {
+        "prior_alpha": {
+          "type": "number",
+          "description": "Parámetro alpha de la distribución Beta a priori"
+        },
+        "prior_beta": {
+          "type": "number",
+          "description": "Parámetro beta de la distribución Beta a priori"
+        },
+        "posterior_alpha": {
+          "type": "number",
+          "description": "Parámetro alpha de la distribución Beta posterior"
+        },
+        "posterior_beta": {
+          "type": "number",
+          "description": "Parámetro beta de la distribución Beta posterior"
+        },
+        "posterior_samples": {
+          "type": "array",
+          "items": {"type": "number"},
+          "description": "Muestras de la distribución posterior (para análisis avanzado)",
+          "maxItems": 10000
+        },
+        "hpd_interval_95": {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Highest Posterior Density interval al 95%"
+        }
+      },
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Advertencias generadas durante la simulación (convergencia, poder insuficiente, etc.)"
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Recomendaciones para mejorar la robustez del modelo"
+    }
+  },
+  "additionalProperties": false
+}

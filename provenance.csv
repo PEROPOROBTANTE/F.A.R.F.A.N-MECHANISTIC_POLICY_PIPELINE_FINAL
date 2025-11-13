@@ -1,0 +1,21 @@
+filename,purpose,created_date,last_modified,status
+demo_macro_prompts.py,Demo version of macro-level prompt builders,2024-11-02,2024-11-02,active
+verify_complete_implementation.py,Verification script for complete implementation,2024-11-02,2024-11-02,active
+validation_engine.py,Validation engine for scoring preconditions,2024-11-02,2024-11-02,active
+validate_system.py,System-wide validation script,2024-11-02,2024-11-02,active
+seed_factory.py,Deterministic seed generation factory,2024-11-02,2024-11-02,active
+qmcm_hooks.py,QMCM (Quality Method Call Monitor) recorder hooks,2024-11-02,2024-11-02,active
+meso_cluster_analysis.py,Meso-level cluster analysis functions,2024-11-02,2024-11-02,active
+macro_prompts.py,Macro-level prompt builders and orchestrators,2024-11-02,2024-11-02,active
+json_contract_loader.py,JSON contract document loader,2024-11-02,2024-11-02,active
+evidence_registry.py,Immutable evidence registry with blockchain-like tracking,2024-11-02,2024-11-02,active
+document_ingestion.py,Document ingestion pipeline,2024-11-02,2024-11-02,active
+scoring.py,Scoring modalities for question results,2024-11-02,2024-11-02,active
+recommendation_engine.py,Policy recommendation engine,2024-11-02,2024-11-02,active
+orchestrator.py,Main orchestrator for SAAAAAA system,2024-11-02,2024-11-02,active
+micro_prompts.py,Micro-level prompt builders,2024-11-02,2024-11-02,active
+coverage_gate.py,Coverage enforcement gate for method counts,2024-11-02,2024-11-02,active
+scripts/bootstrap_validate.py,Bootstrap validation script for CI/CD,2024-11-02,2024-11-02,active
+validation/predicates.py,Validation predicates for system checks,2024-11-02,2024-11-02,active
+validation/golden_rule.py,Golden rule validator for immutability enforcement,2024-11-02,2024-11-02,active
+validation/architecture_validator.py,Architecture validation for system structure,2024-11-02,2024-11-02,active

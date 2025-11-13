@@ -1,0 +1,932 @@
+{
+  "reporte_unit_of_analysis": {
+    "titulo": "Unit of analysis description for methos calibration",
+    "secciones": [
+      {
+        "id": "I",
+        "titulo": "Estructura jerárquica del plan de desarrollo municipal (PDM/PDT)",
+        "descripcion": "La estructura de un Plan de Desarrollo Territorial (PDT) se rige por la Ley 152 de 1994 (Ley Orgánica del Plan de Desarrollo), que establece los procedimientos para su elaboración, aprobación, ejecución, seguimiento, evaluación y control. La Ley 152 de 1994 exige que el PDT esté compuesto por dos partes principales: una Parte Estratégica y un Plan de Inversiones a mediano y corto plazo.",
+        "componentes": [
+          {
+            "nivel": "H1",
+            "titulo": "Título I: Fundamentos y componente general (Diagnóstico)",
+            "descripcion": "Este título incluye los elementos normativos, conceptuales y el análisis situacional que sirve de base para la planificación.",
+            "subcomponentes": [
+              {
+                "nivel": "H2",
+                "titulo": "Marco normativo y alineación",
+                "contenido": {
+                  "tipico": "Preceptos de la Constitución Política (Art. 339), la Ley 152 de 1994, la articulación con el Plan Nacional de Desarrollo (PND) 2022-2026 ('Colombia Potencia Mundial de la Vida'), los Objetivos de Desarrollo Sostenible (ODS), y el Plan de Desarrollo Departamental (PDD).",
+                  "alineacion_clave": "El PDM debe ser coherente con las disposiciones del Plan de Ordenamiento Territorial (POT) o Plan Básico de Ordenamiento Territorial (PBOT), establecido por la Ley 388 de 1997."
+                }
+              },
+              {
+                "nivel": "H2",
+                "titulo": "Metodología y participación",
+                "contenido": {
+                  "tipico": "Participación ciudadana (diálogos, mesas temáticas), uso de herramientas como el Sistema de Planificación Territorial (SisPT) del DNP, y la conversión del Programa de Gobierno elegido en objetivos realizables (voto programático)."
+                }
+              },
+              {
+                "nivel": "H2",
+                "titulo": "Diagnóstico territorial (Caracterización)",
+                "contenido": {
+                  "tipico": "Análisis de 'brechas', Caracterización Socioeconómica, Demográfica y Sectorial (Salud, Educación, Medio Ambiente, Gestión de Riesgos, etc.)."
+                }
+              }
+            ]
+          },
+          {
+            "nivel": "H1",
+            "titulo": "Título II: Parte estratégica",
+            "descripcion": "Es el componente programático del PDT. Cuantifica los objetivos a alcanzar en el marco del mandato de cuatro años.",
+            "subcomponentes": [
+              {
+                "nivel": "H2",
+                "titulo": "Objetivos, principios y enfoques",
+                "contenido": {
+                  "tipico": "Visión, Misión, Principios Rectores (Equidad, Inclusión, Unidad, etc.), y Enfoques Transversales (Derechos, Diferencial, Territorial, Género, Capacidades, Desarrollo Sostenible)."
+                }
+              },
+              {
+                "nivel": "H2",
+                "titulo": "Líneas estratégicas / Ejes estratégicos",
+                "contenido": {
+                  "organizacion": "Son las 'grandes apuestas' u objetivos globales de la administración.",
+                  "relacion_jerarquica": "Las líneas estratégicas son el nivel más alto de organización de los objetivos."
+                }
+              },
+              {
+                "nivel": "H3",
+                "titulo": "Programas",
+                "contenido": {
+                  "rol": "Cada Línea Estratégica se despliega en varios Programas (ej: Programa de Salud Pública)."
+                }
+              },
+              {
+                "nivel": "H4",
+                "titulo": "Metas e indicadores",
+                "contenido": {
+                  "metas_bienestar_resultado": "Miden los efectos o cambios deseados en el territorio (ej: reducción de la pobreza).",
+                  "metas_producto": "Cuantifican los bienes o servicios específicos que se entregarán (ej: 'Kilómetros de vías mejoradas').",
+                  "proyectos": "Son las iniciativas de inversión específicas inscritas en el Plan Plurianual de Inversiones (PPI)."
+                }
+              }
+            ]
+          },
+          {
+            "nivel": "H1",
+            "titulo": "Capítulos especiales y transversales (Obligatorios/Contextuales)",
+            "subcomponentes": [
+              {
+                "nivel": "H2",
+                "titulo": "Proyectos, políticas y programas para la construcción de paz (Obligatorio)",
+                "contenido": {
+                  "pdet": "Para los municipios ubicados en zonas PDET (Programas de Desarrollo con Enfoque Territorial), se da prioridad a las disposiciones del Plan Marco de Implementación (PMI)."
+                }
+              },
+              {
+                "nivel": "H2",
+                "titulo": "Inversiones con imputación al Sistema General de Regalías (SGR) (Independiente)",
+                "contenido": {
+                  "detalle": "Detalla la articulación de los proyectos SGR con las líneas estratégicas."
+                }
+              }
+            ]
+          },
+          {
+            "nivel": "H1",
+            "titulo": "Título III: Componente financiero y plan plurianual de inversiones (PPI)",
+            "descripcion": "Esta parte es obligatoria y establece la proyección de los recursos financieros.",
+            "subcomponentes": [
+              {
+                "nivel": "H2",
+                "titulo": "Plan financiero y diagnóstico fiscal",
+                "contenido": {
+                  "detalle": "Análisis histórico de los ingresos, gastos, deuda pública y el Marco Fiscal de Mediano Plazo (MFMP)."
+                }
+              },
+              {
+                "nivel": "H2",
+                "titulo": "Plan plurianual de inversiones (PPI)",
+                "contenido": {
+                  "rol": "Es la matriz que desglosa la distribución presupuestaria por año (2024-2027), por línea estratégica, programa y proyecto, precisando las fuentes de financiación (recursos propios, SGP, SGR, etc.)."
+                }
+              }
+            ]
+          },
+          {
+            "nivel": "H1",
+            "titulo": "Título IV (o Capítulo Final): Seguimiento y evaluación",
+            "descripcion": "Este sistema garantiza la transparencia y la rendición de cuentas.",
+            "subcomponentes": [
+              {
+                "nivel": "H2",
+                "titulo": "Mecanismos de seguimiento y control",
+                "contenido": {
+                  "detalle": "Definición de indicadores (producto y resultado), uso de plataformas de seguimiento como el SisPT, y establecimiento del Plan de Acción."
+                }
+              }
+            ]
+          }
+        ],
+        "resumen_componentes": {
+          "titulo": "Resumen de componentes y ubicación típica",
+          "tabla": [
+            {
+              "seccion_principal": "I. Diagnóstico (Caracterización)",
+              "contenido_clave": "Análisis de Brechas, Caracterización Socio-Sectorial.",
+              "logica_organizacion": "Identifica el 'Qué' y el 'Por qué' intervenir.",
+              "ubicacion_tipica_paginas": "Páginas 10 a 70 (variable)."
+            },
+            {
+              "seccion_principal": "II. Parte Estratégica",
+              "contenido_clave": "Líneas Estratégicas (Ejes), Programas, Metas.",
+              "logica_organizacion": "Define el 'Qué hacer' y los 'Objetivos'.",
+              "ubicacion_tipica_paginas": "Páginas 70 a 250 (variable)."
+            },
+            {
+              "seccion_principal": "III. Plan Plurianual de Inversiones (PPI)",
+              "contenido_clave": "Plan Financiero, Fuentes de Financiación, Matriz PPI.",
+              "logica_organizacion": "Detalla el 'Cuánto' y el 'Cómo financiar'.",
+              "ubicacion_tipica_paginas": "Última parte o Anexos, después de la Pág. 250."
+            },
+            {
+              "seccion_principal": "Capítulo de Paz/PDET",
+              "contenido_clave": "Articulación con la RRI, iniciativas PDET/PATR.",
+              "logica_organizacion": "Integra los compromisos de paz.",
+              "ubicacion_tipica_paginas": "Capítulo independiente o integrado."
+            },
+            {
+              "seccion_principal": "Seguimiento y Evaluación",
+              "contenido_clave": "Indicadores, Plan de Acción, Informes Anuales.",
+              "logica_organizacion": "Garantiza el 'Cómo medir' la ejecución.",
+              "ubicacion_tipica_paginas": "Último capítulo o sección final."
+            }
+          ]
+        }
+      },
+      {
+        "id": "II",
+        "titulo": "Patrones de delimitación de secciones",
+        "descripcion": "A continuación, se presentan los modelos textuales y estructurales específicos que indican los límites de sección en los PDT:",
+        "puntos": [
+          {
+            "id": "1",
+            "titulo": "Formatos exactos de los encabezados",
+            "tabla_formatos": [
+              {
+                "nivel_jerarquico": "Título o capítulo mayor (H1)",
+                "formato_texto_tipico": "CAPÍTULO [Número]. [Título]",
+                "ejemplos_contenido_localizacion": "CAPÍTULO 5. BUENOS AIRES ACTÚA POR LA PAZ, CAPÍTULO I: Diagnóstico municipal, CAPÍTULO III PARTE ESTRATÉGICA"
+              },
+              {
+                "nivel_jerarquico": "Subcapítulo principal (H2)",
+                "formato_texto_tipico": "[Número]. [Título] o [Número].[Número]. [Título]",
+                "ejemplos_contenido_localizacion": "6.1. CINCO (5) INICIATIVAS PRIORIZADAS..., 7.1 INSTRUMENTOS MONITORES Y DE EVALUACIÓN DEL PDM."
+              },
+              {
+                "nivel_jerarquico": "Línea estratégica (Eje) (H2/H3)",
+                "formato_texto_tipico": "Línea estratégica [Número/Nombre]: [Título descriptivo]",
+                "ejemplos_contenido_localizacion": "Línea estratégica I: Un futuro con proyección social, Línea Estratégica 2: Familia..."
+              },
+              {
+                "nivel_jerarquico": "Componente del plan (H3/H4)",
+                "formato_texto_tipico": "Sector: [Nombre del sector]",
+                "ejemplos_contenido_localizacion": "Sector: Justicia y del Derecho, Sector: Salud y Protección Social."
+              },
+              {
+                "nivel_jerarquico": "Componente del plan (H4/H5)",
+                "formato_texto_tipico": "Programa: [Nombre del programa]",
+                "ejemplos_contenido_localizacion": "Programa: Salud Pública, Programa: Promoción al acceso a la justicia."
+              },
+              {
+                "nivel_jerarquico": "Formato específico (Cajibío)",
+                "formato_texto_tipico": "##### 3.2 ARMONIZACION...",
+                "ejemplos_contenido_localizacion": "##### 3.3 ARMONIZACION PROGRAMAS – PRODUCTOS..."
+              }
+            ]
+          },
+          {
+            "id": "2",
+            "titulo": "Organización de las subsecciones",
+            "descripcion": "La estructura jerárquica interna sigue la lógica de la cadena de valor del DNP (Diagnóstico → Ejes → Programas → Productos → Metas).",
+            "elementos": [
+              "Ejes y Programas: Las Líneas Estratégicas se subdividen en Programas.",
+              "Proyectos y Productos: Los Proyectos son las iniciativas de inversión. Los Productos son los bienes o servicios finales cuantificados (ej., Documentos de planeación).",
+              "Indicadores y Metas: Las Metas y los Indicadores se definen a nivel de Programa o Producto."
+            ]
+          },
+          {
+            "id": "3",
+            "titulo": "Patrones de numeración y letras",
+            "elementos": [
+              "Numeración de secciones: Uso de números decimales (ej. 6.1., 7.1., 7.1.1.).",
+              "Listas y actividades: Viñetas (* o -) o numeración secuencial simple (1), 2)).",
+              "Identificación de metas: Códigos sectoriales normalizados (ej. Código de Producto 2106003)."
+            ]
+          },
+          {
+            "id": "4",
+            "titulo": "Frases de transición y marcadores contextuales",
+            "subpuntos": [
+              {
+                "titulo": "Vínculo Diagnóstico/Estrategia",
+                "ejemplos": [
+                  "...la cual es fundamental para el capítulo II que contiene la parte estratégica",
+                  "...Dando continuidad al proceso de análisis, se presentará a continuación la estructura general...",
+                  "...Los programas que componen están enfocados en... dar respuesta a las grandes necesidades encontradas en los diálogos ciudadanos"
+                ]
+              },
+              {
+                "titulo": "Introducción a las listas",
+                "ejemplos": [
+                  "...se describen a continuación:.",
+                  "...Por lo tanto, se enuncian a continuación:.",
+                  "A continuación, se dan a conocer los momentos de la planeación territorial..."
+                ]
+              }
+            ]
+          },
+          {
+            "id": "5",
+            "titulo": "Pistas visuales y de diseño",
+            "elementos": [
+              "Organización en Partes/Títulos: El documento se divide en 'Partes' o 'Títulos' (ej. Parte Estratégica, Plan Financiero).",
+              "Uso de tablas: Las matrices de datos (tablas) marcan la transición a secciones programáticas y financieras.",
+              "Diseño de encabezados: Uso de mayúsculas, negrita o formatos de alineación (como #####).",
+              "Saltos de página y folios: Los capítulos principales pueden comenzar con un salto de página. Marcadores de paginación (ej. Página: X de Y)."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "III",
+        "titulo": "Patrones de lenguaje causal (Cadena de valor)",
+        "descripcion": "A continuación, se compilan los modelos textuales y frases en español más comunes para describir las dimensiones causales.",
+        "dimensiones_causales": {
+          "D1_Insumos": {
+            "frases_asignacion_recursos": "recursos financieros, fuentes de financiación, Asignación de recursos, recursos propios, Sistema General de Participaciones (SGP), Sistema General de Regalías (SGR), Otras fuentes.",
+            "patrones_descripcion_capacidad": "fortalecimiento de capacidades, personal capacitado, capacidad institucional, infraestructura adecuada, gestión institucional, financiera y administrativa.",
+            "terminologia_diagnostico_carencia": "Falta de recursos, limitaciones financieras, Déficit técnico, Carencia de infraestructura, personal capacitado."
+          },
+          "D2_Actividades": {
+            "verbos_implementacion": "Implementar acciones, Realizar actividades, Desarrollar actividades, Adelantar la construcción, Ejecutar los proyectos, Contempla actividades de apoyo.",
+            "descripciones_intervencion": "conjunto de procesos u operaciones, acciones relacionadas con, procesos de formación, gestión de peticiones, quejas, reclamos y denuncias.",
+            "terminologia_proceso": "procesos productivos, Monitoreo y diagnóstico periódico, Formulación de política pública, mecanismos de seguimiento y evaluación."
+          },
+          "D3_Productos": {
+            "descripciones_entregables": "bienes y servicios provistos por el Estado, bienes o servicios específicos a entregar, Metas de Producto, Productos específicos.",
+            "establecimiento_indicadores": "Indicadores de producto, Código de Producto, Unidad de medida.",
+            "frases_finalizacion_producto": "Documentos... elaborados, Campañas... implementadas, Personas capacitadas, Unidades productivas beneficiadas, Infraestructura mejorada."
+          },
+          "D4_Resultados": {
+            "lenguaje_logro_resultados": "efectos relacionados con la intervención pública, cuantifican los efectos o cambios generados, Metas de Resultado, Metas de Bienestar.",
+            "frases_cambio_mediano_plazo": "cierre de brechas, mejorar su condición de salud, incrementar el control sobre su salud, superación total de las brechas.",
+            "terminos_medicion_resultados": "Indicadores de resultado, Línea base, Meta Cuatrienio, Tasa de cobertura, Tasa de pobreza."
+          },
+          "D5_Impactos": {
+            "lenguaje_transformacion_largo_plazo": "efectos exclusivamente atribuibles a la intervención pública, Potencial Transformador: Alto, visión de largo plazo, cambio significativo.",
+            "terminologia_sostenibilidad": "sostenibilidad, desarrollo sostenible, enfoque de sostenibilidad, EMI_total (para medir la madurez de integración).",
+            "frases_evaluacion_impacto": "Puntaje Final DE-1, Potencial Transformador, EMI_total, Resultados Esperados: Transformadores."
+          },
+          "D6_Causalidad": {
+            "conectores_teoria_cambio": "coherencia entre diagnóstico y propuesta de intervención, Articulación lógica entre los eslabones de la cadena de valor, dar respuesta a las grandes necesidades encontradas.",
+            "terminos_marco_logico": "Cadena de valor, Matriz Causal, Metodología General Ajustada (MGA), eslabones clave de la cadena de valor.",
+            "declaraciones_hipotesis": "efectos pueden ser intencionales o no y/o atribuibles o no, dichos efectos pueden ser incididos por factores externos."
+          }
+        }
+      },
+      {
+        "id": "IV",
+        "titulo": "Patrones de marcadores contextuales (P-D-Q)",
+        "contextos": {
+          "P_Problema": {
+            "descripcion": "Aparecen principalmente en la sección de Diagnóstico",
+            "frases_encuadre_problemas": "Ejes problemáticos del territorio municipal, Problemáticas priorizadas, Problemáticas comunes, Problemas de mayor gravedad e incidencia en el territorio, Problemáticas sentidas y fundamentadas en cifras epidemiológicas.",
+            "terminos_justificacion_necesidades": "la necesidad de, necesidades y problemáticas, necesidades más sentidas, requieren ser priorizados, dar respuesta a las grandes necesidades encontradas.",
+            "lenguaje_identificacion_brechas": "cierre de brechas, brechas territoriales detalladas, rezagos en esos temas, desactualizado, ausencia de."
+          },
+          "D_Decision": {
+            "descripcion": "Señalan la transición del análisis a la acción estratégica",
+            "indicadores_eleccion_politica": "definición de los objetivos, Líneas Estratégicas, se debe tener en cuenta, priorización de indicadores, definición del alcance de las intervenciones.",
+            "terminos_seleccion_estrategia": "se abordaran en el presente cuatrienio, apuestas precisas, grandes apuestas de la administración entrante, se enuncian a continuación.",
+            "frases_evaluacion_opciones": "alternativas de solución, Priorizar las posibles alternativas de solución, priorización de las iniciativas."
+          },
+          "Q_Pregunta": {
+            "descripcion": "Empleadas en secciones metodológicas, de seguimiento y evaluación",
+            "encuadre_pregunta_investigacion": "pregunta orientadora, ¿El PDT define productos medibles alineados con la prioridad?.",
+            "patrones_investigacion_analitica": "revisión exhaustiva del documento, analizar las estadísticas que se derivan de diferentes fuentes, verificación, evaluar la lógica de intervención y la coherencia interna.",
+            "instrucciones_investigacion": "Busca información relevante en las secciones de:, Evidencia esperada:, Evidencia Textual:, Evidencia Contraria (si aplica):."
+          }
+        }
+      },
+      {
+        "id": "V",
+        "titulo": "Límites semánticos y reglas de contexto",
+        "partes": [
+          {
+            "id": "5",
+            "titulo": "Límites naturales de los bloques semánticos",
+            "subpartes": [
+              {
+                "id": "A",
+                "titulo": "Longitud típica de los párrafos por tipo de sección",
+                "tipos": [
+                  "Generalidades / Fundamentos: Largos o de longitud media. Descriptivos, con citas de leyes.",
+                  "Diagnóstico (Analítico): Variables, pero a menudo largos para describir en detalle las problemáticas (déficit de vivienda, tasas de morbilidad), integrando fuentes (DANE, SISBEN).",
+                  "Parte Estratégica (Narrativa): Medios. Usados para vincular el diagnóstico con los programas (cadena de causalidad).",
+                  "Parte Estratégica (Operacional): Cortos, a menudo introducidos por verbos de acción u organizados en listas.",
+                  "Seguimiento y Evaluación: Cortos, centrados en responsabilidades, calendarios y plataformas (SisPT)."
+                ]
+              },
+              {
+                "id": "B",
+                "titulo": "Inicio y fin naturales de las unidades políticas",
+                "unidades": [
+                  "Línea Estratégica (Eje o Pilar): Comienza con un Título mayor (H1 o H2), a menudo en mayúsculas (ej: Línea Estratégica 1: Territorio, Ambiente...). Termina donde comienza la siguiente línea.",
+                  "Programa: Comienza con un Subtítulo numerado (H3 o H4) (ej: 2.5.1. AGRICULTURA Y DESARROLLO RURAL). Engloba la justificación, la lista de Productos y las Metas.",
+                  "Proyecto: Son las unidades de inversión específicas, generalmente descritas en las matrices del Plan Plurianual de Inversiones (PPI)."
+                ]
+              },
+              {
+                "id": "C",
+                "titulo": "Integración de las tablas con el texto circundante",
+                "tipos_tablas": [
+                  "Tablas de Diagnóstico: Aparecen inmediatamente después del párrafo narrativo que las introduce (ej: 'La tabla siguiente presenta las tasas de morbilidad...').",
+                  "Tablas Operacionales (Matrices PPI, Matrices de Indicadores): Son bloques de información autónomos, generalmente ubicados en los capítulos finales (TÍTULO III o Anexos). El texto que las precede explica la metodología y las fuentes de financiación."
+                ]
+              },
+              {
+                "id": "D",
+                "titulo": "Patrones de estructura de lista",
+                "tipos_listas": [
+                  "Listas Numeradas Secuenciales (1., 2., 3...): Utilizadas para detallar procesos, metodologías o componentes obligatorios (ej: Los 6 temas del Capítulo de Paz: 1. Reforma Rural Integral, 2. PDET...).",
+                  "Listas con Viñetas (-, *, •): Utilizadas para enumerar elementos de alto nivel, principios, ejemplos o listas de actividades/productos."
+                ]
+              },
+              {
+                "id": "E",
+                "titulo": "Puntos de transición entre diferentes tipos de contenido",
+                "transiciones": [
+                  "Diagnóstico → Estrategia: Marcado por un nuevo Capítulo/Título (ej: TÍTULO II PARTE ESTRATÉGICA). El lenguaje pasa del análisis de 'brechas' y 'problemáticas' a la definición de 'objetivos', 'líneas estratégicas' y 'apuestas'.",
+                  "Estrategia → Financiación: Marcado por un nuevo Capítulo/Título (ej: TÍTULO III PARTE FINANCIERA). El contenido pasa de la descripción de acciones a la presentación de matrices (Plan Plurianual de Inversiones).",
+                  "Texto Narrativo → Datos/Medidas: Introducción de la tabla por una frase de transición (ej: 'se presenta de forma detallada la información...') o el uso de términos como 'Matriz de Indicadores'."
+                ]
+              }
+            ]
+          },
+          {
+            "id": "6",
+            "titulo": "Reglas de preservación del contexto",
+            "descripcion": "Ciertos elementos deben permanecer juntos para asegurar la coherencia:",
+            "reglas": [
+              {
+                "id": "A",
+                "titulo": "Definición + Pares de primer uso",
+                "items": [
+                  "Conceptos clave como PROGRAMA, PROYECTO, META, INDICADOR, PRESUPUESTO deben permanecer cerca de su definición.",
+                  "Las definiciones de los Enfoques (ej: Enfoque de derechos, Enfoque diferencial) deben estar vinculadas a las secciones donde se aplican."
+                ]
+              },
+              {
+                "id": "B",
+                "titulo": "Indicador + Línea de base + Grupos objetivo",
+                "items": [
+                  "El Meta Cuatrienio debe presentarse con su Indicador de Producto o Indicador de Resultado.",
+                  "La Línea Base (valor inicial) debe citarse explícitamente junto a la Meta (objetivo).",
+                  "La Meta debe especificar el Grupo de Población Objetivo (ej: Beneficiarios de transporte escolar, Hogares beneficiados)."
+                ]
+              },
+              {
+                "id": "C",
+                "titulo": "Partidas presupuestarias con descripciones",
+                "items": [
+                  "El costo de un Producto o Proyecto (ej: $455,000,000 COP) debe ser indisociable de la descripción del Producto y de la fuente de financiación (SGR, SGP, recursos propios).",
+                  "Los códigos normalizados (Códigos de Producto MGA, BPIN) deben permanecer ligados al elemento que codifican."
+                ]
+              },
+              {
+                "id": "D",
+                "titulo": "Alcance geográfico + Pares de intervención",
+                "items": [
+                  "La descripción de las actividades debe indicar su alcance geográfico (ej: vivienda rural y/o urbana, zonas rurales estratégicas, Consejo Comunitario La Fortaleza).",
+                  "Las iniciativas de ordenamiento territorial (ej: Actualización Catastral) deben estar vinculadas al POT/PBOT."
+                ]
+              },
+              {
+                "id": "E",
+                "titulo": "Referencias temporales + Grupos de actividades",
+                "items": [
+                  "Las Metas deben definirse explícitamente para el cuatrienio (2024-2027).",
+                  "Las actividades pueden estar ligadas a hitos temporales (ej: Documento actualizado... en 2024) o a la planificación anual (POAI)."
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "VI",
+        "titulo": "Patrones de tablas y datos estructurados",
+        "partes": [
+          {
+            "id": "7",
+            "titulo": "Matriz de indicadores del PDM",
+            "descripcion": "La Matriz de Indicadores (o Plan de Indicadores) es una hoja de cálculo esencial que vincula la planificación estratégica con la medición de los productos y los resultados. Es el fundamento del sistema de seguimiento y evaluación. La estructura y las columnas siguen la metodología del DNP y del Catálogo de Productos de la MGA.",
+            "tabla_indicadores": {
+              "titulo": "Matriz de indicadores (Producto)",
+              "columnas": [
+                "Línea Estratégica",
+                "Cód. Programa (Código del Programa Presupuestal)",
+                "Programas presupuestales (Nombre del Programa)",
+                "Cód. Producto (Código MGA del Producto)",
+                "Producto (Descripción del Entregable)",
+                "Cód. indicador de producto (Código del Indicador)",
+                "Indicadores producto (Nombre del Indicador)",
+                "Unidad de medida",
+                "Línea base indicador de producto (Valor de la Línea Base)",
+                "Año línea base indicador de producto (Año de la Línea Base)",
+                "Fuente de información (Fuente de los Datos)",
+                "Metas de producto Total cuatrienio 2024-2027 (Objetivo Total)"
+              ],
+              "filas_ejemplo": [
+                {
+                  "ejemplo": 1,
+                  "contexto": "Miranda - Formación/Capacidades Institucionales",
+                  "datos": {
+                    "Línea Estratégica": "Fortalecimiento de capacidades institucionales",
+                    "Cód. Programa": 1203,
+                    "Programas presupuestales": "Promoción de los métodos de resolución de conflictos",
+                    "Cód. Producto": 1203009,
+                    "Producto": "Servicio de educación informal en resolución de conflictos",
+                    "Cód. indicador de producto": 120300900,
+                    "Indicadores producto": "Personas capacitadas",
+                    "Unidad de medida": "Número",
+                    "Línea base...": 12,
+                    "Año línea base...": 2023,
+                    "Fuente de información": "Municipio Miranda - Secretaria de Gobierno",
+                    "Meta Total 2024-2027": 30
+                  }
+                },
+                {
+                  "ejemplo": 2,
+                  "contexto": "El Tambo - Planificación",
+                  "datos": {
+                    "Línea Estratégica": "(No especificado)",
+                    "Cód. Programa": "(No especificado)",
+                    "Programas presupuestales": "Desarrollo integral de la primera infancia...",
+                    "Cód. Producto": 4102051,
+                    "Producto": "Documentos de planeación elaborados",
+                    "Cód. indicador de producto": "(No especificado)",
+                    "Indicadores producto": "Consiste en la formulación de documentos... objetivos, estrategias, metas e indicadores",
+                    "Unidad de medida": "(No especificado)",
+                    "Línea base...": "S/D",
+                    "Año línea base...": "S/D",
+                    "Fuente de información": "(No especificado)",
+                    "Meta Total 2024-2027": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "8",
+            "titulo": "Plan plurianual de inversiones (PPI)",
+            "descripcion": "El PPI es el componente financiero obligatorio del PDT, que detalla la proyección de los recursos necesarios para alcanzar los objetivos estratégicos en el cuatrienio.",
+            "tabla_ppi": {
+              "titulo": "Plan plurianual de inversiones (Matriz PPI)",
+              "columnas_estandar_rol": [
+                "Línea Estratégica: El eje estratégico superior que agrupa los programas.",
+                "Sector: El sector de inversión (ej: Inclusión Social, Educación).",
+                "Programa: El programa presupuestal detallado (ej: Tejiendo lazos familiares...).",
+                "Costo Total Cuatrienio: Monto total de la inversión proyectada para 2024-2027.",
+                "Distribución Anual (Vigencias): TOTAL 2024, TOTAL 2025, TOTAL 2026, TOTAL 2027",
+                "Fuentes de Financiación (Columnas específicas): SGP (Sistema General de Participaciones), Regalías (Sistema General de Regalías), Recursos Propios (Impuestos locales, etc.), Otras Fuentes (Créditos, Cooperación, etc.), (Opcional) Fondo subregional (ej: Alto Patía)"
+              ],
+              "filas_ejemplo": [
+                {
+                  "ejemplo": 1,
+                  "contexto": "Mercaderes - SGR - Total Cuatrienal",
+                  "datos": {
+                    "Línea Estratégica": "(No especificado)",
+                    "Sector": "(No especificado)",
+                    "Programa": "(No especificado)",
+                    "Costo Total Cuatrienio": "8.242.757.474,00",
+                    "TOTAL 2024": "822.843.000,00",
+                    "TOTAL 2025": "2.770.002.915,00",
+                    "TOTAL 2026": "1.846.668.610,00",
+                    "TOTAL 2027": "2.803.242.949,00"
+                  }
+                },
+                {
+                  "ejemplo": 2,
+                  "contexto": "Caloto - Programa de Inclusión Social - Asignación 2024 (Valores en millones)",
+                  "datos": {
+                    "Línea Estratégica": "(No especificado)",
+                    "Sector": "41 Inclusión Social",
+                    "Programa": "4103 Tejiendo lazos familiares...",
+                    "TOTAL 2024": "136,551",
+                    "SGP": "86,769",
+                    "Regalías": "0",
+                    "Recursos Propios": "49,782",
+                    "Otras Fuentes": "0"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "9",
+            "titulo": "Tablas de diagnóstico socioeconómico",
+            "descripcion": "Estas tablas sirven para justificar la intervención pública mostrando las brechas y el estado actual del territorio.",
+            "subpartes": [
+              {
+                "id": "A",
+                "titulo": "Caracterización socioeconómica (Mercaderes)",
+                "tabla": {
+                  "titulo": "Subdivisión administrativa en corregimientos y veredas (Mercaderes)",
+                  "columnas": [
+                    "Corregimiento",
+                    "Veredas",
+                    "Población (Aprox.) (Implícito en el diagnóstico)",
+                    "Distancia a la cabecera municipal (Típico en tablas administrativas)"
+                  ],
+                  "fila_ejemplo": [
+                    {
+                      "Corregimiento": "Bucana",
+                      "Veredas": "Bella vista, La Puentona, Las Juntas, San Joaquín."
+                    },
+                    {
+                      "Corregimiento": "La Mesa",
+                      "Veredas": "La Loma, La Mesita, La Cabaña."
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "B",
+                "titulo": "Datos sociales y demográficos (Mercaderes, Piendamó, Suárez)",
+                "tabla": {
+                  "titulo": "Indicadores de Pobreza / Afiliación Salud",
+                  "columnas": [
+                    "Índice/Concepto (Ej: Pobreza Multidimensional, Afiliados Contributivo)",
+                    "Valor",
+                    "Año",
+                    "Fuente (DANE, SISBEN, etc.)"
+                  ],
+                  "filas_ejemplo": [
+                    {
+                      "contexto": "Pobreza Piendamó",
+                      "datos": [
+                        {
+                          "Índice/Concepto": "Necesidades Básicas Insatisfechas (NBI) - Total",
+                          "Valor": "(Valor Numérico)",
+                          "Año": "(Año de referencia)",
+                          "Fuente": "(Fuente Oficial, ej: DANE)"
+                        },
+                        {
+                          "Índice/Concepto": "Población en Régimen Subsidiado (EPS)",
+                          "Valor": "(Número de personas)",
+                          "Año": "2022",
+                          "Fuente": "(Fuente Oficial, ej: Ministerio de Salud/ADRES)"
+                        }
+                      ]
+                    },
+                    {
+                      "contexto": "Salud Mercaderes",
+                      "datos": [
+                        {
+                          "Tipo de evento": "Principales causas de defunciones",
+                          "Frecuencia": "(Valor Numérico)",
+                          "Año": "2023"
+                        },
+                        {
+                          "Tipo de evento": "Eventos de salud pública con mayor frecuencia",
+                          "Frecuencia": "(Valor Numérico)",
+                          "Año": "2023"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "VII",
+        "titulo": "Patrones de reconocimiento de entidades",
+        "tabla_entidades": {
+          "id": "10",
+          "titulo": "Entidades institucionales colombianas",
+          "entidades": [
+            {
+              "tipo_entidad": "Entidades Nacionales",
+              "sigla_descripcion": "DNP (Departamento Nacional de Planeación)",
+              "rol_contexto": "Autoridad metodológica, provee herramientas (SisPT, TerriData)."
+            },
+            {
+              "tipo_entidad": "Entidades Nacionales",
+              "sigla_descripcion": "Ministerios (MinVivienda, MinSalud)",
+              "rol_contexto": "Competencias sectoriales, cofinanciación."
+            },
+            {
+              "tipo_entidad": "Entidades Nacionales",
+              "sigla_descripcion": "Fiscalía, JEP, UBPD, UARIV",
+              "rol_contexto": "Justicia, reparación a víctimas, implementación de la paz."
+            },
+            {
+              "tipo_entidad": "Entidades Nacionales",
+              "sigla_descripcion": "Banco de la República, DANE",
+              "rol_contexto": "Variables económicas (IPC), datos estadísticos."
+            },
+            {
+              "tipo_entidad": "Entidades Departamentales",
+              "sigla_descripcion": "Gobernación del Cauca",
+              "rol_contexto": "Coordinación y cofinanciación."
+            },
+            {
+              "tipo_entidad": "Entidades Departamentales",
+              "sigla_descripcion": "Corporaciones Autónomas Regionales (CAR)",
+              "rol_contexto": "Entidades ambientales (ej: CRC)."
+            },
+            {
+              "tipo_entidad": "Entidades Municipales",
+              "sigla_descripcion": "Administraciones Municipales/Alcaldías",
+              "rol_contexto": "Ejecutores principales, formuladores del PDT."
+            },
+            {
+              "tipo_entidad": "Entidades Municipales",
+              "sigla_descripcion": "Secretaría de Planeación",
+              "rol_contexto": "Responsable de la coordinación del PDT y seguimiento (SisPT)."
+            },
+            {
+              "tipo_entidad": "Entidades Municipales",
+              "sigla_descripcion": "Secretaría de Hacienda",
+              "rol_contexto": "Responsable del análisis y proyección fiscal."
+            },
+            {
+              "tipo_entidad": "Entidades Municipales",
+              "sigla_descripcion": "Consejo Municipal",
+              "rol_contexto": "Órgano de aprobación del PDT y del presupuesto."
+            },
+            {
+              "tipo_entidad": "Entidades Municipales",
+              "sigla_descripcion": "Comisarías de Familia",
+              "rol_contexto": "Instituciones locales de justicia."
+            },
+            {
+              "tipo_entidad": "Cooperación y Sociedad Civil",
+              "sigla_descripcion": "Cooperación internacional",
+              "rol_contexto": "Fuente posible de financiación."
+            },
+            {
+              "tipo_entidad": "Cooperación y Sociedad Civil",
+              "sigla_descripcion": "Juntas de Acción Comunal (JAC), Mesas de participación, Consejos Comunitarios",
+              "rol_contexto": "Participación y priorización de iniciativas."
+            }
+          ]
+        }
+      },
+      {
+        "id": "VIII",
+        "titulo": "Patrones legales, temporales y geográficos",
+        "partes": [
+          {
+            "id": "11",
+            "titulo": "Patrones de referencia legal",
+            "referencias": {
+              "ley": "Ley [Número] de [Año] (ej: Ley 152 de 1994, Ley 2056 de 2020).",
+              "decreto": "DECRETO [Número] DE [Año] (ej: DECRETO 111 DE 1996, Decreto 413 de 2018).",
+              "resolucion": "Resolución [Número] de [Año] (ej: Resolución 2993 de 2021).",
+              "acuerdo": "Acuerdo Municipal o Acuerdo No [Número] de [Año] (ej: Acuerdo No 001 de 2.024).",
+              "otros_instrumentos": "Constitucion Política (Art. 339), Circular conjunta 100-002 de 2023, Estatuto Orgánico del Presupuesto."
+            }
+          },
+          {
+            "id": "12",
+            "titulo": "Patrones de expresión temporal",
+            "expresiones": {
+              "duracion_plan": "Período de cuatro años (cuatrienio), 2024-2027.",
+              "fases_implementacion": "corto plazo, mediano plazo, largo plazo.",
+              "fechas_hito": "30 de mayo, 31 mayo, 02-01-2024.",
+              "periodos_vigencia": "vigencia 2024 – 2027, vigencia 2024-2033 (para el MFMP).",
+              "referencias_ano_fiscal": "Marco Fiscal de Mediano Plazo (MFMP), POAI (Plan Operativo Anual de Inversiones), año fiscal."
+            }
+          },
+          {
+            "id": "13",
+            "titulo": "Sistemas de referencia territorial",
+            "sistemas": {
+              "referencias_municipales": "Municipio de Mercaderes Cauca, MUNICIPIO DE BUENOS AIRES, Piendamó – Tunía.",
+              "contextos_departamentales": "Departamento del Cauca, Gobernación de Cauca.",
+              "agrupaciones_regionales": "región Norte del Cauca, región del Alto Patia-Norte del Cauca.",
+              "tipos_territorios_especificos": "territorio, urbano y rural, cabecera urbana y centros poblados urbanos, corregimientos, vereda, Consejo Comunitario La Fortaleza.",
+              "designaciones_zonas_vulnerables": "PDET (Programas de Desarrollo con Enfoque Territorial), municipios más afectados por el conflicto."
+            }
+          }
+        ]
+      },
+      {
+        "id": "IX",
+        "titulo": "Patrones de relación, confianza y terminología",
+        "partes": [
+          {
+            "id": "14",
+            "titulo": "Patrones de relaciones (Conectores más comunes)",
+            "tabla_relaciones": [
+              {
+                "categoria_relacion": "Relación Causal fuerte (A causa B)",
+                "frases_comunes": "a través de la estructuración y ejecución de proyectos... que contribuyen al logro de las transformaciones",
+                "justificacion_contexto": "Vincula explícitamente las acciones con los objetivos."
+              },
+              {
+                "categoria_relacion": "Relación Causal fuerte (A causa B)",
+                "frases_comunes": "con el fin de incidir positivamente en las condiciones de vida",
+                "justificacion_contexto": "Conecta la intención del programa con el impacto deseado."
+              },
+              {
+                "categoria_relacion": "Relación Temporal (A antes B)",
+                "frases_comunes": "durante los próximos cuatro años",
+                "justificacion_contexto": "Define el período de ejecución del mandato."
+              },
+              {
+                "categoria_relacion": "Relación Temporal (A antes B)",
+                "frases_comunes": "a partir de la identificación... la revisión documental... se consideró",
+                "justificacion_contexto": "Describe una secuencia de trabajo metodológico."
+              },
+              {
+                "categoria_relacion": "Relación Temporal (A antes B)",
+                "frases_comunes": "se inicia una fase de seguimiento... en la cual... finalizan el proceso de formulación",
+                "justificacion_contexto": "Describe el ciclo de gestión pública."
+              },
+              {
+                "categoria_relacion": "Relación Jerárquica (A contiene B)",
+                "frases_comunes": "Los planes... estarán conformados por una parte estratégica y un plan de inversiones",
+                "justificacion_contexto": "Define las dos partes principales obligatorias del plan."
+              },
+              {
+                "categoria_relacion": "Relación Jerárquica (A contiene B)",
+                "frases_comunes": "a partir de estas líneas se estructuran los indicadores... así como los programas",
+                "justificacion_contexto": "Muestra la jerarquía de planificación (Línea → Programas)."
+              },
+              {
+                "categoria_relacion": "Relación Jerárquica (A contiene B)",
+                "frases_comunes": "En los Planes... PDET se priorizará lo dispuesto en el Plan Marco de Implementación (PMI)",
+                "justificacion_contexto": "Muestra la articulación normativa (PMI → PDET → PDT)."
+              },
+              {
+                "categoria_relacion": "Relación Geográfica (A en territorio B)",
+                "frases_comunes": "ubicadas en zonas PDET",
+                "justificacion_contexto": "Localiza las entidades territoriales en zonas PDET."
+              },
+              {
+                "categoria_relacion": "Relación Geográfica (A en territorio B)",
+                "frases_comunes": "Corregimiento... Veredas",
+                "justificacion_contexto": "Muestra la subdivisión administrativa (Corregimiento contiene Veredas)."
+              },
+              {
+                "categoria_relacion": "Relación Geográfica (A en territorio B)",
+                "frases_comunes": "Municipio de Mercaderes Cauca",
+                "justificacion_contexto": "Vincula el municipio al departamento (Cauca)."
+              }
+            ]
+          },
+          {
+            "id": "15",
+            "titulo": "Umbrales de confianza (Características del contenido)",
+            "tabla_confianza": [
+              {
+                "confianza_alta_score_0_9_1_0": "Diagnóstico Robusto (4 puntos): Datos detallados y desagregados (por género, zonas), identificación de causas directas y estructurales.",
+                "confianza_media_score_0_6_0_8": "Diagnóstico Parcial (3 puntos): Reconocimiento de problemas importantes (ej: EOT vencido) y datos parciales (ej: número de predios), sin análisis profundo de conflictos.",
+                "confianza_baja_score_menor_0_6": "Diagnóstico Débil/Ausencia (1-2 puntos): Ausencia de análisis de conflictos o de datos específicos. Indicadores de diagnóstico basados en S/D (Sin Dato)."
+              },
+              {
+                "confianza_alta_score_0_9_1_0": "Suficiencia Causal (4 puntos): Vínculos causales claros con pruebas. Cadena de valor totalmente verificada.",
+                "confianza_media_score_0_6_0_8": "Causalidad Parcial (3 puntos): La lógica es plausible pero carece de análisis o pruebas explícitas (ej: los beneficios se asumen).",
+                "confianza_baja_score_menor_0_6": "Causalidad Insuficiente/Ausente (1-2 puntos): Vínculo causal no explícito o acciones no relacionadas con los problemas (DE-1, DE-4)."
+              },
+              {
+                "confianza_alta_score_0_9_1_0": "Productos Específicos/Medibles (3-4 puntos): Productos definidos de manera cuantificable (ej: Predios... formalizados: 30 unidades).",
+                "confianza_media_score_0_6_0_8": "Productos Genéricos (2 puntos): Productos definidos como documentos (Documentos de planeación elaborados) o actividades no medibles por resultado.",
+                "confianza_baja_score_menor_0_6": "Productos No Definidos (1 punto): Ausencia de cuantificación clara de los entregables (DE-4)."
+              },
+              {
+                "confianza_alta_score_0_9_1_0": "Potencial Transformador Alto (4 puntos): Objetivos alineados con la RRI (Reforma Rural Integral) y el Catastro Multipropósito.",
+                "confianza_media_score_0_6_0_8": "Potencial Medio (3 puntos): Apunta a la mejora (ej: reducción de brechas) o al logro de objetivos no estructurales.",
+                "confianza_baja_score_menor_0_6": "Potencial Bajo (2 puntos): Objetivos limitados por restricciones estructurales (ej: falta de recursos)."
+              },
+              {
+                "confianza_alta_score_0_9_1_0": "Sinergias Integradas (4 puntos): Coordinación explícita con las entidades nacionales clave (ANT, ART) y las políticas PDET.",
+                "confianza_media_score_0_6_0_8": "Sinergias Identificadas (3 puntos): Menciona la alineación con los ODS o el PND sin detallar los mecanismos operativos.",
+                "confianza_baja_score_menor_0_6": "Sinergias Aisladas/Débiles (1-2 puntos): Dependencia excesiva de la gestión externa o de recursos no asegurados."
+              }
+            ]
+          },
+          {
+            "id": "16",
+            "titulo": "Vocabulario específico de políticas",
+            "terminologia": {
+              "terminos_planificacion_desarrollo": [
+                "Plan de Desarrollo Territorial (PDT): Documento de planificación municipal para el cuatrienio (2024-2027).",
+                "Ejes / Líneas Estratégicas: Los grandes objetivos que organizan la Parte Estratégica.",
+                "Catastro Multipropósito: Herramienta para la formalización de propiedades rurales y administración del territorio.",
+                "Ordenamiento Territorial Alrededor del Agua: Enfoque de aménageamiento territorial centrado en la gestión del agua.",
+                "Cierre de brechas: Objetivo estratégico de reducción de las desigualdades sociales o territoriales."
+              ],
+              "terminologia_politica_publica": [
+                "Programas de Desarrollo con Enfoque Territorial (PDET): Programas prioritarios para las zonas afectadas por el conflicto.",
+                "Reforma Rural Integral (RRI): Primer pilar del Acuerdo de Paz, visant la transformación del medio rural.",
+                "Articulación Institucional: Necesidad de coordinación entre entidades municipales, departamentales y nacionales."
+              ],
+              "terminos_gestion_financiera": [
+                "Sistema General de Regalías (SGR): Fuente de financiación específica, requiere un capítulo independiente.",
+                "Sistema General de Participaciones (SGP): Transferencias nacionales para los sectores sociales.",
+                "Plan Plurianual de Inversiones (PPI): Componente financiero del PDT, que proyecta los recursos para el cuatrienio.",
+                "Plan Operativo Anual de Inversiones (POAI): Plan anual derivado del PPI para la ejecución presupuestaria.",
+                "Marco Fiscal de Mediano Plazo (MFMP): Proyección financiera a 10 años."
+              ],
+              "vocabulario_gestion_proyectos": [
+                "Metodología General Ajustada (MGA): Metodología del DNP para estructurar y codificar proyectos de inversión.",
+                "Proyecto: Iniciativa de inversión específica.",
+                "BPIN: Código del Banco de Proyectos de Inversión Nacional."
+              ],
+              "terminos_seguimiento_evaluacion": [
+                "Metas de Producto: Cuantificación de los entregables (productos).",
+                "Metas de Resultado: Cuantificación de los efectos (resultados).",
+                "Indicador: Herramienta de medición.",
+                "Línea Base: Valor inicial de un indicador antes de la intervención (a menudo 2023).",
+                "Meta Cuatrienio: Objetivo a 4 años."
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "X",
+        "titulo": "Extracción de ejemplos concretos",
+        "descripcion": "A continuación se presentan ejemplos reales extraídos de los documentos de planificación:",
+        "ejemplos": [
+          {
+            "id": "17",
+            "titulo": "Encabezados de sección reales",
+            "items": [
+              "CAPÍTULO 5. BUENOS AIRES ACTÚA POR LA PAZ",
+              "Línea Estratégica 1: “Cultura ciudadana en la economía, los alimentos el medio natural y ambiental”",
+              "11 SISTEMA DE SEGUIMIENTO, MONITOREO Y EVALUACIÓN DEL PDT",
+              "3.1.2 Parte estratégica",
+              "9.3 Componente estratégico del sistema general de regalías",
+              "Programa: Vías de Calidad."
+            ]
+          },
+          {
+            "id": "18",
+            "titulo": "Formulaciones de indicadores reales",
+            "items": [
+              "Población con acceso a servicios de salud incrementado (Indicador de Resultado - IR)",
+              "Estudios y diseños de infraestructura educativa (Descripción de Producto)",
+              "3.000 Predios formalizados o regularizados para el desarrollo rural (Meta de Producto)",
+              "Número de iniciativas únicas priorizadas (Indicador de Producto/Gestión)",
+              "Tasa de Deserción (Meta: 3% a 2%) (Indicador de Resultado/Outcome)"
+            ]
+          },
+          {
+            "id": "19",
+            "titulo": "Descripciones reales de líneas presupuestarias",
+            "items": [
+              "Valor total inversión vigencia 2024-2027 (Columna Total)",
+              "Gestión e inversión (Categoría de Costo)",
+              "Levantamiento y actualización de información estadística de calidad (Descripción de Programa Presupuestario)",
+              "Servicio de apoyo financiero para proyectos productivos (Descripción de Producto)",
+              "$10.000.000 (Formato monetario)"
+            ]
+          },
+          {
+            "id": "20",
+            "titulo": "Declaraciones reales de relación causal",
+            "items": [
+              "Esta [articulación] contribuirá a que durante los próximos cuatro años se activen e implementen las iniciativas, a través de la estructuración y ejecución de proyectos integradores y transformadores...",
+              "...se articula las iniciativas en el desarrollo de los indicadores y las líneas estratégicas condensadas en dicho documento.",
+              "...propiciando la transformación de las condiciones de vida y su productividad, para lo cual se actualizará el catastro con enfoque multipropósito",
+              "...donde se pone en valor los hallazgos y se sintetizan en los programas estratégicos.",
+              "El POT contiene las apuestas físico-espaciales... Por su parte, los [PDT]... definen cuales programas y proyectos deben ser incorporados..."
+            ]
+          },
+          {
+            "id": "21",
+            "titulo": "Definiciones reales de alcance geográfico",
+            "items": [
+              "zonas PDET",
+              "Subregión de Alto Patía y Norte del Cauca",
+              "área rural fueron alineadas con iniciativas aprobadas en los pactos municipales",
+              "comunidades indígenas; y comunidades afro",
+              "Municipio de Mercaderes Cauca"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

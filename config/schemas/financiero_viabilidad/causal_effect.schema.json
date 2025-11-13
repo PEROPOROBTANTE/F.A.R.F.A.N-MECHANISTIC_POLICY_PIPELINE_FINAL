@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/financiero_viabilidad/causal_effect.schema.json",
+  "title": "CausalEffect",
+  "description": "Efecto causal estimado con inferencia bayesiana",
+  "type": "object",
+  "required": ["treatment", "outcome", "effect_type", "point_estimate", "posterior_mean", "credible_interval_95", "probability_positive", "probability_significant"],
+  "properties": {
+    "treatment": {
+      "type": "string",
+      "description": "Nombre de la intervención/tratamiento",
+      "minLength": 1
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Nombre del outcome/resultado",
+      "minLength": 1
+    },
+    "effect_type": {
+      "type": "string",
+      "enum": ["ATE", "ATT", "direct", "indirect", "total"],
+      "description": "Tipo de efecto causal estimado"
+    },
+    "point_estimate": {
+      "type": "number",
+      "description": "Estimación puntual del efecto"
+    },
+    "posterior_mean": {
+      "type": "number",
+      "description": "Media posterior bayesiana"
+    },
+    "credible_interval_95": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Intervalo creíble al 95%: [percentil_2.5, percentil_97.5]"
+    },
+    "probability_positive": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Probabilidad de efecto positivo"
+    },
+    "probability_significant": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Probabilidad de efecto significativo"
+    },
+    "mediating_paths": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "Secuencia de nodos en el camino mediador"
+      },
+      "description": "Caminos de mediación identificados"
+    },
+    "confounders_adjusted": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Lista de confounders ajustados"
+    }
+  },
+  "additionalProperties": false
+}

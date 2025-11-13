@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/semantic_chunking_policy/analysis_result.schema.json",
+  "title": "PolicyDocumentAnalysisResult",
+  "description": "Resultado completo del análisis de documento de política con chunking, embeddings y análisis de dimensiones causales",
+  "type": "object",
+  "required": ["summary", "causal_dimensions", "key_excerpts"],
+  "properties": {
+    "summary": {
+      "type": "object",
+      "required": ["total_chunks", "sections_detected", "has_tables", "has_numerical"],
+      "properties": {
+        "total_chunks": {
+          "type": "integer",
+          "description": "Número total de fragmentos generados",
+          "minimum": 0
+        },
+        "sections_detected": {
+          "type": "integer",
+          "description": "Número de secciones PDM detectadas",
+          "minimum": 0
+        },
+        "has_tables": {
+          "type": "integer",
+          "description": "Número de fragmentos con contenido tabular",
+          "minimum": 0
+        },
+        "has_numerical": {
+          "type": "integer",
+          "description": "Número de fragmentos con datos numéricos",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "causal_dimensions": {
+      "type": "object",
+      "description": "Análisis por dimensión del Marco Lógico",
+      "properties": {
+        "insumos": {
+          "$ref": "#/definitions/DimensionAnalysis"
+        },
+        "actividades": {
+          "$ref": "#/definitions/DimensionAnalysis"
+        },
+        "productos": {
+          "$ref": "#/definitions/DimensionAnalysis"
+        },
+        "resultados": {
+          "$ref": "#/definitions/DimensionAnalysis"
+        },
+        "impactos": {
+          "$ref": "#/definitions/DimensionAnalysis"
+        },
+        "supuestos": {
+          "$ref": "#/definitions/DimensionAnalysis"
+        }
+      },
+      "additionalProperties": false
+    },
+    "key_excerpts": {
+      "type": "object",
+      "description": "Extractos clave más relevantes por dimensión causal",
+      "properties": {
+        "insumos": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "actividades": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "productos": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "resultados": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "impactos": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "supuestos": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DimensionAnalysis": {
+      "type": "object",
+      "required": ["total_chunks", "mean_similarity", "max_similarity"],
+      "properties": {
+        "total_chunks": {
+          "type": "integer",
+          "description": "Número de fragmentos relevantes para esta dimensión",
+          "minimum": 0
+        },
+        "mean_similarity": {
+          "type": "number",
+          "description": "Similitud promedio con embeddings de la dimensión",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "max_similarity": {
+          "type": "number",
+          "description": "Similitud máxima encontrada",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "point_estimate": {
+          "type": "number",
+          "description": "Estimación puntual bayesiana (0.0-1.0)",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "credible_interval": {
+          "type": "array",
+          "description": "Intervalo de credibilidad al 95%",
+          "items": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "evidence_strength": {
+          "type": "string",
+          "enum": ["weak", "moderate", "strong", "very_strong"],
+          "description": "Clasificación de la fuerza de evidencia"
+        },
+        "renyi_divergence": {
+          "type": "number",
+          "description": "Divergencia de Rényi para análisis de información",
+          "minimum": 0.0
+        },
+        "numerical_coherence": {
+          "type": "number",
+          "description": "Coherencia numérica del análisis",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

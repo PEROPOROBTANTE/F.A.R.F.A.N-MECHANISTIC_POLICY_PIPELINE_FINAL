@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/financiero_viabilidad/counterfactual_scenario.schema.json",
+  "title": "CounterfactualScenario",
+  "description": "Escenario contrafactual para análisis de intervenciones causales y predicción de outcomes",
+  "type": "object",
+  "required": ["intervention", "predicted_outcomes", "probability_improvement", "narrative"],
+  "properties": {
+    "intervention": {
+      "type": "object",
+      "description": "Mapa de intervenciones propuestas (variable → valor de intervención)",
+      "additionalProperties": {
+        "type": "number",
+        "description": "Valor de la intervención en la variable"
+      }
+    },
+    "predicted_outcomes": {
+      "type": "object",
+      "description": "Resultados predichos (outcome → [mean, lower_ci, upper_ci])",
+      "additionalProperties": {
+        "type": "array",
+        "description": "Tupla [media, límite inferior IC95%, límite superior IC95%]",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 3,
+        "maxItems": 3
+      }
+    },
+    "probability_improvement": {
+      "type": "object",
+      "description": "Probabilidad de mejora por outcome",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0,
+        "description": "Probabilidad de que el outcome mejore con la intervención"
+      }
+    },
+    "narrative": {
+      "type": "string",
+      "description": "Narrativa explicativa del escenario contrafactual",
+      "minLength": 1,
+      "maxLength": 10000
+    }
+  },
+  "additionalProperties": false
+}

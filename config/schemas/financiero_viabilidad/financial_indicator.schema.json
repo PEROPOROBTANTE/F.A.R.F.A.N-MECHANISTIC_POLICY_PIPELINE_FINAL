@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/financiero_viabilidad/financial_indicator.schema.json",
+  "title": "FinancialIndicator",
+  "description": "Indicador financiero extraído del plan de desarrollo",
+  "type": "object",
+  "required": ["source_text", "amount", "currency", "funding_source", "budget_category", "confidence_interval", "risk_level"],
+  "properties": {
+    "source_text": {
+      "type": "string",
+      "description": "Texto fuente del documento",
+      "minLength": 1,
+      "maxLength": 5000
+    },
+    "amount": {
+      "type": "string",
+      "pattern": "^\\d+(\\.\\d{1,2})?$",
+      "description": "Monto en COP (como string decimal para precisión)"
+    },
+    "currency": {
+      "type": "string",
+      "enum": ["COP", "USD", "EUR"],
+      "description": "Moneda del monto"
+    },
+    "fiscal_year": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "integer",
+          "minimum": 2020,
+          "maximum": 2050,
+          "description": "Año fiscal"
+        }
+      ]
+    },
+    "funding_source": {
+      "type": "string",
+      "description": "Fuente de financiamiento (SGP, SGR, recursos propios, etc.)",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "budget_category": {
+      "type": "string",
+      "description": "Categoría presupuestal",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "execution_percentage": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 200.0,
+          "description": "Porcentaje de ejecución (puede exceder 100%)"
+        }
+      ]
+    },
+    "confidence_interval": {
+      "type": "array",
+      "items": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Intervalo de confianza para la extracción: [lower, upper]"
+    },
+    "risk_level": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Nivel de riesgo financiero estimado"
+    }
+  },
+  "additionalProperties": false
+}

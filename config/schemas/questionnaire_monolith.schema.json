@@ -1,0 +1,1058 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/questionnaire_monolith.schema.json",
+  "title": "Questionnaire Monolith Schema",
+  "description": "Comprehensive schema for questionnaire_monolith.json - the canonical source of truth for 305 questions (300 micro + 4 meso + 1 macro) with complete metadata, patterns, validations, and method references.",
+  "type": "object",
+  "required": [
+    "version",
+    "schema_version",
+    "generated_at",
+    "integrity",
+    "blocks",
+    "observability",
+    "canonical_notation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the questionnaire monolith (MAJOR.MINOR.PATCH)"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of the schema structure itself"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the monolith was generated"
+    },
+    "canonical_notation": {
+      "type": "object",
+      "description": "Canonical notation and reference system",
+      "additionalProperties": true
+    },
+    "integrity": {
+      "type": "object",
+      "required": [
+        "monolith_hash",
+        "ruleset_hash",
+        "question_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "monolith_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "SHA256 hash of the monolith content for integrity verification"
+        },
+        "ruleset_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "SHA256 hash of the ruleset used to generate the monolith"
+        },
+        "question_count": {
+          "type": "object",
+          "required": [
+            "micro",
+            "meso",
+            "macro",
+            "total"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "micro": {
+              "type": "integer",
+              "const": 300,
+              "description": "Must be exactly 300 micro-level questions"
+            },
+            "meso": {
+              "type": "integer",
+              "const": 4,
+              "description": "Must be exactly 4 meso-level (cluster) questions"
+            },
+            "macro": {
+              "type": "integer",
+              "const": 1,
+              "description": "Must be exactly 1 macro-level (holistic) question"
+            },
+            "total": {
+              "type": "integer",
+              "const": 305,
+              "description": "Total must be 305 questions (300 + 4 + 1)"
+            }
+          }
+        }
+      },
+      "description": "Integrity verification data for the monolith"
+    },
+    "observability": {
+      "type": "object",
+      "required": [
+        "telemetry_schema"
+      ],
+      "properties": {
+        "telemetry_schema": {
+          "type": "object",
+          "required": [
+            "logs",
+            "metrics",
+            "tracing"
+          ],
+          "properties": {
+            "logs": {
+              "type": "object",
+              "required": [
+                "format",
+                "fields"
+              ],
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "enum": [
+                    "jsonl",
+                    "json",
+                    "text"
+                  ]
+                },
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                }
+              }
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "aggregation",
+                  "level"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "aggregation": {
+                    "type": "string",
+                    "enum": [
+                      "sum",
+                      "avg",
+                      "p95",
+                      "p99",
+                      "ratio",
+                      "count"
+                    ]
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "MICRO",
+                      "MESO",
+                      "MACRO",
+                      "DIMENSION",
+                      "METHOD_SET",
+                      "CLUSTER"
+                    ]
+                  }
+                }
+              }
+            },
+            "tracing": {
+              "type": "object",
+              "required": [
+                "propagation",
+                "span_structure"
+              ],
+              "properties": {
+                "propagation": {
+                  "type": "string",
+                  "enum": [
+                    "W3C",
+                    "B3",
+                    "Jaeger"
+                  ]
+                },
+                "span_structure": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Observability and telemetry configuration"
+    },
+    "blocks": {
+      "type": "object",
+      "required": [
+        "macro_question",
+        "meso_questions",
+        "micro_questions",
+        "niveles_abstraccion",
+        "scoring",
+        "semantic_layers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "macro_question": {
+          "$ref": "#/$defs/macro_question"
+        },
+        "meso_questions": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/meso_question"
+          },
+          "description": "Exactly 4 cluster-level (meso) questions"
+        },
+        "micro_questions": {
+          "type": "array",
+          "minItems": 300,
+          "maxItems": 300,
+          "items": {
+            "$ref": "#/$defs/micro_question"
+          },
+          "description": "Exactly 300 micro-level questions"
+        },
+        "niveles_abstraccion": {
+          "$ref": "#/$defs/niveles_abstraccion"
+        },
+        "scoring": {
+          "$ref": "#/$defs/scoring"
+        },
+        "semantic_layers": {
+          "$ref": "#/$defs/semantic_layers"
+        }
+      },
+      "description": "Main content blocks of the questionnaire"
+    }
+  },
+  "$defs": {
+    "pattern_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "pattern",
+        "match_type",
+        "confidence_weight",
+        "category"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^PAT-Q\\d{3}-\\d{3}$",
+          "description": "Pattern ID in format PAT-Q###-###"
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Regular expression or literal pattern to match"
+        },
+        "match_type": {
+          "type": "string",
+          "enum": [
+            "REGEX",
+            "LITERAL"
+          ]
+        },
+        "confidence_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Weight assigned to this pattern match (0.0 to 1.0)"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "GENERAL",
+            "INDICADOR",
+            "TEMPORAL",
+            "TERRITORIAL",
+            "FUENTE_OFICIAL",
+            "UNIDAD_MEDIDA"
+          ]
+        },
+        "flags": {
+          "type": "string",
+          "pattern": "^[imsx]*$",
+          "description": "Regex flags (i=case insensitive, m=multiline, s=dotall, x=verbose)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "expected_element": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of expected element"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this element is required"
+        },
+        "minimum": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum count required"
+        }
+      },
+      "additionalProperties": false
+    },
+    "method_set": {
+      "type": "object",
+      "required": [
+        "module_enum",
+        "class",
+        "function",
+        "method_type",
+        "priority",
+        "description"
+      ],
+      "properties": {
+        "module_enum": {
+          "type": "string",
+          "pattern": "^DIM\\d{2}_(METHODS|VALIDATION)$",
+          "description": "Module enumeration identifier"
+        },
+        "class": {
+          "type": "string",
+          "pattern": "^Dimension\\d+[A-Za-z]+$",
+          "description": "Class name for the method"
+        },
+        "function": {
+          "type": "string",
+          "pattern": "^[a-z_][a-z0-9_]*$",
+          "description": "Function name in snake_case (may contain digits)"
+        },
+        "method_type": {
+          "type": "string",
+          "enum": [
+            "extraction",
+            "validation",
+            "analysis",
+            "scoring"
+          ]
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Execution priority (lower number = higher priority)"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 5
+        }
+      },
+      "additionalProperties": false
+    },
+    "failure_contract": {
+      "type": "object",
+      "required": [
+        "abort_if",
+        "emit_code"
+      ],
+      "properties": {
+        "abort_if": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "emit_code": {
+          "type": "string",
+          "pattern": "^ABORT-Q\\d{3}-[A-Z]+$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_check": {
+      "type": "object",
+      "properties": {
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minimum_required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minimum_years": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "specificity": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "micro_question": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "question_global",
+        "base_slot",
+        "policy_area_id",
+        "cluster_id",
+        "dimension_id",
+        "text",
+        "scoring_modality",
+        "scoring_definition_ref",
+        "patterns",
+        "expected_elements",
+        "method_sets",
+        "failure_contract",
+        "validations"
+      ],
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "pattern": "^Q\\d{3}$",
+          "description": "Question ID in format Q001 to Q300"
+        },
+        "question_global": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300,
+          "description": "Global question number (1-300)"
+        },
+        "base_slot": {
+          "type": "string",
+          "pattern": "^D[1-6]-Q[1-5]$",
+          "description": "Base slot assignment (D1-Q1 through D6-Q5)"
+        },
+        "policy_area_id": {
+          "type": "string",
+          "pattern": "^PA(0[1-9]|10)$",
+          "description": "Policy area ID (PA01 to PA10)"
+        },
+        "cluster_id": {
+          "type": "string",
+          "pattern": "^CL0[1-4]$",
+          "description": "Cluster ID (CL01 to CL04)"
+        },
+        "dimension_id": {
+          "type": "string",
+          "pattern": "^DIM0[1-6]$",
+          "description": "Dimension ID (DIM01 to DIM06)"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Question text in Spanish"
+        },
+        "scoring_modality": {
+          "type": "string",
+          "enum": [
+            "TYPE_A",
+            "TYPE_B",
+            "TYPE_C",
+            "TYPE_D",
+            "TYPE_E",
+            "TYPE_F"
+          ],
+          "description": "Scoring methodology type"
+        },
+        "scoring_definition_ref": {
+          "type": "string",
+          "pattern": "^scoring_modalities\\.[A-Z_]+$",
+          "description": "Reference to scoring modality definition"
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pattern_item"
+          },
+          "minItems": 1,
+          "description": "Search patterns for automated extraction"
+        },
+        "expected_elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/expected_element"
+          },
+          "minItems": 1,
+          "description": "Expected elements to find in the text"
+        },
+        "method_sets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/method_set"
+          },
+          "minItems": 1,
+          "description": "Methods to execute for this question"
+        },
+        "failure_contract": {
+          "$ref": "#/$defs/failure_contract",
+          "description": "Contract defining abort conditions"
+        },
+        "validations": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z_]+$": {
+              "$ref": "#/$defs/validation_check"
+            }
+          },
+          "description": "Validation checks to perform"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "MICRO"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "meso_question": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "question_global",
+        "type",
+        "cluster_id",
+        "text",
+        "scoring_modality",
+        "aggregation_method",
+        "policy_areas",
+        "patterns"
+      ],
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "pattern": "^MESO_[1-4]$",
+          "description": "Meso question ID (MESO_1 to MESO_4)"
+        },
+        "question_global": {
+          "type": "integer",
+          "minimum": 301,
+          "maximum": 304,
+          "description": "Global question number (301-304)"
+        },
+        "type": {
+          "type": "string",
+          "const": "MESO"
+        },
+        "cluster_id": {
+          "type": "string",
+          "pattern": "^CLUSTER_[1-4]$",
+          "description": "Cluster identifier"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Question text in Spanish"
+        },
+        "scoring_modality": {
+          "type": "string",
+          "pattern": "^MESO_[A-Z_]+$",
+          "description": "Meso-level scoring modality"
+        },
+        "aggregation_method": {
+          "type": "string",
+          "enum": [
+            "weighted_average",
+            "sum",
+            "min",
+            "max"
+          ]
+        },
+        "policy_areas": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^P(10|[1-9])$"
+          },
+          "minItems": 1,
+          "description": "Policy areas included in this cluster"
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "description"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "macro_question": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "question_global",
+        "type",
+        "text",
+        "scoring_modality",
+        "aggregation_method",
+        "clusters",
+        "patterns",
+        "fallback"
+      ],
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "const": "MACRO_1"
+        },
+        "question_global": {
+          "type": "integer",
+          "const": 305,
+          "description": "Must be exactly 305"
+        },
+        "type": {
+          "type": "string",
+          "const": "MACRO"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Macro question text in Spanish"
+        },
+        "scoring_modality": {
+          "type": "string",
+          "pattern": "^MACRO_[A-Z_]+$"
+        },
+        "aggregation_method": {
+          "type": "string",
+          "enum": [
+            "holistic_assessment",
+            "weighted_average"
+          ]
+        },
+        "clusters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CLUSTER_[1-4]$"
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "All 4 clusters must be included"
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "priority",
+              "description"
+            ]
+          },
+          "minItems": 1
+        },
+        "fallback": {
+          "type": "object",
+          "required": [
+            "condition",
+            "pattern",
+            "priority"
+          ],
+          "properties": {
+            "condition": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            },
+            "priority": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "niveles_abstraccion": {
+      "type": "object",
+      "required": [
+        "clusters",
+        "dimensions",
+        "policy_areas"
+      ],
+      "properties": {
+        "clusters": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "cluster_id",
+              "i18n",
+              "policy_area_ids",
+              "legacy_policy_area_ids",
+              "rationale"
+            ],
+            "properties": {
+              "cluster_id": {
+                "type": "string",
+                "pattern": "^CL0[1-4]$"
+              },
+              "i18n": {
+                "$ref": "#/$defs/i18n_label"
+              },
+              "policy_area_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^PA(0[1-9]|10)$"
+                },
+                "minItems": 1
+              },
+              "legacy_policy_area_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^P(10|[1-9])$"
+                }
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 10
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "dimensions": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "dimension_id",
+              "legacy_id",
+              "i18n",
+              "description"
+            ],
+            "properties": {
+              "dimension_id": {
+                "type": "string",
+                "pattern": "^DIM0[1-6]$"
+              },
+              "legacy_id": {
+                "type": "string",
+                "pattern": "^D[1-6]$"
+              },
+              "i18n": {
+                "$ref": "#/$defs/i18n_label"
+              },
+              "description": {
+                "type": "string",
+                "minLength": 10
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "policy_areas": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "policy_area_id",
+              "legacy_ids",
+              "cluster_id",
+              "dimension_ids",
+              "i18n",
+              "required_evidence_keys"
+            ],
+            "properties": {
+              "policy_area_id": {
+                "type": "string",
+                "pattern": "^PA(0[1-9]|10)$"
+              },
+              "legacy_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^P(10|[1-9])$"
+                },
+                "minItems": 1
+              },
+              "cluster_id": {
+                "type": "string",
+                "pattern": "^CL0[1-4]$"
+              },
+              "dimension_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^DIM0[1-6]$"
+                },
+                "minItems": 6,
+                "maxItems": 6
+              },
+              "i18n": {
+                "$ref": "#/$defs/i18n_label"
+              },
+              "required_evidence_keys": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z_]+$"
+                },
+                "minItems": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "i18n_label": {
+      "type": "object",
+      "required": [
+        "default",
+        "keys"
+      ],
+      "properties": {
+        "default": {
+          "type": "string",
+          "const": "es"
+        },
+        "keys": {
+          "type": "object",
+          "required": [
+            "label_es",
+            "label_en"
+          ],
+          "properties": {
+            "label_es": {
+              "type": "string",
+              "minLength": 1
+            },
+            "label_en": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "scoring": {
+      "type": "object",
+      "required": [
+        "micro_levels",
+        "modalities",
+        "modality_definitions"
+      ],
+      "properties": {
+        "micro_levels": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "level",
+              "min_score",
+              "color"
+            ],
+            "properties": {
+              "level": {
+                "type": "string",
+                "enum": [
+                  "EXCELENTE",
+                  "BUENO",
+                  "ACEPTABLE",
+                  "INSUFICIENTE"
+                ]
+              },
+              "min_score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "color": {
+                "type": "string",
+                "enum": [
+                  "green",
+                  "blue",
+                  "yellow",
+                  "red"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "modalities": {
+          "type": "object",
+          "patternProperties": {
+            "^TYPE_[A-F]$": {
+              "type": "object",
+              "required": [
+                "description",
+                "max_score",
+                "levels"
+              ],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "max_score": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "levels": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "minProperties": 6
+        },
+        "modality_definitions": {
+          "type": "object",
+          "patternProperties": {
+            "^TYPE_[A-F]$": {
+              "type": "object",
+              "required": [
+                "aggregation",
+                "description",
+                "failure_code"
+              ],
+              "properties": {
+                "aggregation": {
+                  "type": "string",
+                  "enum": [
+                    "presence_threshold",
+                    "binary_sum",
+                    "weighted_sum",
+                    "binary_presence",
+                    "normalized_continuous"
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "failure_code": {
+                  "type": "string",
+                  "pattern": "^F-[A-F]-[A-Z]+$"
+                },
+                "threshold": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "max_score": {
+                  "type": "integer"
+                },
+                "weights": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "normalization": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "minProperties": 6
+        }
+      },
+      "additionalProperties": false
+    },
+    "semantic_layers": {
+      "type": "object",
+      "required": [
+        "embedding_strategy",
+        "disambiguation"
+      ],
+      "properties": {
+        "embedding_strategy": {
+          "type": "object",
+          "required": [
+            "model",
+            "dimension"
+          ],
+          "properties": {
+            "model": {
+              "type": "string"
+            },
+            "dimension": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "hybrid": {
+              "type": "object",
+              "properties": {
+                "bm25": {
+                  "type": "boolean"
+                },
+                "fusion": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "disambiguation": {
+          "type": "object",
+          "required": [
+            "entity_linker",
+            "confidence_threshold"
+          ],
+          "properties": {
+            "entity_linker": {
+              "type": "string"
+            },
+            "confidence_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

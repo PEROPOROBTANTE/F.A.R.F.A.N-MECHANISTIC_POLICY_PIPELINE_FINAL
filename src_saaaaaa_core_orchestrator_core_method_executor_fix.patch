@@ -1,0 +1,42 @@
+# PATCH for core.py - MethodExecutor class
+
+# In MethodExecutor.execute_method (around line 500-600):
+def execute_method(
+    self,
+    class_name: str,
+    method_name: str,
+    *args,
+    **kwargs
+) -> Any:
+    """Execute method with config constraints."""
+    
+    # Get config from context if available
+    config = kwargs.pop('executor_config', None)
+    
+    if config and config.require_calibration:
+        # Get constraints for this method
+        try:
+            constraints = config.get_method_constraints(class_name, method_name)
+            
+            # Log what constraints are being applied
+            logger.info(
+                "applying_method_constraints",
+                extra={
+                    "class": class_name,
+                    "method": method_name,
+                    "min_evidence": constraints.min_evidence_snippets,
+                    "contradiction_tolerance": constraints.contradiction_tolerance,
+                }
+            )
+            
+            # Pass constraints to method via kwargs
+            kwargs['_method_constraints'] = constraints
+            
+        except RuntimeError as e:
+            if config.fail_on_missing_calibration:
+                raise
+            else:
+                logger.warning(f"No constraints for {class_name}.{method_name}")
+    
+    # Execute the method
+    return super().execute_method(class_name, method_name, *args, **kwargs)

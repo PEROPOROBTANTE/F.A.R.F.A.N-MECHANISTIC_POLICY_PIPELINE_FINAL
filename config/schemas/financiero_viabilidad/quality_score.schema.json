@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/financiero_viabilidad/quality_score.schema.json",
+  "title": "QualityScore",
+  "description": "Puntuación de calidad agregada del plan de desarrollo municipal con desagregación por dimensiones",
+  "type": "object",
+  "required": ["overall_score", "financial_feasibility", "indicator_quality", "responsibility_clarity", "temporal_consistency", "pdet_alignment", "causal_coherence", "confidence_interval", "evidence"],
+  "properties": {
+    "overall_score": {
+      "type": "number",
+      "description": "Puntuación de calidad general (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "financial_feasibility": {
+      "type": "number",
+      "description": "Viabilidad financiera del plan (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "indicator_quality": {
+      "type": "number",
+      "description": "Calidad de los indicadores definidos (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "responsibility_clarity": {
+      "type": "number",
+      "description": "Claridad en la asignación de responsabilidades (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "temporal_consistency": {
+      "type": "number",
+      "description": "Consistencia temporal de las metas y cronogramas (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "pdet_alignment": {
+      "type": "number",
+      "description": "Alineación con lineamientos PDET (Planes de Desarrollo con Enfoque Territorial) (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "causal_coherence": {
+      "type": "number",
+      "description": "Coherencia de la cadena causal (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "confidence_interval": {
+      "type": "array",
+      "description": "Intervalo de confianza para overall_score [lower, upper]",
+      "items": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Evidencia y detalles que respaldan las puntuaciones",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

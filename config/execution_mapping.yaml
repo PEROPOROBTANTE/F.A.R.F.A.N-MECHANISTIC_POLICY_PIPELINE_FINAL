@@ -1,0 +1,399 @@
+# EXECUTION MAPPING - Metadata Artifact (Golden Rule 1: Immutable Declarative Configuration)
+# This file defines the canonical execution pipeline for all questions across 6 dimensions
+# Each question's processing is deterministically mapped to execution chains
+
+version: "2.0.0"
+metadata:
+  generated: "2025-10-22"
+  standard: "DECALOGO Framework - Colombian Municipal Development Plans"
+  policy: "95% integration of all methods, classes, and functions"
+  hermetic: true
+  description: "Immutable declarative specification for metadata-driven processing"
+
+# GLOBAL EXECUTION MODULES (Available to all questions)
+modules:
+  # Semantic Processing
+  semantic_chunker:
+    file: "semantic_chunking_policy.py"
+    class: "AdvancedSemanticChunker"
+    methods: ["chunk_document", "extract_semantic_boundaries"]
+    provides: ["semantic_chunks", "section_metadata"]
+    
+  embedding_engine:
+    file: "embedding_policy.py"
+    class: "PolicyAnalysisEmbedder"
+    methods: ["process_document", "embed_chunks", "semantic_search"]
+    provides: ["embeddings", "similarity_scores", "semantic_evidence"]
+    
+  policy_processor:
+    file: "policy_processor.py"
+    class: "IndustrialPolicyProcessor"
+    methods: ["process", "_extract_point_evidence", "_match_patterns_in_sentences", "_analyze_causal_dimensions"]
+    provides: ["pattern_matches", "dimensional_evidence", "category_scores"]
+    
+  bayesian_scorer:
+    file: "policy_processor.py"
+    class: "BayesianEvidenceScorer"
+    methods: ["compute_evidence_score", "_similarity_to_probability", "_compute_reliability_weights"]
+    provides: ["confidence_scores", "information_gain", "evidence_strength"]
+    
+  # Causal Analysis
+  teoria_cambio:
+    file: "teoria_cambio.py"
+    class: "TeoriaCambio"
+    methods: ["construir_grafo_causal", "validacion_completa", "_validar_orden_causal", "_encontrar_caminos_completos"]
+    provides: ["causal_dag", "validation_results", "completeness_score"]
+    
+  dereck_beach:
+    file: "dereck_beach.py"
+    class: "CDAFFramework"
+    methods: ["process_document", "extract_causal_mechanisms", "apply_beach_tests"]
+    provides: ["mechanism_evidence", "beach_test_results", "causal_confidence"]
+    
+  causal_extractor:
+    file: "dereck_beach.py"
+    class: "CausalExtractor"
+    methods: ["extract_causal_hierarchy", "_extract_goals", "_extract_causal_links"]
+    provides: ["causal_hierarchy", "goal_taxonomy", "link_evidence"]
+    
+  mechanism_inference:
+    file: "dereck_beach.py"
+    class: "BayesianMechanismInference"
+    methods: ["infer_mechanisms", "_test_necessity", "_test_sufficiency", "_infer_activity_sequence"]
+    provides: ["mechanisms", "necessity_scores", "sufficiency_scores"]
+    
+  # Financial Analysis
+  financial_analyzer:
+    file: "financiero_viabilidad_tablas.py"
+    class: "PDETMunicipalPlanAnalyzer"
+    methods: ["analyze_municipal_plan", "extract_tables", "analyze_financial_feasibility", "construct_causal_dag"]
+    provides: ["financial_tables", "budget_allocation", "financial_dag", "feasibility_metrics"]
+    
+  financial_auditor:
+    file: "financiero_viabilidad_tablas.py"
+    class: "FinancialAuditor"
+    methods: ["trace_financial_allocation", "_perform_counterfactual_budget_check"]
+    provides: ["allocation_trace", "sufficiency_assessment", "gaps"]
+    
+  # Contradiction Detection
+  contradiction_detector:
+    file: "contradiction_deteccion.py"
+    class: "PolicyContradictionDetector"
+    methods: ["detect", "_calculate_global_semantic_coherence", "_extract_quantitative_claims", "_detect_numerical_inconsistencies"]
+    provides: ["contradictions", "coherence_score", "numerical_claims", "inconsistencies"]
+    
+  temporal_verifier:
+    file: "contradiction_deteccion.py"
+    class: "TemporalLogicVerifier"
+    methods: ["verify_temporal_consistency", "_parse_temporal_marker"]
+    provides: ["temporal_conflicts", "consistency_score"]
+    
+  # Integrated Analysis
+  analyzer_semantic:
+    file: "Analyzer_one.py"
+    class: "SemanticAnalyzer"
+    methods: ["extract_semantic_cube", "_classify_value_chain_link"]
+    provides: ["semantic_cube", "value_chain_classification"]
+    
+  performance_analyzer:
+    file: "Analyzer_one.py"
+    class: "PerformanceAnalyzer"
+    methods: ["_detect_bottlenecks", "analyze_capacity_constraints"]
+    provides: ["bottlenecks", "capacity_metrics"]
+
+# DIMENSION-SPECIFIC EXECUTION CHAINS
+# Each dimension (D1-D6) has canonical execution patterns for its question types
+
+dimensions:
+  D1_Insumos:
+    description: "Baseline data, resource availability, institutional capacity"
+    typical_chains:
+      baseline_quantitative:
+        sequence:
+          - module: "policy_processor"
+            method: "_match_patterns_in_sentences"
+            inputs: ["document_text", "pattern_taxonomy"]
+            outputs: ["pattern_matches", "positions"]
+          - module: "bayesian_scorer"
+            method: "compute_evidence_score"
+            inputs: ["pattern_matches", "document_length"]
+            outputs: ["confidence_score", "information_gain"]
+          - module: "embedding_engine"
+            method: "semantic_search"
+            inputs: ["query", "document_chunks"]
+            outputs: ["relevant_chunks", "similarity_scores"]
+          - module: "contradiction_detector"
+            method: "_extract_quantitative_claims"
+            inputs: ["document_text"]
+            outputs: ["numerical_claims", "sources"]
+        indicators:
+          - "baseline_indicators_count >= 5"
+          - "time_series_years >= 5"
+          - "source_diversity >= 2"
+      
+      financial_allocation:
+        sequence:
+          - module: "financial_analyzer"
+            method: "extract_tables"
+            inputs: ["pdf_document"]
+            outputs: ["tables", "table_metadata"]
+          - module: "financial_analyzer"
+            method: "analyze_financial_feasibility"
+            inputs: ["tables", "requirements"]
+            outputs: ["feasibility_score", "gaps"]
+          - module: "financial_auditor"
+            method: "trace_financial_allocation"
+            inputs: ["budget_data", "programs"]
+            outputs: ["allocation_trace", "sufficiency"]
+        indicators:
+          - "budget_traceability == true"
+          - "ppi_codes_present == true"
+          - "sufficiency_justified == true"
+      
+      coherence_check:
+        sequence:
+          - module: "contradiction_detector"
+            method: "detect"
+            inputs: ["document_text"]
+            outputs: ["contradictions_list"]
+          - module: "contradiction_detector"
+            method: "_calculate_global_semantic_coherence"
+            inputs: ["document_embeddings"]
+            outputs: ["coherence_score"]
+        indicators:
+          - "coherence_score >= 0.85"
+          - "contradictions_count < 3"
+  
+  D2_Actividades:
+    description: "Activity formalization, mechanisms, causal linkages"
+    typical_chains:
+      mechanism_extraction:
+        sequence:
+          - module: "causal_extractor"
+            method: "extract_causal_hierarchy"
+            inputs: ["document_text"]
+            outputs: ["causal_hierarchy"]
+          - module: "mechanism_inference"
+            method: "infer_mechanisms"
+            inputs: ["causal_hierarchy", "evidence"]
+            outputs: ["mechanisms", "confidence"]
+          - module: "mechanism_inference"
+            method: "_test_necessity"
+            inputs: ["mechanism", "evidence"]
+            outputs: ["necessity_score"]
+          - module: "mechanism_inference"
+            method: "_test_sufficiency"
+            inputs: ["mechanism", "evidence"]
+            outputs: ["sufficiency_score"]
+          - module: "dereck_beach"
+            method: "apply_beach_tests"
+            inputs: ["necessity_score", "sufficiency_score"]
+            outputs: ["test_type", "confidence_update"]
+        indicators:
+          - "mechanism_identified == true"
+          - "necessity_score >= 0.7"
+          - "sufficiency_score >= 0.7"
+      
+      causal_dag_construction:
+        sequence:
+          - module: "teoria_cambio"
+            method: "construir_grafo_causal"
+            inputs: ["causal_data"]
+            outputs: ["dag"]
+          - module: "teoria_cambio"
+            method: "_validar_orden_causal"
+            inputs: ["dag"]
+            outputs: ["is_acyclic", "violations"]
+          - module: "financial_analyzer"
+            method: "construct_causal_dag"
+            inputs: ["document_data"]
+            outputs: ["dag_secondary"]
+        indicators:
+          - "dag_acyclic == true"
+          - "complete_paths_exist == true"
+  
+  D3_Productos:
+    description: "Product specification, indicators, formulas"
+    typical_chains:
+      indicator_extraction:
+        sequence:
+          - module: "policy_processor"
+            method: "_extract_point_evidence"
+            inputs: ["document_text", "point_code"]
+            outputs: ["evidence_by_dimension"]
+          - module: "contradiction_detector"
+            method: "_extract_quantitative_claims"
+            inputs: ["document_text"]
+            outputs: ["claims"]
+          - module: "bayesian_scorer"
+            method: "compute_evidence_score"
+            inputs: ["claims", "document_length"]
+            outputs: ["confidence"]
+        indicators:
+          - "formula_present == true"
+          - "baseline_specified == true"
+          - "target_specified == true"
+  
+  D4_Resultados:
+    description: "Outcome metrics, causal chains, measurability"
+    typical_chains:
+      causal_chain_validation:
+        sequence:
+          - module: "teoria_cambio"
+            method: "construir_grafo_causal"
+            inputs: ["causal_specification"]
+            outputs: ["dag"]
+          - module: "teoria_cambio"
+            method: "_encontrar_caminos_completos"
+            inputs: ["dag", "source", "target"]
+            outputs: ["paths", "completeness"]
+          - module: "mechanism_inference"
+            method: "infer_mechanisms"
+            inputs: ["dag", "evidence"]
+            outputs: ["mechanisms"]
+        indicators:
+          - "causal_path_complete == true"
+          - "mechanisms_identified >= 1"
+      
+      temporal_consistency:
+        sequence:
+          - module: "temporal_verifier"
+            method: "verify_temporal_consistency"
+            inputs: ["temporal_claims"]
+            outputs: ["conflicts", "consistency_score"]
+        indicators:
+          - "temporal_conflicts_count == 0"
+          - "consistency_score >= 0.85"
+  
+  D5_Impactos:
+    description: "Long-term impacts, transmission pathways, plausibility"
+    typical_chains:
+      pathway_analysis:
+        sequence:
+          - module: "causal_extractor"
+            method: "extract_causal_hierarchy"
+            inputs: ["document_text"]
+            outputs: ["hierarchy"]
+          - module: "mechanism_inference"
+            method: "infer_mechanisms"
+            inputs: ["hierarchy"]
+            outputs: ["mechanisms"]
+          - module: "dereck_beach"
+            method: "apply_beach_tests"
+            inputs: ["mechanism_evidence"]
+            outputs: ["plausibility_score"]
+        indicators:
+          - "transmission_pathways >= 1"
+          - "plausibility_score >= 0.70"
+  
+  D6_Causalidad:
+    description: "Explicit theory of change, DAG completeness, assumptions"
+    typical_chains:
+      toc_validation:
+        sequence:
+          - module: "teoria_cambio"
+            method: "construir_grafo_causal"
+            inputs: ["toc_specification"]
+            outputs: ["dag"]
+          - module: "teoria_cambio"
+            method: "validacion_completa"
+            inputs: ["dag"]
+            outputs: ["validation_report"]
+          - module: "teoria_cambio"
+            method: "_encontrar_caminos_completos"
+            inputs: ["dag"]
+            outputs: ["path_completeness"]
+          - module: "causal_extractor"
+            method: "extract_causal_hierarchy"
+            inputs: ["document_text"]
+            outputs: ["extracted_hierarchy"]
+          - module: "financial_analyzer"
+            method: "construct_causal_dag"
+            inputs: ["financial_data"]
+            outputs: ["dag_cross_validation"]
+        indicators:
+          - "explicit_toc == true"
+          - "dag_acyclic == true"
+          - "path_completeness >= 0.90"
+          - "assumptions_testable == true"
+
+# SCORING MODALITIES (From CHESS Strategy)
+scoring_modalities:
+  TYPE_A_BAYESIAN:
+    description: "Bayesian numerical analysis for quantitative claims"
+    modules: ["bayesian_scorer", "contradiction_detector"]
+    primary_method: "BayesianEvidenceScorer.compute_evidence_score"
+    applicable_to: ["D1", "D2", "D3", "D4", "D5"]
+    
+  TYPE_B_CAUSAL_DAG:
+    description: "Causal DAG validation and completeness"
+    modules: ["teoria_cambio", "financial_analyzer", "causal_extractor"]
+    primary_method: "TeoriaCambio.validacion_completa"
+    applicable_to: ["D2", "D3", "D4", "D6"]
+    
+  TYPE_C_COHERENCE:
+    description: "Contradiction detection (inverted scoring)"
+    modules: ["contradiction_detector", "temporal_verifier"]
+    primary_method: "PolicyContradictionDetector._calculate_global_semantic_coherence"
+    applicable_to: ["D1", "D2", "D4", "D5"]
+    
+  TYPE_D_PATTERN:
+    description: "Pattern matching and evidence density"
+    modules: ["policy_processor", "embedding_engine"]
+    primary_method: "IndustrialPolicyProcessor._match_patterns_in_sentences"
+    applicable_to: ["D1", "D2", "D3", "D4", "D5", "D6"]
+    
+  TYPE_E_FINANCIAL:
+    description: "Budget traceability and financial feasibility"
+    modules: ["financial_analyzer", "financial_auditor"]
+    primary_method: "FinancialAuditor.trace_financial_allocation"
+    applicable_to: ["D1", "D3"]
+    
+  TYPE_F_BEACH:
+    description: "Derek Beach evidential tests for mechanisms"
+    modules: ["dereck_beach", "mechanism_inference"]
+    primary_method: "BeachEvidentialTest.apply_test_logic"
+    applicable_to: ["D2", "D4", "D5", "D6"]
+
+# QUALITY THRESHOLDS (From rubric_scoring.json)
+thresholds:
+  EXCELENTE:
+    score_min: 0.85
+    requirements:
+      - "all_critical_indicators_present == true"
+      - "source_diversity >= 3"
+      - "confidence_interval_width <= 0.15"
+      - "contradiction_count == 0"
+  
+  BUENO:
+    score_min: 0.70
+    requirements:
+      - "critical_indicators_coverage >= 0.80"
+      - "source_diversity >= 2"
+      - "confidence_interval_width <= 0.20"
+      - "contradiction_count <= 2"
+  
+  ACEPTABLE:
+    score_min: 0.55
+    requirements:
+      - "critical_indicators_coverage >= 0.60"
+      - "source_diversity >= 1"
+      - "confidence_interval_width <= 0.25"
+  
+  INSUFICIENTE:
+    score_min: 0.00
+    requirements: []
+
+# DATA PROVENANCE (Golden Rule 6)
+provenance:
+  capture_intermediate: true
+  lineage_tracking: true
+  metadata_versioning: true
+  audit_trail: true
+  
+# OBSERVABILITY (Golden Rule 10)
+observability:
+  metrics_export: true
+  logging_level: "INFO"
+  trace_execution: true
+  performance_monitoring: true

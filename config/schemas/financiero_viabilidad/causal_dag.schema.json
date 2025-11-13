@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/financiero_viabilidad/causal_dag.schema.json",
+  "title": "CausalDAG",
+  "description": "Grafo Acíclico Dirigido (DAG) completo para análisis causal",
+  "type": "object",
+  "required": ["nodes", "edges", "adjacency_matrix", "graph_metadata"],
+  "properties": {
+    "nodes": {
+      "type": "object",
+      "description": "Diccionario de nodos causales indexado por nombre",
+      "patternProperties": {
+        "^.+$": {
+          "$ref": "causal_node.schema.json"
+        }
+      },
+      "minProperties": 1
+    },
+    "edges": {
+      "type": "array",
+      "description": "Lista de aristas causales",
+      "items": {
+        "$ref": "causal_edge.schema.json"
+      },
+      "minItems": 0
+    },
+    "adjacency_matrix": {
+      "type": "array",
+      "description": "Matriz de adyacencia del grafo (n×n)",
+      "items": {
+        "type": "array",
+        "items": {"type": "number"}
+      }
+    },
+    "graph_metadata": {
+      "type": "object",
+      "description": "Metadatos del grafo (reemplaza objeto nx.DiGraph)",
+      "properties": {
+        "is_acyclic": {"type": "boolean"},
+        "node_count": {"type": "integer", "minimum": 0},
+        "edge_count": {"type": "integer", "minimum": 0},
+        "connected_components": {"type": "integer", "minimum": 1},
+        "topological_order": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "required": ["is_acyclic", "node_count", "edge_count"]
+    }
+  },
+  "additionalProperties": false
+}

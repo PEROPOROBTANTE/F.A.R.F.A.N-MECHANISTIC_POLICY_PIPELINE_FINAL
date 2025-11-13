@@ -1,0 +1,35 @@
+{
+  "method_compatibility": {
+    "pattern_extractor_v2": {
+      "questions": {
+        "Q001": 1.0,
+        "Q031": 0.7,
+        "Q091": 0.3
+      },
+      "dimensions": {
+        "DIM01": 1.0,
+        "DIM02": 0.7,
+        "DIM03": 0.3
+      },
+      "policies": {
+        "PA01": 1.0,
+        "PA10": 0.7,
+        "PA03": 0.3
+      }
+    },
+    "coherence_validator": {
+      "questions": {
+        "Q001": 1.0,
+        "Q002": 1.0
+      },
+      "dimensions": {
+        "DIM01": 1.0,
+        "DIM02": 0.7
+      },
+      "policies": {
+        "PA01": 1.0,
+        "PA02": 0.7
+      }
+    }
+  }
+}

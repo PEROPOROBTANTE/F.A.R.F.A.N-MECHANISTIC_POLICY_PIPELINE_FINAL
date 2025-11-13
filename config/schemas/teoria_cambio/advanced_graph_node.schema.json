@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/teoria_cambio/advanced_graph_node.schema.json",
+  "title": "AdvancedGraphNode",
+  "description": "Nodo enriquecido utilizado por AdvancedDAGValidator con dependencias únicas, metadatos normalizados y rol semántico compatible con la jerarquía de teoría de cambio.",
+  "type": "object",
+  "required": ["name", "dependencies", "metadata", "role"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Identificador único del nodo dentro del DAG de teoría de cambio",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Lista ordenada de nodos antecesores (set serializado en orden lexicográfico estable).",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "uniqueItems": true
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadatos del nodo con valores primitivos (timestamps ISO 8601 y confianza en [0,1]).",
+      "required": ["created", "confidence"],
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Fecha y hora de creación en formato ISO 8601."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Nivel de confianza asociado al nodo (0 = sin evidencia, 1 = evidencia concluyente)."
+        }
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {"type": "string"},
+          {"type": "number"},
+          {"type": "boolean"},
+          {"type": "null"}
+        ]
+      }
+    },
+    "role": {
+      "type": "string",
+      "description": "Rol semántico del nodo dentro de la jerarquía axiomática",
+      "enum": [
+        "variable",
+        "insumo",
+        "proceso",
+        "producto",
+        "resultado",
+        "causalidad"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "reduccion_vbg",
+      "dependencies": ["comisarias_funcionales"],
+      "metadata": {
+        "created": "2025-10-22T12:34:56+00:00",
+        "confidence": 0.92,
+        "evidence_source": "Encuesta Nacional 2024"
+      },
+      "role": "resultado"
+    }
+  ]
+}

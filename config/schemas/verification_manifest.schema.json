@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kkkkknhh/SAAAAAA/schemas/verification_manifest.schema.json",
+  "title": "Verification Manifest",
+  "description": "Schema for pipeline execution verification manifest with cryptographic integrity",
+  "type": "object",
+  "required": [
+    "version",
+    "timestamp",
+    "success",
+    "pipeline_hash",
+    "environment",
+    "determinism",
+    "integrity_hmac"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Manifest schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of manifest generation"
+    },
+    "success": {
+      "type": "boolean",
+      "description": "Overall pipeline execution success flag"
+    },
+    "pipeline_hash": {
+      "type": "string",
+      "description": "SHA256 hash of the pipeline execution",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "environment": {
+      "type": "object",
+      "description": "Execution environment information",
+      "required": ["python_version", "platform", "timestamp_utc"],
+      "properties": {
+        "python_version": {
+          "type": "string",
+          "description": "Python version string"
+        },
+        "platform": {
+          "type": "string",
+          "description": "Operating system platform"
+        },
+        "cpu_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of CPU cores"
+        },
+        "memory_gb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Available memory in gigabytes"
+        },
+        "timestamp_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp"
+        }
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "description": "Deterministic execution tracking",
+      "required": ["seed_version"],
+      "properties": {
+        "base_seed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Base seed for execution"
+        },
+        "policy_unit_id": {
+          "type": "string",
+          "description": "Policy unit identifier"
+        },
+        "correlation_id": {
+          "type": "string",
+          "description": "Execution correlation identifier"
+        },
+        "seed_version": {
+          "type": "string",
+          "description": "Seed derivation algorithm version",
+          "examples": ["sha256_v1"]
+        },
+        "seeds_by_component": {
+          "type": "object",
+          "description": "Seeds used by each component",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "calibrations": {
+      "type": "object",
+      "description": "Calibration information",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Calibration registry version"
+        },
+        "hash": {
+          "type": "string",
+          "description": "Calibration data hash",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "methods_calibrated": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of calibrated methods"
+        },
+        "methods_missing": {
+          "type": "array",
+          "description": "List of methods without calibration",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ingestion": {
+      "type": "object",
+      "description": "Document ingestion information",
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "Ingestion method used",
+          "enum": ["SPC", "CPP"]
+        },
+        "chunk_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of chunks processed"
+        },
+        "text_length": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total text length processed"
+        },
+        "sentence_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of sentences extracted"
+        },
+        "chunk_strategy": {
+          "type": "string",
+          "description": "Chunking strategy used"
+        },
+        "chunk_overlap": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Chunk overlap in characters"
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "description": "Execution phase results",
+      "items": {
+        "type": "object",
+        "required": ["phase_id", "phase_name", "success"],
+        "properties": {
+          "phase_id": {
+            "type": "integer",
+            "description": "Phase numeric identifier"
+          },
+          "phase_name": {
+            "type": "string",
+            "description": "Phase human-readable name"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Phase execution success"
+          },
+          "duration_ms": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Phase duration in milliseconds"
+          },
+          "items_processed": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of items processed"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if phase failed"
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "description": "Generated artifacts and their hashes",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["path", "hash"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Artifact file path"
+          },
+          "hash": {
+            "type": "string",
+            "description": "SHA256 hash of artifact",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Artifact size in bytes"
+          }
+        }
+      }
+    },
+    "integrity_hmac": {
+      "type": "string",
+      "description": "HMAC-SHA256 of manifest content for integrity verification",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

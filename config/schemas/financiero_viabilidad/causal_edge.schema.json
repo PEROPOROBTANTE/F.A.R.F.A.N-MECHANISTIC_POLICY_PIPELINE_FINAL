@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/financiero_viabilidad/causal_edge.schema.json",
+  "title": "CausalEdge",
+  "description": "Arista causal entre nodos en el DAG",
+  "type": "object",
+  "required": ["source", "target", "edge_type", "mechanism", "probability"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Nombre del nodo fuente",
+      "minLength": 1
+    },
+    "target": {
+      "type": "string",
+      "description": "Nombre del nodo destino",
+      "minLength": 1
+    },
+    "edge_type": {
+      "type": "string",
+      "enum": ["direct", "mediated", "confounded"],
+      "description": "Tipo de relación causal"
+    },
+    "effect_size_posterior": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Posterior bayesiano del efecto: [media, percentil_2.5, percentil_97.5]"
+        }
+      ]
+    },
+    "mechanism": {
+      "type": "string",
+      "description": "Descripción del mecanismo causal",
+      "maxLength": 2000
+    },
+    "evidence_quotes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 1000
+      },
+      "description": "Citas textuales del documento como evidencia",
+      "maxItems": 50
+    },
+    "probability": {
+      "type": "number",
+      "description": "Probabilidad de la relación causal (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "additionalProperties": false
+}

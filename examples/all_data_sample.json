@@ -1,0 +1,47 @@
+{
+  "micro_scores": {
+    "PA01-DIM01": 1.2,
+    "PA01-DIM02": 1.5,
+    "PA02-DIM02": 1.4,
+    "PA03-DIM05": 1.3,
+    "PA04-DIM03": 1.6,
+    "PA05-DIM04": 1.1,
+    "PA06-DIM02": 2.0,
+    "PA07-DIM01": 1.8,
+    "PA08-DIM05": 1.4,
+    "PA09-DIM03": 1.2,
+    "PA10-DIM06": 1.3
+  },
+  "cluster_data": {
+    "CL01": {
+      "score": 68.5,
+      "variance": 0.22,
+      "weak_pa": "PA02"
+    },
+    "CL02": {
+      "score": 58.3,
+      "variance": 0.15
+    },
+    "CL03": {
+      "score": 72.1,
+      "variance": 0.26,
+      "weak_pa": "PA04"
+    },
+    "CL04": {
+      "score": 65.8,
+      "variance": 0.28,
+      "weak_pa": "PA09"
+    }
+  },
+  "macro_data": {
+    "macro_band": "SATISFACTORIO",
+    "clusters_below_target": ["CL02", "CL03"],
+    "variance_alert": "MODERADA",
+    "priority_micro_gaps": [
+      "PA01-DIM05",
+      "PA05-DIM04",
+      "PA04-DIM04",
+      "PA08-DIM05"
+    ]
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "version": "1.0",
+  "created_at": "2025-10-26T00:00:00Z",
+  "description": "Broad metadata applicable to all municipal development plans in the SAAAAAA analysis system",
+  "system_info": {
+    "system_name": "SAAAAAA",
+    "system_description": "Strategic Policy Analysis System for Colombian Municipal Development Plans",
+    "evaluation_framework": "300-question comprehensive assessment",
+    "analysis_levels": ["MICRO", "MESO", "MACRO"],
+    "chess_strategy": "Opening (7 producers) → Middle Game (6 modalities) → Endgame (synthesis)"
+  },
+  "document_standards": {
+    "document_type": "PDM",
+    "document_type_full": "Plan de Desarrollo Municipal",
+    "country": "Colombia",
+    "language": "Spanish (es)",
+    "encoding": "UTF-8",
+    "format": "PDF",
+    "legal_basis": [
+      "Constitución Política de Colombia (Arts. 287, 288, 311, 313, 315, 339, 342)",
+      "Ley 136 de 1994",
+      "Ley 152 de 1994",
+      "Ley 388 de 1997",
+      "Ley 810 de 2003"
+    ]
+  },
+  "common_document_structure": {
+    "typical_sections": [
+      {
+        "section": "Exposición de Motivos",
+        "description": "Legal and contextual justification for the plan",
+        "importance": "high"
+      },
+      {
+        "section": "Diagnóstico Territorial",
+        "description": "Baseline analysis of municipal conditions",
+        "importance": "high"
+      },
+      {
+        "section": "Ejes Estratégicos",
+        "description": "Strategic pillars guiding development",
+        "importance": "high"
+      },
+      {
+        "section": "Objetivos Generales y Específicos",
+        "description": "Overall and specific development goals",
+        "importance": "high"
+      },
+      {
+        "section": "Políticas y Estrategias",
+        "description": "Policy frameworks and implementation strategies",
+        "importance": "high"
+      },
+      {
+        "section": "Programas y Proyectos",
+        "description": "Specific programs and projects for implementation",
+        "importance": "high"
+      },
+      {
+        "section": "Plan Plurianual de Inversiones",
+        "description": "Multi-year investment plan with budget allocation",
+        "importance": "critical"
+      },
+      {
+        "section": "Indicadores y Metas",
+        "description": "Performance indicators and targets",
+        "importance": "high"
+      },
+      {
+        "section": "Sistema de Seguimiento",
+        "description": "Monitoring and evaluation system",
+        "importance": "medium"
+      }
+    ]
+  },
+  "evaluation_dimensions": {
+    "count": 6,
+    "dimensions": [
+      {
+        "code": "D1",
+        "name": "Gobernanza",
+        "description": "Governance and institutional capacity"
+      },
+      {
+        "code": "D2",
+        "name": "Social",
+        "description": "Social development and inclusion"
+      },
+      {
+        "code": "D3",
+        "name": "Económico",
+        "description": "Economic development and competitiveness"
+      },
+      {
+        "code": "D4",
+        "name": "Ambiental",
+        "description": "Environmental sustainability"
+      },
+      {
+        "code": "D5",
+        "name": "Institucional",
+        "description": "Institutional strengthening"
+      },
+      {
+        "code": "D6",
+        "name": "Territorial",
+        "description": "Territorial planning and development"
+      }
+    ]
+  },
+  "analysis_configuration": {
+    "total_questions": 300,
+    "scoring_modalities": 6,
+    "modality_types": ["TYPE_A", "TYPE_B", "TYPE_C", "TYPE_D", "TYPE_E", "TYPE_F"],
+    "producer_modules": 7,
+    "producers": [
+      "dereck_beach - Beach methodology (CDAF framework)",
+      "policy_processor - Industrial policy analysis",
+      "embedding_policy - Semantic embeddings and Bayesian analysis",
+      "semantic_chunking_policy - Document segmentation",
+      "teoria_cambio - Theory of change validation",
+      "contradiction_deteccion - Contradiction and coherence detection",
+      "financiero_viabilidad_tablas - Financial and causal analysis"
+    ],
+    "aggregator_module": "report_assembly - Single responsibility collection and synthesis"
+  },
+  "output_schema": {
+    "micro_level": {
+      "description": "Individual question answers",
+      "count": 300,
+      "structure": "MicroLevelAnswer with evidence, confidence, and provenance"
+    },
+    "meso_level": {
+      "description": "Policy cluster analyses",
+      "count": 60,
+      "structure": "MesoLevelCluster with aggregated scores and patterns"
+    },
+    "macro_level": {
+      "description": "Overall plan classification and convergence",
+      "count": 1,
+      "structure": "MacroLevelConvergence with synthesis and recommendations"
+    }
+  },
+  "quality_thresholds": {
+    "EXCELENTE": {
+      "range": [0.85, 1.0],
+      "description": "Excellent alignment with framework"
+    },
+    "BUENO": {
+      "range": [0.70, 0.84],
+      "description": "Good alignment with framework"
+    },
+    "ACEPTABLE": {
+      "range": [0.55, 0.69],
+      "description": "Acceptable alignment with framework"
+    },
+    "INSUFICIENTE": {
+      "range": [0.0, 0.54],
+      "description": "Insufficient alignment with framework"
+    }
+  },
+  "processing_notes": {
+    "note_1": "All plans follow Colombian national standards for municipal development planning",
+    "note_2": "Plans may span different time periods (2012-2015, 2024-2027) enabling temporal analysis",
+    "note_3": "All plans are in Spanish and use UTF-8 encoding",
+    "note_4": "Document structure is consistent across plans despite variations in presentation",
+    "note_5": "Financial data is critical for viability assessment across all plans"
+  }
+}

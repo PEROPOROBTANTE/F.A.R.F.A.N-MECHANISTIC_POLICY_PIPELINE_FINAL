@@ -1,0 +1,200 @@
+{
+  "coverage": 0.6296296296296297,
+  "total_spec_methods": 81,
+  "total_available_methods": 449,
+  "resolved_methods": [
+    "BayesianConfidenceCalculator.calculate_posterior",
+    "DocumentProcessor.load_docx",
+    "DocumentProcessor.load_pdf",
+    "IndustrialPolicyProcessor.__init__",
+    "IndustrialPolicyProcessor._build_point_patterns",
+    "IndustrialPolicyProcessor._compile_pattern_registry",
+    "IndustrialPolicyProcessor._match_patterns_in_sentences",
+    "IndustrialPolicyProcessor.process",
+    "MunicipalOntology.__init__",
+    "PDETMunicipalPlanAnalyzer._generate_recommendations",
+    "PDETMunicipalPlanAnalyzer.analyze_municipal_plan",
+    "PerformanceAnalyzer._calculate_loss_functions",
+    "PolicyAnalysisPipeline.__init__",
+    "PolicyContradictionDetector.__init__",
+    "PolicyContradictionDetector._build_knowledge_graph",
+    "PolicyContradictionDetector._calculate_confidence_interval",
+    "PolicyContradictionDetector._calculate_contradiction_entropy",
+    "PolicyContradictionDetector._calculate_global_semantic_coherence",
+    "PolicyContradictionDetector._calculate_graph_fragmentation",
+    "PolicyContradictionDetector._calculate_objective_alignment",
+    "PolicyContradictionDetector._calculate_syntactic_complexity",
+    "PolicyContradictionDetector._classify_contradiction",
+    "PolicyContradictionDetector._detect_logical_incompatibilities",
+    "PolicyContradictionDetector._detect_numerical_inconsistencies",
+    "PolicyContradictionDetector._detect_resource_conflicts",
+    "PolicyContradictionDetector._detect_temporal_conflicts",
+    "PolicyContradictionDetector._determine_relation_type",
+    "PolicyContradictionDetector._determine_semantic_role",
+    "PolicyContradictionDetector._extract_quantitative_claims",
+    "PolicyContradictionDetector._extract_resource_mentions",
+    "PolicyContradictionDetector._extract_temporal_markers",
+    "PolicyContradictionDetector._generate_embeddings",
+    "PolicyContradictionDetector._generate_resolution_recommendations",
+    "PolicyContradictionDetector._get_context_window",
+    "PolicyContradictionDetector._get_dependency_depth",
+    "PolicyContradictionDetector._get_graph_statistics",
+    "PolicyContradictionDetector._identify_affected_sections",
+    "PolicyContradictionDetector._identify_dependencies",
+    "PolicyContradictionDetector._initialize_pdm_patterns",
+    "PolicyContradictionDetector._parse_number",
+    "SemanticAnalyzer.__init__",
+    "SemanticAnalyzer._calculate_semantic_complexity",
+    "SemanticAnalyzer._classify_cross_cutting_themes",
+    "TemporalLogicVerifier._build_timeline",
+    "TemporalLogicVerifier._check_deadline_constraints",
+    "TemporalLogicVerifier._extract_resources",
+    "TemporalLogicVerifier.verify_temporal_consistency",
+    "TeoriaCambio._encontrar_caminos_completos",
+    "TeoriaCambio._validar_orden_causal",
+    "TeoriaCambio.validacion_completa",
+    "nx.DiGraph"
+  ],
+  "missing_methods": {},
+  "per_dimension": {
+    "D1": {
+      "D1-Q1": [
+        "IndustrialPolicyProcessor.process",
+        "PolicyContradictionDetector._extract_quantitative_claims",
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._parse_number",
+        "SemanticAnalyzer._calculate_semantic_complexity",
+        "BayesianConfidenceCalculator.calculate_posterior"
+      ],
+      "D1-Q3": [
+        "PolicyContradictionDetector._extract_resource_mentions",
+        "PolicyContradictionDetector._detect_numerical_inconsistencies",
+        "PolicyContradictionDetector._detect_resource_conflicts"
+      ],
+      "D1-Q4": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._determine_semantic_role",
+        "PolicyContradictionDetector._calculate_graph_fragmentation"
+      ],
+      "D1-Q5": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._detect_temporal_conflicts",
+        "TemporalLogicVerifier.verify_temporal_consistency",
+        "PolicyContradictionDetector._calculate_confidence_interval"
+      ]
+    },
+    "D2": {
+      "D2-Q1": [
+        "PDETMunicipalPlanAnalyzer.analyze_municipal_plan",
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._detect_temporal_conflicts",
+        "TemporalLogicVerifier._build_timeline"
+      ],
+      "D2-Q2_Q3": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._determine_relation_type",
+        "SemanticAnalyzer._classify_cross_cutting_themes"
+      ],
+      "D2-Q4": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._detect_logical_incompatibilities",
+        "PolicyContradictionDetector._identify_affected_sections"
+      ],
+      "D2-Q5": [
+        "PolicyContradictionDetector._calculate_global_semantic_coherence",
+        "PolicyContradictionDetector._build_knowledge_graph",
+        "PolicyContradictionDetector._get_dependency_depth"
+      ]
+    },
+    "D3": {
+      "D3-Q1": [
+        "PolicyContradictionDetector._extract_quantitative_claims",
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "BayesianConfidenceCalculator.calculate_posterior"
+      ],
+      "D3-Q2": [
+        "PolicyContradictionDetector._detect_numerical_inconsistencies",
+        "PerformanceAnalyzer.analyze_loss_function"
+      ],
+      "D3-Q4": [
+        "PolicyContradictionDetector._detect_temporal_conflicts",
+        "TemporalLogicVerifier._check_deadline_constraints",
+        "PolicyContradictionDetector._detect_resource_conflicts",
+        "PolicyContradictionDetector._get_context_window"
+      ],
+      "D3-Q5": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._determine_relation_type"
+      ]
+    },
+    "D4": {
+      "D4-Q2": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._build_knowledge_graph",
+        "PolicyContradictionDetector._determine_semantic_role"
+      ],
+      "D4-Q3": [
+        "PolicyContradictionDetector._detect_numerical_inconsistencies",
+        "PolicyContradictionDetector._calculate_objective_alignment",
+        "PDETMunicipalPlanAnalyzer.generate_recommendations"
+      ],
+      "D4-Q5": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._calculate_global_semantic_coherence"
+      ]
+    },
+    "D5": {
+      "D5-Q1": [
+        "PolicyContradictionDetector._extract_temporal_markers",
+        "TemporalLogicVerifier._extract_resources",
+        "PolicyContradictionDetector._calculate_objective_alignment"
+      ],
+      "D5-Q2_Q3": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._classify_contradiction",
+        "PolicyContradictionDetector._get_graph_statistics"
+      ],
+      "D5-Q4": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._detect_logical_incompatibilities",
+        "PolicyContradictionDetector._calculate_contradiction_entropy"
+      ],
+      "D5-Q5": [
+        "IndustrialPolicyProcessor._match_patterns_in_sentences"
+      ]
+    },
+    "D6": {
+      "D6-Q1_Q2": [
+        "PolicyContradictionDetector._build_knowledge_graph",
+        "nx.DiGraph",
+        "AdvancedDAGValidator.validacion_completa",
+        "AdvancedDAGValidator._validar_orden_causal",
+        "AdvancedDAGValidator._encontrar_caminos_completos",
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._calculate_syntactic_complexity"
+      ],
+      "D6-Q3_Q4": [
+        "PolicyContradictionDetector._detect_logical_incompatibilities",
+        "IndustrialPolicyProcessor._match_patterns_in_sentences",
+        "PolicyContradictionDetector._generate_resolution_recommendations"
+      ],
+      "D6-Q5": [
+        "PolicyContradictionDetector._generate_embeddings",
+        "SemanticAnalyzer._classify_cross_cutting_themes",
+        "PolicyContradictionDetector._identify_dependencies"
+      ]
+    }
+  },
+  "global_methods": [
+    "PolicyAnalysisPipeline.__init__",
+    "IndustrialPolicyProcessor.__init__",
+    "DocumentProcessor.load_pdf",
+    "DocumentProcessor.load_docx",
+    "MunicipalOntology.init",
+    "SemanticAnalyzer.init",
+    "IndustrialPolicyProcessor._compile_pattern_registry",
+    "IndustrialPolicyProcessor._build_point_patterns",
+    "PolicyContradictionDetector.init",
+    "PolicyContradictionDetector._initialize_pdm_patterns"
+  ]
+}

@@ -1,0 +1,143 @@
+# Core Python Dependencies - All versions pinned
+# Web Framework
+flask==3.0.3
+flask-cors==6.0.0
+flask-socketio==5.4.1
+werkzeug==3.0.6
+fastapi==0.115.6
+uvicorn==0.34.0
+sse-starlette==2.2.1
+httpx==0.28.1
+
+# WebSocket Support
+python-socketio==5.14.1
+gevent==24.11.1
+gevent-websocket==0.10.1
+
+# Authentication
+pyjwt==2.10.1
+
+# Configuration
+pyyaml==6.0.2
+python-dotenv==1.0.1
+typer==0.15.1
+
+# Core Scientific Computing
+# NumPy 1.26.4 is REQUIRED for Python 3.12 compatibility with PyMC/PyTensor stack
+# NumPy 2.0 breaks binary compatibility with PyMC - this is NOT a downgrade
+numpy==1.26.4
+scipy==1.14.1
+pandas==2.2.3
+polars==1.19.0
+pyarrow==19.0.0
+
+# Machine Learning
+scikit-learn==1.6.1
+tensorflow==2.18.0
+torch==2.8.0
+
+# NLP
+transformers==4.53.0
+sentence-transformers==3.3.1
+spacy==3.8.3
+
+# Graph Analysis
+networkx==3.4.2
+igraph==0.11.8
+python-louvain==0.16
+pydot==3.0.4
+
+# Bayesian Analysis
+# PyTensor 2.34.0 is last version supporting NumPy 1.x (required for Python 3.12)
+# PyTensor 2.35+ requires NumPy 2.0 which breaks PyMC binary compatibility
+pytensor==2.34.0
+# PyMC 5.16.2 works with PyTensor 2.34 and can build from source on Python 3.12
+pymc==5.16.2
+arviz==0.20.0
+
+# Causal Inference
+dowhy==0.12
+econml==0.15.1
+
+# PDF Processing
+pdfplumber==0.11.4
+PyPDF2==3.0.1
+PyMuPDF==1.25.2
+tabula-py==2.10.0
+camelot-py==0.11.0
+python-docx==1.1.2
+
+# Computer Vision
+opencv-python==4.10.0.84
+
+# NLP Additional Dependencies
+nltk==3.9.1
+sentencepiece==0.2.0
+tiktoken==0.8.0
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.26.1
+langdetect==1.0.9
+regex==2024.11.6
+
+# Hugging Face Ecosystem
+# huggingface-hub==0.27.1 resolves the transformers initialization regression
+huggingface-hub==0.27.1
+safetensors==0.5.2
+tokenizers==0.21.0
+filelock==3.16.1
+
+# Data Validation
+jsonschema==4.23.0
+pydantic==2.10.6
+
+# Database
+redis==5.2.1
+sqlalchemy==2.0.37
+
+# Production Server
+gunicorn==23.0.0
+
+# Development
+pytest==8.3.4
+pytest-cov==6.0.0
+black==24.10.0
+flake8==7.1.1
+hypothesis==6.122.7
+
+# Monitoring
+prometheus-client==0.21.1
+psutil==6.1.1
+structlog==24.4.0
+opentelemetry-api==1.29.0
+opentelemetry-sdk==1.29.0
+opentelemetry-instrumentation-fastapi==0.50b0
+tenacity==9.0.0
+
+# Type Checking
+typing-extensions==4.12.2
+
+# Hashing & Security
+blake3==0.4.1
+
+# Build Tools
+setuptools==78.1.1
+
+# HTTP & Networking
+requests==2.32.4
+urllib3==2.5.0
+certifi==2024.7.4
+charset-normalizer==3.3.2
+idna==3.7
+
+# Utilities
+tqdm==4.66.3
+packaging==23.2
+click==8.1.7
+joblib==1.3.2
+threadpoolctl==3.2.0
+six==1.16.0
+python-dateutil==2.8.2
+pytz==2024.1
+
+# Testing & Contract Validation
+schemathesis==3.39.16

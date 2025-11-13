@@ -1,0 +1,93 @@
+{
+  "CDAFFrameworkInputContract": {
+    "config": "NotRequired[Dict[str, Any]]",
+    "document_text": "<class 'str'>",
+    "plan_metadata": "Dict[str, Any]"
+  },
+  "CDAFFrameworkOutputContract": {
+    "audit_results": "Dict[str, Any]",
+    "bayesian_inference": "Dict[str, Any]",
+    "causal_mechanisms": "List[Dict[str, Any]]",
+    "evidential_tests": "Dict[str, Any]"
+  },
+  "ContradictionDetectorInputContract": {
+    "config": "NotRequired[Dict[str, Any]]",
+    "dimension": "NotRequired[str]",
+    "plan_name": "<class 'str'>",
+    "text": "<class 'str'>"
+  },
+  "ContradictionDetectorOutputContract": {
+    "confidence_scores": "Dict[str, float]",
+    "contradictions": "List[Dict[str, Any]]",
+    "severity_scores": "Dict[str, float]",
+    "temporal_conflicts": "List[Dict[str, Any]]"
+  },
+  "EmbeddingPolicyInputContract": {
+    "dimensions": "NotRequired[List[str]]",
+    "model_config": "NotRequired[Dict[str, Any]]",
+    "text": "<class 'str'>"
+  },
+  "EmbeddingPolicyOutputContract": {
+    "bayesian_evaluation": "Dict[str, Any]",
+    "embeddings": "List[List[float]]",
+    "policy_metrics": "Dict[str, float]",
+    "similarity_scores": "Dict[str, float]"
+  },
+  "PDETAnalyzerInputContract": {
+    "config": "NotRequired[Dict[str, Any]]",
+    "document_content": "<class 'str'>",
+    "extract_tables": "NotRequired[bool]"
+  },
+  "PDETAnalyzerOutputContract": {
+    "extracted_tables": "List[Dict[str, Any]]",
+    "financial_indicators": "Dict[str, float]",
+    "quality_scores": "Dict[str, float]",
+    "viability_score": "<class 'float'>"
+  },
+  "PolicyProcessorInputContract": {
+    "config": "NotRequired[Dict[str, Any]]",
+    "data": "Any",
+    "sentences": "NotRequired[List[str]]",
+    "tables": "NotRequired[List[Dict[str, Any]]]",
+    "text": "<class 'str'>"
+  },
+  "PolicyProcessorOutputContract": {
+    "bayesian_scores": "Dict[str, float]",
+    "evidence_bundles": "List[Dict[str, Any]]",
+    "matched_patterns": "List[Dict[str, Any]]",
+    "processed_data": "Dict[str, Any]"
+  },
+  "SemanticAnalyzerInputContract": {
+    "ontology_params": "NotRequired[Dict[str, Any]]",
+    "segments": "NotRequired[List[str]]",
+    "text": "<class 'str'>"
+  },
+  "SemanticAnalyzerOutputContract": {
+    "coherence_score": "<class 'float'>",
+    "complexity_score": "<class 'float'>",
+    "domain_classification": "Dict[str, float]",
+    "semantic_cube": "Dict[str, Any]"
+  },
+  "SemanticChunkingInputContract": {
+    "config": "NotRequired[Dict[str, Any]]",
+    "preserve_structure": "NotRequired[bool]",
+    "text": "<class 'str'>"
+  },
+  "SemanticChunkingOutputContract": {
+    "causal_dimensions": "Dict[str, Dict[str, Any]]",
+    "chunks": "List[Dict[str, Any]]",
+    "key_excerpts": "Dict[str, List[str]]",
+    "summary": "Dict[str, Any]"
+  },
+  "TeoriaCambioInputContract": {
+    "config": "NotRequired[Dict[str, Any]]",
+    "document_text": "<class 'str'>",
+    "strategic_goals": "NotRequired[List[str]]"
+  },
+  "TeoriaCambioOutputContract": {
+    "causal_dag": "Dict[str, Any]",
+    "graph_visualizations": "NotRequired[List[Dict[str, Any]]]",
+    "monte_carlo_results": "NotRequired[Dict[str, Any]]",
+    "validation_results": "Dict[str, Any]"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "macro_band": "SATISFACTORIO",
+  "clusters_below_target": ["CL02", "CL03"],
+  "variance_alert": "MODERADA",
+  "priority_micro_gaps": [
+    "PA01-DIM05",
+    "PA05-DIM04",
+    "PA04-DIM04",
+    "PA08-DIM05"
+  ]
+}

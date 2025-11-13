@@ -1,0 +1,251 @@
+{
+  "manifest_version": "1.0.0",
+  "generated": "2025-11-06T00:00:00Z",
+  "description": "Lista blanca de tests actualizados y soportados en el sistema SIN_CARRETA",
+  "total_tests": 61,
+  "updated_tests_count": 45,
+  "outdated_tests_count": 16,
+  "test_categories": {
+    "core_critical": {
+      "description": "Tests críticos del núcleo del sistema - MUST PASS",
+      "priority": "high",
+      "tests": [
+        "tests/test_contracts_comprehensive.py",
+        "tests/test_flux_contracts.py",
+        "tests/test_flux_integration.py",
+        "tests/test_signal_client.py",
+        "tests/test_signals.py",
+        "tests/test_signal_integration_e2e.py",
+        "tests/test_cpp_adapter.py",
+        "tests/test_cpp_ingestion.py",
+        "tests/test_arg_router.py",
+        "tests/test_arg_router_extended.py",
+        "tests/test_import_consistency.py",
+        "tests/test_smoke_imports.py"
+      ],
+      "markers": ["updated", "core"],
+      "min_pass_rate": 1.0
+    },
+    "integration": {
+      "description": "Tests de integración entre componentes",
+      "priority": "high",
+      "tests": [
+        "tests/test_aggregation.py",
+        "tests/test_aggregation_validation.py",
+        "tests/test_scoring.py",
+        "tests/test_recommendation_coverage.py",
+        "tests/test_enhanced_recommendations.py",
+        "tests/test_embedding_policy_contracts.py",
+        "tests/test_concurrency.py",
+        "tests/test_circuit_breaker_async.py"
+      ],
+      "markers": ["updated", "integration"],
+      "min_pass_rate": 0.95
+    },
+    "quality_validation": {
+      "description": "Tests de calidad y validación de contratos",
+      "priority": "medium",
+      "tests": [
+        "tests/test_questionnaire_validation.py",
+        "tests/test_schema_validation.py",
+        "tests/test_boundaries.py",
+        "tests/test_structure_verification.py",
+        "tests/test_questionnaire_resource_provider.py",
+        "tests/test_defensive_signatures.py",
+        "tests/test_signature_validation.py",
+        "tests/test_statistics_guards.py"
+      ],
+      "markers": ["updated", "validation"],
+      "min_pass_rate": 0.90
+    },
+    "gold_standard": {
+      "description": "Tests de estándares de oro (Gold Canario)",
+      "priority": "medium",
+      "tests": [
+        "tests/test_gold_canario_integration.py",
+        "tests/test_gold_canario_micro_bayesian.py",
+        "tests/test_gold_canario_micro_provenance.py",
+        "tests/test_gold_canario_micro_stress.py",
+        "tests/test_gold_canario_meso_reporting.py",
+        "tests/test_gold_canario_macro_reporting.py"
+      ],
+      "markers": ["updated", "gold"],
+      "min_pass_rate": 0.85
+    },
+    "operational": {
+      "description": "Tests operacionales y de infraestructura",
+      "priority": "medium",
+      "tests": [
+        "tests/operational/test_boot_checks.py",
+        "tests/operational/test_synthetic_traffic.py",
+        "tests/test_infrastructure.py",
+        "tests/test_executor_monitoring.py",
+        "tests/test_metrics_thread_safety.py",
+        "tests/test_phase_timeout.py"
+      ],
+      "markers": ["updated", "operational"],
+      "min_pass_rate": 0.90
+    },
+    "regression": {
+      "description": "Tests de regresión y fixes",
+      "priority": "low",
+      "tests": [
+        "tests/test_runtime_error_fixes.py",
+        "tests/test_regression_semantic_chunking.py",
+        "tests/test_score_normalization_fix.py",
+        "tests/test_integration_failures.py"
+      ],
+      "markers": ["updated", "regression"],
+      "min_pass_rate": 0.85
+    },
+    "property_based": {
+      "description": "Tests basados en propiedades (Hypothesis)",
+      "priority": "low",
+      "tests": [
+        "tests/test_property_based.py"
+      ],
+      "markers": ["updated", "property"],
+      "min_pass_rate": 0.95
+    }
+  },
+  "outdated_tests": {
+    "description": "Tests obsoletos o incompatibles con la arquitectura actual",
+    "reason": "Incompatible con arquitectura actual o funcionalidad deprecada",
+    "tests": [
+      {
+        "file": "tests/test_contracts.py",
+        "reason": "Replaced by test_contracts_comprehensive.py",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_contracts_comprehensive.py')"
+      },
+      {
+        "file": "tests/test_imports.py",
+        "reason": "Replaced by test_import_consistency.py and test_smoke_imports.py",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_import_consistency.py')"
+      },
+      {
+        "file": "tests/test_executor_sequences.py",
+        "reason": "Old executor model, replaced by flux phases",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - executor model changed')"
+      },
+      {
+        "file": "tests/test_executor_config_properties.py",
+        "reason": "Config system refactored to use frozen dataclasses",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - config system refactored')"
+      },
+      {
+        "file": "tests/test_executor_logging.py",
+        "reason": "Logging system migrated to structlog",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - logging migrated to structlog')"
+      },
+      {
+        "file": "tests/test_arg_router_expected_type_name.py",
+        "reason": "Merged into test_arg_router_extended.py",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - merged into test_arg_router_extended.py')"
+      },
+      {
+        "file": "tests/test_contract_runtime.py",
+        "reason": "Runtime contracts now in test_contracts_comprehensive.py",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_contracts_comprehensive.py')"
+      },
+      {
+        "file": "tests/test_contract_snapshots.py",
+        "reason": "Snapshot testing replaced by deterministic fingerprints",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - snapshot testing deprecated')"
+      },
+      {
+        "file": "tests/test_core_expected_counts.py",
+        "reason": "Count validation moved to structure_verification",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_structure_verification.py')"
+      },
+      {
+        "file": "tests/test_core_monolith_hash.py",
+        "reason": "Hash validation now part of questionnaire_validation",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - hash validation in questionnaire_validation')"
+      },
+      {
+        "file": "tests/test_coreographer.py",
+        "reason": "DELETED - Coreographer was a deprecated typo (should be choreographer)",
+        "deprecated_since": "2025-09",
+        "deleted_on": "2025-11",
+        "marker": "FILE DELETED"
+      },
+      {
+        "file": "tests/test_enhanced_argument_resolution.py",
+        "reason": "Argument resolution now in ArgRouter extended tests",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_arg_router_extended.py')"
+      },
+      {
+        "file": "tests/test_class_registry_paths.py",
+        "reason": "Registry system refactored",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - registry system refactored')"
+      },
+      {
+        "file": "tests/test_graph_resolution.py",
+        "reason": "Graph resolution logic moved to cpp_ingestion ChunkGraph",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - logic in cpp_ingestion.ChunkGraph')"
+      },
+      {
+        "file": "tests/test_macro_score_dict.py",
+        "reason": "Macro scoring now part of gold_canario_macro_reporting",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_gold_canario_macro_reporting.py')"
+      },
+      {
+        "file": "tests/test_strategic_wiring.py",
+        "reason": "Strategic wiring validation moved to system_audit",
+        "deprecated_since": "2025-10",
+        "marker": "@pytest.mark.skip(reason='outdated - use test_system_audit.py')"
+      }
+    ]
+  },
+  "execution_commands": {
+    "all_updated": "pytest -m 'updated and not outdated' -v",
+    "critical_only": "pytest tests/test_contracts_comprehensive.py tests/test_flux_integration.py tests/test_signal_client.py tests/test_cpp_adapter.py -v",
+    "by_category": {
+      "core_critical": "pytest tests/test_contracts_comprehensive.py tests/test_flux_contracts.py tests/test_flux_integration.py tests/test_signal_client.py tests/test_signals.py tests/test_signal_integration_e2e.py tests/test_cpp_adapter.py tests/test_cpp_ingestion.py tests/test_arg_router.py tests/test_arg_router_extended.py tests/test_import_consistency.py tests/test_smoke_imports.py -v",
+      "integration": "pytest tests/test_aggregation.py tests/test_aggregation_validation.py tests/test_scoring.py tests/test_recommendation_coverage.py tests/test_enhanced_recommendations.py tests/test_embedding_policy_contracts.py tests/test_concurrency.py tests/test_circuit_breaker_async.py -v",
+      "quality_validation": "pytest tests/test_questionnaire_validation.py tests/test_schema_validation.py tests/test_boundaries.py tests/test_structure_verification.py tests/test_questionnaire_resource_provider.py tests/test_defensive_signatures.py tests/test_signature_validation.py tests/test_statistics_guards.py -v"
+    },
+    "smoke": "pytest tests/test_smoke_imports.py tests/test_import_consistency.py -v",
+    "with_coverage": "pytest -m 'updated and not outdated' --cov=src/saaaaaa --cov-report=html --cov-report=term-missing",
+    "parallel": "pytest -m 'updated and not outdated' -n auto"
+  },
+  "pytest_markers": {
+    "updated": "Tests actualizados y compatibles con arquitectura actual",
+    "outdated": "Tests obsoletos - no ejecutar",
+    "core": "Tests críticos del núcleo",
+    "integration": "Tests de integración",
+    "validation": "Tests de validación y calidad",
+    "gold": "Tests de estándares de oro",
+    "operational": "Tests operacionales",
+    "regression": "Tests de regresión",
+    "property": "Tests basados en propiedades (Hypothesis)"
+  },
+  "quality_gates": {
+    "min_overall_pass_rate": 0.90,
+    "min_core_pass_rate": 1.0,
+    "min_integration_pass_rate": 0.95,
+    "max_execution_time_seconds": 600,
+    "required_coverage_percent": 75
+  },
+  "notes": [
+    "Todos los tests en 'outdated_tests' deben marcarse con @pytest.mark.skip",
+    "Los tests críticos (core_critical) deben pasar al 100%",
+    "Ejecutar 'pytest -m updated' para correr solo tests actualizados",
+    "Ejecutar 'pytest -m \"updated and core\"' para tests críticos",
+    "Ver pyproject.toml para configuración completa de markers"
+  ]
+}

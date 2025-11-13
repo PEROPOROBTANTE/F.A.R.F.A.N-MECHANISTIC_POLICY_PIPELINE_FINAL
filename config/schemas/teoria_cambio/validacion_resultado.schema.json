@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/teoria_cambio/validacion_resultado.schema.json",
+  "title": "ValidacionResultado",
+  "description": "Resultado exhaustivo de la validación estructural de una teoría de cambio contra el modelo axiomático de categorías jerárquicas (Insumos→Procesos→Productos→Resultados→Causalidad)",
+  "type": "object",
+  "required": ["es_valida", "violaciones_orden", "caminos_completos", "categorias_faltantes", "sugerencias"],
+  "properties": {
+    "es_valida": {
+      "type": "boolean",
+      "description": "TRUE si la teoría de cambio cumple todos los criterios de validación estructural"
+    },
+    "violaciones_orden": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {"type": "string"},
+        "minItems": 2,
+        "maxItems": 2,
+        "description": "Par [origen, destino] que viola el orden causal axiomático"
+      },
+      "description": "Lista de violaciones del orden causal jerárquico (INSUMOS[1]→PROCESOS[2]→PRODUCTOS[3]→RESULTADOS[4]→CAUSALIDAD[5])",
+      "examples": [
+        [["RESULTADOS", "INSUMOS"], ["PRODUCTOS", "PROCESOS"]]
+      ]
+    },
+    "caminos_completos": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["INSUMOS", "PROCESOS", "PRODUCTOS", "RESULTADOS", "CAUSALIDAD"]
+        },
+        "description": "Secuencia de categorías causales en el camino",
+        "minItems": 2
+      },
+      "description": "Caminos causales completos identificados que atraviesan la jerarquía",
+      "examples": [
+        [["INSUMOS", "PROCESOS", "PRODUCTOS", "RESULTADOS"]],
+        [["INSUMOS", "PRODUCTOS", "RESULTADOS", "CAUSALIDAD"]]
+      ]
+    },
+    "categorias_faltantes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["INSUMOS", "PROCESOS", "PRODUCTOS", "RESULTADOS", "CAUSALIDAD"]
+      },
+      "description": "Categorías causales ausentes en el grafo (crítico para completitud)",
+      "uniqueItems": true
+    },
+    "sugerencias": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 1000
+      },
+      "description": "Sugerencias generadas automáticamente para corregir deficiencias estructurales",
+      "maxItems": 50
+    },
+    "metadata_validacion": {
+      "type": "object",
+      "description": "Metadatos adicionales de la validación",
+      "properties": {
+        "total_nodos": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total de nodos en el grafo"
+        },
+        "total_aristas": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total de aristas en el grafo"
+        },
+        "es_aciclico": {
+          "type": "boolean",
+          "description": "TRUE si el grafo es acíclico (DAG)"
+        },
+        "componentes_conexos": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Número de componentes fuertemente conexos"
+        },
+        "orden_topologico": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Orden topológico de los nodos (si es DAG)"
+        },
+        "densidad_grafo": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Densidad del grafo (aristas_reales / aristas_posibles)"
+        },
+        "diametro": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Diámetro del grafo (camino más largo entre cualquier par de nodos)"
+            }
+          ]
+        },
+        "centralidad_nodos": {
+          "type": "object",
+          "description": "Medidas de centralidad por nodo",
+          "patternProperties": {
+            "^.+$": {
+              "type": "object",
+              "properties": {
+                "degree": {"type": "number"},
+                "betweenness": {"type": "number"},
+                "closeness": {"type": "number"},
+                "eigenvector": {"type": "number"}
+              }
+            }
+          }
+        },
+        "validated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de la validación"
+        },
+        "validation_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tiempo de ejecución de la validación en milisegundos"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

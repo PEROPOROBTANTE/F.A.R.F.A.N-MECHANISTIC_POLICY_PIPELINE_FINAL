@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/semantic_chunking_policy/chunk.schema.json",
+  "title": "SemanticChunk",
+  "description": "Fragmento semántico de documento de política con embeddings y metadatos estructurales",
+  "type": "object",
+  "required": ["text", "section_type", "section_id", "token_count", "position", "has_table", "has_numerical", "embedding"],
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "Contenido textual del fragmento",
+      "minLength": 1,
+      "maxLength": 50000
+    },
+    "section_type": {
+      "type": "string",
+      "enum": ["diagnostico", "vision_estrategica", "plan_plurianual", "plan_inversiones", "marco_fiscal", "seguimiento_evaluacion"],
+      "description": "Tipo de sección PDM según Ley 152/1994"
+    },
+    "section_id": {
+      "type": "string",
+      "description": "Identificador único de la sección",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "token_count": {
+      "type": "integer",
+      "description": "Número de tokens en el fragmento",
+      "minimum": 1
+    },
+    "position": {
+      "type": "integer",
+      "description": "Posición ordinal del fragmento en el documento",
+      "minimum": 0
+    },
+    "has_table": {
+      "type": "boolean",
+      "description": "Indica si el fragmento contiene datos tabulares"
+    },
+    "has_numerical": {
+      "type": "boolean",
+      "description": "Indica si el fragmento contiene datos numéricos"
+    },
+    "embedding": {
+      "type": "array",
+      "description": "Vector de embeddings semánticos (BGE-M3)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 768,
+      "maxItems": 1024
+    }
+  },
+  "additionalProperties": false
+}

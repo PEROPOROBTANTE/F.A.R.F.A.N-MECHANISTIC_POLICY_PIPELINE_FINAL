@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Execution Step",
+  "type": "object",
+  "required": [
+    "step_id",
+    "fq_method",
+    "inputs",
+    "artifacts_in",
+    "artifacts_out",
+    "evidence_contract"
+  ],
+  "properties": {
+    "step_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fq_method": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+:[A-Za-z0-9_]+\\.[A-Za-z0-9_]+$"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "artifacts_in": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "artifacts_out": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "evidence_contract": {
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

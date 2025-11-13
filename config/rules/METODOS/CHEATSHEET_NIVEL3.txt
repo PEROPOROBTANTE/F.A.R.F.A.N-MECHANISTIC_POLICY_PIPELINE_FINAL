@@ -1,0 +1,530 @@
+================================================================================
+NIVEL3 - CHEATSHEET DE MÉTODOS
+Sistema de Análisis de Políticas Públicas - 593 Métodos
+Generado: 2025-10-29 03:34:44
+================================================================================
+
+RESUMEN GENERAL
+--------------------------------------------------------------------------------
+Total de métodos:        593
+Score promedio aptitud:  98.46/100
+
+Por Complejidad:
+  LOW     : 280 métodos
+  MEDIUM  : 282 métodos
+  HIGH    :  31 métodos
+
+Por Prioridad:
+  LOW     : 289 métodos
+  MEDIUM  : 236 métodos
+  HIGH    :  24 métodos
+  CRITICAL:  44 métodos
+
+================================================================================
+
+MÉTODOS CRÍTICOS (CRITICAL PRIORITY)
+================================================================================
+Estos métodos DEBEN ejecutarse para el funcionamiento del sistema
+
+ 1. PDETMunicipalPlanAnalyzer.__init__
+    Archivo: financiero_viabilidad_tablas.py
+    Aptitud: 90/100
+    Firma: __init__(self, use_gpu, language, confidence_threshold)
+
+ 2. MunicipalOntology.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self)
+
+ 3. SemanticAnalyzer.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self, ontology)
+
+ 4. PerformanceAnalyzer.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self, ontology)
+
+ 5. TextMiningEngine.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self, ontology)
+
+ 6. MunicipalAnalyzer.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self)
+
+ 7. CanonicalQuestionSegmenter.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self, questionnaire_path, rubric_path, segmentation_method)
+
+ 8. ConfigurationManager.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self, config_path)
+
+ 9. BatchProcessor.__init__
+    Archivo: Analyzer_one.py
+    Aptitud: 90/100
+    Firma: __init__(self, analyzer)
+
+10. BayesianConfidenceCalculator.__init__
+    Archivo: contradiction_deteccion.py
+    Aptitud: 90/100
+    Firma: __init__(self)
+
+11. TemporalLogicVerifier.__init__
+    Archivo: contradiction_deteccion.py
+    Aptitud: 90/100
+    Firma: __init__(self)
+
+12. PolicyContradictionDetector.__init__
+    Archivo: contradiction_deteccion.py
+    Aptitud: 90/100
+    Firma: __init__(self, model_name, spacy_model, device)
+
+13. AdvancedSemanticChunker.__init__
+    Archivo: embedding_policy.py
+    Aptitud: 90/100
+    Firma: __init__(self, config)
+
+14. BayesianNumericalAnalyzer.__init__
+    Archivo: embedding_policy.py
+    Aptitud: 100/100
+    Firma: __init__(self, prior_strength)
+
+15. PolicyCrossEncoderReranker.__init__
+    Archivo: embedding_policy.py
+    Aptitud: 100/100
+    Firma: __init__(self, model_name, max_length, retry_handler)
+
+16. PolicyAnalysisEmbedder.__init__
+    Archivo: embedding_policy.py
+    Aptitud: 90/100
+    Firma: __init__(self, config, retry_handler)
+
+17. EmbeddingPolicyProducer.__init__
+    Archivo: embedding_policy.py
+    Aptitud: 100/100
+    Firma: __init__(self, config, model_tier, retry_handler)
+
+18. TeoriaCambio.__init__
+    Archivo: teoria_cambio.py
+    Aptitud: 100/100
+    Firma: __init__(self)
+
+19. AdvancedDAGValidator.__init__
+    Archivo: teoria_cambio.py
+    Aptitud: 90/100
+    Firma: __init__(self, graph_type)
+
+20. IndustrialGradeValidator.__init__
+    Archivo: teoria_cambio.py
+    Aptitud: 90/100
+    Firma: __init__(self)
+
+21. CDAFException.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, message, details, stage, recoverable)
+
+22. ConfigLoader.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config_path)
+
+23. PDFProcessor.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config, retry_handler)
+
+24. CausalExtractor.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config, nlp_model)
+
+25. MechanismPartExtractor.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config, nlp_model)
+
+26. FinancialAuditor.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config)
+
+27. OperationalizationAuditor.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config)
+
+28. BayesianMechanismInference.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config, nlp_model)
+
+29. CausalInferenceSetup.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config)
+
+30. ReportingEngine.__init__
+    Archivo: dereck_beach.py
+    Aptitud: 90/100
+    Firma: __init__(self, config, output_dir)
+
+================================================================================
+
+MÉTODOS DE ALTA PRIORIDAD (HIGH PRIORITY)
+================================================================================
+ 1. TemporalLogicVerifier._check_deadline_constraints
+    Complejidad: LOW | Aptitud: 100/100
+    Dependencias: Instance state
+
+ 2. IndustrialGradeValidator.validate_engine_readiness
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+ 3. IndustrialGradeValidator.validate_causal_categories
+    Complejidad: HIGH | Aptitud: 85/100
+    Dependencias: Instance state
+
+ 4. IndustrialGradeValidator.validate_connection_matrix
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+ 5. MechanismTypeConfig.check_sum_to_one
+    Complejidad: MEDIUM | Aptitud: 100/100
+
+ 6. ConfigLoader._validate_config
+    Complejidad: LOW | Aptitud: 100/100
+    Dependencias: Instance state
+
+ 7. ConfigLoader.check_uncertainty_reduction_criterion
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+ 8. CausalExtractor._check_structural_violation
+    Complejidad: LOW | Aptitud: 100/100
+    Dependencias: Instance state
+
+ 9. FinancialAuditor._perform_counterfactual_budget_check
+    Complejidad: LOW | Aptitud: 100/100
+    Dependencias: Instance state
+
+10. CDAFFramework._validate_dnp_compliance
+    Complejidad: LOW | Aptitud: 100/100
+    Dependencias: Instance state
+
+11. AdaptivePriorCalculator.validate_quality_criteria
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+12. HierarchicalGenerativeModel.posterior_predictive_check
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+13. BayesianCounterfactualAuditor.refutation_and_sanity_checks
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+14. DerekBeachProducer.posterior_predictive_check
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+15. DerekBeachProducer.refutation_checks
+    Complejidad: MEDIUM | Aptitud: 95/100
+    Dependencias: Instance state
+
+16. DerekBeachProducer.all_checks_passed
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+17. ProcessorConfig.validate
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+18. ReportAssembler._validate_macro_gating
+    Complejidad: LOW | Aptitud: 100/100
+    Dependencias: Instance state
+
+19. ReportAssembler.validate_micro_answer_schema
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+20. ReportAssembler.validate_meso_cluster_schema
+    Complejidad: MEDIUM | Aptitud: 100/100
+    Dependencias: Instance state
+
+================================================================================
+
+MÉTODOS DE ALTA COMPLEJIDAD
+================================================================================
+Requieren atención especial y recursos computacionales
+
+ 1. PDETMunicipalPlanAnalyzer._bayesian_risk_inference
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 2. PDETMunicipalPlanAnalyzer.construct_causal_dag
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 3. PDETMunicipalPlanAnalyzer._identify_causal_nodes
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 4. PDETMunicipalPlanAnalyzer._identify_causal_edges
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 5. PDETMunicipalPlanAnalyzer.estimate_causal_effects
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 6. PDETMunicipalPlanAnalyzer._estimate_effect_bayesian
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 7. PDETMunicipalPlanAnalyzer.calculate_quality_score
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 8. PDETMunicipalPlanAnalyzer._score_causal_coherence
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+ 9. PDETMunicipalPlanAnalyzer.export_causal_network
+    Archivo: financiero_viabilidad_tablas.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+10. TeoriaCambio.construir_grafo_causal
+    Archivo: teoria_cambio.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+11. TeoriaCambio._validar_orden_causal
+    Archivo: teoria_cambio.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+12. AdvancedDAGValidator._calculate_bayesian_posterior
+    Archivo: teoria_cambio.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+13. IndustrialGradeValidator.validate_causal_categories
+    Archivo: teoria_cambio.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+14. ConfigLoader.get_bayesian_threshold
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+15. CausalExtractor.extract_causal_hierarchy
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+16. CausalExtractor._extract_causal_links
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+17. OperationalizationAuditor.bayesian_counterfactual_audit
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+18. OperationalizationAuditor._build_normative_dag
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+19. OperationalizationAuditor._audit_causal_implications
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+20. ReportingEngine.generate_causal_diagram
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+21. ReportingEngine.generate_confidence_report
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+22. ReportingEngine.generate_causal_model_json
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+23. BayesianCounterfactualAuditor.aggregate_risk_and_prioritize
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+24. DerekBeachProducer.is_inference_uncertain
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+25. DerekBeachProducer.get_causal_effect
+    Archivo: dereck_beach.py
+    Reqs Computacionales: HIGH
+    Memoria: MEDIUM
+    Riesgos: High computational complexity
+
+================================================================================
+
+DISTRIBUCIÓN POR ARCHIVO
+================================================================================
+
+financiero_viabilidad_tablas.py (61 métodos)
+--------------------------------------------------------------------------------
+  • _get_spanish_stopwords                   [LOW     ] 100/100
+  • _clean_dataframe                         [LOW     ] 100/100
+  • _is_likely_header                        [LOW     ] 100/100
+  • _deduplicate_tables                      [LOW     ] 100/100
+  • _classify_tables                         [LOW     ] 100/100
+  • _extract_financial_amounts               [LOW     ] 100/100
+  • _identify_funding_source                 [LOW     ] 100/100
+  • _extract_from_budget_table               [LOW     ] 100/100
+  • _analyze_funding_sources                 [LOW     ] 100/100
+  • _assess_financial_sustainability         [LOW     ] 100/100
+
+Analyzer_one.py (46 métodos)
+--------------------------------------------------------------------------------
+  • extract_semantic_cube                    [MEDIUM  ] 100/100
+  • _empty_semantic_cube                     [LOW     ] 100/100
+  • _vectorize_segments                      [LOW     ] 100/100
+  • _process_segment                         [LOW     ] 100/100
+  • _classify_value_chain_link               [LOW     ] 100/100
+  • _classify_policy_domain                  [LOW     ] 100/100
+  • _classify_cross_cutting_themes           [LOW     ] 100/100
+  • _calculate_semantic_complexity           [LOW     ] 100/100
+  • analyze_performance                      [MEDIUM  ] 100/100
+  • _calculate_throughput_metrics            [LOW     ] 100/100
+
+contradiction_deteccion.py (54 métodos)
+--------------------------------------------------------------------------------
+  • calculate_posterior                      [MEDIUM  ] 100/100
+  • verify_temporal_consistency              [MEDIUM  ] 100/100
+  • _build_timeline                          [LOW     ] 100/100
+  • _parse_temporal_marker                   [LOW     ] 100/100
+  • _has_temporal_conflict                   [LOW     ] 100/100
+  • _are_mutually_exclusive                  [LOW     ] 100/100
+  • _extract_resources                       [LOW     ] 100/100
+  • _check_deadline_constraints              [HIGH    ] 100/100
+  • _should_precede                          [LOW     ] 100/100
+  • _classify_temporal_type                  [LOW     ] 100/100
+
+embedding_policy.py (68 métodos)
+--------------------------------------------------------------------------------
+  • chunk_document                           [MEDIUM  ] 100/100
+  • _normalize_text                          [LOW     ] 100/100
+  • _recursive_split                         [LOW     ] 100/100
+  • _find_sentence_boundary                  [LOW     ] 100/100
+  • _extract_sections                        [LOW     ] 100/100
+  • _extract_tables                          [LOW     ] 100/100
+  • _extract_lists                           [LOW     ] 100/100
+  • _infer_pdq_context                       [LOW     ] 100/100
+  • _contains_table                          [LOW     ] 100/100
+  • _contains_list                           [LOW     ] 100/100
+
+teoria_cambio.py (39 métodos)
+--------------------------------------------------------------------------------
+  • __post_init__                            [LOW     ] 100/100
+  • _normalize_metadata                      [LOW     ] 100/100
+  • _sanitize_confidence                     [LOW     ] 100/100
+  • _sanitize_created                        [LOW     ] 100/100
+  • _sanitize_metadata_value                 [LOW     ] 100/100
+  • to_serializable_dict                     [MEDIUM  ] 100/100
+  • __init__                                 [CRITICAL] 100/100
+  • _es_conexion_valida                      [LOW     ] 100/100
+  • validacion_completa                      [MEDIUM  ] 100/100
+  • _extraer_categorias                      [LOW     ] 100/100
+
+dereck_beach.py (159 métodos)
+--------------------------------------------------------------------------------
+  • classify_test                            [MEDIUM  ] 100/100
+  • apply_test_logic                         [MEDIUM  ] 100/100
+  • _format_message                          [LOW     ] 100/100
+  • to_dict                                  [MEDIUM  ] 100/100
+  • check_sum_to_one                         [HIGH    ] 100/100
+  • _load_config                             [LOW     ] 100/100
+  • _load_default_config                     [LOW     ] 100/100
+  • _validate_config                         [HIGH    ] 100/100
+  • get                                      [MEDIUM  ] 100/100
+  • get_mechanism_prior                      [MEDIUM  ] 100/100
+
+policy_processor.py (41 métodos)
+--------------------------------------------------------------------------------
+  • from_legacy                              [MEDIUM  ] 100/100
+  • validate                                 [HIGH    ] 100/100
+  • compute_evidence_score                   [MEDIUM  ] 100/100
+  • _calculate_shannon_entropy               [LOW     ] 100/100
+  • normalize_unicode                        [MEDIUM  ] 100/100
+  • segment_into_sentences                   [MEDIUM  ] 100/100
+  • extract_contextual_window                [MEDIUM  ] 100/100
+  • compile_pattern                          [MEDIUM  ] 100/100
+  • _load_questionnaire                      [LOW     ] 100/100
+  • _compile_pattern_registry                [LOW     ] 100/100
+
+report_assembly.py (125 métodos)
+--------------------------------------------------------------------------------
+  • __init__                                 [CRITICAL] 100/100
+  • generate_micro_answer                    [MEDIUM  ] 100/100
+  • _apply_scoring_modality                  [LOW     ] 100/100
+  • _score_type_a                            [LOW     ] 100/100
+  • _score_type_b                            [LOW     ] 100/100
+  • _score_type_c                            [LOW     ] 100/100
+  • _score_type_d                            [LOW     ] 100/100
+  • _score_type_e                            [LOW     ] 100/100
+  • _score_type_f                            [LOW     ] 100/100
+  • _evaluate_condition                      [LOW     ] 100/100
+
+================================================================================
+FIN DEL CHEATSHEET
+Para detalles completos ver: metodos_completos_nivel3.json y README_NIVEL3.md
+================================================================================

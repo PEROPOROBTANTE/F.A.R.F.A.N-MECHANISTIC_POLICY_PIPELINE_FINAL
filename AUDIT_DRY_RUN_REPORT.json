@@ -1,0 +1,3429 @@
+{
+  "keep": [
+    {
+      "path": ".env.example",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": ".python-version",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "bayesian_multilevel_system.py",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "concurrency/__init__.py",
+      "reason": "Compatibility shim for backward-compatible imports"
+    },
+    {
+      "path": "concurrency/concurrency.py",
+      "reason": "Compatibility shim for backward-compatible imports"
+    },
+    {
+      "path": "config/recommendation_rules.json",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "config/recommendation_rules_enhanced.json",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "config/rules/METODOS/complete_canonical_catalog.json",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "config/schemas/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "config/schemas/questionnaire_monolith.schema.json",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "constraints.txt",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "contracts/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "core/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "coverage_gate.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "data/prompt_cross_registry.json",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "demo_macro_prompts.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "document_ingestion.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "evidence_registry.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "examples/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "examples/flux_demo.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "examples/micro_prompts_integration_demo.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "executors/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "json_contract_loader.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "macro_prompts.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "meso_cluster_analysis.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "micro_prompts.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "minipdm/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "minipdm/requirements.txt",
+      "reason": "Dependency specification for pip install"
+    },
+    {
+      "path": "orchestrator.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "orchestrator/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "orchestrator/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "orchestrator/arg_router.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "orchestrator/factory.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "orchestrator/provider.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "orchestrator/settings.py",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "provenance.csv",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "pyproject.toml",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "qmcm_hooks.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "recommendation_engine.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "requirements.txt",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "requirements_atroz.txt",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "runtime_audit.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scoring/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scoring/scoring.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/build_monolith.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/create_deployment_zip.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/signature_ci_check.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/update_imports.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/validate_imports.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/validate_strategic_wiring.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/validate_system.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/verify_complete_implementation.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/verify_dependencies.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "scripts/verify_imports.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "seed_factory.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "setup.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/Analyzer_one.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/bayesian_multilevel_system.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/contradiction_deteccion.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/dereck_beach.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/factory.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/recommendation_engine.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/scoring/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/scoring/scoring.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/analysis/teoria_cambio.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/api/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/api/api_server.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/api/static/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "src/saaaaaa/concurrency/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "src/saaaaaa/concurrency/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/concurrency/concurrency.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/controls/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/arg_router.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/arg_router_extended.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/class_registry.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/contract_loader.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/core.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/core_module_factory.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/evidence_registry.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/executors.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/factory.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/signals.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/core/ports.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/flux/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "src/saaaaaa/flux/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/flux/cli.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/flux/phases.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/infrastructure/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/processing/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/processing/aggregation.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "src/saaaaaa/processing/document_ingestion.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/processing/embedding_policy.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/processing/policy_processor.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/processing/semantic_chunking_policy.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/utils/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/utils/contracts.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/utils/cpp_adapter.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/utils/evidence_registry.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/utils/seed_factory.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "src/saaaaaa/utils/signature_validator.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/operational/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/operational/test_boot_checks.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_arg_router_extended.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_boundaries.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_class_registry_paths.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_contracts.py",
+      "reason": "Referenced by runtime file I/O operations"
+    },
+    {
+      "path": "tests/test_contracts_comprehensive.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_flux_contracts.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_gold_canario_micro_provenance.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_import_consistency.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_imports.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_integration_failures.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_signal_integration_e2e.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_signals.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_smoke_imports.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_strategic_wiring.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tests/test_structure_verification.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/README.md",
+      "reason": "Package documentation referenced by setup.py"
+    },
+    {
+      "path": "tools/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/bulk_import_test.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/import_all.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/migrations/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/migrations/migrate_ids_v1_to_v2.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/prompt_cross_analysis.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/scan_boundaries.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/testing/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/testing/boot_check.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "tools/validation/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "validate_strategic_wiring.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "validate_system.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "validation/__init__.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "validation/predicates.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "validation_engine.py",
+      "reason": "Reachable in import graph from entry points"
+    },
+    {
+      "path": "verify_complete_implementation.py",
+      "reason": "Reachable in import graph from entry points"
+    }
+  ],
+  "delete": [
+    {
+      "path": ".augment/rules/CATEGORIZATION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".augment/rules/GENERAL.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".augment/rules/RULE FOR DESIGN.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".augment/rules/rule-corefiles.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".augment/rules/rule-coreographer-capacities.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".augment/rules/rule-coreographer_flux.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".augment/rules/rule-design-patter.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".importlinter",
+      "reason": "Not reachable from entry points",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".pre-commit-config.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": ".vscode/settings.json",
+      "reason": "Development tooling; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "ARCHITECTURE_REFACTORING.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "ATROZ_DASHBOARD_DEPLOYMENT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "AUDIT_FIX_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "BUILD_HYGIENE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "CPP_IMPLEMENTATION_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "DASHBOARD_FEATURES.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "DEPENDENCY_SETUP.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "DEPLOYMENT_VERIFICATION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "DOCUMENTATION_OVERVIEW.txt",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "EXECUTORS_ASSESSMENT_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "FLUX_IMPLEMENTATION_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "GITHUB_PAGES_SETUP.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "IMPORT_AUDIT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "IMPORT_CERTIFICATION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "IMPORT_VERIFICATION_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "IO_MIGRATION_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "Makefile",
+      "reason": "Build/deployment script; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "OPERATIONAL_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "ORCHESTRATOR_EXCELLENCE_RUNBOOK.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "ORCHESTRATOR_EXCELLENCE_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "OperationalizationAuditor_v3.0_COMPLETO.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "PROJECT_STRUCTURE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "QUICKSTART.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "QUICK_REFERENCE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "RESOLUCION_ORGANIZACION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "STRATEGIC_WIRING_ARCHITECTURE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "TEST_IMPORT_MATRIX.md",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "VERIFICATION_QUICKSTART.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "VFARFAN_D1Q1_COMPLETE_10_AREAS.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "WORKFLOW_FIXES_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "atroz_quickstart.sh",
+      "reason": "Build/deployment script; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "calibracion_bayesiana.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "catalogo_principal.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "causal_exctractor.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "causalextractor.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/COMPLETE_METHOD_CLASS_MAP.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/derek_beach_cdaf_config.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/execution_mapping.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/forge_manifest.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/inventory.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/metadata_checksums.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/method_counts.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/rules/METODOS/CHEATSHEET_NIVEL3.txt",
+      "reason": "Not reachable from entry points",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/rules/METODOS/README_NIVEL3.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/rules/recommendation_rules.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/rules/recommendation_rules_enhanced.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/CHOREOGRAPHER_SCHEMA_INVENTORY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/analyzer_one/performance_analysis.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/analyzer_one/semantic_cube.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/contract_error_log.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/contradiction_deteccion/contradiction_evidence.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/contradiction_deteccion/policy_statement.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/dereck_beach/audit_result.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/dereck_beach/config.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/dereck_beach/meta_node.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/embedding_policy/bayesian_evaluation.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/embedding_policy/semantic_chunk.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/execution_mapping.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/execution_step.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/causal_dag.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/causal_edge.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/causal_effect.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/causal_node.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/counterfactual_scenario.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/extracted_table.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/financial_indicator.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/quality_score.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/financiero_viabilidad/responsible_entity.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/policy_processor/evidence_bundle.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/preprocessed_document.py",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/question_segmentation.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/questionnaire.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/report_assembly/macro_convergence.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/report_assembly/meso_cluster.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/report_assembly/micro_answer.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/report_assembly/producer_api.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/rubric.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/rubric_scoring.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/semantic_chunking_policy/analysis_result.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/semantic_chunking_policy/chunk.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/teoria_cambio/advanced_graph_node.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/teoria_cambio/monte_carlo_result.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/teoria_cambio/validacion_resultado.schema.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/v1/questionnaire.schema.v1.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/schemas/v1/rubric_scoring.schema.v1.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "config/strategic_files.txt",
+      "reason": "Not reachable from entry points",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "cpp_ingestion/Cargo.toml",
+      "reason": "Not reachable from entry points",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/bayesian_outputs/posterior_table_macro.csv",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/bayesian_outputs/posterior_table_meso.csv",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/bayesian_outputs/posterior_table_micro.csv",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/interaction_matrix.csv",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/plans/BROAD_METADATA.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/plans/manifest.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/provenance.csv",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "data/questionnaire_monolith.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/API_EXEMPTIONS.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/ARCHITECTURE_DIAGRAM.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/ARCHITECTURE_REFACTORING.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/ARQUITECTURA_ORQUESTADOR_COREOGRAFO.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/ATROZ_INTEGRATION_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/AUDIT_REPORT.json",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/BAYESIAN_MULTILEVEL_README.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/CHANGELOG_REFACTORING.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/CI_CD_GOVERNANCE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/COMPONENT_AUDIT_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/CONCURRENCY_MODULE_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/CONTRACT_ACCEPTANCE_CRITERIA.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/CONTRACT_AUDIT_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/CPP_ARCHITECTURE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/DATA_CONTRACTS.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/DEFENSIVE_SIGNATURES.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/ENHANCED_RECOMMENDATION_ENGINE_README.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/EVALUATION_EXECUTIVE_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/EVIDENCE_REGISTRY_ENHANCEMENTS.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/EXECUTION_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/EXECUTOR_MONITORING_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/FINAL_DELIVERABLE_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/GOLD_CANARIO_TEST_SUITE_README.md",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/GOLD_CANARIO_TEST_SUMMARY.txt",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/GOVERNANCE_IMPLEMENTATION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/IMPLEMENTATION_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/IMPLEMENTATION_SUMMARY_CONTRACTS.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/INTEGRATION_STATUS.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/INTEGRATION_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/INVENTORY_COMPLETE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/JSON_CATALOGUE_RULEBOOK.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/MACRO_PROMPTS_IMPLEMENTATION_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/MACRO_PROMPTS_README.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/MESO_INTEGRATION_STRATEGY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/MESO_REFACTORING_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/MICRO_PROMPTS_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/MIGRATION_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/ORCHESTRATOR_COMPREHENSIVE_EVALUATION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/PIPELINE_E2E_AUDIT_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/PROSPECTIVE_DEFECTS.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/PR_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/PSEUDOCODIGO_FLUJO_COMPLETO.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/QUALITY_VALIDATION_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/QUESTIONNAIRE_MONOLITH_SCHEMA.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/README.inventory.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/README_ATROZ_INTEGRATION.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/README_MONOLITH.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/REPOSITORY_STRUCTURE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/RUNTIME_ERROR_FIXES_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/SCHEMA_AUDIT_REPORT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/SIGNATURE_FIX_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/SIGNATURE_GOVERNANCE_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/STRATEGIC_WIRING_ARCHITECTURE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/STRATEGIC_WIRING_README.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/SURFACE_MAP.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/SYSTEM_AUDIT_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/TYPE_SAFETY_GUIDE.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/UNIT_TEST_DEVELOPMENT_SUMMARY.md",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/VALIDATION_IMPLEMENTATION_SUMMARY.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/audit.json",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/deepseek_html_20251022_29a8c3.html",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/dependency_graph.dot",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/scoring_implementation.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/scoring_readme.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "docs/taxonomia_meso.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/all_data_sample.json",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/cluster_data_sample.json",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/concurrency_integration_demo.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/cpp_ingestion_example.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/demo_aguja_i.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/demo_bayesian_multilevel.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/demo_macro_prompts.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/demo_scoring.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/demo_tres_agujas.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/integration_guide_bayesian.py",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/macro_data_sample.json",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "examples/micro_scores_sample.json",
+      "reason": "Example/demo file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "financia_callibrator.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "requirements_cpp.txt",
+      "reason": "Not reachable from entry points",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/README_DEPLOYMENT.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/bootstrap_validate.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/build_cpp_rust.sh",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/count_producer_methods.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/generate_all_reports.sh",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/generate_inventory.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/inventory_generator.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/recommendation_cli.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/run_all_producers.sh",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/scan_no_yaml_in_executors.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/setup.sh",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/start_dashboard.sh",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/update_questionnaire_metadata.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/validate_contracts_local.sh",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/validate_questionnaire_monolith_schema.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/validate_schema.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/verify_executors_features.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/verify_system_complete.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "scripts/verify_weights.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "src/saaaaaa/controls/graphs/dependency_graph.md",
+      "reason": "Documentation; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "src/saaaaaa/controls/inventories/code_inventory.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/architecture_validation_report.json",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/data/__init__.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/data/contract_snapshots.json",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/data/test_questionnaire_and_rubric.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/operational/test_synthetic_traffic.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_aggregation.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_aggregation_validation.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_arg_router.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_concurrency.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_contract_runtime.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_contract_snapshots.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_coreographer.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_cpp_adapter.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_cpp_ingestion.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_defensive_signatures.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_embedding_policy_contracts.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_enhanced_argument_resolution.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_enhanced_recommendations.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_executor_config_properties.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_executor_monitoring.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_flux_integration.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_gold_canario_integration.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_gold_canario_macro_reporting.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_gold_canario_meso_reporting.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_gold_canario_micro_bayesian.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_gold_canario_micro_stress.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_infrastructure.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_property_based.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_questionnaire_resource_provider.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_recommendation_coverage.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_regression_semantic_chunking.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_runtime_error_fixes.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_schema_validation.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_score_normalization_fix.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_scoring.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_signature_validation.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tests/test_system_audit.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/detect_cycles.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/grep_boundary_checks.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/integrity/__init__.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/integrity/check_cross_refs.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/integrity/dump_artifacts.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/lint/__init__.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/lint/json_lint.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/scan_core_purity.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/testing/generate_synthetic_traffic.py",
+      "reason": "Test file; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/type_safety_checks.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/validate_execution_mapping.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/validate_strategic_files.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/validation/validate_build_hygiene.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/validation/validate_error_logs.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "tools/validation/validate_scoring_parity.py",
+      "reason": "Development scripts; not required for runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    },
+    {
+      "path": "trazabilidad_cohrencia.yaml",
+      "reason": "Configuration/data file; not used at runtime",
+      "rules": [
+        "unreachable-import-graph",
+        "no-dynamic-match",
+        "no-runtime-io"
+      ]
+    }
+  ],
+  "unsure": [
+    {
+      "path": ".DS_Store",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "aggregation.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "causal_exctractor_2",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "config/rules/METODOS/ejemplo_uso_nivel3.py",
+      "ambiguity": "Has main() function; might be CLI entry point not in packaging config"
+    },
+    {
+      "path": "contracts.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "contracts/importlinter.ini",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "core/contracts.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "cpp_ingestion/src/lib.rs",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "data/plans/Plan_1.pdf",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "data/plans/Plan_2.pdf",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "data/plans/Plan_3.pdf",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "dereck_beach.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "embedding.ymal",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "embedding_policy.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "orchestrator/choreographer_dispatch.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "orchestrator/coreographer.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "orchestrator/executors.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "policy_processor.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "runtime_error_fixes.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "schema_validator.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "scoring.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "signature_validator.py",
+      "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
+    },
+    {
+      "path": "src/saaaaaa/analysis/enhance_recommendation_rules.py",
+      "ambiguity": "Has main() function; might be CLI entry point not in packaging config"
+    },
+    {
+      "path": "src/saaaaaa/analysis/macro_prompts.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/analysis/meso_cluster_analysis.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/analysis/micro_prompts.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/analysis/scoring.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/api/signals_service.py",
+      "ambiguity": "Has main() function; might be CLI entry point not in packaging config"
+    },
+    {
+      "path": "src/saaaaaa/api/static/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/api/static/css/atroz-dashboard.css",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "src/saaaaaa/api/static/index.html",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "src/saaaaaa/api/static/js/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/api/static/js/atroz-dashboard-integration.js",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "src/saaaaaa/api/static/js/atroz-dashboard.js",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "src/saaaaaa/api/static/js/atroz-data-service.js",
+      "ambiguity": "Classification unclear; requires human review"
+    },
+    {
+      "path": "src/saaaaaa/contracts.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/controls/graphs/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/controls/inventories/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/core/aggregation.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/core/contracts.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/choreographer.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/executor_config.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/core/orchestrator/questionnaire_resource_provider.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/flux/configs.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/flux/gates.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/flux/models.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/infrastructure/clock.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/infrastructure/environment.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/infrastructure/filesystem.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/infrastructure/logging.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/chunking.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/models.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/parsers.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/pipeline.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/quality_gates.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/structural.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/cpp_ingestion/tables.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/processing/factory.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/scoring/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/scoring/scoring.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/adapters.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/contracts_runtime.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/core_contracts.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/coverage_gate.py",
+      "ambiguity": "Has main() function; might be CLI entry point not in packaging config"
+    },
+    {
+      "path": "src/saaaaaa/utils/determinism/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/determinism/seeds.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/json_contract_loader.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/metadata_loader.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/qmcm_hooks.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/runtime_error_fixes.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/schema_monitor.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/__init__.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/aggregation_models.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/architecture_validator.py",
+      "ambiguity": "Has main() function; might be CLI entry point not in packaging config"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/contract_logger.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/golden_rule.py",
+      "ambiguity": "Appears to be backup/old code; manual verification needed"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/predicates.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation/schema_validator.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "src/saaaaaa/utils/validation_engine.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "validation/aggregation_models.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "validation/architecture_validator.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    },
+    {
+      "path": "validation/golden_rule.py",
+      "ambiguity": "Appears to be backup/old code; manual verification needed"
+    },
+    {
+      "path": "validation/schema_validator.py",
+      "ambiguity": "Python module not in import graph; usage unclear"
+    }
+  ],
+  "evidence": {
+    "entry_points": [
+      "saaaaaa.core.orchestrator:main",
+      "saaaaaa.api.api_server:main",
+      "saaaaaa.core.orchestrator.ORCHESTRATOR_MONILITH:main",
+      "saaaaaa.api.api_server:main"
+    ],
+    "import_graph_nodes": 115,
+    "dynamic_strings_matched": [
+      "\"get_global_registry\"",
+      "pkg_resources",
+      "'[\"\\'].*registry.*[\"\\']'",
+      "'[\"\\'].*factory.*[\"\\']'",
+      "'[\"\\'].*plugin.*[\"\\']'",
+      "\"evidence_registry.py\"",
+      "\"seed_factory.py\"",
+      "\"\"\"Compatibility wrapper for orchestrator evidence registry.\"\"\"",
+      "\"get_global_registry\"",
+      "\"saaaaaa.core.orchestrator.evidence_registry\"",
+      "\"orchestrator.evidence_registry\"",
+      "\"Note: evidence_registry not fully imported\"",
+      "\"\"\"Dummy signal registry for demonstration.\"\"\"",
+      "'evidence_registry.py'",
+      "'seed_factory.py'",
+      "\"evidence_registry.py\"",
+      "\"class_registry.py\"",
+      "\"core.py\", \"executors.py\", \"evidence_registry.py\"",
+      "\"factory.py\"",
+      "\"data\" / \"signature_registry.json\"",
+      "importlib.import_module",
+      "'\\bimport evidence_registry\\b': 'from saaaaaa.utils import evidence_registry'",
+      "'\\bfrom evidence_registry import': 'from saaaaaa.utils.evidence_registry import'",
+      "'\\bimport seed_factory\\b': 'from saaaaaa.utils import seed_factory'",
+      "'\\bfrom seed_factory import': 'from saaaaaa.utils.seed_factory import'",
+      "__import__(",
+      "\"evidence_registry.py\": \"Append-only evidence registry\"",
+      "\"evidence_registry.py\"",
+      "\"file\": \"evidence_registry.py\"",
+      "\"module\": \"evidence_registry\"",
+      "\"seed_factory.py\": \"Deterministic seed generation\"",
+      "\"seed_factory.py\"",
+      "\"file\": \"seed_factory.py\"",
+      "\"module\": \"seed_factory\"",
+      "importlib.import_module",
+      "\"evidence_registry\"",
+      "\"seed_factory\"",
+      "'A070', f'Cluster {cluster_id} not found in canonical registry'",
+      "'A090', f'Cluster {cluster_id} missing from canonical registry'",
+      "\"\u2717 ERROR: Failed to check class registry: {e}\"",
+      "\"\"\"Attempt to actually load the class registry.\"\"\"",
+      "\"\u2713 Successfully loaded {len(registry)} classes:\"",
+      "\"  \u2713 Class registry can load all modules successfully\"",
+      "\"get_global_registry\"",
+      "\"orchestrator.class_registry\": \"saaaaaa.core.orchestrator.class_registry\"",
+      "\"orchestrator.evidence_registry\": \"saaaaaa.core.orchestrator.evidence_registry\"",
+      "\"orchestrator.factory\": \"saaaaaa.core.orchestrator.factory\"",
+      "\"data/prompt_cross_registry.json\"",
+      "\"\"\"Compute contribution score for a single registry entry.\"\"\"",
+      "importlib.import_module",
+      "importlib.import_module",
+      "\"- Move all I/O operations to orchestrator/factory.py\"",
+      "importlib.import_module",
+      "\"\"\"Test seed factory contract enforcement.\"\"\"",
+      "__import__(",
+      "__import__(",
+      "\"\"\"Test detection of QMCM records not in registry\"\"\"",
+      "\"\"\"Test registry initialization.\"\"\"",
+      "\"\"\"Test clearing registry.\"\"\"",
+      "\"\"\"Create router with test class registry.\"\"\"",
+      "\"TestAnalyzer\", \"_compile_pattern_registry\"",
+      "\"TestAnalyzer\", \"_compile_pattern_registry\"",
+      "\"_compile_pattern_registry\"",
+      "\"_compile_pattern_registry\"",
+      "__import__(",
+      "\"saaaaaa.core.orchestrator.evidence_registry\", \"EvidenceRegistry\"",
+      "\"\"\"run_signals requires registry_get callable.\"\"\"",
+      "\"registry_get not None\"",
+      "\"\"\"Test that class registry can be imported and has correct structure.\"\"\"",
+      "importlib.import_module",
+      "\"method_factory\"",
+      "\"evidence_registry.py\"",
+      "\"evidence_registry.py\"",
+      "\"\"\"Verify evidence_registry.py imports correctly.\"\"\"",
+      "\"Failed to import evidence_registry: {e}\"",
+      "\"\"\"Verify evidence_registry maintains immutability.\"\"\"",
+      "\"seed_factory.py\"",
+      "\"seed_factory.py\"",
+      "\"\"\"Verify seed_factory.py imports correctly.\"\"\"",
+      "\"Failed to import seed_factory: {e}\"",
+      "\"\"\"Verify seed_factory produces deterministic seeds.\"\"\"",
+      "\"\"\"Verify seed_factory context manager maintains state.\"\"\"",
+      "importlib.import_module",
+      "importlib.import_module",
+      "\"evidence_registry\"",
+      "\"seed_factory\"",
+      "importlib.import_module",
+      "\"\"\"Test that signals flow from registry to executor to method execution.\"\"\"",
+      "\"\"\"Test that executors work without signal registry (backward compatibility).\"\"\"",
+      "\"determinism\"] = {\"seed_required\": True, \"seed_source\": \"seed_factory_v1\"",
+      "importlib.import_module",
+      "\"  Validating orchestrator registry...\", end=\" \"",
+      "\"ClassNotFoundError in registry: {e}\"",
+      "\"\\nChecking orchestrator registry:\"",
+      "\"\"\"Test that registry validation doesn't fail hard if not implemented.\"\"\"",
+      "\"data/signature_registry.json\"",
+      "\"\"\"Save registry to disk\"\"\"",
+      "\"Saved {len(self.signatures)} signatures to {self.registry_path}\"",
+      "\"\"\"Load registry from disk\"\"\"",
+      "\"No existing registry found at {self.registry_path}\"",
+      "\"Loaded {len(self.signatures)} signatures from {self.registry_path}\"",
+      "\"Failed to load registry: {e}\"",
+      "\"Initializing signature registry for project: {project_root}\"",
+      "\"\"\"Append-only registry that persists evidence records to disk.\"\"\"",
+      "\".evidence_registry.json\"",
+      "\"\"\"Append a new evidence record to the registry.\"\"\"",
+      "\"\"\"Persist the registry to disk.\"\"\"",
+      "\"Evidence registry at {path} is not valid JSON: {exc}\"",
+      "\"Evidence registry payload must be a list\"",
+      "\"\"\"Verify registry integrity by recomputing all hashes.\"\"\"",
+      "\"registry_get not None\"",
+      "\"registry_get must be provided\"",
+      "\"\"\"Dummy registry for demonstration.\"\"\"",
+      "\"\"\"Entry in the signal registry cache.\"\"\"",
+      "\"signal_registry_initialized\"",
+      "\"signal_registry_evicted_lru\"",
+      "\"signal_registry_put\"",
+      "\"signal_registry_miss\"",
+      "\"signal_registry_expired\"",
+      "\"signal_registry_invalid\"",
+      "\"signal_registry_hit\"",
+      "\"signal_registry_evicted_expired\"",
+      "\"\"\"Clear all entries from registry.\"\"\"",
+      "\"signal_registry_cleared\"",
+      "\"_compile_pattern_registry\"",
+      "\"description\": \"Compile patterns into regex registry\"",
+      "\"\"\"Get the signal registry if available.\"\"\"",
+      "\"core_module_factory_initialized\"",
+      "\"No signal registry available, skipping signal fetch\"",
+      "'pattern_registry', 'patterns'",
+      "'_pattern_registry'",
+      "'_pattern_registry'",
+      "'_pattern_registry'",
+      "'IndustrialPolicyProcessor', '_compile_pattern_registry'",
+      "'IndustrialPolicyProcessor', '_compile_pattern_registry'",
+      "\"evidence_registry.jsonl\"",
+      "\"\"\"Get or create global evidence registry.\"\"\"",
+      "\"get_global_registry\"",
+      "\"No monolith data available. Use saaaaaa.core.orchestrator.factory to load \"",
+      "\"\"\"Dynamic class registry for orchestrator method execution.\"\"\"",
+      "\"get_global_registry\"",
+      "\"Questionnaire data not loaded. Use factory.py to load data first.\""
+    ],
+    "runtime_io_refs": [
+      "examples/demo_bayesian_multilevel.py -> 'data/bayesian_outputs' via Path()",
+      "examples/integration_guide_bayesian.py -> 'data/bayesian_outputs' via Path()",
+      "examples/integration_guide_bayesian.py -> 'data/bayesian_outputs' via Path()",
+      "scripts/validate_system.py -> 'src/saaaaaa/core/orchestrator' via Path()",
+      "scripts/signature_ci_check.py -> '.' via Path()",
+      "scripts/verify_imports.py -> '/home/runner/work/SAAAAAA/SAAAAAA' via Path()",
+      "scripts/validate_strategic_wiring.py -> 'provenance.csv' via Path()",
+      "scripts/verify_complete_implementation.py -> 'bayesian_multilevel_system.py' via Path()",
+      "scripts/verify_complete_implementation.py -> 'bayesian_multilevel_system.py' via Path()",
+      "scripts/verify_complete_implementation.py -> 'bayesian_multilevel_system.py' via Path()",
+      "scripts/bootstrap_validate.py -> 'requirements_atroz.txt' via Path()",
+      "tools/prompt_cross_analysis.py -> 'data/prompt_cross_registry.json' via Path()",
+      "tools/type_safety_checks.py -> 'tests/test_contracts.py' via open()",
+      "tools/type_safety_checks.py -> 'tests/test_contracts.py' via open()",
+      "tools/scan_core_purity.py -> 'core' via Path()",
+      "tools/bulk_import_test.py -> 'src/saaaaaa' via Path()",
+      "tests/test_coreographer.py -> 'rules/METODOS/complete_canonical_catalog.json' via open()",
+      "tests/test_coreographer.py -> 'rules/METODOS/complete_canonical_catalog.json' via Path()",
+      "tools/validation/validate_build_hygiene.py -> '.python-version' via Path()",
+      "tools/validation/validate_build_hygiene.py -> 'pyproject.toml' via Path()",
+      "tools/validation/validate_build_hygiene.py -> 'requirements.txt' via Path()",
+      "tools/validation/validate_build_hygiene.py -> 'constraints.txt' via Path()",
+      "tools/validation/validate_build_hygiene.py -> 'setup.py' via Path()",
+      "tools/validation/validate_build_hygiene.py -> 'orchestrator/settings.py' via Path()",
+      "tools/validation/validate_build_hygiene.py -> '.env.example' via Path()",
+      "tools/validation/validate_build_hygiene.py -> '.gitignore' via Path()",
+      "src/saaaaaa/utils/coverage_gate.py -> 'schemas' via Path()",
+      "src/saaaaaa/analysis/bayesian_multilevel_system.py -> 'data/bayesian_outputs' via Path()",
+      "src/saaaaaa/analysis/enhance_recommendation_rules.py -> 'config/recommendation_rules.json' via Path()",
+      "src/saaaaaa/analysis/enhance_recommendation_rules.py -> 'config/recommendation_rules_enhanced.json' via Path()",
+      "src/saaaaaa/core/orchestrator/factory.py -> 'rules/METODOS/complete_canonical_catalog.json' via Path()",
+      "src/saaaaaa/core/orchestrator/factory.py -> 'schemas/questionnaire_monolith.schema.json' via Path()",
+      "src/saaaaaa/core/orchestrator/contract_loader.py -> '.' via Path()"
+    ],
+    "smoke_test": "simulated-pass",
+    "summary": {
+      "total_kept": 142,
+      "total_deleted": 258,
+      "total_unsure": 84,
+      "entry_points_analyzed": 4
+    }
+  }
+}

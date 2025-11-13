@@ -1,0 +1,905 @@
+{
+  "generated_at": "2025-10-22T12:00:00",
+  "root_directory": "/workspace/SAAAAAA",
+  "note": "COMPLETE EXHAUSTIVE INVENTORY - ALL 9 FILES, ALL CLASSES, ALL METHODS",
+  "statistics": {
+    "total_files": 9,
+    "total_classes": 82,
+    "total_methods": 416,
+    "total_lines_of_code": 17933
+  },
+  "files": [
+    {
+      "file_path": "financiero_viabilidad_tablas.py",
+      "lines_of_code": 2334,
+      "role": "data_producer",
+      "adapter": "FinancieroViabilidadAdapter",
+      "classes": [
+        {
+          "name": "ColombianMunicipalContext",
+          "type": "config_class",
+          "methods": []
+        },
+        {
+          "name": "CausalNode",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "CausalEdge",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "CausalDAG",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "CausalEffect",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "CounterfactualScenario",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "ExtractedTable",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "FinancialIndicator",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "ResponsibleEntity",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "QualityScore",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "PDETMunicipalPlanAnalyzer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_get_spanish_stopwords",
+            "extract_tables",
+            "_clean_dataframe",
+            "_is_likely_header",
+            "_deduplicate_tables",
+            "_reconstruct_fragmented_tables",
+            "_classify_tables",
+            "analyze_financial_feasibility",
+            "_extract_financial_amounts",
+            "_identify_funding_source",
+            "_extract_from_budget_table",
+            "_analyze_funding_sources",
+            "_assess_financial_sustainability",
+            "_bayesian_risk_inference",
+            "_interpret_risk",
+            "_indicator_to_dict",
+            "identify_responsible_entities",
+            "_extract_entities_ner",
+            "_extract_entities_syntax",
+            "_classify_entity_type",
+            "_extract_from_responsibility_tables",
+            "_consolidate_entities",
+            "_score_entity_specificity",
+            "construct_causal_dag",
+            "_identify_causal_nodes",
+            "_identify_causal_edges",
+            "_find_semantic_mentions",
+            "_extract_budget_for_pillar",
+            "_find_outcome_mentions",
+            "_find_mediator_mentions",
+            "_estimate_causal_edge_probability",
+            "_break_cycles",
+            "estimate_causal_effects",
+            "_find_all_paths",
+            "_estimate_direct_effect",
+            "_estimate_mediated_effect",
+            "_estimate_total_effect",
+            "_bayesian_effect_inference",
+            "generate_counterfactual_scenarios",
+            "_identify_intervention_targets",
+            "_simulate_intervention",
+            "_generate_scenario_narrative",
+            "sensitivity_analysis",
+            "_identify_confounders",
+            "_vary_confounder_strength",
+            "analyze_municipal_plan"
+          ]
+        }
+      ],
+      "functions": []
+    },
+    {
+      "file_path": "Analyzer_one.py",
+      "lines_of_code": 1887,
+      "role": "data_producer",
+      "adapter": "MunicipalAnalyzerAdapter",
+      "classes": [
+        {
+          "name": "ValueChainLink",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "MunicipalOntology",
+          "type": "main_class",
+          "methods": [
+            "__init__"
+          ]
+        },
+        {
+          "name": "SemanticAnalyzer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "extract_semantic_cube",
+            "_empty_semantic_cube",
+            "_vectorize_segments",
+            "_process_segment",
+            "_classify_value_chain_link",
+            "_classify_policy_domain",
+            "_classify_cross_cutting_themes",
+            "_calculate_semantic_complexity"
+          ]
+        },
+        {
+          "name": "PerformanceAnalyzer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "analyze_performance",
+            "_calculate_throughput_metrics",
+            "_detect_bottlenecks",
+            "_calculate_loss_functions",
+            "_generate_recommendations"
+          ]
+        },
+        {
+          "name": "TextMiningEngine",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "diagnose_critical_links",
+            "_identify_critical_links",
+            "_analyze_link_text",
+            "_assess_risks",
+            "_generate_interventions"
+          ]
+        },
+        {
+          "name": "MunicipalAnalyzer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "analyze_document",
+            "_load_document",
+            "_generate_summary"
+          ]
+        },
+        {
+          "name": "DocumentProcessor",
+          "type": "main_class",
+          "methods": [
+            "load_pdf"
+          ]
+        }
+      ],
+      "functions": [
+        "example_usage"
+      ]
+    },
+    {
+      "file_path": "contradiction_deteccion.py",
+      "lines_of_code": 1493,
+      "role": "data_producer",
+      "adapter": "ContradictionDetectorAdapter",
+      "classes": [
+        {
+          "name": "ContradictionType",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "PolicyDimension",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "PolicyStatement",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "ContradictionEvidence",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "BayesianConfidenceCalculator",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "calculate_posterior"
+          ]
+        },
+        {
+          "name": "TemporalLogicVerifier",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "verify_temporal_consistency",
+            "_build_timeline",
+            "_parse_temporal_marker",
+            "_has_temporal_conflict",
+            "_are_mutually_exclusive",
+            "_extract_resources",
+            "_check_deadline_constraints",
+            "_should_precede",
+            "_classify_temporal_type"
+          ]
+        },
+        {
+          "name": "PolicyContradictionDetector",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_initialize_pdm_patterns",
+            "detect",
+            "_extract_policy_statements",
+            "_generate_embeddings",
+            "_build_knowledge_graph",
+            "_detect_semantic_contradictions",
+            "_detect_numerical_inconsistencies",
+            "_detect_temporal_conflicts",
+            "_detect_logical_incompatibilities",
+            "_detect_resource_conflicts",
+            "_calculate_coherence_metrics",
+            "_calculate_global_semantic_coherence",
+            "_calculate_objective_alignment",
+            "_calculate_graph_fragmentation",
+            "_calculate_contradiction_entropy",
+            "_calculate_syntactic_complexity",
+            "_get_dependency_depth",
+            "_calculate_confidence_interval",
+            "_generate_resolution_recommendations",
+            "_extract_temporal_markers",
+            "_extract_quantitative_claims",
+            "_determine_semantic_role",
+            "_identify_dependencies",
+            "_get_context_window",
+            "_calculate_similarity",
+            "_determine_relation_type",
+            "_classify_contradiction",
+            "_get_domain_weight",
+            "_calculate_severity",
+            "_suggest_resolutions",
+            "_are_comparable_claims",
+            "_calculate_numerical_divergence",
+            "_statistical_significance_test",
+            "_has_logical_conflict",
+            "_extract_resource_mentions",
+            "_are_conflicting_allocations",
+            "_serialize_contradiction",
+            "_get_graph_statistics",
+            "_identify_affected_sections"
+          ]
+        }
+      ],
+      "functions": []
+    },
+    {
+      "file_path": "embedding_policy.py",
+      "lines_of_code": 1495,
+      "role": "data_producer",
+      "adapter": "EmbeddingPolicyAdapter",
+      "classes": [
+        {
+          "name": "PolicyDomain",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "AnalyticalDimension",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "ChunkingConfig",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "AdvancedSemanticChunker",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "chunk_document",
+            "_normalize_text",
+            "_recursive_split",
+            "_find_sentence_boundary",
+            "_extract_sections",
+            "_extract_tables",
+            "_extract_lists",
+            "_infer_pdq_context",
+            "_contains_table",
+            "_contains_list",
+            "_find_section"
+          ]
+        },
+        {
+          "name": "BayesianNumericalAnalyzer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "evaluate_policy_metric",
+            "_beta_binomial_posterior",
+            "_normal_normal_posterior",
+            "_classify_evidence_strength",
+            "_compute_coherence",
+            "_null_evaluation",
+            "compare_policies"
+          ]
+        },
+        {
+          "name": "PolicyCrossEncoderReranker",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "rerank"
+          ]
+        },
+        {
+          "name": "PolicyEmbeddingConfig",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "PolicyAnalysisEmbedder",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "process_document",
+            "semantic_search",
+            "evaluate_policy_numerical_consistency",
+            "compare_policy_interventions",
+            "_embed_texts",
+            "_filter_by_pdq",
+            "_extract_numerical_values",
+            "_apply_mmr",
+            "_calculate_mmr_score"
+          ]
+        }
+      ],
+      "functions": []
+    },
+    {
+      "file_path": "teoria_cambio.py",
+      "lines_of_code": 1095,
+      "role": "data_producer",
+      "adapter": "TeoriaCambioAdapter",
+      "classes": [
+        {
+          "name": "CategoriaCausal",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "GraphType",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "ValidacionResultado",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "ValidationMetric",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "AdvancedGraphNode",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "MonteCarloAdvancedResult",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "TeoriaCambio",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_es_conexion_valida",
+            "construir_grafo_causal",
+            "validacion_completa",
+            "_extraer_categorias",
+            "_validar_orden_causal",
+            "_encontrar_caminos_completos",
+            "_generar_sugerencias_internas"
+          ]
+        },
+        {
+          "name": "AdvancedDAGValidator",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "add_node",
+            "add_edge",
+            "_initialize_rng",
+            "_is_acyclic",
+            "_generate_subgraph",
+            "calculate_acyclicity_pvalue",
+            "_perform_sensitivity_analysis_internal",
+            "_calculate_confidence_interval",
+            "_calculate_statistical_power",
+            "_calculate_bayesian_posterior",
+            "_calculate_node_importance",
+            "get_graph_stats",
+            "_create_empty_result"
+          ]
+        },
+        {
+          "name": "IndustrialGradeValidator",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "execute_suite",
+            "validate_engine_readiness",
+            "validate_causal_categories",
+            "validate_connection_matrix",
+            "run_performance_benchmarks",
+            "_benchmark_operation",
+            "_log_metric"
+          ]
+        }
+      ],
+      "functions": [
+        "_create_advanced_seed",
+        "create_policy_theory_of_change_graph",
+        "main"
+      ]
+    },
+    {
+      "file_path": "dereck_beach.py",
+      "lines_of_code": 5542,
+      "role": "data_producer",
+      "adapter": "CausalDeconstructionAdapter",
+      "classes": [
+        {
+          "name": "BeachEvidentialTest",
+          "type": "main_class",
+          "methods": [
+            "classify_test",
+            "apply_test_logic"
+          ]
+        },
+        {
+          "name": "CDAFException",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_format_message",
+            "to_dict"
+          ]
+        },
+        {
+          "name": "CDAFValidationError",
+          "type": "main_class",
+          "methods": []
+        },
+        {
+          "name": "CDAFProcessingError",
+          "type": "main_class",
+          "methods": []
+        },
+        {
+          "name": "CDAFBayesianError",
+          "type": "main_class",
+          "methods": []
+        },
+        {
+          "name": "CDAFConfigError",
+          "type": "main_class",
+          "methods": []
+        },
+        {
+          "name": "BayesianThresholdsConfig",
+          "type": "pydantic_model",
+          "methods": []
+        },
+        {
+          "name": "MechanismTypeConfig",
+          "type": "pydantic_model",
+          "methods": [
+            "check_sum_to_one"
+          ]
+        },
+        {
+          "name": "PerformanceConfig",
+          "type": "pydantic_model",
+          "methods": []
+        },
+        {
+          "name": "SelfReflectionConfig",
+          "type": "pydantic_model",
+          "methods": []
+        },
+        {
+          "name": "CDAFConfigSchema",
+          "type": "pydantic_model",
+          "methods": []
+        },
+        {
+          "name": "MetaNode",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "ConfigLoader",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_load_config",
+            "_load_default_config",
+            "_validate_config",
+            "get",
+            "get_bayesian_threshold",
+            "get_mechanism_prior",
+            "get_performance_setting",
+            "update_priors_from_feedback",
+            "_save_prior_history",
+            "_load_uncertainty_history",
+            "check_uncertainty_reduction_criterion"
+          ]
+        },
+        {
+          "name": "PDFProcessor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "load_document",
+            "extract_text",
+            "extract_tables",
+            "extract_sections"
+          ]
+        },
+        {
+          "name": "CausalExtractor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "extract_causal_hierarchy",
+            "_extract_goals",
+            "_add_node_to_graph",
+            "_extract_causal_links",
+            "_build_type_hierarchy",
+            "_parse_goal_context",
+            "_classify_goal_type",
+            "_extract_numerical_data",
+            "_identify_responsible_entity",
+            "_extract_entity_activities",
+            "_extract_contextual_risks",
+            "_extract_causal_justifications",
+            "_calculate_confidence"
+          ]
+        },
+        {
+          "name": "MechanismPartExtractor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "extract_entity_activity",
+            "_find_subject_entity",
+            "_find_action_verb",
+            "_validate_entity_activity",
+            "_calculate_ea_confidence"
+          ]
+        },
+        {
+          "name": "BayesianMechanismInference",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "infer_mechanisms",
+            "_build_transition_matrix",
+            "_calculate_type_transition_prior",
+            "_infer_activity_sequence",
+            "_test_necessity",
+            "_test_sufficiency",
+            "_classify_mechanism_type",
+            "_aggregate_bayesian_confidence"
+          ]
+        },
+        {
+          "name": "CausalInferenceSetup",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "classify_goal_dynamics",
+            "identify_failure_points",
+            "assign_probative_value",
+            "_get_dynamics_pattern"
+          ]
+        },
+        {
+          "name": "OperationalizationAuditor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "audit_evidence_traceability",
+            "bayesian_counterfactual_audit",
+            "_audit_systemic_risk",
+            "_perform_counterfactual_budget_check",
+            "_generate_optimal_remediations"
+          ]
+        },
+        {
+          "name": "FinancialAuditor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "trace_financial_allocation",
+            "_match_goal_to_budget",
+            "_calculate_sufficiency",
+            "_detect_allocation_gaps"
+          ]
+        },
+        {
+          "name": "CDAFFramework",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "process_document",
+            "_validate_dnp_compliance",
+            "_generate_extraction_report",
+            "_generate_causal_model_json",
+            "_generate_dnp_compliance_report",
+            "_audit_causal_coherence"
+          ]
+        }
+      ],
+      "functions": []
+    },
+    {
+      "file_path": "policy_processor.py",
+      "lines_of_code": 1503,
+      "role": "data_producer",
+      "adapter": "PolicyProcessorAdapter",
+      "classes": [
+        {
+          "name": "CausalDimension",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "ProcessorConfig",
+          "type": "main_class",
+          "methods": [
+            "from_legacy",
+            "validate"
+          ]
+        },
+        {
+          "name": "BayesianEvidenceScorer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "compute_evidence_score",
+            "_calculate_shannon_entropy"
+          ]
+        },
+        {
+          "name": "PolicyTextProcessor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "normalize_unicode",
+            "segment_into_sentences",
+            "extract_contextual_window",
+            "compile_pattern"
+          ]
+        },
+        {
+          "name": "EvidenceBundle",
+          "type": "main_class",
+          "methods": [
+            "to_dict"
+          ]
+        },
+        {
+          "name": "IndustrialPolicyProcessor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_load_questionnaire",
+            "_compile_pattern_registry",
+            "_build_point_patterns",
+            "process",
+            "_match_patterns_in_sentences",
+            "_compute_evidence_confidence",
+            "_construct_evidence_bundle",
+            "_extract_point_evidence",
+            "_analyze_causal_dimensions",
+            "_extract_metadata",
+            "_compute_avg_confidence",
+            "_empty_result",
+            "export_results"
+          ]
+        },
+        {
+          "name": "AdvancedTextSanitizer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "sanitize",
+            "_protect_structure",
+            "_restore_structure"
+          ]
+        },
+        {
+          "name": "ResilientFileHandler",
+          "type": "main_class",
+          "methods": [
+            "read_text",
+            "write_text"
+          ]
+        },
+        {
+          "name": "PolicyAnalysisPipeline",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "analyze_file"
+          ]
+        }
+      ],
+      "functions": []
+    },
+    {
+      "file_path": "report_assembly.py",
+      "lines_of_code": 1998,
+      "role": "aggregator",
+      "adapter": "ReportAssemblerAdapter",
+      "classes": [
+        {
+          "name": "MicroLevelAnswer",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "MesoLevelCluster",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "MacroLevelConvergence",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "ReportAssembler",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "generate_micro_answer",
+            "_apply_scoring_modality",
+            "_score_type_a",
+            "_score_type_b",
+            "_score_type_c",
+            "_score_type_d",
+            "_score_type_e",
+            "_score_type_f",
+            "_evaluate_condition",
+            "_score_default",
+            "_extract_numerical_value",
+            "_extract_pattern_matches",
+            "_score_to_qualitative_question",
+            "_extract_evidence_excerpts",
+            "_find_context_around",
+            "_calculate_confidence",
+            "_generate_explanation",
+            "_summarize_module_data",
+            "generate_meso_cluster",
+            "_aggregate_micro_scores",
+            "_calculate_dimension_scores",
+            "_identify_strengths_weaknesses",
+            "_generate_cluster_recommendations",
+            "_score_to_qualitative_overall",
+            "generate_macro_convergence",
+            "_calculate_convergence_by_dimension",
+            "_calculate_convergence_by_policy",
+            "_perform_gap_analysis",
+            "_identify_critical_gaps",
+            "_generate_strategic_recommendations",
+            "_generate_implementation_roadmap",
+            "_calculate_score_distribution",
+            "_calculate_confidence_metrics",
+            "_synthesize_evidence",
+            "save_micro_report",
+            "save_meso_report",
+            "save_macro_report",
+            "save_complete_report",
+            "_convert_to_serializable"
+          ]
+        }
+      ],
+      "functions": []
+    },
+    {
+      "file_path": "semantic_chunking_policy.py",
+      "lines_of_code": 586,
+      "role": "pre_processor",
+      "adapter": "SemanticChunkerAdapter",
+      "classes": [
+        {
+          "name": "CausalDimension",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "PDMSection",
+          "type": "enum",
+          "methods": []
+        },
+        {
+          "name": "SemanticConfig",
+          "type": "dataclass",
+          "methods": []
+        },
+        {
+          "name": "SemanticProcessor",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_lazy_load",
+            "chunk_text",
+            "_detect_pdm_structure",
+            "_detect_table",
+            "_detect_numerical_data",
+            "_embed_batch",
+            "embed_single"
+          ]
+        },
+        {
+          "name": "BayesianEvidenceIntegrator",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "integrate_evidence",
+            "_similarity_to_probability",
+            "_compute_reliability_weights",
+            "_null_evidence",
+            "causal_strength"
+          ]
+        },
+        {
+          "name": "PolicyDocumentAnalyzer",
+          "type": "main_class",
+          "methods": [
+            "__init__",
+            "_init_dimension_embeddings",
+            "analyze",
+            "_extract_key_excerpts"
+          ]
+        }
+      ],
+      "functions": []
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "generated_at": 1761714638.009295,
+    "registry_version": "1.0.0",
+    "sources": [
+      "question_component_map.json",
+      "execution_mapping.yaml",
+      "policy_analysis_architecture.yaml",
+      "policy_analysis_architecture.json"
+    ]
+  },
+  "coverage": {
+    "total_methods_in_codebase": 416,
+    "declared_in_metadata": 7,
+    "successfully_resolved": 0,
+    "coverage_percentage": 0.0,
+    "resolution_rate": 0.0
+  },
+  "validation": {
+    "provisional": {
+      "passed": true,
+      "threshold": 400,
+      "total_methods": 416
+    },
+    "strict": {
+      "passed": false,
+      "threshold": 555,
+      "total_methods": 416
+    }
+  },
+  "missing": [
+    "Analyzer_one.py",
+    "BayesianEvidenceScorer.compute_evidence_score",
+    "BeachEvidentialTest.apply_test_logic",
+    "FinancialAuditor.trace_financial_allocation",
+    "IndustrialPolicyProcessor._match_patterns_in_sentences",
+    "PolicyContradictionDetector._calculate_global_semantic_coherence",
+    "TeoriaCambio.validacion_completa"
+  ],
+  "extras": [],
+  "class_coverage": {
+    "total_classes": 82,
+    "mapped_classes": 7
+  }
+}

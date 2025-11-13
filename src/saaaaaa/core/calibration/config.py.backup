@@ -1,0 +1,459 @@
+"""
+Calibration configuration schema.
+
+This defines ALL parameters needed for the 7-layer calibration system.
+
+Design Principles:
+1. Single Source of Truth: All parameters defined here
+2. Immutability: All configs are frozen dataclasses
+3. Validation: __post_init__ enforces mathematical constraints
+4. Hashability: Support deterministic config hashing for SIN_CARRETA
+5. Environment Support: Can load from env vars
+"""
+from dataclasses import dataclass, field
+from typing import Literal
+import hashlib
+import json
+import os
+
+
+@dataclass(frozen=True)
+class UnitLayerConfig:
+    """
+    Configuration for @u (Unit/PDT Quality Layer).
+    
+    Theoretical Formula:
+        U(pdt) = aggregator(w_S·S, w_M·M, w_I·I, w_P·P)
+    
+    Where:
+        S = Structural compliance
+        M = Mandatory sections ratio
+        I = Indicator quality
+        P = PPI completeness
+    
+    with hard gates that can force U = 0.0.
+    """
+    # ========================================
+    # Component Weights (MUST sum to 1.0)
+    # ========================================
+    w_S: float = 0.25  # Structural compliance weight
+    w_M: float = 0.25  # Mandatory sections weight
+    w_I: float = 0.25  # Indicator quality weight
+    w_P: float = 0.25  # PPI completeness weight
+    
+    # ========================================
+    # Aggregation Method
+    # ========================================
+    aggregation_type: Literal["geometric_mean", "harmonic_mean", "arithmetic_mean"] = "geometric_mean"
+    
+    # ========================================
+    # Hard Gates (can force U = 0.0)
+    # ========================================
+    enforce_ppi_gate: bool = True  # If True, missing PPI → U = 0.0
+    enforce_indicator_gate: bool = True  # If True, missing indicators → U = 0.0
+    min_structural_compliance: float = 0.3  # Below this → U = 0.0
+    
+    # ========================================
+    # Structural Component (S) Parameters
+    # ========================================
+    # S = w_block·B_cov + w_hier·H + w_order·O
+    w_S_block_coverage: float = 0.4  # Block coverage weight
+    w_S_hierarchy: float = 0.3  # Hierarchy score weight
+    w_S_order: float = 0.3  # Order preservation weight
+    
+    # ========================================
+    # Mandatory Sections (M) Parameters
+    # ========================================
+    # M = (present sections) / (required sections)
+    required_sections: tuple[str, ...] = (
+        "diagnostic", "objectives", "strategies", 
+        "programs", "projects", "budget"
+    )
+    
+    # ========================================
+    # Indicator Quality (I) Parameters
+    # ========================================
+    # I = w_struct·I_struct + w_link·I_link + w_logic·I_logic
+    w_I_structural: float = 0.4  # Structural completeness weight
+    w_I_linkage: float = 0.3  # Linkage to objectives weight
+    w_I_logic: float = 0.3  # Logical consistency weight
+    
+    # ========================================
+    # PPI Completeness (P) Parameters
+    # ========================================
+    # P = w_pres·P_presence + w_struct·P_struct + w_cons·P_consistency
+    w_P_presence: float = 0.4  # Presence weight
+    w_P_structure: float = 0.3  # Structure weight
+    w_P_consistency: float = 0.3  # Consistency weight
+    
+    def __post_init__(self):
+        """Validate configuration constraints."""
+        # Validate main component weights sum to 1.0
+        total_main = self.w_S + self.w_M + self.w_I + self.w_P
+        if abs(total_main - 1.0) > 1e-6:
+            raise ValueError(
+                f"Unit layer main weights must sum to 1.0, got {total_main}"
+            )
+        
+        # Validate structural component weights
+        total_S = self.w_S_block_coverage + self.w_S_hierarchy + self.w_S_order
+        if abs(total_S - 1.0) > 1e-6:
+            raise ValueError(
+                f"Structural component weights must sum to 1.0, got {total_S}"
+            )
+        
+        # Validate indicator component weights
+        total_I = self.w_I_structural + self.w_I_linkage + self.w_I_logic
+        if abs(total_I - 1.0) > 1e-6:
+            raise ValueError(
+                f"Indicator component weights must sum to 1.0, got {total_I}"
+            )
+        
+        # Validate PPI component weights
+        total_P = self.w_P_presence + self.w_P_structure + self.w_P_consistency
+        if abs(total_P - 1.0) > 1e-6:
+            raise ValueError(
+                f"PPI component weights must sum to 1.0, got {total_P}"
+            )
+        
+        # Validate min_structural_compliance range
+        if not 0.0 <= self.min_structural_compliance <= 1.0:
+            raise ValueError(
+                f"min_structural_compliance must be in [0.0, 1.0], "
+                f"got {self.min_structural_compliance}"
+            )
+        
+        # Validate all weights are non-negative
+        for attr_name in ['w_S', 'w_M', 'w_I', 'w_P']:
+            value = getattr(self, attr_name)
+            if value < 0:
+                raise ValueError(f"{attr_name} must be non-negative, got {value}")
+
+
+@dataclass(frozen=True)
+class MetaLayerConfig:
+    """
+    Configuration for @m (Meta/Governance Layer).
+    
+    Theoretical Formula:
+        x_@m = w_transp·m_transp + w_gov·m_gov + w_cost·m_cost
+    
+    Where:
+        m_transp = Transparency (formula export, trace, logs)
+        m_gov = Governance (version, config hash, signature)
+        m_cost = Cost (runtime, memory)
+    """
+    # ========================================
+    # Component Weights (MUST sum to 1.0)
+    # ========================================
+    w_transparency: float = 0.5  # Transparency weight
+    w_governance: float = 0.4  # Governance weight
+    w_cost: float = 0.1  # Cost weight
+    
+    # ========================================
+    # Transparency Thresholds
+    # ========================================
+    require_formula_export: bool = True
+    require_trace_complete: bool = True
+    require_logs_conform: bool = True
+    
+    # ========================================
+    # Governance Thresholds
+    # ========================================
+    require_version_tag: bool = True
+    require_config_hash: bool = True
+    require_signature: bool = False  # Optional for now
+    
+    # ========================================
+    # Cost Thresholds
+    # ========================================
+    threshold_runtime_fast_ms: float = 1000.0  # < 1s → cost = 1.0
+    threshold_runtime_acceptable_ms: float = 5000.0  # < 5s → cost = 0.8
+    threshold_memory_normal_mb: float = 100.0  # < 100MB → normal
+    threshold_memory_excessive_mb: float = 500.0  # > 500MB → excessive
+    
+    def __post_init__(self):
+        """Validate weights sum to 1.0."""
+        total = self.w_transparency + self.w_governance + self.w_cost
+        if abs(total - 1.0) > 1e-6:
+            raise ValueError(f"Meta layer weights must sum to 1.0, got {total}")
+        
+        # Validate all weights are non-negative
+        if self.w_transparency < 0 or self.w_governance < 0 or self.w_cost < 0:
+            raise ValueError("All meta layer weights must be non-negative")
+        
+        # Validate thresholds are positive
+        if self.threshold_runtime_fast_ms <= 0:
+            raise ValueError("threshold_runtime_fast_ms must be positive")
+        if self.threshold_runtime_acceptable_ms <= self.threshold_runtime_fast_ms:
+            raise ValueError(
+                "threshold_runtime_acceptable_ms must be > threshold_runtime_fast_ms"
+            )
+        if self.threshold_memory_normal_mb <= 0:
+            raise ValueError("threshold_memory_normal_mb must be positive")
+        if self.threshold_memory_excessive_mb <= self.threshold_memory_normal_mb:
+            raise ValueError(
+                "threshold_memory_excessive_mb must be > threshold_memory_normal_mb"
+            )
+
+
+@dataclass(frozen=True)
+class ChoquetAggregationConfig:
+    """
+    Configuration for Choquet 2-Additive aggregation.
+    
+    Theoretical Formula:
+        Cal(I) = Σ a_ℓ·x_ℓ + Σ a_ℓk·min(x_ℓ, x_k)
+    
+    Normalization Constraint:
+        Σ a_ℓ + Σ a_ℓk = 1.0
+    
+    Standard Interactions (from theoretical model):
+        (@u, @chain): 0.15 - "Plan quality only matters with sound wiring"
+        (@chain, @C): 0.12 - "Ensemble validity requires chain integrity"
+        (@q, @d): 0.08 - "Question-dimension alignment synergy"
+        (@d, @p): 0.05 - "Dimension-policy coherence synergy"
+    """
+    # ========================================
+    # Linear Weights (Layer Importance)
+    # ========================================
+    # Adjusted to account for interactions (total must = 1.0 with interactions)
+    a_base: float = 0.20  # @b - Intrinsic quality
+    a_unit: float = 0.05  # @u - PDT quality (low due to interaction)
+    a_question: float = 0.10  # @q - Question compatibility
+    a_dimension: float = 0.08  # @d - Dimension compatibility
+    a_policy: float = 0.07  # @p - Policy compatibility
+    a_congruence: float = 0.10  # @C - Ensemble validity
+    a_chain: float = 0.10  # @chain - Data flow (low due to interaction)
+    a_meta: float = 0.05  # @m - Governance
+    
+    # ========================================
+    # Interaction Weights (Synergies)
+    # ========================================
+    a_unit_chain: float = 0.15  # (@u, @chain) - Plan quality gates wiring
+    a_chain_congruence: float = 0.05  # (@chain, @C) - Chain enables ensemble
+    a_question_dimension: float = 0.03  # (@q, @d) - Q-D alignment
+    a_dimension_policy: float = 0.02  # (@d, @p) - D-P coherence
+    
+    def __post_init__(self):
+        """Validate normalization constraint: Σ a_ℓ + Σ a_ℓk = 1.0."""
+        # Sum all linear weights
+        total_linear = (
+            self.a_base + self.a_unit + self.a_question + 
+            self.a_dimension + self.a_policy + self.a_congruence + 
+            self.a_chain + self.a_meta
+        )
+        
+        # Sum all interaction weights
+        total_interaction = (
+            self.a_unit_chain + self.a_chain_congruence + 
+            self.a_question_dimension + self.a_dimension_policy
+        )
+        
+        # Check normalization
+        total = total_linear + total_interaction
+        if abs(total - 1.0) > 1e-6:
+            raise ValueError(
+                f"Choquet weights must sum to 1.0:\n"
+                f"  Linear: {total_linear:.6f}\n"
+                f"  Interaction: {total_interaction:.6f}\n"
+                f"  Total: {total:.6f}"
+            )
+        
+        # Validate all weights are non-negative
+        weights = [
+            self.a_base, self.a_unit, self.a_question, self.a_dimension,
+            self.a_policy, self.a_congruence, self.a_chain, self.a_meta,
+            self.a_unit_chain, self.a_chain_congruence,
+            self.a_question_dimension, self.a_dimension_policy
+        ]
+        if any(w < 0 for w in weights):
+            raise ValueError("All Choquet weights must be non-negative")
+    
+    def get_layer_weights(self) -> dict[str, float]:
+        """Get linear layer weights as dictionary."""
+        return {
+            "b": self.a_base,
+            "u": self.a_unit,
+            "q": self.a_question,
+            "d": self.a_dimension,
+            "p": self.a_policy,
+            "C": self.a_congruence,
+            "chain": self.a_chain,
+            "m": self.a_meta,
+        }
+    
+    def get_interaction_weights(self) -> dict[tuple[str, str], float]:
+        """Get interaction weights as dictionary."""
+        return {
+            ("u", "chain"): self.a_unit_chain,
+            ("chain", "C"): self.a_chain_congruence,
+            ("q", "d"): self.a_question_dimension,
+            ("d", "p"): self.a_dimension_policy,
+        }
+
+
+@dataclass(frozen=True)
+class CalibrationSystemConfig:
+    """
+    Complete calibration system configuration.
+    
+    This is the root configuration object that aggregates all layer configs.
+    
+    SIN_CARRETA Compliance:
+        - Immutable (frozen=True)
+        - Deterministic hash via compute_system_hash()
+        - Fixed random seed for reproducibility
+        - All parameters validated in __post_init__
+    """
+    # ========================================
+    # Layer Configurations
+    # ========================================
+    unit_layer: UnitLayerConfig = field(default_factory=UnitLayerConfig)
+    meta_layer: MetaLayerConfig = field(default_factory=MetaLayerConfig)
+    choquet: ChoquetAggregationConfig = field(default_factory=ChoquetAggregationConfig)
+    
+    # ========================================
+    # Global Settings
+    # ========================================
+    random_seed: int = 42  # For any stochastic operations
+    tolerance: float = 1e-6  # Numerical tolerance for comparisons
+    
+    # ========================================
+    # Environment Overrides
+    # ========================================
+    enable_env_overrides: bool = False  # If True, read from env vars
+    
+    def __post_init__(self):
+        """Validate system configuration."""
+        # Validate tolerance is positive
+        if self.tolerance <= 0:
+            raise ValueError(f"tolerance must be positive, got {self.tolerance}")
+        
+        # All sub-configs are validated in their own __post_init__
+        # No additional validation needed here
+    
+    def compute_system_hash(self) -> str:
+        """
+        Compute deterministic hash of entire configuration.
+        
+        This ensures reproducibility: same config = same hash.
+        Used for audit trails and result caching.
+        
+        Returns:
+            SHA256 hash of configuration as hex string
+        """
+        # Convert to JSON-serializable dict (deterministic order)
+        config_dict = {
+            "unit_layer": {
+                "w_S": self.unit_layer.w_S,
+                "w_M": self.unit_layer.w_M,
+                "w_I": self.unit_layer.w_I,
+                "w_P": self.unit_layer.w_P,
+                "aggregation_type": self.unit_layer.aggregation_type,
+                "enforce_ppi_gate": self.unit_layer.enforce_ppi_gate,
+                "enforce_indicator_gate": self.unit_layer.enforce_indicator_gate,
+                "min_structural_compliance": self.unit_layer.min_structural_compliance,
+                "w_S_block_coverage": self.unit_layer.w_S_block_coverage,
+                "w_S_hierarchy": self.unit_layer.w_S_hierarchy,
+                "w_S_order": self.unit_layer.w_S_order,
+                "required_sections": list(self.unit_layer.required_sections),
+                "w_I_structural": self.unit_layer.w_I_structural,
+                "w_I_linkage": self.unit_layer.w_I_linkage,
+                "w_I_logic": self.unit_layer.w_I_logic,
+                "w_P_presence": self.unit_layer.w_P_presence,
+                "w_P_structure": self.unit_layer.w_P_structure,
+                "w_P_consistency": self.unit_layer.w_P_consistency,
+            },
+            "meta_layer": {
+                "w_transparency": self.meta_layer.w_transparency,
+                "w_governance": self.meta_layer.w_governance,
+                "w_cost": self.meta_layer.w_cost,
+                "require_formula_export": self.meta_layer.require_formula_export,
+                "require_trace_complete": self.meta_layer.require_trace_complete,
+                "require_logs_conform": self.meta_layer.require_logs_conform,
+                "require_version_tag": self.meta_layer.require_version_tag,
+                "require_config_hash": self.meta_layer.require_config_hash,
+                "require_signature": self.meta_layer.require_signature,
+                "threshold_runtime_fast_ms": self.meta_layer.threshold_runtime_fast_ms,
+                "threshold_runtime_acceptable_ms": self.meta_layer.threshold_runtime_acceptable_ms,
+                "threshold_memory_normal_mb": self.meta_layer.threshold_memory_normal_mb,
+                "threshold_memory_excessive_mb": self.meta_layer.threshold_memory_excessive_mb,
+            },
+            "choquet": {
+                "layer_weights": self.choquet.get_layer_weights(),
+                "interaction_weights": {
+                    f"{k[0]}_{k[1]}": v 
+                    for k, v in self.choquet.get_interaction_weights().items()
+                },
+            },
+            "random_seed": self.random_seed,
+            "tolerance": self.tolerance,
+        }
+        
+        # Compute SHA256 hash (sort_keys ensures determinism)
+        config_json = json.dumps(config_dict, sort_keys=True)
+        return hashlib.sha256(config_json.encode()).hexdigest()
+    
+    @classmethod
+    def from_env(cls) -> "CalibrationSystemConfig":
+        """
+        Create configuration with environment variable overrides.
+        
+        Environment variables (all optional):
+            CALIB_RANDOM_SEED: int
+            CALIB_UNIT_W_S: float
+            CALIB_UNIT_W_M: float
+            CALIB_UNIT_W_I: float
+            CALIB_UNIT_W_P: float
+            CALIB_META_W_TRANSPARENCY: float
+            CALIB_META_W_GOVERNANCE: float
+            CALIB_META_W_COST: float
+            ... (add more as needed)
+        
+        Returns:
+            CalibrationSystemConfig with env overrides applied
+        """
+        # Start with defaults
+        unit_kwargs = {}
+        meta_kwargs = {}
+        choquet_kwargs = {}
+        system_kwargs = {}
+        
+        # Override from environment
+        if "CALIB_RANDOM_SEED" in os.environ:
+            system_kwargs["random_seed"] = int(os.environ["CALIB_RANDOM_SEED"])
+        
+        if "CALIB_UNIT_W_S" in os.environ:
+            unit_kwargs["w_S"] = float(os.environ["CALIB_UNIT_W_S"])
+        if "CALIB_UNIT_W_M" in os.environ:
+            unit_kwargs["w_M"] = float(os.environ["CALIB_UNIT_W_M"])
+        if "CALIB_UNIT_W_I" in os.environ:
+            unit_kwargs["w_I"] = float(os.environ["CALIB_UNIT_W_I"])
+        if "CALIB_UNIT_W_P" in os.environ:
+            unit_kwargs["w_P"] = float(os.environ["CALIB_UNIT_W_P"])
+        
+        if "CALIB_META_W_TRANSPARENCY" in os.environ:
+            meta_kwargs["w_transparency"] = float(os.environ["CALIB_META_W_TRANSPARENCY"])
+        if "CALIB_META_W_GOVERNANCE" in os.environ:
+            meta_kwargs["w_governance"] = float(os.environ["CALIB_META_W_GOVERNANCE"])
+        if "CALIB_META_W_COST" in os.environ:
+            meta_kwargs["w_cost"] = float(os.environ["CALIB_META_W_COST"])
+        
+        # Build configs
+        unit_config = UnitLayerConfig(**unit_kwargs) if unit_kwargs else UnitLayerConfig()
+        meta_config = MetaLayerConfig(**meta_kwargs) if meta_kwargs else MetaLayerConfig()
+        choquet_config = ChoquetAggregationConfig(**choquet_kwargs) if choquet_kwargs else ChoquetAggregationConfig()
+        
+        system_kwargs.update({
+            "unit_layer": unit_config,
+            "meta_layer": meta_config,
+            "choquet": choquet_config,
+            "enable_env_overrides": True,
+        })
+        
+        return cls(**system_kwargs)
+
+
+# Default configuration instance
+DEFAULT_CALIBRATION_CONFIG = CalibrationSystemConfig()

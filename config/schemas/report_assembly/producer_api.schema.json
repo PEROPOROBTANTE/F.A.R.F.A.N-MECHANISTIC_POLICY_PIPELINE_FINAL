@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/report_assembly/producer_api.schema.json",
+  "title": "ReportAssemblyProducerAPI",
+  "description": "API contract for ReportAssemblyProducer public methods - registry exposure without summarization leakage",
+  "type": "object",
+  "properties": {
+    "producer_metadata": {
+      "type": "object",
+      "required": ["version", "producer_type", "public_method_count"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Producer version (semver)"
+        },
+        "producer_type": {
+          "type": "string",
+          "enum": ["report_assembly"],
+          "description": "Producer type identifier"
+        },
+        "public_method_count": {
+          "type": "integer",
+          "minimum": 40,
+          "description": "Number of public API methods exposed for registry"
+        }
+      }
+    },
+    "api_methods": {
+      "type": "object",
+      "description": "Available public API methods grouped by category",
+      "properties": {
+        "micro_production": {
+          "type": "array",
+          "description": "MICRO level production methods",
+          "items": {
+            "type": "object",
+            "required": ["method_name", "input_schema", "output_schema"],
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "produce_micro_answer",
+                  "get_micro_answer_score",
+                  "get_micro_answer_qualitative",
+                  "get_micro_answer_evidence",
+                  "get_micro_answer_confidence",
+                  "get_micro_answer_modules",
+                  "get_micro_answer_execution_time",
+                  "get_micro_answer_elements_found",
+                  "count_micro_evidence_excerpts",
+                  "is_micro_answer_excellent",
+                  "is_micro_answer_passing"
+                ]
+              },
+              "input_schema": {
+                "type": "object",
+                "description": "Input parameter schema"
+              },
+              "output_schema": {
+                "type": "object",
+                "description": "Output value schema"
+              }
+            }
+          }
+        },
+        "meso_production": {
+          "type": "array",
+          "description": "MESO level production methods",
+          "items": {
+            "type": "object",
+            "required": ["method_name", "input_schema", "output_schema"],
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "produce_meso_cluster",
+                  "get_meso_cluster_score",
+                  "get_meso_cluster_policy_areas",
+                  "get_meso_cluster_dimension_scores",
+                  "get_meso_cluster_strengths",
+                  "get_meso_cluster_weaknesses",
+                  "get_meso_cluster_recommendations",
+                  "get_meso_cluster_coverage",
+                  "get_meso_cluster_question_counts",
+                  "count_meso_strengths",
+                  "count_meso_weaknesses",
+                  "is_meso_cluster_excellent",
+                  "is_meso_cluster_passing"
+                ]
+              }
+            }
+          }
+        },
+        "macro_production": {
+          "type": "array",
+          "description": "MACRO level production methods",
+          "items": {
+            "type": "object",
+            "required": ["method_name", "input_schema", "output_schema"],
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "produce_macro_convergence",
+                  "get_macro_overall_score",
+                  "get_macro_dimension_convergence",
+                  "get_macro_policy_convergence",
+                  "get_macro_gap_analysis",
+                  "get_macro_agenda_alignment",
+                  "get_macro_critical_gaps",
+                  "get_macro_strategic_recommendations",
+                  "get_macro_classification",
+                  "get_macro_evidence_synthesis",
+                  "get_macro_implementation_roadmap",
+                  "get_macro_score_distribution",
+                  "get_macro_confidence_metrics",
+                  "count_macro_critical_gaps",
+                  "count_macro_strategic_recommendations",
+                  "is_macro_excellent",
+                  "is_macro_passing"
+                ]
+              }
+            }
+          }
+        },
+        "scoring_utilities": {
+          "type": "array",
+          "description": "Scoring utility methods",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "convert_score_to_percentage",
+                  "convert_percentage_to_score",
+                  "classify_score",
+                  "classify_percentage",
+                  "get_rubric_threshold",
+                  "get_question_rubric_threshold"
+                ]
+              }
+            }
+          }
+        },
+        "configuration": {
+          "type": "array",
+          "description": "Configuration access methods",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "get_dimension_description",
+                  "list_dimensions",
+                  "list_rubric_levels",
+                  "get_causal_threshold",
+                  "get_cluster_weight",
+                  "get_cluster_policy_weights"
+                ]
+              }
+            }
+          }
+        },
+        "serialization": {
+          "type": "array",
+          "description": "Serialization and export methods",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "export_complete_report",
+                  "serialize_micro_answer",
+                  "serialize_meso_cluster",
+                  "serialize_macro_convergence",
+                  "deserialize_micro_answer",
+                  "deserialize_meso_cluster",
+                  "deserialize_macro_convergence"
+                ]
+              }
+            }
+          }
+        },
+        "validation": {
+          "type": "array",
+          "description": "Schema validation methods",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method_name": {
+                "type": "string",
+                "enum": [
+                  "validate_micro_answer",
+                  "validate_meso_cluster",
+                  "validate_macro_convergence"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["producer_metadata", "api_methods"],
+  "additionalProperties": false
+}

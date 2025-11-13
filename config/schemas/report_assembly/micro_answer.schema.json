@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/report_assembly/micro_answer.schema.json",
+  "title": "MicroLevelAnswer",
+  "description": "Respuesta a nivel MICRO para una pregunta individual con trazabilidad completa",
+  "type": "object",
+  "required": ["question_id", "qualitative_note", "quantitative_score", "evidence", "explanation", "confidence", "scoring_modality", "elements_found", "modules_executed", "execution_time"],
+  "properties": {
+    "question_id": {
+      "type": "string",
+      "pattern": "^P(\\d|10)-D[1-6]-Q[1-5]$",
+      "description": "ID canónico de la pregunta (P#-D#-Q#)",
+      "examples": ["P1-D1-Q1", "P10-D6-Q5"]
+    },
+    "qualitative_note": {
+      "type": "string",
+      "enum": ["EXCELENTE", "BUENO", "ACEPTABLE", "INSUFICIENTE"],
+      "description": "Clasificación cualitativa de la respuesta"
+    },
+    "quantitative_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 3.0,
+      "description": "Puntuación cuantitativa (0.0-3.0)"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "description": "Extractos textuales del plan como evidencia",
+      "minItems": 0,
+      "maxItems": 100
+    },
+    "explanation": {
+      "type": "string",
+      "minLength": 150,
+      "maxLength": 3000,
+      "description": "Explicación doctoral de 150-300 palabras"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Nivel de confianza en la respuesta"
+    },
+    "scoring_modality": {
+      "type": "string",
+      "enum": ["TYPE_A", "TYPE_B", "TYPE_C", "TYPE_D", "TYPE_E", "TYPE_F"],
+      "description": "Modalidad de scoring aplicada"
+    },
+    "elements_found": {
+      "type": "object",
+      "description": "Elementos esperados que fueron detectados",
+      "patternProperties": {
+        "^.+$": {"type": "boolean"}
+      }
+    },
+    "search_pattern_matches": {
+      "type": "object",
+      "description": "Resultados del pattern matching"
+    },
+    "modules_executed": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Nombres de los adaptadores ejecutados",
+      "minItems": 1
+    },
+    "module_results": {
+      "type": "object",
+      "description": "Resultados de cada adaptador"
+    },
+    "execution_time": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Tiempo de ejecución en segundos"
+    },
+    "execution_chain": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": {"type": "string"},
+          "module": {"type": "string"},
+          "timestamp": {"type": "string", "format": "date-time"}
+        }
+      },
+      "description": "Cadena de ejecución completa para trazabilidad"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadatos adicionales"
+    }
+  },
+  "additionalProperties": false
+}

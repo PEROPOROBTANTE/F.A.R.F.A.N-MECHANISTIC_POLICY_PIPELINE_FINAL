@@ -1,0 +1,25 @@
+{
+  "producers": {
+    "SemanticChunkingProducer": {
+      "public": 23,
+      "private": 1,
+      "total": 24
+    },
+    "EmbeddingPolicyProducer": {
+      "public": 30,
+      "private": 1,
+      "total": 31
+    },
+    "DerekBeachProducer": {
+      "public": 40,
+      "private": 1,
+      "total": 41
+    },
+    "ReportAssemblyProducer": {
+      "public": 63,
+      "private": 1,
+      "total": 64
+    }
+  },
+  "total_public_methods": 156
+}

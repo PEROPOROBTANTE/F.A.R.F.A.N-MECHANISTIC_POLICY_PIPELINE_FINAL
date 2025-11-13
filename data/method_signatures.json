@@ -1,0 +1,34 @@
+{
+  "signatures_version": "1.0.0",
+  "last_updated": "2025-11-11",
+  "methods": {
+    "pattern_extractor_v2": {
+      "required_inputs": ["text", "question_id"],
+      "optional_inputs": ["context", "patterns", "regex_flags"],
+      "critical_optional": ["patterns"],
+      "output_type": "dict",
+      "description": "Extracts patterns from text"
+    },
+    "coherence_validator": {
+      "required_inputs": ["text", "question_id"],
+      "optional_inputs": ["reference_corpus", "threshold"],
+      "critical_optional": ["reference_corpus"],
+      "output_type": "float",
+      "description": "Validates text coherence"
+    },
+    "semantic_analyzer": {
+      "required_inputs": ["text"],
+      "optional_inputs": ["context", "language"],
+      "critical_optional": [],
+      "output_type": "dict",
+      "description": "Analyzes semantics"
+    },
+    "structural_scorer": {
+      "required_inputs": ["document_structure"],
+      "optional_inputs": ["weights", "thresholds"],
+      "critical_optional": [],
+      "output_type": "float",
+      "description": "Scores structure"
+    }
+  }
+}

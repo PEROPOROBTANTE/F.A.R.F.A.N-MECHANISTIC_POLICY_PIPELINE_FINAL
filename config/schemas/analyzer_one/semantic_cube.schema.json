@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/analyzer_one/semantic_cube.schema.json",
+  "title": "SemanticCube",
+  "description": "Cubo semántico multidimensional extraído de segmentos de documentos municipales",
+  "type": "object",
+  "required": ["dimensions", "measures", "metadata"],
+  "properties": {
+    "dimensions": {
+      "type": "object",
+      "required": ["value_chain_links", "policy_domains", "cross_cutting_themes"],
+      "properties": {
+        "value_chain_links": {
+          "type": "object",
+          "description": "Enlaces de cadena de valor con segmentos clasificados",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Datos procesados del segmento"
+            }
+          }
+        },
+        "policy_domains": {
+          "type": "object",
+          "description": "Dominios de política con segmentos clasificados",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Datos procesados del segmento"
+            }
+          }
+        },
+        "cross_cutting_themes": {
+          "type": "object",
+          "description": "Temas transversales identificados con segmentos clasificados",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Datos procesados del segmento"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "measures": {
+      "type": "object",
+      "required": ["semantic_density", "coherence_scores"],
+      "properties": {
+        "semantic_density": {
+          "type": "array",
+          "description": "Densidad semántica por segmento",
+          "items": {
+            "type": "number",
+            "minimum": 0.0
+          }
+        },
+        "coherence_scores": {
+          "type": "array",
+          "description": "Puntajes de coherencia por segmento",
+          "items": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        },
+        "overall_coherence": {
+          "type": "number",
+          "description": "Coherencia general promedio",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "semantic_complexity": {
+          "type": "number",
+          "description": "Métrica de complejidad semántica",
+          "minimum": 0.0
+        },
+        "complexity_metrics": {
+          "type": "array",
+          "description": "Métricas adicionales de complejidad",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["extraction_timestamp", "total_segments"],
+      "properties": {
+        "extraction_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de extracción ISO 8601"
+        },
+        "total_segments": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número total de segmentos procesados"
+        },
+        "processing_parameters": {
+          "type": "object",
+          "description": "Parámetros utilizados durante el procesamiento",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

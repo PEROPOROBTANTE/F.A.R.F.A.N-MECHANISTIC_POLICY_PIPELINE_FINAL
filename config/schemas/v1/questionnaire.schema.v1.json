@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/questionnaire.schema.json",
+  "title": "PolicyAnalysisQuestionnaire",
+  "description": "Canonical truth model for policy analysis with immutable MESO cluster taxonomy",
+  "type": "object",
+  "required": ["metadata", "questions"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["version", "clusters", "policy_areas", "dimensions"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version (MAJOR.MINOR.PATCH)"
+        },
+        "clusters": {
+          "type": "array",
+          "description": "Immutable taxonomy of 4 policy subsystem clusters",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["cluster_id", "name", "rationale", "policy_area_ids"],
+            "properties": {
+              "cluster_id": {
+                "type": "string",
+                "pattern": "^CL0[1-4]$",
+                "description": "Canonical cluster identifier (CL01-CL04)"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 3,
+                "description": "Human-readable cluster name"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 10,
+                "description": "Policy subsystem rationale (not narrative)"
+              },
+              "policy_area_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^PA(0[1-9]|10)$"
+                },
+                "minItems": 1,
+                "uniqueItems": true,
+                "description": "Policy areas (Decálogo points) in this cluster"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "policy_areas": {
+          "type": "array",
+          "description": "10 policy areas (Decálogo points)",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": ["policy_area_id", "name"],
+            "properties": {
+              "policy_area_id": {
+                "type": "string",
+                "pattern": "^PA(0[1-9]|10)$",
+                "description": "Canonical policy area ID (PA01-PA10)"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 5,
+                "description": "Policy area name"
+              },
+              "description": {
+                "type": "string",
+                "description": "Optional detailed description"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "6 analytical dimensions",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["dimension_id", "name"],
+            "properties": {
+              "dimension_id": {
+                "type": "string",
+                "pattern": "^DIM0[1-6]$",
+                "description": "Canonical dimension ID (DIM01-DIM06)"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 3,
+                "description": "Dimension name"
+              },
+              "description": {
+                "type": "string",
+                "description": "Optional detailed description"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": true,
+      "$comment": "TODO: Harden additionalProperties to false in schema v2 when metadata extensions stabilize."
+    },
+    "questions": {
+      "type": "array",
+      "description": "Complete set of 300 questions",
+      "minItems": 300,
+      "items": {
+        "type": "object",
+        "required": ["question_id", "policy_area_id", "dimension_id", "question_text", "scoring_modality"],
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "pattern": "^Q\\d{3}$",
+            "description": "Canonical question ID (Q001-Q300)"
+          },
+          "policy_area_id": {
+            "type": "string",
+            "pattern": "^PA(0[1-9]|10)$",
+            "description": "Reference to policy_area"
+          },
+          "dimension_id": {
+            "type": "string",
+            "pattern": "^DIM0[1-6]$",
+            "description": "Reference to dimension"
+          },
+          "question_text": {
+            "type": "string",
+            "minLength": 10,
+            "description": "Question text"
+          },
+          "scoring_modality": {
+            "type": "string",
+            "enum": ["TYPE_A", "TYPE_B", "TYPE_C", "TYPE_D", "TYPE_E", "TYPE_F"],
+            "description": "Scoring modality type"
+          },
+          "expected_elements": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Expected elements for scoring"
+          },
+          "search_patterns": {
+            "type": "object",
+            "description": "Search patterns for evidence extraction"
+          },
+          "element_weights": {
+            "type": "object",
+            "patternProperties": {
+              "^.+$": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "description": "Weights for expected elements"
+          },
+          "numerical_thresholds": {
+            "type": "object",
+            "description": "Numerical thresholds for scoring"
+          },
+          "validation_rules": {
+            "type": "object",
+            "description": "Validation rules"
+          }
+        },
+        "additionalProperties": true
+      },
+      "maxItems": 300
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over canonicalized payload excluding this field"
+    }
+  },
+  "additionalProperties": false
+}

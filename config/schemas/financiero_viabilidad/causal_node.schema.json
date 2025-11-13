@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/financiero_viabilidad/causal_node.schema.json",
+  "title": "CausalNode",
+  "description": "Nodo en el grafo causal para análisis de planes de desarrollo municipal PDET",
+  "type": "object",
+  "required": ["name", "node_type", "temporal_lag", "evidence_strength"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre del nodo causal (pilar PDET, outcome, mediador, confounder)",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "node_type": {
+      "type": "string",
+      "enum": ["pilar", "outcome", "mediator", "confounder"],
+      "description": "Tipo de nodo en la jerarquía causal"
+    },
+    "embedding": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array",
+          "items": {"type": "number"},
+          "description": "Vector de embeddings semánticos (768 dimensiones)",
+          "minItems": 768,
+          "maxItems": 768
+        }
+      ]
+    },
+    "associated_budget": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d{1,2})?$",
+          "description": "Presupuesto asociado en COP (como string decimal)"
+        }
+      ]
+    },
+    "temporal_lag": {
+      "type": "integer",
+      "description": "Rezago temporal en años para efectos",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "evidence_strength": {
+      "type": "number",
+      "description": "Fuerza de la evidencia (0.0-1.0)",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "additionalProperties": false
+}

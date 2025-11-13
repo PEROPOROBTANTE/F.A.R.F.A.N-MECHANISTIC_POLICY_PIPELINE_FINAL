@@ -1,0 +1,6 @@
+metric,value,penalty,description
+overall_posterior,0.5942,0.8260,Raw overall score before penalties
+coverage,0.0300,0.7700,Question coverage ratio
+dispersion,1.0000,0.0000,Portfolio dispersion score
+contradictions,5,0.0560,Number of detected contradictions
+adjusted_score,0.1034,0.0000,Final penalty-adjusted score

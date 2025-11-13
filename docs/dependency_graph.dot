@@ -1,0 +1,190 @@
+// DEPENDENCY GRAPH: Strategic Policy Analysis System
+// Generated: 2025-10-22
+// Architecture: 7 Producers + 1 Aggregator (Two-Core Pipeline)
+// Total: 8 files, 67 classes, 584 methods
+
+digraph PolicyAnalysisSystem {
+    // Graph attributes
+    rankdir=LR;
+    concentrate=true;
+    compound=true;
+    newrank=true;
+    splines=ortho;
+    nodesep=0.8;
+    ranksep=1.2;
+    
+    // Node defaults
+    node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=8, color="#666666"];
+    
+    // Subgraph: Input Layer
+    subgraph cluster_input {
+        label="INPUT LAYER";
+        style=filled;
+        fillcolor="#E8F4F8";
+        fontsize=12;
+        fontname="Arial Bold";
+        
+        PDF [label="Municipal Development\nPlan (PDF)", shape=note, fillcolor="#FFE4B5"];
+        QUESTIONNAIRE [label="cuestionario_FIXED.json\n(300 questions)", shape=note, fillcolor="#FFE4B5"];
+    }
+    
+    // Subgraph: Producer Layer (7 independent producers)
+    subgraph cluster_producers {
+        label="GENERATION PIPELINE (7 Producers - Parallel Execution)";
+        style=filled;
+        fillcolor="#E0F2E9";
+        fontsize=12;
+        fontname="Arial Bold";
+        
+        // Producer 1: Financial Analysis
+        FINANCIERO [label="financiero_viabilidad_tablas.py\n65 methods\nPDETMunicipalPlanAnalyzer", fillcolor="#90EE90"];
+        
+        // Producer 2: Semantic Analysis
+        ANALYZER [label="Analyzer_one.py\n34 methods\nSemanticAnalyzer", fillcolor="#90EE90"];
+        
+        // Producer 3: Contradiction Detection
+        CONTRADICTION [label="contradiction_deteccion.py\n62 methods\nPolicyContradictionDetector", fillcolor="#90EE90"];
+        
+        // Producer 4: Embedding & Semantic Search
+        EMBEDDING [label="embedding_policy.py\n36 methods\nPolicyAnalysisEmbedder", fillcolor="#90EE90"];
+        
+        // Producer 5: Theory of Change
+        TEORIA [label="teoria_cambio.py\n30 methods\nTeoriaCambio", fillcolor="#90EE90"];
+        
+        // Producer 6: Causal Deconstruction
+        BEACH [label="dereck_beach.py\n99 methods\nCDAFFramework", fillcolor="#90EE90"];
+        
+        // Producer 7: Pattern Processor
+        PROCESSOR [label="policy_processor.py\n32 methods\nIndustrialPolicyProcessor", fillcolor="#90EE90"];
+    }
+    
+    // Subgraph: Aggregator Layer
+    subgraph cluster_aggregator {
+        label="ASSEMBLY PIPELINE (1 Aggregator)";
+        style=filled;
+        fillcolor="#FFE4E1";
+        fontsize=12;
+        fontname="Arial Bold";
+        
+        ASSEMBLER [label="report_assembly.py\n43 methods\nReportAssembler\n(6 Scoring Modalities)", fillcolor="#FF6B6B"];
+    }
+    
+    // Subgraph: Output Layer
+    subgraph cluster_output {
+        label="OUTPUT LAYER";
+        style=filled;
+        fillcolor="#F0E68C";
+        fontsize=12;
+        fontname="Arial Bold";
+        
+        MICRO [label="MICRO Report\n(300 question answers)", shape=note, fillcolor="#FFFFE0"];
+        MESO [label="MESO Report\n(60 policy-dimension clusters)", shape=note, fillcolor="#FFFFE0"];
+        MACRO [label="MACRO Report\n(1 overall convergence)", shape=note, fillcolor="#FFFFE0"];
+    }
+    
+    // ========== INPUT → PRODUCERS ==========
+    PDF -> FINANCIERO [label="extract", color="#2E86AB", penwidth=2];
+    PDF -> ANALYZER [label="load", color="#2E86AB", penwidth=2];
+    PDF -> CONTRADICTION [label="parse", color="#2E86AB", penwidth=2];
+    PDF -> EMBEDDING [label="chunk", color="#2E86AB", penwidth=2];
+    PDF -> TEORIA [label="read", color="#2E86AB", penwidth=2];
+    PDF -> BEACH [label="process", color="#2E86AB", penwidth=2];
+    PDF -> PROCESSOR [label="analyze", color="#2E86AB", penwidth=2];
+    
+    QUESTIONNAIRE -> PROCESSOR [label="patterns", color="#A23B72", penwidth=2];
+    QUESTIONNAIRE -> ASSEMBLER [label="criteria", color="#A23B72", penwidth=2];
+    
+    // ========== INTER-PRODUCER DEPENDENCIES ==========
+    // Note: Producers are designed to be independent, but some share conceptual patterns
+    
+    // Causal Analysis Cluster (TEORIA ↔ FINANCIERO ↔ BEACH)
+    TEORIA -> FINANCIERO [label="DAG validation", style=dashed, color="#9B59B6"];
+    FINANCIERO -> BEACH [label="causal nodes", style=dashed, color="#9B59B6"];
+    BEACH -> TEORIA [label="mechanism feedback", style=dashed, color="#9B59B6"];
+    
+    // Semantic Analysis Cluster (ANALYZER ↔ EMBEDDING)
+    ANALYZER -> EMBEDDING [label="semantic vectors", style=dashed, color="#E67E22"];
+    EMBEDDING -> ANALYZER [label="similarity scores", style=dashed, color="#E67E22"];
+    
+    // Coherence Cluster (CONTRADICTION ↔ PROCESSOR)
+    PROCESSOR -> CONTRADICTION [label="pattern matches", style=dashed, color="#27AE60"];
+    CONTRADICTION -> PROCESSOR [label="contradiction flags", style=dashed, color="#27AE60"];
+    
+    // ========== PRODUCERS → AGGREGATOR ==========
+    FINANCIERO -> ASSEMBLER [label="Financial\nArtifact", color="#16A085", penwidth=2.5];
+    ANALYZER -> ASSEMBLER [label="Semantic\nArtifact", color="#16A085", penwidth=2.5];
+    CONTRADICTION -> ASSEMBLER [label="Contradiction\nArtifact", color="#16A085", penwidth=2.5];
+    EMBEDDING -> ASSEMBLER [label="Embedding\nArtifact", color="#16A085", penwidth=2.5];
+    TEORIA -> ASSEMBLER [label="TeoriaCambio\nArtifact", color="#16A085", penwidth=2.5];
+    BEACH -> ASSEMBLER [label="CDAF\nArtifact", color="#16A085", penwidth=2.5];
+    PROCESSOR -> ASSEMBLER [label="Processor\nArtifact", color="#16A085", penwidth=2.5];
+    
+    // ========== AGGREGATOR → OUTPUTS ==========
+    ASSEMBLER -> MICRO [label="generate_micro_answer\n(300x)", color="#C0392B", penwidth=2];
+    ASSEMBLER -> MESO [label="generate_meso_cluster\n(60x)", color="#C0392B", penwidth=2];
+    ASSEMBLER -> MACRO [label="generate_macro_convergence\n(1x)", color="#C0392B", penwidth=2];
+    
+    // ========== KEY DEPENDENCIES (Detailed) ==========
+    
+    // Table Extraction (Dual Path)
+    subgraph cluster_table {
+        label="Table Extraction";
+        style=dashed;
+        color="#8E44AD";
+        
+        FINANCIERO_TABLE [label="PDETMunicipalPlanAnalyzer\n.extract_tables()", shape=ellipse, fillcolor="#D7BDE2"];
+        BEACH_TABLE [label="PDFProcessor\n.extract_tables()", shape=ellipse, fillcolor="#D7BDE2"];
+    }
+    FINANCIERO -> FINANCIERO_TABLE [style=invis];
+    BEACH -> BEACH_TABLE [style=invis];
+    FINANCIERO_TABLE -> BEACH_TABLE [label="cross-validate", dir=both, color="#8E44AD", style=dotted];
+    
+    // Causal DAG Construction (Triple Path)
+    subgraph cluster_dag {
+        label="Causal DAG Construction";
+        style=dashed;
+        color="#2980B9";
+        
+        TEORIA_DAG [label="TeoriaCambio\n.construir_grafo_causal()", shape=ellipse, fillcolor="#AED6F1"];
+        FINANCIERO_DAG [label="PDETMunicipalPlanAnalyzer\n.construct_causal_dag()", shape=ellipse, fillcolor="#AED6F1"];
+        BEACH_DAG [label="CausalExtractor\n.extract_causal_hierarchy()", shape=ellipse, fillcolor="#AED6F1"];
+    }
+    TEORIA -> TEORIA_DAG [style=invis];
+    FINANCIERO -> FINANCIERO_DAG [style=invis];
+    BEACH -> BEACH_DAG [style=invis];
+    TEORIA_DAG -> FINANCIERO_DAG [label="validate", dir=both, color="#2980B9", style=dotted];
+    FINANCIERO_DAG -> BEACH_DAG [label="validate", dir=both, color="#2980B9", style=dotted];
+    
+    // Bayesian Inference (Multi-Source)
+    subgraph cluster_bayesian {
+        label="Bayesian Inference";
+        style=dashed;
+        color="#D35400";
+        
+        EMBEDDING_BAYES [label="BayesianNumericalAnalyzer\n.evaluate_policy_metric()", shape=ellipse, fillcolor="#F0B27A"];
+        CONTRADICTION_BAYES [label="BayesianConfidenceCalculator\n.calculate_posterior()", shape=ellipse, fillcolor="#F0B27A"];
+        BEACH_BAYES [label="BayesianMechanismInference\n.infer_mechanisms()", shape=ellipse, fillcolor="#F0B27A"];
+        PROCESSOR_BAYES [label="BayesianEvidenceScorer\n.compute_evidence_score()", shape=ellipse, fillcolor="#F0B27A"];
+    }
+    EMBEDDING -> EMBEDDING_BAYES [style=invis];
+    CONTRADICTION -> CONTRADICTION_BAYES [style=invis];
+    BEACH -> BEACH_BAYES [style=invis];
+    PROCESSOR -> PROCESSOR_BAYES [style=invis];
+    EMBEDDING_BAYES -> ASSEMBLER [label="TYPE_A", color="#D35400"];
+    CONTRADICTION_BAYES -> ASSEMBLER [label="TYPE_A", color="#D35400"];
+    BEACH_BAYES -> ASSEMBLER [label="TYPE_F", color="#D35400"];
+    PROCESSOR_BAYES -> ASSEMBLER [label="TYPE_D", color="#D35400"];
+    
+    // Legend
+    subgraph cluster_legend {
+        label="LEGEND";
+        style=filled;
+        fillcolor="#FFFFFF";
+        fontsize=10;
+        
+        LEG1 [label="Solid Line = Direct Dependency", shape=plaintext];
+        LEG2 [label="Dashed Line = Conceptual Dependency", shape=plaintext];
+        LEG3 [label="Dotted Line = Cross-Validation", shape=plaintext];
+    }
+}

@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.example.com/schemas/contract_error_log.schema.json",
+  "title": "Contract Error Log Schema",
+  "description": "Machine-readable schema for ERR_CONTRACT_MISMATCH and other contract validation errors",
+  "type": "object",
+  "required": [
+    "error_code",
+    "timestamp",
+    "severity",
+    "function",
+    "message",
+    "context"
+  ],
+  "properties": {
+    "error_code": {
+      "type": "string",
+      "description": "Standardized error code for categorization and monitoring",
+      "enum": [
+        "ERR_CONTRACT_MISMATCH",
+        "ERR_TYPE_VIOLATION",
+        "ERR_SCHEMA_VALIDATION",
+        "ERR_MISSING_REQUIRED_FIELD",
+        "ERR_INVALID_MODALITY",
+        "ERR_DETERMINISM_VIOLATION"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the error occurred"
+    },
+    "severity": {
+      "type": "string",
+      "description": "Error severity level",
+      "enum": ["CRITICAL", "ERROR", "WARNING", "INFO"]
+    },
+    "function": {
+      "type": "string",
+      "description": "Fully qualified function name where error occurred (e.g., 'embedding_policy._filter_by_pdq')",
+      "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable error message",
+      "minLength": 1
+    },
+    "context": {
+      "type": "object",
+      "description": "Structured context about the error",
+      "required": ["key", "needed", "got"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "The parameter or field name that failed validation"
+        },
+        "needed": {
+          "description": "Expected type, value, or constraint",
+          "oneOf": [
+            {"type": "string"},
+            {"type": "boolean"},
+            {"type": "null"}
+          ]
+        },
+        "got": {
+          "description": "Actual value received (null if missing)",
+          "oneOf": [
+            {"type": "string"},
+            {"type": "number"},
+            {"type": "boolean"},
+            {"type": "null"},
+            {"type": "object"},
+            {"type": "array"}
+          ]
+        },
+        "index": {
+          "type": "integer",
+          "description": "Index in array/list if error occurred in a collection",
+          "minimum": 0
+        },
+        "file": {
+          "type": "string",
+          "description": "File path where error originated"
+        },
+        "line": {
+          "type": "integer",
+          "description": "Line number where error originated",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "stack_trace": {
+      "type": "array",
+      "description": "Optional stack trace for debugging",
+      "items": {
+        "type": "string"
+      }
+    },
+    "remediation": {
+      "type": "string",
+      "description": "Suggested fix or remediation steps"
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Unique request/transaction ID for tracing",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "error_code": "ERR_CONTRACT_MISMATCH",
+      "timestamp": "2024-10-30T02:21:27.988Z",
+      "severity": "ERROR",
+      "function": "embedding_policy._filter_by_pdq",
+      "message": "Contract violation: required parameter 'pdq_context' is missing",
+      "context": {
+        "key": "pdq_context",
+        "needed": true,
+        "got": null,
+        "index": 0,
+        "file": "embedding_policy.py",
+        "line": 142
+      },
+      "remediation": "Ensure pdq_context is provided in the evidence dictionary",
+      "request_id": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    {
+      "error_code": "ERR_TYPE_VIOLATION",
+      "timestamp": "2024-10-30T02:21:28.123Z",
+      "severity": "ERROR",
+      "function": "scoring.apply_scoring",
+      "message": "Type violation: expected float for 'confidence', got string",
+      "context": {
+        "key": "confidence",
+        "needed": "float",
+        "got": "high",
+        "file": "scoring/scoring.py",
+        "line": 234
+      },
+      "remediation": "Convert confidence value to float between 0.0 and 1.0"
+    },
+    {
+      "error_code": "ERR_INVALID_MODALITY",
+      "timestamp": "2024-10-30T02:21:29.456Z",
+      "severity": "ERROR",
+      "function": "scoring.validate_modality",
+      "message": "Invalid modality: TYPE_X is not in allowed modalities",
+      "context": {
+        "key": "modality",
+        "needed": "TYPE_A|TYPE_B|TYPE_C|TYPE_D|TYPE_E|TYPE_F",
+        "got": "TYPE_X",
+        "file": "scoring/scoring.py",
+        "line": 89
+      },
+      "remediation": "Use one of the six allowed modality types: TYPE_A through TYPE_F"
+    }
+  ]
+}

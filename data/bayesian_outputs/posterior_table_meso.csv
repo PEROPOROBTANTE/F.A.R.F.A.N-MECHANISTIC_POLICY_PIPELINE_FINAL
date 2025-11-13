@@ -1,0 +1,4 @@
+cluster_id,raw_meso_score,dispersion_penalty,peer_penalty,total_penalty,adjusted_score,cv,max_gap,gini
+D1_DIAGNOSTICO,0.6717,0.1164,0.0000,0.1164,0.5936,0.5327,0.4711,0.2539
+D2_DISENO,0.6930,0.0000,0.0000,0.0000,0.6930,0.1082,0.1061,0.0383
+D6_TEORIA_CAMBIO,0.9922,0.0000,0.5000,0.5000,0.4961,0.0014,0.0020,0.0005

@@ -1,0 +1,242 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "generated_at": "2025-11-10T08:23:00Z",
+    "description": "Fusion specification - weights and interaction terms for calibration fusion",
+    "spec_compliance": "SUPERPROMPT Three-Pillar Calibration System",
+    "purpose": "Defines a_ℓ (linear weights) and a_ℓk (interaction weights) per role"
+  },
+  
+  "_fusion_formula": {
+    "description": "Cal(I) = Σ(a_ℓ · x_ℓ) + Σ(a_ℓk · min(x_ℓ, x_k))",
+    "constraints": [
+      "a_ℓ ≥ 0 for all ℓ",
+      "a_ℓk ≥ 0 for all (ℓ,k)",
+      "Σ(a_ℓ) + Σ(a_ℓk) = 1.0",
+      "Cal(I) ∈ [0,1] (bounded)",
+      "∂Cal/∂x_ℓ ≥ 0 (monotonic)"
+    ]
+  },
+  
+  "role_fusion_parameters": {
+    "INGEST_PDM": {
+      "required_layers": ["@b", "@chain", "@u", "@m"],
+      "linear_weights": {
+        "@b": 0.35,
+        "@chain": 0.25,
+        "@u": 0.20,
+        "@m": 0.05
+      },
+      "interaction_weights": {
+        "(@u, @chain)": 0.15
+      },
+      "_validation": {
+        "linear_sum": 0.85,
+        "interaction_sum": 0.15,
+        "total": 1.0
+      }
+    },
+    
+    "STRUCTURE": {
+      "required_layers": ["@b", "@chain", "@u", "@m"],
+      "linear_weights": {
+        "@b": 0.35,
+        "@chain": 0.25,
+        "@u": 0.20,
+        "@m": 0.05
+      },
+      "interaction_weights": {
+        "(@u, @chain)": 0.15
+      },
+      "_validation": {
+        "linear_sum": 0.85,
+        "interaction_sum": 0.15,
+        "total": 1.0
+      }
+    },
+    
+    "EXTRACT": {
+      "required_layers": ["@b", "@chain", "@u", "@m"],
+      "linear_weights": {
+        "@b": 0.35,
+        "@chain": 0.25,
+        "@u": 0.20,
+        "@m": 0.05
+      },
+      "interaction_weights": {
+        "(@u, @chain)": 0.15
+      },
+      "_validation": {
+        "linear_sum": 0.85,
+        "interaction_sum": 0.15,
+        "total": 1.0
+      }
+    },
+    
+    "SCORE_Q": {
+      "required_layers": ["@b", "@chain", "@q", "@d", "@p", "@C", "@u", "@m"],
+      "linear_weights": {
+        "@b": 0.18,
+        "@chain": 0.14,
+        "@q": 0.09,
+        "@d": 0.07,
+        "@p": 0.06,
+        "@C": 0.09,
+        "@u": 0.04,
+        "@m": 0.03
+      },
+      "interaction_weights": {
+        "(@u, @chain)": 0.15,
+        "(@chain, @C)": 0.10,
+        "(@q, @d)": 0.05
+      },
+      "_validation": {
+        "linear_sum": 0.70,
+        "interaction_sum": 0.30,
+        "total": 1.0
+      }
+    },
+    
+    "AGGREGATE": {
+      "required_layers": ["@b", "@chain", "@d", "@p", "@C", "@m"],
+      "linear_weights": {
+        "@b": 0.25,
+        "@chain": 0.20,
+        "@d": 0.12,
+        "@p": 0.10,
+        "@C": 0.15,
+        "@m": 0.06
+      },
+      "interaction_weights": {
+        "(@chain, @C)": 0.10,
+        "(@d, @p)": 0.02
+      },
+      "_validation": {
+        "linear_sum": 0.88,
+        "interaction_sum": 0.12,
+        "total": 1.0
+      }
+    },
+    
+    "REPORT": {
+      "required_layers": ["@b", "@chain", "@C", "@m"],
+      "linear_weights": {
+        "@b": 0.30,
+        "@chain": 0.25,
+        "@C": 0.20,
+        "@m": 0.15
+      },
+      "interaction_weights": {
+        "(@chain, @C)": 0.10
+      },
+      "_validation": {
+        "linear_sum": 0.90,
+        "interaction_sum": 0.10,
+        "total": 1.0
+      }
+    },
+    
+    "META_TOOL": {
+      "required_layers": ["@b", "@chain", "@m"],
+      "linear_weights": {
+        "@b": 0.40,
+        "@chain": 0.30,
+        "@m": 0.20
+      },
+      "interaction_weights": {
+        "(@b, @chain)": 0.10
+      },
+      "_validation": {
+        "linear_sum": 0.90,
+        "interaction_sum": 0.10,
+        "total": 1.0
+      }
+    },
+    
+    "TRANSFORM": {
+      "required_layers": ["@b", "@chain", "@m"],
+      "linear_weights": {
+        "@b": 0.40,
+        "@chain": 0.30,
+        "@m": 0.20
+      },
+      "interaction_weights": {
+        "(@b, @chain)": 0.10
+      },
+      "_validation": {
+        "linear_sum": 0.90,
+        "interaction_sum": 0.10,
+        "total": 1.0
+      }
+    }
+  },
+  
+  "standard_interactions": {
+    "description": "Standard interaction patterns and their rationales",
+    "patterns": {
+      "(@u, @chain)": {
+        "rationale": "Plan quality only matters with sound wiring - weakest link",
+        "typical_weight": 0.12,
+        "applies_to_roles": ["INGEST_PDM", "STRUCTURE", "EXTRACT", "SCORE_Q"]
+      },
+      "(@chain, @C)": {
+        "rationale": "Ensemble validity requires chain integrity",
+        "typical_weight": 0.10,
+        "applies_to_roles": ["SCORE_Q", "AGGREGATE", "REPORT"]
+      },
+      "(@q, @d)": {
+        "rationale": "Question-dimension alignment synergy",
+        "typical_weight": 0.08,
+        "applies_to_roles": ["SCORE_Q"]
+      },
+      "(@d, @p)": {
+        "rationale": "Dimension-policy coherence",
+        "typical_weight": 0.05,
+        "applies_to_roles": ["AGGREGATE"]
+      },
+      "(@b, @chain)": {
+        "rationale": "Base quality enhanced by proper wiring",
+        "typical_weight": 0.10,
+        "applies_to_roles": ["META_TOOL", "TRANSFORM"]
+      }
+    }
+  },
+  
+  "default_fallback": {
+    "description": "Fallback weights for methods without explicit role specification",
+    "linear_weights": {
+      "@b": 0.50,
+      "@chain": 0.30,
+      "@m": 0.10
+    },
+    "interaction_weights": {
+      "(@b, @chain)": 0.10
+    },
+    "_validation": {
+      "total": 1.0
+    }
+  },
+  
+  "_normalization_policy": {
+    "description": "How to handle weight normalization",
+    "enforcement": "strict",
+    "validation": "CI must reject configs where sum != 1.0",
+    "tolerance": 1e-9,
+    "auto_normalize": false,
+    "note": "No silent normalization - explicit weights must sum to 1.0"
+  },
+  
+  "_interaction_semantics": {
+    "description": "Interaction terms use min(x_ℓ, x_k) to capture weakest-link dynamics",
+    "min_operator_rationale": "Ensures that low score in either dimension limits the interaction benefit",
+    "monotonicity": "Interaction terms preserve monotonicity since min is monotonic"
+  },
+  
+  "_notes": [
+    "All weights MUST be non-negative",
+    "Linear + interaction weights MUST sum to 1.0 per role",
+    "Interaction pairs (ℓ,k) must have both layers active",
+    "Missing required layers is a validation error",
+    "Config changes require version bump and approval"
+  ]
+}

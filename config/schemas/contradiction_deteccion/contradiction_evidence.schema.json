@@ -1,0 +1,294 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/contradiction_deteccion/contradiction_evidence.schema.json",
+  "title": "ContradictionEvidence",
+  "description": "Evidencia estructurada de contradicción con trazabilidad completa, inferencia bayesiana y análisis estadístico",
+  "type": "object",
+  "required": [
+    "statement_a",
+    "statement_b",
+    "contradiction_type",
+    "confidence",
+    "severity",
+    "semantic_similarity",
+    "logical_conflict_score",
+    "temporal_consistency",
+    "affected_dimensions",
+    "resolution_suggestions"
+  ],
+  "properties": {
+    "statement_a": {
+      "$ref": "policy_statement.schema.json",
+      "description": "Primera declaración en la contradicción"
+    },
+    "statement_b": {
+      "$ref": "policy_statement.schema.json",
+      "description": "Segunda declaración en la contradicción"
+    },
+    "contradiction_type": {
+      "type": "string",
+      "enum": [
+        "NUMERICAL_INCONSISTENCY",
+        "TEMPORAL_CONFLICT",
+        "SEMANTIC_OPPOSITION",
+        "LOGICAL_INCOMPATIBILITY",
+        "RESOURCE_ALLOCATION_MISMATCH",
+        "OBJECTIVE_MISALIGNMENT",
+        "REGULATORY_CONFLICT",
+        "STAKEHOLDER_DIVERGENCE"
+      ],
+      "description": "Tipo de contradicción según taxonomía de políticas públicas colombianas"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Probabilidad posterior bayesiana de la contradicción (con priors informados por dominio: alpha=2.5, beta=7.5)"
+    },
+    "severity": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Impacto en la coherencia de la política (0=mínimo, 1=crítico)"
+    },
+    "semantic_similarity": {
+      "type": "number",
+      "minimum": -1.0,
+      "maximum": 1.0,
+      "description": "Similitud coseno entre embeddings de las declaraciones (-1=opuestas, 1=idénticas)"
+    },
+    "logical_conflict_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Puntuación de conflicto lógico basado en análisis de grafos de conocimiento"
+    },
+    "temporal_consistency": {
+      "type": "boolean",
+      "description": "TRUE si las declaraciones son temporalmente consistentes (verificado mediante lógica temporal lineal LTL)"
+    },
+    "numerical_divergence": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["absolute_difference", "relative_difference", "statistical_significance"],
+          "properties": {
+            "absolute_difference": {
+              "type": "number",
+              "description": "Diferencia absoluta entre las afirmaciones numéricas"
+            },
+            "relative_difference": {
+              "type": "number",
+              "description": "Diferencia relativa en porcentaje"
+            },
+            "statistical_significance": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "Valor p de la prueba estadística (chi-cuadrado o Kolmogorov-Smirnov)"
+            },
+            "test_type": {
+              "type": "string",
+              "enum": ["chi2_contingency", "ks_2samp", "t_test", "mann_whitney"],
+              "description": "Tipo de prueba estadística aplicada"
+            },
+            "effect_size": {
+              "type": "number",
+              "description": "Tamaño del efecto (Cohen's d u otra métrica)"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "Divergencia numérica cuantificada con análisis estadístico riguroso"
+    },
+    "affected_dimensions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "diagnóstico",
+          "estratégico",
+          "programático",
+          "plan plurianual de inversiones",
+          "seguimiento y evaluación",
+          "ordenamiento territorial"
+        ]
+      },
+      "description": "Dimensiones del plan afectadas por la contradicción",
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "resolution_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["suggestion_text", "priority", "feasibility"],
+        "properties": {
+          "suggestion_text": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 2000,
+            "description": "Texto de la sugerencia de resolución"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "Prioridad de la acción correctiva"
+          },
+          "feasibility": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Factibilidad estimada de implementación (0=imposible, 1=trivial)"
+          },
+          "estimated_cost": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "negligible"],
+            "description": "Costo estimado de la corrección"
+          },
+          "requires_stakeholder_consultation": {
+            "type": "boolean",
+            "description": "Indica si requiere consulta con actores clave"
+          },
+          "affected_sections": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Secciones del documento que deben modificarse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Sugerencias de resolución priorizadas y evaluadas",
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "graph_path": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Camino en el grafo de conocimiento que conecta las declaraciones contradictorias",
+          "minItems": 2
+        }
+      ]
+    },
+    "statistical_significance": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Valor p de la prueba estadística global (cuando aplica)"
+        }
+      ]
+    },
+    "bayesian_metadata": {
+      "type": "object",
+      "description": "Metadatos completos de la inferencia bayesiana",
+      "properties": {
+        "prior_alpha": {
+          "type": "number",
+          "description": "Parámetro alpha de la distribución Beta a priori (default: 2.5)"
+        },
+        "prior_beta": {
+          "type": "number",
+          "description": "Parámetro beta de la distribución Beta a priori (default: 7.5)"
+        },
+        "posterior_alpha": {
+          "type": "number",
+          "description": "Parámetro alpha de la distribución Beta posterior"
+        },
+        "posterior_beta": {
+          "type": "number",
+          "description": "Parámetro beta de la distribución Beta posterior"
+        },
+        "credible_interval_95": {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Intervalo creíble al 95%: [lower, upper]"
+        },
+        "uncertainty_penalty": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Penalización por incertidumbre (1 - ancho_intervalo)"
+        },
+        "evidence_strength": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Fuerza de la evidencia empírica"
+        },
+        "observations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de observaciones que soportan la evidencia"
+        },
+        "domain_weight": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "description": "Peso específico del dominio de política (default: 1.0)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "tfidf_metadata": {
+      "type": "object",
+      "description": "Metadatos de análisis TF-IDF para similitud textual",
+      "properties": {
+        "cosine_similarity_tfidf": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Similitud coseno basada en TF-IDF"
+        },
+        "top_common_terms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "term": {"type": "string"},
+              "tfidf_score": {"type": "number"}
+            }
+          },
+          "description": "Términos comunes más relevantes",
+          "maxItems": 20
+        }
+      },
+      "additionalProperties": false
+    },
+    "extraction_metadata": {
+      "type": "object",
+      "description": "Metadatos de extracción y procesamiento",
+      "properties": {
+        "detected_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de detección"
+        },
+        "processing_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tiempo de procesamiento en milisegundos"
+        },
+        "nlp_model_version": {
+          "type": "string",
+          "description": "Versión del modelo NLP usado (spaCy, transformers, etc.)"
+        },
+        "embedding_model": {
+          "type": "string",
+          "description": "Modelo de embeddings usado (sentence-transformers, etc.)"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

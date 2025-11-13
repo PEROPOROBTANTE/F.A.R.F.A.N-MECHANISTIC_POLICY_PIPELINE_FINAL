@@ -1,0 +1,324 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saaaaaa.policy.analysis/schemas/rubric_scoring.schema.json",
+  "title": "RubricScoring",
+  "description": "Scoring rubrics with weights for Q→PA→CL aggregation",
+  "type": "object",
+  "required": ["scoring_modalities"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "compatible_questionnaire_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Compatible questionnaire.json version"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Alias for metadata.version in legacy payloads"
+    },
+    "requires_questionnaire_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Alias for metadata.compatible_questionnaire_version"
+    },
+    "scoring_modalities": {
+      "type": "object",
+      "description": "Scoring rubrics by TYPE_A through TYPE_F",
+      "patternProperties": {
+        "^TYPE_[A-F]$": {
+          "type": "object",
+          "required": ["name", "description", "score_range"],
+          "properties": {
+            "name": {"type": "string"},
+            "description": {"type": "string"},
+            "score_range": {
+              "type": "object",
+              "required": ["min", "max"],
+              "properties": {
+                "min": {"type": "number"},
+                "max": {"type": "number"}
+              }
+            },
+            "thresholds": {
+              "type": "object",
+              "description": "Thresholds for qualitative notes"
+            }
+          }
+        }
+      }
+    },
+    "aggregation_rules": {
+      "type": "object",
+      "required": ["question_to_policy_area", "policy_area_to_cluster", "cluster_to_macro"],
+      "properties": {
+        "question_to_policy_area": {
+          "type": "object",
+          "description": "Aggregation weights Q→PA by policy area",
+          "patternProperties": {
+            "^PA(0[1-9]|10)$": {
+              "type": "object",
+              "required": ["method", "weights"],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": ["weighted_average", "simple_average", "bayesian"]
+                },
+                "weights": {
+                  "type": "object",
+                  "description": "Weights by dimension",
+                  "patternProperties": {
+                    "^DIM0[1-6]$": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "policy_area_to_cluster": {
+          "type": "object",
+          "description": "Aggregation weights PA→CL by cluster",
+          "patternProperties": {
+            "^CL0[1-4]$": {
+              "type": "object",
+              "required": ["method", "weights"],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": ["weighted_average", "simple_average", "bayesian"]
+                },
+                "weights": {
+                  "type": "object",
+                  "description": "Weights by policy area",
+                  "patternProperties": {
+                    "^PA(0[1-9]|10)$": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                },
+                "imbalance_threshold": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Threshold τ for high imbalance detection (max-min)"
+                }
+              }
+            }
+          }
+        },
+        "cluster_to_macro": {
+          "type": "object",
+          "required": ["method", "weights"],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": ["weighted_average", "simple_average", "bayesian"]
+            },
+            "weights": {
+              "type": "object",
+              "description": "Weights by cluster",
+              "patternProperties": {
+                "^CL0[1-4]$": {"type": "number", "minimum": 0, "maximum": 1}
+              }
+            }
+          }
+        }
+      }
+    },
+    "aggregation": {
+      "type": "object",
+      "required": ["question_to_policy_area", "policy_area_to_cluster", "cluster_to_macro"],
+      "properties": {
+        "question_to_policy_area": {
+          "type": "object",
+          "description": "Aggregation weights Q→PA by policy area",
+          "patternProperties": {
+            "^PA(0[1-9]|10)$": {
+              "type": "object",
+              "required": ["method", "weights"],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": ["weighted_average", "simple_average", "bayesian"]
+                },
+                "weights": {
+                  "type": "object",
+                  "description": "Weights by dimension",
+                  "patternProperties": {
+                    "^DIM0[1-6]$": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "policy_area_to_cluster": {
+          "type": "object",
+          "description": "Aggregation weights PA→CL by cluster",
+          "patternProperties": {
+            "^CL0[1-4]$": {
+              "type": "object",
+              "required": ["method", "weights"],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": ["weighted_average", "simple_average", "bayesian"]
+                },
+                "weights": {
+                  "type": "object",
+                  "description": "Weights by policy area",
+                  "patternProperties": {
+                    "^PA(0[1-9]|10)$": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                },
+                "imbalance_threshold": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Threshold τ for high imbalance detection (max-min)"
+                }
+              }
+            }
+          }
+        },
+        "cluster_to_macro": {
+          "type": "object",
+          "required": ["method", "weights"],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": ["weighted_average", "simple_average", "bayesian"]
+            },
+            "weights": {
+              "type": "object",
+              "description": "Weights by cluster",
+              "patternProperties": {
+                "^CL0[1-4]$": {"type": "number", "minimum": 0, "maximum": 1}
+              }
+            }
+          }
+        }
+      }
+    },
+    "recommendation_rules": {
+      "type": "object",
+      "description": "Computable recommendation grammar",
+      "patternProperties": {
+        "^CL0[1-4]$": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["condition", "action_template"],
+            "properties": {
+              "condition": {
+                "type": "object",
+                "required": ["type"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["low_score", "high_imbalance", "combined"]
+                  },
+                  "threshold": {"type": "number"},
+                  "weak_policy_area": {"type": "string", "pattern": "^PA(0[1-9]|10)$"}
+                }
+              },
+              "action_template": {
+                "type": "object",
+                "required": ["problem", "intervention", "indicator", "responsible", "timeframe"],
+                "properties": {
+                  "problem": {"type": "string"},
+                  "intervention": {"type": "string"},
+                  "indicator": {"type": "string"},
+                  "responsible": {"type": "string"},
+                  "timeframe": {"type": "string"},
+                  "verification_sources": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "anyOf": [
+    {
+      "description": "Legacy v1 layout with version info nested under metadata and aggregation_rules",
+      "required": ["metadata", "scoring_modalities", "aggregation_rules"],
+      "properties": {
+        "metadata": {
+          "required": ["version", "compatible_questionnaire_version"]
+        }
+      }
+    },
+    {
+      "description": "Aliased structure exposing top-level versioning and aggregation block",
+      "required": ["version", "requires_questionnaire_version", "scoring_modalities", "aggregation"]
+    }
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": ["metadata", "version"],
+        "properties": {
+          "metadata": {
+            "required": ["version"],
+            "properties": {
+              "version": {"type": "string"}
+            }
+          },
+          "version": {"type": "string"}
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "version": {"constRef": "/version"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["metadata", "requires_questionnaire_version"],
+        "properties": {
+          "metadata": {
+            "required": ["compatible_questionnaire_version"],
+            "properties": {
+              "compatible_questionnaire_version": {"type": "string"}
+            }
+          },
+          "requires_questionnaire_version": {"type": "string"}
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "compatible_questionnaire_version": {"constRef": "/requires_questionnaire_version"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["aggregation", "aggregation_rules"]
+      },
+      "then": {
+        "properties": {
+          "aggregation_rules": {"constRef": "/aggregation"}
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

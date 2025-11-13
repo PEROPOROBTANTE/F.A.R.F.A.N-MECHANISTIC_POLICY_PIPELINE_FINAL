@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtroZ · Sistema Visceral de Análisis Municipal</title>
+    <link rel="stylesheet" href="css/atroz-dashboard.css">
+</head>
+<body>
+    <div class="neural-bg"></div>
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="atlas-container">
+        <header class="header">
+            <div class="logo">ATROZ</div>
+            <nav class="nav-pills">
+                <button class="nav-pill active" data-view="constellation">
+                    <span>CONSTELACIÓN</span>
+                </button>
+                <button class="nav-pill" data-view="macro">
+                    <span>MACRO</span>
+                </button>
+                <button class="nav-pill" data-view="meso">
+                    <span>MESO</span>
+                </button>
+                <button class="nav-pill" data-view="micro">
+                    <span>MICRO</span>
+                </button>
+            </nav>
+        </header>
+
+        <div class="viz-container">
+            <div class="constellation-map" id="constellationMap">
+                <canvas class="constellation-canvas" id="neuralCanvas"></canvas>
+                <div id="pdetNodes"></div>
+            </div>
+
+            <div class="data-panel" id="dataPanel">
+                <div class="level-viz" style="animation-delay: 0s;">
+                    <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">NIVEL MACRO</h3>
+                    <div class="macro-phylogram">
+                        <div class="phylo-ring"></div>
+                        <div class="phylo-ring"></div>
+                        <div class="phylo-ring"></div>
+                        <div class="phylo-center">
+                            <span id="macroScore" style="font-size: 24px; font-weight: 700;">--</span>
+                        </div>
+                        <svg style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;">
+                            <line class="phylo-branch" x1="50%" y1="50%" x2="80%" y2="20%" stroke="var(--atroz-green-toxic)" stroke-width="1" opacity="0.5"/>
+                            <line class="phylo-branch" x1="50%" y1="50%" x2="20%" y2="30%" stroke="var(--atroz-green-toxic)" stroke-width="1" opacity="0.5"/>
+                            <line class="phylo-branch" x1="50%" y1="50%" x2="70%" y2="80%" stroke="var(--atroz-green-toxic)" stroke-width="1" opacity="0.5"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="level-viz" style="animation-delay: 0.2s;">
+                    <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">NIVEL MESO · CLUSTERS</h3>
+                    <div class="meso-mesh" id="mesoMesh"></div>
+                </div>
+
+                <div class="level-viz" style="animation-delay: 0.4s;">
+                    <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">NIVEL MICRO · 44 PREGUNTAS</h3>
+                    <div class="micro-helix" id="microHelix">
+                        <div class="helix-strand"></div>
+                    </div>
+                </div>
+
+                <div class="level-viz" style="animation-delay: 0.6s;">
+                    <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">RECOMENDACIONES CRÍTICAS</h3>
+                    <div id="recommendations"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="evidence-stream">
+            <div class="evidence-ticker" id="evidenceTicker"></div>
+        </div>
+    </div>
+
+    <div class="muni-overlay" id="muniOverlay">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h2 id="overlayTitle" style="font-size: 16px; letter-spacing: 2px;">ANÁLISIS MUNICIPAL</h2>
+                <button class="close-overlay" onclick="closeMuniOverlay()">×</button>
+            </div>
+            <div class="overlay-body">
+                <div class="viz-card">
+                    <h4 style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">ALINEACIÓN MACRO</h4>
+                    <div class="radar-container">
+                        <svg class="radar-web" viewBox="0 0 200 200">
+                            <polygon class="radar-polygon" points="100,40 160,70 160,130 100,160 40,130 40,70"/>
+                            <polygon class="radar-polygon" points="100,60 140,80 140,120 100,140 60,120 60,80"/>
+                            <polygon class="radar-polygon" points="100,80 120,90 120,110 100,120 80,110 80,90"/>
+                            <polygon id="radarData" class="radar-data" points="100,50 150,75 145,125 100,150 55,120 50,75"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="viz-card">
+                    <h4 style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">ANÁLISIS POR CLUSTERS</h4>
+                    <div id="clusterBars" style="height: 200px; position: relative;"></div>
+                </div>
+
+                <div class="viz-card">
+                    <h4 style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">DETALLE 44 PREGUNTAS</h4>
+                    <div id="questionMatrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-interface">
+        <button class="control-btn" onclick="toggleComparison()" title="Comparar">
+            <span>⊕</span>
+        </button>
+        <button class="control-btn" onclick="exportData()" title="Exportar">
+            <span>↓</span>
+        </button>
+        <button class="control-btn" onclick="toggleFilter()" title="Filtrar">
+            <span>◈</span>
+        </button>
+        <button class="control-btn" onclick="toggleTimeline()" title="Línea de Tiempo">
+            <span>⏱</span>
+        </button>
+        <button class="control-btn" onclick="toggleFocusMode()" title="Modo Enfoque">
+            <span>🔍</span>
+        </button>
+    </div>
+
+    <div class="comparison-matrix" id="comparisonMatrix">
+        <h4 style="font-size: 11px; letter-spacing: 2px; margin-bottom: 10px;">MATRIZ COMPARATIVA</h4>
+        <div class="matrix-grid" id="matrixGrid"></div>
+    </div>
+
+    <div class="timeline" id="timeline">
+        <div class="timeline-scrubber" id="timelineScrubber"></div>
+        <div class="timeline-years">
+            <span>2018</span>
+            <span>2020</span>
+            <span>2022</span>
+            <span>2024</span>
+        </div>
+    </div>
+
+    <div class="radial-menu" id="radialMenu">
+        <div class="radial-item" style="transform: translate(80px, 40px);" data-action="drillDown">🔍</div>
+        <div class="radial-item" style="transform: translate(120px, 80px);" data-action="compare">⇄</div>
+        <div class="radial-item" style="transform: translate(100px, 130px);" data-action="analyze">📊</div>
+        <div class="radial-item" style="transform: translate(60px, 130px);" data-action="highlight">🌟</div>
+        <div class="radial-item" style="transform: translate(40px, 80px);" data-action="export">📥</div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <div class="notification" id="notification">
+        <div id="notificationMessage"></div>
+    </div>
+
+    <div class="loading-dna" id="loadingDNA">
+        <div class="dna-strand">
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+        </div>
+    </div>
+
+    <!-- Configuration -->
+    <script>
+        // API Configuration - Can be overridden via environment
+        window.ATROZ_API_URL = window.location.protocol + '//' + window.location.host;
+        window.ATROZ_ENABLE_REALTIME = true;
+        window.ATROZ_ENABLE_AUTH = false;
+        window.ATROZ_CACHE_TIMEOUT = 300000;
+        window.ATROZ_REFRESH_INTERVAL = 60000;
+    </script>
+
+    <!-- External Dependencies (CDN fallbacks) -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" 
+            integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" 
+            crossorigin="anonymous"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/atroz-data-service.js"></script>
+    <script src="js/atroz-dashboard-integration.js"></script>
+    <script src="js/atroz-dashboard.js"></script>
+</body>
+</html>
