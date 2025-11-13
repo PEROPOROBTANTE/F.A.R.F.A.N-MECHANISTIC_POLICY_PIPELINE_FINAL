@@ -65,7 +65,24 @@ def _print_contracts() -> None:
 
 
 def _dummy_registry_get(policy_area: str) -> dict[str, Any] | None:
-    """Dummy registry for demonstration."""
+    """
+    Placeholder registry lookup for demonstration and testing purposes.
+
+    This function returns a mock registry entry to enable CLI demonstrations
+    without requiring a live registry connection. In production, this would
+    be replaced with actual registry queries.
+
+    Args:
+        policy_area: The policy area to look up (ignored in this stub)
+
+    Returns:
+        dict[str, Any] | None: Mock registry entry with patterns and version,
+            or None if the policy area is not found (always returns mock data)
+
+    Note:
+        This is a stub implementation for testing. Production code should use
+        the actual registry implementation.
+    """
     return {"patterns": ["pattern1", "pattern2"], "version": "1.0"}
 
 

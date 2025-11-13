@@ -100,12 +100,17 @@ class ContradictionEvidence:
     statistical_significance: float | None = None
 
 class BayesianConfidenceCalculator:
-    """Cálculo Bayesiano de confianza con priors informados por dominio"""
+    """
+    Bayesian confidence calculator with domain-informed priors.
+
+    Uses Beta distribution priors calibrated from empirical analysis of
+    Colombian municipal development plans (PDMs).
+    """
 
     def __init__(self) -> None:
-        # Priors basados en análisis empírico de PDMs colombianos
+        # Priors based on empirical analysis of Colombian municipal development plans (PDMs)
         self.prior_alpha = 2.5  # Shape parameter for beta distribution
-        self.prior_beta = 7.5  # Scale parameter (sesgo conservador)
+        self.prior_beta = 7.5  # Scale parameter (conservative bias favoring lower confidence)
 
     def calculate_posterior(
             self,
@@ -114,30 +119,41 @@ class BayesianConfidenceCalculator:
             domain_weight: float = 1.0
     ) -> float:
         """
-        Calcula probabilidad posterior usando inferencia Bayesiana
+        Calculate posterior probability using Bayesian inference.
+
+        Updates the Beta distribution prior with observed evidence to compute
+        the posterior mean, which represents the confidence level in the finding.
 
         Args:
-            evidence_strength: Fuerza de la evidencia [0, 1]
-            observations: Número de observaciones que soportan la evidencia
-            domain_weight: Peso específico del dominio de política
+            evidence_strength: Strength of the evidence (0.0-1.0 scale, unitless ratio)
+            observations: Number of observations supporting the evidence (count)
+            domain_weight: Policy domain-specific weight (multiplier, default: 1.0)
+
+        Returns:
+            float: Posterior probability (0.0-1.0 scale) representing confidence level
         """
-        # Actualizar distribución Beta con evidencia
+        # Update Beta distribution with evidence
         alpha_post = self.prior_alpha + evidence_strength * observations * domain_weight
         beta_post = self.prior_beta + (1 - evidence_strength) * observations * domain_weight
 
-        # Calcular media de la distribución posterior
+        # Calculate mean of posterior distribution
         posterior_mean = alpha_post / (alpha_post + beta_post)
 
-        # Calcular intervalo de credibilidad del 95%
+        # Calculate 95% credible interval
         credible_interval = beta.interval(0.95, alpha_post, beta_post)
 
-        # Ajustar por incertidumbre
+        # Adjust for uncertainty (wider intervals reduce confidence)
         uncertainty_penalty = 1.0 - (credible_interval[1] - credible_interval[0])
 
         return min(1.0, posterior_mean * uncertainty_penalty)
 
 class TemporalLogicVerifier:
-    """Verificación de consistencia temporal usando lógica temporal lineal (LTL)"""
+    """
+    Temporal consistency verification using Linear Temporal Logic (LTL).
+
+    Analyzes policy statements for temporal contradictions, deadline violations,
+    and ordering conflicts using temporal logic patterns.
+    """
 
     def __init__(self) -> None:
         self.temporal_patterns = {
@@ -152,15 +168,23 @@ class TemporalLogicVerifier:
             statements: list[PolicyStatement]
     ) -> tuple[bool, list[dict[str, Any]]]:
         """
-        Verifica consistencia temporal entre declaraciones
+        Verify temporal consistency between policy statements.
+
+        Analyzes temporal ordering and deadline constraints to identify
+        contradictions or violations in the policy timeline.
+
+        Args:
+            statements: List of policy statements to analyze
 
         Returns:
-            (is_consistent, conflicts_found)
+            tuple[bool, list[dict]]: A tuple containing:
+                - is_consistent: True if no conflicts found
+                - conflicts_found: List of detected temporal conflicts
         """
         timeline = self._build_timeline(statements)
         conflicts = []
 
-        # Verificar orden temporal
+        # Verify temporal ordering
         for i, event_a in enumerate(timeline):
             for event_b in timeline[i + 1:]:
                 if self._has_temporal_conflict(event_a, event_b):
@@ -170,18 +194,28 @@ class TemporalLogicVerifier:
                         'conflict_type': 'temporal_ordering'
                     })
 
-        # Verificar restricciones de plazo
+        # Verify deadline constraints
         deadline_violations = self._check_deadline_constraints(timeline)
         conflicts.extend(deadline_violations)
 
         return len(conflicts) == 0, conflicts
 
     def _build_timeline(self, statements: list[PolicyStatement]) -> list[dict]:
-        """Construye línea temporal a partir de declaraciones"""
+        """
+        Build timeline from policy statements.
+
+        Extracts temporal markers and organizes them chronologically.
+
+        Args:
+            statements: List of policy statements
+
+        Returns:
+            list[dict]: Sorted timeline events with timestamps
+        """
         timeline = []
         for stmt in statements:
             for marker in stmt.temporal_markers:
-                # Extraer información temporal estructurada
+                # Extract structured temporal information
                 timeline.append({
                     'statement': stmt,
                     'marker': marker,
@@ -191,8 +225,18 @@ class TemporalLogicVerifier:
         return sorted(timeline, key=lambda x: x.get('timestamp', 0))
 
     def _parse_temporal_marker(self, marker: str) -> int | None:
-        """Parsea marcador temporal a timestamp numérico"""
-        # Implementación específica para formato colombiano
+        """
+        Parse temporal marker to numeric timestamp.
+
+        Implements Colombian policy document temporal format parsing.
+
+        Args:
+            marker: Temporal marker string (e.g., "2024", "Q2", "segundo trimestre")
+
+        Returns:
+            int | None: Numeric timestamp, or None if parsing fails
+        """
+        # Implementation specific to Colombian policy document format
         year_match = re.search(r'20\d{2}', marker)
         if year_match:
             return int(year_match.group())

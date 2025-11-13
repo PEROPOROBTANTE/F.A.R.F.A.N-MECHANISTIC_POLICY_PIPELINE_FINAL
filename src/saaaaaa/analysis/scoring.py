@@ -1,40 +1,66 @@
 """
-SCORING MODULE - ESTRICTAMENTE SEGÚN EL MONOLITH DEL CUESTIONARIO
-==================================================================
-Archivo: scoring.py
-Código: SC
-Propósito: Aplicar modalidades de scoring a resultados de preguntas
+SCORING MODULE - Question Scoring According to Questionnaire Monolith
+======================================================================
+File: scoring.py
+Code: SC
+Purpose: Apply scoring modalities to question results
 
-MODALIDADES DE SCORING (6 EXACTAS del monolith):
-1. TYPE_A: Count 4 elements and scale to 0-3 (threshold=0.7)
+This module implements the scoring system for policy assessment questions.
+All scoring modalities and quality thresholds are defined in the questionnaire
+monolith specification (lines 34512-34607).
+
+SCORING MODALITIES (6 types):
+------------------------------
+1. TYPE_A: Count 4 elements and scale to 0-3 (threshold=0.7 ratio)
+   - Used when 4 specific policy elements must be present
+   - Threshold: 70% of elements must be found to receive partial credit
+
 2. TYPE_B: Count up to 3 elements, each worth 1 point
-3. TYPE_C: Count 2 elements and scale to 0-3 (threshold=0.5)
+   - Used for independent policy components
+   - Each element contributes equally to the final score
+
+3. TYPE_C: Count 2 elements and scale to 0-3 (threshold=0.5 ratio)
+   - Used when 2 critical policy elements must be present
+   - Threshold: 50% of elements must be found to receive partial credit
+
 4. TYPE_D: Count 3 elements, weighted [0.4, 0.3, 0.3]
+   - Used when policy elements have different importance
+   - First element has highest weight (40%), others equal (30% each)
+
 5. TYPE_E: Boolean presence check
+   - Binary scoring: element is present (3 points) or absent (0 points)
+
 6. TYPE_F: Semantic matching with cosine similarity (normalized_continuous)
+   - Uses text similarity to assess policy alignment
+   - Continuous score based on semantic similarity (0.0-1.0 range)
 
-NIVELES DE CALIDAD MICRO (del monolith):
-- EXCELENTE: ≥ 0.85 (85%) - verde
-- BUENO: ≥ 0.70 (70%) - azul
-- ACEPTABLE: ≥ 0.55 (55%) - amarillo
-- INSUFICIENTE: < 0.55 (55%) - rojo
+QUALITY LEVELS:
+---------------
+Quality levels are determined from normalized scores (0.0-1.0 scale):
+- EXCELLENT: ≥ 0.85 (85th percentile) - green indicator
+- GOOD: ≥ 0.70 (70th percentile) - blue indicator
+- ACCEPTABLE: ≥ 0.55 (55th percentile) - yellow indicator
+- INSUFFICIENT: < 0.55 (below 55th percentile) - red indicator
 
-MÉTODOS (8 EXACTOS):
-1. MicroQuestionScorer.score_type_a()
-2. MicroQuestionScorer.score_type_b()
-3. MicroQuestionScorer.score_type_c()
-4. MicroQuestionScorer.score_type_d()
-5. MicroQuestionScorer.score_type_e()
-6. MicroQuestionScorer.score_type_f()
-7. MicroQuestionScorer.apply_scoring_modality()
-8. MicroQuestionScorer.determine_quality_level()
+CORE METHODS:
+-------------
+1. MicroQuestionScorer.score_type_a() - TYPE_A scoring logic
+2. MicroQuestionScorer.score_type_b() - TYPE_B scoring logic
+3. MicroQuestionScorer.score_type_c() - TYPE_C scoring logic
+4. MicroQuestionScorer.score_type_d() - TYPE_D scoring logic
+5. MicroQuestionScorer.score_type_e() - TYPE_E scoring logic
+6. MicroQuestionScorer.score_type_f() - TYPE_F scoring logic
+7. MicroQuestionScorer.apply_scoring_modality() - Dispatcher for modalities
+8. MicroQuestionScorer.determine_quality_level() - Maps scores to quality levels
 
-INTEGRACIÓN:
-- Input: QuestionResult con evidencia de FASE 2
-- Output: ScoredResult con score 0-3 y nivel de calidad
+DATA FLOW:
+----------
+Input: QuestionResult with evidence from Phase 2 evaluation
+Output: ScoredResult with score (0-3 range) and quality level classification
 
-REFERENCIA:
-Monolito del cuestionario líneas 34512-34607
+REFERENCE:
+----------
+Questionnaire monolith specification lines 34512-34607
 """
 
 import logging
@@ -73,41 +99,83 @@ class QualityLevel(Enum):
 @dataclass
 class ScoringConfig:
     """
-    Configuración de scoring extraída del monolith.
-    Líneas 34512-34607 del monolito del cuestionario
+    Scoring configuration extracted from questionnaire monolith specification.
+
+    This configuration defines all parameters for the six scoring modalities
+    and quality level thresholds. All values are derived from the questionnaire
+    monolith specification (lines 34512-34607).
+
+    Attributes:
+        TYPE_A Configuration (line 34568):
+            type_a_threshold: Ratio threshold for partial credit (0.0-1.0 scale, default: 0.7)
+                             Elements found / expected must exceed this to receive credit
+            type_a_max_score: Maximum score achievable (default: 3.0 points)
+            type_a_expected_elements: Number of elements expected (default: 4 elements)
+
+        TYPE_B Configuration (line 34574):
+            type_b_max_score: Maximum score achievable (default: 3.0 points)
+            type_b_max_elements: Maximum elements to count (default: 3 elements)
+
+        TYPE_C Configuration (line 34580):
+            type_c_threshold: Ratio threshold for partial credit (0.0-1.0 scale, default: 0.5)
+                             Elements found / expected must exceed this to receive credit
+            type_c_max_score: Maximum score achievable (default: 3.0 points)
+            type_c_expected_elements: Number of elements expected (default: 2 elements)
+
+        TYPE_D Configuration (line 34586):
+            type_d_weights: Importance weights for each element (0.0-1.0 scale per weight,
+                           must sum to 1.0, default: [0.4, 0.3, 0.3])
+                           First element weighted 40%, second and third 30% each
+            type_d_max_score: Maximum score achievable (default: 3.0 points)
+            type_d_expected_elements: Number of elements expected (default: 3 elements)
+
+        TYPE_E Configuration (line 34596):
+            type_e_max_score: Maximum score achievable (default: 3.0 points)
+                             Binary: full score if present, 0 if absent
+
+        TYPE_F Configuration (line 34601):
+            type_f_max_score: Maximum score achievable (default: 3.0 points)
+            type_f_normalization: Normalization method for similarity scores (default: "minmax")
+                                 Options: "minmax", "zscore", "none"
+
+        Quality Level Thresholds (line 34513):
+            level_excelente_min: Minimum normalized score for EXCELLENT (0.0-1.0 scale, default: 0.85)
+            level_bueno_min: Minimum normalized score for GOOD (0.0-1.0 scale, default: 0.70)
+            level_aceptable_min: Minimum normalized score for ACCEPTABLE (0.0-1.0 scale, default: 0.55)
+            level_insuficiente_min: Minimum normalized score for INSUFFICIENT (0.0-1.0 scale, default: 0.0)
     """
 
-    # TYPE_A config (línea 34568)
-    type_a_threshold: float = 0.7
-    type_a_max_score: float = 3.0
-    type_a_expected_elements: int = 4
+    # TYPE_A config (line 34568)
+    type_a_threshold: float = 0.7  # Ratio (0.0-1.0): proportion of elements required
+    type_a_max_score: float = 3.0  # Points: maximum achievable score
+    type_a_expected_elements: int = 4  # Count: number of policy elements to check
 
-    # TYPE_B config (línea 34574)
-    type_b_max_score: float = 3.0
-    type_b_max_elements: int = 3
+    # TYPE_B config (line 34574)
+    type_b_max_score: float = 3.0  # Points: maximum achievable score
+    type_b_max_elements: int = 3  # Count: maximum elements to score
 
-    # TYPE_C config (línea 34580)
-    type_c_threshold: float = 0.5
-    type_c_max_score: float = 3.0
-    type_c_expected_elements: int = 2
+    # TYPE_C config (line 34580)
+    type_c_threshold: float = 0.5  # Ratio (0.0-1.0): proportion of elements required
+    type_c_max_score: float = 3.0  # Points: maximum achievable score
+    type_c_expected_elements: int = 2  # Count: number of policy elements to check
 
-    # TYPE_D config (línea 34586)
-    type_d_weights: list[float] = field(default_factory=lambda: [0.4, 0.3, 0.3])
-    type_d_max_score: float = 3.0
-    type_d_expected_elements: int = 3
+    # TYPE_D config (line 34586)
+    type_d_weights: list[float] = field(default_factory=lambda: [0.4, 0.3, 0.3])  # Weights (sum to 1.0): element importance
+    type_d_max_score: float = 3.0  # Points: maximum achievable score
+    type_d_expected_elements: int = 3  # Count: number of policy elements to check
 
-    # TYPE_E config (línea 34596)
-    type_e_max_score: float = 3.0
+    # TYPE_E config (line 34596)
+    type_e_max_score: float = 3.0  # Points: maximum achievable score (binary: 3.0 or 0.0)
 
-    # TYPE_F config (línea 34601)
-    type_f_max_score: float = 3.0
-    type_f_normalization: str = "minmax"
+    # TYPE_F config (line 34601)
+    type_f_max_score: float = 3.0  # Points: maximum achievable score
+    type_f_normalization: str = "minmax"  # Method: "minmax", "zscore", or "none"
 
-    # Quality levels (línea 34513)
-    level_excelente_min: float = 0.85
-    level_bueno_min: float = 0.70
-    level_aceptable_min: float = 0.55
-    level_insuficiente_min: float = 0.0
+    # Quality levels (line 34513) - All thresholds are normalized scores (0.0-1.0 scale)
+    level_excelente_min: float = 0.85  # Ratio (0.0-1.0): minimum for EXCELLENT quality
+    level_bueno_min: float = 0.70  # Ratio (0.0-1.0): minimum for GOOD quality
+    level_aceptable_min: float = 0.55  # Ratio (0.0-1.0): minimum for ACCEPTABLE quality
+    level_insuficiente_min: float = 0.0  # Ratio (0.0-1.0): minimum for INSUFFICIENT quality
 
 @dataclass
 class Evidence:

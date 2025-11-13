@@ -51,15 +51,15 @@ class UnitLayerConfig:
     # ========================================
     require_ppi_presence: bool = True
     require_indicator_matrix: bool = True
-    min_structural_compliance: float = 0.5  # S must be >= this or U = 0.0
-    
+    min_structural_compliance: float = 0.5  # Ratio (0.0-1.0): S must be >= this or U = 0.0
+
     # ========================================
     # Anti-Gaming Thresholds
     # ========================================
-    max_placeholder_ratio: float = 0.10  # Max proportion of "S/D" placeholders
-    min_unique_values_ratio: float = 0.5  # Min proportion of unique cost values in PPI
-    min_number_density: float = 0.02  # Min proportion of numeric tokens in critical sections
-    gaming_penalty_cap: float = 0.3  # Maximum total penalty
+    max_placeholder_ratio: float = 0.10  # Ratio (0.0-1.0): max 10% "S/D" placeholders allowed
+    min_unique_values_ratio: float = 0.5  # Ratio (0.0-1.0): min 50% unique cost values required
+    min_number_density: float = 0.02  # Ratio (0.0-1.0): min 2% numeric tokens in critical sections
+    gaming_penalty_cap: float = 0.3  # Ratio (0.0-1.0): maximum penalty deduction from score
     
     # ========================================
     # S (Structural Compliance) Sub-Weights
@@ -69,80 +69,80 @@ class UnitLayerConfig:
     w_order: float = 0.25           # Sequential order correctness
     
     # Block requirements
-    min_block_tokens: int = 50      # Min tokens for block to count as "present"
-    min_block_numbers: int = 1      # Min numbers for block validity
-    
+    min_block_tokens: int = 50      # Count: minimum tokens for block to count as "present"
+    min_block_numbers: int = 1      # Count: minimum numeric values for block validity
+
     # Hierarchy thresholds
-    hierarchy_excellent_threshold: float = 0.8  # ≥80% valid → score 1.0
-    hierarchy_acceptable_threshold: float = 0.5  # ≥50% valid → score 0.5
+    hierarchy_excellent_threshold: float = 0.8  # Ratio (0.0-1.0): ≥80% valid headers → score 1.0
+    hierarchy_acceptable_threshold: float = 0.5  # Ratio (0.0-1.0): ≥50% valid headers → score 0.5
     
     # ========================================
     # M (Mandatory Sections) Requirements
     # ========================================
     # Section-specific minimums (can be overridden per section type)
-    diagnostico_min_tokens: int = 500
-    diagnostico_min_keywords: int = 3
-    diagnostico_min_numbers: int = 5
-    diagnostico_min_sources: int = 2
-    
-    estrategica_min_tokens: int = 400
-    estrategica_min_keywords: int = 3
-    estrategica_min_numbers: int = 3
-    
-    ppi_section_min_tokens: int = 300
-    ppi_section_min_keywords: int = 2
-    ppi_section_min_numbers: int = 10
-    
-    seguimiento_min_tokens: int = 200
-    seguimiento_min_keywords: int = 2
-    seguimiento_min_numbers: int = 2
-    
-    marco_normativo_min_tokens: int = 150
-    marco_normativo_min_keywords: int = 1
-    
+    diagnostico_min_tokens: int = 500  # Count: minimum tokens in diagnostic section
+    diagnostico_min_keywords: int = 3  # Count: minimum required keywords
+    diagnostico_min_numbers: int = 5  # Count: minimum numeric values
+    diagnostico_min_sources: int = 2  # Count: minimum cited sources
+
+    estrategica_min_tokens: int = 400  # Count: minimum tokens in strategic section
+    estrategica_min_keywords: int = 3  # Count: minimum required keywords
+    estrategica_min_numbers: int = 3  # Count: minimum numeric values
+
+    ppi_section_min_tokens: int = 300  # Count: minimum tokens in PPI section
+    ppi_section_min_keywords: int = 2  # Count: minimum required keywords
+    ppi_section_min_numbers: int = 10  # Count: minimum numeric values
+
+    seguimiento_min_tokens: int = 200  # Count: minimum tokens in monitoring section
+    seguimiento_min_keywords: int = 2  # Count: minimum required keywords
+    seguimiento_min_numbers: int = 2  # Count: minimum numeric values
+
+    marco_normativo_min_tokens: int = 150  # Count: minimum tokens in regulatory framework
+    marco_normativo_min_keywords: int = 1  # Count: minimum required keywords
+
     # Critical sections get double weight
-    critical_sections_weight: float = 2.0
+    critical_sections_weight: float = 2.0  # Multiplier: weight factor for critical sections
     
     # ========================================
     # I (Indicator Quality) Configuration
     # ========================================
-    w_i_struct: float = 0.4   # Structure/completeness
-    w_i_link: float = 0.3     # Traceability
-    w_i_logic: float = 0.3    # Chain coherence
-    
+    w_i_struct: float = 0.4   # Weight (0.0-1.0): structure/completeness importance
+    w_i_link: float = 0.3     # Weight (0.0-1.0): traceability importance
+    w_i_logic: float = 0.3    # Weight (0.0-1.0): chain coherence importance
+
     # Hard gate for indicator structure
-    i_struct_hard_gate: float = 0.7  # If I_struct < this, I = 0.0
-    
+    i_struct_hard_gate: float = 0.7  # Ratio (0.0-1.0): if I_struct < this, I = 0.0
+
     # Structure sub-parameters
-    i_critical_fields_weight: float = 2.0  # Weight for critical fields
-    i_placeholder_penalty_multiplier: float = 3.0  # Penalty multiplier for "S/D"
-    
+    i_critical_fields_weight: float = 2.0  # Multiplier: importance factor for critical fields
+    i_placeholder_penalty_multiplier: float = 3.0  # Multiplier: penalty factor for "S/D" placeholders
+
     # Link sub-parameters
-    i_fuzzy_match_threshold: float = 0.85  # Levenshtein threshold for traceability
-    i_mga_code_pattern: str = r"^\d{7}$"  # Valid MGA code format
-    
+    i_fuzzy_match_threshold: float = 0.85  # Ratio (0.0-1.0): Levenshtein similarity threshold for traceability
+    i_mga_code_pattern: str = r"^\d{7}$"  # Regex: valid MGA code format (7 digits)
+
     # Logic sub-parameters
-    i_valid_lb_year_min: int = 2019  # Min valid baseline year
-    i_valid_lb_year_max: int = 2024  # Max valid baseline year
-    i_valid_meta_year_min: int = 2024  # Min valid target year
-    i_valid_meta_year_max: int = 2027  # Max valid target year
+    i_valid_lb_year_min: int = 2019  # Year: minimum valid baseline year
+    i_valid_lb_year_max: int = 2024  # Year: maximum valid baseline year
+    i_valid_meta_year_min: int = 2024  # Year: minimum valid target year
+    i_valid_meta_year_max: int = 2027  # Year: maximum valid target year
     
     # ========================================
     # P (PPI Completeness) Configuration
     # ========================================
-    w_p_presence: float = 0.2      # Matrix exists
-    w_p_structure: float = 0.4     # Field completeness
-    w_p_consistency: float = 0.4   # Accounting closure
-    
+    w_p_presence: float = 0.2      # Weight (0.0-1.0): matrix existence importance
+    w_p_structure: float = 0.4     # Weight (0.0-1.0): field completeness importance
+    w_p_consistency: float = 0.4   # Weight (0.0-1.0): accounting closure importance
+
     # Hard gate for PPI structure
-    p_struct_hard_gate: float = 0.7  # If P_struct < this, P = 0.0
-    
+    p_struct_hard_gate: float = 0.7  # Ratio (0.0-1.0): if P_struct < this, P = 0.0
+
     # Structure requirements
-    p_min_nonzero_rows: float = 0.8  # Min proportion of rows with non-zero costs
-    
+    p_min_nonzero_rows: float = 0.8  # Ratio (0.0-1.0): min 80% of rows must have non-zero costs
+
     # Consistency tolerances
-    p_accounting_tolerance: float = 0.01  # 1% tolerance for sum checks
-    p_traceability_threshold: float = 0.80  # Min fuzzy match for strategic link
+    p_accounting_tolerance: float = 0.01  # Ratio (0.0-1.0): ±1% tolerance for sum checks
+    p_traceability_threshold: float = 0.80  # Ratio (0.0-1.0): min 80% fuzzy match for strategic link
     
     def __post_init__(self):
         """Validate configuration constraints."""
@@ -258,15 +258,15 @@ class MetaLayerConfig:
     # ========================================
     # Cost Thresholds
     # ========================================
-    # Runtime thresholds (seconds)
-    threshold_fast: float = 1.0  # Excellent performance
-    threshold_acceptable: float = 5.0  # Acceptable performance
+    # Runtime thresholds
+    threshold_fast: float = 1.0  # Seconds: excellent performance threshold
+    threshold_acceptable: float = 5.0  # Seconds: acceptable performance threshold
     # If runtime > threshold_acceptable → score drops to 0.5
     # If timeout or out_of_memory → score = 0.0
-    
-    # Memory thresholds (MB)
-    threshold_memory_normal: int = 512
-    threshold_memory_high: int = 1024
+
+    # Memory thresholds
+    threshold_memory_normal: int = 512  # Megabytes: normal memory usage threshold
+    threshold_memory_high: int = 1024  # Megabytes: high memory usage threshold
     
     def __post_init__(self):
         """Validate configuration."""
@@ -409,10 +409,10 @@ class CalibrationSystemConfig:
     # ========================================
     # Anti-Universality Theorem enforcement
     enable_anti_universality_check: bool = True
-    max_avg_compatibility: float = 0.9  # Threshold for universality detection
-    
+    max_avg_compatibility: float = 0.9  # Ratio (0.0-1.0): threshold for universality detection
+
     # Determinism (SIN_CARRETA doctrine)
-    random_seed: int = 42
+    random_seed: int = 42  # Seed: integer seed for reproducible randomness
     enforce_determinism: bool = True
     
     # Logging

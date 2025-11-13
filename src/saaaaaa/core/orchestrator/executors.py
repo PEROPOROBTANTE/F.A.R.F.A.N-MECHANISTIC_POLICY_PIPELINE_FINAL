@@ -1,44 +1,69 @@
-"""Advanced Data Flow Executors with Frontier Paradigmatic Tendencies - COMPLETE
+"""Advanced Data Flow Executors for Orchestration
 
-This module implements a sophisticated orchestration system incorporating:
-- Quantum-inspired optimization for execution path selection
-- Neuromorphic computing patterns for dynamic data flow
-- Causal inference frameworks for dependency resolution
-- Meta-learning for adaptive execution strategies
-- Information-theoretic flow optimization
-- Category theory abstractions for composable execution
-- Probabilistic programming for uncertainty quantification
-- Topological data analysis for data manifold understanding
+This module implements a sophisticated orchestration system for executing analysis
+methods across policy documents. The executor framework provides:
 
-Advanced Paradigms and Activation Conditions:
-----------------------------------------------
-1. Quantum Optimization: Activated when num_methods >= 3 for path selection
-2. Neuromorphic Computing: Activated on every data flow for adaptive processing
-3. Causal Inference: Activated when optimizing execution order for 2+ questions
-4. Meta-Learning: Activated on every execution to select optimal strategy
-5. Information Theory: Activated to detect bottlenecks and optimize entropy
-6. Attention Mechanism: Activated to prioritize method execution
-7. Topological Analysis: Activated for complex data manifold understanding
-8. Category Theory: Activated for composable execution pipelines
-9. Probabilistic Programming: Activated for uncertainty quantification per method
+- Dynamic method sequencing with dependency resolution
+- Parallel execution optimization for independent methods
+- Calibration-aware execution with adaptive thresholding
+- Signal registry integration for tracking method results
+- Comprehensive error handling and retry mechanisms
+- Telemetry and observability through OpenTelemetry integration
 
-Expected Execution Times:
+Architecture:
+-------------
+The executor system uses a hierarchical design:
+
+1. ExecutorBase: Abstract base class defining the core execution interface
+2. AdvancedDataFlowExecutor: Main implementation with calibration integration
+3. Question-specific executors (D1Q1_Executor, D1Q2_Executor, etc.): Specialized
+   executors for each question in the policy assessment questionnaire
+
+Method Sequencing:
+------------------
+The executor determines optimal method execution order by:
+- Analyzing method dependencies through input/output requirements
+- Detecting independent methods that can execute in parallel
+- Applying calibration scores to skip low-quality methods (threshold: 0.3)
+- Using retry logic with exponential backoff for transient failures
+
+This approach reduces total execution time by executing independent methods
+concurrently while maintaining correctness through dependency ordering.
+
+Calibration Integration:
 ------------------------
+When a CalibrationOrchestrator is provided, executors:
+- Query calibration scores for each method before execution
+- Skip methods scoring below CALIBRATION_SKIP_THRESHOLD (0.3)
+- Log calibration decisions for traceability
+- Propagate calibration metadata through the execution pipeline
+
+Performance Characteristics:
+----------------------------
 - Single Question Executor: 50-200ms (varies by question complexity)
 - Batch Execution (5 questions): 300-1000ms
 - Batch Execution (30 questions): 2-5 seconds
-- Quantum Optimization: +10-50ms per invocation
-- Causal Structure Learning: +100-500ms for 30 variables
+- Calibration lookup overhead: ~5-10ms per method
+- Dependency resolution: ~50-100ms for complex graphs
 
 Memory Requirements:
--------------------
+--------------------
 - Base Memory per Executor: ~10MB
-- Quantum State (30 methods): ~5MB
-- Causal Graph (30 variables): ~50MB
-- Neuromorphic Controller: ~20MB
-- Information Flow Optimizer: ~15MB
-- Total for Full Orchestrator: ~200-300MB
+- Method result caching: ~5-10MB per 100 results
+- Dependency graph storage: ~1-5MB (scales with method count)
+- Signal registry: ~20-50MB (depends on signal count and size)
+- Total for Full Orchestrator: ~50-100MB
 - Large Documents (10MB+): Additional 50-100MB working memory
+
+Configuration:
+--------------
+Executors require an ExecutorConfig object that specifies:
+- timeout_s: Maximum execution time per method (seconds, default: 300.0)
+- retry_count: Number of retry attempts for failed methods (default: 3)
+- seed: Random seed for deterministic execution (optional)
+- advanced_modules: Configuration for optional advanced features
+
+See ExecutorConfig and AdvancedModuleConfig for complete parameter documentation.
 """
 
 import asyncio

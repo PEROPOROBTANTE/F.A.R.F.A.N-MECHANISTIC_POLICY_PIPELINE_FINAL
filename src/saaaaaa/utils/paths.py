@@ -50,21 +50,45 @@ class UnnormalizedPathError(PathError):
 # Project root detection - computed once at module load
 def _detect_project_root() -> Path:
     """
-    Detect the project root directory.
-    
-    Looks for pyproject.toml as the canonical marker.
-    Falls back to looking for src/saaaaaa if needed.
+    Detect the project root directory using filesystem markers.
+
+    This function uses a multi-strategy approach to locate the project root:
+
+    1. Primary strategy: Search for pyproject.toml
+       - Walks up the directory tree from this file's location
+       - Returns the first directory containing pyproject.toml
+
+    2. Secondary strategy: Search for src/saaaaaa layout
+       - Looks for directories with both src/saaaaaa and setup.py
+       - This supports older project structures
+
+    3. Fallback strategy: Relative path calculation
+       - If no markers found, assumes standard layout (src/saaaaaa/utils)
+       - Returns path 3 levels up from this file
+
+    The function is called once at module load time, and the result is
+    cached in the PROJECT_ROOT constant.
+
+    Returns:
+        Path: Absolute path to the project root directory
+
+    Raises:
+        No exceptions raised; always returns a path (uses fallback if needed)
+
+    Note:
+        This function is intended for internal use. External code should use
+        the PROJECT_ROOT constant instead of calling this directly.
     """
     # Start from this file's location
     current = Path(__file__).resolve().parent
-    
+
     # Walk up to find pyproject.toml
     for parent in [current] + list(current.parents):
         if (parent / "pyproject.toml").exists():
             return parent
         if (parent / "src" / "saaaaaa").exists() and (parent / "setup.py").exists():
             return parent
-    
+
     # Fallback: if we can't find it, assume we're in src/saaaaaa/utils
     # and go up 3 levels
     return current.parent.parent.parent
