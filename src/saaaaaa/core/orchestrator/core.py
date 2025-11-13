@@ -1134,6 +1134,7 @@ class Orchestrator:
         self,
         catalog: dict[str, Any] | None = None,
         monolith: dict[str, Any] | None = None,
+        questionnaire: "CanonicalQuestionnaire | None" = None,
         method_map: dict[str, Any] | None = None,
         schema: dict[str, Any] | None = None,
         catalog_path: str | None = None,
@@ -1147,7 +1148,8 @@ class Orchestrator:
 
         Args:
             catalog: Pre-loaded method catalog data (preferred, I/O-free)
-            monolith: Pre-loaded questionnaire monolith data (preferred, I/O-free)
+            monolith: DEPRECATED - Use questionnaire parameter instead
+            questionnaire: Pre-loaded CanonicalQuestionnaire (PREFERRED, I/O-free, type-safe)
             method_map: Pre-loaded method-class mapping data (preferred, I/O-free)
             schema: Pre-loaded questionnaire schema data (preferred, I/O-free)
             catalog_path: Legacy path to method catalog JSON (deprecated, triggers I/O)
@@ -1158,35 +1160,79 @@ class Orchestrator:
             resource_snapshot_interval: Interval for resource snapshots
 
         Note:
-            For I/O-free initialization, use factory.py to load data and pass via data parameters.
-            Passing path parameters triggers I/O and is deprecated.
+            QUESTIONNAIRE INTEGRITY ENFORCEMENT:
+            - Prefer 'questionnaire' parameter (CanonicalQuestionnaire) for type safety
+            - The 'monolith' parameter is deprecated (accepts dict for backward compatibility)
+            - For I/O-free initialization, use factory.py to load data
+            - Passing path parameters triggers I/O and is deprecated
         """
-        # Store pre-loaded data
-        self._catalog_data = catalog
-        self._monolith_data = monolith
-        self._method_map_data = method_map
-        self._schema_data = schema
-        
         # ========================================================================
-        # PROMPT_SCHEMA_GATES_ENFORCER: Validate phase definitions at startup
-        # No limited mode allowed - if schema is broken, orchestrator cannot start
+        # QUESTIONNAIRE INTEGRITY ENFORCEMENT
         # ========================================================================
-        validate_phase_definitions(self.FASES, self.__class__)
-        
-        # ========================================================================
-        # PROMPT_SCHEMA_GATES_ENFORCER: Validate questionnaire structure if provided
-        # Cannot proceed with corrupt questionnaire schema
-        # Note: Local import to avoid circular dependency (factory imports from core)
-        # ========================================================================
-        if self._monolith_data is not None:
-            from .factory import validate_questionnaire_structure
+        # Import CanonicalQuestionnaire for type checking
+        from .questionnaire import CanonicalQuestionnaire
+
+        # Handle questionnaire parameter (preferred) vs monolith (deprecated)
+        if questionnaire is not None and monolith is not None:
+            raise ValueError(
+                "Cannot specify both 'questionnaire' and 'monolith' parameters. "
+                "Use 'questionnaire' (CanonicalQuestionnaire) for type safety."
+            )
+
+        if questionnaire is not None:
+            # Type-safe path: CanonicalQuestionnaire already validated
+            if not isinstance(questionnaire, CanonicalQuestionnaire):
+                raise TypeError(
+                    f"questionnaire must be CanonicalQuestionnaire, got {type(questionnaire).__name__}"
+                )
+            self._canonical_questionnaire = questionnaire
+            self._monolith_data = dict(questionnaire.data)  # Extract mutable dict for internal use
+            logger.info(
+                "orchestrator_initialized_with_canonical_questionnaire",
+                sha256=questionnaire.sha256[:16] + "...",
+                question_count=questionnaire.total_question_count,
+                version=questionnaire.version,
+            )
+        elif monolith is not None:
+            # Legacy path: dict provided (deprecated)
+            import warnings
+            warnings.warn(
+                "Orchestrator 'monolith' parameter is deprecated. "
+                "Use 'questionnaire' parameter with CanonicalQuestionnaire instead. "
+                "Load via: from saaaaaa.core.orchestrator.questionnaire import load_questionnaire",
+                DeprecationWarning,
+                stacklevel=2
+            )
+            self._canonical_questionnaire = None
+            self._monolith_data = monolith
+            logger.warning(
+                "orchestrator_initialized_with_legacy_dict",
+                version=monolith.get("version", "unknown"),
+            )
+            # Validate structure of legacy dict
+            from .questionnaire import _validate_questionnaire_structure
             try:
-                validate_questionnaire_structure(self._monolith_data)
+                _validate_questionnaire_structure(monolith)
             except (ValueError, TypeError) as e:
                 raise RuntimeError(
                     f"Questionnaire structure validation failed: {e}. "
                     "Cannot start orchestrator with corrupt questionnaire."
                 ) from e
+        else:
+            # Neither provided - will need to load later
+            self._canonical_questionnaire = None
+            self._monolith_data = None
+
+        # Store other pre-loaded data
+        self._catalog_data = catalog
+        self._method_map_data = method_map
+        self._schema_data = schema
+
+        # ========================================================================
+        # PROMPT_SCHEMA_GATES_ENFORCER: Validate phase definitions at startup
+        # No limited mode allowed - if schema is broken, orchestrator cannot start
+        # ========================================================================
+        validate_phase_definitions(self.FASES, self.__class__)
 
         # Store paths for backward compatibility
         self.catalog_path = self._resolve_path(catalog_path) if catalog_path else None

@@ -91,33 +91,57 @@ class ProcessorBundle:
 def load_questionnaire_monolith(path: Path | None = None) -> dict[str, Any]:
     """DEPRECATED: Use questionnaire.load_questionnaire() instead.
 
-    This function is maintained for backward compatibility only.
-    It loads the questionnaire but returns mutable dict instead of
-    CanonicalQuestionnaire.
+    ⚠️  QUESTIONNAIRE INTEGRITY VIOLATION WARNING ⚠️
+    This function bypasses the CanonicalQuestionnaire type system and returns
+    a mutable dict. This is UNSAFE and defeats questionnaire integrity checks.
+
+    MIGRATION PATH:
+        # Old (UNSAFE):
+        monolith = load_questionnaire_monolith()
+
+        # New (SAFE):
+        from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
+        questionnaire = load_questionnaire()  # Returns CanonicalQuestionnaire
 
     Args:
-        path: Optional path to questionnaire file (parameter is ignored,
-              always loads from canonical path)
+        path: IGNORED - Parameter is ignored, always loads from canonical path
 
     Returns:
-        Mutable questionnaire dict (DEPRECATED)
+        Mutable questionnaire dict (UNSAFE, DEPRECATED)
+
+    Raises:
+        DeprecationWarning: Always warns about deprecation
     """
     import warnings
     warnings.warn(
-        "load_questionnaire_monolith() is deprecated. "
-        "Use questionnaire.load_questionnaire() which returns CanonicalQuestionnaire.",
+        "\n"
+        "════════════════════════════════════════════════════════════════════════\n"
+        "⚠️  QUESTIONNAIRE INTEGRITY VIOLATION: load_questionnaire_monolith() ⚠️\n"
+        "════════════════════════════════════════════════════════════════════════\n"
+        "This function is DEPRECATED and will be REMOVED in a future version.\n"
+        "\n"
+        "PROBLEMS:\n"
+        "  • Returns mutable dict instead of immutable CanonicalQuestionnaire\n"
+        "  • No hash verification (integrity violation)\n"
+        "  • No type safety (can be modified in-flight)\n"
+        "\n"
+        "MIGRATION:\n"
+        "  from saaaaaa.core.orchestrator.questionnaire import load_questionnaire\n"
+        "  questionnaire = load_questionnaire()  # Type-safe, hash-verified\n"
+        "\n"
+        "════════════════════════════════════════════════════════════════════════\n",
         DeprecationWarning,
         stacklevel=2
     )
 
     if path is not None:
         logger.warning(
-            "load_questionnaire_monolith: path parameter is ignored. "
+            "load_questionnaire_monolith: path parameter is IGNORED. "
             "Questionnaire always loads from canonical path."
         )
 
     canonical = load_questionnaire()
-    # Return mutable copy for backward compatibility
+    # Return mutable copy for backward compatibility (UNSAFE)
     return dict(canonical.data)
 
 def load_catalog(path: Path | None = None) -> dict[str, Any]:
