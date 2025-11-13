@@ -13,7 +13,6 @@ Reports severity levels:
 - BENIGN: No runtime issues due to import order/structure
 """
 
-import os
 import sys
 import ast
 import importlib
@@ -21,7 +20,6 @@ import importlib.util
 from pathlib import Path
 from typing import Set, Dict, List, Tuple, Optional
 from collections import defaultdict, deque
-import json
 
 class ImportAnalyzer:
     """Analyze Python imports and detect circular dependencies."""
@@ -164,7 +162,7 @@ class ImportAnalyzer:
                     # Check if we haven't already found this cycle
                     cycle_normalized = min(
                         [cycle[i:] + cycle[:i] for i in range(len(cycle)-1)],
-                        key=lambda x: tuple(x)
+                        key=tuple
                     )
                     if cycle_normalized not in cycles:
                         cycles.append(cycle_normalized)
@@ -191,8 +189,6 @@ class ImportAnalyzer:
             'is_circular': False,
             'cycle_chain': []
         }
-
-        imports = self._extract_imports_from_ast(file_path)
 
         # Extract from/import statements for detailed info
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -271,7 +267,7 @@ def test_import_runtime(module_name: str) -> Tuple[bool, Optional[str]]:
             return False, f"Module spec not found: {module_name}"
 
         # Try actual import
-        mod = importlib.import_module(module_name)
+        importlib.import_module(module_name)
         return True, None
     except ImportError as e:
         return False, str(e)

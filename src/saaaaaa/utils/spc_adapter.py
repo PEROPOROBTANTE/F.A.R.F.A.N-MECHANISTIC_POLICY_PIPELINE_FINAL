@@ -17,7 +17,7 @@ Design Principles:
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from types import MappingProxyType
 from typing import Any
 
@@ -25,7 +25,6 @@ from schemas.preprocessed_document import (
     DocumentIndexesV1,
     PreprocessedDocument,
     SentenceMetadata,
-    StructuredSection,
     StructuredTextV1,
     TableAnnotation,
 )
@@ -69,6 +68,24 @@ class SPCAdapter:
 
         Raises:
             SPCAdapterError: If conversion fails or data is invalid
+
+        CanonPolicyPackage Expected Attributes:
+            Required:
+                - chunk_graph: ChunkGraph with .chunks dict
+                - chunk_graph.chunks: dict of chunk objects with .text and .text_span
+
+            Optional (handled with hasattr checks):
+                - schema_version: str (default: 'SPC-2025.1')
+                - quality_metrics: object with metrics like provenance_completeness,
+                  structural_consistency, boundary_f1, kpi_linkage_rate,
+                  budget_consistency_score, temporal_robustness, chunk_context_coverage
+                - policy_manifest: object with axes, programs, projects, years, territories
+                - metadata: dict with optional 'spc_rich_data' key
+
+            Chunk Optional Attributes (handled with hasattr checks):
+                - entities: list of entity objects with .text attribute
+                - time_facets: object with .years list
+                - budget: object with amount, currency, year, use, source attributes
         """
         self.logger.info(f"Converting CanonPolicyPackage to PreprocessedDocument: {document_id}")
 
@@ -109,24 +126,25 @@ class SPCAdapter:
 
         for idx, chunk in enumerate(sorted_chunks):
             chunk_text = chunk.text
-            chunk_start = len(' '.join(full_text_parts))
+            # Calculate chunk start position accounting for spaces between chunks
+            chunk_start = sum(len(text) for text in full_text_parts) + len(full_text_parts)
 
             # Add to full text
             full_text_parts.append(chunk_text)
 
-            # Create sentence entry (each chunk is treated as a sentence)
+            # Create sentence entry (each chunk is represented as a sentence for orchestrator compatibility)
             sentences.append(chunk_text)
 
-            # Create sentence metadata
+            # Create chunk metadata (using SentenceMetadata for orchestrator compatibility)
             chunk_end = chunk_start + len(chunk_text)
-            sent_meta = SentenceMetadata(
+            chunk_meta = SentenceMetadata(
                 index=idx,
                 page_number=None,  # SPC doesn't track pages
                 start_char=chunk_start,
                 end_char=chunk_end,
                 extra=_EMPTY_MAPPING
             )
-            sentence_metadata.append(sent_meta)
+            sentence_metadata.append(chunk_meta)
 
             # Extract entities for entity_index
             if hasattr(chunk, 'entities') and chunk.entities:
@@ -234,7 +252,7 @@ class SPCAdapter:
             tables=tuple(tables),
             indexes=indexes,
             metadata=metadata,
-            ingested_at=datetime.utcnow()
+            ingested_at=datetime.now(timezone.utc)
         )
 
         self.logger.info(
