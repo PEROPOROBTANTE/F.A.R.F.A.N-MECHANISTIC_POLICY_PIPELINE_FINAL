@@ -19,6 +19,8 @@ from .congruence_layer import CongruenceLayerEvaluator
 from .chain_layer import ChainLayerEvaluator
 from .meta_layer import MetaLayerEvaluator
 from .choquet_aggregator import ChoquetAggregator
+from .intrinsic_loader import IntrinsicScoreLoader
+from .layer_requirements import LayerRequirementsResolver
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +48,15 @@ class CalibrationOrchestrator:
         config: CalibrationSystemConfig = None,
         compatibility_path: Path | str = None,
         method_registry_path: Path | str = None,
-        method_signatures_path: Path | str = None
+        method_signatures_path: Path | str = None,
+        intrinsic_calibration_path: Path | str = None
     ):
         self.config = config or DEFAULT_CALIBRATION_CONFIG
+
+        # Initialize intrinsic calibration (GAP 0 integration)
+        intrinsic_path = intrinsic_calibration_path or "config/intrinsic_calibration.json"
+        self.intrinsic_loader = IntrinsicScoreLoader(intrinsic_path)
+        self.layer_resolver = LayerRequirementsResolver(self.intrinsic_loader)
 
         # Initialize layer evaluators
         self.unit_evaluator = UnitLayerEvaluator(self.config.unit_layer)
@@ -115,11 +123,19 @@ class CalibrationOrchestrator:
         # Choquet aggregator
         self.aggregator = ChoquetAggregator(self.config.choquet)
 
+        # Log intrinsic calibration statistics
+        intrinsic_stats = self.intrinsic_loader.get_statistics()
         logger.info(
             "calibration_orchestrator_initialized",
             extra={
                 "config_hash": self.config.compute_system_hash(),
-                "anti_universality_enabled": self.config.enable_anti_universality_check
+                "anti_universality_enabled": self.config.enable_anti_universality_check,
+                "intrinsic_calibration": {
+                    "total_methods": intrinsic_stats["total"],
+                    "calibrated": intrinsic_stats["computed"],
+                    "excluded": intrinsic_stats["excluded"],
+                    "path": str(intrinsic_path)
+                }
             }
         )
     
@@ -171,100 +187,173 @@ class CalibrationOrchestrator:
         
         # Collect layer scores
         layer_scores = {}
-        
-        # Layer 1: Base (@b) - ASSUMED COMPLETE
-        # This comes from intrinsic calibration (already done)
-        # TODO: This should come from actual base layer evaluation, not hardcoded
-        base_score = 0.9  # Placeholder until base layer integration complete
+
+        # Determine required layers for this method
+        required_layers = self.layer_resolver.get_required_layers(method_id)
+        layer_summary = self.layer_resolver.get_layer_summary(method_id)
+
+        logger.info(
+            "layer_requirements_determined",
+            extra={
+                "method": method_id,
+                "required_layers": [layer.value for layer in required_layers],
+                "summary": layer_summary
+            }
+        )
+
+        # Layer 1: Base (@b) - ALWAYS REQUIRED
+        # Load intrinsic calibration score from JSON
+        base_score = self.intrinsic_loader.get_score(method_id, default=0.5)
+        is_calibrated = self.intrinsic_loader.is_calibrated(method_id)
+
         layer_scores[LayerID.BASE] = LayerScore(
             layer=LayerID.BASE,
             score=base_score,
-            rationale=f"Base layer (intrinsic quality) - STUB using {base_score}",
-            metadata={"stub": True, "warning": "Hardcoded value pending integration"}
+            rationale=f"Base layer (intrinsic quality) score: {base_score:.3f}" +
+                     (" [from intrinsic calibration]" if is_calibrated else " [default - not calibrated]"),
+            metadata={
+                "source": "intrinsic_calibration" if is_calibrated else "default",
+                "calibrated": is_calibrated,
+                "method_id": method_id
+            }
+        )
+
+        logger.info(
+            "base_layer_score_loaded",
+            extra={
+                "method": method_id,
+                "base_score": base_score,
+                "source": "intrinsic_calibration" if is_calibrated else "default"
+            }
         )
         
         # Layer 2: Unit (@u)
-        unit_score = self.unit_evaluator.evaluate(pdt_structure)
-        layer_scores[LayerID.UNIT] = unit_score
+        if not self.layer_resolver.should_skip_layer(method_id, LayerID.UNIT):
+            unit_score = self.unit_evaluator.evaluate(pdt_structure)
+            layer_scores[LayerID.UNIT] = unit_score
+        else:
+            logger.debug(
+                "layer_skipped",
+                extra={"method": method_id, "layer": "u", "reason": "not_required_for_role"}
+            )
         
         # Layers 3-5: Contextual (@q, @d, @p)
-        if self.contextual_evaluator:
-            contextual_scores = self.contextual_evaluator.evaluate_all_contextual(
-                method_id=method_id,
-                question_id=context.question_id,
-                dimension=context.dimension,
-                policy_area=context.policy_area
-            )
-            
-            layer_scores[LayerID.QUESTION] = LayerScore(
-                layer=LayerID.QUESTION,
-                score=contextual_scores['q'],
-                rationale=f"Question compatibility for {context.question_id}"
-            )
-            
-            layer_scores[LayerID.DIMENSION] = LayerScore(
-                layer=LayerID.DIMENSION,
-                score=contextual_scores['d'],
-                rationale=f"Dimension compatibility for {context.dimension}"
-            )
-            
-            layer_scores[LayerID.POLICY] = LayerScore(
-                layer=LayerID.POLICY,
-                score=contextual_scores['p'],
-                rationale=f"Policy compatibility for {context.policy_area}"
-            )
-        else:
-            # No compatibility data - use penalties
-            for layer, name in [(LayerID.QUESTION, "question"), 
-                               (LayerID.DIMENSION, "dimension"), 
-                               (LayerID.POLICY, "policy")]:
-                layer_scores[layer] = LayerScore(
-                    layer=layer,
-                    score=0.1,
-                    rationale=f"No compatibility data - penalty applied"
+        # Check which contextual layers are required
+        needs_q = not self.layer_resolver.should_skip_layer(method_id, LayerID.QUESTION)
+        needs_d = not self.layer_resolver.should_skip_layer(method_id, LayerID.DIMENSION)
+        needs_p = not self.layer_resolver.should_skip_layer(method_id, LayerID.POLICY)
+
+        if needs_q or needs_d or needs_p:
+            if self.contextual_evaluator:
+                contextual_scores = self.contextual_evaluator.evaluate_all_contextual(
+                    method_id=method_id,
+                    question_id=context.question_id,
+                    dimension=context.dimension,
+                    policy_area=context.policy_area
                 )
+
+                if needs_q:
+                    layer_scores[LayerID.QUESTION] = LayerScore(
+                        layer=LayerID.QUESTION,
+                        score=contextual_scores['q'],
+                        rationale=f"Question compatibility for {context.question_id}"
+                    )
+                else:
+                    logger.debug("layer_skipped", extra={"method": method_id, "layer": "q"})
+
+                if needs_d:
+                    layer_scores[LayerID.DIMENSION] = LayerScore(
+                        layer=LayerID.DIMENSION,
+                        score=contextual_scores['d'],
+                        rationale=f"Dimension compatibility for {context.dimension}"
+                    )
+                else:
+                    logger.debug("layer_skipped", extra={"method": method_id, "layer": "d"})
+
+                if needs_p:
+                    layer_scores[LayerID.POLICY] = LayerScore(
+                        layer=LayerID.POLICY,
+                        score=contextual_scores['p'],
+                        rationale=f"Policy compatibility for {context.policy_area}"
+                    )
+                else:
+                    logger.debug("layer_skipped", extra={"method": method_id, "layer": "p"})
+            else:
+                # No compatibility data - use penalties for required layers only
+                for layer, name in [(LayerID.QUESTION, "question"),
+                                   (LayerID.DIMENSION, "dimension"),
+                                   (LayerID.POLICY, "policy")]:
+                    if not self.layer_resolver.should_skip_layer(method_id, layer):
+                        layer_scores[layer] = LayerScore(
+                            layer=layer,
+                            score=0.1,
+                            rationale=f"No compatibility data - penalty applied"
+                        )
+        else:
+            logger.debug(
+                "contextual_layers_skipped",
+                extra={"method": method_id, "layers": ["q", "d", "p"]}
+            )
         
         # Layer 6: Congruence (@C)
-        congruence_score = self.congruence_evaluator.evaluate(
-            method_ids=[method_id],
-            subgraph_id=subgraph_id,
-            fusion_rule="weighted_average",
-            available_inputs=[]  # TODO: Get from actual graph execution
-        )
-        layer_scores[LayerID.CONGRUENCE] = LayerScore(
-            layer=LayerID.CONGRUENCE,
-            score=congruence_score,
-            rationale="Congruence evaluation"
-        )
+        if not self.layer_resolver.should_skip_layer(method_id, LayerID.CONGRUENCE):
+            congruence_score = self.congruence_evaluator.evaluate(
+                method_ids=[method_id],
+                subgraph_id=subgraph_id,
+                fusion_rule="weighted_average",
+                available_inputs=[]  # TODO: Get from actual graph execution
+            )
+            layer_scores[LayerID.CONGRUENCE] = LayerScore(
+                layer=LayerID.CONGRUENCE,
+                score=congruence_score,
+                rationale="Congruence evaluation"
+            )
+        else:
+            logger.debug(
+                "layer_skipped",
+                extra={"method": method_id, "layer": "C", "reason": "not_required_for_role"}
+            )
         
         # Layer 7: Chain (@chain)
-        chain_score = self.chain_evaluator.evaluate(
-            method_id=method_id,
-            provided_inputs=[]  # TODO: Get from actual graph execution
-        )
-        layer_scores[LayerID.CHAIN] = LayerScore(
-            layer=LayerID.CHAIN,
-            score=chain_score,
-            rationale="Chain integrity"
-        )
+        if not self.layer_resolver.should_skip_layer(method_id, LayerID.CHAIN):
+            chain_score = self.chain_evaluator.evaluate(
+                method_id=method_id,
+                provided_inputs=[]  # TODO: Get from actual graph execution
+            )
+            layer_scores[LayerID.CHAIN] = LayerScore(
+                layer=LayerID.CHAIN,
+                score=chain_score,
+                rationale="Chain integrity"
+            )
+        else:
+            logger.debug(
+                "layer_skipped",
+                extra={"method": method_id, "layer": "chain", "reason": "not_required_for_role"}
+            )
         
         # Layer 8: Meta (@m)
-        # FIXED: Pass all required arguments to meta layer
-        meta_score = self.meta_evaluator.evaluate(
-            method_id=method_id,
-            method_version=method_version,
-            config_hash=self.config.compute_system_hash(),
-            formula_exported=False,  # TODO: Get from actual method execution
-            full_trace=False,  # TODO: Get from actual method execution
-            logs_conform=False,  # TODO: Validate against log schema
-            signature_valid=False,  # TODO: Verify cryptographic signature
-            execution_time_s=None  # TODO: Measure actual execution time
-        )
-        layer_scores[LayerID.META] = LayerScore(
-            layer=LayerID.META,
-            score=meta_score,
-            rationale="Meta/governance evaluation"
-        )
+        if not self.layer_resolver.should_skip_layer(method_id, LayerID.META):
+            # FIXED: Pass all required arguments to meta layer
+            meta_score = self.meta_evaluator.evaluate(
+                method_id=method_id,
+                method_version=method_version,
+                config_hash=self.config.compute_system_hash(),
+                formula_exported=False,  # TODO: Get from actual method execution
+                full_trace=False,  # TODO: Get from actual method execution
+                logs_conform=False,  # TODO: Validate against log schema
+                signature_valid=False,  # TODO: Verify cryptographic signature
+                execution_time_s=None  # TODO: Measure actual execution time
+            )
+            layer_scores[LayerID.META] = LayerScore(
+                layer=LayerID.META,
+                score=meta_score,
+                rationale="Meta/governance evaluation"
+            )
+        else:
+            logger.debug(
+                "layer_skipped",
+                extra={"method": method_id, "layer": "m", "reason": "not_required_for_role"}
+            )
         
         # Choquet aggregation
         end_time = datetime.utcnow()
