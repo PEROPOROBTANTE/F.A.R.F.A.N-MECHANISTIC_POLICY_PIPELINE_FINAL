@@ -1,0 +1,3596 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-11-13",
+    "total_executors": 30,
+    "total_base_slots": 30,
+    "total_questions": 300,
+    "total_policy_areas": 10,
+    "dimensions": 6,
+    "description": "Catálogo canónico de métodos utilizados por los 30 executors del F.A.R.F.A.N Mechanistic Policy Pipeline",
+    "files": {
+      "PP": {
+        "name": "policy_processor.py",
+        "path": "src/saaaaaa/processing/policy_processor.py",
+        "classes": [
+          "IndustrialPolicyProcessor",
+          "PolicyTextProcessor",
+          "BayesianEvidenceScorer"
+        ]
+      },
+      "CD": {
+        "name": "contradiction_detection.py",
+        "path": "src/saaaaaa/analysis/contradiction_detection.py",
+        "classes": [
+          "PolicyContradictionDetector",
+          "BayesianConfidenceCalculator",
+          "TemporalLogicVerifier"
+        ]
+      },
+      "FV": {
+        "name": "financiero_viabilidad_tablas.py",
+        "path": "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+        "classes": [
+          "PDETMunicipalPlanAnalyzer",
+          "FinancialAuditor"
+        ]
+      },
+      "DB": {
+        "name": "dereck_beach.py",
+        "path": "src/saaaaaa/analysis/dereck_beach.py",
+        "classes": [
+          "BeachEvidentialTest",
+          "BayesianMechanismInference",
+          "CausalExtractor",
+          "MechanismPartExtractor",
+          "CausalInferenceSetup",
+          "OperationalizationAuditor",
+          "CDAFFramework"
+        ]
+      },
+      "RA": {
+        "name": "report_assembly.py",
+        "path": "src/saaaaaa/analysis/report_assembly.py",
+        "classes": [
+          "ReportAssembler"
+        ]
+      },
+      "EP": {
+        "name": "embedding_policy.py",
+        "path": "src/saaaaaa/processing/embedding_policy.py",
+        "classes": [
+          "PolicyAnalysisEmbedder",
+          "BayesianNumericalAnalyzer"
+        ]
+      },
+      "A1": {
+        "name": "Analyzer_one.py",
+        "path": "src/saaaaaa/analysis/Analyzer_one.py",
+        "classes": [
+          "SemanticAnalyzer",
+          "PerformanceAnalyzer",
+          "TextMiningEngine",
+          "MunicipalOntology"
+        ]
+      },
+      "TC": {
+        "name": "teoria_cambio.py",
+        "path": "src/saaaaaa/analysis/teoria_cambio.py",
+        "classes": [
+          "TeoriaCambio",
+          "AdvancedDAGValidator"
+        ]
+      },
+      "SC": {
+        "name": "semantic_chunking_policy.py",
+        "path": "src/saaaaaa/processing/semantic_chunking_policy.py",
+        "classes": [
+          "SemanticProcessor"
+        ]
+      }
+    },
+    "types": {
+      "E": "Extracción",
+      "V": "Validación",
+      "T": "Transformación",
+      "C": "Cálculo",
+      "O": "Orquestación",
+      "R": "Reporte"
+    },
+    "priority": {
+      "3": "★ Crítico",
+      "2": "◆ Importante",
+      "1": "○ Complementario"
+    }
+  },
+  "dimensions": {
+    "D1": {
+      "code": "DIM01",
+      "name": "INSUMOS",
+      "label": "Diagnóstico y Recursos",
+      "total_executors": 5,
+      "questions": [
+        "D1-Q1",
+        "D1-Q2",
+        "D1-Q3",
+        "D1-Q4",
+        "D1-Q5"
+      ],
+      "total_methods": 15
+    },
+    "D2": {
+      "code": "DIM02",
+      "name": "ACTIVIDADES",
+      "label": "Diseño de Intervención",
+      "total_executors": 5,
+      "questions": [
+        "D2-Q1",
+        "D2-Q2",
+        "D2-Q3",
+        "D2-Q4",
+        "D2-Q5"
+      ],
+      "total_methods": 15
+    },
+    "D3": {
+      "code": "DIM03",
+      "name": "PRODUCTOS",
+      "label": "Productos y Outputs",
+      "total_executors": 5,
+      "questions": [
+        "D3-Q1",
+        "D3-Q2",
+        "D3-Q3",
+        "D3-Q4",
+        "D3-Q5"
+      ],
+      "total_methods": 14
+    },
+    "D4": {
+      "code": "DIM04",
+      "name": "RESULTADOS",
+      "label": "Resultados y Outcomes",
+      "total_executors": 5,
+      "questions": [
+        "D4-Q1",
+        "D4-Q2",
+        "D4-Q3",
+        "D4-Q4",
+        "D4-Q5"
+      ],
+      "total_methods": 16
+    },
+    "D5": {
+      "code": "DIM05",
+      "name": "IMPACTOS",
+      "label": "Impactos de Largo Plazo",
+      "total_executors": 5,
+      "questions": [
+        "D5-Q1",
+        "D5-Q2",
+        "D5-Q3",
+        "D5-Q4",
+        "D5-Q5"
+      ],
+      "total_methods": 15
+    },
+    "D6": {
+      "code": "DIM06",
+      "name": "CAUSALIDAD",
+      "label": "Teoría de Cambio",
+      "total_executors": 5,
+      "questions": [
+        "D6-Q1",
+        "D6-Q2",
+        "D6-Q3",
+        "D6-Q4",
+        "D6-Q5"
+      ],
+      "total_methods": 17
+    }
+  },
+  "policy_areas": {
+    "PA01": {
+      "name": "Derechos de las mujeres e igualdad de género",
+      "legacy_id": "P1"
+    },
+    "PA02": {
+      "name": "Prevención de la violencia y protección de la población frente al conflicto armado y la violencia generada por grupos delincuenciales organizados, asociada a economías ilegales",
+      "legacy_id": "P2"
+    },
+    "PA03": {
+      "name": "Ambiente sano, cambio climático, prevención y atención a desastres",
+      "legacy_id": "P3"
+    },
+    "PA04": {
+      "name": "Derechos económicos, sociales y culturales",
+      "legacy_id": "P4"
+    },
+    "PA05": {
+      "name": "Derechos de las víctimas y construcción de paz",
+      "legacy_id": "P5"
+    },
+    "PA06": {
+      "name": "Derecho al buen futuro de la niñez, adolescencia, juventud y entornos protectores",
+      "legacy_id": "P6"
+    },
+    "PA07": {
+      "name": "Tierras y territorios",
+      "legacy_id": "P7"
+    },
+    "PA08": {
+      "name": "Líderes y lideresas, defensores y defensoras de derechos humanos, comunitarios, sociales, ambientales, de la tierra, el territorio y de la naturaleza",
+      "legacy_id": "P8"
+    },
+    "PA09": {
+      "name": "Crisis de derechos de personas privadas de la libertad",
+      "legacy_id": "P9"
+    },
+    "PA10": {
+      "name": "Migración transfronteriza",
+      "legacy_id": "P10"
+    }
+  },
+  "special_features": {
+    "bicameral_system": {
+      "description": "Sistema bicameral de validación de contradicciones",
+      "ruta_1": {
+        "executor": "D6-Q3",
+        "description": "Detección local de contradicciones",
+        "primary_method": "PolicyContradictionDetector._suggest_resolutions"
+      },
+      "ruta_2": {
+        "executor": "D6-Q4",
+        "description": "Inferencia estructural de mejoras",
+        "primary_method": "TeoriaCambio._generar_sugerencias_internas"
+      }
+    },
+    "anti_milagro": {
+      "description": "Validación de proporcionalidad y continuidad causal",
+      "executor": "D6-Q2",
+      "patrones": [
+        "enlaces_proporcionales",
+        "sin_saltos",
+        "no_milagros"
+      ],
+      "umbrales": [
+        "0.8",
+        "0.95",
+        "1.0"
+      ],
+      "key_methods": [
+        "PolicyContradictionDetector._detect_numerical_inconsistencies",
+        "PolicyContradictionDetector._statistical_significance_test",
+        "BayesianNumericalAnalyzer._compute_coherence",
+        "TeoriaCambio._validar_orden_causal"
+      ]
+    },
+    "dereck_beach_tests": {
+      "description": "Tests de evidencia causal según Derek Beach Process Tracing",
+      "hoop_test": {
+        "description": "Necesario pero NO suficiente",
+        "note": "Si falla, hipótesis descartada"
+      },
+      "smoking_gun_test": {
+        "description": "Suficiente pero NO necesario",
+        "note": "Si pasa, hipótesis confirmada"
+      },
+      "doubly_decisive_test": {
+        "description": "Necesario Y suficiente",
+        "note": "Test más robusto"
+      },
+      "straw_in_wind_test": {
+        "description": "Ni necesario ni suficiente",
+        "note": "Evidencia débil pero informativa"
+      },
+      "key_methods": [
+        "BayesianMechanismInference._test_necessity",
+        "BayesianMechanismInference._test_sufficiency",
+        "BeachEvidentialTest.classify_test",
+        "BeachEvidentialTest.apply_test_logic"
+      ]
+    }
+  },
+  "executors": [
+    {
+      "q": "D1-Q1",
+      "qid": "Q001",
+      "t": "¿El diagnóstico presenta datos numéricos (tasas de VBG, porcentajes de participación, cifras de brechas salariales) para el área de Derechos de las mujeres e igualdad de género que sirvan como línea base? Se debe verificar la presencia de un año de referencia y la mención de fuentes (ej. DANE, Medicina Legal, Observatorio de Género).",
+      "m": 15,
+      "flow": "PP.E → SC.T → EP.C → CD.V → A1.T",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_match_patterns_in_sentences",
+            "_extract_quantitative_baseline",
+            "_validate_source_credibility"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de datos numéricos de línea base y fuentes oficiales"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_semantic_boundaries",
+            "_extract_indicators"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            2,
+            3
+          ],
+          "note": "Segmentación semántica y extracción de indicadores"
+        },
+        {
+          "f": "EP",
+          "c": "PolicyAnalysisEmbedder",
+          "m": [
+            "embed_policy_text",
+            "_compute_similarity_matrix"
+          ],
+          "t": [
+            "C",
+            "C"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Embeddings para análisis semántico"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_extract_quantitative_claims",
+            "_parse_number",
+            "_validate_data_quality"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Validación de calidad y coherencia de datos cuantitativos"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_policy_context",
+            "_extract_entities",
+            "_validate_completeness"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            2,
+            2,
+            2
+          ],
+          "note": "Análisis semántico y validación de completitud"
+        }
+      ]
+    },
+    {
+      "q": "D1-Q2",
+      "qid": "Q002",
+      "t": "¿El texto dimensiona el problema de la desigualdad de género cuantificando la brecha o déficit? Se debe buscar si se mencionan explícitamente limitaciones en los datos, como 'subregistro', 'información insuficiente' o 'vacíos de información'.",
+      "m": 15,
+      "flow": "PP.E → SC.T → EP.C → CD.V → A1.T",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_match_patterns_in_sentences",
+            "_extract_quantitative_baseline",
+            "_validate_source_credibility"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de datos numéricos de línea base y fuentes oficiales"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_semantic_boundaries",
+            "_extract_indicators"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            2,
+            3
+          ],
+          "note": "Segmentación semántica y extracción de indicadores"
+        },
+        {
+          "f": "EP",
+          "c": "PolicyAnalysisEmbedder",
+          "m": [
+            "embed_policy_text",
+            "_compute_similarity_matrix"
+          ],
+          "t": [
+            "C",
+            "C"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Embeddings para análisis semántico"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_extract_quantitative_claims",
+            "_parse_number",
+            "_validate_data_quality"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Validación de calidad y coherencia de datos cuantitativos"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_policy_context",
+            "_extract_entities",
+            "_validate_completeness"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            2,
+            2,
+            2
+          ],
+          "note": "Análisis semántico y validación de completitud"
+        }
+      ]
+    },
+    {
+      "q": "D1-Q3",
+      "qid": "Q003",
+      "t": "¿Se identifican en el Plan Plurianual de Inversiones (PPI) o en tablas presupuestales, recursos monetarios (con cifras en $, COP o millones) explícitamente asignados a programas para la equidad de género, la Casa de la Mujer o la atención a VBG?",
+      "m": 15,
+      "flow": "PP.E → SC.T → EP.C → CD.V → A1.T",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_match_patterns_in_sentences",
+            "_extract_quantitative_baseline",
+            "_validate_source_credibility"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de datos numéricos de línea base y fuentes oficiales"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_semantic_boundaries",
+            "_extract_indicators"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            2,
+            3
+          ],
+          "note": "Segmentación semántica y extracción de indicadores"
+        },
+        {
+          "f": "EP",
+          "c": "PolicyAnalysisEmbedder",
+          "m": [
+            "embed_policy_text",
+            "_compute_similarity_matrix"
+          ],
+          "t": [
+            "C",
+            "C"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Embeddings para análisis semántico"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_extract_quantitative_claims",
+            "_parse_number",
+            "_validate_data_quality"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Validación de calidad y coherencia de datos cuantitativos"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_policy_context",
+            "_extract_entities",
+            "_validate_completeness"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            2,
+            2,
+            2
+          ],
+          "note": "Análisis semántico y validación de completitud"
+        }
+      ]
+    },
+    {
+      "q": "D1-Q4",
+      "qid": "Q004",
+      "t": "¿El PDM describe las capacidades para gestionar la política de género, mencionando entidades (ej. Secretaría de la Mujer, Comisaría) y sus necesidades? Se debe buscar términos como 'equipo psicosocial', 'protocolo de atención' y si se identifican 'limitaciones' o 'barreras' institucionales.",
+      "m": 15,
+      "flow": "PP.E → SC.T → EP.C → CD.V → A1.T",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_match_patterns_in_sentences",
+            "_extract_quantitative_baseline",
+            "_validate_source_credibility"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de datos numéricos de línea base y fuentes oficiales"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_semantic_boundaries",
+            "_extract_indicators"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            2,
+            3
+          ],
+          "note": "Segmentación semántica y extracción de indicadores"
+        },
+        {
+          "f": "EP",
+          "c": "PolicyAnalysisEmbedder",
+          "m": [
+            "embed_policy_text",
+            "_compute_similarity_matrix"
+          ],
+          "t": [
+            "C",
+            "C"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Embeddings para análisis semántico"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_extract_quantitative_claims",
+            "_parse_number",
+            "_validate_data_quality"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Validación de calidad y coherencia de datos cuantitativos"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_policy_context",
+            "_extract_entities",
+            "_validate_completeness"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            2,
+            2,
+            2
+          ],
+          "note": "Análisis semántico y validación de completitud"
+        }
+      ]
+    },
+    {
+      "q": "D1-Q5",
+      "qid": "Q005",
+      "t": "¿El plan justifica su alcance en materia de género mencionando el marco legal (ej. Ley 1257) o reconociendo restricciones explícitas de tipo presupuestal, temporal o de competencias?",
+      "m": 15,
+      "flow": "PP.E → SC.T → EP.C → CD.V → A1.T",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_match_patterns_in_sentences",
+            "_extract_quantitative_baseline",
+            "_validate_source_credibility"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de datos numéricos de línea base y fuentes oficiales"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_semantic_boundaries",
+            "_extract_indicators"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            2,
+            3
+          ],
+          "note": "Segmentación semántica y extracción de indicadores"
+        },
+        {
+          "f": "EP",
+          "c": "PolicyAnalysisEmbedder",
+          "m": [
+            "embed_policy_text",
+            "_compute_similarity_matrix"
+          ],
+          "t": [
+            "C",
+            "C"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Embeddings para análisis semántico"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_extract_quantitative_claims",
+            "_parse_number",
+            "_validate_data_quality"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Validación de calidad y coherencia de datos cuantitativos"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_policy_context",
+            "_extract_entities",
+            "_validate_completeness"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            2,
+            2,
+            2
+          ],
+          "note": "Análisis semántico y validación de completitud"
+        }
+      ]
+    },
+    {
+      "q": "D2-Q1",
+      "qid": "Q006",
+      "t": "¿Las actividades para la equidad de género se presentan en un formato estructurado (tabla, cuadro) que incluya columnas para 'responsable', 'producto' o 'entregable', 'cronograma' y 'costo' o 'presupuesto'?",
+      "m": 15,
+      "flow": "PP.E → SC.T → A1.T → CD.V → TC.V",
+      "p": [
+        {
+          "f": "PP",
+          "c": "PolicyTextProcessor",
+          "m": [
+            "process",
+            "_extract_activities",
+            "_identify_structure",
+            "_parse_tables"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de actividades estructuradas"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_activity_blocks",
+            "_extract_instruments"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            3,
+            3
+          ],
+          "note": "Identificación de instrumentos y población objetivo"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_causal_logic",
+            "_extract_target_population",
+            "_identify_mechanisms"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Análisis de lógica causal y mecanismos"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_coherence",
+            "_detect_gaps",
+            "_check_risk_mitigation"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de coherencia y riesgos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_validate_activity_chain",
+            "_check_complementarity"
+          ],
+          "t": [
+            "V",
+            "V"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Validación de cadena y complementariedad"
+        }
+      ]
+    },
+    {
+      "q": "D2-Q2",
+      "qid": "Q007",
+      "t": "¿La descripción de las actividades de género detalla el instrumento ('mediante talleres', 'a través de capital semilla'), la población objetivo ('mujeres rurales', 'madres cabeza de familia') y la lógica causal ('para generar autonomía', 'porque reduce la dependencia')?",
+      "m": 15,
+      "flow": "PP.E → SC.T → A1.T → CD.V → TC.V",
+      "p": [
+        {
+          "f": "PP",
+          "c": "PolicyTextProcessor",
+          "m": [
+            "process",
+            "_extract_activities",
+            "_identify_structure",
+            "_parse_tables"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de actividades estructuradas"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_activity_blocks",
+            "_extract_instruments"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            3,
+            3
+          ],
+          "note": "Identificación de instrumentos y población objetivo"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_causal_logic",
+            "_extract_target_population",
+            "_identify_mechanisms"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Análisis de lógica causal y mecanismos"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_coherence",
+            "_detect_gaps",
+            "_check_risk_mitigation"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de coherencia y riesgos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_validate_activity_chain",
+            "_check_complementarity"
+          ],
+          "t": [
+            "V",
+            "V"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Validación de cadena y complementariedad"
+        }
+      ]
+    },
+    {
+      "q": "D2-Q3",
+      "qid": "Q008",
+      "t": "¿El PDM vincula explícitamente las actividades propuestas con las 'causas raíz' de la desigualdad de género (ej. dependencia económica, patrones culturales) identificadas en el diagnóstico?",
+      "m": 15,
+      "flow": "PP.E → SC.T → A1.T → CD.V → TC.V",
+      "p": [
+        {
+          "f": "PP",
+          "c": "PolicyTextProcessor",
+          "m": [
+            "process",
+            "_extract_activities",
+            "_identify_structure",
+            "_parse_tables"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de actividades estructuradas"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_activity_blocks",
+            "_extract_instruments"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            3,
+            3
+          ],
+          "note": "Identificación de instrumentos y población objetivo"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_causal_logic",
+            "_extract_target_population",
+            "_identify_mechanisms"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Análisis de lógica causal y mecanismos"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_coherence",
+            "_detect_gaps",
+            "_check_risk_mitigation"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de coherencia y riesgos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_validate_activity_chain",
+            "_check_complementarity"
+          ],
+          "t": [
+            "V",
+            "V"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Validación de cadena y complementariedad"
+        }
+      ]
+    },
+    {
+      "q": "D2-Q4",
+      "qid": "Q009",
+      "t": "¿El plan identifica posibles riesgos, 'obstáculos' o 'barreras' en la implementación de las actividades de género (ej. revictimización, baja participación) y propone 'medidas de mitigación'?",
+      "m": 15,
+      "flow": "PP.E → SC.T → A1.T → CD.V → TC.V",
+      "p": [
+        {
+          "f": "PP",
+          "c": "PolicyTextProcessor",
+          "m": [
+            "process",
+            "_extract_activities",
+            "_identify_structure",
+            "_parse_tables"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de actividades estructuradas"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_activity_blocks",
+            "_extract_instruments"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            3,
+            3
+          ],
+          "note": "Identificación de instrumentos y población objetivo"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_causal_logic",
+            "_extract_target_population",
+            "_identify_mechanisms"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Análisis de lógica causal y mecanismos"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_coherence",
+            "_detect_gaps",
+            "_check_risk_mitigation"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de coherencia y riesgos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_validate_activity_chain",
+            "_check_complementarity"
+          ],
+          "t": [
+            "V",
+            "V"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Validación de cadena y complementariedad"
+        }
+      ]
+    },
+    {
+      "q": "D2-Q5",
+      "qid": "Q010",
+      "t": "¿El conjunto de actividades de género demuestra una estrategia coherente? Se debe buscar evidencia de 'complementariedad', 'sinergia', o una 'secuencia' lógica entre ellas.",
+      "m": 15,
+      "flow": "PP.E → SC.T → A1.T → CD.V → TC.V",
+      "p": [
+        {
+          "f": "PP",
+          "c": "PolicyTextProcessor",
+          "m": [
+            "process",
+            "_extract_activities",
+            "_identify_structure",
+            "_parse_tables"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de actividades estructuradas"
+        },
+        {
+          "f": "SC",
+          "c": "SemanticProcessor",
+          "m": [
+            "chunk_document",
+            "_identify_activity_blocks",
+            "_extract_instruments"
+          ],
+          "t": [
+            "T",
+            "T",
+            "E"
+          ],
+          "pr": [
+            2,
+            3,
+            3
+          ],
+          "note": "Identificación de instrumentos y población objetivo"
+        },
+        {
+          "f": "A1",
+          "c": "SemanticAnalyzer",
+          "m": [
+            "analyze_causal_logic",
+            "_extract_target_population",
+            "_identify_mechanisms"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Análisis de lógica causal y mecanismos"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_coherence",
+            "_detect_gaps",
+            "_check_risk_mitigation"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de coherencia y riesgos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_validate_activity_chain",
+            "_check_complementarity"
+          ],
+          "t": [
+            "V",
+            "V"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Validación de cadena y complementariedad"
+        }
+      ]
+    },
+    {
+      "q": "D3-Q1",
+      "qid": "Q011",
+      "t": "¿Los indicadores de producto para género (ej. mujeres capacitadas, kits entregados) incluyen 'línea base', 'meta' cuantitativa, y 'fuente de verificación'?",
+      "m": 14,
+      "flow": "PP.E → EP.C → FV.T → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_indicators",
+            "_parse_baselines_and_targets",
+            "_extract_verification_sources"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores con línea base y metas"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_compute_proportionality",
+            "_assess_intensity",
+            "_validate_targets"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Análisis de proporcionalidad y validación de metas"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "_extract_budget_linkage",
+            "_identify_responsible_entities",
+            "_validate_traceability"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Trazabilidad presupuestal y organizacional"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_product_feasibility",
+            "_check_timeframe_realism",
+            "_detect_numerical_inconsistencies"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Validación de factibilidad y realismo"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_product_analysis"
+          ],
+          "t": [
+            "R"
+          ],
+          "pr": [
+            2
+          ],
+          "note": "Síntesis de análisis de productos"
+        }
+      ]
+    },
+    {
+      "q": "D3-Q2",
+      "qid": "Q012",
+      "t": "¿Las metas de los productos de género (ej. 'cobertura del 15% de mujeres rurales') son proporcionales a la magnitud de la brecha diagnosticada? Se debe buscar si se define la 'intensidad' o 'frecuencia' de la intervención.",
+      "m": 14,
+      "flow": "PP.E → EP.C → FV.T → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_indicators",
+            "_parse_baselines_and_targets",
+            "_extract_verification_sources"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores con línea base y metas"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_compute_proportionality",
+            "_assess_intensity",
+            "_validate_targets"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Análisis de proporcionalidad y validación de metas"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "_extract_budget_linkage",
+            "_identify_responsible_entities",
+            "_validate_traceability"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Trazabilidad presupuestal y organizacional"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_product_feasibility",
+            "_check_timeframe_realism",
+            "_detect_numerical_inconsistencies"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Validación de factibilidad y realismo"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_product_analysis"
+          ],
+          "t": [
+            "R"
+          ],
+          "pr": [
+            2
+          ],
+          "note": "Síntesis de análisis de productos"
+        }
+      ]
+    },
+    {
+      "q": "D3-Q3",
+      "qid": "Q013",
+      "t": "¿Los productos de género tienen trazabilidad presupuestal (vinculados a códigos BPIN, PPI) y organizacional (asociados a una 'Secretaría de la Mujer' o dependencia responsable)?",
+      "m": 14,
+      "flow": "PP.E → EP.C → FV.T → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_indicators",
+            "_parse_baselines_and_targets",
+            "_extract_verification_sources"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores con línea base y metas"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_compute_proportionality",
+            "_assess_intensity",
+            "_validate_targets"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Análisis de proporcionalidad y validación de metas"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "_extract_budget_linkage",
+            "_identify_responsible_entities",
+            "_validate_traceability"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Trazabilidad presupuestal y organizacional"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_product_feasibility",
+            "_check_timeframe_realism",
+            "_detect_numerical_inconsistencies"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Validación de factibilidad y realismo"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_product_analysis"
+          ],
+          "t": [
+            "R"
+          ],
+          "pr": [
+            2
+          ],
+          "note": "Síntesis de análisis de productos"
+        }
+      ]
+    },
+    {
+      "q": "D3-Q4",
+      "qid": "Q014",
+      "t": "¿Existe una relación factible entre la actividad (ej. 'un taller de formación') y la meta del producto asociado (ej. '5.000 mujeres emprendedoras') para el área de Derechos de las mujeres e igualdad de género? Se debe evaluar si los 'plazos' y recursos son realistas.",
+      "m": 14,
+      "flow": "PP.E → EP.C → FV.T → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_indicators",
+            "_parse_baselines_and_targets",
+            "_extract_verification_sources"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores con línea base y metas"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_compute_proportionality",
+            "_assess_intensity",
+            "_validate_targets"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Análisis de proporcionalidad y validación de metas"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "_extract_budget_linkage",
+            "_identify_responsible_entities",
+            "_validate_traceability"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Trazabilidad presupuestal y organizacional"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_product_feasibility",
+            "_check_timeframe_realism",
+            "_detect_numerical_inconsistencies"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Validación de factibilidad y realismo"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_product_analysis"
+          ],
+          "t": [
+            "R"
+          ],
+          "pr": [
+            2
+          ],
+          "note": "Síntesis de análisis de productos"
+        }
+      ]
+    },
+    {
+      "q": "D3-Q5",
+      "qid": "Q015",
+      "t": "¿El PDM explica cómo los productos de la política de género (ej. 'mujeres capacitadas') contribuyen a generar resultados (ej. 'aumento de ingresos')? Se debe buscar la descripción de este 'mecanismo' o 'eslabón' causal.",
+      "m": 14,
+      "flow": "PP.E → EP.C → FV.T → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_indicators",
+            "_parse_baselines_and_targets",
+            "_extract_verification_sources"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores con línea base y metas"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_compute_proportionality",
+            "_assess_intensity",
+            "_validate_targets"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Análisis de proporcionalidad y validación de metas"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "_extract_budget_linkage",
+            "_identify_responsible_entities",
+            "_validate_traceability"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Trazabilidad presupuestal y organizacional"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_activity_product_feasibility",
+            "_check_timeframe_realism",
+            "_detect_numerical_inconsistencies"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Validación de factibilidad y realismo"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_product_analysis"
+          ],
+          "t": [
+            "R"
+          ],
+          "pr": [
+            2
+          ],
+          "note": "Síntesis de análisis de productos"
+        }
+      ]
+    },
+    {
+      "q": "D4-Q1",
+      "qid": "Q016",
+      "t": "¿Los indicadores de resultado para género (ej. 'tasa de participación política', 'reducción de la VBG') están definidos con línea base, meta y un horizonte temporal ('cuatrienio', 'para 2027')?",
+      "m": 16,
+      "flow": "PP.E → TC.T → DB.C → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_result_indicators",
+            "_parse_temporal_horizons",
+            "_extract_assumptions"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores de resultado y supuestos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_causal_chain",
+            "_identify_enabling_conditions",
+            "_extract_assumptions",
+            "_validate_ambition"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Construcción y validación de cadena causal"
+        },
+        {
+          "f": "DB",
+          "c": "BayesianMechanismInference",
+          "m": [
+            "_test_necessity",
+            "_test_sufficiency",
+            "_compute_causal_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests de evidencia causal según Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_result_alignment",
+            "_check_resource_justification",
+            "_compare_benchmarks"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de alineación y justificación"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_result_analysis",
+            "_generate_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis y recomendaciones"
+        }
+      ]
+    },
+    {
+      "q": "D4-Q2",
+      "qid": "Q017",
+      "t": "¿Se explicita la cadena causal que lleva a los resultados de género, mencionando los 'supuestos' clave (ej. 'si las mujeres denuncian') o las 'condiciones habilitantes' para que funcione?",
+      "m": 16,
+      "flow": "PP.E → TC.T → DB.C → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_result_indicators",
+            "_parse_temporal_horizons",
+            "_extract_assumptions"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores de resultado y supuestos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_causal_chain",
+            "_identify_enabling_conditions",
+            "_extract_assumptions",
+            "_validate_ambition"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Construcción y validación de cadena causal"
+        },
+        {
+          "f": "DB",
+          "c": "BayesianMechanismInference",
+          "m": [
+            "_test_necessity",
+            "_test_sufficiency",
+            "_compute_causal_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests de evidencia causal según Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_result_alignment",
+            "_check_resource_justification",
+            "_compare_benchmarks"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de alineación y justificación"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_result_analysis",
+            "_generate_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis y recomendaciones"
+        }
+      ]
+    },
+    {
+      "q": "D4-Q3",
+      "qid": "Q018",
+      "t": "¿La ambición de las metas de resultado en materia de género (ej. 'reducir la brecha salarial en 10%') se justifica en función de los recursos asignados, la capacidad institucional o se compara con 'casos' similares?",
+      "m": 16,
+      "flow": "PP.E → TC.T → DB.C → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_result_indicators",
+            "_parse_temporal_horizons",
+            "_extract_assumptions"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores de resultado y supuestos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_causal_chain",
+            "_identify_enabling_conditions",
+            "_extract_assumptions",
+            "_validate_ambition"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Construcción y validación de cadena causal"
+        },
+        {
+          "f": "DB",
+          "c": "BayesianMechanismInference",
+          "m": [
+            "_test_necessity",
+            "_test_sufficiency",
+            "_compute_causal_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests de evidencia causal según Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_result_alignment",
+            "_check_resource_justification",
+            "_compare_benchmarks"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de alineación y justificación"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_result_analysis",
+            "_generate_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis y recomendaciones"
+        }
+      ]
+    },
+    {
+      "q": "D4-Q4",
+      "qid": "Q019",
+      "t": "¿Los resultados propuestos para la igualdad de género (ej. 'aumento de la autonomía económica') 'atienden' o 'abordan' directamente los problemas priorizados en el diagnóstico?",
+      "m": 16,
+      "flow": "PP.E → TC.T → DB.C → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_result_indicators",
+            "_parse_temporal_horizons",
+            "_extract_assumptions"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores de resultado y supuestos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_causal_chain",
+            "_identify_enabling_conditions",
+            "_extract_assumptions",
+            "_validate_ambition"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Construcción y validación de cadena causal"
+        },
+        {
+          "f": "DB",
+          "c": "BayesianMechanismInference",
+          "m": [
+            "_test_necessity",
+            "_test_sufficiency",
+            "_compute_causal_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests de evidencia causal según Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_result_alignment",
+            "_check_resource_justification",
+            "_compare_benchmarks"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de alineación y justificación"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_result_analysis",
+            "_generate_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis y recomendaciones"
+        }
+      ]
+    },
+    {
+      "q": "D4-Q5",
+      "qid": "Q020",
+      "t": "¿El plan declara la alineación de sus resultados de género con marcos superiores como el PND o los ODS (especialmente el ODS 5)?",
+      "m": 16,
+      "flow": "PP.E → TC.T → DB.C → CD.V → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_result_indicators",
+            "_parse_temporal_horizons",
+            "_extract_assumptions"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Extracción de indicadores de resultado y supuestos"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_causal_chain",
+            "_identify_enabling_conditions",
+            "_extract_assumptions",
+            "_validate_ambition"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Construcción y validación de cadena causal"
+        },
+        {
+          "f": "DB",
+          "c": "BayesianMechanismInference",
+          "m": [
+            "_test_necessity",
+            "_test_sufficiency",
+            "_compute_causal_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests de evidencia causal según Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "_validate_result_alignment",
+            "_check_resource_justification",
+            "_compare_benchmarks"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            2
+          ],
+          "note": "Validación de alineación y justificación"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_result_analysis",
+            "_generate_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis y recomendaciones"
+        }
+      ]
+    },
+    {
+      "q": "D5-Q1",
+      "qid": "Q021",
+      "t": "¿El PDM define 'impactos' o 'transformaciones estructurales' de largo plazo en equidad de género? Se debe verificar si se menciona la ruta desde los resultados y el 'tiempo de maduración' esperado.",
+      "m": 15,
+      "flow": "PP.E → TC.T → DB.C → EP.C → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_impact_indicators",
+            "_identify_structural_transformations",
+            "_extract_maturation_timelines"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de impactos y transformaciones estructurales"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_long_term_pathway",
+            "_identify_systemic_risks",
+            "_validate_impact_realism"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de ruta de impacto y validación"
+        },
+        {
+          "f": "DB",
+          "c": "CausalExtractor",
+          "m": [
+            "extract_causal_mechanism",
+            "_identify_indirect_effects",
+            "_assess_unintended_consequences"
+          ],
+          "t": [
+            "C",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Extracción de mecanismos y efectos indirectos"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_validate_proxy_indicators",
+            "_assess_measurement_validity",
+            "_compute_confidence_intervals"
+          ],
+          "t": [
+            "C",
+            "V",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Validación de proxies y análisis bayesiano"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_impact_analysis",
+            "_generate_risk_assessment"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis de impactos y evaluación de riesgos"
+        }
+      ]
+    },
+    {
+      "q": "D5-Q2",
+      "qid": "Q022",
+      "t": "¿Se utilizan 'índices' (ej. Índice de Equidad de Género) o 'proxies' para medir los impactos en la política de género, justificando por qué son válidos para 'capturar el mecanismo' de cambio?",
+      "m": 15,
+      "flow": "PP.E → TC.T → DB.C → EP.C → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_impact_indicators",
+            "_identify_structural_transformations",
+            "_extract_maturation_timelines"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de impactos y transformaciones estructurales"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_long_term_pathway",
+            "_identify_systemic_risks",
+            "_validate_impact_realism"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de ruta de impacto y validación"
+        },
+        {
+          "f": "DB",
+          "c": "CausalExtractor",
+          "m": [
+            "extract_causal_mechanism",
+            "_identify_indirect_effects",
+            "_assess_unintended_consequences"
+          ],
+          "t": [
+            "C",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Extracción de mecanismos y efectos indirectos"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_validate_proxy_indicators",
+            "_assess_measurement_validity",
+            "_compute_confidence_intervals"
+          ],
+          "t": [
+            "C",
+            "V",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Validación de proxies y análisis bayesiano"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_impact_analysis",
+            "_generate_risk_assessment"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis de impactos y evaluación de riesgos"
+        }
+      ]
+    },
+    {
+      "q": "D5-Q3",
+      "qid": "Q023",
+      "t": "Cuando un impacto en género es difícil de medir (ej. 'cambio en patrones culturales'), ¿se recurre a un 'proxy'? Se valora si el texto documenta su 'validez' y reconoce sus 'limitaciones'.",
+      "m": 15,
+      "flow": "PP.E → TC.T → DB.C → EP.C → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_impact_indicators",
+            "_identify_structural_transformations",
+            "_extract_maturation_timelines"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de impactos y transformaciones estructurales"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_long_term_pathway",
+            "_identify_systemic_risks",
+            "_validate_impact_realism"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de ruta de impacto y validación"
+        },
+        {
+          "f": "DB",
+          "c": "CausalExtractor",
+          "m": [
+            "extract_causal_mechanism",
+            "_identify_indirect_effects",
+            "_assess_unintended_consequences"
+          ],
+          "t": [
+            "C",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Extracción de mecanismos y efectos indirectos"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_validate_proxy_indicators",
+            "_assess_measurement_validity",
+            "_compute_confidence_intervals"
+          ],
+          "t": [
+            "C",
+            "V",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Validación de proxies y análisis bayesiano"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_impact_analysis",
+            "_generate_risk_assessment"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis de impactos y evaluación de riesgos"
+        }
+      ]
+    },
+    {
+      "q": "D5-Q4",
+      "qid": "Q024",
+      "t": "¿Los impactos en género se alinean con marcos nacionales/globales y consideran 'riesgos sistémicos' (ej. crisis económica) que podrían romper el mecanismo causal?",
+      "m": 15,
+      "flow": "PP.E → TC.T → DB.C → EP.C → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_impact_indicators",
+            "_identify_structural_transformations",
+            "_extract_maturation_timelines"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de impactos y transformaciones estructurales"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_long_term_pathway",
+            "_identify_systemic_risks",
+            "_validate_impact_realism"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de ruta de impacto y validación"
+        },
+        {
+          "f": "DB",
+          "c": "CausalExtractor",
+          "m": [
+            "extract_causal_mechanism",
+            "_identify_indirect_effects",
+            "_assess_unintended_consequences"
+          ],
+          "t": [
+            "C",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Extracción de mecanismos y efectos indirectos"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_validate_proxy_indicators",
+            "_assess_measurement_validity",
+            "_compute_confidence_intervals"
+          ],
+          "t": [
+            "C",
+            "V",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Validación de proxies y análisis bayesiano"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_impact_analysis",
+            "_generate_risk_assessment"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis de impactos y evaluación de riesgos"
+        }
+      ]
+    },
+    {
+      "q": "D5-Q5",
+      "qid": "Q025",
+      "t": "¿La ambición del impacto para la igualdad de género es realista? Se debe buscar si se analizan posibles 'efectos no deseados' (ej. sobrecarga en mujeres) o se declaran 'hipótesis límite'.",
+      "m": 15,
+      "flow": "PP.E → TC.T → DB.C → EP.C → RA.R",
+      "p": [
+        {
+          "f": "PP",
+          "c": "IndustrialPolicyProcessor",
+          "m": [
+            "process",
+            "_extract_impact_indicators",
+            "_identify_structural_transformations",
+            "_extract_maturation_timelines"
+          ],
+          "t": [
+            "E",
+            "E",
+            "E",
+            "E"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            2
+          ],
+          "note": "Extracción de impactos y transformaciones estructurales"
+        },
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "_build_long_term_pathway",
+            "_identify_systemic_risks",
+            "_validate_impact_realism"
+          ],
+          "t": [
+            "T",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de ruta de impacto y validación"
+        },
+        {
+          "f": "DB",
+          "c": "CausalExtractor",
+          "m": [
+            "extract_causal_mechanism",
+            "_identify_indirect_effects",
+            "_assess_unintended_consequences"
+          ],
+          "t": [
+            "C",
+            "E",
+            "V"
+          ],
+          "pr": [
+            3,
+            2,
+            3
+          ],
+          "note": "Extracción de mecanismos y efectos indirectos"
+        },
+        {
+          "f": "EP",
+          "c": "BayesianNumericalAnalyzer",
+          "m": [
+            "_validate_proxy_indicators",
+            "_assess_measurement_validity",
+            "_compute_confidence_intervals"
+          ],
+          "t": [
+            "C",
+            "V",
+            "C"
+          ],
+          "pr": [
+            3,
+            3,
+            2
+          ],
+          "note": "Validación de proxies y análisis bayesiano"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_impact_analysis",
+            "_generate_risk_assessment"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis de impactos y evaluación de riesgos"
+        }
+      ]
+    },
+    {
+      "q": "D6-Q1",
+      "qid": "Q026",
+      "t": "¿Existe una 'teoría de cambio' explícita para la política de género, preferiblemente en un 'diagrama', que identifique causas, mediadores y 'supuestos verificables'?",
+      "m": 17,
+      "flow": "TC.T → DB.C → CD.V → FV.C → RA.R",
+      "p": [
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "build_theory_of_change",
+            "_extract_causal_diagram",
+            "_identify_mediators",
+            "_validate_orden_causal",
+            "_detect_causal_jumps"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción y validación de teoría de cambio"
+        },
+        {
+          "f": "DB",
+          "c": "BeachEvidentialTest",
+          "m": [
+            "classify_test",
+            "apply_test_logic",
+            "_assess_evidence_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests evidenciales de Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "detect_contradictions",
+            "_detect_numerical_inconsistencies",
+            "_suggest_resolutions",
+            "_statistical_significance_test"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Detección de contradicciones y validación anti-milagro"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "construct_causal_dag",
+            "estimate_causal_effects",
+            "_validate_proportionality"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de DAG causal y estimación de efectos"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_causal_analysis",
+            "_generate_monitoring_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis causal y recomendaciones de monitoreo"
+        }
+      ]
+    },
+    {
+      "q": "D6-Q2",
+      "qid": "Q027",
+      "t": "¿Los saltos en la cadena causal de género son proporcionales y realistas (ej. un taller de 2 horas no genera 'empoderamiento económico total')?",
+      "m": 17,
+      "flow": "TC.T → DB.C → CD.V → FV.C → RA.R",
+      "p": [
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "build_theory_of_change",
+            "_extract_causal_diagram",
+            "_identify_mediators",
+            "_validate_orden_causal",
+            "_detect_causal_jumps"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción y validación de teoría de cambio"
+        },
+        {
+          "f": "DB",
+          "c": "BeachEvidentialTest",
+          "m": [
+            "classify_test",
+            "apply_test_logic",
+            "_assess_evidence_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests evidenciales de Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "detect_contradictions",
+            "_detect_numerical_inconsistencies",
+            "_suggest_resolutions",
+            "_statistical_significance_test"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Detección de contradicciones y validación anti-milagro"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "construct_causal_dag",
+            "estimate_causal_effects",
+            "_validate_proportionality"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de DAG causal y estimación de efectos"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_causal_analysis",
+            "_generate_monitoring_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis causal y recomendaciones de monitoreo"
+        }
+      ]
+    },
+    {
+      "q": "D6-Q3",
+      "qid": "Q028",
+      "t": "¿El plan reconoce 'inconsistencias' en su lógica causal para género y propone 'pilotos' o 'pruebas' para 'testear los supuestos' de sus intervenciones?",
+      "m": 17,
+      "flow": "TC.T → DB.C → CD.V → FV.C → RA.R",
+      "p": [
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "build_theory_of_change",
+            "_extract_causal_diagram",
+            "_identify_mediators",
+            "_validate_orden_causal",
+            "_detect_causal_jumps"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción y validación de teoría de cambio"
+        },
+        {
+          "f": "DB",
+          "c": "BeachEvidentialTest",
+          "m": [
+            "classify_test",
+            "apply_test_logic",
+            "_assess_evidence_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests evidenciales de Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "detect_contradictions",
+            "_detect_numerical_inconsistencies",
+            "_suggest_resolutions",
+            "_statistical_significance_test"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Detección de contradicciones y validación anti-milagro"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "construct_causal_dag",
+            "estimate_causal_effects",
+            "_validate_proportionality"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de DAG causal y estimación de efectos"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_causal_analysis",
+            "_generate_monitoring_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis causal y recomendaciones de monitoreo"
+        }
+      ]
+    },
+    {
+      "q": "D6-Q4",
+      "qid": "Q029",
+      "t": "¿Se describe un sistema de monitoreo para la política de género que incluya 'mecanismos de corrección', 'retroalimentación' o 'aprendizaje' para adaptar la estrategia en caso de desviaciones?",
+      "m": 17,
+      "flow": "TC.T → DB.C → CD.V → FV.C → RA.R",
+      "p": [
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "build_theory_of_change",
+            "_extract_causal_diagram",
+            "_identify_mediators",
+            "_validate_orden_causal",
+            "_detect_causal_jumps"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción y validación de teoría de cambio"
+        },
+        {
+          "f": "DB",
+          "c": "BeachEvidentialTest",
+          "m": [
+            "classify_test",
+            "apply_test_logic",
+            "_assess_evidence_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests evidenciales de Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "detect_contradictions",
+            "_detect_numerical_inconsistencies",
+            "_suggest_resolutions",
+            "_statistical_significance_test"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Detección de contradicciones y validación anti-milagro"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "construct_causal_dag",
+            "estimate_causal_effects",
+            "_validate_proportionality"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de DAG causal y estimación de efectos"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_causal_analysis",
+            "_generate_monitoring_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis causal y recomendaciones de monitoreo"
+        }
+      ]
+    },
+    {
+      "q": "D6-Q5",
+      "qid": "Q030",
+      "t": "¿La lógica causal para la equidad de género considera el contexto, reconociendo 'grupos afectados' (ej. mujeres rurales, víctimas, étnicas) y 'restricciones' territoriales, culturales o normativas?",
+      "m": 17,
+      "flow": "TC.T → DB.C → CD.V → FV.C → RA.R",
+      "p": [
+        {
+          "f": "TC",
+          "c": "TeoriaCambio",
+          "m": [
+            "build_theory_of_change",
+            "_extract_causal_diagram",
+            "_identify_mediators",
+            "_validate_orden_causal",
+            "_detect_causal_jumps"
+          ],
+          "t": [
+            "T",
+            "E",
+            "E",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción y validación de teoría de cambio"
+        },
+        {
+          "f": "DB",
+          "c": "BeachEvidentialTest",
+          "m": [
+            "classify_test",
+            "apply_test_logic",
+            "_assess_evidence_strength"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Tests evidenciales de Derek Beach"
+        },
+        {
+          "f": "CD",
+          "c": "PolicyContradictionDetector",
+          "m": [
+            "detect_contradictions",
+            "_detect_numerical_inconsistencies",
+            "_suggest_resolutions",
+            "_statistical_significance_test"
+          ],
+          "t": [
+            "V",
+            "V",
+            "V",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "note": "Detección de contradicciones y validación anti-milagro"
+        },
+        {
+          "f": "FV",
+          "c": "PDETMunicipalPlanAnalyzer",
+          "m": [
+            "construct_causal_dag",
+            "estimate_causal_effects",
+            "_validate_proportionality"
+          ],
+          "t": [
+            "C",
+            "C",
+            "V"
+          ],
+          "pr": [
+            3,
+            3,
+            3
+          ],
+          "note": "Construcción de DAG causal y estimación de efectos"
+        },
+        {
+          "f": "RA",
+          "c": "ReportAssembler",
+          "m": [
+            "_synthesize_causal_analysis",
+            "_generate_monitoring_recommendations"
+          ],
+          "t": [
+            "R",
+            "R"
+          ],
+          "pr": [
+            2,
+            2
+          ],
+          "note": "Síntesis causal y recomendaciones de monitoreo"
+        }
+      ]
+    }
+  ]
+}

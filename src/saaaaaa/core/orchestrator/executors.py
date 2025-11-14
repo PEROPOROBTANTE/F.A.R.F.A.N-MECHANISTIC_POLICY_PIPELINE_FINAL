@@ -707,7 +707,24 @@ class InformationFlowOptimizer:
         return bottlenecks
 
     def optimize_information_flow(self, current_order: list[int]) -> list[int]:
-        """Reorder execution to maximize information flow"""
+        """
+        Reorder execution to maximize information flow using a greedy algorithm.
+        
+        This method implements a greedy selection strategy that iteratively selects
+        the next stage based on mutual information with already-selected stages.
+        At each step, it chooses the remaining stage with the highest total mutual
+        information with all previously selected stages, creating an execution order
+        that maximizes information propagation.
+        
+        The algorithm is used to optimize method execution order based on data
+        dependencies and information transfer between stages.
+        
+        Args:
+            current_order: Initial execution order (list of stage indices)
+            
+        Returns:
+            Optimized execution order maximizing cumulative mutual information
+        """
         if len(current_order) <= 1:
             return current_order
 
