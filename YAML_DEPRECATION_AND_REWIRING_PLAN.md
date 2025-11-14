@@ -653,6 +653,7 @@ Method Configuration Loader for Canonical JSON Specification.
 Provides unified access to method parameters from the canonical
 parameterization specification.
 """
+import ast
 import json
 from pathlib import Path
 from typing import Any
@@ -667,6 +668,10 @@ class MethodConfigLoader:
             "CAUSAL.BMI.infer_mech_v1",
             "kl_divergence_threshold"
         )
+    
+    Note:
+        The loader expects the JSON spec to follow the canonical schema with
+        keys: specification_metadata, methods, and epistemic_validation_summary.
     """
 
     def __init__(self, spec_path: str | Path):
@@ -674,11 +679,27 @@ class MethodConfigLoader:
         with open(self.spec_path) as f:
             self.spec = json.load(f)
 
+        # Validate schema before use
+        self.validate_spec_schema()
+
         # Build index for fast lookup
         self._method_index = {
             method["canonical_id"]: method
             for method in self.spec["methods"]
         }
+
+    def validate_spec_schema(self):
+        """
+        Validate JSON spec matches expected schema.
+        
+        Raises:
+            ValueError: If spec is missing required keys
+        """
+        required_keys = {"specification_metadata", "methods"}
+        # Note: epistemic_validation_summary is optional in some versions
+        if not required_keys.issubset(self.spec.keys()):
+            missing = required_keys - set(self.spec.keys())
+            raise ValueError(f"Spec missing required keys: {missing}")
 
     def get_method_parameter(
         self,
@@ -753,19 +774,59 @@ class MethodConfigLoader:
         return True
 
     def _parse_range(self, spec: str) -> tuple[float, float]:
-        """Parse range specification like '[0.0, 1.0], inclusive'."""
-        # Simple parser; extend as needed
-        parts = spec.replace("[", "").replace("]", "").split(",")
-        min_val = float(parts[0].strip())
-        max_val = float(parts[1].strip())
-        return min_val, max_val
+        """
+        Parse range specification like '[0.0, 1.0], inclusive' or '[100, 10000], integer'.
+        
+        Args:
+            spec: Range specification string with format "[min, max], modifiers"
+                  Modifiers can include: inclusive, exclusive, integer
+        
+        Returns:
+            Tuple of (min_val, max_val) as floats
+            
+        Raises:
+            ValueError: If spec format is invalid
+        
+        Note:
+            The inclusive/exclusive and integer modifiers are parsed but not
+            currently enforced in validation. This maintains compatibility with
+            the current spec while allowing future enhancement.
+        """
+        try:
+            # Extract bracketed part before any modifiers
+            bracket_part = spec.split("]")[0] + "]"
+            parts = bracket_part.replace("[", "").replace("]", "").split(",")
+            min_val = float(parts[0].strip())
+            max_val = float(parts[1].strip())
+            return min_val, max_val
+        except (IndexError, ValueError) as e:
+            raise ValueError(f"Invalid range spec: {spec}") from e
 
     def _parse_set(self, spec: str | list) -> set:
-        """Parse set specification."""
+        """
+        Parse set specification safely.
+        
+        Args:
+            spec: Either a list or a string representation of a Python literal
+        
+        Returns:
+            Set of allowed values
+            
+        Raises:
+            ValueError: If spec cannot be parsed safely
+            
+        Note:
+            Uses ast.literal_eval() for safe parsing of string specs.
+            Only Python literals (strings, numbers, tuples, lists, dicts,
+            booleans, None) are supported - no arbitrary code execution.
+        """
         if isinstance(spec, list):
             return set(spec)
-        # Parse string representation
-        return set(eval(spec))  # WARNING: Only for trusted specs
+        try:
+            # Use ast.literal_eval for safer parsing
+            return set(ast.literal_eval(spec))
+        except (ValueError, SyntaxError) as e:
+            raise ValueError(f"Invalid set spec: {spec}") from e
 ```
 
 **Testing:** `tests/test_method_config_loader.py`
