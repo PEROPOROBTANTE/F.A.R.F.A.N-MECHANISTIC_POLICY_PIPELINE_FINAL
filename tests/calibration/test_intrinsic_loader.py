@@ -206,7 +206,7 @@ class TestIntrinsicScoreLoader:
 
         # Should compute with missing values as 0.0
         # Expected: 0.4*0.5 + 0.35*0.0 + 0.25*0.0 = 0.2
-        assert pytest.approx(score, rel=1e-3) == 0.2
+        assert score == pytest.approx(0.2, rel=1e-3)
 
 
 class TestIntrinsicScoreLoaderWithRealData:
