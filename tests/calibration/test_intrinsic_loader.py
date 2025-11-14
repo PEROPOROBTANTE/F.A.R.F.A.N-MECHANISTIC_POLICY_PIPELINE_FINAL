@@ -95,7 +95,7 @@ class TestIntrinsicScoreLoader:
         assert not loader._loaded
 
         # First access triggers load
-        score = loader.get_score("test.analyzer.AnalyzeMethod.analyze")
+        loader.get_score("test.analyzer.AnalyzeMethod.analyze")
 
         # Data now loaded
         assert loader._loaded
