@@ -1,0 +1,1348 @@
+{
+  "metadata": {
+    "total_municipalities": 167,
+    "total_subregions": 16,
+    "total_departments": 19,
+    "source": "Agencia de Renovación del Territorio (ART)",
+    "last_updated": "2024-11-14"
+  },
+  "subregions": [
+    {
+      "id": "alto-patia",
+      "name": "Alto Patía y Norte del Cauca",
+      "municipalities_count": 24,
+      "departments": [
+        "Cauca",
+        "Nariño",
+        "Valle del Cauca"
+      ],
+      "municipalities": [
+        {
+          "name": "Argelia",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Balboa",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Buenos Aires",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Cajibío",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Caldono",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Caloto",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Corinto",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Tambo",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Jambaló",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Mercaderes",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Miranda",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Morales",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Patía",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Piendamó",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Santander de Quilichao",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Suárez",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Toribío",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Cumbitara",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Rosario",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Leiva",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Los Andes",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Policarpa",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Florida",
+          "department": "Valle del Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Pradera",
+          "department": "Valle del Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "arauca",
+      "name": "Arauca",
+      "municipalities_count": 4,
+      "departments": [
+        "Arauca"
+      ],
+      "municipalities": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Fortul",
+          "department": "Arauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Saravena",
+          "department": "Arauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Tame",
+          "department": "Arauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "bajo-cauca",
+      "name": "Bajo Cauca y Nordeste Antioqueño",
+      "municipalities_count": 13,
+      "departments": [
+        "Antioquia"
+      ],
+      "municipalities": [
+        {
+          "name": "Amalfi",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Anorí",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Briceño",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Cáceres",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Caucasia",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Bagre",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Ituango",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Nechí",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Remedios",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Segovia",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Tarazá",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Valdivia",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Zaragoza",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "catatumbo",
+      "name": "Catatumbo",
+      "municipalities_count": 8,
+      "departments": [
+        "Norte de Santander"
+      ],
+      "municipalities": [
+        {
+          "name": "Convención",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Carmen",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Tarra",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Hacarí",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Calixto",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Sardinata",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Teorama",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Tibú",
+          "department": "Norte de Santander",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "choco",
+      "name": "Chocó",
+      "municipalities_count": 14,
+      "departments": [
+        "Chocó"
+      ],
+      "municipalities": [
+        {
+          "name": "Acandí",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Alto Baudó",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Bagadó",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Bajo Baudó",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Bojayá",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Carmen del Darién",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Condoto",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Litoral de San Juan",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Istmina",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Juradó",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Medio Atrato",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Medio Baudó",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Nuquí",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Río Quito",
+          "department": "Chocó",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "caguan",
+      "name": "Cuenca del Caguán y Piedemonte Caqueteño",
+      "municipalities_count": 17,
+      "departments": [
+        "Caquetá",
+        "Huila"
+      ],
+      "municipalities": [
+        {
+          "name": "Albania",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Belén de los Andaquíes",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Cartagena del Chairá",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Curillo",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Doncello",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Paujil",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Florencia",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "La Montañita",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Milán",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Morelia",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Rico",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San José del Fragua",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Vicente del Caguán",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Solano",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Solita",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Valparaíso",
+          "department": "Caquetá",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Algeciras",
+          "department": "Huila",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "macarena",
+      "name": "Macarena - Guaviare",
+      "municipalities_count": 13,
+      "departments": [
+        "Guaviare",
+        "Meta"
+      ],
+      "municipalities": [
+        {
+          "name": "La Macarena",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Mapiripán",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Mesetas",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Concordia",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Lleras",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Rico",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Juan de Arama",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Uribe",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Vistahermosa",
+          "department": "Meta",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Calamar",
+          "department": "Guaviare",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Retorno",
+          "department": "Guaviare",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Miraflores",
+          "department": "Guaviare",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San José del Guaviare",
+          "department": "Guaviare",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "montes-maria",
+      "name": "Montes de María",
+      "municipalities_count": 15,
+      "departments": [
+        "Bolívar",
+        "Sucre"
+      ],
+      "municipalities": [
+        {
+          "name": "El Carmen de Bolívar",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "María La Baja",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Jacinto",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Juan Nepomuceno",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Zambrano",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Córdoba",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Guamo",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Chalán",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Colosó",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Morroa",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Ovejas",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Palmito",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Los Palmitos",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Onofre",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Tolú Viejo",
+          "department": "Sucre",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "pacifico-medio",
+      "name": "Pacífico Medio",
+      "municipalities_count": 4,
+      "departments": [
+        "Cauca",
+        "Valle del Cauca"
+      ],
+      "municipalities": [
+        {
+          "name": "Buenaventura",
+          "department": "Valle del Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "López de Micay",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Guapi",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Timbiquí",
+          "department": "Cauca",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "pacifico-narinense",
+      "name": "Pacífico y Frontera Nariñense",
+      "municipalities_count": 11,
+      "departments": [
+        "Nariño"
+      ],
+      "municipalities": [
+        {
+          "name": "Barbacoas",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "El Charco",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Francisco Pizarro",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "La Tola",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Magüí Payán",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Mosquera",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Olaya Herrera",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Roberto Payán",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Santa Bárbara",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Tumaco",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Ricaurte",
+          "department": "Nariño",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "putumayo",
+      "name": "Putumayo",
+      "municipalities_count": 9,
+      "departments": [
+        "Putumayo"
+      ],
+      "municipalities": [
+        {
+          "name": "Mocoa",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Orito",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Asís",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Caicedo",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Guzmán",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Leguízamo",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Miguel",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Valle del Guamuez",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Villagarzón",
+          "department": "Putumayo",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "sierra-nevada",
+      "name": "Sierra Nevada, Perijá y Zona Bananera",
+      "municipalities_count": 10,
+      "departments": [
+        "Cesar",
+        "La Guajira",
+        "Magdalena"
+      ],
+      "municipalities": [
+        {
+          "name": "Ciénaga",
+          "department": "Magdalena",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Fundación",
+          "department": "Magdalena",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Pueblo Viejo",
+          "department": "Magdalena",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Zona Bananera",
+          "department": "Magdalena",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Dibulla",
+          "department": "La Guajira",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "La Jagua del Pilar",
+          "department": "La Guajira",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Juan del Cesar",
+          "department": "La Guajira",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Becerril",
+          "department": "Cesar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "La Jagua de Ibirico",
+          "department": "Cesar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Agustín Codazzi",
+          "department": "Cesar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "sur-bolivar",
+      "name": "Sur de Bolívar",
+      "municipalities_count": 6,
+      "departments": [
+        "Bolívar"
+      ],
+      "municipalities": [
+        {
+          "name": "Arenal",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Montecristo",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Morales",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Pablo",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Santa Rosa del Sur",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Simití",
+          "department": "Bolívar",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "sur-cordoba",
+      "name": "Sur de Córdoba",
+      "municipalities_count": 5,
+      "departments": [
+        "Córdoba"
+      ],
+      "municipalities": [
+        {
+          "name": "Montelíbano",
+          "department": "Córdoba",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Puerto Libertador",
+          "department": "Córdoba",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San José de Uré",
+          "department": "Córdoba",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Tierralta",
+          "department": "Córdoba",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Valencia",
+          "department": "Córdoba",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "sur-tolima",
+      "name": "Sur del Tolima",
+      "municipalities_count": 4,
+      "departments": [
+        "Tolima"
+      ],
+      "municipalities": [
+        {
+          "name": "Ataco",
+          "department": "Tolima",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Chaparral",
+          "department": "Tolima",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Planadas",
+          "department": "Tolima",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Rioblanco",
+          "department": "Tolima",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    },
+    {
+      "id": "uraba",
+      "name": "Urabá Antioqueño",
+      "municipalities_count": 10,
+      "departments": [
+        "Antioquia"
+      ],
+      "municipalities": [
+        {
+          "name": "Apartadó",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Carepa",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Chigorodó",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Mutatá",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Murindó",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Turbo",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Pedro de Urabá",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Necoclí",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "San Juan de Urabá",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        },
+        {
+          "name": "Arboletes",
+          "department": "Antioquia",
+          "dane_code": null,
+          "population": null,
+          "area_km2": null
+        }
+      ]
+    }
+  ]
+}
