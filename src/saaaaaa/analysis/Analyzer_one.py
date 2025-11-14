@@ -26,6 +26,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import (
     Any,
+    Optional,
 )
 
 warnings.filterwarnings('ignore')
@@ -134,13 +135,54 @@ class MunicipalOntology:
 class SemanticAnalyzer:
     """Advanced semantic analysis for municipal documents."""
 
-    def __init__(self, ontology: MunicipalOntology) -> None:
+    def __init__(
+        self, 
+        ontology: MunicipalOntology,
+        config_loader: Optional['MethodConfigLoader'] = None,
+        max_features: Optional[int] = None,
+        ngram_range: Optional[tuple[int, int]] = None,
+        similarity_threshold: Optional[float] = None
+    ) -> None:
+        """
+        Initialize SemanticAnalyzer.
+        
+        Args:
+            ontology: Municipal ontology for semantic classification
+            config_loader: Optional MethodConfigLoader for canonical parameter access
+            max_features: TF-IDF max features (overrides config_loader)
+            ngram_range: N-gram range for feature extraction (overrides config_loader)
+            similarity_threshold: Similarity threshold for concept detection (overrides config_loader)
+        """
         self.ontology = ontology
+        
+        # Load parameters from canonical JSON if config_loader provided
+        if config_loader is not None:
+            try:
+                if max_features is None:
+                    max_features = config_loader.get_method_parameter(
+                        "ANLZ.SA.extract_cube_v1", "max_features"
+                    )
+                if ngram_range is None:
+                    ngram_range = tuple(config_loader.get_method_parameter(
+                        "ANLZ.SA.extract_cube_v1", "ngram_range"
+                    ))
+                if similarity_threshold is None:
+                    similarity_threshold = config_loader.get_method_parameter(
+                        "ANLZ.SA.extract_cube_v1", "similarity_threshold"
+                    )
+            except (KeyError, AttributeError) as e:
+                logger.warning(f"Failed to load parameters from config_loader: {e}. Using defaults.")
+        
+        # Use defaults if not provided
+        self.max_features = max_features if max_features is not None else 1000
+        self.ngram_range = ngram_range if ngram_range is not None else (1, 3)
+        self.similarity_threshold = similarity_threshold if similarity_threshold is not None else 0.3
+        
         if TfidfVectorizer is not None:
             self.vectorizer = TfidfVectorizer(
-                max_features=1000,
+                max_features=self.max_features,
                 stop_words='english',
-                ngram_range=(1, 3)
+                ngram_range=self.ngram_range
             )
         else:
             self.vectorizer = None
@@ -180,19 +222,19 @@ class SemanticAnalyzer:
             # Classify by value chain links
             link_scores = self._classify_value_chain_link(segment)
             for link, score in link_scores.items():
-                if score > 0.3:  # Threshold for inclusion
+                if score > self.similarity_threshold:  # Configurable threshold for inclusion
                     semantic_cube["dimensions"]["value_chain_links"][link].append(segment_data)
 
             # Classify by policy domains
             domain_scores = self._classify_policy_domain(segment)
             for domain, score in domain_scores.items():
-                if score > 0.3:
+                if score > self.similarity_threshold:
                     semantic_cube["dimensions"]["policy_domains"][domain].append(segment_data)
 
             # Extract cross-cutting themes
             theme_scores = self._classify_cross_cutting_themes(segment)
             for theme, score in theme_scores.items():
-                if score > 0.3:
+                if score > self.similarity_threshold:
                     semantic_cube["dimensions"]["cross_cutting_themes"][theme].append(segment_data)
 
             # Add measures
