@@ -41,21 +41,25 @@ class TestExecutorArchitecture:
     """
 
     @pytest.fixture(scope="class")
-    def repo_root(cls) -> Path:
+    @staticmethod
+    def repo_root() -> Path:
         """Get repository root."""
         return Path(__file__).parent.parent.parent
 
     @pytest.fixture(scope="class")
-    def audit_system(cls, repo_root: Path) -> AuditSystem:
+    @staticmethod
+    def audit_system(repo_root: Path) -> AuditSystem:
         """Create audit system."""
         return AuditSystem(repo_root)
 
     @pytest.fixture(scope="class")
+    @staticmethod
     def event_tracker() -> EventTracker:
         """Create event tracker for tests."""
         return EventTracker("Executor Integration Tests")
 
     @pytest.fixture(scope="class")
+    @staticmethod
     def expected_executors() -> List[str]:
         """Get list of expected executors."""
         return [
@@ -65,6 +69,7 @@ class TestExecutorArchitecture:
         ]
 
     @pytest.fixture(scope="class")
+    @staticmethod
     def dimension_names() -> Dict[int, str]:
         """Get dimension names."""
         return {
@@ -326,6 +331,7 @@ class TestExecutorIntegrationWithRealData:
     """
 
     @pytest.fixture(scope="class")
+    @staticmethod
     def sample_policy_data() -> Dict[str, Any]:
         """Create sample policy data for testing."""
         return {
