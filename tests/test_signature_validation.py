@@ -97,7 +97,7 @@ def test_defensive_class_init_with_extra_kwargs():
 def test_signature_validator_basic_functionality():
     """Test basic signature validation functionality"""
 
-    from saaaaaa.validation.signature_validator import validate_call_signature
+    from saaaaaa.utils.signature_validator import validate_call_signature
 
     def sample_function(arg1: str, arg2: int):
         return f"{arg1}: {arg2}"
@@ -119,7 +119,7 @@ def test_signature_validator_basic_functionality():
 def test_validate_signature_decorator():
     """Test the validate_signature decorator"""
 
-    from saaaaaa.validation.signature_validator import validate_signature
+    from saaaaaa.utils.signature_validator import validate_signature
 
     @validate_signature(enforce=False, track=False)
     def decorated_function(param1: str, param2: int) -> str:

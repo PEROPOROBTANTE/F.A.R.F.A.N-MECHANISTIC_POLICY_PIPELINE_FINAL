@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from saaaaaa.validation.schema_validator import SchemaValidator
+from saaaaaa.utils.validation.schema_validator import SchemaValidator
 
 def _write_payload(path: Path, payload: dict) -> None:
     payload["content_hash"] = SchemaValidator._canonical_hash(payload)
