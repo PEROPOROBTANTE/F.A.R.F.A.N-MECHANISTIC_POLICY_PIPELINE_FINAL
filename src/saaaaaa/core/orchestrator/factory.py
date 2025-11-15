@@ -225,7 +225,7 @@ def get_canonical_dimensions(questionnaire_path: Path | None = None) -> dict[str
     if 'dimensions' not in canonical.data['canonical_notation']:
         raise KeyError("dimensions section missing from canonical_notation")
 
-    # Return immutable copy
+    # Return a shallow copy
     return dict(canonical.data['canonical_notation']['dimensions'])
 
 def get_canonical_policy_areas(questionnaire_path: Path | None = None) -> dict[str, dict[str, str]]:
