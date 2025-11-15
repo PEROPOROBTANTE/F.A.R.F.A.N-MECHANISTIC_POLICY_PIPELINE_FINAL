@@ -238,7 +238,7 @@ class TestStrategicWiring(unittest.TestCase):
 
     def test_validation_engine_preconditions(self):
         """Verify validation_engine properly validates preconditions."""
-        from saaaaaa.validation.validation_engine import ValidationEngine
+        from saaaaaa.utils.validation_engine import ValidationEngine
 
         engine = ValidationEngine()
 
@@ -343,8 +343,8 @@ class TestStrategicFileInteraction(unittest.TestCase):
 
     def test_validation_engine_uses_predicates(self):
         """Verify validation_engine properly integrates with predicates."""
-        from saaaaaa.utils.validation.predicates import ValidationPredicates
-        from saaaaaa.validation.validation_engine import ValidationEngine
+        from validation.predicates import ValidationPredicates
+        from saaaaaa.utils.validation_engine import ValidationEngine
 
         engine = ValidationEngine()
 

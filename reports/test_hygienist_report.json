@@ -1,0 +1,2227 @@
+{
+  "generated": "2025-11-15T00:01:03.528884",
+  "total_tests": 105,
+  "summary": {
+    "keep": 67,
+    "refactor": 38,
+    "deprecate": 0
+  },
+  "tests": [
+    {
+      "name": "test_import_consistency",
+      "file": "tests/test_import_consistency.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 123,
+        "num_test_functions": 6,
+        "cyclomatic_complexity": 10,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_smoke_imports",
+      "file": "tests/test_smoke_imports.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 106,
+        "num_test_functions": 11,
+        "cyclomatic_complexity": 10,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_cpp_table_extraction_none_handling",
+      "file": "tests/test_cpp_table_extraction_none_handling.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 170,
+        "num_test_functions": 8,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_safe_imports",
+      "file": "tests/test_safe_imports.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 32.0,
+      "metrics": {
+        "lines_of_code": 176,
+        "num_test_functions": 27,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (32.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_defensive_signatures",
+      "file": "tests/test_defensive_signatures.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 99,
+        "num_test_functions": 8,
+        "cyclomatic_complexity": 16,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_dependency_lockdown",
+      "file": "tests/test_dependency_lockdown.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 32.0,
+      "metrics": {
+        "lines_of_code": 184,
+        "num_test_functions": 16,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (32.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_class_registry_paths",
+      "file": "tests/test_class_registry_paths.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 113,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 10,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_intrinsic_loader",
+      "file": "tests/calibration/test_intrinsic_loader.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 32.0,
+      "metrics": {
+        "lines_of_code": 192,
+        "num_test_functions": 16,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 0,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (32.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_synthetic_traffic",
+      "file": "tests/operational/test_synthetic_traffic.py",
+      "recommendation": "KEEP",
+      "value_score": 85.0,
+      "refactoring_complexity": 33.0,
+      "metrics": {
+        "lines_of_code": 97,
+        "num_test_functions": 7,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) with manageable complexity (33.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_metrics_thread_safety",
+      "file": "tests/test_metrics_thread_safety.py",
+      "recommendation": "KEEP",
+      "value_score": 82.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 69,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 13,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (82.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_regression_semantic_chunking",
+      "file": "tests/test_regression_semantic_chunking.py",
+      "recommendation": "KEEP",
+      "value_score": 82.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 94,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 17,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (82.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_embedding_policy_contracts",
+      "file": "tests/test_embedding_policy_contracts.py",
+      "recommendation": "KEEP",
+      "value_score": 82.0,
+      "refactoring_complexity": 28.0,
+      "metrics": {
+        "lines_of_code": 123,
+        "num_test_functions": 3,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (82.0/100) with manageable complexity (28.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_enhanced_recommendations",
+      "file": "tests/test_enhanced_recommendations.py",
+      "recommendation": "KEEP",
+      "value_score": 78.0,
+      "refactoring_complexity": 26.0,
+      "metrics": {
+        "lines_of_code": 140,
+        "num_test_functions": 1,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (78.0/100) with manageable complexity (26.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_property_based",
+      "file": "tests/test_property_based.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 297,
+        "num_test_functions": 16,
+        "cyclomatic_complexity": 5,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (40.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_proof_generator",
+      "file": "tests/test_proof_generator.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 294,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 5,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (40.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_structure_verification",
+      "file": "tests/test_structure_verification.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 35.0,
+      "metrics": {
+        "lines_of_code": 179,
+        "num_test_functions": 0,
+        "cyclomatic_complexity": 23,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (35.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_wiring_core",
+      "file": "tests/test_wiring_core.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 36.0,
+      "metrics": {
+        "lines_of_code": 261,
+        "num_test_functions": 23,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_calibration_stability",
+      "file": "tests/test_calibration_stability.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 30.0,
+      "metrics": {
+        "lines_of_code": 177,
+        "num_test_functions": 14,
+        "cyclomatic_complexity": 5,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (30.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_cpp_ingestion",
+      "file": "tests/test_cpp_ingestion.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 40.0,
+      "metrics": {
+        "lines_of_code": 305,
+        "num_test_functions": 16,
+        "cyclomatic_complexity": 5,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (40.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_flux_contracts",
+      "file": "tests/test_flux_contracts.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 36.0,
+      "metrics": {
+        "lines_of_code": 326,
+        "num_test_functions": 25,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_aggregation",
+      "file": "tests/test_aggregation.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 36.0,
+      "metrics": {
+        "lines_of_code": 302,
+        "num_test_functions": 19,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_gold_canario_micro_stress",
+      "file": "tests/test_gold_canario_micro_stress.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 430,
+        "num_test_functions": 33,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_calibration_completeness",
+      "file": "tests/test_calibration_completeness.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 30.0,
+      "metrics": {
+        "lines_of_code": 143,
+        "num_test_functions": 14,
+        "cyclomatic_complexity": 5,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (30.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_runtime_error_fixes",
+      "file": "tests/test_runtime_error_fixes.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 26.0,
+      "metrics": {
+        "lines_of_code": 167,
+        "num_test_functions": 25,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (26.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_infrastructure",
+      "file": "tests/test_infrastructure.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 244,
+        "num_test_functions": 29,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_calibration_context",
+      "file": "tests/test_calibration_context.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 286,
+        "num_test_functions": 20,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_routing_metrics_integration",
+      "file": "tests/test_routing_metrics_integration.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 26.0,
+      "metrics": {
+        "lines_of_code": 106,
+        "num_test_functions": 8,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (26.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_method_sequence_validation",
+      "file": "tests/test_method_sequence_validation.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 28.0,
+      "metrics": {
+        "lines_of_code": 190,
+        "num_test_functions": 11,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (28.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_contracts_comprehensive",
+      "file": "tests/test_contracts_comprehensive.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 265,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_integration_failures",
+      "file": "tests/test_integration_failures.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 242,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_schema_validation",
+      "file": "tests/test_schema_validation.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 36.0,
+      "metrics": {
+        "lines_of_code": 307,
+        "num_test_functions": 13,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_questionnaire_resource_provider",
+      "file": "tests/test_questionnaire_resource_provider.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 30.0,
+      "metrics": {
+        "lines_of_code": 122,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 5,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (30.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_flux_integration",
+      "file": "tests/test_flux_integration.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 36.0,
+      "metrics": {
+        "lines_of_code": 307,
+        "num_test_functions": 21,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_aggregation_validation",
+      "file": "tests/test_aggregation_validation.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 38.0,
+      "metrics": {
+        "lines_of_code": 254,
+        "num_test_functions": 35,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_determinism",
+      "file": "tests/test_determinism.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 26.0,
+      "metrics": {
+        "lines_of_code": 163,
+        "num_test_functions": 16,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (26.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_contracts",
+      "file": "tests/test_contracts.py",
+      "recommendation": "KEEP",
+      "value_score": 75.0,
+      "refactoring_complexity": 36.0,
+      "metrics": {
+        "lines_of_code": 257,
+        "num_test_functions": 26,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_argrouter_optional_backends",
+      "file": "tests/test_argrouter_optional_backends.py",
+      "recommendation": "KEEP",
+      "value_score": 72.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 28,
+        "num_test_functions": 3,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (72.0/100) with manageable complexity (17.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_signal_integration_e2e",
+      "file": "tests/test_signal_integration_e2e.py",
+      "recommendation": "KEEP",
+      "value_score": 72.0,
+      "refactoring_complexity": 26.0,
+      "metrics": {
+        "lines_of_code": 134,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (72.0/100) with manageable complexity (26.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_graph_resolution",
+      "file": "tests/test_graph_resolution.py",
+      "recommendation": "KEEP",
+      "value_score": 72.0,
+      "refactoring_complexity": 19.0,
+      "metrics": {
+        "lines_of_code": 72,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 3,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (72.0/100) with manageable complexity (19.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_contract_snapshots",
+      "file": "tests/test_contract_snapshots.py",
+      "recommendation": "KEEP",
+      "value_score": 68.0,
+      "refactoring_complexity": 15.0,
+      "metrics": {
+        "lines_of_code": 36,
+        "num_test_functions": 1,
+        "cyclomatic_complexity": 4,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (68.0/100) with manageable complexity (15.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_executor_sequences",
+      "file": "tests/test_executor_sequences.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 72,
+        "num_test_functions": 6,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_spc_validation",
+      "file": "tests/test_spc_validation.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 22.0,
+      "metrics": {
+        "lines_of_code": 153,
+        "num_test_functions": 9,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_method_config_loader",
+      "file": "tests/test_method_config_loader.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 22.0,
+      "metrics": {
+        "lines_of_code": 168,
+        "num_test_functions": 16,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 0,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_questionnaire_validation_edge_cases",
+      "file": "tests/test_questionnaire_validation_edge_cases.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 32.0,
+      "metrics": {
+        "lines_of_code": 250,
+        "num_test_functions": 19,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (32.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_spc_adapter",
+      "file": "tests/test_spc_adapter.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 34.0,
+      "metrics": {
+        "lines_of_code": 336,
+        "num_test_functions": 18,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_signal_client",
+      "file": "tests/test_signal_client.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 81,
+        "num_test_functions": 7,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_hash_determinism",
+      "file": "tests/test_hash_determinism.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 34.0,
+      "metrics": {
+        "lines_of_code": 284,
+        "num_test_functions": 24,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_executor_config_cli",
+      "file": "tests/test_executor_config_cli.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 39,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_monitoring",
+      "file": "tests/test_monitoring.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 19.0,
+      "metrics": {
+        "lines_of_code": 97,
+        "num_test_functions": 10,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (19.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_aggregators_optional_monolith",
+      "file": "tests/test_aggregators_optional_monolith.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 41,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_cpp_adapter",
+      "file": "tests/test_cpp_adapter.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 34.0,
+      "metrics": {
+        "lines_of_code": 238,
+        "num_test_functions": 14,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_arg_router",
+      "file": "tests/test_arg_router.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 39,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_questionnaire_validation",
+      "file": "tests/test_questionnaire_validation.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 74,
+        "num_test_functions": 6,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_statistics_guards",
+      "file": "tests/test_statistics_guards.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 56,
+        "num_test_functions": 7,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_schema_gates",
+      "file": "tests/test_schema_gates.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 32.0,
+      "metrics": {
+        "lines_of_code": 206,
+        "num_test_functions": 18,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (32.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_paths_workspace_bounds",
+      "file": "tests/paths/test_paths_workspace_bounds.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 22.0,
+      "metrics": {
+        "lines_of_code": 130,
+        "num_test_functions": 20,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_paths_utils",
+      "file": "tests/paths/test_paths_utils.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 34.0,
+      "metrics": {
+        "lines_of_code": 204,
+        "num_test_functions": 30,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_data_structures",
+      "file": "tests/calibration/test_data_structures.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 34.0,
+      "metrics": {
+        "lines_of_code": 201,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_regression",
+      "file": "tests/calibration/test_regression.py",
+      "recommendation": "KEEP",
+      "value_score": 65.0,
+      "refactoring_complexity": 22.0,
+      "metrics": {
+        "lines_of_code": 199,
+        "num_test_functions": 9,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_macro_score_dict",
+      "file": "tests/test_macro_score_dict.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 13.0,
+      "metrics": {
+        "lines_of_code": 77,
+        "num_test_functions": 3,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_arg_router_expected_type_name",
+      "file": "tests/test_arg_router_expected_type_name.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 15.0,
+      "metrics": {
+        "lines_of_code": 29,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (15.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_cpp_adapter_no_arrow",
+      "file": "tests/test_cpp_adapter_no_arrow.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 13.0,
+      "metrics": {
+        "lines_of_code": 23,
+        "num_test_functions": 3,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_spc_adapter_integration",
+      "file": "tests/test_spc_adapter_integration.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 22.0,
+      "metrics": {
+        "lines_of_code": 127,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (22.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_core_monolith_hash",
+      "file": "tests/test_core_monolith_hash.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 13.0,
+      "metrics": {
+        "lines_of_code": 68,
+        "num_test_functions": 3,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_core_expected_counts",
+      "file": "tests/test_core_expected_counts.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 15.0,
+      "metrics": {
+        "lines_of_code": 38,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (15.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_method_config_loader_integration",
+      "file": "tests/test_method_config_loader_integration.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 13.0,
+      "metrics": {
+        "lines_of_code": 36,
+        "num_test_functions": 3,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 0,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified."
+    },
+    {
+      "name": "test_boot_checks",
+      "file": "tests/operational/test_boot_checks.py",
+      "recommendation": "KEEP",
+      "value_score": 62.0,
+      "refactoring_complexity": 17.0,
+      "metrics": {
+        "lines_of_code": 36,
+        "num_test_functions": 4,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (62.0/100) with manageable complexity (17.0/100). Test provides good coverage."
+    },
+    {
+      "name": "test_canonical_method_catalog",
+      "file": "tests/test_canonical_method_catalog.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 55.0,
+      "metrics": {
+        "lines_of_code": 285,
+        "num_test_functions": 31,
+        "cyclomatic_complexity": 25,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_executor_config_properties",
+      "file": "tests/test_executor_config_properties.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 44.0,
+      "metrics": {
+        "lines_of_code": 213,
+        "num_test_functions": 17,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_enhanced_argument_resolution",
+      "file": "tests/test_enhanced_argument_resolution.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 48.0,
+      "metrics": {
+        "lines_of_code": 278,
+        "num_test_functions": 13,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_gold_canario_integration",
+      "file": "tests/test_gold_canario_integration.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 42.0,
+      "metrics": {
+        "lines_of_code": 392,
+        "num_test_functions": 11,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_gold_canario_micro_bayesian",
+      "file": "tests/test_gold_canario_micro_bayesian.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 54.0,
+      "metrics": {
+        "lines_of_code": 623,
+        "num_test_functions": 27,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (54.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_dependency_management",
+      "file": "tests/test_dependency_management.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 55.0,
+      "metrics": {
+        "lines_of_code": 231,
+        "num_test_functions": 13,
+        "cyclomatic_complexity": 22,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_wiring_e2e",
+      "file": "tests/test_wiring_e2e.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 44.0,
+      "metrics": {
+        "lines_of_code": 319,
+        "num_test_functions": 25,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_gold_canario_meso_reporting",
+      "file": "tests/test_gold_canario_meso_reporting.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 56.0,
+      "metrics": {
+        "lines_of_code": 572,
+        "num_test_functions": 37,
+        "cyclomatic_complexity": 8,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (56.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_signals",
+      "file": "tests/test_signals.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 65.0,
+      "metrics": {
+        "lines_of_code": 521,
+        "num_test_functions": 33,
+        "cyclomatic_complexity": 15,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (65.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_recommendation_coverage",
+      "file": "tests/test_recommendation_coverage.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 62.0,
+      "metrics": {
+        "lines_of_code": 534,
+        "num_test_functions": 10,
+        "cyclomatic_complexity": 11,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (62.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_problem_statement_verification",
+      "file": "tests/test_problem_statement_verification.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 45.0,
+      "metrics": {
+        "lines_of_code": 170,
+        "num_test_functions": 12,
+        "cyclomatic_complexity": 14,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_chunk_execution",
+      "file": "tests/test_chunk_execution.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 48.0,
+      "metrics": {
+        "lines_of_code": 207,
+        "num_test_functions": 12,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_gold_canario_micro_provenance",
+      "file": "tests/test_gold_canario_micro_provenance.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 54.0,
+      "metrics": {
+        "lines_of_code": 529,
+        "num_test_functions": 26,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (54.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_boundaries",
+      "file": "tests/test_boundaries.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 45.0,
+      "metrics": {
+        "lines_of_code": 176,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 29,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_concurrency",
+      "file": "tests/test_concurrency.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 55.0,
+      "metrics": {
+        "lines_of_code": 295,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 21,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_arg_router_extended",
+      "file": "tests/test_arg_router_extended.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 46.0,
+      "metrics": {
+        "lines_of_code": 235,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 8,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (46.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_contract_runtime",
+      "file": "tests/test_contract_runtime.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 42.0,
+      "metrics": {
+        "lines_of_code": 317,
+        "num_test_functions": 27,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_circuit_breaker_stress",
+      "file": "tests/test_circuit_breaker_stress.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 50.0,
+      "metrics": {
+        "lines_of_code": 223,
+        "num_test_functions": 7,
+        "cyclomatic_complexity": 10,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (50.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_executor_monitoring",
+      "file": "tests/test_executor_monitoring.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 48.0,
+      "metrics": {
+        "lines_of_code": 208,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_score_normalization_fix",
+      "file": "tests/test_score_normalization_fix.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 42.0,
+      "metrics": {
+        "lines_of_code": 130,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 11,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_calibration_system",
+      "file": "tests/test_calibration_system.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 44.0,
+      "metrics": {
+        "lines_of_code": 282,
+        "num_test_functions": 17,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_spc_integration_complete",
+      "file": "tests/test_spc_integration_complete.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 48.0,
+      "metrics": {
+        "lines_of_code": 320,
+        "num_test_functions": 11,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_system_audit",
+      "file": "tests/test_system_audit.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 45.0,
+      "metrics": {
+        "lines_of_code": 195,
+        "num_test_functions": 10,
+        "cyclomatic_complexity": 39,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_executor_validation",
+      "file": "tests/test_executor_validation.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 44.0,
+      "metrics": {
+        "lines_of_code": 225,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 7,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_scoring",
+      "file": "tests/test_scoring.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 48.0,
+      "metrics": {
+        "lines_of_code": 423,
+        "num_test_functions": 22,
+        "cyclomatic_complexity": 9,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_paths_no_absolutes",
+      "file": "tests/paths/test_paths_no_absolutes.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 45.0,
+      "metrics": {
+        "lines_of_code": 144,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 43,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_30_executors",
+      "file": "tests/integration/test_30_executors.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 55.0,
+      "metrics": {
+        "lines_of_code": 414,
+        "num_test_functions": 20,
+        "cyclomatic_complexity": 17,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_layer_requirements",
+      "file": "tests/calibration/test_layer_requirements.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 42.0,
+      "metrics": {
+        "lines_of_code": 248,
+        "num_test_functions": 19,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 0,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve. Issues: related source code modified."
+    },
+    {
+      "name": "test_gap0_complete",
+      "file": "tests/calibration/test_gap0_complete.py",
+      "recommendation": "REFACTOR",
+      "value_score": 85.0,
+      "refactoring_complexity": 55.0,
+      "metrics": {
+        "lines_of_code": 241,
+        "num_test_functions": 15,
+        "cyclomatic_complexity": 25,
+        "days_since_modification": 0,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_signature_validation",
+      "file": "tests/test_signature_validation.py",
+      "recommendation": "REFACTOR",
+      "value_score": 75.0,
+      "refactoring_complexity": 42.0,
+      "metrics": {
+        "lines_of_code": 109,
+        "num_test_functions": 5,
+        "cyclomatic_complexity": 6,
+        "days_since_modification": 1,
+        "imports_valid": false,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [
+          "saaaaaa.validation.signature_validator",
+          "saaaaaa.validation.signature_validator"
+        ],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve. Issues: 2 missing imports."
+    },
+    {
+      "name": "test_imports",
+      "file": "tests/test_imports.py",
+      "recommendation": "REFACTOR",
+      "value_score": 75.0,
+      "refactoring_complexity": 47.0,
+      "metrics": {
+        "lines_of_code": 117,
+        "num_test_functions": 6,
+        "cyclomatic_complexity": 11,
+        "days_since_modification": 1,
+        "imports_valid": false,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [
+          "saaaaaa.validation.signature_validator"
+        ],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (75.0/100) justifies refactoring despite high complexity (47.0/100). Important test to preserve. Issues: 1 missing imports."
+    },
+    {
+      "name": "test_strategic_wiring",
+      "file": "tests/test_strategic_wiring.py",
+      "recommendation": "REFACTOR",
+      "value_score": 65.0,
+      "refactoring_complexity": 70.0,
+      "metrics": {
+        "lines_of_code": 284,
+        "num_test_functions": 18,
+        "cyclomatic_complexity": 14,
+        "days_since_modification": 1,
+        "imports_valid": false,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [
+          "saaaaaa.validation.validation_engine",
+          "saaaaaa.validation.validation_engine",
+          "saaaaaa.validation.validation_engine"
+        ],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) justifies refactoring despite high complexity (70.0/100). Important test to preserve. Issues: 3 missing imports."
+    },
+    {
+      "name": "test_gold_canario_macro_reporting",
+      "file": "tests/test_gold_canario_macro_reporting.py",
+      "recommendation": "REFACTOR",
+      "value_score": 65.0,
+      "refactoring_complexity": 44.0,
+      "metrics": {
+        "lines_of_code": 602,
+        "num_test_functions": 44,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "High value (65.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve."
+    },
+    {
+      "name": "test_executor_logging",
+      "file": "tests/test_executor_logging.py",
+      "recommendation": "REFACTOR",
+      "value_score": 58.0,
+      "refactoring_complexity": 13.0,
+      "metrics": {
+        "lines_of_code": 54,
+        "num_test_functions": 2,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": true
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "Moderate value (58.0/100) with reasonable complexity (13.0/100). Worth updating. Issues: related source code modified."
+    },
+    {
+      "name": "test_async_timeout",
+      "file": "tests/test_async_timeout.py",
+      "recommendation": "REFACTOR",
+      "value_score": 55.0,
+      "refactoring_complexity": 12.0,
+      "metrics": {
+        "lines_of_code": 147,
+        "num_test_functions": 0,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "Moderate value (55.0/100) with reasonable complexity (12.0/100). Worth updating."
+    },
+    {
+      "name": "test_phase_timeout",
+      "file": "tests/test_phase_timeout.py",
+      "recommendation": "REFACTOR",
+      "value_score": 55.0,
+      "refactoring_complexity": 7.0,
+      "metrics": {
+        "lines_of_code": 97,
+        "num_test_functions": 0,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "Moderate value (55.0/100) with reasonable complexity (7.0/100). Worth updating."
+    },
+    {
+      "name": "test_circuit_breaker_async",
+      "file": "tests/test_circuit_breaker_async.py",
+      "recommendation": "REFACTOR",
+      "value_score": 55.0,
+      "refactoring_complexity": 9.0,
+      "metrics": {
+        "lines_of_code": 52,
+        "num_test_functions": 0,
+        "cyclomatic_complexity": 2,
+        "days_since_modification": 1,
+        "imports_valid": true,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "Moderate value (55.0/100) with reasonable complexity (9.0/100). Worth updating."
+    },
+    {
+      "name": "test_questionnaire_and_rubric",
+      "file": "tests/data/test_questionnaire_and_rubric.py",
+      "recommendation": "REFACTOR",
+      "value_score": 55.0,
+      "refactoring_complexity": 22.0,
+      "metrics": {
+        "lines_of_code": 71,
+        "num_test_functions": 6,
+        "cyclomatic_complexity": 1,
+        "days_since_modification": 1,
+        "imports_valid": false,
+        "related_source_modified": false
+      },
+      "issues": {
+        "missing_imports": [
+          "saaaaaa.validation.schema_validator"
+        ],
+        "import_errors": [],
+        "execution_errors": []
+      },
+      "justification": "Moderate value (55.0/100) with reasonable complexity (22.0/100). Worth updating. Issues: 1 missing imports."
+    }
+  ]
+}
