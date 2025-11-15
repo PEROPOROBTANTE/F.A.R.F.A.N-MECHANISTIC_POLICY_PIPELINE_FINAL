@@ -86,7 +86,7 @@ scikit-learn==1.5.2
 tensorflow==2.18.0
 # torch 2.4.0 with compatible torchvision 0.19.0
 # Note: torch 2.8.0 was incompatible with torchvision 0.19.0
-torch==2.4.0
+torch==2.8.0
 torchvision==0.19.0
 
 # ============================================================================
