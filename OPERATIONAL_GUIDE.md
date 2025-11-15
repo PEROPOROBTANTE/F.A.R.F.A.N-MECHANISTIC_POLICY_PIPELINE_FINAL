@@ -270,13 +270,14 @@ from saaaaaa.analysis.teoria_cambio import TeoriaCambio, AdvancedDAGValidator
 from saaaaaa.analysis.dereck_beach import CDAFFramework, BeachEvidentialTest
 from saaaaaa.analysis.bayesian_multilevel_system import BayesianMultilevelScorer
 
-# Processing modules - CPP Ingestion (CANONICAL)
-from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
-from saaaaaa.utils.cpp_adapter import CPPAdapter
-from saaaaaa.processing.policy_processor import IndustrialPolicyProcessor
+# Processing modules - SPC Ingestion (CANONICAL)
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+from saaaaaa.utils.spc_adapter import SPCAdapter
+from saaaaaa.processing.policy_processor import IndustrialPolicyProcessor  # LEGACY - Use SPC instead
 from saaaaaa.processing.embedding_policy import PolicyAnalysisEmbedder
 
-# Legacy processing (DEPRECATED - Use cpp_ingestion instead)
+# Legacy processing (DEPRECATED - Use spc_ingestion instead)
+# from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline  # OLD API
 # from saaaaaa.processing.document_ingestion import DocumentIngestionEngine  # DEPRECATED
 
 # Utilities
@@ -440,15 +441,20 @@ python3 run_complete_analysis_plan1.py \
 
 # Or use the CPP ingestion directly
 python3 -c "
+import asyncio
 from pathlib import Path
-from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
 
-pipeline = CPPIngestionPipeline()
-outcome = pipeline.ingest(
-    Path('data/input_plans/plan_municipal_2024.pdf'),
-    Path('data/cpp_output/')
-)
-print(f'CPP ingestion completed: {outcome.success}')
+async def test():
+    pipeline = CPPIngestionPipeline()
+    cpp = await pipeline.process(
+        document_path=Path('data/input_plans/plan_municipal_2024.pdf'),
+        document_id='plan_municipal_2024',
+        max_chunks=50
+    )
+    print(f'SPC ingestion completed: {len(cpp.chunk_graph.chunks)} chunks')
+
+asyncio.run(test())
 print(f'Quality metrics: {outcome.quality_metrics}')
 "
 

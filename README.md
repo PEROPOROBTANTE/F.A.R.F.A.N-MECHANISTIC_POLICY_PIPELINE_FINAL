@@ -868,14 +868,19 @@ python -m saaaaaa.core.orchestrator \
 Cada fase del pipeline produce un hash BLAKE3 acumulativo:
 
 ```python
-from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
 
 pipeline = CPPIngestionPipeline()
-outcome = pipeline.ingest(Path("plan.pdf"), Path("output/"))
+cpp = await pipeline.process(
+    document_path=Path("plan.pdf"),
+    document_id="plan",
+    max_chunks=50
+)
 
-# Hashes por fase
-for phase_num, phase_hash in enumerate(outcome.phase_hashes, start=1):
-    print(f"Phase {phase_num}: {phase_hash}")
+# Access quality metrics
+if cpp.quality_metrics:
+    print(f"Provenance: {cpp.quality_metrics.provenance_completeness:.2%}")
+    print(f"Coherence: {cpp.quality_metrics.structural_consistency:.2%}")
 ```
 
 **Reference Hashes** (plan_golden.pdf):
