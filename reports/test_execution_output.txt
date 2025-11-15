@@ -1,0 +1,263 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.1, pluggy-1.6.0 -- /root/.local/share/uv/tools/pytest/bin/python
+cachedir: .pytest_cache
+rootdir: /home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_
+configfile: pyproject.toml
+collecting ... collected 231 items / 10 errors
+
+==================================== ERRORS ====================================
+_________ ERROR collecting tests/data/test_questionnaire_and_rubric.py _________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/data/test_questionnaire_and_rubric.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/data/test_questionnaire_and_rubric.py:6: in <module>
+    from saaaaaa.utils.validation.schema_validator import SchemaValidator
+src/saaaaaa/utils/validation/__init__.py:3: in <module>
+    from .aggregation_models import (
+src/saaaaaa/utils/validation/aggregation_models.py:8: in <module>
+    from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+E   ModuleNotFoundError: No module named 'pydantic'
+___________ ERROR collecting tests/integration/test_30_executors.py ____________
+invalid method signature
+
+During handling of the above exception, another exception occurred:
+Could not determine arguments of <bound method TestExecutorArchitecture.dimension_names of <tests.integration.test_30_executors.TestExecutorArchitecture object at 0x7ebbbd781550>>: invalid method signature
+___________ ERROR collecting tests/integration/test_30_executors.py ____________
+invalid method signature
+
+During handling of the above exception, another exception occurred:
+Could not determine arguments of <bound method TestExecutorIntegrationWithRealData.sample_policy_data of <tests.integration.test_30_executors.TestExecutorIntegrationWithRealData object at 0x7ebbbd728390>>: invalid method signature
+____________ ERROR collecting tests/test_aggregation_validation.py _____________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_aggregation_validation.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_aggregation_validation.py:8: in <module>
+    from pydantic import ValidationError
+E   ModuleNotFoundError: No module named 'pydantic'
+__________________ ERROR collecting tests/test_arg_router.py ___________________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_arg_router.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_arg_router.py:6: in <module>
+    from saaaaaa.core.orchestrator.arg_router import ArgRouter, ArgumentValidationError
+src/saaaaaa/core/orchestrator/__init__.py:141: in <module>
+    from .core import (
+src/saaaaaa/core/orchestrator/core.py:31: in <module>
+    from ...analysis.recommendation_engine import RecommendationEngine
+src/saaaaaa/analysis/recommendation_engine.py:29: in <module>
+    import jsonschema
+E   ModuleNotFoundError: No module named 'jsonschema'
+_________ ERROR collecting tests/test_arg_router_expected_type_name.py _________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_arg_router_expected_type_name.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_arg_router_expected_type_name.py:8: in <module>
+    from saaaaaa.core.orchestrator.arg_router import PayloadDriftMonitor
+src/saaaaaa/core/orchestrator/__init__.py:141: in <module>
+    from .core import (
+src/saaaaaa/core/orchestrator/core.py:31: in <module>
+    from ...analysis.recommendation_engine import RecommendationEngine
+src/saaaaaa/analysis/recommendation_engine.py:29: in <module>
+    import jsonschema
+E   ModuleNotFoundError: No module named 'jsonschema'
+______________ ERROR collecting tests/test_arg_router_extended.py ______________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_arg_router_extended.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_arg_router_extended.py:12: in <module>
+    from saaaaaa.core.orchestrator.arg_router import (
+src/saaaaaa/core/orchestrator/__init__.py:141: in <module>
+    from .core import (
+src/saaaaaa/core/orchestrator/core.py:31: in <module>
+    from ...analysis.recommendation_engine import RecommendationEngine
+src/saaaaaa/analysis/recommendation_engine.py:29: in <module>
+    import jsonschema
+E   ModuleNotFoundError: No module named 'jsonschema'
+_________________ ERROR collecting tests/test_async_timeout.py _________________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_async_timeout.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_async_timeout.py:10: in <module>
+    from saaaaaa.core.orchestrator.core import (
+src/saaaaaa/core/orchestrator/__init__.py:141: in <module>
+    from .core import (
+src/saaaaaa/core/orchestrator/core.py:31: in <module>
+    from ...analysis.recommendation_engine import RecommendationEngine
+src/saaaaaa/analysis/recommendation_engine.py:29: in <module>
+    import jsonschema
+E   ModuleNotFoundError: No module named 'jsonschema'
+___________ ERROR collecting tests/test_calibration_completeness.py ____________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_calibration_completeness.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_calibration_completeness.py:13: in <module>
+    from saaaaaa.core.orchestrator.calibration_registry import (
+src/saaaaaa/core/orchestrator/__init__.py:141: in <module>
+    from .core import (
+src/saaaaaa/core/orchestrator/core.py:31: in <module>
+    from ...analysis.recommendation_engine import RecommendationEngine
+src/saaaaaa/analysis/recommendation_engine.py:29: in <module>
+    import jsonschema
+E   ModuleNotFoundError: No module named 'jsonschema'
+______________ ERROR collecting tests/test_calibration_context.py ______________
+ImportError while importing test module '/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_/tests/test_calibration_context.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule
+    mod = import_path(
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/root/.local/share/uv/tools/pytest/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module
+    exec(co, module.__dict__)
+tests/test_calibration_context.py:5: in <module>
+    from src.saaaaaa.core.orchestrator.calibration_registry import (
+src/saaaaaa/core/orchestrator/__init__.py:141: in <module>
+    from .core import (
+src/saaaaaa/core/orchestrator/core.py:31: in <module>
+    from ...analysis.recommendation_engine import RecommendationEngine
+src/saaaaaa/analysis/recommendation_engine.py:29: in <module>
+    import jsonschema
+E   ModuleNotFoundError: No module named 'jsonschema'
+=========================== short test summary info ============================
+ERROR tests/data/test_questionnaire_and_rubric.py
+ERROR tests/integration/test_30_executors.py::TestExecutorArchitecture - Failed: Could not determine arguments of <bound method TestExecutorArchitecture.dimension_names of <tests.integration.test_30_executors.TestExecutorArchitecture object at 0x7ebbbd781550>>: invalid method signature
+ERROR tests/integration/test_30_executors.py::TestExecutorIntegrationWithRealData - Failed: Could not determine arguments of <bound method TestExecutorIntegrationWithRealData.sample_policy_data of <tests.integration.test_30_executors.TestExecutorIntegrationWithRealData object at 0x7ebbbd728390>>: invalid method signature
+ERROR tests/test_aggregation_validation.py
+ERROR tests/test_arg_router.py
+ERROR tests/test_arg_router_expected_type_name.py
+ERROR tests/test_arg_router_extended.py
+ERROR tests/test_async_timeout.py
+ERROR tests/test_calibration_completeness.py
+ERROR tests/test_calibration_context.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 10 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+============================== 10 errors in 1.22s ==============================

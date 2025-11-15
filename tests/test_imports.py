@@ -75,7 +75,7 @@ def test_qmcm_hooks_backward_compatibility():
 
 def test_signature_validator_backward_compatibility():
     """Test that signature_validator has backward-compatible aliases"""
-    import saaaaaa.validation.signature_validator as signature_validator
+    import saaaaaa.utils.signature_validator as signature_validator
 
     # Check that both old and new names work
     assert hasattr(signature_validator, 'SignatureMismatch')

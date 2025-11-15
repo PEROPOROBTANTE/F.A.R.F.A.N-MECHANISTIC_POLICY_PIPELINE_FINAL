@@ -1,0 +1,534 @@
+================================================================================
+TEST COVERAGE GAP ANALYSIS REPORT
+================================================================================
+
+SUMMARY BY SEVERITY
+--------------------------------------------------------------------------------
+CRITICAL    :  37 gaps
+HIGH        :  20 gaps
+MEDIUM      :  27 gaps
+LOW         :   0 gaps
+
+SUMMARY BY CATEGORY
+--------------------------------------------------------------------------------
+E2E_WORKFLOW        :   4 gaps
+ERROR_HANDLING      :   6 gaps
+INTEGRATION         :   4 gaps
+UNTESTED_MODULE     :  70 gaps
+
+
+================================================================================
+CRITICAL PRIORITY GAPS: 37
+================================================================================
+
+[UNTESTED_MODULE] core.calibration.chain_layer
+  Description: Module 'core.calibration.chain_layer' has no associated tests
+  Potential Impact: Bugs in core.calibration.chain_layer may go undetected until production
+  Proposed Test: test_chain_layer
+  Test File: tests/test_core_calibration_chain_layer.py
+
+[UNTESTED_MODULE] core.calibration.choquet_aggregator
+  Description: Module 'core.calibration.choquet_aggregator' has no associated tests
+  Potential Impact: Bugs in core.calibration.choquet_aggregator may go undetected until production
+  Proposed Test: test_choquet_aggregator
+  Test File: tests/test_core_calibration_choquet_aggregator.py
+
+[UNTESTED_MODULE] core.calibration.compatibility
+  Description: Module 'core.calibration.compatibility' has no associated tests
+  Potential Impact: Bugs in core.calibration.compatibility may go undetected until production
+  Proposed Test: test_compatibility
+  Test File: tests/test_core_calibration_compatibility.py
+
+[UNTESTED_MODULE] core.calibration.congruence_layer
+  Description: Module 'core.calibration.congruence_layer' has no associated tests
+  Potential Impact: Bugs in core.calibration.congruence_layer may go undetected until production
+  Proposed Test: test_congruence_layer
+  Test File: tests/test_core_calibration_congruence_layer.py
+
+[UNTESTED_MODULE] core.calibration.intrinsic_loader
+  Description: Module 'core.calibration.intrinsic_loader' has no associated tests
+  Potential Impact: Bugs in core.calibration.intrinsic_loader may go undetected until production
+  Proposed Test: test_intrinsic_loader
+  Test File: tests/test_core_calibration_intrinsic_loader.py
+
+[UNTESTED_MODULE] core.calibration.layer_requirements
+  Description: Module 'core.calibration.layer_requirements' has no associated tests
+  Potential Impact: Bugs in core.calibration.layer_requirements may go undetected until production
+  Proposed Test: test_layer_requirements
+  Test File: tests/test_core_calibration_layer_requirements.py
+
+[UNTESTED_MODULE] core.calibration.meta_layer
+  Description: Module 'core.calibration.meta_layer' has no associated tests
+  Potential Impact: Bugs in core.calibration.meta_layer may go undetected until production
+  Proposed Test: test_meta_layer
+  Test File: tests/test_core_calibration_meta_layer.py
+
+[UNTESTED_MODULE] core.calibration.orchestrator
+  Description: Module 'core.calibration.orchestrator' has no associated tests
+  Potential Impact: Bugs in core.calibration.orchestrator may go undetected until production
+  Proposed Test: test_orchestrator
+  Test File: tests/test_core_calibration_orchestrator.py
+
+[UNTESTED_MODULE] core.calibration.unit_layer
+  Description: Module 'core.calibration.unit_layer' has no associated tests
+  Potential Impact: Bugs in core.calibration.unit_layer may go undetected until production
+  Proposed Test: test_unit_layer
+  Test File: tests/test_core_calibration_unit_layer.py
+
+[UNTESTED_MODULE] core.canonical_notation
+  Description: Module 'core.canonical_notation' has no associated tests
+  Potential Impact: Bugs in core.canonical_notation may go undetected until production
+  Proposed Test: test_canonical_notation
+  Test File: tests/test_core_canonical_notation.py
+
+[UNTESTED_MODULE] core.contracts
+  Description: Module 'core.contracts' has no associated tests
+  Potential Impact: Bugs in core.contracts may go undetected until production
+  Proposed Test: test_contracts
+  Test File: tests/test_core_contracts.py
+
+[UNTESTED_MODULE] core.layer_coexistence
+  Description: Module 'core.layer_coexistence' has no associated tests
+  Potential Impact: Bugs in core.layer_coexistence may go undetected until production
+  Proposed Test: test_layer_coexistence
+  Test File: tests/test_core_layer_coexistence.py
+
+[UNTESTED_MODULE] core.layer_influence_model
+  Description: Module 'core.layer_influence_model' has no associated tests
+  Potential Impact: Bugs in core.layer_influence_model may go undetected until production
+  Proposed Test: test_layer_influence_model
+  Test File: tests/test_core_layer_influence_model.py
+
+[UNTESTED_MODULE] core.orchestrator.advanced_module_config
+  Description: Module 'core.orchestrator.advanced_module_config' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.advanced_module_config may go undetected until production
+  Proposed Test: test_advanced_module_config
+  Test File: tests/test_core_orchestrator_advanced_module_config.py
+
+[UNTESTED_MODULE] core.orchestrator.catalogo_completo_canonico
+  Description: Module 'core.orchestrator.catalogo_completo_canonico' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.catalogo_completo_canonico may go undetected until production
+  Proposed Test: test_catalogo_completo_canonico
+  Test File: tests/test_core_orchestrator_catalogo_completo_canonico.py
+
+[UNTESTED_MODULE] core.orchestrator.choreographer
+  Description: Module 'core.orchestrator.choreographer' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.choreographer may go undetected until production
+  Proposed Test: test_choreographer
+  Test File: tests/test_core_orchestrator_choreographer.py
+
+[UNTESTED_MODULE] core.orchestrator.contract_loader
+  Description: Module 'core.orchestrator.contract_loader' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.contract_loader may go undetected until production
+  Proposed Test: test_contract_loader
+  Test File: tests/test_core_orchestrator_contract_loader.py
+
+[UNTESTED_MODULE] core.orchestrator.core_module_factory
+  Description: Module 'core.orchestrator.core_module_factory' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.core_module_factory may go undetected until production
+  Proposed Test: test_core_module_factory
+  Test File: tests/test_core_orchestrator_core_module_factory.py
+
+[UNTESTED_MODULE] core.orchestrator.evidence_registry
+  Description: Module 'core.orchestrator.evidence_registry' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.evidence_registry may go undetected until production
+  Proposed Test: test_evidence_registry
+  Test File: tests/test_core_orchestrator_evidence_registry.py
+
+[UNTESTED_MODULE] core.orchestrator.questionnaire
+  Description: Module 'core.orchestrator.questionnaire' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.questionnaire may go undetected until production
+  Proposed Test: test_questionnaire
+  Test File: tests/test_core_orchestrator_questionnaire.py
+
+[UNTESTED_MODULE] core.orchestrator.signal_consumption
+  Description: Module 'core.orchestrator.signal_consumption' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.signal_consumption may go undetected until production
+  Proposed Test: test_signal_consumption
+  Test File: tests/test_core_orchestrator_signal_consumption.py
+
+[UNTESTED_MODULE] core.orchestrator.signal_loader
+  Description: Module 'core.orchestrator.signal_loader' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.signal_loader may go undetected until production
+  Proposed Test: test_signal_loader
+  Test File: tests/test_core_orchestrator_signal_loader.py
+
+[UNTESTED_MODULE] core.orchestrator.verification_manifest
+  Description: Module 'core.orchestrator.verification_manifest' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.verification_manifest may go undetected until production
+  Proposed Test: test_verification_manifest
+  Test File: tests/test_core_orchestrator_verification_manifest.py
+
+[UNTESTED_MODULE] core.orchestrator.versions
+  Description: Module 'core.orchestrator.versions' has no associated tests
+  Potential Impact: Bugs in core.orchestrator.versions may go undetected until production
+  Proposed Test: test_versions
+  Test File: tests/test_core_orchestrator_versions.py
+
+[UNTESTED_MODULE] core.ports
+  Description: Module 'core.ports' has no associated tests
+  Potential Impact: Bugs in core.ports may go undetected until production
+  Proposed Test: test_ports
+  Test File: tests/test_core_ports.py
+
+[UNTESTED_MODULE] processing.factory
+  Description: Module 'processing.factory' has no associated tests
+  Potential Impact: Bugs in processing.factory may go undetected until production
+  Proposed Test: test_factory
+  Test File: tests/test_processing_factory.py
+
+[UNTESTED_MODULE] processing.semantic_chunking_policy
+  Description: Module 'processing.semantic_chunking_policy' has no associated tests
+  Potential Impact: Bugs in processing.semantic_chunking_policy may go undetected until production
+  Proposed Test: test_semantic_chunking_policy
+  Test File: tests/test_processing_semantic_chunking_policy.py
+
+[UNTESTED_MODULE] processing.spc_ingestion.quality_gates
+  Description: Module 'processing.spc_ingestion.quality_gates' has no associated tests
+  Potential Impact: Bugs in processing.spc_ingestion.quality_gates may go undetected until production
+  Proposed Test: test_quality_gates
+  Test File: tests/test_processing_spc_ingestion_quality_gates.py
+
+[UNTESTED_MODULE] processing.spc_ingestion.structural
+  Description: Module 'processing.spc_ingestion.structural' has no associated tests
+  Potential Impact: Bugs in processing.spc_ingestion.structural may go undetected until production
+  Proposed Test: test_structural
+  Test File: tests/test_processing_spc_ingestion_structural.py
+
+[UNTESTED_MODULE] utils.core_contracts
+  Description: Module 'utils.core_contracts' has no associated tests
+  Potential Impact: Bugs in utils.core_contracts may go undetected until production
+  Proposed Test: test_core_contracts
+  Test File: tests/test_utils_core_contracts.py
+
+[INTEGRATION] calibration
+  Description: Missing end-to-end calibration system integration test
+  Potential Impact: Calibration pipeline may fail when components are combined, causing incorrect policy analysis results
+  Proposed Test: test_calibration_e2e_integration
+  Test File: tests/integration/test_calibration_e2e.py
+
+[INTEGRATION] orchestrator
+  Description: Missing stress test for concurrent multi-executor coordination
+  Potential Impact: Race conditions or deadlocks may occur when multiple executors run in parallel, causing pipeline failures
+  Proposed Test: test_concurrent_executor_coordination
+  Test File: tests/integration/test_executor_concurrency.py
+
+[INTEGRATION] processing.cpp_ingestion
+  Description: Missing end-to-end provenance chain validation
+  Potential Impact: Provenance data may be corrupted across pipeline stages, violating audit trail requirements
+  Proposed Test: test_provenance_chain_integrity_e2e
+  Test File: tests/integration/test_provenance_integrity.py
+
+[ERROR_HANDLING] processing
+  Description: Missing tests for memory exhaustion with large documents
+  Potential Impact: Pipeline may crash when processing very large development plans (>500 pages), losing all progress
+  Proposed Test: test_large_document_memory_management
+  Test File: tests/test_memory_limits.py
+
+[ERROR_HANDLING] core.orchestrator.questionnaire
+  Description: Missing tests for malformed questionnaire JSON handling
+  Potential Impact: Corrupted questionnaire file may cause pipeline to fail with unclear error messages
+  Proposed Test: test_questionnaire_schema_validation
+  Test File: tests/test_questionnaire_error_handling.py
+
+[E2E_WORKFLOW] full_pipeline
+  Description: Missing end-to-end test with real municipal development plan
+  Potential Impact: Pipeline may fail on real data despite passing synthetic tests, causing production failures
+  Proposed Test: test_real_plan_e2e_execution
+  Test File: tests/integration/test_real_plan_e2e.py
+
+[E2E_WORKFLOW] full_pipeline
+  Description: Missing test for deterministic execution across different platforms
+  Potential Impact: Analysis results may differ between development and production, violating reproducibility requirements
+  Proposed Test: test_cross_platform_determinism
+  Test File: tests/test_platform_determinism.py
+
+================================================================================
+HIGH PRIORITY GAPS: 20
+================================================================================
+
+[UNTESTED_MODULE] analysis.Analyzer_one
+  Description: Module 'analysis.Analyzer_one' has no associated tests
+  Potential Impact: Bugs in analysis.Analyzer_one may go undetected until production
+  Proposed Test: test_Analyzer_one
+  Test File: tests/test_analysis_Analyzer_one.py
+
+[UNTESTED_MODULE] analysis.bayesian_multilevel_system
+  Description: Module 'analysis.bayesian_multilevel_system' has no associated tests
+  Potential Impact: Bugs in analysis.bayesian_multilevel_system may go undetected until production
+  Proposed Test: test_bayesian_multilevel_system
+  Test File: tests/test_analysis_bayesian_multilevel_system.py
+
+[UNTESTED_MODULE] analysis.contradiction_deteccion
+  Description: Module 'analysis.contradiction_deteccion' has no associated tests
+  Potential Impact: Bugs in analysis.contradiction_deteccion may go undetected until production
+  Proposed Test: test_contradiction_deteccion
+  Test File: tests/test_analysis_contradiction_deteccion.py
+
+[UNTESTED_MODULE] analysis.enhance_recommendation_rules
+  Description: Module 'analysis.enhance_recommendation_rules' has no associated tests
+  Potential Impact: Bugs in analysis.enhance_recommendation_rules may go undetected until production
+  Proposed Test: test_enhance_recommendation_rules
+  Test File: tests/test_analysis_enhance_recommendation_rules.py
+
+[UNTESTED_MODULE] analysis.factory
+  Description: Module 'analysis.factory' has no associated tests
+  Potential Impact: Bugs in analysis.factory may go undetected until production
+  Proposed Test: test_factory
+  Test File: tests/test_analysis_factory.py
+
+[UNTESTED_MODULE] analysis.macro_prompts
+  Description: Module 'analysis.macro_prompts' has no associated tests
+  Potential Impact: Bugs in analysis.macro_prompts may go undetected until production
+  Proposed Test: test_macro_prompts
+  Test File: tests/test_analysis_macro_prompts.py
+
+[UNTESTED_MODULE] analysis.micro_prompts
+  Description: Module 'analysis.micro_prompts' has no associated tests
+  Potential Impact: Bugs in analysis.micro_prompts may go undetected until production
+  Proposed Test: test_micro_prompts
+  Test File: tests/test_analysis_micro_prompts.py
+
+[UNTESTED_MODULE] analysis.report_assembly
+  Description: Module 'analysis.report_assembly' has no associated tests
+  Potential Impact: Bugs in analysis.report_assembly may go undetected until production
+  Proposed Test: test_report_assembly
+  Test File: tests/test_analysis_report_assembly.py
+
+[UNTESTED_MODULE] analysis.teoria_cambio
+  Description: Module 'analysis.teoria_cambio' has no associated tests
+  Potential Impact: Bugs in analysis.teoria_cambio may go undetected until production
+  Proposed Test: test_teoria_cambio
+  Test File: tests/test_analysis_teoria_cambio.py
+
+[UNTESTED_MODULE] utils.enhanced_contracts
+  Description: Module 'utils.enhanced_contracts' has no associated tests
+  Potential Impact: Bugs in utils.enhanced_contracts may go undetected until production
+  Proposed Test: test_enhanced_contracts
+  Test File: tests/test_utils_enhanced_contracts.py
+
+[UNTESTED_MODULE] utils.validation.architecture_validator
+  Description: Module 'utils.validation.architecture_validator' has no associated tests
+  Potential Impact: Bugs in utils.validation.architecture_validator may go undetected until production
+  Proposed Test: test_architecture_validator
+  Test File: tests/test_utils_validation_architecture_validator.py
+
+[UNTESTED_MODULE] utils.validation.contract_logger
+  Description: Module 'utils.validation.contract_logger' has no associated tests
+  Potential Impact: Bugs in utils.validation.contract_logger may go undetected until production
+  Proposed Test: test_contract_logger
+  Test File: tests/test_utils_validation_contract_logger.py
+
+[UNTESTED_MODULE] utils.validation.golden_rule
+  Description: Module 'utils.validation.golden_rule' has no associated tests
+  Potential Impact: Bugs in utils.validation.golden_rule may go undetected until production
+  Proposed Test: test_golden_rule
+  Test File: tests/test_utils_validation_golden_rule.py
+
+[UNTESTED_MODULE] utils.validation.predicates
+  Description: Module 'utils.validation.predicates' has no associated tests
+  Potential Impact: Bugs in utils.validation.predicates may go undetected until production
+  Proposed Test: test_predicates
+  Test File: tests/test_utils_validation_predicates.py
+
+[INTEGRATION] spc_causal_bridge
+  Description: Missing integration test for SPC to causal analysis workflow
+  Potential Impact: Data may be lost or corrupted when transitioning from SPC ingestion to causal analysis
+  Proposed Test: test_spc_to_analysis_integration
+  Test File: tests/integration/test_spc_analysis_bridge.py
+
+[ERROR_HANDLING] processing.document_ingestion
+  Description: Missing tests for corrupted/malformed PDF handling
+  Potential Impact: System may crash or produce incorrect results when processing malformed PDFs from municipalities
+  Proposed Test: test_malformed_pdf_handling
+  Test File: tests/test_document_ingestion_errors.py
+
+[ERROR_HANDLING] core.orchestrator.signals
+  Description: Missing tests for network timeout and retry logic
+  Potential Impact: Signal client may fail silently or retry indefinitely, causing pipeline hangs
+  Proposed Test: test_signal_client_network_failures
+  Test File: tests/test_signal_client_resilience.py
+
+[E2E_WORKFLOW] orchestrator
+  Description: Missing test for batch processing multiple plans concurrently
+  Potential Impact: Batch processing may cause resource contention or data corruption when analyzing multiple plans
+  Proposed Test: test_batch_plan_processing
+  Test File: tests/integration/test_batch_processing.py
+
+[E2E_WORKFLOW] analysis.report_assembly
+  Description: Missing test for complete report generation from analysis results
+  Potential Impact: Reports may be incomplete or malformed, missing critical policy recommendations
+  Proposed Test: test_complete_report_assembly
+  Test File: tests/test_report_assembly_complete.py
+
+[ERROR_HANDLING] analysis.bayesian_multilevel_system
+  Description: Missing tests for edge cases in Bayesian scoring (zero evidence, conflicting evidence)
+  Potential Impact: Bayesian scores may be NaN or Inf in edge cases, causing downstream failures
+  Proposed Test: test_bayesian_scoring_edge_cases
+  Test File: tests/test_bayesian_edge_cases.py
+
+================================================================================
+MEDIUM PRIORITY GAPS: 27
+================================================================================
+
+[UNTESTED_MODULE] api.api_server
+  Description: Module 'api.api_server' has no associated tests
+  Potential Impact: Bugs in api.api_server may go undetected until production
+  Proposed Test: test_api_server
+  Test File: tests/test_api_api_server.py
+
+[UNTESTED_MODULE] api.signals_service
+  Description: Module 'api.signals_service' has no associated tests
+  Potential Impact: Bugs in api.signals_service may go undetected until production
+  Proposed Test: test_signals_service
+  Test File: tests/test_api_signals_service.py
+
+[UNTESTED_MODULE] audit.audit_system
+  Description: Module 'audit.audit_system' has no associated tests
+  Potential Impact: Bugs in audit.audit_system may go undetected until production
+  Proposed Test: test_audit_system
+  Test File: tests/test_audit_audit_system.py
+
+[UNTESTED_MODULE] compat.lazy_deps
+  Description: Module 'compat.lazy_deps' has no associated tests
+  Potential Impact: Bugs in compat.lazy_deps may go undetected until production
+  Proposed Test: test_lazy_deps
+  Test File: tests/test_compat_lazy_deps.py
+
+[UNTESTED_MODULE] compat.native_check
+  Description: Module 'compat.native_check' has no associated tests
+  Potential Impact: Bugs in compat.native_check may go undetected until production
+  Proposed Test: test_native_check
+  Test File: tests/test_compat_native_check.py
+
+[UNTESTED_MODULE] observability.opentelemetry_integration
+  Description: Module 'observability.opentelemetry_integration' has no associated tests
+  Potential Impact: Bugs in observability.opentelemetry_integration may go undetected until production
+  Proposed Test: test_opentelemetry_integration
+  Test File: tests/test_observability_opentelemetry_integration.py
+
+[UNTESTED_MODULE] optimization.rl_strategy
+  Description: Module 'optimization.rl_strategy' has no associated tests
+  Potential Impact: Bugs in optimization.rl_strategy may go undetected until production
+  Proposed Test: test_rl_strategy
+  Test File: tests/test_optimization_rl_strategy.py
+
+[UNTESTED_MODULE] patterns.event_tracking
+  Description: Module 'patterns.event_tracking' has no associated tests
+  Potential Impact: Bugs in patterns.event_tracking may go undetected until production
+  Proposed Test: test_event_tracking
+  Test File: tests/test_patterns_event_tracking.py
+
+[UNTESTED_MODULE] patterns.saga
+  Description: Module 'patterns.saga' has no associated tests
+  Potential Impact: Bugs in patterns.saga may go undetected until production
+  Proposed Test: test_saga
+  Test File: tests/test_patterns_saga.py
+
+[UNTESTED_MODULE] utils.adapters
+  Description: Module 'utils.adapters' has no associated tests
+  Potential Impact: Bugs in utils.adapters may go undetected until production
+  Proposed Test: test_adapters
+  Test File: tests/test_utils_adapters.py
+
+[UNTESTED_MODULE] utils.contract_adapters
+  Description: Module 'utils.contract_adapters' has no associated tests
+  Potential Impact: Bugs in utils.contract_adapters may go undetected until production
+  Proposed Test: test_contract_adapters
+  Test File: tests/test_utils_contract_adapters.py
+
+[UNTESTED_MODULE] utils.contract_io
+  Description: Module 'utils.contract_io' has no associated tests
+  Potential Impact: Bugs in utils.contract_io may go undetected until production
+  Proposed Test: test_contract_io
+  Test File: tests/test_utils_contract_io.py
+
+[UNTESTED_MODULE] utils.coverage_gate
+  Description: Module 'utils.coverage_gate' has no associated tests
+  Potential Impact: Bugs in utils.coverage_gate may go undetected until production
+  Proposed Test: test_coverage_gate
+  Test File: tests/test_utils_coverage_gate.py
+
+[UNTESTED_MODULE] utils.determinism.seeds
+  Description: Module 'utils.determinism.seeds' has no associated tests
+  Potential Impact: Bugs in utils.determinism.seeds may go undetected until production
+  Proposed Test: test_seeds
+  Test File: tests/test_utils_determinism_seeds.py
+
+[UNTESTED_MODULE] utils.determinism_helpers
+  Description: Module 'utils.determinism_helpers' has no associated tests
+  Potential Impact: Bugs in utils.determinism_helpers may go undetected until production
+  Proposed Test: test_determinism_helpers
+  Test File: tests/test_utils_determinism_helpers.py
+
+[UNTESTED_MODULE] utils.deterministic_execution
+  Description: Module 'utils.deterministic_execution' has no associated tests
+  Potential Impact: Bugs in utils.deterministic_execution may go undetected until production
+  Proposed Test: test_deterministic_execution
+  Test File: tests/test_utils_deterministic_execution.py
+
+[UNTESTED_MODULE] utils.domain_errors
+  Description: Module 'utils.domain_errors' has no associated tests
+  Potential Impact: Bugs in utils.domain_errors may go undetected until production
+  Proposed Test: test_domain_errors
+  Test File: tests/test_utils_domain_errors.py
+
+[UNTESTED_MODULE] utils.evidence_registry
+  Description: Module 'utils.evidence_registry' has no associated tests
+  Potential Impact: Bugs in utils.evidence_registry may go undetected until production
+  Proposed Test: test_evidence_registry
+  Test File: tests/test_utils_evidence_registry.py
+
+[UNTESTED_MODULE] utils.flow_adapters
+  Description: Module 'utils.flow_adapters' has no associated tests
+  Potential Impact: Bugs in utils.flow_adapters may go undetected until production
+  Proposed Test: test_flow_adapters
+  Test File: tests/test_utils_flow_adapters.py
+
+[UNTESTED_MODULE] utils.json_contract_loader
+  Description: Module 'utils.json_contract_loader' has no associated tests
+  Potential Impact: Bugs in utils.json_contract_loader may go undetected until production
+  Proposed Test: test_json_contract_loader
+  Test File: tests/test_utils_json_contract_loader.py
+
+[UNTESTED_MODULE] utils.json_logger
+  Description: Module 'utils.json_logger' has no associated tests
+  Potential Impact: Bugs in utils.json_logger may go undetected until production
+  Proposed Test: test_json_logger
+  Test File: tests/test_utils_json_logger.py
+
+[UNTESTED_MODULE] utils.metadata_loader
+  Description: Module 'utils.metadata_loader' has no associated tests
+  Potential Impact: Bugs in utils.metadata_loader may go undetected until production
+  Proposed Test: test_metadata_loader
+  Test File: tests/test_utils_metadata_loader.py
+
+[UNTESTED_MODULE] utils.method_config_loader
+  Description: Module 'utils.method_config_loader' has no associated tests
+  Potential Impact: Bugs in utils.method_config_loader may go undetected until production
+  Proposed Test: test_method_config_loader
+  Test File: tests/test_utils_method_config_loader.py
+
+[UNTESTED_MODULE] utils.qmcm_hooks
+  Description: Module 'utils.qmcm_hooks' has no associated tests
+  Potential Impact: Bugs in utils.qmcm_hooks may go undetected until production
+  Proposed Test: test_qmcm_hooks
+  Test File: tests/test_utils_qmcm_hooks.py
+
+[UNTESTED_MODULE] utils.schema_monitor
+  Description: Module 'utils.schema_monitor' has no associated tests
+  Potential Impact: Bugs in utils.schema_monitor may go undetected until production
+  Proposed Test: test_schema_monitor
+  Test File: tests/test_utils_schema_monitor.py
+
+[UNTESTED_MODULE] utils.seed_factory
+  Description: Module 'utils.seed_factory' has no associated tests
+  Potential Impact: Bugs in utils.seed_factory may go undetected until production
+  Proposed Test: test_seed_factory
+  Test File: tests/test_utils_seed_factory.py
+
+[ERROR_HANDLING] infrastructure
+  Description: Missing tests for circuit breaker state transition edge cases
+  Potential Impact: Circuit breaker may get stuck in open state, preventing recovery from transient failures
+  Proposed Test: test_circuit_breaker_state_transitions
+  Test File: tests/test_circuit_breaker_advanced.py
