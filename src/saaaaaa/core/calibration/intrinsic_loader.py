@@ -310,7 +310,7 @@ class IntrinsicScoreLoader:
 
     def is_excluded(self, method_id: str) -> bool:
         """
-        Check if a method was explicitly excluded from calibration.
+        Check if a method was explicitly excluded from saaaaaa.core.calibration.
 
         Args:
             method_id: Full method identifier

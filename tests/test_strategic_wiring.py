@@ -166,7 +166,7 @@ class TestStrategicWiring(unittest.TestCase):
     def test_validation_predicates_imports(self):
         """Verify validation/predicates.py imports correctly."""
         try:
-            from validation.predicates import ValidationPredicates, ValidationResult
+            from saaaaaa.utils.validation.predicates import ValidationPredicates, ValidationResult
             self.assertIsNotNone(ValidationPredicates)
             self.assertIsNotNone(ValidationResult)
         except ImportError as e:
@@ -175,7 +175,7 @@ class TestStrategicWiring(unittest.TestCase):
     def test_golden_rule_imports(self):
         """Verify validation/golden_rule.py imports correctly."""
         try:
-            from validation.golden_rule import GoldenRuleValidator, GoldenRuleViolation
+            from saaaaaa.utils.validation.golden_rule import GoldenRuleValidator, GoldenRuleViolation
             self.assertIsNotNone(GoldenRuleValidator)
             self.assertIsNotNone(GoldenRuleViolation)
         except ImportError as e:
@@ -266,7 +266,7 @@ class TestStrategicWiring(unittest.TestCase):
 
     def test_golden_rule_validator(self):
         """Verify golden_rule validator enforces immutability."""
-        from validation.golden_rule import GoldenRuleValidator, GoldenRuleViolation
+        from saaaaaa.utils.validation.golden_rule import GoldenRuleValidator, GoldenRuleViolation
 
         step_catalog = ["step1", "step2", "step3"]
         questionnaire_hash = "abc123"

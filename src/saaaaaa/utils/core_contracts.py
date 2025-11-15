@@ -175,7 +175,7 @@ class PolicyProcessorOutputContract(TypedDict):
 # ============================================================================
 
 class DocumentData(TypedDict):
-    """Standard document data structure from orchestrator.
+    """Standard document data structure from saaaaaa.core.orchestrator.
 
     This is what the orchestrator/factory provides to core modules.
     """

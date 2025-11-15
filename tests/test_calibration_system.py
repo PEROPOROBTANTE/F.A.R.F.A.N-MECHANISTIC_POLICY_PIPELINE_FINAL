@@ -154,7 +154,7 @@ class TestLayerComputation:
     
     def test_base_layer_computation(self, engine):
         """Test base layer (@b) computation"""
-        from calibration.layer_computers import compute_base_layer
+        from saaaaaa.core.calibration.layer_computers import compute_base_layer
         
         # Use a method that exists in config
         score = compute_base_layer(TEST_METHOD_SCORE, engine.intrinsic_config)
@@ -164,7 +164,7 @@ class TestLayerComputation:
     
     def test_chain_layer_computation(self, engine):
         """Test chain layer (@chain) computation"""
-        from calibration.layer_computers import compute_chain_layer
+        from saaaaaa.core.calibration.layer_computers import compute_chain_layer
         
         graph = ComputationGraph(
             nodes={"node1"},
@@ -177,7 +177,7 @@ class TestLayerComputation:
     
     def test_unit_layer_computation(self, engine):
         """Test unit layer (@u) computation"""
-        from calibration.layer_computers import compute_unit_layer
+        from saaaaaa.core.calibration.layer_computers import compute_unit_layer
         
         # Test identity function (INGEST_PDM)
         score = compute_unit_layer(
@@ -349,7 +349,7 @@ class TestValidators:
     
     def test_fusion_weight_validation(self):
         """Test fusion weight validation"""
-        from calibration.validators import CalibrationValidator
+        from saaaaaa.core.calibration.validators import CalibrationValidator
         
         validator = CalibrationValidator()
         
@@ -372,7 +372,7 @@ class TestValidators:
     
     def test_boundedness_validation(self):
         """Test boundedness validation"""
-        from calibration.validators import CalibrationValidator
+        from saaaaaa.core.calibration.validators import CalibrationValidator
         
         validator = CalibrationValidator()
         
