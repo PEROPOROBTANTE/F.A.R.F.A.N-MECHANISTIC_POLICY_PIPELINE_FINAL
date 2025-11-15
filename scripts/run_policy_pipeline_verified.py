@@ -315,10 +315,16 @@ class VerifiedPipelineRunner:
             from saaaaaa.core.orchestrator.factory import build_processor
             
             processor = build_processor()
-            orchestrator = Orchestrator(processor=processor)
-            
-            # Run all phases
-            results = await orchestrator.process(preprocessed_doc)
+            orchestrator = Orchestrator(
+                monolith=processor.questionnaire,
+                catalog=processor.factory.catalog
+            )
+
+            # Run all phases (using correct method name)
+            results = await orchestrator.process_development_plan_async(
+                pdf_path=str(self.plan_pdf_path),
+                preprocessed_document=preprocessed_doc
+            )
             
             # Count actual phases completed based on results
             if results and hasattr(results, '__dict__'):

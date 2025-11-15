@@ -1,4 +1,22 @@
 """
+⚠️  LEGACY MODULE - IndustrialPolicyProcessor (Pre-SPC Architecture)
+=======================================================================
+
+⚠️  WARNING: This module represents PRE-SPC architecture (before Smart Policy Chunks).
+
+For NEW code, use:
+    from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+
+This module is kept for:
+- Backward compatibility with existing tests
+- Historical reference
+- Gradual migration support
+
+DO NOT use IndustrialPolicyProcessor in new scripts or features.
+Use the SPC (Smart Policy Chunks) ingestion pipeline instead.
+
+---
+
 Causal Framework Policy Plan Processor - Industrial Grade
 =========================================================
 
