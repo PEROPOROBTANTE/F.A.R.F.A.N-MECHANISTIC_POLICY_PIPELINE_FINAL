@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA04",
+  "patterns": [
+    "derechos económicos",
+    "derechos sociales",
+    "derechos culturales",
+    "DESC",
+    "educación",
+    "salud",
+    "vivienda",
+    "trabajo digno",
+    "seguridad social",
+    "alimentación",
+    "cultura",
+    "recreación",
+    "deporte",
+    "empleo formal",
+    "salario mínimo",
+    "pensión",
+    "acceso servicios",
+    "cobertura universal",
+    "calidad educativa",
+    "infraestructura social"
+  ],
+  "regex": [
+    "\\bDESC\\b",
+    "\\bderechos?.*económicos?\\b",
+    "\\bderechos?.*sociales?\\b",
+    "\\bderechos?.*culturales?\\b",
+    "\\beducación\\b",
+    "\\bsalud\\b",
+    "\\bvivienda\\b",
+    "\\btrabajo.*digno\\b",
+    "\\bseguridad.*social\\b",
+    "\\balimentación\\b",
+    "\\bcultura\\b",
+    "\\bempleo.*formal\\b"
+  ],
+  "verbs": [
+    "garantizar",
+    "asegurar",
+    "proveer",
+    "ampliar",
+    "mejorar",
+    "fortalecer",
+    "universalizar",
+    "promover",
+    "facilitar",
+    "incrementar",
+    "elevar",
+    "consolidar"
+  ],
+  "entities": [
+    "Ministerio de Educación",
+    "Ministerio de Salud",
+    "Ministerio de Trabajo",
+    "Ministerio de Cultura",
+    "Ministerio de Vivienda",
+    "ICBF",
+    "Colpensiones",
+    "EPS",
+    "IPS",
+    "SENA"
+  ],
+  "thresholds": {
+    "min_confidence": 0.75,
+    "min_evidence": 0.70
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa04_v1_economic_social_cultural",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Derechos económicos, sociales y culturales",
+    "legacy_id": "P4",
+    "questions": ["Q121", "Q122", "Q123", "Q124", "Q125", "Q126", "Q127", "Q128", "Q129", "Q130", "Q131", "Q132", "Q133", "Q134", "Q135", "Q136", "Q137", "Q138", "Q139", "Q140", "Q141", "Q142", "Q143", "Q144", "Q145", "Q146", "Q147", "Q148", "Q149", "Q150"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}
