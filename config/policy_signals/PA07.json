@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA07",
+  "patterns": [
+    "tierras",
+    "territorios",
+    "reforma agraria",
+    "acceso a la tierra",
+    "formalización",
+    "titulación",
+    "catastro",
+    "ordenamiento territorial",
+    "uso del suelo",
+    "conflictos territoriales",
+    "restitución de tierras",
+    "baldíos",
+    "adjudicación",
+    "propiedad rural",
+    "tenencia de la tierra",
+    "desarrollo rural",
+    "economía campesina",
+    "zonas de reserva campesina",
+    "ZRC",
+    "planificación territorial"
+  ],
+  "regex": [
+    "\\btierras?\\b",
+    "\\bterritorios?\\b",
+    "\\breforma.*agraria\\b",
+    "\\bacceso.*tierra\\b",
+    "\\bformalización\\b",
+    "\\btitulación\\b",
+    "\\bcatastro\\b",
+    "\\bordenamiento.*territorial\\b",
+    "\\brestitución.*tierras?\\b",
+    "\\bbaldíos?\\b",
+    "\\bZRC\\b",
+    "\\bzonas?.*reserva.*campesina\\b"
+  ],
+  "verbs": [
+    "formalizar",
+    "titular",
+    "adjudicar",
+    "restituir",
+    "ordenar",
+    "planificar",
+    "delimitar",
+    "actualizar",
+    "registrar",
+    "legalizar",
+    "sanear",
+    "clarificar"
+  ],
+  "entities": [
+    "Agencia Nacional de Tierras",
+    "ANT",
+    "Unidad de Restitución de Tierras",
+    "IGAC",
+    "Instituto Geográfico Agustín Codazzi",
+    "Ministerio de Agricultura",
+    "Agencia de Desarrollo Rural",
+    "ADR",
+    "Superintendencia de Notariado y Registro"
+  ],
+  "thresholds": {
+    "min_confidence": 0.77,
+    "min_evidence": 0.73
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa07_v1_land_territory",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Tierras y territorios",
+    "legacy_id": "P7",
+    "questions": ["Q211", "Q212", "Q213", "Q214", "Q215", "Q216", "Q217", "Q218", "Q219", "Q220", "Q221", "Q222", "Q223", "Q224", "Q225", "Q226", "Q227", "Q228", "Q229", "Q230", "Q231", "Q232", "Q233", "Q234", "Q235", "Q236", "Q237", "Q238", "Q239", "Q240"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

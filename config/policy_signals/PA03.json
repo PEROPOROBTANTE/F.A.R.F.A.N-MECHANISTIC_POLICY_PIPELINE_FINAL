@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA03",
+  "patterns": [
+    "ambiente",
+    "medio ambiente",
+    "cambio climático",
+    "desastres",
+    "gestión del riesgo",
+    "mitigación",
+    "adaptación",
+    "emisiones",
+    "deforestación",
+    "biodiversidad",
+    "áreas protegidas",
+    "recursos naturales",
+    "calidad del aire",
+    "contaminación",
+    "residuos sólidos",
+    "agua potable",
+    "saneamiento básico",
+    "inundaciones",
+    "sequías",
+    "prevención desastres"
+  ],
+  "regex": [
+    "\\bambiente\\b",
+    "\\bmedio.*ambiente\\b",
+    "\\bcambio.*climático\\b",
+    "\\bdesastres?\\b",
+    "\\bgestión.*riesgo\\b",
+    "\\bmitigación\\b",
+    "\\badaptación\\b",
+    "\\bemisiones?\\b",
+    "\\bdeforestación\\b",
+    "\\bbiodiversidad\\b",
+    "\\báreas?.*protegidas?\\b",
+    "\\bcontaminación\\b",
+    "\\bresiduo.*sólido\\b"
+  ],
+  "verbs": [
+    "proteger",
+    "conservar",
+    "mitigar",
+    "adaptar",
+    "reducir",
+    "prevenir",
+    "restaurar",
+    "remediar",
+    "monitorear",
+    "gestionar",
+    "controlar",
+    "preservar"
+  ],
+  "entities": [
+    "Ministerio de Ambiente",
+    "IDEAM",
+    "Parques Nacionales",
+    "CAR",
+    "Unidad de Gestión del Riesgo",
+    "UNGRD",
+    "ANLA",
+    "Sistema Nacional Ambiental",
+    "SINA"
+  ],
+  "thresholds": {
+    "min_confidence": 0.75,
+    "min_evidence": 0.72
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa03_v1_environment_climate",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Ambiente sano, cambio climático, prevención y atención a desastres",
+    "legacy_id": "P3",
+    "questions": ["Q091", "Q092", "Q093", "Q094", "Q095", "Q096", "Q097", "Q098", "Q099", "Q100", "Q101", "Q102", "Q103", "Q104", "Q105", "Q106", "Q107", "Q108", "Q109", "Q110", "Q111", "Q112", "Q113", "Q114", "Q115", "Q116", "Q117", "Q118", "Q119", "Q120"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

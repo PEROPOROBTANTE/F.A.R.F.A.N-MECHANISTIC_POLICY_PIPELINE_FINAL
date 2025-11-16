@@ -22,7 +22,7 @@ import structlog
 
 from saaaaaa.core.orchestrator.arg_router import ExtendedArgRouter
 from saaaaaa.core.orchestrator.class_registry import build_class_registry
-from saaaaaa.core.orchestrator.core_module_factory import CoreModuleFactory
+from saaaaaa.core.orchestrator.bayesian_module_factory import BayesianModuleFactory
 from saaaaaa.core.orchestrator.executor_config import ExecutorConfig
 from saaaaaa.core.orchestrator.questionnaire_resource_provider import (
     QuestionnaireResourceProvider,

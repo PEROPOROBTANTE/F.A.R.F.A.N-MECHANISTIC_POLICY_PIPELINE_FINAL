@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA02",
+  "patterns": [
+    "violencia",
+    "conflicto armado",
+    "grupos delincuenciales",
+    "economías ilegales",
+    "narcotráfico",
+    "extorsión",
+    "secuestro",
+    "desplazamiento forzado",
+    "protección civil",
+    "víctimas",
+    "reparación",
+    "seguridad ciudadana",
+    "prevención violencia",
+    "atención humanitaria",
+    "zonas de conflicto",
+    "desarme",
+    "desmovilización",
+    "reintegración",
+    "DDR",
+    "protección población"
+  ],
+  "regex": [
+    "\\bviolencia\\b",
+    "\\bconflicto.*armado\\b",
+    "\\bgrupos?.*delincuenciales?\\b",
+    "\\beconomías?.*ilegales?\\b",
+    "\\bnarcotráfico\\b",
+    "\\bextorsión\\b",
+    "\\bsecuestro\\b",
+    "\\bdesplazamiento.*forzado\\b",
+    "\\bvíctimas?\\b",
+    "\\bDDR\\b",
+    "\\bdesarme\\b",
+    "\\bdesmovilización\\b"
+  ],
+  "verbs": [
+    "prevenir",
+    "proteger",
+    "atender",
+    "reparar",
+    "garantizar",
+    "desmovilizar",
+    "desarmar",
+    "reintegrar",
+    "asistir",
+    "resguardar",
+    "salvaguardar",
+    "neutralizar"
+  ],
+  "entities": [
+    "Ministerio de Defensa",
+    "Fuerzas Armadas",
+    "Policía Nacional",
+    "Unidad para las Víctimas",
+    "Agencia de Reintegración",
+    "Misión de Verificación",
+    "Cruz Roja",
+    "ACNUR",
+    "OIM"
+  ],
+  "thresholds": {
+    "min_confidence": 0.80,
+    "min_evidence": 0.75
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa02_v1_violence_prevention",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Prevención de la violencia y protección de la población frente al conflicto armado y la violencia generada por grupos delincuenciales organizados, asociada a economías ilegales",
+    "legacy_id": "P2",
+    "questions": ["Q061", "Q062", "Q063", "Q064", "Q065", "Q066", "Q067", "Q068", "Q069", "Q070", "Q071", "Q072", "Q073", "Q074", "Q075", "Q076", "Q077", "Q078", "Q079", "Q080", "Q081", "Q082", "Q083", "Q084", "Q085", "Q086", "Q087", "Q088", "Q089", "Q090"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

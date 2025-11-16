@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA08",
+  "patterns": [
+    "líderes sociales",
+    "lideresas",
+    "defensores derechos humanos",
+    "defensoras",
+    "DDHH",
+    "protección líderes",
+    "amenazas",
+    "riesgo",
+    "seguridad líderes",
+    "asesinatos",
+    "violencia contra líderes",
+    "defensa del territorio",
+    "activismo ambiental",
+    "líderes comunitarios",
+    "líderes ambientales",
+    "sindicalistas",
+    "periodistas",
+    "rutas de protección",
+    "medidas de seguridad",
+    "esquemas de protección"
+  ],
+  "regex": [
+    "\\blíderes?\\b",
+    "\\blideresas?\\b",
+    "\\bdefensores?\\b",
+    "\\bdefensoras?\\b",
+    "\\bDDHH\\b",
+    "\\bderechos?.*humanos?\\b",
+    "\\bprotección.*líderes?\\b",
+    "\\bamenazas?\\b",
+    "\\briesgo\\b",
+    "\\bviolencia.*líderes?\\b",
+    "\\besquemas?.*protección\\b"
+  ],
+  "verbs": [
+    "proteger",
+    "salvaguardar",
+    "garantizar",
+    "prevenir",
+    "investigar",
+    "judicializar",
+    "fortalecer",
+    "asegurar",
+    "blindar",
+    "resguardar",
+    "acompañar",
+    "alertar"
+  ],
+  "entities": [
+    "UNP",
+    "Unidad Nacional de Protección",
+    "Defensoría del Pueblo",
+    "Fiscalía General",
+    "Procuraduría",
+    "Alto Comisionado DDHH",
+    "Sistema de Alertas Tempranas",
+    "SAT",
+    "Programa de Protección",
+    "CERREM"
+  ],
+  "thresholds": {
+    "min_confidence": 0.80,
+    "min_evidence": 0.78
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa08_v1_leaders_defenders",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Líderes y lideresas, defensores y defensoras de derechos humanos, comunitarios, sociales, ambientales, de la tierra, el territorio y de la naturaleza",
+    "legacy_id": "P8",
+    "questions": ["Q241", "Q242", "Q243", "Q244", "Q245", "Q246", "Q247", "Q248", "Q249", "Q250", "Q251", "Q252", "Q253", "Q254", "Q255", "Q256", "Q257", "Q258", "Q259", "Q260", "Q261", "Q262", "Q263", "Q264", "Q265", "Q266", "Q267", "Q268", "Q269", "Q270"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

@@ -1234,7 +1234,44 @@ class Orchestrator:
         # ========================================================================
         validate_phase_definitions(self.FASES, self.__class__)
 
-        # Store paths for backward compatibility
+        # ========================================================================
+        # DEPRECATION WARNINGS for path parameters
+        # Path parameters trigger I/O and are deprecated in favor of pre-loaded data
+        # ========================================================================
+        import warnings
+
+        path_params = {
+            "catalog_path": (
+                catalog_path,
+                "Use 'catalog' parameter with pre-loaded data instead. "
+                "Load via: from saaaaaa.core.orchestrator.factory import build_processor",
+            ),
+            "monolith_path": (
+                monolith_path,
+                "Use 'questionnaire' parameter with CanonicalQuestionnaire instead. "
+                "Load via: from saaaaaa.core.orchestrator.questionnaire import load_questionnaire",
+            ),
+            "method_map_path": (
+                method_map_path,
+                "Use 'method_map' parameter with pre-loaded data instead. "
+                "Load via: from saaaaaa.core.orchestrator.factory import build_processor",
+            ),
+            "schema_path": (
+                schema_path,
+                "Use 'schema' parameter with pre-loaded data instead. "
+                "Load via: from saaaaaa.core.orchestrator.factory import build_processor",
+            ),
+        }
+
+        for param_name, (param_value, message) in path_params.items():
+            if param_value is not None:
+                warnings.warn(
+                    f"Orchestrator '{param_name}' parameter is DEPRECATED. {message}",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+
+        # Store paths for backward compatibility (but deprecated)
         self.catalog_path = self._resolve_path(catalog_path) if catalog_path else None
         self.monolith_path = self._resolve_path(monolith_path) if monolith_path else None
         self.method_map_path = self._resolve_path(method_map_path) if method_map_path else None
@@ -1481,6 +1518,44 @@ class Orchestrator:
             self.process_development_plan_async(
                 pdf_path, preprocessed_document=preprocessed_document
             )
+        )
+
+    async def process(self, preprocessed_document: Any) -> list[PhaseResult]:
+        """
+        DEPRECATED ALIAS for process_development_plan_async().
+
+        This method exists ONLY for backward compatibility with code
+        that incorrectly assumed Orchestrator had a .process() method.
+
+        Use process_development_plan_async() instead.
+
+        Args:
+            preprocessed_document: PreprocessedDocument to process
+
+        Returns:
+            List of phase results
+
+        Raises:
+            DeprecationWarning: This method is deprecated
+        """
+        import warnings
+        warnings.warn(
+            "Orchestrator.process() is deprecated. "
+            "Use process_development_plan_async(pdf_path, preprocessed_document=...) instead.",
+            DeprecationWarning,
+            stacklevel=2
+        )
+
+        # Extract pdf_path from preprocessed_document if available
+        pdf_path = getattr(preprocessed_document, 'source_path', None)
+        if pdf_path is None:
+            # Try to get from metadata
+            metadata = getattr(preprocessed_document, 'metadata', {})
+            pdf_path = metadata.get('source_path', 'unknown.pdf')
+
+        return await self.process_development_plan_async(
+            pdf_path=str(pdf_path),
+            preprocessed_document=preprocessed_document
         )
 
     async def process_development_plan_async(

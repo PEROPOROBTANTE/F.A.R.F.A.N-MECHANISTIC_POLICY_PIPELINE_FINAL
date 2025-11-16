@@ -14,6 +14,8 @@ from dataclasses import dataclass, asdict
 import traceback
 
 from ..core.orchestrator.core import Orchestrator
+from ..core.orchestrator.factory import build_processor
+from ..core.orchestrator.questionnaire import load_questionnaire
 from ..core.orchestrator.verification_manifest import write_verification_manifest
 
 logger = logging.getLogger(__name__)
@@ -99,9 +101,31 @@ class PipelineConnector:
 
             preprocessed_doc = await self._ingest_document(pdf_path, municipality)
 
-            # Initialize Orchestrator
-            logger.info("Initializing Orchestrator")
-            orchestrator = Orchestrator()
+            # Initialize Orchestrator with proper factory and questionnaire
+            # FIX: Previously used Orchestrator() without parameters which would fail
+            # in _load_configuration() with ValueError: "No monolith data available"
+            logger.info("Initializing Orchestrator via factory pattern")
+
+            # Build processor bundle with all dependencies
+            processor = build_processor()
+
+            # Load canonical questionnaire for type-safe initialization
+            canonical_questionnaire = load_questionnaire()
+
+            # Initialize orchestrator with pre-loaded data (I/O-free path)
+            orchestrator = Orchestrator(
+                questionnaire=canonical_questionnaire,
+                catalog=processor.factory.catalog
+            )
+
+            logger.info(
+                "Orchestrator initialized successfully",
+                extra={
+                    "questionnaire_hash": canonical_questionnaire.sha256[:16] + "...",
+                    "question_count": canonical_questionnaire.total_question_count,
+                    "catalog_loaded": processor.factory.catalog is not None
+                }
+            )
 
             # Track phase timings
             phase_timings = {}

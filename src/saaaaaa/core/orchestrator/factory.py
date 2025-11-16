@@ -641,7 +641,32 @@ def build_processor(
 
     Note:
         Uses load_questionnaire() for hash verification and immutability.
+
+    Raises:
+        TypeError: If parameters have incorrect types
     """
+
+    # Runtime type checks (defensive programming)
+    if questionnaire_path is not None and not isinstance(questionnaire_path, Path):
+        raise TypeError(
+            f"questionnaire_path must be Path or None, got {type(questionnaire_path).__name__}. "
+            f"build_processor() requires keyword arguments only."
+        )
+
+    if data_dir is not None and not isinstance(data_dir, Path):
+        raise TypeError(
+            f"data_dir must be Path or None, got {type(data_dir).__name__}"
+        )
+
+    if factory is not None and not isinstance(factory, CoreModuleFactory):
+        raise TypeError(
+            f"factory must be CoreModuleFactory or None, got {type(factory).__name__}"
+        )
+
+    if not isinstance(enable_signals, bool):
+        raise TypeError(
+            f"enable_signals must be bool, got {type(enable_signals).__name__}"
+        )
 
     core_factory = factory or CoreModuleFactory(data_dir=data_dir)
 
@@ -667,8 +692,8 @@ def build_processor(
     signal_registry = None
     if enable_signals:
         try:
-            from .core_module_factory import CoreModuleFactory as SignalFactory
-            
+            from .bayesian_module_factory import BayesianModuleFactory as SignalFactory
+
             # Create signal-enabled factory
             signal_factory = SignalFactory(
                 questionnaire_data=questionnaire_data,

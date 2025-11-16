@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA06",
+  "patterns": [
+    "niñez",
+    "adolescencia",
+    "juventud",
+    "entornos protectores",
+    "primera infancia",
+    "desarrollo infantil",
+    "educación inicial",
+    "protección integral",
+    "derechos del niño",
+    "bienestar infantil",
+    "cuidado infantil",
+    "nutrición infantil",
+    "salud infantil",
+    "educación de calidad",
+    "recreación",
+    "deporte",
+    "cultura juvenil",
+    "participación juvenil",
+    "empleabilidad juvenil",
+    "prevención violencia infantil"
+  ],
+  "regex": [
+    "\\bniñez\\b",
+    "\\bniñ[oa]s?\\b",
+    "\\badolescencia\\b",
+    "\\badolescentes?\\b",
+    "\\bjuventud\\b",
+    "\\bjóvenes?\\b",
+    "\\bentornos?.*protectores?\\b",
+    "\\bprimera.*infancia\\b",
+    "\\bdesarrollo.*infantil\\b",
+    "\\bprotección.*integral\\b"
+  ],
+  "verbs": [
+    "proteger",
+    "garantizar",
+    "promover",
+    "fortalecer",
+    "asegurar",
+    "fomentar",
+    "impulsar",
+    "prevenir",
+    "desarrollar",
+    "acompañar",
+    "potenciar",
+    "estimular"
+  ],
+  "entities": [
+    "ICBF",
+    "Instituto Colombiano de Bienestar Familiar",
+    "Ministerio de Educación",
+    "Secretaría de Juventud",
+    "Consejería de Infancia",
+    "Sistema Nacional de Bienestar Familiar",
+    "SNBF",
+    "De Cero a Siempre",
+    "Programa Jóvenes en Acción"
+  ],
+  "thresholds": {
+    "min_confidence": 0.75,
+    "min_evidence": 0.70
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa06_v1_children_youth",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Derecho al buen futuro de la niñez, adolescencia, juventud y entornos protectores",
+    "legacy_id": "P6",
+    "questions": ["Q181", "Q182", "Q183", "Q184", "Q185", "Q186", "Q187", "Q188", "Q189", "Q190", "Q191", "Q192", "Q193", "Q194", "Q195", "Q196", "Q197", "Q198", "Q199", "Q200", "Q201", "Q202", "Q203", "Q204", "Q205", "Q206", "Q207", "Q208", "Q209", "Q210"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

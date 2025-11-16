@@ -56,45 +56,9 @@ def compute_fingerprint(content: str | bytes) -> str:
         return hashlib.sha256(content).hexdigest()
 
 
-def load_questionnaire_monolith() -> dict[str, Any]:
-    """DEPRECATED: Use questionnaire.load_questionnaire() instead.
-
-    ⚠️  QUESTIONNAIRE INTEGRITY VIOLATION WARNING ⚠️
-    This function is DEPRECATED and duplicates the canonical loader.
-    It returns a mutable dict instead of CanonicalQuestionnaire.
-
-    MIGRATION:
-        # Old (UNSAFE):
-        monolith = load_questionnaire_monolith()
-
-        # New (SAFE):
-        from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
-        questionnaire = load_questionnaire()
-
-    Returns:
-        Mutable dict for backward compatibility (UNSAFE, DEPRECATED)
-    """
-    import warnings
-    warnings.warn(
-        "signal_loader.load_questionnaire_monolith() is DEPRECATED. "
-        "Use saaaaaa.core.orchestrator.questionnaire.load_questionnaire() instead. "
-        "This function returns mutable dict instead of CanonicalQuestionnaire.",
-        DeprecationWarning,
-        stacklevel=2
-    )
-
-    from .questionnaire import load_questionnaire
-
-    canonical = load_questionnaire()
-
-    logger.info(
-        "questionnaire_monolith_loaded_via_canonical_loader",
-        sha256=canonical.sha256[:16] + "...",
-        questions=canonical.total_question_count,
-    )
-
-    # Return mutable dict for backward compatibility (UNSAFE)
-    return dict(canonical.data)
+# DEPRECATED: Re-exported from factory.py for backward compatibility
+# Do NOT create additional implementations - this is the single source
+from .factory import load_questionnaire_monolith
 
 
 def extract_patterns_by_policy_area(

@@ -1,6 +1,6 @@
-"""Core Module Factory - Dependency Injection for 19 Module Classes.
+"""Bayesian Module Factory - Dependency Injection for 19 Bayesian Module Classes.
 
-This factory creates module instances with injected resources from the questionnaire.
+This factory creates Bayesian module instances with injected resources from the questionnaire.
 It eliminates pattern duplication by providing a single source of truth via
 QuestionnaireResourceProvider.
 
@@ -10,6 +10,10 @@ Design Principles:
 - Lazy instantiation of modules
 - Full traceability of resource injection
 - Type-safe module creation
+
+NOTE: This factory is distinct from factory.py (CoreModuleFactory).
+      - factory.py: General-purpose factory for contracts, loaders, processors
+      - bayesian_module_factory.py: Specialized factory for Bayesian analysis modules
 """
 
 from __future__ import annotations
@@ -35,7 +39,7 @@ from .signal_loader import build_all_signal_packs
 logger = structlog.get_logger(__name__)
 
 
-class CoreModuleFactory:
+class BayesianModuleFactory:
     """
     Factory for creating module instances with injected questionnaire resources.
     
@@ -64,7 +68,7 @@ class CoreModuleFactory:
     19. BayesianQualityController
     
     Usage:
-        factory = CoreModuleFactory(questionnaire_data)
+        factory = BayesianModuleFactory(questionnaire_data)
         analyzer = factory.create_bayesian_numerical_analyzer()
         scorer = factory.create_bayesian_evidence_scorer()
     """
@@ -164,7 +168,7 @@ class CoreModuleFactory:
         )
     
     @classmethod
-    def from_provider(cls, provider: QuestionnaireResourceProvider) -> CoreModuleFactory:
+    def from_provider(cls, provider: QuestionnaireResourceProvider) -> "BayesianModuleFactory":
         """
         Create factory from existing provider.
         
