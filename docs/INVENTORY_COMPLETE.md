@@ -56,7 +56,7 @@
 - **IndustrialGradeValidator**: 8 methods
 - Dataclasses: ValidacionResultado, ValidationMetric, AdvancedGraphNode, MonteCarloAdvancedResult
 
-### 6. dereck_beach.py (4,051 LOC - LARGEST FILE)
+### 6. derek_beach.py (4,051 LOC - LARGEST FILE)
 **Role**: Data Producer  
 **Classes**: 22
 - **CDAFFramework**: 6 methods (orchestrator)
@@ -101,7 +101,7 @@
    - contradiction_deteccion.py (ContradictionDetectorAdapter)
    - embedding_policy.py (EmbeddingPolicyAdapter)
    - teoria_cambio.py (TeoriaCambioAdapter)
-   - dereck_beach.py (CausalDeconstructionAdapter)
+   - derek_beach.py (CausalDeconstructionAdapter)
    - policy_processor.py (PolicyProcessorAdapter)
 
 2. **Assembly Pipeline**: 1 aggregator

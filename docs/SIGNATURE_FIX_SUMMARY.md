@@ -77,7 +77,7 @@ Created a comprehensive signature validation system:
            sentences = self.text_processor.segment_into_sentences(text)
    ```
 
-3. **dereck_beach.py** (Line 2528)
+3. **derek_beach.py** (Line 2528)
    ```python
    # Before:
    def __init__(self, config: ConfigLoader, nlp_model: spacy.Language) -> None:

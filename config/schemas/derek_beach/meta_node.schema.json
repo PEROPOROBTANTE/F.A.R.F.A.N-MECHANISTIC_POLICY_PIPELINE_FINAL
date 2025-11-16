@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://policy.analysis/schemas/dereck_beach/meta_node.schema.json",
+  "$id": "https://policy.analysis/schemas/derek_beach/meta_node.schema.json",
   "title": "CDAFMetaNode",
   "description": "Nodo meta del marco CDAF con trazabilidad causal, financiera y de riesgos contextualizados.",
   "type": "object",

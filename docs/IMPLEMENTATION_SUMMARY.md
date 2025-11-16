@@ -38,7 +38,7 @@ This implementation establishes the **complete foundation** for refactoring 7 co
 ```
 Analyzer_one.py                    -32 lines (removed __main__ blocks)
 contradiction_deteccion.py         -21 lines
-dereck_beach.py                    -2 lines
+derek_beach.py                    -2 lines
 embedding_policy.py                -3 lines
 financiero_viabilidad_tablas.py    -35 lines
 semantic_chunking_policy.py        -3 lines + bug fix
@@ -112,7 +112,7 @@ Total identified:           ~150
 Migrated:                   0 (infrastructure ready)
 Remaining by module:
   - Analyzer_one.py:        72 operations
-  - dereck_beach.py:        40 operations  
+  - derek_beach.py:        40 operations  
   - financiero_viabilidad:  ~20 operations
   - teoria_cambio.py:       ~18 operations
   - Others:                 0 (already clean)
@@ -164,7 +164,7 @@ Contract validation:        Helper functions provided
 3. **semantic_chunking_policy.py** (already clean, verify only)
 4. **teoria_cambio.py** (~18 I/O ops, small module)
 5. **financiero_viabilidad_tablas.py** (~20 I/O ops)
-6. **dereck_beach.py** (~40 I/O ops, medium complexity)
+6. **derek_beach.py** (~40 I/O ops, medium complexity)
 7. **Analyzer_one.py** (~72 I/O ops, highest complexity)
 
 **Per-module workflow:**

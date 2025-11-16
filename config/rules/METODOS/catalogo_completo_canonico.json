@@ -6779,13 +6779,13 @@
         }
       ]
     },
-    "dereck_beach.py": {
+    "derek_beach.py": {
       "method_count": 159,
       "methods": [
         {
           "method_name": "classify_test",
           "class": "BeachEvidentialTest",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "classify_test(necessity, sufficiency)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -6808,7 +6808,7 @@
         {
           "method_name": "apply_test_logic",
           "class": "BeachEvidentialTest",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "apply_test_logic(test_type, evidence_found, prior, bayes_factor)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -6831,7 +6831,7 @@
         {
           "method_name": "__init__",
           "class": "CDAFException",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, message, details, stage, recoverable)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -6854,7 +6854,7 @@
         {
           "method_name": "_format_message",
           "class": "CDAFException",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_format_message(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -6879,7 +6879,7 @@
         {
           "method_name": "to_dict",
           "class": "CDAFException",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "to_dict(self)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -6904,7 +6904,7 @@
         {
           "method_name": "check_sum_to_one",
           "class": "MechanismTypeConfig",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "check_sum_to_one(cls, v, values)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -6927,7 +6927,7 @@
         {
           "method_name": "__init__",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config_path)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -6950,7 +6950,7 @@
         {
           "method_name": "_load_config",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_load_config(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -6975,7 +6975,7 @@
         {
           "method_name": "_load_default_config",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_load_default_config(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7000,7 +7000,7 @@
         {
           "method_name": "_validate_config",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_validate_config(self)",
           "complexity": "LOW",
           "priority": "HIGH",
@@ -7025,7 +7025,7 @@
         {
           "method_name": "get",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get(self, key, default)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7050,7 +7050,7 @@
         {
           "method_name": "get_bayesian_threshold",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_bayesian_threshold(self, key)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -7080,7 +7080,7 @@
         {
           "method_name": "get_mechanism_prior",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_mechanism_prior(self, mechanism_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7105,7 +7105,7 @@
         {
           "method_name": "get_performance_setting",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_performance_setting(self, key)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7130,7 +7130,7 @@
         {
           "method_name": "update_priors_from_feedback",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "update_priors_from_feedback(self, feedback_data)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7155,7 +7155,7 @@
         {
           "method_name": "_save_prior_history",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_save_prior_history(self, feedback_data, uncertainty_reduction)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7180,7 +7180,7 @@
         {
           "method_name": "_load_uncertainty_history",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_load_uncertainty_history(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7205,7 +7205,7 @@
         {
           "method_name": "check_uncertainty_reduction_criterion",
           "class": "ConfigLoader",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "check_uncertainty_reduction_criterion(self, current_uncertainty)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -7230,7 +7230,7 @@
         {
           "method_name": "__init__",
           "class": "PDFProcessor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config, retry_handler)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -7253,7 +7253,7 @@
         {
           "method_name": "load_document",
           "class": "PDFProcessor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "load_document(self, pdf_path)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7278,7 +7278,7 @@
         {
           "method_name": "extract_text",
           "class": "PDFProcessor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "extract_text(self)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7305,7 +7305,7 @@
         {
           "method_name": "extract_tables",
           "class": "PDFProcessor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "extract_tables(self)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7330,7 +7330,7 @@
         {
           "method_name": "extract_sections",
           "class": "PDFProcessor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "extract_sections(self)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7355,7 +7355,7 @@
         {
           "method_name": "__init__",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config, nlp_model)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -7378,7 +7378,7 @@
         {
           "method_name": "extract_causal_hierarchy",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "extract_causal_hierarchy(self, text)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -7406,7 +7406,7 @@
         {
           "method_name": "_extract_goals",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_extract_goals(self, text)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7432,7 +7432,7 @@
         {
           "method_name": "_parse_goal_context",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_parse_goal_context(self, goal_id, context)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7459,7 +7459,7 @@
         {
           "method_name": "_add_node_to_graph",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_add_node_to_graph(self, node)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7486,7 +7486,7 @@
         {
           "method_name": "_extract_causal_links",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_extract_causal_links(self, text)",
           "complexity": "HIGH",
           "priority": "LOW",
@@ -7514,7 +7514,7 @@
         {
           "method_name": "_calculate_semantic_distance",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_semantic_distance(self, source, target)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7539,7 +7539,7 @@
         {
           "method_name": "_calculate_type_transition_prior",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_type_transition_prior(self, source, target)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7564,7 +7564,7 @@
         {
           "method_name": "_check_structural_violation",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_check_structural_violation(self, source, target)",
           "complexity": "LOW",
           "priority": "HIGH",
@@ -7589,7 +7589,7 @@
         {
           "method_name": "_calculate_language_specificity",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_language_specificity(self, keyword, policy_area, context)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7614,7 +7614,7 @@
         {
           "method_name": "_assess_temporal_coherence",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_assess_temporal_coherence(self, source, target)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7639,7 +7639,7 @@
         {
           "method_name": "_assess_financial_consistency",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_assess_financial_consistency(self, source, target)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7664,7 +7664,7 @@
         {
           "method_name": "_calculate_textual_proximity",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_textual_proximity(self, source, target, text)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7692,7 +7692,7 @@
         {
           "method_name": "_initialize_prior",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_initialize_prior(self, source, target)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7717,7 +7717,7 @@
         {
           "method_name": "_calculate_composite_likelihood",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_composite_likelihood(self, evidence)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7742,7 +7742,7 @@
         {
           "method_name": "_build_type_hierarchy",
           "class": "CausalExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_build_type_hierarchy(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7767,7 +7767,7 @@
         {
           "method_name": "__init__",
           "class": "MechanismPartExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config, nlp_model)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -7790,7 +7790,7 @@
         {
           "method_name": "extract_entity_activity",
           "class": "MechanismPartExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "extract_entity_activity(self, text)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7816,7 +7816,7 @@
         {
           "method_name": "_normalize_entity",
           "class": "MechanismPartExtractor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_normalize_entity(self, entity)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7841,7 +7841,7 @@
         {
           "method_name": "__init__",
           "class": "FinancialAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -7864,7 +7864,7 @@
         {
           "method_name": "trace_financial_allocation",
           "class": "FinancialAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "trace_financial_allocation(self, tables, nodes, graph)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -7889,7 +7889,7 @@
         {
           "method_name": "_process_financial_table",
           "class": "FinancialAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_process_financial_table(self, table, nodes)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7914,7 +7914,7 @@
         {
           "method_name": "_parse_amount",
           "class": "FinancialAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_parse_amount(self, value)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7939,7 +7939,7 @@
         {
           "method_name": "_match_program_to_node",
           "class": "FinancialAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_match_program_to_node(self, program_id, nodes)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -7964,7 +7964,7 @@
         {
           "method_name": "_perform_counterfactual_budget_check",
           "class": "FinancialAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_perform_counterfactual_budget_check(self, nodes, graph)",
           "complexity": "LOW",
           "priority": "HIGH",
@@ -7989,7 +7989,7 @@
         {
           "method_name": "__init__",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -8012,7 +8012,7 @@
         {
           "method_name": "audit_evidence_traceability",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "audit_evidence_traceability(self, nodes)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8037,7 +8037,7 @@
         {
           "method_name": "audit_sequence_logic",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "audit_sequence_logic(self, graph)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8062,7 +8062,7 @@
         {
           "method_name": "bayesian_counterfactual_audit",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "bayesian_counterfactual_audit(self, nodes, graph, historical_data, pdet_alignment)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -8092,7 +8092,7 @@
         {
           "method_name": "_build_normative_dag",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_build_normative_dag(self)",
           "complexity": "HIGH",
           "priority": "LOW",
@@ -8121,7 +8121,7 @@
         {
           "method_name": "_get_default_historical_priors",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_get_default_historical_priors(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8146,7 +8146,7 @@
         {
           "method_name": "_audit_direct_evidence",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_audit_direct_evidence(self, nodes, scm_dag, historical_data)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8171,7 +8171,7 @@
         {
           "method_name": "_audit_causal_implications",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_audit_causal_implications(self, nodes, graph, direct_evidence)",
           "complexity": "HIGH",
           "priority": "LOW",
@@ -8198,7 +8198,7 @@
         {
           "method_name": "_audit_systemic_risk",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_audit_systemic_risk(self, nodes, graph, direct_evidence, causal_implications, pdet_alignment)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8225,7 +8225,7 @@
         {
           "method_name": "_generate_optimal_remediations",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_generate_optimal_remediations(self, direct_evidence, causal_implications, systemic_risk)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8250,7 +8250,7 @@
         {
           "method_name": "_get_remediation_text",
           "class": "OperationalizationAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_get_remediation_text(self, omission, node_id)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8277,7 +8277,7 @@
         {
           "method_name": "__init__",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config, nlp_model)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -8300,7 +8300,7 @@
         {
           "method_name": "_log_refactored_components",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_log_refactored_components(self)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8325,7 +8325,7 @@
         {
           "method_name": "infer_mechanisms",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "infer_mechanisms(self, nodes, text)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8351,7 +8351,7 @@
         {
           "method_name": "_infer_single_mechanism",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_infer_single_mechanism(self, node, text, all_nodes)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8377,7 +8377,7 @@
         {
           "method_name": "_extract_observations",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_extract_observations(self, node, text)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8403,7 +8403,7 @@
         {
           "method_name": "_infer_mechanism_type",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_infer_mechanism_type(self, observations)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8428,7 +8428,7 @@
         {
           "method_name": "_infer_activity_sequence",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_infer_activity_sequence(self, observations, mechanism_type_posterior)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8453,7 +8453,7 @@
         {
           "method_name": "_calculate_coherence_factor",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_coherence_factor(self, node, observations, all_nodes)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8478,7 +8478,7 @@
         {
           "method_name": "_test_sufficiency",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_test_sufficiency(self, node, observations)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8503,7 +8503,7 @@
         {
           "method_name": "_test_necessity",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_test_necessity(self, node, observations)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8528,7 +8528,7 @@
         {
           "method_name": "_generate_necessity_remediation",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_generate_necessity_remediation(self, node_id, missing_components)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8553,7 +8553,7 @@
         {
           "method_name": "_quantify_uncertainty",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_quantify_uncertainty(self, mechanism_type_posterior, sequence_posterior, coherence_score)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8578,7 +8578,7 @@
         {
           "method_name": "_detect_gaps",
           "class": "BayesianMechanismInference",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_detect_gaps(self, node, observations, uncertainty)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8603,7 +8603,7 @@
         {
           "method_name": "__init__",
           "class": "CausalInferenceSetup",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -8626,7 +8626,7 @@
         {
           "method_name": "classify_goal_dynamics",
           "class": "CausalInferenceSetup",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "classify_goal_dynamics(self, nodes)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8651,7 +8651,7 @@
         {
           "method_name": "assign_probative_value",
           "class": "CausalInferenceSetup",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "assign_probative_value(self, nodes)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8676,7 +8676,7 @@
         {
           "method_name": "identify_failure_points",
           "class": "CausalInferenceSetup",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "identify_failure_points(self, graph, text)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8702,7 +8702,7 @@
         {
           "method_name": "__init__",
           "class": "ReportingEngine",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config, output_dir)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -8725,7 +8725,7 @@
         {
           "method_name": "generate_causal_diagram",
           "class": "ReportingEngine",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "generate_causal_diagram(self, graph, policy_code)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -8752,7 +8752,7 @@
         {
           "method_name": "generate_accountability_matrix",
           "class": "ReportingEngine",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "generate_accountability_matrix(self, graph, policy_code)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8777,7 +8777,7 @@
         {
           "method_name": "generate_confidence_report",
           "class": "ReportingEngine",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "generate_confidence_report(self, nodes, graph, causal_chains, audit_results, financial_auditor, sequence_warnings, policy_code)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -8805,7 +8805,7 @@
         {
           "method_name": "_calculate_quality_score",
           "class": "ReportingEngine",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_quality_score(self, traceability, financial, logic, ea)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8830,7 +8830,7 @@
         {
           "method_name": "generate_causal_model_json",
           "class": "ReportingEngine",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "generate_causal_model_json(self, graph, nodes, policy_code)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -8857,7 +8857,7 @@
         {
           "method_name": "__init__",
           "class": "CDAFFramework",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, config_path, output_dir, log_level)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -8880,7 +8880,7 @@
         {
           "method_name": "process_document",
           "class": "CDAFFramework",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "process_document(self, pdf_path, policy_code)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -8905,7 +8905,7 @@
         {
           "method_name": "_extract_feedback_from_audit",
           "class": "CDAFFramework",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_extract_feedback_from_audit(self, inferred_mechanisms, counterfactual_audit, audit_results)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8930,7 +8930,7 @@
         {
           "method_name": "_validate_dnp_compliance",
           "class": "CDAFFramework",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_validate_dnp_compliance(self, nodes, graph, policy_code)",
           "complexity": "LOW",
           "priority": "HIGH",
@@ -8955,7 +8955,7 @@
         {
           "method_name": "_generate_dnp_report",
           "class": "CDAFFramework",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_generate_dnp_report(self, dnp_results, policy_code)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -8980,7 +8980,7 @@
         {
           "method_name": "get_bayes_factor",
           "class": "BayesFactorTable",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_bayes_factor(cls, test_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9003,7 +9003,7 @@
         {
           "method_name": "get_version",
           "class": "BayesFactorTable",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_version(cls)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9026,7 +9026,7 @@
         {
           "method_name": "__init__",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, calibration_params)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -9049,7 +9049,7 @@
         {
           "method_name": "calculate_likelihood_adaptativo",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "calculate_likelihood_adaptativo(self, evidence_dict, test_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9074,7 +9074,7 @@
         {
           "method_name": "_adjust_domain_weights",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_adjust_domain_weights(self, domain_scores)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9099,7 +9099,7 @@
         {
           "method_name": "sensitivity_analysis",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "sensitivity_analysis(self, evidence_dict, test_type, perturbation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9124,7 +9124,7 @@
         {
           "method_name": "_perturb_evidence",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_perturb_evidence(self, evidence_dict, domain, perturbation)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9149,7 +9149,7 @@
         {
           "method_name": "_add_ood_noise",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_add_ood_noise(self, evidence_dict)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9174,7 +9174,7 @@
         {
           "method_name": "generate_traceability_record",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "generate_traceability_record(self, evidence_dict, test_type, result, seed)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9199,7 +9199,7 @@
         {
           "method_name": "validate_quality_criteria",
           "class": "AdaptivePriorCalculator",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "validate_quality_criteria(self, validation_samples)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -9224,7 +9224,7 @@
         {
           "method_name": "__init__",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self, mechanism_priors)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -9247,7 +9247,7 @@
         {
           "method_name": "infer_mechanism_posterior",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "infer_mechanism_posterior(self, observations, n_iter, burn_in, n_chains)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9272,7 +9272,7 @@
         {
           "method_name": "_run_mcmc_chain",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_run_mcmc_chain(self, observations, n_iter, burn_in, seed)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9297,7 +9297,7 @@
         {
           "method_name": "_calculate_likelihood",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_likelihood(self, mechanism_type, observations)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9322,7 +9322,7 @@
         {
           "method_name": "_get_mode_sequence",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_get_mode_sequence(self, samples)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9347,7 +9347,7 @@
         {
           "method_name": "_calculate_r_hat",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_r_hat(self, chains)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9372,7 +9372,7 @@
         {
           "method_name": "_calculate_ess",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_ess(self, samples)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9397,7 +9397,7 @@
         {
           "method_name": "posterior_predictive_check",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "posterior_predictive_check(self, posterior_samples, observed_data)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -9422,7 +9422,7 @@
         {
           "method_name": "_ablation_analysis",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_ablation_analysis(self, posterior_samples, observed_data)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9447,7 +9447,7 @@
         {
           "method_name": "verify_conditional_independence",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "verify_conditional_independence(self, dag, independence_tests)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9472,7 +9472,7 @@
         {
           "method_name": "_generate_independence_tests",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_generate_independence_tests(self, dag, n_tests)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9497,7 +9497,7 @@
         {
           "method_name": "_calculate_waic_difference",
           "class": "HierarchicalGenerativeModel",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_calculate_waic_difference(self, dag)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9522,7 +9522,7 @@
         {
           "method_name": "__init__",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -9545,7 +9545,7 @@
         {
           "method_name": "construct_scm",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "construct_scm(self, dag, structural_equations)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9570,7 +9570,7 @@
         {
           "method_name": "_create_default_equations",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_create_default_equations(self, dag)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9595,7 +9595,7 @@
         {
           "method_name": "counterfactual_query",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "counterfactual_query(self, intervention, target, evidence)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9620,7 +9620,7 @@
         {
           "method_name": "_evaluate_factual",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_evaluate_factual(self, target, evidence)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9645,7 +9645,7 @@
         {
           "method_name": "_evaluate_counterfactual",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_evaluate_counterfactual(self, target, intervention, evidence)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9670,7 +9670,7 @@
         {
           "method_name": "_test_effect_stability",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "_test_effect_stability(self, intervention, target, evidence, n_perturbations)",
           "complexity": "LOW",
           "priority": "LOW",
@@ -9695,7 +9695,7 @@
         {
           "method_name": "aggregate_risk_and_prioritize",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "aggregate_risk_and_prioritize(self, omission_score, insufficiency_score, unnecessity_score, causal_effect, feasibility, cost)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -9723,7 +9723,7 @@
         {
           "method_name": "refutation_and_sanity_checks",
           "class": "BayesianCounterfactualAuditor",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "refutation_and_sanity_checks(self, dag, target, treatment, confounders)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -9748,7 +9748,7 @@
         {
           "method_name": "__init__",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "__init__(self)",
           "complexity": "MEDIUM",
           "priority": "CRITICAL",
@@ -9771,7 +9771,7 @@
         {
           "method_name": "classify_test_type",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "classify_test_type(self, necessity, sufficiency)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9796,7 +9796,7 @@
         {
           "method_name": "apply_test_logic",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "apply_test_logic(self, test_type, evidence_found, prior, bayes_factor)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9821,7 +9821,7 @@
         {
           "method_name": "is_hoop_test",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_hoop_test(self, test_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9846,7 +9846,7 @@
         {
           "method_name": "is_smoking_gun",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_smoking_gun(self, test_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9871,7 +9871,7 @@
         {
           "method_name": "is_doubly_decisive",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_doubly_decisive(self, test_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9896,7 +9896,7 @@
         {
           "method_name": "is_straw_in_wind",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_straw_in_wind(self, test_type)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9921,7 +9921,7 @@
         {
           "method_name": "create_hierarchical_model",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "create_hierarchical_model(self, mechanism_priors)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9946,7 +9946,7 @@
         {
           "method_name": "infer_mechanism_posterior",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "infer_mechanism_posterior(self, model, observations, n_iter, burn_in, n_chains)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9973,7 +9973,7 @@
         {
           "method_name": "get_type_posterior",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_type_posterior(self, inference)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -9998,7 +9998,7 @@
         {
           "method_name": "get_sequence_mode",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_sequence_mode(self, inference)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10023,7 +10023,7 @@
         {
           "method_name": "get_coherence_score",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_coherence_score(self, inference)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10048,7 +10048,7 @@
         {
           "method_name": "get_r_hat",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_r_hat(self, inference)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10073,7 +10073,7 @@
         {
           "method_name": "get_ess",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_ess(self, inference)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10098,7 +10098,7 @@
         {
           "method_name": "is_inference_uncertain",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_inference_uncertain(self, inference)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -10125,7 +10125,7 @@
         {
           "method_name": "posterior_predictive_check",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "posterior_predictive_check(self, model, posterior_samples, observed_data)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -10150,7 +10150,7 @@
         {
           "method_name": "get_ppd_p_value",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_ppd_p_value(self, ppc)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10175,7 +10175,7 @@
         {
           "method_name": "get_ablation_curve",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_ablation_curve(self, ppc)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10200,7 +10200,7 @@
         {
           "method_name": "get_ppc_recommendation",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_ppc_recommendation(self, ppc)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10225,7 +10225,7 @@
         {
           "method_name": "verify_conditional_independence",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "verify_conditional_independence(self, model, dag, independence_tests)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10250,7 +10250,7 @@
         {
           "method_name": "get_independence_tests",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_independence_tests(self, verification)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10275,7 +10275,7 @@
         {
           "method_name": "get_delta_waic",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_delta_waic(self, verification)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10300,7 +10300,7 @@
         {
           "method_name": "get_model_preference",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_model_preference(self, verification)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10325,7 +10325,7 @@
         {
           "method_name": "create_auditor",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "create_auditor(self)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10350,7 +10350,7 @@
         {
           "method_name": "construct_scm",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "construct_scm(self, auditor, dag, structural_equations)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10375,7 +10375,7 @@
         {
           "method_name": "counterfactual_query",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "counterfactual_query(self, auditor, intervention, target, evidence)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10400,7 +10400,7 @@
         {
           "method_name": "get_causal_effect",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_causal_effect(self, query)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -10427,7 +10427,7 @@
         {
           "method_name": "is_sufficient",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_sufficient(self, query)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10452,7 +10452,7 @@
         {
           "method_name": "is_necessary",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_necessary(self, query)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10477,7 +10477,7 @@
         {
           "method_name": "is_effect_stable",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "is_effect_stable(self, query)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10502,7 +10502,7 @@
         {
           "method_name": "aggregate_risk",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "aggregate_risk(self, auditor, omission_score, insufficiency_score, unnecessity_score, causal_effect, feasibility, cost)",
           "complexity": "HIGH",
           "priority": "MEDIUM",
@@ -10530,7 +10530,7 @@
         {
           "method_name": "get_risk_score",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_risk_score(self, aggregation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10555,7 +10555,7 @@
         {
           "method_name": "get_success_probability",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_success_probability(self, aggregation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10580,7 +10580,7 @@
         {
           "method_name": "get_priority",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_priority(self, aggregation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10605,7 +10605,7 @@
         {
           "method_name": "get_recommendations",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_recommendations(self, aggregation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10630,7 +10630,7 @@
         {
           "method_name": "refutation_checks",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "refutation_checks(self, auditor, dag, target, treatment, confounders)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -10657,7 +10657,7 @@
         {
           "method_name": "get_negative_controls",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_negative_controls(self, refutation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10682,7 +10682,7 @@
         {
           "method_name": "get_placebo_effect",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_placebo_effect(self, refutation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10707,7 +10707,7 @@
         {
           "method_name": "get_sanity_violations",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_sanity_violations(self, refutation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -10732,7 +10732,7 @@
         {
           "method_name": "all_checks_passed",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "all_checks_passed(self, refutation)",
           "complexity": "MEDIUM",
           "priority": "HIGH",
@@ -10757,7 +10757,7 @@
         {
           "method_name": "get_refutation_recommendation",
           "class": "DerekBeachProducer",
-          "file": "dereck_beach.py",
+          "file": "derek_beach.py",
           "signature": "get_refutation_recommendation(self, refutation)",
           "complexity": "MEDIUM",
           "priority": "MEDIUM",
@@ -21697,7 +21697,7 @@
     {
       "method_name": "classify_test",
       "class": "BeachEvidentialTest",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "classify_test(necessity, sufficiency)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -21720,7 +21720,7 @@
     {
       "method_name": "apply_test_logic",
       "class": "BeachEvidentialTest",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "apply_test_logic(test_type, evidence_found, prior, bayes_factor)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -21743,7 +21743,7 @@
     {
       "method_name": "__init__",
       "class": "CDAFException",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, message, details, stage, recoverable)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -21766,7 +21766,7 @@
     {
       "method_name": "_format_message",
       "class": "CDAFException",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_format_message(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -21791,7 +21791,7 @@
     {
       "method_name": "to_dict",
       "class": "CDAFException",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "to_dict(self)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -21816,7 +21816,7 @@
     {
       "method_name": "check_sum_to_one",
       "class": "MechanismTypeConfig",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "check_sum_to_one(cls, v, values)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -21839,7 +21839,7 @@
     {
       "method_name": "__init__",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config_path)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -21862,7 +21862,7 @@
     {
       "method_name": "_load_config",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_load_config(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -21887,7 +21887,7 @@
     {
       "method_name": "_load_default_config",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_load_default_config(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -21912,7 +21912,7 @@
     {
       "method_name": "_validate_config",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_validate_config(self)",
       "complexity": "LOW",
       "priority": "HIGH",
@@ -21937,7 +21937,7 @@
     {
       "method_name": "get",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get(self, key, default)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -21962,7 +21962,7 @@
     {
       "method_name": "get_bayesian_threshold",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_bayesian_threshold(self, key)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -21992,7 +21992,7 @@
     {
       "method_name": "get_mechanism_prior",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_mechanism_prior(self, mechanism_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22017,7 +22017,7 @@
     {
       "method_name": "get_performance_setting",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_performance_setting(self, key)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22042,7 +22042,7 @@
     {
       "method_name": "update_priors_from_feedback",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "update_priors_from_feedback(self, feedback_data)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22067,7 +22067,7 @@
     {
       "method_name": "_save_prior_history",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_save_prior_history(self, feedback_data, uncertainty_reduction)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22092,7 +22092,7 @@
     {
       "method_name": "_load_uncertainty_history",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_load_uncertainty_history(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22117,7 +22117,7 @@
     {
       "method_name": "check_uncertainty_reduction_criterion",
       "class": "ConfigLoader",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "check_uncertainty_reduction_criterion(self, current_uncertainty)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -22142,7 +22142,7 @@
     {
       "method_name": "__init__",
       "class": "PDFProcessor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config, retry_handler)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -22165,7 +22165,7 @@
     {
       "method_name": "load_document",
       "class": "PDFProcessor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "load_document(self, pdf_path)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22190,7 +22190,7 @@
     {
       "method_name": "extract_text",
       "class": "PDFProcessor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "extract_text(self)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22217,7 +22217,7 @@
     {
       "method_name": "extract_tables",
       "class": "PDFProcessor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "extract_tables(self)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22242,7 +22242,7 @@
     {
       "method_name": "extract_sections",
       "class": "PDFProcessor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "extract_sections(self)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22267,7 +22267,7 @@
     {
       "method_name": "__init__",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config, nlp_model)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -22290,7 +22290,7 @@
     {
       "method_name": "extract_causal_hierarchy",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "extract_causal_hierarchy(self, text)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -22318,7 +22318,7 @@
     {
       "method_name": "_extract_goals",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_extract_goals(self, text)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22344,7 +22344,7 @@
     {
       "method_name": "_parse_goal_context",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_parse_goal_context(self, goal_id, context)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22371,7 +22371,7 @@
     {
       "method_name": "_add_node_to_graph",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_add_node_to_graph(self, node)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22398,7 +22398,7 @@
     {
       "method_name": "_extract_causal_links",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_extract_causal_links(self, text)",
       "complexity": "HIGH",
       "priority": "LOW",
@@ -22426,7 +22426,7 @@
     {
       "method_name": "_calculate_semantic_distance",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_semantic_distance(self, source, target)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22451,7 +22451,7 @@
     {
       "method_name": "_calculate_type_transition_prior",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_type_transition_prior(self, source, target)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22476,7 +22476,7 @@
     {
       "method_name": "_check_structural_violation",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_check_structural_violation(self, source, target)",
       "complexity": "LOW",
       "priority": "HIGH",
@@ -22501,7 +22501,7 @@
     {
       "method_name": "_calculate_language_specificity",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_language_specificity(self, keyword, policy_area, context)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22526,7 +22526,7 @@
     {
       "method_name": "_assess_temporal_coherence",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_assess_temporal_coherence(self, source, target)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22551,7 +22551,7 @@
     {
       "method_name": "_assess_financial_consistency",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_assess_financial_consistency(self, source, target)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22576,7 +22576,7 @@
     {
       "method_name": "_calculate_textual_proximity",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_textual_proximity(self, source, target, text)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22604,7 +22604,7 @@
     {
       "method_name": "_initialize_prior",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_initialize_prior(self, source, target)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22629,7 +22629,7 @@
     {
       "method_name": "_calculate_composite_likelihood",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_composite_likelihood(self, evidence)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22654,7 +22654,7 @@
     {
       "method_name": "_build_type_hierarchy",
       "class": "CausalExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_build_type_hierarchy(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22679,7 +22679,7 @@
     {
       "method_name": "__init__",
       "class": "MechanismPartExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config, nlp_model)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -22702,7 +22702,7 @@
     {
       "method_name": "extract_entity_activity",
       "class": "MechanismPartExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "extract_entity_activity(self, text)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22728,7 +22728,7 @@
     {
       "method_name": "_normalize_entity",
       "class": "MechanismPartExtractor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_normalize_entity(self, entity)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22753,7 +22753,7 @@
     {
       "method_name": "__init__",
       "class": "FinancialAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -22776,7 +22776,7 @@
     {
       "method_name": "trace_financial_allocation",
       "class": "FinancialAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "trace_financial_allocation(self, tables, nodes, graph)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22801,7 +22801,7 @@
     {
       "method_name": "_process_financial_table",
       "class": "FinancialAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_process_financial_table(self, table, nodes)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22826,7 +22826,7 @@
     {
       "method_name": "_parse_amount",
       "class": "FinancialAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_parse_amount(self, value)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22851,7 +22851,7 @@
     {
       "method_name": "_match_program_to_node",
       "class": "FinancialAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_match_program_to_node(self, program_id, nodes)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -22876,7 +22876,7 @@
     {
       "method_name": "_perform_counterfactual_budget_check",
       "class": "FinancialAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_perform_counterfactual_budget_check(self, nodes, graph)",
       "complexity": "LOW",
       "priority": "HIGH",
@@ -22901,7 +22901,7 @@
     {
       "method_name": "__init__",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -22924,7 +22924,7 @@
     {
       "method_name": "audit_evidence_traceability",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "audit_evidence_traceability(self, nodes)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22949,7 +22949,7 @@
     {
       "method_name": "audit_sequence_logic",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "audit_sequence_logic(self, graph)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -22974,7 +22974,7 @@
     {
       "method_name": "bayesian_counterfactual_audit",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "bayesian_counterfactual_audit(self, nodes, graph, historical_data, pdet_alignment)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -23004,7 +23004,7 @@
     {
       "method_name": "_build_normative_dag",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_build_normative_dag(self)",
       "complexity": "HIGH",
       "priority": "LOW",
@@ -23033,7 +23033,7 @@
     {
       "method_name": "_get_default_historical_priors",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_get_default_historical_priors(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23058,7 +23058,7 @@
     {
       "method_name": "_audit_direct_evidence",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_audit_direct_evidence(self, nodes, scm_dag, historical_data)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23083,7 +23083,7 @@
     {
       "method_name": "_audit_causal_implications",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_audit_causal_implications(self, nodes, graph, direct_evidence)",
       "complexity": "HIGH",
       "priority": "LOW",
@@ -23110,7 +23110,7 @@
     {
       "method_name": "_audit_systemic_risk",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_audit_systemic_risk(self, nodes, graph, direct_evidence, causal_implications, pdet_alignment)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23137,7 +23137,7 @@
     {
       "method_name": "_generate_optimal_remediations",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_generate_optimal_remediations(self, direct_evidence, causal_implications, systemic_risk)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23162,7 +23162,7 @@
     {
       "method_name": "_get_remediation_text",
       "class": "OperationalizationAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_get_remediation_text(self, omission, node_id)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23189,7 +23189,7 @@
     {
       "method_name": "__init__",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config, nlp_model)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -23212,7 +23212,7 @@
     {
       "method_name": "_log_refactored_components",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_log_refactored_components(self)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23237,7 +23237,7 @@
     {
       "method_name": "infer_mechanisms",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "infer_mechanisms(self, nodes, text)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23263,7 +23263,7 @@
     {
       "method_name": "_infer_single_mechanism",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_infer_single_mechanism(self, node, text, all_nodes)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23289,7 +23289,7 @@
     {
       "method_name": "_extract_observations",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_extract_observations(self, node, text)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23315,7 +23315,7 @@
     {
       "method_name": "_infer_mechanism_type",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_infer_mechanism_type(self, observations)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23340,7 +23340,7 @@
     {
       "method_name": "_infer_activity_sequence",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_infer_activity_sequence(self, observations, mechanism_type_posterior)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23365,7 +23365,7 @@
     {
       "method_name": "_calculate_coherence_factor",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_coherence_factor(self, node, observations, all_nodes)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23390,7 +23390,7 @@
     {
       "method_name": "_test_sufficiency",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_test_sufficiency(self, node, observations)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23415,7 +23415,7 @@
     {
       "method_name": "_test_necessity",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_test_necessity(self, node, observations)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23440,7 +23440,7 @@
     {
       "method_name": "_generate_necessity_remediation",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_generate_necessity_remediation(self, node_id, missing_components)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23465,7 +23465,7 @@
     {
       "method_name": "_quantify_uncertainty",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_quantify_uncertainty(self, mechanism_type_posterior, sequence_posterior, coherence_score)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23490,7 +23490,7 @@
     {
       "method_name": "_detect_gaps",
       "class": "BayesianMechanismInference",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_detect_gaps(self, node, observations, uncertainty)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23515,7 +23515,7 @@
     {
       "method_name": "__init__",
       "class": "CausalInferenceSetup",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -23538,7 +23538,7 @@
     {
       "method_name": "classify_goal_dynamics",
       "class": "CausalInferenceSetup",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "classify_goal_dynamics(self, nodes)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23563,7 +23563,7 @@
     {
       "method_name": "assign_probative_value",
       "class": "CausalInferenceSetup",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "assign_probative_value(self, nodes)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23588,7 +23588,7 @@
     {
       "method_name": "identify_failure_points",
       "class": "CausalInferenceSetup",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "identify_failure_points(self, graph, text)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23614,7 +23614,7 @@
     {
       "method_name": "__init__",
       "class": "ReportingEngine",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config, output_dir)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -23637,7 +23637,7 @@
     {
       "method_name": "generate_causal_diagram",
       "class": "ReportingEngine",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "generate_causal_diagram(self, graph, policy_code)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -23664,7 +23664,7 @@
     {
       "method_name": "generate_accountability_matrix",
       "class": "ReportingEngine",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "generate_accountability_matrix(self, graph, policy_code)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23689,7 +23689,7 @@
     {
       "method_name": "generate_confidence_report",
       "class": "ReportingEngine",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "generate_confidence_report(self, nodes, graph, causal_chains, audit_results, financial_auditor, sequence_warnings, policy_code)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -23717,7 +23717,7 @@
     {
       "method_name": "_calculate_quality_score",
       "class": "ReportingEngine",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_quality_score(self, traceability, financial, logic, ea)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23742,7 +23742,7 @@
     {
       "method_name": "generate_causal_model_json",
       "class": "ReportingEngine",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "generate_causal_model_json(self, graph, nodes, policy_code)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -23769,7 +23769,7 @@
     {
       "method_name": "__init__",
       "class": "CDAFFramework",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, config_path, output_dir, log_level)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -23792,7 +23792,7 @@
     {
       "method_name": "process_document",
       "class": "CDAFFramework",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "process_document(self, pdf_path, policy_code)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23817,7 +23817,7 @@
     {
       "method_name": "_extract_feedback_from_audit",
       "class": "CDAFFramework",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_extract_feedback_from_audit(self, inferred_mechanisms, counterfactual_audit, audit_results)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23842,7 +23842,7 @@
     {
       "method_name": "_validate_dnp_compliance",
       "class": "CDAFFramework",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_validate_dnp_compliance(self, nodes, graph, policy_code)",
       "complexity": "LOW",
       "priority": "HIGH",
@@ -23867,7 +23867,7 @@
     {
       "method_name": "_generate_dnp_report",
       "class": "CDAFFramework",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_generate_dnp_report(self, dnp_results, policy_code)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -23892,7 +23892,7 @@
     {
       "method_name": "get_bayes_factor",
       "class": "BayesFactorTable",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_bayes_factor(cls, test_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23915,7 +23915,7 @@
     {
       "method_name": "get_version",
       "class": "BayesFactorTable",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_version(cls)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23938,7 +23938,7 @@
     {
       "method_name": "__init__",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, calibration_params)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -23961,7 +23961,7 @@
     {
       "method_name": "calculate_likelihood_adaptativo",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "calculate_likelihood_adaptativo(self, evidence_dict, test_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -23986,7 +23986,7 @@
     {
       "method_name": "_adjust_domain_weights",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_adjust_domain_weights(self, domain_scores)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24011,7 +24011,7 @@
     {
       "method_name": "sensitivity_analysis",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "sensitivity_analysis(self, evidence_dict, test_type, perturbation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24036,7 +24036,7 @@
     {
       "method_name": "_perturb_evidence",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_perturb_evidence(self, evidence_dict, domain, perturbation)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24061,7 +24061,7 @@
     {
       "method_name": "_add_ood_noise",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_add_ood_noise(self, evidence_dict)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24086,7 +24086,7 @@
     {
       "method_name": "generate_traceability_record",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "generate_traceability_record(self, evidence_dict, test_type, result, seed)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24111,7 +24111,7 @@
     {
       "method_name": "validate_quality_criteria",
       "class": "AdaptivePriorCalculator",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "validate_quality_criteria(self, validation_samples)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -24136,7 +24136,7 @@
     {
       "method_name": "__init__",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self, mechanism_priors)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -24159,7 +24159,7 @@
     {
       "method_name": "infer_mechanism_posterior",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "infer_mechanism_posterior(self, observations, n_iter, burn_in, n_chains)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24184,7 +24184,7 @@
     {
       "method_name": "_run_mcmc_chain",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_run_mcmc_chain(self, observations, n_iter, burn_in, seed)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24209,7 +24209,7 @@
     {
       "method_name": "_calculate_likelihood",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_likelihood(self, mechanism_type, observations)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24234,7 +24234,7 @@
     {
       "method_name": "_get_mode_sequence",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_get_mode_sequence(self, samples)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24259,7 +24259,7 @@
     {
       "method_name": "_calculate_r_hat",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_r_hat(self, chains)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24284,7 +24284,7 @@
     {
       "method_name": "_calculate_ess",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_ess(self, samples)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24309,7 +24309,7 @@
     {
       "method_name": "posterior_predictive_check",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "posterior_predictive_check(self, posterior_samples, observed_data)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -24334,7 +24334,7 @@
     {
       "method_name": "_ablation_analysis",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_ablation_analysis(self, posterior_samples, observed_data)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24359,7 +24359,7 @@
     {
       "method_name": "verify_conditional_independence",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "verify_conditional_independence(self, dag, independence_tests)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24384,7 +24384,7 @@
     {
       "method_name": "_generate_independence_tests",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_generate_independence_tests(self, dag, n_tests)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24409,7 +24409,7 @@
     {
       "method_name": "_calculate_waic_difference",
       "class": "HierarchicalGenerativeModel",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_calculate_waic_difference(self, dag)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24434,7 +24434,7 @@
     {
       "method_name": "__init__",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -24457,7 +24457,7 @@
     {
       "method_name": "construct_scm",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "construct_scm(self, dag, structural_equations)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24482,7 +24482,7 @@
     {
       "method_name": "_create_default_equations",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_create_default_equations(self, dag)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24507,7 +24507,7 @@
     {
       "method_name": "counterfactual_query",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "counterfactual_query(self, intervention, target, evidence)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24532,7 +24532,7 @@
     {
       "method_name": "_evaluate_factual",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_evaluate_factual(self, target, evidence)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24557,7 +24557,7 @@
     {
       "method_name": "_evaluate_counterfactual",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_evaluate_counterfactual(self, target, intervention, evidence)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24582,7 +24582,7 @@
     {
       "method_name": "_test_effect_stability",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "_test_effect_stability(self, intervention, target, evidence, n_perturbations)",
       "complexity": "LOW",
       "priority": "LOW",
@@ -24607,7 +24607,7 @@
     {
       "method_name": "aggregate_risk_and_prioritize",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "aggregate_risk_and_prioritize(self, omission_score, insufficiency_score, unnecessity_score, causal_effect, feasibility, cost)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -24635,7 +24635,7 @@
     {
       "method_name": "refutation_and_sanity_checks",
       "class": "BayesianCounterfactualAuditor",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "refutation_and_sanity_checks(self, dag, target, treatment, confounders)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -24660,7 +24660,7 @@
     {
       "method_name": "__init__",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "__init__(self)",
       "complexity": "MEDIUM",
       "priority": "CRITICAL",
@@ -24683,7 +24683,7 @@
     {
       "method_name": "classify_test_type",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "classify_test_type(self, necessity, sufficiency)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24708,7 +24708,7 @@
     {
       "method_name": "apply_test_logic",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "apply_test_logic(self, test_type, evidence_found, prior, bayes_factor)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24733,7 +24733,7 @@
     {
       "method_name": "is_hoop_test",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_hoop_test(self, test_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24758,7 +24758,7 @@
     {
       "method_name": "is_smoking_gun",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_smoking_gun(self, test_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24783,7 +24783,7 @@
     {
       "method_name": "is_doubly_decisive",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_doubly_decisive(self, test_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24808,7 +24808,7 @@
     {
       "method_name": "is_straw_in_wind",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_straw_in_wind(self, test_type)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24833,7 +24833,7 @@
     {
       "method_name": "create_hierarchical_model",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "create_hierarchical_model(self, mechanism_priors)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24858,7 +24858,7 @@
     {
       "method_name": "infer_mechanism_posterior",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "infer_mechanism_posterior(self, model, observations, n_iter, burn_in, n_chains)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24885,7 +24885,7 @@
     {
       "method_name": "get_type_posterior",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_type_posterior(self, inference)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24910,7 +24910,7 @@
     {
       "method_name": "get_sequence_mode",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_sequence_mode(self, inference)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24935,7 +24935,7 @@
     {
       "method_name": "get_coherence_score",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_coherence_score(self, inference)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24960,7 +24960,7 @@
     {
       "method_name": "get_r_hat",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_r_hat(self, inference)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -24985,7 +24985,7 @@
     {
       "method_name": "get_ess",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_ess(self, inference)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25010,7 +25010,7 @@
     {
       "method_name": "is_inference_uncertain",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_inference_uncertain(self, inference)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -25037,7 +25037,7 @@
     {
       "method_name": "posterior_predictive_check",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "posterior_predictive_check(self, model, posterior_samples, observed_data)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -25062,7 +25062,7 @@
     {
       "method_name": "get_ppd_p_value",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_ppd_p_value(self, ppc)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25087,7 +25087,7 @@
     {
       "method_name": "get_ablation_curve",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_ablation_curve(self, ppc)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25112,7 +25112,7 @@
     {
       "method_name": "get_ppc_recommendation",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_ppc_recommendation(self, ppc)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25137,7 +25137,7 @@
     {
       "method_name": "verify_conditional_independence",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "verify_conditional_independence(self, model, dag, independence_tests)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25162,7 +25162,7 @@
     {
       "method_name": "get_independence_tests",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_independence_tests(self, verification)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25187,7 +25187,7 @@
     {
       "method_name": "get_delta_waic",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_delta_waic(self, verification)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25212,7 +25212,7 @@
     {
       "method_name": "get_model_preference",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_model_preference(self, verification)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25237,7 +25237,7 @@
     {
       "method_name": "create_auditor",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "create_auditor(self)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25262,7 +25262,7 @@
     {
       "method_name": "construct_scm",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "construct_scm(self, auditor, dag, structural_equations)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25287,7 +25287,7 @@
     {
       "method_name": "counterfactual_query",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "counterfactual_query(self, auditor, intervention, target, evidence)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25312,7 +25312,7 @@
     {
       "method_name": "get_causal_effect",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_causal_effect(self, query)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -25339,7 +25339,7 @@
     {
       "method_name": "is_sufficient",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_sufficient(self, query)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25364,7 +25364,7 @@
     {
       "method_name": "is_necessary",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_necessary(self, query)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25389,7 +25389,7 @@
     {
       "method_name": "is_effect_stable",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "is_effect_stable(self, query)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25414,7 +25414,7 @@
     {
       "method_name": "aggregate_risk",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "aggregate_risk(self, auditor, omission_score, insufficiency_score, unnecessity_score, causal_effect, feasibility, cost)",
       "complexity": "HIGH",
       "priority": "MEDIUM",
@@ -25442,7 +25442,7 @@
     {
       "method_name": "get_risk_score",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_risk_score(self, aggregation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25467,7 +25467,7 @@
     {
       "method_name": "get_success_probability",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_success_probability(self, aggregation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25492,7 +25492,7 @@
     {
       "method_name": "get_priority",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_priority(self, aggregation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25517,7 +25517,7 @@
     {
       "method_name": "get_recommendations",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_recommendations(self, aggregation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25542,7 +25542,7 @@
     {
       "method_name": "refutation_checks",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "refutation_checks(self, auditor, dag, target, treatment, confounders)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -25569,7 +25569,7 @@
     {
       "method_name": "get_negative_controls",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_negative_controls(self, refutation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25594,7 +25594,7 @@
     {
       "method_name": "get_placebo_effect",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_placebo_effect(self, refutation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25619,7 +25619,7 @@
     {
       "method_name": "get_sanity_violations",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_sanity_violations(self, refutation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",
@@ -25644,7 +25644,7 @@
     {
       "method_name": "all_checks_passed",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "all_checks_passed(self, refutation)",
       "complexity": "MEDIUM",
       "priority": "HIGH",
@@ -25669,7 +25669,7 @@
     {
       "method_name": "get_refutation_recommendation",
       "class": "DerekBeachProducer",
-      "file": "dereck_beach.py",
+      "file": "derek_beach.py",
       "signature": "get_refutation_recommendation(self, refutation)",
       "complexity": "MEDIUM",
       "priority": "MEDIUM",

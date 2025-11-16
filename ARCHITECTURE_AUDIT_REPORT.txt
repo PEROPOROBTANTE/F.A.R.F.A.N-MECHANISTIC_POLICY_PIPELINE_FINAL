@@ -175,7 +175,7 @@ SUSPICIOUS CONSTRUCTS
      Class: ValidationMetric
      Reason: Class name suggests questionnaire/pattern logic. Such logic should only exist in QuestionnaireResourceProvider.
 
-  34. File: src/saaaaaa/analysis/dereck_beach.py
+  34. File: src/saaaaaa/analysis/derek_beach.py
      Line: 228
      Class: CDAFValidationError
      Reason: Class name suggests questionnaire/pattern logic. Such logic should only exist in QuestionnaireResourceProvider.

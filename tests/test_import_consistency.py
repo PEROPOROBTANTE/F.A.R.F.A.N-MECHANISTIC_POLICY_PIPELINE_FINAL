@@ -89,7 +89,7 @@ def test_all_compatibility_shims():
     compatibility_modules = [
         'aggregation',
         'bayesian_multilevel_system',
-        # 'dereck_beach',  # Skip - has spacy dependency
+        # 'derek_beach',  # Skip - has spacy dependency
         'document_ingestion',
         # 'embedding_policy',  # Skip - has sentence_transformers dependency
         'macro_prompts',

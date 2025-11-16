@@ -494,7 +494,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:240`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:240`
 
 **Evidence:**
 - Class: CDAFConfigError
@@ -511,7 +511,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:248`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:248`
 
 **Evidence:**
 - Class: BayesianThresholdsConfig
@@ -528,7 +528,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:277`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:277`
 
 **Evidence:**
 - Class: MechanismTypeConfig
@@ -545,7 +545,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:294`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:294`
 
 **Evidence:**
 - Class: PerformanceConfig
@@ -562,7 +562,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:314`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:314`
 
 **Evidence:**
 - Class: SelfReflectionConfig
@@ -579,7 +579,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:336`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:336`
 
 **Evidence:**
 - Class: CDAFConfigSchema
@@ -596,7 +596,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:432`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:432`
 
 **Evidence:**
 - Class: ConfigLoader
@@ -613,7 +613,7 @@
 
 **Description:** Config class lacks from_env=✗ or from_cli=✗
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py:367`
+**Location:** `src/saaaaaa/analysis/derek_beach.py:367`
 
 **Evidence:**
 - Class: Config

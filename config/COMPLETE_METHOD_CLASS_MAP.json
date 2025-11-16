@@ -11,7 +11,7 @@
     "total_classes": 82,
     "total_methods": 416,
     "integration_target_methods": 395,
-    "key_file": "dereck_beach.py (99 methods - THE KEY)"
+    "key_file": "derek_beach.py (99 methods - THE KEY)"
   },
   "files": {
     "policy_processor.py": {
@@ -392,7 +392,7 @@
         }
       }
     },
-    "dereck_beach.py": {
+    "derek_beach.py": {
       "total_classes": 14,
       "total_methods": 99,
       "KEY_FILE": true,

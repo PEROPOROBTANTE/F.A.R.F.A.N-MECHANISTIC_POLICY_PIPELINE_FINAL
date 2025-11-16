@@ -240,7 +240,7 @@ class ValidationPredicates:
         Verify that a producer module is available and initialized.
 
         Args:
-            producer_name: Name of the producer (e.g., 'dereck_beach')
+            producer_name: Name of the producer (e.g., 'derek_beach')
             producers_dict: Dictionary of initialized producers
 
         Returns:

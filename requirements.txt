@@ -2,7 +2,7 @@
 # F.A.R.F.A.N MECHANISTIC POLICY PIPELINE - PRODUCTION DEPENDENCIES
 # ============================================================================
 # Versión: 2025.11 - Complete Production Stack
-# Python Version: 3.11+ (Tested on 3.11.14)
+# Python Version: 3.12.x (Tested on 3.12.12)
 #
 # AUDIT LOG (2025-11-15):
 # ✅ Fixed 4 critical dependency conflicts (see TEST_AUDIT_REPORT.md)

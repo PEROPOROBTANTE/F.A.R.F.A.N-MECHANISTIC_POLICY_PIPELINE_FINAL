@@ -58,7 +58,7 @@ class CodeInventoryGenerator:
 
         # Core producer files
         self.core_files = [
-            "dereck_beach.py",
+            "derek_beach.py",
             "policy_processor.py",
             "embedding_policy.py",
             "semantic_chunking_policy.py",

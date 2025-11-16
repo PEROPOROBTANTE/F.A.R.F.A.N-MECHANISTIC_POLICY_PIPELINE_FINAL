@@ -368,7 +368,7 @@ def main():
         'report_assembly.py',
         'policy_processor.py',
         'contradiction_deteccion.py',
-        'dereck_beach.py',
+        'derek_beach.py',
         'embedding_policy.py',
         'teoria_cambio.py'
     ]

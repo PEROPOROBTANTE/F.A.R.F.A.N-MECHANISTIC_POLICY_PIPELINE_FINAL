@@ -1,5 +1,7 @@
 .PHONY: help install setup verify clean validate-schema validate-monolith validate-canonical equip equip-python equip-native equip-compat equip-types audit-imports audit-paths test-paths fix-paths ci-prep-dirs
 
+PYTHON ?= python3.12
+
 # Default target: show help
 .DEFAULT_GOAL := help
 
@@ -26,25 +28,25 @@ install: setup
 # Setup the development environment (dependencies + editable package install)
 setup:
 	@echo "Installing Python dependencies..."
-	@pip install -r requirements.txt
+	@$(PYTHON) -m pip install -r requirements.txt
 	@echo "Installing development dependencies..."
-	@pip install -r requirements-dev.txt
+	@$(PYTHON) -m pip install -r requirements-dev.txt
 	@echo "Installing package in editable mode..."
-	@pip install -e .
+	@$(PYTHON) -m pip install -e .
 	@echo "✓ Setup complete! Package installed and ready to use."
 
 # Run all verification checks (following orchestrator excellence checklist)
 verify:
 	@echo "=== Step 1: Bytecode Compilation ==="
-	@python -m compileall -q core orchestrator executors || (echo "❌ Compilation failed" && exit 1)
+	@$(PYTHON) -m compileall -q src/saaaaaa || (echo "❌ Compilation failed" && exit 1)
 	@echo "✓ Compilation successful\n"
 	
 	@echo "=== Step 2: Core Purity Scanner (AST anti-I/O and anti-__main__) ==="
-	@python tools/scan_core_purity.py || (echo "❌ Core purity check failed" && exit 1)
+	@$(PYTHON) tools/scan_core_purity.py || (echo "❌ Core purity check failed" && exit 1)
 	@echo "✓ Core purity verified\n"
 	
 	@echo "=== Step 3: Canonical Notation Enforcement ==="
-	@python tools/lint/check_canonical_notation.py || (echo "❌ Canonical notation violations detected" && exit 1)
+	@$(PYTHON) tools/lint/check_canonical_notation.py || (echo "❌ Canonical notation violations detected" && exit 1)
 	@echo "✓ Canonical notation check passed\n"
 	
 	@echo "=== Step 4: Import Linter (Layer Contracts) ==="
@@ -52,14 +54,14 @@ verify:
 	@echo "✓ Import contracts satisfied\n"
 	
 	@echo "=== Step 5: Ruff Linting ==="
-	@ruff check core orchestrator executors --quiet || (echo "⚠️  Ruff found issues" && exit 1)
+	@ruff check src/saaaaaa --quiet || (echo "⚠️  Ruff found issues" && exit 1)
 	@echo "✓ Ruff checks passed\n"
 	
 	@echo "=== Step 6: Mypy Type Checking ==="
-	@mypy core orchestrator executors --config-file pyproject.toml --no-error-summary 2>&1 | tee /tmp/mypy_output.txt | grep -E "(error|warning)" && echo "⚠️  Mypy found issues (install full package for complete check)" || echo "✓ Mypy checks passed\n"
+	@mypy src/saaaaaa --config-file pyproject.toml --no-error-summary 2>&1 | tee /tmp/mypy_output.txt | grep -E "(error|warning)" && echo "⚠️  Mypy found issues (install full package for complete check)" || echo "✓ Mypy checks passed\n"
 	
 	@echo "=== Step 7: Grep Boundary Checks ==="
-	@python tools/grep_boundary_checks.py || (echo "❌ Boundary violations detected" && exit 1)
+	@$(PYTHON) tools/grep_boundary_checks.py || (echo "❌ Boundary violations detected" && exit 1)
 	@echo "✓ Boundary checks passed\n"
 	
 	@echo "=== Step 8: Pycycle (Circular Dependency Detection) ==="
@@ -73,11 +75,11 @@ verify:
 	fi
 	
 	@echo "=== Step 9: Bulk Import Test ==="
-	@python scripts/import_all.py || (echo "❌ Import test failed" && exit 1)
+	@$(PYTHON) scripts/import_all.py || (echo "❌ Import test failed" && exit 1)
 	@echo "✓ Import test passed\n"
 	
 	@echo "=== Step 10: Bandit Security Scan ==="
-	@bandit -q -r core orchestrator executors -f txt 2>&1 | head -20 || echo "✓ Security scan completed\n"
+	@bandit -q -r src/saaaaaa -f txt 2>&1 | head -20 || echo "✓ Security scan completed\n"
 	
 	@echo "=== Step 11: Test Suite ==="
 	@pytest -q -ra tests/ 2>&1 | tail -30 || echo "⚠️  Some tests failed"
@@ -87,12 +89,12 @@ verify:
 # Validate canonical notation usage
 validate-canonical:
 	@echo "Checking canonical notation enforcement..."
-	@python3 tools/lint/check_canonical_notation.py
+	@$(PYTHON) tools/lint/check_canonical_notation.py
 
 # Validate questionnaire monolith against JSON Schema
 validate-monolith:
 	@echo "Validating questionnaire monolith..."
-	@python3 scripts/validate_questionnaire_monolith_schema.py
+	@$(PYTHON) scripts/validate_questionnaire_monolith_schema.py
 
 # Alias for validate-monolith
 validate-schema: validate-monolith
@@ -110,15 +112,15 @@ equip: equip-python equip-native equip-compat
 
 equip-python:
 	@echo "Running Python environment checks..."
-	@python3 scripts/equip_python.py
+	@$(PYTHON) scripts/equip_python.py
 
 equip-native:
 	@echo "Running native dependencies checks..."
-	@python3 scripts/equip_native.py
+	@$(PYTHON) scripts/equip_native.py
 
 equip-compat:
 	@echo "Running compatibility layer checks..."
-	@python3 scripts/equip_compat.py
+	@$(PYTHON) scripts/equip_compat.py
 
 equip-types:
 	@echo "Running type stubs checks..."
@@ -132,17 +134,17 @@ equip-types:
 audit-imports:
 	@echo "=== IMPORT AUDIT ==="
 	@echo "\n1. Shadowing Detection:"
-	@python3 scripts/audit_import_shadowing.py || true
+	@$(PYTHON) scripts/audit_import_shadowing.py || true
 	@echo "\n2. Circular Import Detection:"
-	@python3 scripts/audit_circular_imports.py || true
+	@$(PYTHON) scripts/audit_circular_imports.py || true
 	@echo "\n3. Import Budget Check:"
-	@python3 scripts/audit_import_budget.py || true
+	@$(PYTHON) scripts/audit_import_budget.py || true
 	@echo "\n=== AUDIT COMPLETE ==="
 
 # Path audit - comprehensive path usage and portability checks
 audit-paths:
 	@echo "=== PATH AUDIT ==="
-	@python3 scripts/audit_paths.py
+	@$(PYTHON) scripts/audit_paths.py
 	@echo "✓ Path audit complete. See PATHS_AUDIT.md for details."
 
 # Path testing - run all path validation tests

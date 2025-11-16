@@ -110,7 +110,7 @@ def _analyze_causal_dimensions(
 
 ### 3. BayesianMechanismInference.__init__()
 
-**Location:** `src/saaaaaa/analysis/dereck_beach.py` (class BayesianMechanismInference)
+**Location:** `src/saaaaaa/analysis/derek_beach.py` (class BayesianMechanismInference)
 
 **Signature:**
 ```python

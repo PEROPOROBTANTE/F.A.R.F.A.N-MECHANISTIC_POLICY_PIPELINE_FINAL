@@ -256,7 +256,7 @@
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "BeachProcessor",
             "alias": null,
             "level": 0
@@ -848,14 +848,14 @@
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "AdaptivePriorCalculator",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "BayesFactorTable",
             "alias": null,
             "level": 0
@@ -1067,28 +1067,28 @@
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "AdaptivePriorCalculator",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "BayesFactorTable",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "HierarchicalGenerativeModel",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "BayesianCounterfactualAuditor",
             "alias": null,
             "level": 0
@@ -4882,7 +4882,7 @@
         "classes": 7
       },
       {
-        "path": "src/saaaaaa/analysis/dereck_beach.py",
+        "path": "src/saaaaaa/analysis/derek_beach.py",
         "size": 246702,
         "compiles": true,
         "lines": 5886,
@@ -7278,28 +7278,28 @@
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "CDAFFramework",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "OperationalizationAuditor",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "FinancialAuditor",
             "alias": null,
             "level": 0
           },
           {
             "type": "from",
-            "module": "dereck_beach",
+            "module": "derek_beach",
             "name": "BayesianMechanismInference",
             "alias": null,
             "level": 0
@@ -12908,7 +12908,7 @@
           },
           {
             "type": "from",
-            "module": "saaaaaa.analysis.dereck_beach",
+            "module": "saaaaaa.analysis.derek_beach",
             "name": "BayesianMechanismInference",
             "alias": null,
             "level": 0
@@ -12941,7 +12941,7 @@
           },
           {
             "type": "from",
-            "module": "saaaaaa.analysis.dereck_beach",
+            "module": "saaaaaa.analysis.derek_beach",
             "name": "BayesianMechanismInference",
             "alias": null,
             "level": 0
@@ -16151,7 +16151,7 @@
         ]
       },
       {
-        "path": "config/schemas/dereck_beach/audit_result.schema.json",
+        "path": "config/schemas/derek_beach/audit_result.schema.json",
         "size": 1249,
         "valid": true,
         "keys": [
@@ -16166,7 +16166,7 @@
         ]
       },
       {
-        "path": "config/schemas/dereck_beach/meta_node.schema.json",
+        "path": "config/schemas/derek_beach/meta_node.schema.json",
         "size": 5301,
         "valid": true,
         "keys": [

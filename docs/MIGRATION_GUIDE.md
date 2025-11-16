@@ -46,8 +46,8 @@ All Python modules have moved from the root directory to `src/saaaaaa/` subdirec
 **Old:** `import teoria_cambio`  
 **New:** `from saaaaaa.analysis import teoria_cambio`
 
-**Old:** `import dereck_beach`  
-**New:** `from saaaaaa.analysis import dereck_beach`
+**Old:** `import derek_beach`  
+**New:** `from saaaaaa.analysis import derek_beach`
 
 **Old:** `import financiero_viabilidad_tablas`  
 **New:** `from saaaaaa.analysis import financiero_viabilidad_tablas`

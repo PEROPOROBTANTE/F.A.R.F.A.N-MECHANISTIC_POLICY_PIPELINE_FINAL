@@ -125,7 +125,7 @@ The following files manipulate sys.path (MUST BE REMOVED):
   - Line 18: `sys.path`
   - Line 19: `sys.path.insert`
   - Line 19: `sys.path`
-- **dereck_beach.py**
+- **derek_beach.py**
   - Line 7: `sys.path`
   - Line 8: `sys.path.insert`
   - Line 8: `sys.path`
@@ -400,7 +400,7 @@ Files using relative imports (should be converted to absolute):
   - Line 1009: `from .factory import write_csv`
 - **src/saaaaaa/analysis/contradiction_deteccion.py**
   - Line 303: `from .factory import load_spacy_model`
-- **src/saaaaaa/analysis/dereck_beach.py**
+- **src/saaaaaa/analysis/derek_beach.py**
   - Line 466: `from .factory import load_yaml`
   - Line 743: `from .factory import load_json`
   - Line 743: `from .factory import save_json`
@@ -490,7 +490,7 @@ Files using relative imports (should be converted to absolute):
 | core/contracts.py | 0 | 0 | 0 | ➖ external |
 | coverage_gate.py | 5 | 0 | 3 | ❌ sys.path |
 | demo_macro_prompts.py | 11 | 0 | 3 | ❌ sys.path |
-| dereck_beach.py | 25 | 0 | 3 | ❌ sys.path |
+| derek_beach.py | 25 | 0 | 3 | ❌ sys.path |
 | document_ingestion.py | 4 | 0 | 3 | ❌ sys.path |
 | embedding_policy.py | 1 | 0 | 3 | ❌ sys.path |
 | evidence_registry.py | 5 | 0 | 3 | ❌ sys.path |
@@ -527,7 +527,7 @@ These files should be migrated or removed:
 - core/contracts.py
 - coverage_gate.py
 - demo_macro_prompts.py
-- dereck_beach.py
+- derek_beach.py
 - document_ingestion.py
 - embedding_policy.py
 - evidence_registry.py

@@ -80,7 +80,12 @@ else:
     logger = logging.getLogger(__name__)
 
 
-PolicyArea = Literal["fiscal", "salud", "ambiente", "energía", "transporte"]
+PolicyArea = Literal[
+    "PA01", "PA02", "PA03", "PA04", "PA05",
+    "PA06", "PA07", "PA08", "PA09", "PA10",
+    # Legacy policy areas (kept for backward compatibility)
+    "fiscal", "salud", "ambiente", "energía", "transporte"
+]
 
 
 class SignalPack(BaseModel):

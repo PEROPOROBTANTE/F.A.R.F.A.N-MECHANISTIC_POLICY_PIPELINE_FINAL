@@ -114,7 +114,7 @@
     "modality_types": ["TYPE_A", "TYPE_B", "TYPE_C", "TYPE_D", "TYPE_E", "TYPE_F"],
     "producer_modules": 7,
     "producers": [
-      "dereck_beach - Beach methodology (CDAF framework)",
+      "derek_beach - Beach methodology (CDAF framework)",
       "policy_processor - Industrial policy analysis",
       "embedding_policy - Semantic embeddings and Bayesian analysis",
       "semantic_chunking_policy - Document segmentation",

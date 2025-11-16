@@ -60,7 +60,7 @@ Code Density:         90.1%
 │ • policy_processor                   │
 │ • contradiction_deteccion            │
 │ • financiero_viabilidad_tablas       │
-│ • dereck_beach                       │
+│ • derek_beach                       │
 │ • embedding_policy                   │
 │ • Analyzer_one                       │
 │ • teoria_cambio                      │
@@ -104,7 +104,7 @@ Code Density:         90.1%
 | policy_processor | 5 classes | ⚠️ Requires numpy |
 | contradiction_deteccion | 3 classes | ⚠️ Requires numpy |
 | financiero_viabilidad_tablas | PDETMunicipalPlanAnalyzer | ⚠️ Requires numpy |
-| dereck_beach | 4 classes | ⚠️ Requires dependencies |
+| derek_beach | 4 classes | ⚠️ Requires dependencies |
 | embedding_policy | 3 classes | ⚠️ Requires dependencies |
 | Analyzer_one | 4 classes | ⚠️ Requires dependencies |
 | teoria_cambio | 2 classes | ⚠️ Requires dependencies |
@@ -305,7 +305,7 @@ class MethodExecutor:
 | policy_processor | 5 | 429 | IndustrialPolicyProcessor: 210 |
 | contradiction_deteccion | 3 | 660 | PolicyContradictionDetector: 543 |
 | financiero_viabilidad_tablas | 1 | 207 | PDETMunicipalPlanAnalyzer: 207 |
-| dereck_beach | 4 | 150 | BayesianMechanismInference: 69 |
+| derek_beach | 4 | 150 | BayesianMechanismInference: 69 |
 | embedding_policy | 3 | 90 | BayesianNumericalAnalyzer: 45 |
 | Analyzer_one | 4 | 126 | SemanticAnalyzer: 57 |
 | teoria_cambio | 2 | 141 | TeoriaCambio: 102 |
@@ -1292,7 +1292,7 @@ Producer Module              │ Classes │ References │ Primary Use Case
 policy_processor             │    5    │    429     │ Policy analysis
 contradiction_deteccion      │    3    │    660     │ Contradiction detection
 financiero_viabilidad_tablas │    1    │    207     │ Financial analysis
-dereck_beach                 │    4    │    150     │ Beach tests
+derek_beach                 │    4    │    150     │ Beach tests
 embedding_policy             │    3    │     90     │ Semantic analysis
 Analyzer_one                 │    4    │    126     │ Text mining
 teoria_cambio                │    2    │    141     │ Theory of change

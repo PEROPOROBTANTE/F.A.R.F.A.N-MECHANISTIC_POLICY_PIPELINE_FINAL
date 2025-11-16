@@ -30,7 +30,7 @@ The problem statement (in Spanish) described two categories of import conflicts 
 
 | Category | Count | Path Format | Status |
 |----------|-------|-------------|--------|
-| Derek Beach (CDAF) | 5 | `saaaaaa.analysis.dereck_beach.*` | ✅ Verified |
+| Derek Beach (CDAF) | 5 | `saaaaaa.analysis.derek_beach.*` | ✅ Verified |
 | Contradiction Detection | 3 | `saaaaaa.analysis.contradiction_deteccion.*` | ✅ Verified |
 | Semantic Analyzer | 4 | `saaaaaa.analysis.Analyzer_one.*` | ✅ Verified |
 | Theory of Change | 2 | `saaaaaa.analysis.teoria_cambio.*` | ✅ Verified |
@@ -42,11 +42,11 @@ The problem statement (in Spanish) described two categories of import conflicts 
 **Complete Class List:**
 
 Derek Beach Analysis (5):
-1. ✅ CDAFFramework → `saaaaaa.analysis.dereck_beach.CDAFFramework`
-2. ✅ CausalExtractor → `saaaaaa.analysis.dereck_beach.CausalExtractor`
-3. ✅ OperationalizationAuditor → `saaaaaa.analysis.dereck_beach.OperationalizationAuditor`
-4. ✅ FinancialAuditor → `saaaaaa.analysis.dereck_beach.FinancialAuditor`
-5. ✅ BayesianMechanismInference → `saaaaaa.analysis.dereck_beach.BayesianMechanismInference`
+1. ✅ CDAFFramework → `saaaaaa.analysis.derek_beach.CDAFFramework`
+2. ✅ CausalExtractor → `saaaaaa.analysis.derek_beach.CausalExtractor`
+3. ✅ OperationalizationAuditor → `saaaaaa.analysis.derek_beach.OperationalizationAuditor`
+4. ✅ FinancialAuditor → `saaaaaa.analysis.derek_beach.FinancialAuditor`
+5. ✅ BayesianMechanismInference → `saaaaaa.analysis.derek_beach.BayesianMechanismInference`
 
 Contradiction Detection (3):
 6. ✅ PolicyContradictionDetector → `saaaaaa.analysis.contradiction_deteccion.PolicyContradictionDetector`

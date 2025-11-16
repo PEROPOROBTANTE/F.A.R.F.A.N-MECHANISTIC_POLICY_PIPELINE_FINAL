@@ -1413,6 +1413,75 @@ class Orchestrator:
             logger.warning(f"Failed to initialize RecommendationEngine: {e}")
             self.recommendation_engine = None
 
+
+    def execute_sophisticated_engineering_operation(self, policy_area_id: str) -> dict[str, Any]:
+        """
+        Orchestrates a sophisticated engineering operation:
+        1. Generates 10 smart policy chunks using the canonical SPC ingestion pipeline.
+        2. Loads the corresponding signals (patterns and regex) for the policy area.
+        3. Instantiates an executor.
+        4. Distributes a "work package" (chunks and signals) to the executor.
+        5. Returns the generated artifacts as evidence.
+        """
+        logger.info(f"--- Starting Sophisticated Engineering Operation for: {policy_area_id} ---")
+
+        # 1. Generate 10 smart policy chunks
+        from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+        from pathlib import Path
+
+        document_path = Path(f"data/policy_areas/{policy_area_id}.txt")
+        logger.info(f"Processing document: {document_path}")
+        
+        ingestion_pipeline = CPPIngestionPipeline()
+        canon_package = asyncio.run(ingestion_pipeline.process(document_path, max_chunks=10))
+        
+        logger.info(f"Generated {len(canon_package.chunk_graph.chunks)} chunks for {policy_area_id}.")
+
+        # 2. Load signals
+        from .signal_loader import build_signal_pack_from_monolith
+        from .questionnaire import load_questionnaire
+
+        questionnaire = load_questionnaire()
+        signal_pack = build_signal_pack_from_monolith(policy_area_id, questionnaire=questionnaire)
+        logger.info(f"Loaded signal pack for {policy_area_id} with {len(signal_pack.patterns)} patterns.")
+
+        # 3. Instantiate an executor
+        from . import executors
+
+        # Simple mock for the signal registry, as the executor expects an object with a 'get' method.
+        class MockSignalRegistry:
+            def __init__(self, pack):
+                self._pack = pack
+            def get(self, _policy_area):
+                return self._pack
+
+        executor_instance = executors.D1Q1_Executor(
+            method_executor=self.executor,
+            signal_registry=MockSignalRegistry(signal_pack)
+        )
+        logger.info(f"Instantiated executor: {executor_instance.__class__.__name__}")
+
+        # 4. Prepare and "distribute" the work package
+        work_package = {
+            "canon_policy_package": canon_package.to_dict(),
+            "signal_pack": signal_pack.to_dict(),
+        }
+        
+        logger.info(f"Distributing work package to executor for {policy_area_id}.")
+        # This simulates the distribution. The executor method will provide the evidence of receipt.
+        if hasattr(executor_instance, 'receive_and_process_work_package'):
+            executor_instance.receive_and_process_work_package(work_package)
+        else:
+            logger.error("Executor does not have the 'receive_and_process_work_package' method.")
+
+        logger.info(f"--- Completed Sophisticated Engineering Operation for: {policy_area_id} ---")
+
+        # 5. Return evidence
+        return {
+            "canon_package": canon_package.to_dict(),
+            "signal_pack": signal_pack.to_dict(),
+        }
+
     def _resolve_path(self, path: str | None) -> str | None:
         """Resolve a relative or absolute path, searching multiple candidate locations."""
         if path is None:

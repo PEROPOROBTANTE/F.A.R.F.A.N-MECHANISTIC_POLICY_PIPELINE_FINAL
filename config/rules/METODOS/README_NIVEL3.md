@@ -38,7 +38,7 @@ Cada dimensión contiene 5 preguntas con sus métodos:
 | PP     | policy_processor.py               |
 | CD     | contradiction_deteccion.py        |
 | FV     | financiero_viabilidad_tablas.py   |
-| DB     | dereck_beach.py                   |
+| DB     | derek_beach.py                   |
 | RA     | report_assembly.py                |
 | EP     | embedding_policy.py               |
 | A1     | Analyzer_one.py                   |
@@ -214,7 +214,7 @@ Distribución por Dimensión:
   D6: 155 métodos (37.3%) ← LA MÁS COMPLEJA
 
 Archivo más usado:
-  dereck_beach.py: 99 métodos (23.8%)
+  derek_beach.py: 99 métodos (23.8%)
 ```
 
 ---

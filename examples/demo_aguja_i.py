@@ -14,7 +14,7 @@ Version: 1.0.0
 
 import json
 
-# Import AGUJA I desde dereck_beach
+# Import AGUJA I desde derek_beach
 from pathlib import Path
 
 import numpy as np
@@ -31,7 +31,7 @@ except ImportError as e:
     print("   export PYTHONPATH=/path/to/SAAAAAA/src")
     exit(1)
 
-from saaaaaa.utils.dereck_beach import AdaptivePriorCalculator
+from saaaaaa.utils.derek_beach import AdaptivePriorCalculator
 
 def demo_prompt_i1():
     """Demo PROMPT I-1: Ponderación evidencial con BF y calibración"""
@@ -291,7 +291,7 @@ def main():
 
     print("\n" + "="*80)
     print("📚 Para uso en producción:")
-    print("   from dereck_beach import AdaptivePriorCalculator")
+    print("   from derek_beach import AdaptivePriorCalculator")
     print("   calculator = AdaptivePriorCalculator()")
     print("   result = calculator.calculate_likelihood_adaptativo(evidence, 'hoop')")
     print("="*80)

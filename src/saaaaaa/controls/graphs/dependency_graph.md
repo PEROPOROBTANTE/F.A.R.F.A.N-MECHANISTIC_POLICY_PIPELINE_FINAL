@@ -8,7 +8,7 @@ graph TD
     META2[cuestionario_FIXED.json]
     META3[rubric_scoring.json]
 
-    dereckbeach[dereck_beach]
+    dereckbeach[derek_beach]
     policyprocessor[policy_processor]
     embeddingpolicy[embedding_policy]
     semanticchunkingpolicy[semantic_chunking_policy]

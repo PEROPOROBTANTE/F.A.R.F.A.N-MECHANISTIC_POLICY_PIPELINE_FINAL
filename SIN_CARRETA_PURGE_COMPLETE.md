@@ -114,7 +114,7 @@ SAAAAAA/
    - contracts.py
    - coverage_gate.py
    - demo_macro_prompts.py
-   - dereck_beach.py
+   - derek_beach.py
    - document_ingestion.py
    - embedding_policy.py
    - evidence_registry.py
@@ -169,7 +169,7 @@ SAAAAAA/
 - Found 2 pairs of duplicate files
 
 **Duplicates Removed**:
-1. `config/derek_beach_cdaf_config.yaml` (kept canonical: `config/schemas/dereck_beach/config.yaml`)
+1. `config/derek_beach_cdaf_config.yaml` (kept canonical: `config/schemas/derek_beach/config.yaml`)
 2. `OperationalizationAuditor_v3.0_COMPLETO.yaml` (kept: `.deprecated_yaml_calibrations/financia_callibrator.yaml`)
 
 **Justification**: Eliminates ambiguity, establishes single source of truth.

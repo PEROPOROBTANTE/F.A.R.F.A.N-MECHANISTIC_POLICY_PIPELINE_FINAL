@@ -28,7 +28,12 @@ from pathlib import Path
 from typing import Any
 
 # Add project root to path
-from saaaaaa.validation.signature_validator import FunctionSignature, SignatureRegistry, audit_project_signatures
+from saaaaaa.utils.signature_validator import (
+    FunctionSignature,
+    SignatureMismatch,
+    SignatureRegistry,
+    audit_project_signatures,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +48,7 @@ class SignatureCIChecker:
         self.registry = SignatureRegistry(project_root / "data" / "signature_registry.json")
         self.changed_signatures: list[tuple[str, FunctionSignature, FunctionSignature]] = []
         self.new_signatures: list[FunctionSignature] = []
+        self.mismatches: list[SignatureMismatch] = []
 
     def check_signature_changes(self) -> tuple[int, int, int]:
         """
@@ -51,23 +57,13 @@ class SignatureCIChecker:
         Returns:
             Tuple of (changed_count, new_count, total_count)
         """
-        python_files = list(self.project_root.glob("**/*.py"))
+        logger.info("Auditing repository for signature mismatches")
+        self.mismatches = audit_project_signatures(
+            self.project_root,
+            output_path=self.project_root / "data" / "signature_audit_report.json",
+        )
 
-        # Filter out test files, venv, etc.
-        python_files = [
-            f for f in python_files
-            if not any(
-                part in str(f)
-                for part in ['test', 'venv', '.venv', '__pycache__', '.git']
-            )
-        ]
-
-        logger.info(f"Checking {len(python_files)} Python files for signature changes")
-
-        # This is a simplified implementation
-        # A complete implementation would dynamically import and inspect modules
-
-        changed_count = len(self.changed_signatures)
+        changed_count = len(self.mismatches)
         new_count = len(self.new_signatures)
         total_count = len(self.registry.signatures)
 
@@ -81,7 +77,8 @@ class SignatureCIChecker:
             "summary": {
                 "total_signatures": len(self.registry.signatures),
                 "changed_signatures": len(self.changed_signatures),
-                "new_signatures": len(self.new_signatures)
+                "new_signatures": len(self.new_signatures),
+                "mismatches_detected": len(self.mismatches),
             },
             "changed_signatures": [
                 {
@@ -92,7 +89,8 @@ class SignatureCIChecker:
                 }
                 for key, old, new in self.changed_signatures
             ],
-            "new_signatures": [sig.to_dict() for sig in self.new_signatures]
+            "new_signatures": [sig.to_dict() for sig in self.new_signatures],
+            "mismatches": [m.__dict__ for m in self.mismatches],
         }
 
         return report
@@ -133,11 +131,14 @@ class SignatureCIChecker:
         print("SIGNATURE VALIDATION SUMMARY")
         print("=" * 70)
 
-        changed, new, total = len(self.changed_signatures), len(self.new_signatures), len(self.registry.signatures)
+        changed = len(self.changed_signatures)
+        new = len(self.new_signatures)
+        total = len(self.registry.signatures)
 
         print(f"Total registered signatures: {total}")
         print(f"Changed signatures: {changed}")
         print(f"New signatures: {new}")
+        print(f"Mismatches detected: {len(self.mismatches)}")
 
         if self.changed_signatures:
             print("\nChanged Signatures:")
@@ -149,6 +150,16 @@ class SignatureCIChecker:
 
         if len(self.changed_signatures) > 10:
             print(f"  ... and {len(self.changed_signatures) - 10} more")
+
+        if self.mismatches:
+            print("\nSignature Mismatches:")
+            for mismatch in self.mismatches[:10]:
+                print(f"  - {mismatch.caller_module}:{mismatch.caller_line} → {mismatch.callee_module}.{mismatch.callee_function}")
+                print(f"    Expected: {mismatch.expected_signature}")
+                print(f"    Actual:   {mismatch.actual_call}")
+                print(f"    Severity: {mismatch.severity}")
+            if len(self.mismatches) > 10:
+                print(f"  ... and {len(self.mismatches) - 10} more")
 
         print("=" * 70 + "\n")
 

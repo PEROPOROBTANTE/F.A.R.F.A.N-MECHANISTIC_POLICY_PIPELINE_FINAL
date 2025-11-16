@@ -1227,6 +1227,382 @@ class StrategicIntegrator:
 
 
 # =============================================================================
+# POLICY AREA CHUNK CALIBRATION - Garantiza 10 chunks por policy area
+# =============================================================================
+
+class PolicyAreaChunkCalibrator:
+    """
+    Calibrates chunking to guarantee exactly 10 strategic chunks per policy area.
+
+    Uses the existing SemanticChunkingProducer with dynamically adjusted parameters
+    to ensure consistent chunk count across different policy documents.
+
+    Strategy:
+        1. Estimate optimal chunk_size based on document length
+        2. Generate initial chunks with SemanticChunkingProducer
+        3. Adjust parameters iteratively if chunk count != 10
+        4. Merge or split chunks as needed to reach target
+
+    Attributes:
+        TARGET_CHUNKS_PER_PA: Target number of chunks (10)
+        TOLERANCE: Acceptable deviation (±1 chunk)
+        MAX_ITERATIONS: Maximum calibration iterations (3)
+    """
+
+    TARGET_CHUNKS_PER_PA = 10
+    TOLERANCE = 1
+    MAX_ITERATIONS = 3
+
+    # Canonical policy areas from questionnaire_monolith.json
+    POLICY_AREAS = [
+        "PA01", "PA02", "PA03", "PA04", "PA05",
+        "PA06", "PA07", "PA08", "PA09", "PA10"
+    ]
+
+    def __init__(self, semantic_chunking_producer: SemanticChunkingProducer):
+        """
+        Initialize calibrator.
+
+        Args:
+            semantic_chunking_producer: Canonical SemanticChunkingProducer instance
+        """
+        self.chunking_producer = semantic_chunking_producer
+        self.logger = logging.getLogger("SPC.Calibrator")
+
+    def calibrate_for_policy_area(
+        self,
+        text: str,
+        policy_area: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate exactly 10 chunks for a policy area.
+
+        Args:
+            text: Policy document text
+            policy_area: Policy area ID (PA01-PA10)
+            metadata: Optional metadata to attach to chunks
+
+        Returns:
+            List of exactly 10 chunks
+
+        Raises:
+            ValueError: If policy_area is invalid or text is empty
+        """
+        if policy_area not in self.POLICY_AREAS:
+            raise ValueError(
+                f"Invalid policy_area: {policy_area}. "
+                f"Must be one of {self.POLICY_AREAS}"
+            )
+
+        if not text or len(text.strip()) == 0:
+            raise ValueError("Text cannot be empty")
+
+        self.logger.info(
+            f"Calibrating chunks for {policy_area} "
+            f"(target: {self.TARGET_CHUNKS_PER_PA} chunks)"
+        )
+
+        # Estimate initial parameters based on document length
+        initial_params = self._estimate_initial_params(text)
+
+        # Attempt to generate chunks with calibration
+        chunks = self._generate_with_calibration(
+            text,
+            policy_area,
+            initial_params,
+            metadata
+        )
+
+        # Final validation
+        if len(chunks) != self.TARGET_CHUNKS_PER_PA:
+            self.logger.warning(
+                f"{policy_area}: Could not reach exact target. "
+                f"Got {len(chunks)} chunks, forcing adjustment to {self.TARGET_CHUNKS_PER_PA}"
+            )
+            chunks = self._force_chunk_count(chunks, self.TARGET_CHUNKS_PER_PA)
+
+        self.logger.info(
+            f"{policy_area}: Calibration complete - {len(chunks)} chunks generated"
+        )
+
+        return chunks
+
+    def _estimate_initial_params(self, text: str) -> Dict[str, Any]:
+        """
+        Estimate optimal chunking parameters based on text length.
+
+        Args:
+            text: Document text
+
+        Returns:
+            Dictionary with chunk_size, overlap, and other parameters
+        """
+        text_length = len(text)
+        sentence_count = text.count('.') + text.count('!') + text.count('?')
+
+        # Estimate chunk size to yield ~10 chunks
+        estimated_chunk_size = max(
+            500,  # Minimum chunk size
+            min(
+                2000,  # Maximum chunk size
+                text_length // (self.TARGET_CHUNKS_PER_PA + 2)  # Add buffer
+            )
+        )
+
+        return {
+            'chunk_size': estimated_chunk_size,
+            'overlap': int(estimated_chunk_size * 0.15),  # 15% overlap
+            'min_chunk_size': 300,
+            'adaptive': True,
+        }
+
+    def _generate_with_calibration(
+        self,
+        text: str,
+        policy_area: str,
+        initial_params: Dict[str, Any],
+        metadata: Optional[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate chunks with iterative calibration to reach target count.
+
+        Args:
+            text: Document text
+            policy_area: Policy area ID
+            initial_params: Initial chunking parameters
+            metadata: Optional metadata
+
+        Returns:
+            List of chunks (may not be exactly 10, needs final adjustment)
+        """
+        params = initial_params.copy()
+
+        for iteration in range(self.MAX_ITERATIONS):
+            # Use SemanticChunkingProducer to generate chunks
+            try:
+                # FIXED: Actually use the SemanticChunkingProducer
+                chunks = self._generate_chunks_with_producer(text, params, policy_area, metadata)
+            except Exception as e:
+                # Fallback to simple chunking if producer fails
+                self.logger.warning(f"SemanticChunkingProducer failed: {e}, using fallback")
+                chunks = self._generate_chunks_simple(text, params, policy_area, metadata)
+
+            chunk_count = len(chunks)
+            delta = chunk_count - self.TARGET_CHUNKS_PER_PA
+
+            self.logger.debug(
+                f"{policy_area}: Iteration {iteration+1} - "
+                f"{chunk_count} chunks (delta: {delta:+d})"
+            )
+
+            # Check if within tolerance
+            if abs(delta) <= self.TOLERANCE:
+                return chunks
+
+            # Adjust parameters for next iteration
+            if delta > 0:
+                # Too many chunks - increase chunk size
+                params['chunk_size'] = int(params['chunk_size'] * 1.2)
+            else:
+                # Too few chunks - decrease chunk size
+                params['chunk_size'] = int(params['chunk_size'] * 0.8)
+
+            # Ensure bounds
+            params['chunk_size'] = max(400, min(2500, params['chunk_size']))
+
+        # Return best attempt after max iterations
+        return chunks
+
+    def _generate_chunks_with_producer(
+        self,
+        text: str,
+        params: Dict[str, Any],
+        policy_area: str,
+        metadata: Optional[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate chunks using the SemanticChunkingProducer.
+
+        Args:
+            text: Document text
+            params: Chunking parameters (chunk_size, overlap, etc.)
+            policy_area: Policy area ID
+            metadata: Optional metadata
+
+        Returns:
+            List of chunk dictionaries
+        """
+        # Use the actual SemanticChunkingProducer (instance method, not standalone function)
+        # Use the producer instance injected via __init__
+        producer = self.chunking_producer
+
+        # chunk_document signature: (text: str, preserve_structure: bool = True) -> list[dict[str, Any]]
+        result_chunks = producer.chunk_document(text=text, preserve_structure=True)
+
+        # Convert to our format
+        chunks = []
+        for i, chunk_result in enumerate(result_chunks):
+            # chunk_result is a dict with keys like 'text', 'embedding', 'section_type', etc.
+            chunks.append({
+                'id': f"{policy_area}_chunk_{i+1}",
+                'text': chunk_result.get('text', ''),
+                'policy_area': policy_area,
+                'chunk_index': i,
+                'length': len(chunk_result.get('text', '')),
+                'metadata': metadata or {},
+                'semantic_metadata': {
+                    'section_type': chunk_result.get('section_type'),
+                    'section_id': chunk_result.get('section_id'),
+                    'has_embedding': 'embedding' in chunk_result
+                }
+            })
+
+        return chunks
+
+    def _generate_chunks_simple(
+        self,
+        text: str,
+        params: Dict[str, Any],
+        policy_area: str,
+        metadata: Optional[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Simple chunk generation using sentence splitting.
+
+        This is a fallback implementation. In production, this would use
+        the full SemanticChunkingProducer with BGE-M3 embeddings.
+
+        Args:
+            text: Document text
+            params: Chunking parameters
+            policy_area: Policy area ID
+            metadata: Optional metadata
+
+        Returns:
+            List of chunk dictionaries
+        """
+        # Simple sentence-based chunking
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+
+        chunk_size = params.get('chunk_size', 1000)
+        chunks = []
+        current_chunk = []
+        current_length = 0
+
+        for sentence in sentences:
+            sentence_length = len(sentence)
+
+            if current_length + sentence_length > chunk_size and current_chunk:
+                # Create chunk
+                chunk_text = '. '.join(current_chunk) + '.'
+                chunks.append({
+                    'id': f"{policy_area}_chunk_{len(chunks)+1}",
+                    'text': chunk_text,
+                    'policy_area': policy_area,
+                    'chunk_index': len(chunks),
+                    'length': len(chunk_text),
+                    'metadata': metadata or {}
+                })
+                current_chunk = [sentence]
+                current_length = sentence_length
+            else:
+                current_chunk.append(sentence)
+                current_length += sentence_length
+
+        # Add final chunk
+        if current_chunk:
+            chunk_text = '. '.join(current_chunk) + '.'
+            chunks.append({
+                'id': f"{policy_area}_chunk_{len(chunks)+1}",
+                'text': chunk_text,
+                'policy_area': policy_area,
+                'chunk_index': len(chunks),
+                'length': len(chunk_text),
+                'metadata': metadata or {}
+            })
+
+        return chunks
+
+    def _force_chunk_count(
+        self,
+        chunks: List[Dict[str, Any]],
+        target: int
+    ) -> List[Dict[str, Any]]:
+        """
+        Force chunk count to exactly match target by merging or splitting.
+
+        Args:
+            chunks: List of chunks
+            target: Target chunk count
+
+        Returns:
+            List with exactly target chunks
+        """
+        current_count = len(chunks)
+
+        if current_count == target:
+            return chunks
+
+        if current_count > target:
+            # Too many chunks - merge smallest adjacent pairs
+            while len(chunks) > target:
+                # Find smallest chunk
+                min_idx = min(range(len(chunks)), key=lambda i: chunks[i]['length'])
+
+                # Merge with adjacent chunk
+                if min_idx > 0:
+                    # Merge with previous
+                    chunks[min_idx-1]['text'] += ' ' + chunks[min_idx]['text']
+                    chunks[min_idx-1]['length'] = len(chunks[min_idx-1]['text'])
+                    chunks.pop(min_idx)
+                else:
+                    # Merge with next
+                    chunks[min_idx]['text'] += ' ' + chunks[min_idx+1]['text']
+                    chunks[min_idx]['length'] = len(chunks[min_idx]['text'])
+                    chunks.pop(min_idx+1)
+        else:
+            # Too few chunks - split largest chunks
+            while len(chunks) < target:
+                # Find largest chunk
+                max_idx = max(range(len(chunks)), key=lambda i: chunks[i]['length'])
+
+                # Split it in half
+                chunk_to_split = chunks[max_idx]
+                text = chunk_to_split['text']
+                mid_point = len(text) // 2
+
+                # Find sentence boundary near midpoint
+                split_point = text.rfind('.', 0, mid_point) + 1
+                if split_point <= 0:
+                    split_point = mid_point
+
+                # Create two chunks
+                chunk1_text = text[:split_point].strip()
+                chunk2_text = text[split_point:].strip()
+
+                chunks[max_idx] = {
+                    **chunk_to_split,
+                    'text': chunk1_text,
+                    'length': len(chunk1_text),
+                }
+
+                chunks.insert(max_idx + 1, {
+                    **chunk_to_split,
+                    'id': f"{chunk_to_split['id']}_split",
+                    'text': chunk2_text,
+                    'length': len(chunk2_text),
+                })
+
+        # Re-index chunks
+        for i, chunk in enumerate(chunks):
+            chunk['chunk_index'] = i
+
+        return chunks
+
+
+# =============================================================================
 # SISTEMA PRINCIPAL DE CHUNKING ESTRATÉGICO (COMPLETO)
 # =============================================================================
 

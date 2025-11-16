@@ -34,7 +34,7 @@
 | teoria_cambio | 30 | 29 | 97% | A+ ✅ |
 | embedding_policy | 36 | 32 | 89% | A ✅ |
 | Analyzer_one | 34 | 0 | 0% | F ⏳ |
-| dereck_beach | 99 | 0 | 0% | F ⏳ |
+| derek_beach | 99 | 0 | 0% | F ⏳ |
 | policy_processor | 32 | 0 | 0% | F ⏳ |
 | **TOTAL** | **584** | **508** | **87%** | **A** |
 
@@ -98,8 +98,8 @@
    - `policy_processor/evidence_bundle.schema.json`
    - `analyzer_one/semantic_cube.schema.json`
    - `analyzer_one/performance_analysis.schema.json`
-   - `dereck_beach/audit_result.schema.json`
-   - ✅ `dereck_beach/meta_node.schema.json` (completado)
+   - `derek_beach/audit_result.schema.json`
+   - ✅ `derek_beach/meta_node.schema.json` (completado)
 
 2. **Enhance Evidence Citation** (Priority 2)
    - Add page/section metadata to evidence arrays

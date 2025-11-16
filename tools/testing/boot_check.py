@@ -29,7 +29,7 @@ CORE_MODULES = [
 ]
 
 OPTIONAL_MODULES = [
-    "dereck_beach",
+    "derek_beach",
     "contradiction_deteccion",
     "teoria_cambio",
     "financiero_viabilidad_tablas",

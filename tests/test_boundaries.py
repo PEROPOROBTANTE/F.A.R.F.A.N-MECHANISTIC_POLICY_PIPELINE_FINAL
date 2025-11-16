@@ -37,7 +37,7 @@ PURE_MODULE_PATHS: dict[str, Path] = {
 # detector can surface the locations without failing the build yet.
 LEGACY_IO_MODULES: dict[str, Path] = {
     "saaaaaa.analysis.Analyzer_one": PACKAGE_ROOT / "analysis" / "Analyzer_one.py",
-    "saaaaaa.analysis.dereck_beach": PACKAGE_ROOT / "analysis" / "dereck_beach.py",
+    "saaaaaa.analysis.derek_beach": PACKAGE_ROOT / "analysis" / "derek_beach.py",
     "saaaaaa.analysis.financiero_viabilidad_tablas": PACKAGE_ROOT / "analysis" / "financiero_viabilidad_tablas.py",
     "saaaaaa.analysis.teoria_cambio": PACKAGE_ROOT / "analysis" / "teoria_cambio.py",
     "saaaaaa.analysis.contradiction_deteccion": PACKAGE_ROOT / "analysis" / "contradiction_deteccion.py",

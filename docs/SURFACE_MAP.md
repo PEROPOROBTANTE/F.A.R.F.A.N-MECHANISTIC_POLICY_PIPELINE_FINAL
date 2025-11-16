@@ -53,19 +53,19 @@ This document maps the public APIs of each core module, documenting which functi
 
 ---
 
-## Module: dereck_beach.py
+## Module: derek_beach.py
 
 ### Classes Exposed via Registry
 ```python
 # orchestrator/class_registry.py lines 21-24
-"CDAFFramework": "dereck_beach.CDAFFramework",
-"OperationalizationAuditor": "dereck_beach.OperationalizationAuditor",
-"FinancialAuditor": "dereck_beach.FinancialAuditor",
-"BayesianMechanismInference": "dereck_beach.BayesianMechanismInference",
+"CDAFFramework": "derek_beach.CDAFFramework",
+"OperationalizationAuditor": "derek_beach.OperationalizationAuditor",
+"FinancialAuditor": "derek_beach.FinancialAuditor",
+"BayesianMechanismInference": "derek_beach.BayesianMechanismInference",
 ```
 
 ### Used Methods (from executors_COMPLETE_FIXED.py)
-- Need to grep executors for dereck_beach usage patterns
+- Need to grep executors for derek_beach usage patterns
 
 ### Constructor Requirements
 - To be documented after analysis

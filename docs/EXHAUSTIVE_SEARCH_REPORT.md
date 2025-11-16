@@ -84,7 +84,7 @@ Searched for YAML loading patterns and calibration files:
    - Purpose: Execution flow mapping
    - Status: ℹ️ Not calibration-related
 
-5. **config/schemas/dereck_beach/config.yaml**
+5. **config/schemas/derek_beach/config.yaml**
    - Purpose: Schema configuration
    - Status: ℹ️ Not calibration-related
 

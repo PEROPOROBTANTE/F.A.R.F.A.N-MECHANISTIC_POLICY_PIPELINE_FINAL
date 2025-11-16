@@ -11,7 +11,7 @@ what choreographer still needs before runtime integration.
 
 ---
 
-## dereck_beach.py — Causal Deconstruction (CDAF)
+## derek_beach.py — Causal Deconstruction (CDAF)
 
 | Name | Kind | Key Fields | Schema Path | Notes |
 |------|------|------------|-------------|-------|
@@ -22,10 +22,10 @@ what choreographer still needs before runtime integration.
 | `GoalClassification` | `NamedTuple` | `type: NodeType`; `dynamics: DynamicsType`; `test_type: TestType`; `confidence: float` | — | Output of mechanism classifier. |
 | `EntityActivity` | `NamedTuple` | `entity: str`; `activity: str`; `verb_lemma: str`; `confidence: float` | — | Mechanism part per Beach definition. |
 | `CausalLink` | `TypedDict` | `source`, `target`, `logic`, `strength`, `evidence: list[str]`, `posterior_mean`, `posterior_std`, `kl_divergence`, `converged` | — | Captures mechanistic causal relations. |
-| `AuditResult` | `TypedDict` | `passed: bool`; `warnings: list[str]`; `errors: list[str]`; `recommendations: list[str]` | `schemas/dereck_beach/audit_result.schema.json` | ✅ Schema complete. |
-| `MetaNode` | `dataclass` | `id`, `text`, `type: NodeType`, `baseline`, `target`, `unit`, `responsible_entity`, `entity_activity: EntityActivity`, `financial_allocation`, `unit_cost`, `rigor_status`, `dynamics`, `test_type`, `contextual_risks: list[str]`, `causal_justification: list[str]`, `audit_flags: list[str]`, `confidence_score: float` | `schemas/dereck_beach/meta_node.schema.json` | Canonical CDAF node artifact; schema published. |
+| `AuditResult` | `TypedDict` | `passed: bool`; `warnings: list[str]`; `errors: list[str]`; `recommendations: list[str]` | `schemas/derek_beach/audit_result.schema.json` | ✅ Schema complete. |
+| `MetaNode` | `dataclass` | `id`, `text`, `type: NodeType`, `baseline`, `target`, `unit`, `responsible_entity`, `entity_activity: EntityActivity`, `financial_allocation`, `unit_cost`, `rigor_status`, `dynamics`, `test_type`, `contextual_risks: list[str]`, `causal_justification: list[str]`, `audit_flags: list[str]`, `confidence_score: float` | `schemas/derek_beach/meta_node.schema.json` | Canonical CDAF node artifact; schema published. |
 
-✅ **All schemas complete** for dereck_beach module.
+✅ **All schemas complete** for derek_beach module.
 
 ---
 
@@ -133,7 +133,7 @@ what choreographer still needs before runtime integration.
 
 | Module | Artifact(s) | Schema Path | Status |
 |--------|-------------|-------------|--------|
-| `dereck_beach.py` | `AuditResult` | `schemas/dereck_beach/audit_result.schema.json` | ✅ Complete |
+| `derek_beach.py` | `AuditResult` | `schemas/derek_beach/audit_result.schema.json` | ✅ Complete |
 | `Analyzer_one.py` | `semantic_cube`, `performance_analysis` | `schemas/analyzer_one/semantic_cube.schema.json` / `schemas/analyzer_one/performance_analysis.schema.json` | ✅ Complete |
 | `policy_processor.py` | `EvidenceBundle` | `schemas/policy_processor/evidence_bundle.schema.json` | ✅ Complete |
 | `semantic_chunking_policy.py` | Chunk record, analyzer result | `schemas/semantic_chunking_policy/chunk.schema.json`, `schemas/semantic_chunking_policy/analysis_result.schema.json` | ✅ Complete |

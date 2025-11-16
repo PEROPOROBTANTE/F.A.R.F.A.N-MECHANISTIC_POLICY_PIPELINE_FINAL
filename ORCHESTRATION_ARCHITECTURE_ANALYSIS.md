@@ -203,7 +203,7 @@ instance.method(**kwargs)
 **Distinction:**
 
 **Scripts (Top-Level Orchestrators):**
-- `dereck_beach.py` - Evidential test framework
+- `derek_beach.py` - Evidential test framework
 - `teoria_de_cambio.py` - Causal theory validation
 - `semantic_chunking.py` - Text segmentation
 - These are HIGH-LEVEL orchestrators that USE the core orchestrator

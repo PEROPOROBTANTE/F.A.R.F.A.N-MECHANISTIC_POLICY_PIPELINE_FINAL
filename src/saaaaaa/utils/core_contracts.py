@@ -189,7 +189,7 @@ __all__ = [
     'SemanticAnalyzerInputContract',
     'SemanticAnalyzerOutputContract',
 
-    # dereck_beach
+    # derek_beach
     'CDAFFrameworkInputContract',
     'CDAFFrameworkOutputContract',
 

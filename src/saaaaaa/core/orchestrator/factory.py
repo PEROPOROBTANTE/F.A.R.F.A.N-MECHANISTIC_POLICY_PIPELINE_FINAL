@@ -792,7 +792,7 @@ def migrate_io_from_module(module_name: str, line_numbers: list[int]) -> None:
 # TODO: Migrate I/O operations from core modules
 # Track progress:
 # - Analyzer_one.py: 72 I/O operations to migrate
-# - dereck_beach.py: 40 I/O operations to migrate
+# - derek_beach.py: 40 I/O operations to migrate
 # - financiero_viabilidad_tablas.py: Multiple operations to migrate
 # - teoria_cambio.py: Some operations to migrate
 # Others are clean

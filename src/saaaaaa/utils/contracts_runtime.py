@@ -358,7 +358,7 @@ __all__ = [
     'SemanticAnalyzerInputModel',
     'SemanticAnalyzerOutputModel',
 
-    # dereck_beach
+    # derek_beach
     'CDAFFrameworkInputModel',
     'CDAFFrameworkOutputModel',
 

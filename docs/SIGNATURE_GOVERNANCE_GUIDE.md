@@ -108,7 +108,7 @@ def _analyze_causal_dimensions(
 
 #### 3. `BayesianMechanismInference.__init__()`
 
-**File**: `dereck_beach.py`
+**File**: `derek_beach.py`
 
 **Issue**: Function was being called with unexpected `causal_hierarchy` keyword argument
 

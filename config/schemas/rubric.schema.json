@@ -44,7 +44,7 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "dereck_beach",
+                  "derek_beach",
                   "policy_processor",
                   "embedding_policy",
                   "semantic_chunking_policy",

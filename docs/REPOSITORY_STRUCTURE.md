@@ -54,7 +54,7 @@ Analysis and machine learning modules:
 - `Analyzer_one.py` - Primary analyzer
 - `contradiction_deteccion.py` - Contradiction detection
 - `teoria_cambio.py` - Theory of change
-- `dereck_beach.py` - Beach testing
+- `derek_beach.py` - Beach testing
 - `financiero_viabilidad_tablas.py` - Financial viability
 - `meso_cluster_analysis.py` - Cluster analysis
 - `macro_prompts.py` - Macro-level prompts

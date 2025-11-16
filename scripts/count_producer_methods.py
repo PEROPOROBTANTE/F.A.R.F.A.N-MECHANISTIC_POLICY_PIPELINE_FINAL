@@ -31,7 +31,7 @@ def count_methods_in_class(filepath: Path, class_name: str) -> dict[str, int]:
 producers = {
     "SemanticChunkingProducer": "semantic_chunking_policy.py",
     "EmbeddingPolicyProducer": "embedding_policy.py",
-    "DerekBeachProducer": "dereck_beach.py",
+    "DerekBeachProducer": "derek_beach.py",
     "ReportAssemblyProducer": "report_assembly.py"
 }
 

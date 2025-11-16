@@ -66,7 +66,7 @@ All notable changes to the core module architecture are documented in this file.
 All core modules have been purified of `__main__` blocks to enable safe import without side effects:
 
 - **Analyzer_one.py**: Removed 2 `__main__` blocks (lines 1665, 1887)
-- **dereck_beach.py**: Removed 1 `__main__` block (line 5818)
+- **derek_beach.py**: Removed 1 `__main__` block (line 5818)
 - **financiero_viabilidad_tablas.py**: Removed 1 `__main__` block (line 2310)
 - **teoria_cambio.py**: Removed 1 `__main__` block (line 1094)
 - **contradiction_deteccion.py**: Removed 1 `__main__` block (line 1473)
@@ -91,7 +91,7 @@ The following patterns are deprecated and will be removed in v2.0:
 #### Example/Demo Code (to be moved to examples/)
 - `Analyzer_one.example_usage()` → Move to `examples/analyzer_one_demo.py`
 - `Analyzer_one.main()` → Move to `examples/analyzer_one_cli.py`
-- `dereck_beach.main()` → Move to `examples/cdaf_demo.py`
+- `derek_beach.main()` → Move to `examples/cdaf_demo.py`
 - `financiero_viabilidad_tablas.main_example()` → Move to `examples/pdet_demo.py`
 - `teoria_cambio.main()` → Move to `examples/teoria_cambio_demo.py`
 - `contradiction_deteccion` example code → Move to `examples/contradiction_demo.py`
@@ -155,7 +155,7 @@ pytest tests/test_boundaries.py -v
 #### Phase 7: I/O Migration (Large effort)
 Migrate ~150 I/O operations from core modules to orchestrator/factory.py:
 - Analyzer_one.py: 72 I/O operations
-- dereck_beach.py: 40 I/O operations
+- derek_beach.py: 40 I/O operations
 - financiero_viabilidad_tablas.py: Multiple operations
 - teoria_cambio.py: Some operations
 

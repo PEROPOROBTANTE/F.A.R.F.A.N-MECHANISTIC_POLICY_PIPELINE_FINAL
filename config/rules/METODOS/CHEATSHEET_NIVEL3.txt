@@ -127,52 +127,52 @@ Estos métodos DEBEN ejecutarse para el funcionamiento del sistema
     Firma: __init__(self)
 
 21. CDAFException.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, message, details, stage, recoverable)
 
 22. ConfigLoader.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config_path)
 
 23. PDFProcessor.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config, retry_handler)
 
 24. CausalExtractor.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config, nlp_model)
 
 25. MechanismPartExtractor.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config, nlp_model)
 
 26. FinancialAuditor.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config)
 
 27. OperationalizationAuditor.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config)
 
 28. BayesianMechanismInference.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config, nlp_model)
 
 29. CausalInferenceSetup.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config)
 
 30. ReportingEngine.__init__
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Aptitud: 90/100
     Firma: __init__(self, config, output_dir)
 
@@ -344,73 +344,73 @@ Requieren atención especial y recursos computacionales
     Riesgos: High computational complexity
 
 14. ConfigLoader.get_bayesian_threshold
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 15. CausalExtractor.extract_causal_hierarchy
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 16. CausalExtractor._extract_causal_links
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 17. OperationalizationAuditor.bayesian_counterfactual_audit
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 18. OperationalizationAuditor._build_normative_dag
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 19. OperationalizationAuditor._audit_causal_implications
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 20. ReportingEngine.generate_causal_diagram
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 21. ReportingEngine.generate_confidence_report
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 22. ReportingEngine.generate_causal_model_json
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 23. BayesianCounterfactualAuditor.aggregate_risk_and_prioritize
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 24. DerekBeachProducer.is_inference_uncertain
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
 
 25. DerekBeachProducer.get_causal_effect
-    Archivo: dereck_beach.py
+    Archivo: derek_beach.py
     Reqs Computacionales: HIGH
     Memoria: MEDIUM
     Riesgos: High computational complexity
@@ -485,7 +485,7 @@ teoria_cambio.py (39 métodos)
   • validacion_completa                      [MEDIUM  ] 100/100
   • _extraer_categorias                      [LOW     ] 100/100
 
-dereck_beach.py (159 métodos)
+derek_beach.py (159 métodos)
 --------------------------------------------------------------------------------
   • classify_test                            [MEDIUM  ] 100/100
   • apply_test_logic                         [MEDIUM  ] 100/100

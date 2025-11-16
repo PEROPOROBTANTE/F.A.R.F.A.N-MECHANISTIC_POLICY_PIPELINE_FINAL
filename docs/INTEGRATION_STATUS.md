@@ -92,13 +92,13 @@
 - ✅ `schemas/teoria_cambio/` (2/2 - 100%) - 412 lines, 29/30 methods ✅
 - ✅ `schemas/report_assembly/` (1/3 - 33%) - 98 lines, 43/43 methods (micro_answer only)
 - ✅ `schemas/README.md` + `COMMIT_3_PROGRESS.md` + `SCHEMA_AUDIT_REPORT.md`
-- ✅ `schemas/dereck_beach/meta_node.schema.json` (1/2) - 170 lines, 44/99 métodos capturados ✅
+- ✅ `schemas/derek_beach/meta_node.schema.json` (1/2) - 170 lines, 44/99 métodos capturados ✅
 
 **Critical Gaps (5/19 - must complete for 100% coverage):**
 - ⚠️ `schemas/embedding_policy/bayesian_evaluation.schema.json` (4 methods missing)
 - ⚠️ `schemas/analyzer_one/semantic_cube.schema.json` (34 methods missing)
 - ⚠️ `schemas/analyzer_one/performance_analysis.schema.json`
-- ⚠️ `schemas/dereck_beach/audit_result.schema.json`
+- ⚠️ `schemas/derek_beach/audit_result.schema.json`
 - ⚠️ `schemas/policy_processor/evidence_bundle.schema.json` (32 methods missing)
 **Directory:** `schemas/`
 - `schemas/pdet_analyzer/` - ExtractedTable, FinancialIndicator, CausalDAG, CausalEffect

@@ -141,7 +141,7 @@ def check_compatibility_wrappers():
         "contracts.py",
         "aggregation.py",
         "bayesian_multilevel_system.py",
-        "dereck_beach.py",
+        "derek_beach.py",
         "document_ingestion.py",
         "macro_prompts.py",
         "micro_prompts.py",

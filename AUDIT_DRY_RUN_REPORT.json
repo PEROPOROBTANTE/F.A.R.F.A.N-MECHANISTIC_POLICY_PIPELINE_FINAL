@@ -249,7 +249,7 @@
       "reason": "Reachable in import graph from entry points"
     },
     {
-      "path": "src/saaaaaa/analysis/dereck_beach.py",
+      "path": "src/saaaaaa/analysis/derek_beach.py",
       "reason": "Reachable in import graph from entry points"
     },
     {
@@ -1129,7 +1129,7 @@
       ]
     },
     {
-      "path": "config/schemas/dereck_beach/audit_result.schema.json",
+      "path": "config/schemas/derek_beach/audit_result.schema.json",
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1138,7 +1138,7 @@
       ]
     },
     {
-      "path": "config/schemas/dereck_beach/config.yaml",
+      "path": "config/schemas/derek_beach/config.yaml",
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1147,7 +1147,7 @@
       ]
     },
     {
-      "path": "config/schemas/dereck_beach/meta_node.schema.json",
+      "path": "config/schemas/derek_beach/meta_node.schema.json",
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2939,7 +2939,7 @@
       "ambiguity": "Classification unclear; requires human review"
     },
     {
-      "path": "dereck_beach.py",
+      "path": "derek_beach.py",
       "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
     },
     {

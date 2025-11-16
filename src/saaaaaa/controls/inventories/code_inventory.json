@@ -775,7 +775,7 @@
               "is_async": false,
               "line_end": 325,
               "line_start": 310,
-              "name": "_init_dereck_beach",
+              "name": "_init_derek_beach",
               "parameters": [
                 "self"
               ],
@@ -1008,7 +1008,7 @@
               "is_async": false,
               "line_end": 813,
               "line_start": 793,
-              "name": "_exec_dereck_beach",
+              "name": "_exec_derek_beach",
               "parameters": [
                 "self",
                 "method_name: str",
@@ -1136,7 +1136,7 @@
       "content_hash": "be029dce728e16e4817ce1a71d4a9aac",
       "dependencies": [
         "policy_processor.py",
-        "dereck_beach.py",
+        "derek_beach.py",
         "teoria_cambio.py",
         "Analyzer_one.py",
         "contradiction_deteccion.py",
@@ -1174,12 +1174,12 @@
         "datetime.datetime",
         "yaml",
         "traceback",
-        "dereck_beach.BeachEvidentialTest",
-        "dereck_beach.ConfigLoader",
-        "dereck_beach.PDFProcessor",
-        "dereck_beach.CausalExtractor",
-        "dereck_beach.BayesianMechanismInference",
-        "dereck_beach.CDAFFramework",
+        "derek_beach.BeachEvidentialTest",
+        "derek_beach.ConfigLoader",
+        "derek_beach.PDFProcessor",
+        "derek_beach.CausalExtractor",
+        "derek_beach.BayesianMechanismInference",
+        "derek_beach.CDAFFramework",
         "policy_processor.IndustrialPolicyProcessor",
         "policy_processor.BayesianEvidenceScorer",
         "policy_processor.PolicyTextProcessor",
@@ -2010,7 +2010,7 @@
       "relative_path": "contradiction_deteccion.py",
       "sha256_hash": "5aa9c26d9a02cbeb20a93ac54e5ee4b4682796c975d4ed4bb8c6a59c2d4e26cb"
     },
-    "dereck_beach.py": {
+    "derek_beach.py": {
       "classes": [
         {
           "bases": [],
@@ -3385,7 +3385,7 @@
         "contradiction_deteccion.py",
         "financiero_viabilidad_tablas.py"
       ],
-      "file_path": "/Users/recovered/PycharmProjects/SAAAAAA/dereck_beach.py",
+      "file_path": "/Users/recovered/PycharmProjects/SAAAAAA/derek_beach.py",
       "functions": [
         {
           "has_docstring": true,
@@ -3451,7 +3451,7 @@
       "last_modified": "2025-10-22T11:08:33.747163",
       "lines_of_code": 3054,
       "orphan_reason": null,
-      "relative_path": "dereck_beach.py",
+      "relative_path": "derek_beach.py",
       "sha256_hash": "47d337199f1f849934aece4902201927da651dbc3467d590e1cd62dd8c8dfbf6"
     },
     "embedding_policy.py": {

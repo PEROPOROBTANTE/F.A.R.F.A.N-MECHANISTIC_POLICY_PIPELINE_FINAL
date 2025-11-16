@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA09",
+  "patterns": [
+    "personas privadas de la libertad",
+    "PPL",
+    "cárceles",
+    "centros penitenciarios",
+    "hacinamiento",
+    "crisis carcelaria",
+    "derechos PPL",
+    "dignidad carcelaria",
+    "condiciones de reclusión",
+    "infraestructura carcelaria",
+    "resocialización",
+    "reinserción social",
+    "programas de tratamiento",
+    "atención en salud",
+    "educación carcelaria",
+    "trabajo penitenciario",
+    "sustitución penas",
+    "medidas alternativas",
+    "justicia restaurativa",
+    "INPEC"
+  ],
+  "regex": [
+    "\\bPPL\\b",
+    "\\bpersonas?.*privadas?.*libertad\\b",
+    "\\bcárceles?\\b",
+    "\\bcentros?.*penitenciarios?\\b",
+    "\\bhacinamiento\\b",
+    "\\bcrisis.*carcelaria\\b",
+    "\\bresocialización\\b",
+    "\\breinserción.*social\\b",
+    "\\bINPEC\\b",
+    "\\breclusión\\b"
+  ],
+  "verbs": [
+    "mejorar",
+    "garantizar",
+    "dignificar",
+    "resocializar",
+    "reinsertar",
+    "humanizar",
+    "reducir",
+    "implementar",
+    "fortalecer",
+    "ampliar",
+    "proveer",
+    "habilitar"
+  ],
+  "entities": [
+    "INPEC",
+    "Instituto Nacional Penitenciario y Carcelario",
+    "Ministerio de Justicia",
+    "USPEC",
+    "Unidad de Servicios Penitenciarios",
+    "Defensoría del Pueblo",
+    "Procuraduría",
+    "Personerías",
+    "Jueces de Ejecución de Penas"
+  ],
+  "thresholds": {
+    "min_confidence": 0.76,
+    "min_evidence": 0.72
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa09_v1_prison_rights",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Crisis de derechos de personas privadas de la libertad",
+    "legacy_id": "P9",
+    "questions": ["Q271", "Q272", "Q273", "Q274", "Q275", "Q276", "Q277", "Q278", "Q279", "Q280", "Q281", "Q282", "Q283", "Q284", "Q285", "Q286", "Q287", "Q288", "Q289", "Q290", "Q291", "Q292", "Q293", "Q294", "Q295", "Q296", "Q297", "Q298", "Q299", "Q300"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

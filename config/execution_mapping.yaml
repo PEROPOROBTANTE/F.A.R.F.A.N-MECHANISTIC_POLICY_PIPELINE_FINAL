@@ -44,20 +44,20 @@ modules:
     methods: ["construir_grafo_causal", "validacion_completa", "_validar_orden_causal", "_encontrar_caminos_completos"]
     provides: ["causal_dag", "validation_results", "completeness_score"]
     
-  dereck_beach:
-    file: "dereck_beach.py"
+  derek_beach:
+    file: "derek_beach.py"
     class: "CDAFFramework"
     methods: ["process_document", "extract_causal_mechanisms", "apply_beach_tests"]
     provides: ["mechanism_evidence", "beach_test_results", "causal_confidence"]
     
   causal_extractor:
-    file: "dereck_beach.py"
+    file: "derek_beach.py"
     class: "CausalExtractor"
     methods: ["extract_causal_hierarchy", "_extract_goals", "_extract_causal_links"]
     provides: ["causal_hierarchy", "goal_taxonomy", "link_evidence"]
     
   mechanism_inference:
-    file: "dereck_beach.py"
+    file: "derek_beach.py"
     class: "BayesianMechanismInference"
     methods: ["infer_mechanisms", "_test_necessity", "_test_sufficiency", "_infer_activity_sequence"]
     provides: ["mechanisms", "necessity_scores", "sufficiency_scores"]
@@ -185,7 +185,7 @@ dimensions:
             method: "_test_sufficiency"
             inputs: ["mechanism", "evidence"]
             outputs: ["sufficiency_score"]
-          - module: "dereck_beach"
+          - module: "derek_beach"
             method: "apply_beach_tests"
             inputs: ["necessity_score", "sufficiency_score"]
             outputs: ["test_type", "confidence_update"]
@@ -278,7 +278,7 @@ dimensions:
             method: "infer_mechanisms"
             inputs: ["hierarchy"]
             outputs: ["mechanisms"]
-          - module: "dereck_beach"
+          - module: "derek_beach"
             method: "apply_beach_tests"
             inputs: ["mechanism_evidence"]
             outputs: ["plausibility_score"]
@@ -351,7 +351,7 @@ scoring_modalities:
     
   TYPE_F_BEACH:
     description: "Derek Beach evidential tests for mechanisms"
-    modules: ["dereck_beach", "mechanism_inference"]
+    modules: ["derek_beach", "mechanism_inference"]
     primary_method: "BeachEvidentialTest.apply_test_logic"
     applicable_to: ["D2", "D4", "D5", "D6"]
 

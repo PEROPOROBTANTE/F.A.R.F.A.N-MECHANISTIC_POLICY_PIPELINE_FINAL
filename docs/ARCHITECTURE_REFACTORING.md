@@ -73,7 +73,7 @@ Examples/ Directory
 Seven modules are being refactored:
 
 1. **Analyzer_one.py** - Municipal development plan analysis
-2. **dereck_beach.py** - Causal deconstruction and audit framework (CDAF)
+2. **derek_beach.py** - Causal deconstruction and audit framework (CDAF)
 3. **financiero_viabilidad_tablas.py** - Financial viability and table extraction
 4. **teoria_cambio.py** - Theory of change analysis
 5. **contradiction_deteccion.py** - Policy contradiction detection

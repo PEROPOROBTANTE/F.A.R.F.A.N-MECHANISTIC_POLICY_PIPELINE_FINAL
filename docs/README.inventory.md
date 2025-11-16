@@ -41,7 +41,7 @@ Independent analysis components that generate evidence artifacts:
   - Monte Carlo robustness testing
   - **Outputs:** ValidacionResultado, MonteCarloAdvancedResult
 
-- **CDAFFramework** (`dereck_beach.py`)
+- **CDAFFramework** (`derek_beach.py`)
   - Entity-activity extraction
   - Evidence traceability audit
   - **Outputs:** MetaNode[], AuditResult
@@ -125,7 +125,7 @@ See `interaction_matrix.csv` for detailed producer-consumer contracts:
 - **Key Classes:** TeoriaCambio, AdvancedDAGValidator
 - **Questionnaire Coverage:** D6-Q1, D6-Q2, D6-Q5
 
-### dereck_beach.py
+### derek_beach.py
 - **Purpose:** Causal mechanism validation (Derek Beach methodology)
 - **Key Classes:** CDAFFramework, OperationalizationAuditor
 - **Questionnaire Coverage:** D2-Q2, D3-Q4, D4-Q2

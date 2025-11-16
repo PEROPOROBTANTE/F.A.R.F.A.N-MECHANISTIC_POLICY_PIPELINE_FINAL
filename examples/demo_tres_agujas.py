@@ -18,7 +18,7 @@ from pathlib import Path
 import networkx as nx
 import numpy as np
 
-# Import TRES AGUJAS desde dereck_beach
+# Import TRES AGUJAS desde derek_beach
 # Verify package is available
 try:
     import saaaaaa
@@ -31,7 +31,7 @@ except ImportError as e:
     print("   export PYTHONPATH=/path/to/SAAAAAA/src")
     exit(1)
 
-from saaaaaa.utils.dereck_beach import (
+from saaaaaa.utils.derek_beach import (
     AdaptivePriorCalculator,
     BayesianCounterfactualAuditor,
     HierarchicalGenerativeModel,
@@ -322,14 +322,14 @@ def generate_summary_report():
     print("="*80)
 
     print("\n📚 Ubicación en código:")
-    print("   dereck_beach.py:")
+    print("   derek_beach.py:")
     print("     - Lines 3971-4406: AGUJA I (436 lines)")
     print("     - Lines 4407-4934: AGUJA II (528 lines)")
     print("     - Lines 4935-5462: AGUJA III (528 lines)")
     print("   Total: 1,492 lines de código robusto")
 
     print("\n📦 Uso en producción:")
-    print("   from dereck_beach import (")
+    print("   from derek_beach import (")
     print("       AdaptivePriorCalculator,")
     print("       HierarchicalGenerativeModel,")
     print("       BayesianCounterfactualAuditor")

@@ -317,7 +317,7 @@ asyncio.to_thread:    2 usages
 | contradiction_detección | 3 | 660 | 🟢 Most Used |
 | policy_processor | 5 | 429 | 🟢 Heavy |
 | financiero_viabilidad | 1 | 207 | 🟢 Active |
-| dereck_beach | 4 | 150 | 🟢 Used |
+| derek_beach | 4 | 150 | 🟢 Used |
 | teoria_cambio | 2 | 141 | 🟢 Used |
 | Analyzer_one | 4 | 126 | 🟢 Used |
 | embedding_policy | 3 | 90 | 🟢 Used |

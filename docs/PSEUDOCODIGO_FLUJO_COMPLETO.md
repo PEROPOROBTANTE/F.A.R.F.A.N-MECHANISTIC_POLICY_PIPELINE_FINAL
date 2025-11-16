@@ -734,7 +734,7 @@ FUNCIÓN: EXECUTE_NODE(node: DAGNode, method_packages: list, context: dict) → 
             ✓ PP.policy_processor (12 métodos)
             ✓ CD.contradiction_deteccion (44 métodos)
             ✓ FV.financiero_viabilidad_tablas (27 métodos)
-            ✓ DB.dereck_beach (43 métodos)
+            ✓ DB.derek_beach (43 métodos)
             ✓ EP.embedding_policy (9 métodos)
             ✓ A1.Analyzer_one (16 métodos)
             ✓ TC.teoria_cambio (14 métodos)

@@ -59,7 +59,7 @@
   "package_usage": {
     "PyMuPDF": [
       "src/saaaaaa/analysis/factory.py",
-      "src/saaaaaa/analysis/dereck_beach.py"
+      "src/saaaaaa/analysis/derek_beach.py"
     ],
     "PyPDF2": [
       "src/saaaaaa/processing/document_ingestion.py",
@@ -91,7 +91,7 @@
       "src/saaaaaa/api/api_server.py"
     ],
     "fuzzywuzzy": [
-      "src/saaaaaa/analysis/dereck_beach.py"
+      "src/saaaaaa/analysis/derek_beach.py"
     ],
     "httpx": [
       "src/saaaaaa/core/orchestrator/signals.py",
@@ -233,7 +233,7 @@
       "scripts/runtime_pipeline_validation.py"
     ],
     "pydot": [
-      "src/saaaaaa/analysis/dereck_beach.py"
+      "src/saaaaaa/analysis/derek_beach.py"
     ],
     "pyjwt": [
       "src/saaaaaa/api/api_server.py"
@@ -353,7 +353,7 @@
     "pyyaml": [
       "src/saaaaaa/utils/metadata_loader.py",
       "src/saaaaaa/analysis/factory.py",
-      "src/saaaaaa/analysis/dereck_beach.py"
+      "src/saaaaaa/analysis/derek_beach.py"
     ],
     "scikit-learn": [
       "src/saaaaaa/processing/embedding_policy.py",
