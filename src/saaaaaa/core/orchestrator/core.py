@@ -1451,6 +1451,44 @@ class Orchestrator:
             )
         )
 
+    async def process(self, preprocessed_document: Any) -> list[PhaseResult]:
+        """
+        DEPRECATED ALIAS for process_development_plan_async().
+
+        This method exists ONLY for backward compatibility with code
+        that incorrectly assumed Orchestrator had a .process() method.
+
+        Use process_development_plan_async() instead.
+
+        Args:
+            preprocessed_document: PreprocessedDocument to process
+
+        Returns:
+            List of phase results
+
+        Raises:
+            DeprecationWarning: This method is deprecated
+        """
+        import warnings
+        warnings.warn(
+            "Orchestrator.process() is deprecated. "
+            "Use process_development_plan_async(pdf_path, preprocessed_document=...) instead.",
+            DeprecationWarning,
+            stacklevel=2
+        )
+
+        # Extract pdf_path from preprocessed_document if available
+        pdf_path = getattr(preprocessed_document, 'source_path', None)
+        if pdf_path is None:
+            # Try to get from metadata
+            metadata = getattr(preprocessed_document, 'metadata', {})
+            pdf_path = metadata.get('source_path', 'unknown.pdf')
+
+        return await self.process_development_plan_async(
+            pdf_path=str(pdf_path),
+            preprocessed_document=preprocessed_document
+        )
+
     async def process_development_plan_async(
             self, pdf_path: str, preprocessed_document: Any | None = None
     ) -> list[PhaseResult]:
