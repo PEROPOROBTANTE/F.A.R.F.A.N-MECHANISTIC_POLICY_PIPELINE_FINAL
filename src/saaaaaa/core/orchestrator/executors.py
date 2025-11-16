@@ -4679,7 +4679,7 @@ class FrontierExecutorOrchestrator:
         executor_results = []
         for i, chunk_dict in enumerate(chunks):
             # Convert dict to ChunkData for chunk_router
-            from .core import ChunkData
+            from .core import ChunkData, PreprocessedDocument
             chunk = ChunkData(
                 id=chunk_dict.get('id', f'{policy_area}_chunk_{i}'),
                 chunk_type=chunk_dict.get('chunk_type', 'diagnostic'),
@@ -4701,11 +4701,30 @@ class FrontierExecutorOrchestrator:
             if executor_class:
                 executor = executor_class(method_executor, signal_registry=self.signal_registry)
 
-                # Execute chunk
-                if hasattr(executor, 'execute_chunk'):
-                    result = executor.execute_chunk(chunk_dict, i)
-                else:
-                    result = {'chunk_id': i, 'note': 'execute_chunk not available'}
+                # Create PreprocessedDocument for chunk execution
+                # This document contains the chunk in the proper format expected by execute_chunk
+                chunk_doc = PreprocessedDocument(
+                    document_id=chunk.id,
+                    raw_text=chunk.text,
+                    sentences=[],  # Will be extracted during execution if needed
+                    tables=[],
+                    metadata={
+                        'policy_area': policy_area,
+                        'chunk_type': chunk.chunk_type,
+                        'chunk_index': i,
+                        **chunk.metadata
+                    },
+                    chunks=[chunk],  # Include the chunk data
+                    chunk_index={chunk.id: 0},  # Map chunk ID to position
+                    processing_mode='chunked'  # Enable chunk-aware processing
+                )
+
+                # Execute chunk with proper PreprocessedDocument
+                try:
+                    result = executor.execute_chunk(chunk_doc, 0)  # chunk_id is 0 since we only have one chunk in this doc
+                except Exception as e:
+                    logger.error(f"Executor {executor_key} failed on chunk {i}: {e}")
+                    result = {'error': str(e), 'chunk_id': i}
 
                 executor_results.append({
                     'chunk_id': i,
