@@ -27,6 +27,8 @@
 
 As a digital-nodal-substantive policy tool, F.A.R.F.A.N provides evidence-based, rigorous analysis of development plans through the lens of policy causal mechanisms using the value chain heuristic—the formal schema for organizing policy interventions in Colombia.
 
+For a detailed explanation of the system's design, including the 9-phase pipeline, cross-cut signals, and deterministic protocols, please see the **[ARCHITECTURE.md](ARCHITECTURE.md)** document.
+
 ### Key Components
 
 - **7 Producer Modules**: Independent parallel analysis engines
