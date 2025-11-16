@@ -124,10 +124,12 @@ class SPCAdapter:
         temporal_index = {}
         entity_index = {}
 
+        # Track running offset that matches how full_text is built
+        current_offset = 0
+
         for idx, chunk in enumerate(sorted_chunks):
             chunk_text = chunk.text
-            # Calculate chunk start position accounting for spaces between chunks
-            chunk_start = sum(len(text) for text in full_text_parts) + len(full_text_parts)
+            chunk_start = current_offset
 
             # Add to full text
             full_text_parts.append(chunk_text)
@@ -145,6 +147,9 @@ class SPCAdapter:
                 extra=_EMPTY_MAPPING
             )
             sentence_metadata.append(chunk_meta)
+
+            # Advance offset by chunk length + 1 space separator
+            current_offset = chunk_end + 1
 
             # Extract entities for entity_index
             if hasattr(chunk, 'entities') and chunk.entities:
