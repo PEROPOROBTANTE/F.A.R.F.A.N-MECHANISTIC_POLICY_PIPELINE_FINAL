@@ -1,99 +1,4 @@
-# F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives
-
-**A Mechanistic Policy Pipeline for Colombian Development Plan Analysis**
-
-**F.A.R.F.A.N** is a sophisticated, evidence-based analysis tool for Colombian municipal development plans. It leverages a deterministic pipeline, cryptographic proofs, and a comprehensive questionnaire to deliver rigorous, reproducible results.
-
----
-
-## 🚀 Getting Started
-
-For a complete guide to installation, system activation, and your first analysis, please refer to the **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)**. This is the recommended starting point for all users.
-
-## 🏛️ Architecture
-
-For a deep dive into the system's architecture, including the 9-phase pipeline, cross-cut signals, and deterministic protocols, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
-
-##  quick reference
-
-For a quick reference of the project, see **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)**.
-
-## 📦 Installation
-
-This project requires **Python 3.12** and enforces a strict dependency management system to ensure reproducibility.
-
-### **MANDATORY**: Editable Install
-
-You **MUST** install the package in editable mode before using it:
-
-```bash
-# ❌ NEVER DO THIS:
-jq '.blocks.micro_questions' data/questionnaire_monolith.json
-
-# ✅ ALWAYS DO THIS:
-python3 -c "
-from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
-q = load_questionnaire()
-print(f'Micro questions: {q.micro_question_count}')
-print(f'Total questions: {q.total_question_count}')
-print(f'SHA256: {q.sha256[:16]}...')
-"
-```
-
-### Updating the Questionnaire
-
-If you legitimately modify `questionnaire_monolith.json`:
-
-1. **Compute new hash:**
-   ```bash
-   python3 -c "
-   import json, hashlib
-   data = json.load(open('data/questionnaire_monolith.json'))
-   serialized = json.dumps(data, sort_keys=True, ensure_ascii=True, separators=(',', ':'))
-   print(hashlib.sha256(serialized.encode()).hexdigest())
-   "
-   ```
-
-2. **Update `EXPECTED_HASH` in `src/saaaaaa/core/orchestrator/questionnaire.py`:**
-   ```python
-   EXPECTED_HASH: Final[str] = "NEW_HASH_HERE"
-   ```
-
-3. **Commit both files together:**
-   ```bash
-   git add data/questionnaire_monolith.json src/saaaaaa/core/orchestrator/questionnaire.py
-   git commit -m "Update questionnaire structure (hash verified)"
-   ```
-
-### Why This Matters
-
-The questionnaire defines the entire analysis pipeline:
-- 300 micro questions organized into 6 dimensions (D1-D6)
-- 10 policy areas (PA01-PA10)
-- 4 clusters for aggregation
-- 2,207+ patterns for text matching
-- Expected elements and validation rules
-
-**Any corruption or unintended modification would:**
-- ❌ Produce different analysis results (non-deterministic)
-- ❌ Break reproducibility of published findings
-- ❌ Violate audit trail requirements
-- ❌ Compromise scientific integrity
-
-**The hash enforcement prevents all of these.**
-
-### Verification
-
-```bash
-# Check questionnaire integrity locally
-python3 -c "from saaaaaa.core.orchestrator.questionnaire import load_questionnaire; q = load_questionnaire(); print('✅ VERIFIED:', q.sha256[:16] + '...')"
-
-# Find any violations in the codebase
-grep -r "questionnaire_monolith.json" --include="*.py" . | grep -v "src/saaaaaa/core/orchestrator/questionnaire.py" | grep -v ".github/workflows"
-# Should return NOTHING (or fail CI)
-```
-
----
+# F.A.R.F.A.N. Architecture
 
 **Technical Implementation:** F.A.R.F.A.N integra 584 métodos analíticos distribuidos en 7 productores especializados y 1 agregador, orientado al procesamiento determinista de planes de desarrollo municipales y departamentales en Colombia. La contribución técnica principal radica en: (1) un pipeline de ingesta con 9 fases deterministas que garantiza trazabilidad completa desde token hasta coordenadas de página (provenance_completeness = 1.0), (2) un sistema de señales transversales (cross-cut signals) con transporte memory:// y HTTP opcional, incluyendo circuit breakers para resiliencia, (3) un mecanismo de enrutamiento extendido (ArgRouter) con 30+ rutas especiales que elimina caídas silenciosas de parámetros, y (4) contratos explícitos de entrada/salida con validación en fronteras de proveedor. El sistema procesa 300 preguntas de evaluación organizadas en 6 dimensiones (D1-D6: Insumos, Actividades, Productos, Resultados, Impactos, Causalidad) sobre 10 áreas de política (P1-P10), generando reportes en tres niveles de agregación: MICRO (respuestas atómicas por pregunta, 150-300 palabras), MESO (análisis de clusters por dimensión-área), y MACRO (clasificación y recomendaciones). La arquitectura sigue el patrón "Chess Strategy": apertura paralela con 7 productores independientes, medio juego de triangulación multi-fuente, y final de síntesis doctoral. El alcance excluye procesamiento en tiempo real (modo batch únicamente), datos personales identificables (PII), y claims de precisión absoluta sin intervalos de confianza.
 
@@ -179,7 +84,7 @@ La evaluación ex-ante de planes de desarrollo requiere procesamiento analítico
 
 ### 1.3. Estado del Arte Mínimo
 
-Sistemas previos en evaluación de políticas (e.g., análisis ToC con DAG validation, scoring Bayesiano, extracción de KPIs) operan de forma aislada. Frameworks de NLP (spaCy, Transformers) proveen extracción pero no garantías de proveniencia. RAG (Retrieval-Augmented Generation) carece de contratos formales para composición multi-método. Import-linter y pycycle abordan higiene de dependencias pero no señales transversales runtime.
+Sistemas previos en evaluación de políticas (e.g., análisis ToC con DAG validation, scoring Bayesiano, extracción de KPIs) operan de forma aislada. Frameworks de NLP (spaCy, Transformers) proveen extracción pero no garantías de proveniencia. RAG (Retrieval-Augmented Generation) carece de contratos formais para composición multi-método. Import-linter y pycycle abordan higiene de dependencias pero no señales transversales runtime.
 
 ### 1.4. Contribución y Enfoque
 
@@ -290,7 +195,7 @@ class Deliverable(TypedDict):
     bayesian_score: float  # [0.0, 1.0]
     confidence_interval: Tuple[float, float]  # (lower_95, upper_95)
     provenance_refs: List[ProvenanceRef]  # {page, bbox, token_ids}
-    
+
 class Expectation(TypedDict):
     """Input contract esperado por agregador."""
     required_producers: List[str]  # ["financiero", "causal", ...]
@@ -440,7 +345,7 @@ SPECIAL_ROUTES = {
 
 def route_param(key: str, value: Any, target_obj: Any) -> bool:
     """Route parameter to correct nested location.
-    
+
     Returns:
         True if routed successfully, False if no route found (→ ABORT).
     """
@@ -478,7 +383,7 @@ class BayesianConfig:
     prior_beta: float = 2.0
     confidence_level: float = 0.95
     min_evidence_count: int = 3
-    
+
     def __post_init__(self) -> None:
         if not (0.0 < self.confidence_level < 1.0):
             raise ValueError("confidence_level must be in (0, 1)")
@@ -585,27 +490,27 @@ OCR limitado a texto en imágenes. Gráficos, diagramas de flujo, mapas no son i
 
 #### 4.2.1. Validez Interna
 
-**Amenaza**: Floating-point non-determinism en cálculos Bayesianos.  
-**Evidencia**: Tests de determinismo con tolerancias (±1e-9) para scores Bayesianos.  
+**Amenaza**: Floating-point non-determinism en cálculos Bayesianos.
+**Evidencia**: Tests de determinismo con tolerancias (±1e-9) para scores Bayesianos.
 **Mitigación Parcial**: Fijación de seeds, pero operaciones GPU pueden variar entre hardware.
 
-**Amenaza**: Race conditions en modo parallel (7 productores).  
-**Evidencia**: No detectadas en 1000 runs de stress tests.  
+**Amenaza**: Race conditions en modo parallel (7 productores).
+**Evidencia**: No detectadas en 1000 runs de stress tests.
 **Mitigación**: Productores son stateless; comunicación solo via filesystem (outputs independientes).
 
 #### 4.2.2. Validez Externa
 
-**Amenaza**: Generalización a planes de otras jurisdicciones (no Colombia).  
-**Sin Evidencia**: No testeado con planes mexicanos, argentinos, españoles.  
+**Amenaza**: Generalización a planes de otras jurisdicciones (no Colombia).
+**Sin Evidencia**: No testeado con planes mexicanos, argentinos, españoles.
 **Limitación de Alcance**: Sistema diseñado para Ley 152 de 1994 (Colombia).
 
-**Amenaza**: Degradación con PDFs mal formados (OCR defectuoso).  
-**Evidencia Parcial**: 15% de PDFs municipales fallan en structural_consistency gate.  
+**Amenaza**: Degradación con PDFs mal formados (OCR defectuoso).
+**Evidencia Parcial**: 15% de PDFs municipales fallan en structural_consistency gate.
 **Mitigación**: Fase de pre-validación (checks de MIME, estructura mínima).
 
 #### 4.2.3. Validez de Constructo
 
-**Amenaza**: Métricas (signals.hit_rate, provenance_completeness) no miden directamente "calidad de análisis".  
+**Amenaza**: Métricas (signals.hit_rate, provenance_completeness) no miden directamente "calidad de análisis".
 **Justificación**: Son proxies de condiciones necesarias (trazabilidad, completitud), no suficientes. Calidad final requiere evaluación humana de reportes.
 
 ### 4.3. Planes de Mitigación
@@ -850,9 +755,9 @@ d2b5f4e  Add bandit security scan to CI
 | Versión Python | Soporte | Notas |
 |----------------|---------|-------|
 | 3.9.x | ❌ No | Requiere TypedDict features de 3.10+ |
-| 3.10.x | ⚠️ Legacy | Ya no soportado; migrar a 3.12.x |
-| 3.11.x | ⚠️ Legacy | Ya no soportado; migrar a 3.12.x |
-| 3.12.x | ✅ Completo | **Requerido** y recomendado |
+| 3.10.x | ✅ Completo | Versión mínima requerida |
+| 3.11.x | ✅ Completo | **Recomendado** (mejor performance) |
+| 3.12.x | ✅ Completo | Testeado, compatible |
 | 3.13.x | ⚠️ No testeado | Puede funcionar, sin garantías |
 
 #### Librerías Core
@@ -896,28 +801,93 @@ d2b5f4e  Add bandit security scan to CI
 
 ### Formato BibTeX
 
-# 2. Install the package
-pip install -e ".[all]"
+```bibtex
+@software{farfan2025,
+  author       = {{F.A.R.F.A.N JUAN CAMILO RAVE RESTREPO}},
+  title        = {{F.A.R.F.A.N: Framework for Advanced Retrieval of
+                   Administrativa Narratives - A Mechanistic Policy Pipeline
+                   for Colombian Development Plan Analysis}},
+  year         = {2025},
+  version      = {0.1.0},
+  publisher    = {GitHub},
+  url          = {https://github.com/kkkkknhh/SAAAAAA},
+  doi          = {10.5281/zenodo.XXXXXXX},  % Pending DOI registration
+  note         = {Digital-nodal-substantive policy tool for evidence-based
+                  analysis of municipal development plans using value chain
+                  heuristics and causal mechanisms}
+}
 ```
 
-For detailed installation instructions and troubleshooting, see the **[Installation & Setup](OPERATIONAL_GUIDE.md#installation--setup)** section of the operational guide.
+### Formato APA (7th Edition)
+
+F.A.R.F.A.N RAVE RESTREPO, JUAN CAMILO. (2025). *F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives - A Mechanistic Policy Pipeline for Colombian Development Plan Analysis* (Version 0.1.0) [Computer software]. GitHub. https://github.com/kkkkknhh/SAAAAAA
+
+### Formato Chicago (17th Edition)
+
+F.A.R.F.A.N RAVE RESTREPO, JUAN CAMILO. 2025. "F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives - A Mechanistic Policy Pipeline for Colombian Development Plan Analysis." Version 0.1.0. Computer software. GitHub. https://github.com/kkkkknhh/SAAAAAA.
+
+### Formato MLA (9th Edition)
+
+F.A.R.F.A.N. RAVE RESTREPO, JUAN CAMILO *F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives - A Mechanistic Policy Pipeline for Colombian Development Plan Analysis*. Version 0.1.0, GitHub, 2025, github.com/kkkkknhh/SAAAAAA.
+
+### DOI Registro (Pendiente)
+
+Solicitamos DOI en Zenodo para persistencia de citación. Una vez asignado, actualizar campo `doi` en BibTeX.
 
 ---
 
-## 🔐 Cryptographic Proof & Integrity
+## 9. Licencia
 
-F.A.R.F.A.N enforces data and execution integrity through two key protocols:
+**Tipo de Licencia**: MIT License (Pendiente de confirmación)
 
-1.  **Cryptographic Proof of Execution**: Every successful pipeline run generates a verifiable cryptographic proof, ensuring that the results are genuine and complete.
-2.  **Questionnaire Integrity Protocol**: The 305-question monolith is loaded and validated in a deterministic, tamper-proof manner, guaranteeing the scientific integrity of the analysis.
+**Copyright**: © 2025 F.A.R.F.A.N Development Team
 
-For more details, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+**Permisos**:
+- ✅ Uso comercial
+- ✅ Modificación
+- ✅ Distribución
+- ✅ Uso privado
+
+**Condiciones**:
+- Incluir aviso de copyright y licencia en redistribuciones
+- Uso "AS IS" (sin garantías)
+
+**Limitaciones**:
+- No responsabilidad por daños derivados del uso
+- No garantía de fitness para propósito específico
+
+**Archivo de Licencia**: Ver [LICENSE](LICENSE) (pendiente de creación).
+
+**Licencias de Dependencias**: Ver `requirements.txt` para licencias de bibliotecas de terceros. Todas las dependencias son compatibles con uso académico y comercial (Apache 2.0, MIT, BSD).
 
 ---
 
-## License
+## 10. Referencias Internas
 
-**Documento Generado**: 2025-11-06  
-**Versión**: 1.0.0 (Academic Style)  
-**Estado**: Complete - Under Review  
-**Próxima Revisión**: 2026-01-06
+### Documentos de Auditoría
+
+- [AUDIT_SUMMARY.md](AUDIT_SUMMARY.md) - Resumen de auditoría de código
+- [AUDIT_FIX_REPORT.md](AUDIT_FIX_REPORT.md) - Reporte de correcciones post-auditoría
+- [CPP_IMPLEMENTATION_SUMMARY.md](CPP_IMPLEMENTATION_SUMMARY.md) - Resumen técnico de CPP
+- [ORCHESTRATOR_EXCELLENCE_SUMMARY.md](ORCHESTRATOR_EXCELLENCE_SUMMARY.md) - Verificación arquitectónica
+
+### Documentos Técnicos
+
+- [OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md) - Guía operativa completa (comandos CLI)
+- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - Estructura del repositorio
+- [TEST_IMPORT_MATRIX.md](TEST_IMPORT_MATRIX.md) - Estrategia de imports
+- [BUILD_HYGIENE.md](BUILD_HYGIENE.md) - Estándares de construcción
+
+### Tests Clave
+
+- `tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility` - Golden test de determinismo
+- `tests/test_signal_integration_e2e.py::test_full_signal_flow` - End-to-end signals
+- `tests/test_arg_router_extended.py::test_all_routes_covered` - Validación de rutas ArgRouter
+- `tests/test_boundaries.py::test_no_core_to_orchestrator_imports` - Architectural boundary
+
+### Herramientas de Verificación
+
+- `scripts/verify_phase_hashes.py` - Verificación de hashes por fase
+- `scripts/compare_arrow_files.py` - Comparación de archivos Arrow
+- `tools/scan_core_purity.py` - Scanner de pureza arquitectónica
+- `tools/grep_boundary_checks.py` - Verificación de límites de dependencias
