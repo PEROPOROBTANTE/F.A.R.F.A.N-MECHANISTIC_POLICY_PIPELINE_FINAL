@@ -1234,7 +1234,51 @@ class Orchestrator:
         # ========================================================================
         validate_phase_definitions(self.FASES, self.__class__)
 
-        # Store paths for backward compatibility
+        # ========================================================================
+        # DEPRECATION WARNINGS for path parameters
+        # Path parameters trigger I/O and are deprecated in favor of pre-loaded data
+        # ========================================================================
+        if catalog_path is not None:
+            import warnings
+            warnings.warn(
+                "Orchestrator 'catalog_path' parameter is DEPRECATED. "
+                "Use 'catalog' parameter with pre-loaded data instead. "
+                "Load via: from saaaaaa.core.orchestrator.factory import build_processor",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
+        if monolith_path is not None:
+            import warnings
+            warnings.warn(
+                "Orchestrator 'monolith_path' parameter is DEPRECATED. "
+                "Use 'questionnaire' parameter with CanonicalQuestionnaire instead. "
+                "Load via: from saaaaaa.core.orchestrator.questionnaire import load_questionnaire",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
+        if method_map_path is not None:
+            import warnings
+            warnings.warn(
+                "Orchestrator 'method_map_path' parameter is DEPRECATED. "
+                "Use 'method_map' parameter with pre-loaded data instead. "
+                "Load via: from saaaaaa.core.orchestrator.factory import build_processor",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
+        if schema_path is not None:
+            import warnings
+            warnings.warn(
+                "Orchestrator 'schema_path' parameter is DEPRECATED. "
+                "Use 'schema' parameter with pre-loaded data instead. "
+                "Load via: from saaaaaa.core.orchestrator.factory import build_processor",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
+        # Store paths for backward compatibility (but deprecated)
         self.catalog_path = self._resolve_path(catalog_path) if catalog_path else None
         self.monolith_path = self._resolve_path(monolith_path) if monolith_path else None
         self.method_map_path = self._resolve_path(method_map_path) if method_map_path else None
