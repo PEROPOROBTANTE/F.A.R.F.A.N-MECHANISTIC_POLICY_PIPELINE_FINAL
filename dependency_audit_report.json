@@ -1,67 +1,29 @@
 {
   "imports_by_file": {},
-  "missing_packages": [
-    "uvicorn",
-    "python-docx",
-    "fuzzywuzzy",
-    "structlog",
-    "pymc",
-    "httpx",
-    "werkzeug",
-    "pydantic",
-    "networkx",
-    "pandas",
-    "camelot-py",
-    "pdfplumber",
-    "PyMuPDF",
-    "fastapi",
-    "beautifulsoup4",
-    "PyPDF2",
-    "sentence_transformers",
-    "pydot",
-    "opentelemetry",
-    "nltk",
-    "pyarrow",
-    "hypothesis",
-    "transformers",
-    "numpy",
-    "flask",
-    "typer",
-    "torch",
-    "tabula-py",
-    "blake3",
-    "polars",
-    "flask-cors",
-    "sse-starlette",
-    "scipy",
-    "pytest",
-    "scikit-learn",
-    "langdetect",
-    "tenacity",
-    "spacy",
-    "flask-socketio",
-    "psutil"
-  ],
+  "missing_packages": [],
   "package_classification": {
     "core_runtime": [
       "PyPDF2",
       "blake3",
-      "beautifulsoup4",
       "python-docx",
+      "python-dotenv",
       "fastapi",
       "PyMuPDF",
       "flask",
       "httpx",
+      "importlib_metadata",
       "jsonschema",
       "networkx",
       "numpy",
       "opentelemetry",
       "pandas",
       "pdfplumber",
+      "pkg_resources",
       "polars",
       "pyarrow",
       "pydantic",
       "pymc",
+      "pytensor",
       "scipy",
       "sentence_transformers",
       "scikit-learn",
@@ -103,21 +65,23 @@
       "src/saaaaaa/processing/document_ingestion.py",
       "src/saaaaaa/analysis/Analyzer_one.py"
     ],
-    "beautifulsoup4": [
-      "src/saaaaaa/processing/cpp_ingestion/parsers.py"
-    ],
     "blake3": [
-      "src/saaaaaa/flux/phases.py",
+      "src/saaaaaa/core/orchestrator/signal_loader.py",
+      "src/saaaaaa/core/orchestrator/executor_config.py",
       "src/saaaaaa/core/orchestrator/signals.py",
-      "src/saaaaaa/core/orchestrator/executor_config.py"
+      "src/saaaaaa/core/wiring/validation.py",
+      "src/saaaaaa/core/wiring/bootstrap.py",
+      "src/saaaaaa/flux/phases.py"
     ],
     "camelot-py": [
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py"
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "verify_dependencies.py"
     ],
     "fastapi": [
       "src/saaaaaa/api/signals_service.py"
     ],
     "flask": [
+      "src/saaaaaa/api/auth_admin.py",
       "src/saaaaaa/api/api_server.py"
     ],
     "flask-cors": [
@@ -134,111 +98,139 @@
       "tests/test_signals.py"
     ],
     "hypothesis": [
+      "tests/test_property_based.py",
       "tests/test_executor_config_properties.py",
       "tests/test_embedding_policy_contracts.py",
-      "tests/test_property_based.py",
+      "tests/test_method_sequence_validation.py",
       "tests/test_flux_contracts.py"
+    ],
+    "importlib_metadata": [
+      "src/saaaaaa/compat/safe_imports.py"
     ],
     "jsonschema": [
       "src/saaaaaa/utils/metadata_loader.py",
-      "src/saaaaaa/analysis/recommendation_engine.py",
-      "src/saaaaaa/analysis/teoria_cambio.py",
       "src/saaaaaa/utils/validation/schema_validator.py",
       "src/saaaaaa/core/orchestrator/core.py",
+      "src/saaaaaa/analysis/recommendation_engine.py",
+      "src/saaaaaa/analysis/teoria_cambio.py",
       "scripts/validate_questionnaire_monolith_schema.py"
     ],
     "langdetect": [
-      "src/saaaaaa/processing/document_ingestion.py"
+      "src/saaaaaa/processing/document_ingestion.py",
+      "scripts/smart_policy_chunks_canonic_phase_one.py"
     ],
     "networkx": [
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/teoria_cambio.py",
-      "src/saaaaaa/analysis/dereck_beach.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py",
       "src/saaaaaa/core/orchestrator/executors.py",
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
+      "src/saaaaaa/analysis/teoria_cambio.py",
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "src/saaaaaa/analysis/dereck_beach.py",
+      "src/saaaaaa/analysis/spc_causal_bridge.py",
       "tests/test_graph_resolution.py",
       "tests/test_enhanced_argument_resolution.py",
-      "examples/demo_tres_agujas.py"
+      "tests/validate_spc_implementation.py",
+      "tests/test_chunk_execution.py",
+      "examples/demo_tres_agujas.py",
+      "scripts/run_policy_pipeline_verified.py",
+      "scripts/smart_policy_chunks_canonic_phase_one.py"
     ],
     "nltk": [
       "src/saaaaaa/analysis/Analyzer_one.py"
     ],
     "numpy": [
-      "src/saaaaaa/utils/runtime_error_fixes.py",
-      "src/saaaaaa/utils/seed_factory.py",
+      "src/saaaaaa/processing/policy_processor.py",
       "src/saaaaaa/processing/embedding_policy.py",
       "src/saaaaaa/processing/semantic_chunking_policy.py",
-      "src/saaaaaa/processing/policy_processor.py",
-      "src/saaaaaa/analysis/Analyzer_one.py",
-      "src/saaaaaa/analysis/bayesian_multilevel_system.py",
-      "src/saaaaaa/analysis/scoring.py",
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/micro_prompts.py",
-      "src/saaaaaa/analysis/teoria_cambio.py",
-      "src/saaaaaa/analysis/dereck_beach.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py",
+      "src/saaaaaa/processing/spc_ingestion/converter.py",
+      "src/saaaaaa/utils/deterministic_execution.py",
+      "src/saaaaaa/utils/determinism_helpers.py",
+      "src/saaaaaa/utils/seed_factory.py",
+      "src/saaaaaa/utils/runtime_error_fixes.py",
       "src/saaaaaa/utils/determinism/seeds.py",
       "src/saaaaaa/core/orchestrator/executors.py",
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
+      "src/saaaaaa/analysis/teoria_cambio.py",
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "src/saaaaaa/analysis/Analyzer_one.py",
+      "src/saaaaaa/analysis/bayesian_multilevel_system.py",
+      "src/saaaaaa/analysis/dereck_beach.py",
+      "src/saaaaaa/analysis/scoring.py",
+      "src/saaaaaa/analysis/micro_prompts.py",
+      "src/saaaaaa/optimization/rl_strategy.py",
+      "verify_dependencies.py",
+      "tests/test_determinism.py",
       "tests/test_runtime_error_fixes.py",
       "examples/demo_tres_agujas.py",
-      "examples/integration_guide_bayesian.py",
       "examples/demo_aguja_i.py",
-      "scripts/verify_executors_features.py"
+      "examples/integration_guide_bayesian.py",
+      "scripts/verify_contracts_operational.py",
+      "scripts/verify_executors_features.py",
+      "scripts/smart_policy_chunks_canonic_phase_one.py"
     ],
     "opentelemetry": [
-      "src/saaaaaa/flux/phases.py",
-      "src/saaaaaa/core/orchestrator/executors.py"
+      "src/saaaaaa/core/orchestrator/executors.py",
+      "src/saaaaaa/core/wiring/observability.py",
+      "src/saaaaaa/flux/phases.py"
     ],
     "pandas": [
-      "src/saaaaaa/analysis/Analyzer_one.py",
       "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "src/saaaaaa/analysis/Analyzer_one.py",
       "src/saaaaaa/analysis/dereck_beach.py"
     ],
     "pdfplumber": [
       "src/saaaaaa/processing/factory.py",
       "src/saaaaaa/analysis/factory.py",
-      "src/saaaaaa/processing/cpp_ingestion/parsers.py"
+      "src/saaaaaa/flux/phases.py"
+    ],
+    "pkg_resources": [
+      "scripts/preflight_check.py"
     ],
     "polars": [
-      "src/saaaaaa/flux/phases.py",
-      "src/saaaaaa/flux/cli.py",
       "src/saaaaaa/flux/models.py",
-      "tests/test_flux_integration.py",
+      "src/saaaaaa/flux/cli.py",
+      "src/saaaaaa/flux/phases.py",
       "tests/test_flux_contracts.py",
+      "tests/test_flux_integration.py",
       "examples/flux_demo.py"
     ],
     "psutil": [
+      "src/saaaaaa/core/orchestrator/verification_manifest.py",
       "src/saaaaaa/core/orchestrator/core.py"
     ],
     "pyarrow": [
-      "src/saaaaaa/flux/phases.py",
-      "src/saaaaaa/flux/cli.py",
       "src/saaaaaa/flux/models.py",
-      "src/saaaaaa/processing/cpp_ingestion/chunking.py",
-      "src/saaaaaa/processing/cpp_ingestion/pipeline.py",
-      "src/saaaaaa/processing/cpp_ingestion/models.py",
-      "tests/test_flux_integration.py",
+      "src/saaaaaa/flux/cli.py",
+      "src/saaaaaa/flux/phases.py",
       "tests/test_flux_contracts.py",
-      "tests/test_cpp_ingestion.py",
-      "examples/flux_demo.py"
+      "tests/test_flux_integration.py",
+      "examples/flux_demo.py",
+      "scripts/run_complete_analysis_plan1.py"
     ],
     "pydantic": [
+      "src/saaaaaa/utils/contract_adapters.py",
+      "src/saaaaaa/utils/contract_io.py",
       "src/saaaaaa/utils/contracts_runtime.py",
-      "src/saaaaaa/flux/phases.py",
-      "src/saaaaaa/flux/cli.py",
-      "src/saaaaaa/flux/gates.py",
-      "src/saaaaaa/flux/configs.py",
-      "src/saaaaaa/flux/models.py",
-      "src/saaaaaa/analysis/dereck_beach.py",
-      "src/saaaaaa/utils/validation/schema_validator.py",
+      "src/saaaaaa/utils/flow_adapters.py",
+      "src/saaaaaa/utils/enhanced_contracts.py",
       "src/saaaaaa/utils/validation/aggregation_models.py",
-      "src/saaaaaa/core/orchestrator/signals.py",
+      "src/saaaaaa/utils/validation/schema_validator.py",
+      "src/saaaaaa/core/orchestrator/advanced_module_config.py",
       "src/saaaaaa/core/orchestrator/executor_config.py",
-      "tests/test_signals.py",
+      "src/saaaaaa/core/orchestrator/signals.py",
+      "src/saaaaaa/core/wiring/validation.py",
+      "src/saaaaaa/core/wiring/contracts.py",
+      "src/saaaaaa/analysis/dereck_beach.py",
+      "src/saaaaaa/flux/models.py",
+      "src/saaaaaa/flux/gates.py",
+      "src/saaaaaa/flux/cli.py",
+      "src/saaaaaa/flux/phases.py",
+      "src/saaaaaa/flux/configs.py",
       "tests/test_contract_runtime.py",
+      "tests/test_signals.py",
       "tests/test_flux_contracts.py",
       "tests/test_aggregation_validation.py",
-      "scripts/verify_weights.py"
+      "scripts/verify_weights.py",
+      "scripts/runtime_pipeline_validation.py"
     ],
     "pydot": [
       "src/saaaaaa/analysis/dereck_beach.py"
@@ -247,66 +239,116 @@
       "src/saaaaaa/api/api_server.py"
     ],
     "pymc": [
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py"
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "verify_dependencies.py"
+    ],
+    "pytensor": [
+      "verify_dependencies.py"
     ],
     "pytest": [
-      "tests/test_phase_timeout.py",
-      "tests/test_runtime_error_fixes.py",
-      "tests/test_core_expected_counts.py",
-      "tests/test_executor_config_properties.py",
-      "tests/test_contracts_comprehensive.py",
-      "tests/test_gold_canario_integration.py",
-      "tests/test_gold_canario_meso_reporting.py",
-      "tests/test_embedding_policy_contracts.py",
-      "tests/test_questionnaire_resource_provider.py",
-      "tests/test_contracts.py",
-      "tests/test_gold_canario_micro_stress.py",
-      "tests/test_statistics_guards.py",
-      "tests/test_gold_canario_micro_provenance.py",
-      "tests/test_questionnaire_validation.py",
+      "tests/test_gold_canario_micro_bayesian.py",
+      "tests/test_property_based.py",
+      "tests/test_argrouter_optional_backends.py",
+      "tests/test_circuit_breaker_stress.py",
+      "tests/test_metrics_thread_safety.py",
+      "tests/test_method_config_loader_integration.py",
+      "tests/test_dependency_management.py",
+      "tests/test_cpp_adapter_no_arrow.py",
+      "tests/test_contract_runtime.py",
+      "tests/test_imports.py",
+      "tests/test_system_audit.py",
       "tests/test_arg_router.py",
       "tests/test_scoring.py",
-      "tests/test_recommendation_coverage.py",
-      "tests/test_property_based.py",
-      "tests/test_signals.py",
-      "tests/test_graph_resolution.py",
-      "tests/test_enhanced_argument_resolution.py",
-      "tests/test_contract_runtime.py",
-      "tests/test_arg_router_extended.py",
-      "tests/test_defensive_signatures.py",
-      "tests/test_executor_sequences.py",
-      "tests/test_flux_integration.py",
-      "tests/test_flux_contracts.py",
       "tests/test_executor_monitoring.py",
-      "tests/test_schema_validation.py",
-      "tests/test_dependency_management.py",
-      "tests/test_cpp_ingestion.py",
-      "tests/test_class_registry_paths.py",
-      "tests/test_cpp_adapter.py",
-      "tests/test_aggregation_validation.py",
-      "tests/test_infrastructure.py",
-      "tests/test_smoke_imports.py",
-      "tests/test_integration_failures.py",
-      "tests/test_arg_router_expected_type_name.py",
-      "tests/test_regression_semantic_chunking.py",
-      "tests/test_score_normalization_fix.py",
-      "tests/test_signal_client.py",
-      "tests/test_executor_logging.py",
-      "tests/test_metrics_thread_safety.py",
-      "tests/test_gold_canario_micro_bayesian.py",
-      "tests/test_macro_score_dict.py",
-      "tests/test_aggregation.py",
-      "tests/test_system_audit.py",
-      "tests/test_boundaries.py",
-      "tests/test_gold_canario_macro_reporting.py",
-      "tests/test_circuit_breaker_async.py",
+      "tests/test_method_config_loader.py",
+      "tests/test_defensive_signatures.py",
+      "tests/test_determinism.py",
+      "tests/test_problem_statement_verification.py",
       "tests/test_signal_integration_e2e.py",
+      "tests/test_schema_gates.py",
+      "tests/test_spc_adapter.py",
+      "tests/test_circuit_breaker_async.py",
+      "tests/test_infrastructure.py",
+      "tests/test_cpp_adapter.py",
+      "tests/test_gold_canario_meso_reporting.py",
+      "tests/test_calibration_context.py",
+      "tests/test_gold_canario_macro_reporting.py",
+      "tests/test_aggregators_optional_monolith.py",
+      "tests/test_wiring_e2e.py",
+      "tests/test_signals.py",
+      "tests/test_calibration_system.py",
+      "tests/test_questionnaire_resource_provider.py",
+      "tests/test_graph_resolution.py",
+      "tests/test_canonical_method_catalog.py",
+      "tests/test_recommendation_coverage.py",
+      "tests/test_gold_canario_integration.py",
+      "tests/test_executor_config_properties.py",
+      "tests/test_embedding_policy_contracts.py",
+      "tests/test_gold_canario_micro_provenance.py",
+      "tests/test_boundaries.py",
+      "tests/test_core_expected_counts.py",
+      "tests/test_regression_semantic_chunking.py",
+      "tests/test_method_sequence_validation.py",
+      "tests/test_flux_contracts.py",
+      "tests/test_enhanced_argument_resolution.py",
+      "tests/test_signal_client.py",
+      "tests/test_statistics_guards.py",
+      "tests/test_monitoring.py",
+      "tests/test_spc_integration_complete.py",
+      "tests/test_arg_router_expected_type_name.py",
+      "tests/test_contract_snapshots.py",
+      "tests/test_hash_determinism.py",
+      "tests/test_runtime_error_fixes.py",
+      "tests/test_cpp_table_extraction_none_handling.py",
+      "tests/test_aggregation_validation.py",
+      "tests/test_aggregation.py",
+      "tests/test_wiring_core.py",
+      "tests/test_gold_canario_micro_stress.py",
+      "tests/test_routing_metrics_integration.py",
+      "tests/test_calibration_stability.py",
+      "tests/test_strategic_wiring.py",
+      "tests/test_contracts_comprehensive.py",
       "tests/test_core_monolith_hash.py",
-      "tests/data/test_questionnaire_and_rubric.py"
+      "tests/test_arg_router_extended.py",
+      "tests/test_executor_validation.py",
+      "tests/test_score_normalization_fix.py",
+      "tests/test_executor_sequences.py",
+      "tests/conftest.py",
+      "tests/test_phase_timeout.py",
+      "tests/test_calibration_completeness.py",
+      "tests/test_chunk_execution.py",
+      "tests/test_schema_validation.py",
+      "tests/test_class_registry_paths.py",
+      "tests/test_macro_score_dict.py",
+      "tests/test_flux_integration.py",
+      "tests/test_executor_logging.py",
+      "tests/test_safe_imports.py",
+      "tests/test_questionnaire_validation.py",
+      "tests/test_dependency_lockdown.py",
+      "tests/test_spc_adapter_integration.py",
+      "tests/test_async_timeout.py",
+      "tests/test_proof_generator.py",
+      "tests/test_executor_config_cli.py",
+      "tests/test_contracts.py",
+      "tests/test_questionnaire_validation_edge_cases.py",
+      "tests/test_spc_validation.py",
+      "tests/paths/test_paths_utils.py",
+      "tests/paths/test_paths_workspace_bounds.py",
+      "tests/paths/test_paths_no_absolutes.py",
+      "tests/compat/test_safe_imports.py",
+      "tests/calibration/test_data_structures.py",
+      "tests/calibration/test_gap0_complete.py",
+      "tests/calibration/test_intrinsic_loader.py",
+      "tests/calibration/test_regression.py",
+      "tests/calibration/test_layer_requirements.py",
+      "tests/data/test_questionnaire_and_rubric.py",
+      "tests/integration/test_30_executors.py"
     ],
     "python-docx": [
-      "src/saaaaaa/analysis/Analyzer_one.py",
-      "src/saaaaaa/processing/cpp_ingestion/parsers.py"
+      "src/saaaaaa/analysis/Analyzer_one.py"
+    ],
+    "python-dotenv": [
+      "src/saaaaaa/core/orchestrator/settings.py"
     ],
     "pyyaml": [
       "src/saaaaaa/utils/metadata_loader.py",
@@ -315,66 +357,75 @@
     ],
     "scikit-learn": [
       "src/saaaaaa/processing/embedding_policy.py",
-      "src/saaaaaa/analysis/Analyzer_one.py",
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
       "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py"
+      "src/saaaaaa/analysis/Analyzer_one.py",
+      "scripts/smart_policy_chunks_canonic_phase_one.py"
     ],
     "scipy": [
       "src/saaaaaa/processing/semantic_chunking_policy.py",
-      "src/saaaaaa/analysis/bayesian_multilevel_system.py",
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
       "src/saaaaaa/analysis/teoria_cambio.py",
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
+      "src/saaaaaa/analysis/bayesian_multilevel_system.py",
       "src/saaaaaa/analysis/dereck_beach.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py"
+      "scripts/smart_policy_chunks_canonic_phase_one.py"
     ],
     "sentence_transformers": [
       "src/saaaaaa/processing/embedding_policy.py",
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
       "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py"
+      "verify_dependencies.py"
     ],
     "spacy": [
       "src/saaaaaa/analysis/factory.py",
       "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/dereck_beach.py"
+      "src/saaaaaa/analysis/dereck_beach.py",
+      "verify_dependencies.py",
+      "scripts/verify_dependencies.py",
+      "scripts/smart_policy_chunks_canonic_phase_one.py"
     ],
     "sse-starlette": [
       "src/saaaaaa/api/signals_service.py"
     ],
     "structlog": [
-      "src/saaaaaa/api/signals_service.py",
-      "src/saaaaaa/utils/cpp_adapter.py",
-      "src/saaaaaa/flux/phases.py",
-      "src/saaaaaa/flux/cli.py",
-      "src/saaaaaa/flux/gates.py",
-      "src/saaaaaa/core/orchestrator/signals.py",
-      "src/saaaaaa/core/orchestrator/arg_router_extended.py",
+      "src/saaaaaa/core/orchestrator/signal_loader.py",
       "src/saaaaaa/core/orchestrator/core_module_factory.py",
-      "src/saaaaaa/core/orchestrator/questionnaire_resource_provider.py"
+      "src/saaaaaa/core/orchestrator/questionnaire_resource_provider.py",
+      "src/saaaaaa/core/orchestrator/signal_consumption.py",
+      "src/saaaaaa/core/orchestrator/signals.py",
+      "src/saaaaaa/core/orchestrator/arg_router.py",
+      "src/saaaaaa/core/wiring/observability.py",
+      "src/saaaaaa/core/wiring/validation.py",
+      "src/saaaaaa/core/wiring/bootstrap.py",
+      "src/saaaaaa/api/signals_service.py"
     ],
     "tabula-py": [
       "src/saaaaaa/analysis/financiero_viabilidad_tablas.py"
     ],
     "tenacity": [
-      "src/saaaaaa/flux/phases.py",
-      "src/saaaaaa/core/orchestrator/signals.py"
+      "src/saaaaaa/core/orchestrator/signals.py",
+      "src/saaaaaa/flux/phases.py"
     ],
     "torch": [
       "src/saaaaaa/processing/semantic_chunking_policy.py",
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py"
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py"
     ],
     "transformers": [
       "src/saaaaaa/processing/semantic_chunking_policy.py",
-      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py",
-      "src/saaaaaa/analysis/contradiction_deteccion.py"
+      "src/saaaaaa/analysis/contradiction_deteccion.py",
+      "src/saaaaaa/analysis/financiero_viabilidad_tablas.py"
     ],
     "typer": [
+      "src/saaaaaa/core/orchestrator/executor_config.py",
       "src/saaaaaa/flux/cli.py",
       "tests/test_flux_integration.py"
     ],
     "typing_extensions": [
       "src/saaaaaa/utils/core_contracts.py",
-      "src/saaaaaa/utils/validation/aggregation_models.py"
+      "src/saaaaaa/utils/validation/aggregation_models.py",
+      "src/saaaaaa/compat/__init__.py"
     ],
     "uvicorn": [
       "src/saaaaaa/api/signals_service.py"
@@ -384,9 +435,9 @@
     ]
   },
   "summary": {
-    "installed_packages": 83,
-    "missing_packages": 40,
-    "total_files_scanned": 233,
-    "total_unique_imports": 131
+    "installed_packages": 281,
+    "missing_packages": 0,
+    "total_files_scanned": 388,
+    "total_unique_imports": 173
   }
 }

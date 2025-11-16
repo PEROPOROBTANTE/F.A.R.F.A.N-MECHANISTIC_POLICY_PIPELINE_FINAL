@@ -53,7 +53,7 @@ from scipy import stats
 from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
 _lockdown = get_dependency_lockdown()
 
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer#, util
 from sklearn.cluster import DBSCAN, AgglomerativeClustering
 
 # === MACHINE LEARNING Y SCORING ===
