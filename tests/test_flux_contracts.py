@@ -211,13 +211,25 @@ class TestDeterminism:
 
     def test_ingest_deterministic_fingerprint(self) -> None:
         """run_ingest produces same fingerprint for same input."""
+        import os
+        import tempfile
+        from pathlib import Path
+
+        os.environ["HF_ONLINE"] = "1"
+
         cfg = IngestConfig()
-        uri = "test://doc.txt"
 
-        outcome1 = run_ingest(cfg, input_uri=uri)
-        outcome2 = run_ingest(cfg, input_uri=uri)
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".txt") as f:
+            f.write("test content")
+            uri = f.name
 
-        assert outcome1.fingerprint == outcome2.fingerprint
+        try:
+            outcome1 = run_ingest(cfg, input_uri=uri)
+            outcome2 = run_ingest(cfg, input_uri=uri)
+            assert outcome1.fingerprint == outcome2.fingerprint
+        finally:
+            Path(uri).unlink()
+            del os.environ["HF_ONLINE"]
 
     def test_normalize_deterministic_fingerprint(self) -> None:
         """run_normalize produces same fingerprint for same input."""
@@ -237,25 +249,37 @@ class TestDeterminism:
 
     def test_full_pipeline_deterministic(self) -> None:
         """Full pipeline produces same fingerprints across runs."""
-        input_uri = "test://doc.txt"
+        import os
+        import tempfile
+        from pathlib import Path
 
-        # Run 1
-        ing_cfg = IngestConfig()
-        ing_out1 = run_ingest(ing_cfg, input_uri=input_uri)
-        ing_del1 = IngestDeliverable.model_validate(ing_out1.payload)
+        os.environ["HF_ONLINE"] = "1"
 
-        norm_cfg = NormalizeConfig()
-        norm_out1 = run_normalize(norm_cfg, ing_del1)
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".txt") as f:
+            f.write("test content")
+            input_uri = f.name
 
-        # Run 2
-        ing_out2 = run_ingest(ing_cfg, input_uri=input_uri)
-        ing_del2 = IngestDeliverable.model_validate(ing_out2.payload)
+        try:
+            # Run 1
+            ing_cfg = IngestConfig()
+            ing_out1 = run_ingest(ing_cfg, input_uri=input_uri)
+            ing_del1 = IngestDeliverable.model_validate(ing_out1.payload)
 
-        norm_out2 = run_normalize(norm_cfg, ing_del2)
+            norm_cfg = NormalizeConfig()
+            norm_out1 = run_normalize(norm_cfg, ing_del1)
 
-        # Fingerprints must match
-        assert ing_out1.fingerprint == ing_out2.fingerprint
-        assert norm_out1.fingerprint == norm_out2.fingerprint
+            # Run 2
+            ing_out2 = run_ingest(ing_cfg, input_uri=input_uri)
+            ing_del2 = IngestDeliverable.model_validate(ing_out2.payload)
+
+            norm_out2 = run_normalize(norm_cfg, ing_del2)
+
+            # Fingerprints must match
+            assert ing_out1.fingerprint == ing_out2.fingerprint
+            assert norm_out1.fingerprint == norm_out2.fingerprint
+        finally:
+            Path(input_uri).unlink()
+            del os.environ["HF_ONLINE"]
 
 
 class TestConfigValidation:
@@ -306,13 +330,23 @@ class TestPropertyBasedContracts:
     """Property-based tests with Hypothesis."""
 
     @given(st.text(min_size=1).filter(lambda s: s.strip()))
-    def test_ingest_always_produces_fingerprint(self, uri: str) -> None:
+    def test_ingest_always_produces_fingerprint(self, content: str) -> None:
         """run_ingest always produces a 64-char fingerprint."""
-        cfg = IngestConfig()
-        outcome = run_ingest(cfg, input_uri=uri)
+        import tempfile
+        from pathlib import Path
 
-        assert len(outcome.fingerprint) == 64
-        assert outcome.fingerprint.isalnum()
+        cfg = IngestConfig()
+
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".txt") as f:
+            f.write(content)
+            uri = f.name
+
+        try:
+            outcome = run_ingest(cfg, input_uri=uri)
+            assert len(outcome.fingerprint) == 64
+            assert outcome.fingerprint.isalnum()
+        finally:
+            Path(uri).unlink()
 
     @given(st.lists(st.text(min_size=1), min_size=1, max_size=100))
     def test_normalize_preserves_sentence_count(self, sentences: list[str]) -> None:
@@ -332,7 +366,7 @@ class TestPropertyBasedContracts:
         norm_del = NormalizeDeliverable.model_validate(outcome.payload)
 
         # Should have same number of non-empty sentences
-        expected_count = len([s for s in sentences if s.strip()])
+        expected_count = len([s for s in raw_text.split('\n') if s.strip()])
         assert len(norm_del.sentences) == expected_count
         assert len(norm_del.sentence_meta) == expected_count
 
