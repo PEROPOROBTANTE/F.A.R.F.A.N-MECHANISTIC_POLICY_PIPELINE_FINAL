@@ -1434,10 +1434,8 @@ class PolicyAreaChunkCalibrator:
             List of chunk dictionaries
         """
         # Use the actual SemanticChunkingProducer (instance method, not standalone function)
-        from saaaaaa.processing.semantic_chunking_policy import SemanticChunkingProducer
-
-        # Instantiate the producer
-        producer = SemanticChunkingProducer()
+        # Use the producer instance injected via __init__
+        producer = self.chunking_producer
 
         # chunk_document signature: (text: str, preserve_structure: bool = True) -> list[dict[str, Any]]
         result_chunks = producer.chunk_document(text=text, preserve_structure=True)
