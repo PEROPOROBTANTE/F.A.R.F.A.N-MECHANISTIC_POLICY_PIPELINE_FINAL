@@ -69,7 +69,7 @@
   "ttl_s": 3600,
   "source_fingerprint": "pa01_v1_gender_rights",
   "valid_from": "2025-01-01T00:00:00Z",
-  "valid_to": "",
+  "valid_to": null,
   "metadata": {
     "policy_area_name": "Derechos de las mujeres e igualdad de género",
     "legacy_id": "P1",
