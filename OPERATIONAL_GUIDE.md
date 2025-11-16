@@ -455,7 +455,7 @@ async def test():
     print(f'SPC ingestion completed: {len(cpp.chunk_graph.chunks)} chunks')
 
 asyncio.run(test())
-print(f'Quality metrics: {outcome.quality_metrics}')
+print(f'Quality metrics: {cpp.quality_metrics}')
 "
 
 # This creates a Canon Policy Package with:
