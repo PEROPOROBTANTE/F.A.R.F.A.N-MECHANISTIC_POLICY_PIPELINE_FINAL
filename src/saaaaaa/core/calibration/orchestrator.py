@@ -208,7 +208,7 @@ class CalibrationOrchestrator:
             )
             layer_scores[LayerID.BASE] = LayerScore(
                 layer=LayerID.BASE,
-                score=0.1,
+                score=BaseLayerEvaluator.UNCALIBRATED_PENALTY,
                 rationale="BASE layer: intrinsic calibration not available (penalty applied)",
                 metadata={"penalty": True, "reason": "no_calibration_file"}
             )
