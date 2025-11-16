@@ -70,7 +70,7 @@ class QMCMRecorder:
             "execution_status": execution_status,
             "execution_time_ms": round(execution_time_ms, 2)
         }
-        
+
         # Include monolith_hash if provided
         if monolith_hash is not None:
             call_record["monolith_hash"] = monolith_hash
@@ -229,7 +229,7 @@ def qmcm_record(method=None, *, monolith_hash: str | None = None):
                 raise
 
         return wrapper
-    
+
     # Handle both @qmcm_record and @qmcm_record() usage
     if method is None:
         return decorator

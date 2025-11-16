@@ -153,7 +153,7 @@ class DimensionAggregator:
             self.niveles = None
 
         logger.info("DimensionAggregator initialized")
-        
+
         # Validate canonical notation if available
         if HAS_CANONICAL_NOTATION:
             try:
@@ -182,14 +182,14 @@ class DimensionAggregator:
         if not HAS_CANONICAL_NOTATION:
             logger.debug("Canonical notation not available, skipping validation")
             return True
-        
+
         try:
             canonical_dims = get_all_dimensions()
             # Check if dimension_id is a valid code
             valid_codes = {info.code for info in canonical_dims.values()}
             if dimension_id in valid_codes:
                 return True
-            
+
             msg = f"Invalid dimension ID: {dimension_id}. Valid codes: {sorted(valid_codes)}"
             logger.error(msg)
             if self.abort_on_insufficient:
@@ -215,12 +215,12 @@ class DimensionAggregator:
         if not HAS_CANONICAL_NOTATION:
             logger.debug("Canonical notation not available, skipping validation")
             return True
-        
+
         try:
             canonical_areas = get_all_policy_areas()
             if area_id in canonical_areas:
                 return True
-            
+
             msg = f"Invalid policy area ID: {area_id}. Valid codes: {sorted(canonical_areas.keys())}"
             logger.error(msg)
             if self.abort_on_insufficient:

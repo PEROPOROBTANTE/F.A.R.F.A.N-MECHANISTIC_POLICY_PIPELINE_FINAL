@@ -13,7 +13,6 @@ Compatibility Scores (from theoretical model):
 import json
 import logging
 from pathlib import Path
-from typing import Dict
 
 from .data_structures import CompatibilityMapping
 
@@ -27,7 +26,7 @@ class CompatibilityRegistry:
     This loads from a JSON file that defines which methods work
     in which contexts (questions, dimensions, policies).
     """
-    
+
     def __init__(self, config_path: Path | str):
         """
         Initialize registry from configuration file.
@@ -36,9 +35,9 @@ class CompatibilityRegistry:
             config_path: Path to method_compatibility.json
         """
         self.config_path = Path(config_path)
-        self.mappings: Dict[str, CompatibilityMapping] = {}
+        self.mappings: dict[str, CompatibilityMapping] = {}
         self._load()
-    
+
     def _load(self):
         """Load compatibility mappings from JSON."""
         if not self.config_path.exists():
@@ -46,16 +45,16 @@ class CompatibilityRegistry:
                 f"Compatibility config not found: {self.config_path}\n"
                 f"Create this file with method compatibility definitions."
             )
-        
-        with open(self.config_path, 'r', encoding='utf-8') as f:
+
+        with open(self.config_path, encoding='utf-8') as f:
             data = json.load(f)
-        
+
         # Validate structure
         if "method_compatibility" not in data:
             raise ValueError(
                 "Config must have 'method_compatibility' key at top level"
             )
-        
+
         # Load each method's compatibility
         for method_id, compat_data in data["method_compatibility"].items():
             self.mappings[method_id] = CompatibilityMapping(
@@ -64,7 +63,7 @@ class CompatibilityRegistry:
                 dimensions=compat_data.get("dimensions", {}),
                 policies=compat_data.get("policies", {}),
             )
-            
+
             logger.info(
                 "compatibility_loaded",
                 extra={
@@ -74,12 +73,12 @@ class CompatibilityRegistry:
                     "num_policies": len(compat_data.get("policies", {})),
                 }
             )
-        
+
         logger.info(
             "compatibility_registry_loaded",
             extra={"total_methods": len(self.mappings)}
         )
-    
+
     def get(self, method_id: str) -> CompatibilityMapping:
         """
         Get compatibility mapping for a method.
@@ -101,9 +100,9 @@ class CompatibilityRegistry:
                 dimensions={},
                 policies={},
             )
-        
+
         return self.mappings[method_id]
-    
+
     def validate_anti_universality(self, threshold: float = 0.9) -> dict[str, bool]:
         """
         Check Anti-Universality Theorem for all methods.
@@ -116,11 +115,11 @@ class CompatibilityRegistry:
         """
         results = {}
         violations = []
-        
+
         for method_id, mapping in self.mappings.items():
             is_compliant = mapping.check_anti_universality(threshold)
             results[method_id] = is_compliant
-            
+
             if not is_compliant:
                 violations.append(method_id)
                 logger.error(
@@ -132,13 +131,13 @@ class CompatibilityRegistry:
                         "avg_p": sum(mapping.policies.values()) / len(mapping.policies) if mapping.policies else 0,
                     }
                 )
-        
+
         if violations:
             raise ValueError(
                 f"Anti-Universality Theorem violated by methods: {violations}\n"
                 f"No method can have avg compatibility ≥ {threshold} across ALL contexts."
             )
-        
+
         return results
 
 
@@ -148,10 +147,10 @@ class ContextualLayerEvaluator:
     
     These scores are direct lookups from the compatibility registry.
     """
-    
+
     def __init__(self, registry: CompatibilityRegistry):
         self.registry = registry
-    
+
     def evaluate_question(self, method_id: str, question_id: str) -> float:
         """
         Evaluate @q (question compatibility).
@@ -160,7 +159,7 @@ class ContextualLayerEvaluator:
         """
         mapping = self.registry.get(method_id)
         score = mapping.get_question_score(question_id)
-        
+
         logger.debug(
             "question_compatibility",
             extra={
@@ -169,9 +168,9 @@ class ContextualLayerEvaluator:
                 "score": score
             }
         )
-        
+
         return score
-    
+
     def evaluate_dimension(self, method_id: str, dimension: str) -> float:
         """
         Evaluate @d (dimension compatibility).
@@ -180,7 +179,7 @@ class ContextualLayerEvaluator:
         """
         mapping = self.registry.get(method_id)
         score = mapping.get_dimension_score(dimension)
-        
+
         logger.debug(
             "dimension_compatibility",
             extra={
@@ -189,9 +188,9 @@ class ContextualLayerEvaluator:
                 "score": score
             }
         )
-        
+
         return score
-    
+
     def evaluate_policy(self, method_id: str, policy_area: str) -> float:
         """
         Evaluate @p (policy area compatibility).
@@ -200,7 +199,7 @@ class ContextualLayerEvaluator:
         """
         mapping = self.registry.get(method_id)
         score = mapping.get_policy_score(policy_area)
-        
+
         logger.debug(
             "policy_compatibility",
             extra={
@@ -209,12 +208,12 @@ class ContextualLayerEvaluator:
                 "score": score
             }
         )
-        
+
         return score
-    
+
     def evaluate_all_contextual(
-        self, 
-        method_id: str, 
+        self,
+        method_id: str,
         question_id: str,
         dimension: str,
         policy_area: str

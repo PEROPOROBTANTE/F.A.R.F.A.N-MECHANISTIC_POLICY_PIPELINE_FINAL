@@ -135,7 +135,7 @@ class ValidationEngine:
         questionnaire_data = {}
         if self.questionnaire_provider is not None:
             questionnaire_data = self.questionnaire_provider.get_data()
-        
+
         result = self.predicates.verify_expected_elements(
             question_spec, questionnaire_data
         )

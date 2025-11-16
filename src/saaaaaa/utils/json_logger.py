@@ -34,7 +34,7 @@ class JsonFormatter(logging.Formatter):
     
     Formats LogRecord as JSON with standard fields plus custom extras.
     """
-    
+
     def format(self, record: logging.LogRecord) -> str:
         """
         Format LogRecord as JSON string.
@@ -131,7 +131,7 @@ def log_io_event(
         ... )  # doctest: +SKIP
     """
     elapsed_ms = int((time.monotonic() - started_monotonic) * 1000)
-    
+
     # Safely get payload sizes
     input_bytes = None
     if envelope_in is not None:
@@ -141,7 +141,7 @@ def log_io_event(
                 input_bytes = len(json.dumps(payload, ensure_ascii=False))
         except (TypeError, AttributeError):
             pass
-    
+
     output_bytes = None
     try:
         output_bytes = len(json.dumps(envelope_out.payload, ensure_ascii=False))
@@ -149,7 +149,7 @@ def log_io_event(
         # If payload is missing or not serializable, skip logging output_bytes.
         # This is non-critical for logging; output_bytes will be None.
         pass
-    
+
     logger.info(
         "phase_io",
         extra={
@@ -170,23 +170,23 @@ def log_io_event(
 if __name__ == "__main__":
     import doctest
     import time
-    
+
     # Run doctests
     print("Running doctests...")
     doctest.testmod(verbose=True)
-    
+
     # Integration tests
     print("\n" + "="*60)
     print("JSON Logger Integration Tests")
     print("="*60)
-    
+
     print("\n1. Testing JSON formatter:")
     logger = get_json_logger("demo")
     assert logger.level == logging.INFO
     assert len(logger.handlers) > 0
     assert isinstance(logger.handlers[0].formatter, JsonFormatter)
     print("   ✓ Logger configured with JSON formatter")
-    
+
     print("\n2. Testing log output structure:")
     # Create a test record
     record = logging.LogRecord(
@@ -201,36 +201,36 @@ if __name__ == "__main__":
     record.event_id = "evt-123"
     record.correlation_id = "corr-456"
     record.latency_ms = 42
-    
+
     formatter = JsonFormatter()
     output = formatter.format(record)
     parsed = json.loads(output)
-    
+
     assert parsed["level"] == "INFO"
     assert parsed["message"] == "test message"
     assert parsed["event_id"] == "evt-123"
     assert parsed["correlation_id"] == "corr-456"
     assert parsed["latency_ms"] == 42
     print("   ✓ JSON format includes all expected fields")
-    
+
     print("\n3. Testing I/O event logging:")
     # Only test if ContractEnvelope is available
     if ContractEnvelope is not None:
         from .contract_io import ContractEnvelope
-        
+
         lg = get_json_logger("demo")
         out = ContractEnvelope.wrap(
             {"ok": True},
             policy_unit_id="PU_123",
             correlation_id="corr-1"
         )
-        
+
         # Capture the log output
         import io
         import sys
         old_stdout = sys.stdout
         sys.stdout = buffer = io.StringIO()
-        
+
         log_io_event(
             lg,
             phase="normalize",
@@ -238,10 +238,10 @@ if __name__ == "__main__":
             envelope_out=out,
             started_monotonic=time.monotonic()
         )
-        
+
         sys.stdout = old_stdout
         log_output = buffer.getvalue()
-        
+
         # Verify JSON output
         if log_output.strip():
             log_data = json.loads(log_output.strip())
@@ -253,7 +253,7 @@ if __name__ == "__main__":
             print("   ✓ I/O event logging executed (output suppressed)")
     else:
         print("   ⊘ Skipped (ContractEnvelope not available)")
-    
+
     print("\n" + "="*60)
     print("JSON logger doctest OK - All tests passed!")
     print("="*60)

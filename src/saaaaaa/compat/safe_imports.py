@@ -18,7 +18,6 @@ from __future__ import annotations
 import importlib
 import sys
 import types
-from typing import Optional
 
 
 class ImportErrorDetailed(ImportError):
@@ -128,7 +127,7 @@ def try_import(
         return importlib.import_module(modname)
     except Exception as primary_error:
         msg = f"[IMPORT] Failed '{modname}'"
-        
+
         # Try alternative package if specified
         if alt:
             try:
@@ -149,7 +148,7 @@ def try_import(
         # Required import failed - abort immediately
         if required:
             raise ImportErrorDetailed(modname, hint=hint) from primary_error
-        
+
         # Optional dependency: log and defer failure to call site
         # This allows the module to load but fail when the feature is used
         sys.stderr.write(f"{msg} (optional). {hint}\n")
@@ -182,6 +181,8 @@ def check_import_available(modname: str) -> bool:
     ...     # Fall back to pandas
     ...     pass
     """
+    if modname in sys.builtin_module_names:
+        return True
     try:
         spec = importlib.util.find_spec(modname)
         return spec is not None
@@ -267,7 +268,7 @@ def lazy_import(modname: str, *, hint: str = "") -> types.ModuleType:
         if cached is None:
             raise ImportErrorDetailed(f"[IMPORT] Module '{modname}' previously failed")
         return cached
-    
+
     try:
         mod = importlib.import_module(modname)
         _lazy_cache[modname] = mod

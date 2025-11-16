@@ -3,15 +3,15 @@ AtroZ Pipeline Connector
 Real integration with the orchestrator for executing the 11-phase analysis pipeline
 """
 
-import asyncio
 import json
 import logging
 import time
+import traceback
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional, Callable
-from dataclasses import dataclass, asdict
-import traceback
+from typing import Any
 
 from ..core.orchestrator.core import Orchestrator
 from ..core.orchestrator.verification_manifest import write_verification_manifest
@@ -27,16 +27,16 @@ class PipelineResult:
     document_id: str
     duration_seconds: float
     phases_completed: int
-    macro_score: Optional[float]
-    meso_scores: Optional[Dict[str, float]]
-    micro_scores: Optional[Dict[str, float]]
+    macro_score: float | None
+    meso_scores: dict[str, float] | None
+    micro_scores: dict[str, float] | None
     questions_analyzed: int
     evidence_count: int
     recommendations_count: int
-    verification_manifest_path: Optional[str]
-    error: Optional[str]
-    phase_timings: Dict[str, float]
-    metadata: Dict[str, Any]
+    verification_manifest_path: str | None
+    error: str | None
+    phase_timings: dict[str, float]
+    metadata: dict[str, Any]
 
 
 class PipelineConnector:
@@ -53,8 +53,8 @@ class PipelineConnector:
         self.workspace_dir.mkdir(parents=True, exist_ok=True)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-        self.running_jobs: Dict[str, Dict[str, Any]] = {}
-        self.completed_jobs: Dict[str, PipelineResult] = {}
+        self.running_jobs: dict[str, dict[str, Any]] = {}
+        self.completed_jobs: dict[str, PipelineResult] = {}
 
         logger.info(f"Pipeline connector initialized with workspace: {workspace_dir}")
 
@@ -63,8 +63,8 @@ class PipelineConnector:
         pdf_path: str,
         job_id: str,
         municipality: str = "general",
-        progress_callback: Optional[Callable[[int, str], None]] = None,
-        settings: Optional[Dict[str, Any]] = None
+        progress_callback: Callable[[int, str], None] | None = None,
+        settings: dict[str, Any] | None = None
     ) -> PipelineResult:
         """
         Execute the complete 11-phase pipeline on a PDF document.
@@ -220,7 +220,7 @@ class PipelineConnector:
             if job_id in self.running_jobs:
                 del self.running_jobs[job_id]
 
-    async def _ingest_document(self, pdf_path: str, municipality: str) -> Dict[str, Any]:
+    async def _ingest_document(self, pdf_path: str, municipality: str) -> dict[str, Any]:
         """
         Ingest and preprocess the PDF document.
 
@@ -245,7 +245,7 @@ class PipelineConnector:
                 }
             }
 
-    def _extract_metrics(self, orchestrator_result: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_metrics(self, orchestrator_result: dict[str, Any]) -> dict[str, Any]:
         """Extract key metrics from orchestrator result"""
         metrics = {}
 
@@ -278,8 +278,8 @@ class PipelineConnector:
     async def _write_manifest(
         self,
         job_id: str,
-        orchestrator_result: Dict[str, Any],
-        metrics: Dict[str, Any]
+        orchestrator_result: dict[str, Any],
+        metrics: dict[str, Any]
     ) -> str:
         """Write verification manifest for the analysis"""
         manifest_path = self.output_dir / f"{job_id}_verification_manifest.json"
@@ -318,7 +318,7 @@ class PipelineConnector:
                 "updated_at": datetime.now().isoformat()
             })
 
-    def get_job_status(self, job_id: str) -> Optional[Dict[str, Any]]:
+    def get_job_status(self, job_id: str) -> dict[str, Any] | None:
         """Get current status of a job"""
         if job_id in self.running_jobs:
             return self.running_jobs[job_id]
@@ -331,13 +331,13 @@ class PipelineConnector:
             }
         return None
 
-    def get_result(self, job_id: str) -> Optional[PipelineResult]:
+    def get_result(self, job_id: str) -> PipelineResult | None:
         """Get final result for a completed job"""
         return self.completed_jobs.get(job_id)
 
 
 # Global connector instance
-_connector: Optional[PipelineConnector] = None
+_connector: PipelineConnector | None = None
 
 
 def get_pipeline_connector() -> PipelineConnector:

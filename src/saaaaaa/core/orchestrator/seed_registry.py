@@ -17,7 +17,6 @@ import hashlib
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -53,13 +52,13 @@ class SeedRegistry:
         )
         rng = np.random.default_rng(np_seed)
     """
-    
+
     def __init__(self):
         """Initialize seed registry with empty audit log."""
         self._audit_log: list[SeedRecord] = []
-        self._seed_cache: Dict[tuple[str, str, str], int] = {}
+        self._seed_cache: dict[tuple[str, str, str], int] = {}
         logger.info(f"SeedRegistry initialized with version {SEED_VERSION}")
-    
+
     def get_seed(
         self,
         policy_unit_id: str,
@@ -87,11 +86,11 @@ class SeedRegistry:
         cache_key = (policy_unit_id, correlation_id, component)
         if cache_key in self._seed_cache:
             return self._seed_cache[cache_key]
-        
+
         # Derive seed
         base_material = f"{policy_unit_id}:{correlation_id}:{component}"
         seed = self.derive_seed(base_material)
-        
+
         # Cache and audit
         self._seed_cache[cache_key] = seed
         self._audit_log.append(SeedRecord(
@@ -100,14 +99,14 @@ class SeedRegistry:
             component=component,
             seed=seed
         ))
-        
+
         logger.debug(
             f"Generated seed {seed} for component={component}, "
             f"policy_unit_id={policy_unit_id}, correlation_id={correlation_id}"
         )
-        
+
         return seed
-    
+
     def derive_seed(self, base_material: str) -> int:
         """
         Derive deterministic seed from base material using SHA256.
@@ -127,7 +126,7 @@ class SeedRegistry:
         digest = hashlib.sha256(base_material.encode("utf-8")).digest()
         seed = int.from_bytes(digest[:4], byteorder="big")
         return seed
-    
+
     def get_audit_log(self) -> list[SeedRecord]:
         """
         Get complete audit log of all generated seeds.
@@ -138,12 +137,12 @@ class SeedRegistry:
         Useful for debugging non-determinism issues.
         """
         return list(self._audit_log)
-    
+
     def clear_cache(self):
         """Clear seed cache (useful for testing or isolation)."""
         self._seed_cache.clear()
         logger.debug("Seed cache cleared")
-    
+
     def get_seeds_for_context(
         self,
         policy_unit_id: str,
@@ -171,11 +170,11 @@ class SeedRegistry:
             component: self.get_seed(policy_unit_id, correlation_id, component)
             for component in components
         }
-    
+
     def get_manifest_entry(
         self,
-        policy_unit_id: Optional[str] = None,
-        correlation_id: Optional[str] = None
+        policy_unit_id: str | None = None,
+        correlation_id: str | None = None
     ) -> dict:
         """
         Get manifest entry for verification manifest.
@@ -196,30 +195,30 @@ class SeedRegistry:
             ]
         else:
             filtered_log = self._audit_log
-        
+
         # Use first record for base info (they should all have same context)
         base_record = filtered_log[0] if filtered_log else None
-        
+
         manifest = {
             "seed_version": SEED_VERSION,
             "seeds_generated": len(filtered_log),
         }
-        
+
         if base_record:
             manifest["policy_unit_id"] = base_record.policy_unit_id
             manifest["correlation_id"] = base_record.correlation_id
-            
+
             # Include seed breakdown by component
             manifest["seeds_by_component"] = {
                 record.component: record.seed
                 for record in filtered_log
             }
-        
+
         return manifest
 
 
 # Global registry instance (singleton pattern)
-_global_registry: Optional[SeedRegistry] = None
+_global_registry: SeedRegistry | None = None
 
 
 def get_global_seed_registry() -> SeedRegistry:

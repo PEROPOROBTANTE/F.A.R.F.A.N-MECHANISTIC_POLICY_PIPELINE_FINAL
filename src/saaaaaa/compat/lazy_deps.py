@@ -286,7 +286,7 @@ def get_lazy_dep(name: str) -> Any:
             f"Unknown lazy dependency: {name}. "
             f"Available: {', '.join(LAZY_DEPS.keys())}"
         )
-    
+
     return LAZY_DEPS[name]()
 
 

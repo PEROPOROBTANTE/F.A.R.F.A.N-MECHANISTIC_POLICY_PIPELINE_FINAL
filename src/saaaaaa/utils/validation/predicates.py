@@ -14,6 +14,7 @@ Python: 3.10+
 from dataclasses import dataclass
 from typing import Any
 
+
 @dataclass
 class ValidationResult:
     """Result of a validation check."""

@@ -19,20 +19,17 @@ Design:
 from __future__ import annotations
 
 import asyncio
-import hashlib
 import json
+from collections.abc import AsyncIterator
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import AsyncIterator
 
 import structlog
 from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import StreamingResponse
 from sse_starlette.sse import EventSourceResponse
 
-from saaaaaa.core.orchestrator.signals import SignalPack, PolicyArea
 from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
-
+from saaaaaa.core.orchestrator.signals import PolicyArea, SignalPack
 
 logger = structlog.get_logger(__name__)
 
@@ -94,7 +91,7 @@ def _create_stub_signal_packs() -> dict[str, SignalPack]:
         "energía",
         "transporte",
     ]
-    
+
     packs = {}
     for area in policy_areas:
         packs[area] = SignalPack(
@@ -131,7 +128,7 @@ def _create_stub_signal_packs() -> dict[str, SignalPack]:
             ttl_s=3600,
             source_fingerprint=f"stub_{area}",
         )
-    
+
     return packs
 
 
@@ -203,30 +200,30 @@ async def get_signal_pack(
     if policy_area not in _signal_store:
         logger.warning("signal_pack_not_found", policy_area=policy_area)
         raise HTTPException(status_code=404, detail=f"Policy area '{policy_area}' not found")
-    
+
     signal_pack = _signal_store[policy_area]
-    
+
     # Compute ETag from signal pack hash
     etag = signal_pack.compute_hash()[:32]  # Use first 32 chars for ETag
-    
+
     # Check If-None-Match header
     if_none_match = request.headers.get("If-None-Match")
     if if_none_match == etag:
         # Content not modified
         logger.debug("signal_pack_not_modified", policy_area=policy_area, etag=etag)
         raise HTTPException(status_code=304, detail="Not Modified")
-    
+
     # Set response headers
     response.headers["ETag"] = etag
     response.headers["Cache-Control"] = f"max-age={signal_pack.ttl_s}"
-    
+
     logger.info(
         "signal_pack_served",
         policy_area=policy_area,
         version=signal_pack.version,
         etag=etag,
     )
-    
+
     return signal_pack
 
 
@@ -245,7 +242,7 @@ async def stream_signals(request: Request) -> EventSourceResponse:
     Returns:
         EventSourceResponse with SSE stream
     """
-    
+
     async def event_generator() -> AsyncIterator[dict[str, str]]:
         """Generate SSE events."""
         while True:
@@ -253,7 +250,7 @@ async def stream_signals(request: Request) -> EventSourceResponse:
             if await request.is_disconnected():
                 logger.info("signal_stream_client_disconnected")
                 break
-            
+
             # Send heartbeat
             yield {
                 "event": "heartbeat",
@@ -262,10 +259,10 @@ async def stream_signals(request: Request) -> EventSourceResponse:
                     "signal_count": len(_signal_store),
                 }),
             }
-            
+
             # Wait before next heartbeat
             await asyncio.sleep(30)
-    
+
     return EventSourceResponse(event_generator())
 
 
@@ -293,19 +290,19 @@ async def update_signal_pack(
             status_code=400,
             detail=f"Policy area mismatch: URL={policy_area}, body={signal_pack.policy_area}",
         )
-    
+
     # Update store
     _signal_store[policy_area] = signal_pack
-    
+
     etag = signal_pack.compute_hash()[:32]
-    
+
     logger.info(
         "signal_pack_updated",
         policy_area=policy_area,
         version=signal_pack.version,
         etag=etag,
     )
-    
+
     return {
         "status": "updated",
         "policy_area": policy_area,
@@ -331,7 +328,7 @@ async def list_signal_packs() -> dict[str, list[str]]:
 def main() -> None:
     """Run the signal service."""
     import uvicorn
-    
+
     uvicorn.run(
         "saaaaaa.api.signals_service:app",
         host="0.0.0.0",

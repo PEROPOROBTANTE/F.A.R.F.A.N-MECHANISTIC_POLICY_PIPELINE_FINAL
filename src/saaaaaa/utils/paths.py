@@ -21,6 +21,7 @@ import unicodedata
 from pathlib import Path
 from typing import Final
 
+
 # Custom exception types for path errors
 class PathError(Exception):
     """Base exception for path-related errors."""
@@ -196,7 +197,7 @@ def is_within(base: Path, child: Path) -> bool:
     try:
         base_resolved = base.resolve()
         child_resolved = child.resolve()
-        
+
         # Check if child is relative to base
         child_resolved.relative_to(base_resolved)
         return True
@@ -227,13 +228,13 @@ def safe_join(base: Path, *parts: str) -> Path:
         PathTraversalError
     """
     result = base.joinpath(*parts).resolve()
-    
+
     if not is_within(base, result):
         raise PathTraversalError(
             f"Path traversal detected: '{result}' is outside base '{base}'. "
             f"Use paths within the workspace."
         )
-    
+
     return result
 
 
@@ -280,7 +281,7 @@ def normalize_case(path: Path) -> Path:
             return path.resolve()
         except Exception:
             pass
-    
+
     return path
 
 
@@ -308,11 +309,11 @@ def resources(package: str, *path_parts: str) -> Path:
     try:
         # Python 3.9+ way
         from importlib.resources import files
-        
+
         pkg_path = files(package)
         for part in path_parts:
             pkg_path = pkg_path.joinpath(part)
-        
+
         # Convert to Path - files() returns Traversable
         if hasattr(pkg_path, '__fspath__'):
             return Path(pkg_path)
@@ -345,7 +346,7 @@ def validate_read_path(path: Path) -> None:
     """
     if not path.exists():
         raise PathNotFoundError(f"Path does not exist: '{path}'")
-    
+
     if not os.access(path, os.R_OK):
         raise PermissionError(f"Path is not readable: '{path}'")
 
@@ -372,7 +373,7 @@ def validate_write_path(path: Path, allow_source_tree: bool = False) -> None:
         raise PathOutsideWorkspaceError(
             f"Cannot write to '{path}' - outside workspace '{PROJECT_ROOT}'"
         )
-    
+
     # Prohibit writing to source tree unless explicitly allowed
     if not allow_source_tree:
         if is_within(SRC_DIR, path):
@@ -382,7 +383,7 @@ def validate_write_path(path: Path, allow_source_tree: bool = False) -> None:
                 f"If you need to write to source (e.g., code generation), "
                 f"set allow_source_tree=True."
             )
-    
+
     # Ensure parent directory exists and is writable
     parent = path.parent
     if parent.exists() and not os.access(parent, os.W_OK):
@@ -436,7 +437,7 @@ def get_reports_dir() -> Path:
 __all__ = [
     # Exceptions
     "PathError",
-    "PathTraversalError", 
+    "PathTraversalError",
     "PathNotFoundError",
     "PathOutsideWorkspaceError",
     "UnnormalizedPathError",

@@ -47,20 +47,20 @@ def check_version_compatibility(component: str, version: str, min_version: str) 
     try:
         v_parts = [int(x) for x in version.split(".")]
         min_parts = [int(x) for x in min_version.split(".")]
-        
+
         # Pad to same length
         while len(v_parts) < len(min_parts):
             v_parts.append(0)
         while len(min_parts) < len(v_parts):
             min_parts.append(0)
-        
+
         # Compare tuple
         if tuple(v_parts) < tuple(min_parts):
             raise ValueError(
                 f"{component} version {version} is below minimum required {min_version}. "
                 "Please upgrade or regenerate calibration data."
             )
-        
+
         return True
     except (ValueError, AttributeError) as e:
         if "below minimum" in str(e):

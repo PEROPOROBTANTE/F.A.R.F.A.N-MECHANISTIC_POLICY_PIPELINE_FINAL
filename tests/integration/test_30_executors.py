@@ -72,13 +72,10 @@ class TestExecutorArchitecture:
     @staticmethod
     def dimension_names() -> Dict[int, str]:
         """Get dimension names."""
+        from saaaaaa.core.canonical_notation import get_dimension_info
         return {
-            1: "INSUMOS (Diagnóstico y Recursos)",
-            2: "ACTIVIDADES (Procesos y Operaciones)",
-            3: "PRODUCTOS (Entregables Directos)",
-            4: "RESULTADOS INTERMEDIOS (Efectos Esperados)",
-            5: "RESULTADOS FINALES (Impactos Estratégicos)",
-            6: "CAUSALIDAD (Teoría de Cambio y Coherencia)"
+            i: f"{get_dimension_info(i)['name']} ({get_dimension_info(i)['label']})"
+            for i in range(1, 7)
         }
 
     def test_all_30_executors_exist(self, audit_system: AuditSystem, expected_executors: List[str]):

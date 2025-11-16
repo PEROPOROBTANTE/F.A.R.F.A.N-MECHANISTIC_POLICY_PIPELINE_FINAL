@@ -8,6 +8,7 @@ ensuring zero-tolerance for invalid values at ingestion time.
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from typing_extensions import Self
 
+
 class AggregationWeights(BaseModel):
     """
     Validation model for aggregation weights.

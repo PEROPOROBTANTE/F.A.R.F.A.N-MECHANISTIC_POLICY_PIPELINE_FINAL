@@ -26,10 +26,10 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from dataclasses import asdict
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from saaaaaa.processing.cpp_ingestion.models import (
+    KPI,
     Budget,
     CanonPolicyPackage,
     Chunk,
@@ -39,7 +39,6 @@ from saaaaaa.processing.cpp_ingestion.models import (
     Entity,
     GeoFacet,
     IntegrityIndex,
-    KPI,
     PolicyFacet,
     PolicyManifest,
     ProvenanceMap,
@@ -60,13 +59,13 @@ if TYPE_CHECKING:
         text: str
         normalized_text: str
         semantic_density: float
-        section_hierarchy: List[str]
+        section_hierarchy: list[str]
         document_position: tuple[int, int]
         chunk_type: Any  # ChunkType enum
-        causal_chain: List[Any]
-        policy_entities: List[Any]
-        related_chunks: List[tuple[str, float]]
-        confidence_metrics: Dict[str, float]
+        causal_chain: list[Any]
+        policy_entities: list[Any]
+        related_chunks: list[tuple[str, float]]
+        confidence_metrics: dict[str, float]
         coherence_score: float
         completeness_index: float
         strategic_importance: float
@@ -100,8 +99,8 @@ class SmartChunkConverter:
 
     def convert_to_canon_package(
         self,
-        smart_chunks: List[Any],  # List[SmartPolicyChunk]
-        document_metadata: Dict[str, Any]
+        smart_chunks: list[Any],  # List[SmartPolicyChunk]
+        document_metadata: dict[str, Any]
     ) -> CanonPolicyPackage:
         """
         Convert list of SmartPolicyChunk to CanonPolicyPackage.
@@ -331,7 +330,7 @@ class SmartChunkConverter:
             extraction_method="smart_policy_chunking_v3.0"
         )
 
-    def _extract_entities(self, smart_chunk: Any) -> List[Entity]:
+    def _extract_entities(self, smart_chunk: Any) -> list[Entity]:
         """Extract entities from SPC policy_entities."""
         entities = []
 
@@ -346,7 +345,7 @@ class SmartChunkConverter:
 
         return entities
 
-    def _extract_budget(self, smart_chunk: Any) -> Optional[Budget]:
+    def _extract_budget(self, smart_chunk: Any) -> Budget | None:
         """Extract budget information if present in strategic_context."""
         if hasattr(smart_chunk, 'strategic_context') and smart_chunk.strategic_context:
             ctx = smart_chunk.strategic_context
@@ -378,7 +377,7 @@ class SmartChunkConverter:
 
         return None
 
-    def _extract_kpi(self, smart_chunk: Any) -> Optional[KPI]:
+    def _extract_kpi(self, smart_chunk: Any) -> KPI | None:
         """Extract KPI if chunk contains indicator information."""
         # Check if chunk_type suggests this is a metric
         chunk_type_str = smart_chunk.chunk_type.value if hasattr(smart_chunk.chunk_type, 'value') else str(smart_chunk.chunk_type)
@@ -401,7 +400,7 @@ class SmartChunkConverter:
 
     def _calculate_quality_metrics(
         self,
-        smart_chunks: List[Any],
+        smart_chunks: list[Any],
         chunk_graph: ChunkGraph
     ) -> QualityMetrics:
         """Calculate quality metrics from SPC data."""
@@ -442,8 +441,8 @@ class SmartChunkConverter:
 
     def _generate_integrity_index(
         self,
-        chunk_hashes: Dict[str, str],
-        document_metadata: Dict[str, Any]
+        chunk_hashes: dict[str, str],
+        document_metadata: dict[str, Any]
     ) -> IntegrityIndex:
         """Generate cryptographic integrity index."""
         # Generate root hash from all chunk hashes
@@ -457,9 +456,9 @@ class SmartChunkConverter:
 
     def _preserve_spc_rich_data(
         self,
-        smart_chunks: List[Any],
-        document_metadata: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        smart_chunks: list[Any],
+        document_metadata: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Preserve SPC rich data in metadata for executor access.
 
@@ -488,7 +487,6 @@ class SmartChunkConverter:
             # Add embeddings if available (as lists for JSON serialization)
             if hasattr(sc, 'semantic_embedding') and sc.semantic_embedding is not None:
                 try:
-                    import numpy as np
                     chunk_data['semantic_embedding'] = sc.semantic_embedding.tolist()
                 except Exception:
                     pass  # Skip if conversion fails

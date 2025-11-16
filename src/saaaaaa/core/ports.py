@@ -15,6 +15,7 @@ Version: 1.0.0
 from datetime import datetime
 from typing import Any, Protocol
 
+
 class FilePort(Protocol):
     """Port for file system operations.
 
@@ -231,7 +232,7 @@ class PortCPPIngest(Protocol):
     
     Ingests documents and produces Canon Policy Packages with complete provenance.
     """
-    
+
     def ingest(self, input_uri: str) -> Any:
         """Ingest document from URI and produce Canon Policy Package.
         
@@ -260,7 +261,7 @@ class PortCPPAdapter(Protocol):
     
     Note: CPP is the legacy name. Use PortSPCAdapter for new code.
     """
-    
+
     def to_preprocessed_document(self, cpp: Any, document_id: str) -> Any:
         """Convert CPP to PreprocessedDocument.
         
@@ -290,7 +291,7 @@ class PortSPCAdapter(Protocol):
     Converts Smart Policy Chunks to orchestrator's PreprocessedDocument format.
     This is the preferred terminology for new code.
     """
-    
+
     def to_preprocessed_document(self, spc: Any, document_id: str) -> Any:
         """Convert SPC to PreprocessedDocument.
         
@@ -320,7 +321,7 @@ class PortSignalsClient(Protocol):
     Retrieves policy-aware signals from memory or HTTP sources.
     Sematics: None return = 304 Not Modified or circuit breaker open.
     """
-    
+
     def fetch(self, policy_area: str) -> Any | None:
         """Fetch signals for policy area.
         
@@ -345,7 +346,7 @@ class PortSignalsRegistry(Protocol):
     
     Manages in-memory cache of strategic signals with expiration.
     """
-    
+
     def put(self, pack: Any) -> None:
         """Store signal pack in registry.
         
@@ -357,7 +358,7 @@ class PortSignalsRegistry(Protocol):
             - pack.version is present
         """
         ...
-    
+
     def get(self, policy_area: str) -> dict[str, Any] | None:
         """Retrieve signals for policy area.
         
@@ -368,7 +369,7 @@ class PortSignalsRegistry(Protocol):
             Signal data if cached and not expired, None otherwise
         """
         ...
-    
+
     def fingerprint(self) -> str:
         """Compute registry fingerprint for drift detection.
         
@@ -383,7 +384,7 @@ class PortArgRouter(Protocol):
     
     Routes method calls with strict parameter validation.
     """
-    
+
     def route(
         self,
         class_name: str,
@@ -418,7 +419,7 @@ class PortExecutor(Protocol):
     
     Executes methods with injected executor config and signals.
     """
-    
+
     def run(self, prompt: str, overrides: Any | None = None) -> Any:
         """Execute with prompt and optional config overrides.
         
@@ -445,7 +446,7 @@ class PortAggregate(Protocol):
     
     Aggregates processed chunks into PyArrow tables.
     """
-    
+
     def aggregate(self, enriched_chunks: list[dict[str, Any]]) -> Any:
         """Aggregate enriched chunks to PyArrow table.
         
@@ -471,7 +472,7 @@ class PortScore(Protocol):
     
     Computes scores from feature tables with specified metrics.
     """
-    
+
     def score(self, features: Any, metrics: list[str]) -> Any:
         """Score features using specified metrics.
         
@@ -499,7 +500,7 @@ class PortReport(Protocol):
     
     Generates output reports from scores and manifest.
     """
-    
+
     def report(self, scores: Any, manifest: Any) -> dict[str, str]:
         """Generate reports from scores and manifest.
         

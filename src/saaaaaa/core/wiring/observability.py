@@ -6,15 +6,16 @@ Provides OpenTelemetry tracing and structured logging for all wiring operations.
 from __future__ import annotations
 
 import time
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Any, Iterator
+from typing import Any
 
 import structlog
 
 try:
     from opentelemetry import trace
     from opentelemetry.trace import Status, StatusCode
-    
+
     HAS_OTEL = True
     tracer = trace.get_tracer("saaaaaa.wiring")
 except ImportError:
@@ -48,7 +49,7 @@ def trace_wiring_link(
     """
     start_time = time.time()
     dynamic_attrs: dict[str, Any] = {}
-    
+
     # Start span if OpenTelemetry is available
     span = None
     if HAS_OTEL and tracer:
@@ -57,20 +58,20 @@ def trace_wiring_link(
         for key, value in attributes.items():
             if isinstance(value, (str, int, float, bool)):
                 span.set_attribute(key, value)
-    
+
     # Log start
     logger.info(
         "wiring_link_start",
         link=link_name,
         **attributes,
     )
-    
+
     try:
         yield dynamic_attrs
-        
+
         # Success
         latency_ms = (time.time() - start_time) * 1000
-        
+
         if span:
             span.set_attribute("latency_ms", latency_ms)
             span.set_attribute("ok", True)
@@ -78,7 +79,7 @@ def trace_wiring_link(
                 if isinstance(value, (str, int, float, bool)):
                     span.set_attribute(key, value)
             span.set_status(Status(StatusCode.OK))
-        
+
         logger.info(
             "wiring_link_complete",
             link=link_name,
@@ -87,18 +88,18 @@ def trace_wiring_link(
             **attributes,
             **dynamic_attrs,
         )
-        
+
     except Exception as e:
         # Failure
         latency_ms = (time.time() - start_time) * 1000
-        
+
         if span:
             span.set_attribute("latency_ms", latency_ms)
             span.set_attribute("ok", False)
             span.set_attribute("error_type", type(e).__name__)
             span.set_attribute("error_message", str(e))
             span.set_status(Status(StatusCode.ERROR, str(e)))
-        
+
         logger.error(
             "wiring_link_failed",
             link=link_name,
@@ -108,9 +109,9 @@ def trace_wiring_link(
             error_message=str(e),
             **attributes,
         )
-        
+
         raise
-        
+
     finally:
         if span:
             span.end()
@@ -132,7 +133,7 @@ def trace_wiring_init(
     """
     start_time = time.time()
     dynamic_attrs: dict[str, Any] = {}
-    
+
     span = None
     if HAS_OTEL and tracer:
         span = tracer.start_span(f"wiring.init.{phase}")
@@ -140,18 +141,18 @@ def trace_wiring_init(
         for key, value in attributes.items():
             if isinstance(value, (str, int, float, bool)):
                 span.set_attribute(key, value)
-    
+
     logger.info(
         "wiring_init_start",
         phase=phase,
         **attributes,
     )
-    
+
     try:
         yield dynamic_attrs
-        
+
         latency_ms = (time.time() - start_time) * 1000
-        
+
         if span:
             span.set_attribute("latency_ms", latency_ms)
             span.set_attribute("ok", True)
@@ -159,7 +160,7 @@ def trace_wiring_init(
                 if isinstance(value, (str, int, float, bool)):
                     span.set_attribute(key, value)
             span.set_status(Status(StatusCode.OK))
-        
+
         logger.info(
             "wiring_init_complete",
             phase=phase,
@@ -168,17 +169,17 @@ def trace_wiring_init(
             **attributes,
             **dynamic_attrs,
         )
-        
+
     except Exception as e:
         latency_ms = (time.time() - start_time) * 1000
-        
+
         if span:
             span.set_attribute("latency_ms", latency_ms)
             span.set_attribute("ok", False)
             span.set_attribute("error_type", type(e).__name__)
             span.set_attribute("error_message", str(e))
             span.set_status(Status(StatusCode.ERROR, str(e)))
-        
+
         logger.error(
             "wiring_init_failed",
             phase=phase,
@@ -188,9 +189,9 @@ def trace_wiring_init(
             error_message=str(e),
             **attributes,
         )
-        
+
         raise
-        
+
     finally:
         if span:
             span.end()

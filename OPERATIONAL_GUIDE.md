@@ -44,7 +44,7 @@ For a detailed explanation of the system's design, including the 9-phase pipelin
 
 ### Required Software
 
-- **Python**: 3.10 or higher (3.11 recommended)
+- **Python**: 3.12.x (Mandatory)
 - **pip**: Latest version
 - **Git**: For repository management
 - **Minimum RAM**: 8GB (16GB recommended for large analyses)
@@ -172,7 +172,7 @@ cd /path/to/SAAAAAA
 source venv/bin/activate
 
 # Verify Python version
-python3 --version  # Should be 3.10 or higher
+python3 --version  # Should be 3.12.x
 ```
 
 #### 2. Dependency Verification
@@ -203,7 +203,7 @@ python3 scripts/validate_imports.py
 # Test core imports
 python3 -c "
 from saaaaaa.core.orchestrator import Orchestrator, MethodExecutor
-from saaaaaa.processing import document_ingestion
+from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
 from saaaaaa.analysis import bayesian_multilevel_system
 print('✓ Core modules imported successfully')
 "
@@ -278,8 +278,6 @@ from saaaaaa.utils.cpp_adapter import CPPAdapter
 from saaaaaa.processing.policy_processor import IndustrialPolicyProcessor
 from saaaaaa.processing.embedding_policy import PolicyAnalysisEmbedder
 
-# Legacy processing (DEPRECATED - Use cpp_ingestion instead)
-# from saaaaaa.processing.document_ingestion import DocumentIngestionEngine  # DEPRECATED
 
 # Utilities
 from saaaaaa.utils.contracts import ProducerContract, ScoringModality
@@ -473,17 +471,6 @@ data/cpp_output/
 
 **Note:** The old `document_ingestion` module is deprecated. Always use CPP ingestion for new projects.
 
-#### Step 3: Policy Processing
-
-```bash
-# Process the policy document
-python3 -m saaaaaa.processing.policy_processor \
-  --input data/processed/plan_parsed.json \
-  --output data/processed/policy_analysis.json
-
-# This identifies patterns, baseline data, and evidence
-```
-
 #### Step 4: Run Producer Modules (Parallel Analysis)
 
 Execute all 7 producer modules to analyze different aspects:
@@ -638,38 +625,7 @@ python3 scripts/run_full_pipeline.py
 
 **See**: `examples/orchestrator_io_free_example.py` for the complete working example.
 
-#### Option 2: Step-by-Step Execution
-
-For more control or debugging:
-
-```bash
-# 1. Document Ingestion
-python3 -m saaaaaa.processing.document_ingestion \
-  --input data/input_plans/plan.pdf \
-  --output data/stage1_ingestion.json
-
-# 2. Policy Processing
-python3 -m saaaaaa.processing.policy_processor \
-  --input data/stage1_ingestion.json \
-  --output data/stage2_policy.json
-
-# 3. Execute Producers (can be run in parallel)
-bash scripts/run_all_producers.sh \
-  --input data/stage2_policy.json \
-  --output-dir data/producers
-
-# 4. Aggregation
-python3 -m saaaaaa.processing.aggregation \
-  --producer-dir data/producers \
-  --output data/stage4_aggregated.json
-
-# 5. Report Generation
-bash scripts/generate_all_reports.sh \
-  --input data/stage4_aggregated.json \
-  --output-dir data/reports
-```
-
-#### Option 3: Using the Choreographer
+#### Option 2: Using the Choreographer
 
 For complex workflows with dependencies:
 
@@ -849,23 +805,6 @@ python3 -m saaaaaa.processing.policy_processor \
 
 ### Core System Components
 
-#### Document Ingestion
-```bash
-# PDF ingestion
-python3 -m saaaaaa.processing.document_ingestion \
-  --input data/input_plans/plan.pdf \
-  --output data/processed/document_parsed.json \
-  --extract-tables \
-  --detect-language
-
-# Multiple document formats
-python3 -m saaaaaa.processing.document_ingestion \
-  --input data/input_plans/ \
-  --output data/processed/batch_ingestion.json \
-  --formats pdf,txt,docx \
-  --parallel
-```
-
 #### Policy Processing
 ```bash
 # Basic processing
@@ -1011,6 +950,41 @@ python3 scripts/recommendation_cli.py --interactive
 ---
 
 ## Verification & Testing
+
+### 🔐 Verification Narrative: Proof Generation and Integrity Checks
+
+F.A.R.F.A.N is designed for auditable and reproducible science. Operators must follow a strict verification narrative to ensure the integrity of any analysis. This involves two main components: **equipment checks** to validate the environment and **proof verification** to confirm the integrity of the analysis output.
+
+#### Operator Checklist for a Verifiable Analysis
+
+1.  **Environment Verification (`make equip`)**: Before any analysis, run the equipment checks. This script ensures the Python version is correct (3.12.x), all dependencies are correctly installed, and the environment is ready for a deterministic run.
+
+    ```bash
+    make equip
+    ```
+
+2.  **Run the Full Analysis**: Execute the analysis pipeline using the orchestrator. A successful run is a prerequisite for proof generation.
+
+    ```bash
+    python run_policy_pipeline_verified.py --input /path/to/plan.pdf --output-dir /data/output/my_analysis
+    ```
+
+3.  **Proof Generation**: Upon successful completion, the pipeline automatically generates a cryptographic proof in the output directory (`/data/output/my_analysis/proof.json` and `proof.hash`). This proof attests to the integrity and completeness of the pipeline's execution.
+
+4.  **Proof Verification**: Use the `verify_proof.py` script to validate the generated proof. This confirms that the analysis results have not been tampered with and were produced by a valid pipeline run.
+
+    ```bash
+    python verify_proof.py /data/output/my_analysis
+    ```
+    *Expected Output: `Proof verified successfully.`*
+
+5.  **Full System Verification (`make verify`)**: As a final step, run the full verification suite. This includes linting, type checking, security scans, and contract validation against the `src/saaaaaa` directory, ensuring the underlying code is sound.
+
+    ```bash
+    make verify
+    ```
+
+Only when all these steps are completed with "green logs" can an analysis be considered fully verified and ready for audit.
 
 ### Pre-Execution Verification
 
@@ -1901,11 +1875,6 @@ python3 -m saaaaaa.processing.policy_processor \
 
 #### Processing Commands
 ```bash
-# Document ingestion
-python3 -m saaaaaa.processing.document_ingestion \
-  --input data/input_plans/plan.pdf \
-  --output data/processed/document_parsed.json
-
 # Policy processing
 python3 -m saaaaaa.processing.policy_processor \
   --input data/processed/document_parsed.json \
@@ -2087,30 +2056,29 @@ black src/ tests/
 
 #### Complete Analysis Workflow
 ```bash
+# See the "Running the Full Pipeline" section for the recommended programmatic
+# approach using the Orchestrator. The following is a simplified example of a
+# manual workflow.
+
 # 1. Setup
 pip install -e .
 
-# 2. Ingest document
-python3 -m saaaaaa.processing.document_ingestion \
+# 2. Ingest and Process Document (Canonical Method)
+python3 run_complete_analysis_plan1.py \
   --input data/input_plans/plan.pdf \
-  --output data/processed/parsed.json
+  --output-dir data/cpp_output/
 
-# 3. Process policy
-python3 -m saaaaaa.processing.policy_processor \
-  --input data/processed/parsed.json \
-  --output data/processed/policy.json
-
-# 4. Run all producers
+# 3. Run all producers
 bash scripts/run_all_producers.sh \
-  --input data/processed/policy.json \
+  --input data/cpp_output/policy_analysis.json \
   --output-dir data/producers --parallel
 
-# 5. Aggregate
+# 4. Aggregate
 python3 -m saaaaaa.processing.aggregation \
   --producer-dir data/producers \
   --output data/aggregated/assembly.json
 
-# 6. Generate reports
+# 5. Generate reports
 python3 -m saaaaaa.core.report_generator \
   --input data/aggregated/assembly.json \
   --output-dir data/reports \

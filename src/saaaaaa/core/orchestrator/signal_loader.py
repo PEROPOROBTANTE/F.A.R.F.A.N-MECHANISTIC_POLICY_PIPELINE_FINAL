@@ -16,8 +16,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
-from pathlib import Path
 from typing import Any
 
 try:
@@ -33,8 +31,9 @@ except ImportError:
     import logging
     logger = logging.getLogger(__name__)
 
+from .questionnaire import CanonicalQuestionnaire
+from .signal_consumption import SignalManifest, generate_signal_manifests
 from .signals import SignalPack
-from .signal_consumption import generate_signal_manifests, SignalManifest
 
 
 def compute_fingerprint(content: str | bytes) -> str:
@@ -49,7 +48,7 @@ def compute_fingerprint(content: str | bytes) -> str:
     """
     if isinstance(content, str):
         content = content.encode('utf-8')
-    
+
     if BLAKE3_AVAILABLE:
         return blake3.blake3(content).hexdigest()
     else:
@@ -110,23 +109,23 @@ def extract_patterns_by_policy_area(
         Dict mapping policy_area_id to list of patterns
     """
     questions = monolith.get('blocks', {}).get('micro_questions', [])
-    
+
     patterns_by_pa = {}
     for question in questions:
         policy_area = question.get('policy_area_id', 'PA01')
         patterns = question.get('patterns', [])
-        
+
         if policy_area not in patterns_by_pa:
             patterns_by_pa[policy_area] = []
-        
+
         patterns_by_pa[policy_area].extend(patterns)
-    
+
     logger.info(
         "patterns_extracted_by_policy_area",
         policy_areas=len(patterns_by_pa),
         total_patterns=sum(len(p) for p in patterns_by_pa.values()),
     )
-    
+
     return patterns_by_pa
 
 
@@ -153,18 +152,18 @@ def categorize_patterns(
         'temporal': [],
         'entities': [],
     }
-    
+
     for pattern_obj in patterns:
         pattern_str = pattern_obj.get('pattern', '')
         category = pattern_obj.get('category', '')
-        
+
         if not pattern_str:
             continue
-        
+
         # All non-temporal patterns
         if category != 'TEMPORAL':
             categorized['all_patterns'].append(pattern_str)
-        
+
         # Category-specific
         if category == 'INDICADOR':
             categorized['indicators'].append(pattern_str)
@@ -176,11 +175,11 @@ def categorize_patterns(
             categorized['entities'].extend(p.strip() for p in parts if p.strip())
         elif category == 'TEMPORAL':
             categorized['temporal'].append(pattern_str)
-    
+
     # Deduplicate
     for key in categorized:
         categorized[key] = list(set(categorized[key]))
-    
+
     return categorized
 
 
@@ -199,7 +198,7 @@ def extract_thresholds(patterns: list[dict[str, Any]]) -> dict[str, float]:
         for p in patterns
         if 'confidence_weight' in p
     ]
-    
+
     if confidence_weights:
         min_confidence = min(confidence_weights)
         max_confidence = max(confidence_weights)
@@ -208,7 +207,7 @@ def extract_thresholds(patterns: list[dict[str, Any]]) -> dict[str, float]:
         min_confidence = 0.85
         max_confidence = 0.85
         avg_confidence = 0.85
-    
+
     return {
         'min_confidence': round(min_confidence, 2),
         'max_confidence': round(max_confidence, 2),
@@ -228,7 +227,7 @@ def get_git_sha() -> str:
         import subprocess
         result = subprocess.run(
             ['git', 'rev-parse', '--short', 'HEAD'],
-            capture_output=True,
+            check=False, capture_output=True,
             text=True,
             timeout=2,
         )
@@ -236,7 +235,7 @@ def get_git_sha() -> str:
             return result.stdout.strip()
     except Exception:
         pass
-    
+
     return 'unknown'
 
 
@@ -244,7 +243,7 @@ def build_signal_pack_from_monolith(
     policy_area: str,
     monolith: dict[str, Any] | None = None,
     *,
-    questionnaire: "CanonicalQuestionnaire | None" = None,
+    questionnaire: CanonicalQuestionnaire | None = None,
 ) -> SignalPack:
     """
     Build SignalPack for a specific policy area from questionnaire monolith.
@@ -268,7 +267,7 @@ def build_signal_pack_from_monolith(
         >>> print(f"Indicators: {len(pack.indicators)}")
     """
     # Import here to avoid circular dependency
-    from .questionnaire import load_questionnaire, CanonicalQuestionnaire
+    from .questionnaire import load_questionnaire
 
     # Handle legacy monolith parameter
     if monolith is not None:
@@ -291,7 +290,7 @@ def build_signal_pack_from_monolith(
 
     # Extract patterns by policy area
     patterns_by_pa = extract_patterns_by_policy_area(monolith_data)
-    
+
     if policy_area not in patterns_by_pa:
         logger.warning(
             "policy_area_not_found",
@@ -308,32 +307,32 @@ def build_signal_pack_from_monolith(
             entities=[],
             thresholds={},
         )
-    
+
     # Get patterns for this policy area
     raw_patterns = patterns_by_pa[policy_area]
-    
+
     # Categorize patterns
     categorized = categorize_patterns(raw_patterns)
-    
+
     # Extract thresholds
     thresholds = extract_thresholds(raw_patterns)
 
     # Compute source fingerprint
     monolith_str = json.dumps(monolith_data, sort_keys=True)
     source_fingerprint = compute_fingerprint(monolith_str)
-    
+
     # Build version string (must be semantic X.Y.Z format)
     git_sha = get_git_sha()
     # Use 1.0.0 as base version (git sha stored in metadata)
     version = "1.0.0"
-    
+
     # Regex patterns are all patterns (for now)
     regex_patterns = categorized['all_patterns'][:100]  # Limit for performance
-    
+
     # Map policy area to PolicyArea type (using fiscal as default)
     # The SignalPack PolicyArea type is limited, so we use fiscal as a placeholder
     policy_area_type = "fiscal"
-    
+
     # Build SignalPack
     signal_pack = SignalPack(
         version=version,
@@ -354,7 +353,7 @@ def build_signal_pack_from_monolith(
             'git_sha': git_sha,
         }
     )
-    
+
     logger.info(
         "signal_pack_built",
         policy_area=policy_area,
@@ -363,14 +362,14 @@ def build_signal_pack_from_monolith(
         indicators=len(signal_pack.indicators),
         entities=len(signal_pack.entities),
     )
-    
+
     return signal_pack
 
 
 def build_all_signal_packs(
     monolith: dict[str, Any] | None = None,
     *,
-    questionnaire: "CanonicalQuestionnaire | None" = None,
+    questionnaire: CanonicalQuestionnaire | None = None,
 ) -> dict[str, SignalPack]:
     """
     Build SignalPacks for all policy areas.
@@ -411,20 +410,20 @@ def build_all_signal_packs(
         signal_packs[pa] = build_signal_pack_from_monolith(
             pa, monolith=monolith, questionnaire=questionnaire
         )
-    
+
     logger.info(
         "all_signal_packs_built",
         count=len(signal_packs),
         policy_areas=list(signal_packs.keys()),
     )
-    
+
     return signal_packs
 
 
 def build_signal_manifests(
     monolith: dict[str, Any] | None = None,
     *,
-    questionnaire: "CanonicalQuestionnaire | None" = None,
+    questionnaire: CanonicalQuestionnaire | None = None,
 ) -> dict[str, SignalManifest]:
     """
     Build signal manifests with Merkle roots for verification.
@@ -443,7 +442,7 @@ def build_signal_manifests(
         >>> print(f"Built {len(manifests)} manifests")
     """
     # Import here to avoid circular dependency
-    from .questionnaire import load_questionnaire, QUESTIONNAIRE_PATH
+    from .questionnaire import QUESTIONNAIRE_PATH, load_questionnaire
 
     # Handle legacy monolith parameter
     if monolith is not None:

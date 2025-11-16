@@ -367,9 +367,13 @@ def ejemplo_3_optimizacion_ejecucion():
     manager = CanonicalCatalogManager()
 
     # Obtener solo métodos críticos e importantes de D6-Q1
-    prioritized = manager.obtener_metodos_priorizados("D6-Q1", min_priority=2)
+    question_id = "D6-Q1"
+    prioritized = manager.obtener_metodos_priorizados(question_id, min_priority=2)
 
-    print(f"\n🎯 Métodos priorizados para D6-Q1 (Integridad de Teoría de Cambio)")
+    dimension_id = question_id.split('-')[0]
+    dimension_name = manager.catalog['dimensions'][dimension_id]['name']
+
+    print(f"\n🎯 Métodos priorizados para {question_id} ({dimension_name})")
     print(f"Total: {len(prioritized)} métodos")
 
     critical = [m for m in prioritized if m['priority'] == 3]

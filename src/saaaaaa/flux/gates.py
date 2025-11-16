@@ -1,7 +1,6 @@
 # stdlib
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
 from typing import Any
@@ -123,7 +122,7 @@ class QualityGates:
                     if py_file.is_file():
                         files_checked += 1
                         content = py_file.read_text(encoding="utf-8")
-                        
+
                         # Check for YAML loading patterns
                         if any(
                             pattern in content

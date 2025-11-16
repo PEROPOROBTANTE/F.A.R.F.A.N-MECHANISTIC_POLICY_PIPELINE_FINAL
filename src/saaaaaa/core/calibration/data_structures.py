@@ -11,8 +11,8 @@ Design Principles:
 4. Serializability: Support to_dict() for JSON export
 """
 from dataclasses import dataclass, field
-from typing import Any
 from enum import Enum
+from typing import Any
 
 
 class LayerID(str, Enum):
@@ -24,7 +24,7 @@ class LayerID(str, Enum):
     BASE = "b"          # @b - Intrinsic quality (COMPLETE)
     UNIT = "u"          # @u - PDT quality
     QUESTION = "q"      # @q - Question compatibility
-    DIMENSION = "d"     # @d - Dimension compatibility  
+    DIMENSION = "d"     # @d - Dimension compatibility
     POLICY = "p"        # @p - Policy area compatibility
     CONGRUENCE = "C"    # @C - Ensemble validity
     CHAIN = "chain"     # @chain - Data flow integrity
@@ -59,14 +59,14 @@ class LayerScore:
     components: dict[str, float] = field(default_factory=dict)
     rationale: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
-    
+
     def __post_init__(self):
         """Validate score is in valid range."""
         if not 0.0 <= self.score <= 1.0:
             raise ValueError(
                 f"Layer {self.layer.value} score {self.score} out of range [0.0, 1.0]"
             )
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary for JSON serialization."""
         return {
@@ -104,7 +104,7 @@ class ContextTuple:
     dimension: str
     policy_area: str
     unit_quality: float
-    
+
     def __post_init__(self):
         """Validate canonical notation and ranges."""
         # Validate dimension uses canonical notation
@@ -112,25 +112,25 @@ class ContextTuple:
             raise ValueError(
                 f"Dimension must use canonical code (DIM01-DIM06), got {self.dimension}"
             )
-        
+
         # Validate policy area uses canonical notation
         if not self.policy_area.startswith("PA"):
             raise ValueError(
                 f"Policy must use canonical code (PA01-PA10), got {self.policy_area}"
             )
-        
+
         # Validate question ID format
         if not self.question_id.startswith("Q"):
             raise ValueError(
                 f"Question ID must start with 'Q', got {self.question_id}"
             )
-        
+
         # Validate unit quality range
         if not 0.0 <= self.unit_quality <= 1.0:
             raise ValueError(
                 f"Unit quality must be in [0.0, 1.0], got {self.unit_quality}"
             )
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -176,7 +176,7 @@ class CalibrationSubject:
     graph_config: str
     subgraph_id: str
     context: ContextTuple
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -213,7 +213,7 @@ class CompatibilityMapping:
     questions: dict[str, float]   # question_id -> score ∈ {1.0, 0.7, 0.3, 0.1}
     dimensions: dict[str, float]  # dimension_code -> score
     policies: dict[str, float]    # policy_code -> score
-    
+
     def get_question_score(self, question_id: str) -> float:
         """
         Get compatibility score for a question.
@@ -221,7 +221,7 @@ class CompatibilityMapping:
         Returns 0.1 (penalty) if question not declared.
         """
         return self.questions.get(question_id, 0.1)
-    
+
     def get_dimension_score(self, dimension: str) -> float:
         """
         Get compatibility score for a dimension.
@@ -229,7 +229,7 @@ class CompatibilityMapping:
         Returns 0.1 (penalty) if dimension not declared.
         """
         return self.dimensions.get(dimension, 0.1)
-    
+
     def get_policy_score(self, policy: str) -> float:
         """
         Get compatibility score for a policy area.
@@ -237,7 +237,7 @@ class CompatibilityMapping:
         Returns 0.1 (penalty) if policy not declared.
         """
         return self.policies.get(policy, 0.1)
-    
+
     def check_anti_universality(self, threshold: float = 0.9) -> bool:
         """
         Check Anti-Universality Theorem compliance.
@@ -251,17 +251,17 @@ class CompatibilityMapping:
         """
         if not self.questions or not self.dimensions or not self.policies:
             return True  # Incomplete mapping, cannot be universal
-        
+
         avg_q = sum(self.questions.values()) / len(self.questions)
         avg_d = sum(self.dimensions.values()) / len(self.dimensions)
         avg_p = sum(self.policies.values()) / len(self.policies)
-        
-        is_universal = (avg_q >= threshold and 
-                       avg_d >= threshold and 
+
+        is_universal = (avg_q >= threshold and
+                       avg_d >= threshold and
                        avg_p >= threshold)
-        
+
         return not is_universal
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -300,7 +300,7 @@ class InteractionTerm:
     layer_2: LayerID
     weight: float  # a_ℓk coefficient
     rationale: str  # Why this interaction exists
-    
+
     def compute(self, scores: dict[LayerID, float]) -> float:
         """
         Compute interaction contribution.
@@ -316,7 +316,7 @@ class InteractionTerm:
         score_1 = scores.get(self.layer_1, 0.0)
         score_2 = scores.get(self.layer_2, 0.0)
         return self.weight * min(score_1, score_2)
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -367,7 +367,7 @@ class CalibrationResult:
     interaction_contribution: float
     final_score: float
     computation_metadata: dict[str, Any] = field(default_factory=dict)
-    
+
     def __post_init__(self):
         """Validate calibration result integrity."""
         # Validate final score range
@@ -375,7 +375,7 @@ class CalibrationResult:
             raise ValueError(
                 f"Final calibration score {self.final_score} out of range [0.0, 1.0]"
             )
-        
+
         # Verify linear + interaction = final (within numerical tolerance)
         computed = self.linear_contribution + self.interaction_contribution
         if abs(computed - self.final_score) > 1e-6:
@@ -384,14 +384,14 @@ class CalibrationResult:
                 f"linear {self.linear_contribution} + "
                 f"interaction {self.interaction_contribution} = {computed}"
             )
-        
+
         # Verify all layer scores are in valid range
         for layer_id, layer_score in self.layer_scores.items():
             if not 0.0 <= layer_score.score <= 1.0:
                 raise ValueError(
                     f"Layer {layer_id.value} score {layer_score.score} out of range"
                 )
-    
+
     def to_certificate_dict(self) -> dict:
         """
         Export as a calibration certificate for auditing.
@@ -420,7 +420,7 @@ class CalibrationResult:
             },
             "metadata": self.computation_metadata,
         }
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return self.to_certificate_dict()

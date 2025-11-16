@@ -67,8 +67,10 @@ See ExecutorConfig and AdvancedModuleConfig for complete parameter documentation
 """
 
 import asyncio
+import inspect
 import logging
 import math
+import os
 import threading
 import time
 from abc import ABC, abstractmethod
@@ -77,22 +79,18 @@ from collections.abc import Callable
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from itertools import chain
-import inspect
-import os
 from typing import Any, Generic, TypeVar
 
 import numpy as np
 
 # Contract infrastructure - ACTUAL INTEGRATION
 from ...utils.determinism_helpers import deterministic
-
-from .executor_config import ExecutorConfig, CONSERVATIVE_CONFIG
-from .calibration_registry import resolve_calibration
 from .advanced_module_config import (
-    AdvancedModuleConfig,
-    DEFAULT_ADVANCED_CONFIG,
     CONSERVATIVE_ADVANCED_CONFIG,
+    AdvancedModuleConfig,
 )
+from .calibration_registry import resolve_calibration
+from .executor_config import CONSERVATIVE_CONFIG, ExecutorConfig
 from .signal_consumption import SignalConsumptionProof
 
 # NEW: Calibration system imports
@@ -138,8 +136,8 @@ class DeterministicSeeds:
     """Container for deterministic seeds used within an execution context."""
     np: int  # Seed for numpy RNG
     python: int  # Seed for Python random
-    
-    
+
+
 @contextmanager
 def deterministic(policy_unit_id: str | None, correlation_id: str | None):
     """
@@ -163,7 +161,7 @@ def deterministic(policy_unit_id: str | None, correlation_id: str | None):
     """
     import hashlib
     import random
-    
+
     # Derive deterministic seed from identifiers
     components = [
         str(policy_unit_id) if policy_unit_id else "NO_POLICY_UNIT",
@@ -172,15 +170,15 @@ def deterministic(policy_unit_id: str | None, correlation_id: str | None):
     material = "|".join(components)
     digest = hashlib.sha256(material.encode("utf-8")).digest()
     base_seed = int.from_bytes(digest[:4], byteorder="big")
-    
+
     seeds = DeterministicSeeds(
         np=base_seed,
         python=base_seed + 1,
     )
-    
+
     # Seed Python's random module for deterministic execution
     random.seed(seeds.python)
-    
+
     yield seeds
 
 
@@ -204,7 +202,7 @@ def _ensure_rng(rng: np.random.Generator | None) -> np.random.Generator:
 
 class CircuitBreakerState:
     """Async-safe circuit breaker state for fault isolation."""
-    
+
     def __init__(self):
         self.failures = 0
         self.open = False
@@ -219,7 +217,7 @@ class CircuitBreakerState:
             self.failures += 1
             if self.failures >= 3:
                 self.open = True
-            
+
             # Record state change
             if old_open != self.open:
                 self._state_changes.append({
@@ -228,11 +226,11 @@ class CircuitBreakerState:
                     'to_open': self.open,
                     'failures': self.failures,
                 })
-                
+
                 # Trim history
                 if len(self._state_changes) > self._max_history:
                     self._state_changes = self._state_changes[-self._max_history:]
-                
+
                 logger.warning(
                     "circuit_breaker_state_change",
                     extra={
@@ -241,14 +239,14 @@ class CircuitBreakerState:
                         "failures": self.failures,
                     }
                 )
-    
+
     async def reset(self):
         """Reset circuit breaker state."""
         async with self._lock:
             old_open = self.open
             self.failures = 0
             self.open = False
-            
+
             # Record state change if circuit was open
             if old_open:
                 self._state_changes.append({
@@ -257,16 +255,16 @@ class CircuitBreakerState:
                     'to_open': False,
                     'failures': 0,
                 })
-                
+
                 # Trim history
                 if len(self._state_changes) > self._max_history:
                     self._state_changes = self._state_changes[-self._max_history:]
-    
+
     async def is_open(self) -> bool:
         """Check if circuit is open."""
         async with self._lock:
             return self.open
-    
+
     def get_state_history(self) -> list[dict[str, Any]]:
         """Get history of state changes for monitoring."""
         return list(self._state_changes)
@@ -1088,7 +1086,7 @@ class ExecutorBase(ABC):
     2. Calibrations are properly configured
     3. Required resources are accessible
     """
-    
+
     def validate_before_execution(self) -> ValidationResult:
         """Perform pre-flight checks before execution.
         
@@ -1103,7 +1101,7 @@ class ExecutorBase(ABC):
         errors = []
         warnings = []
         context_info = {}
-        
+
         # Check 1: Verify all dependencies exist
         try:
             dependency_result = self._check_dependencies()
@@ -1114,7 +1112,7 @@ class ExecutorBase(ABC):
                 warnings.append(dependency_result.message)
         except Exception as e:
             errors.append(f"Dependency check failed: {str(e)}")
-        
+
         # Check 2: Verify calibration available
         try:
             calibration_result = self._check_calibration()
@@ -1125,7 +1123,7 @@ class ExecutorBase(ABC):
                 warnings.append(calibration_result.message)
         except Exception as e:
             errors.append(f"Calibration check failed: {str(e)}")
-        
+
         # Check 3: Ensure resources available
         try:
             resource_result = self._check_resources()
@@ -1136,7 +1134,7 @@ class ExecutorBase(ABC):
                 warnings.append(resource_result.message)
         except Exception as e:
             errors.append(f"Resource check failed: {str(e)}")
-        
+
         # Compile final result
         if errors:
             return ValidationResult(
@@ -1159,7 +1157,7 @@ class ExecutorBase(ABC):
                 message="All pre-flight checks passed",
                 context=context_info
             )
-    
+
     def _check_dependencies(self) -> ValidationResult:
         """Check that all class dependencies exist in executor registry.
         
@@ -1173,10 +1171,10 @@ class ExecutorBase(ABC):
                 message="Method executor not initialized",
                 context={"check": "dependencies"}
             )
-        
+
         seq = self._get_method_sequence()
         missing_classes = []
-        
+
         for class_name, method_name in seq:
             if not hasattr(self.executor, 'instances'):
                 return ValidationResult(
@@ -1185,10 +1183,10 @@ class ExecutorBase(ABC):
                     message="Executor does not have instances registry",
                     context={"check": "dependencies"}
                 )
-            
+
             if class_name not in self.executor.instances:
                 missing_classes.append(class_name)
-        
+
         if missing_classes:
             return ValidationResult(
                 is_valid=False,
@@ -1200,7 +1198,7 @@ class ExecutorBase(ABC):
                     "total_required": len(seq)
                 }
             )
-        
+
         return ValidationResult(
             is_valid=True,
             severity="INFO",
@@ -1210,7 +1208,7 @@ class ExecutorBase(ABC):
                 "classes_checked": len(set(c for c, _ in seq))
             }
         )
-    
+
     def _check_calibration(self) -> ValidationResult:
         """Check that all methods have proper calibration entries.
         
@@ -1220,14 +1218,14 @@ class ExecutorBase(ABC):
         seq = self._get_method_sequence()
         missing_calibrations = []
         default_calibrations = []
-        
+
         for class_name, method_name in seq:
             calib = resolve_calibration(class_name, method_name, strict=False)
             if calib is None:
                 missing_calibrations.append(f"{class_name}.{method_name}")
             elif calib.is_default_like():
                 default_calibrations.append(f"{class_name}.{method_name}")
-        
+
         if missing_calibrations:
             return ValidationResult(
                 is_valid=False,
@@ -1239,7 +1237,7 @@ class ExecutorBase(ABC):
                     "total_missing": len(missing_calibrations)
                 }
             )
-        
+
         if default_calibrations:
             return ValidationResult(
                 is_valid=True,
@@ -1251,7 +1249,7 @@ class ExecutorBase(ABC):
                     "total_defaults": len(default_calibrations)
                 }
             )
-        
+
         return ValidationResult(
             is_valid=True,
             severity="INFO",
@@ -1261,7 +1259,7 @@ class ExecutorBase(ABC):
                 "methods_checked": len(seq)
             }
         )
-    
+
     def _check_resources(self) -> ValidationResult:
         """Check that required resources are available.
         
@@ -1270,19 +1268,19 @@ class ExecutorBase(ABC):
         """
         issues = []
         warnings = []
-        
+
         # Check config
         if not hasattr(self, 'config') or self.config is None:
             issues.append("ExecutorConfig not initialized")
-        
+
         # Check signal registry (optional but recommended)
         if not hasattr(self, 'signal_registry') or self.signal_registry is None:
             warnings.append("Signal registry not available (optional)")
-        
+
         # Check method executor
         if not hasattr(self, 'executor') or self.executor is None:
             issues.append("Method executor not initialized")
-        
+
         if issues:
             return ValidationResult(
                 is_valid=False,
@@ -1294,7 +1292,7 @@ class ExecutorBase(ABC):
                     "warnings": warnings
                 }
             )
-        
+
         if warnings:
             return ValidationResult(
                 is_valid=True,
@@ -1305,14 +1303,14 @@ class ExecutorBase(ABC):
                     "warnings": warnings
                 }
             )
-        
+
         return ValidationResult(
             is_valid=True,
             severity="INFO",
             message="All required resources available",
             context={"check": "resources"}
         )
-    
+
     @abstractmethod
     def _get_method_sequence(self) -> list[tuple[str, str]]:
         """Return the method sequence for this executor.
@@ -1325,7 +1323,7 @@ class ExecutorBase(ABC):
 
 class MethodSequenceValidatingMixin:
     """Mixin for validating method sequences in executors."""
-    
+
     def _validate_method_sequences(self) -> None:
         """Validate that all methods in the sequence exist and are callable.
         
@@ -1342,7 +1340,7 @@ class MethodSequenceValidatingMixin:
             method = getattr(instance, method_name)
             if not callable(method):
                 raise ValueError(f"{class_name}.{method_name} is not callable")
-    
+
     def _get_method_sequence(self) -> list[tuple[str, str]]:
         """Return the method sequence for this executor.
         
@@ -1361,7 +1359,7 @@ class MethodSequenceValidatingMixin:
 
 class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
     """Advanced executor with frontier paradigmatic capabilities"""
-    
+
     # Calibration threshold: methods with scores below this are skipped
     CALIBRATION_SKIP_THRESHOLD = 0.3
 
@@ -1380,17 +1378,17 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 f"{self.__class__.__name__}: ExecutorConfig is required and cannot be None. "
                 "Use build_processor() factory or provide explicit config."
             )
-        
+
         self.executor = method_executor
         self.signal_registry = signal_registry
         self.questionnaire_provider = questionnaire_provider
         self.config = config or CONSERVATIVE_CONFIG
-        
+
         # NEW: Calibration orchestrator
         self.calibration = calibration_orchestrator
-        
+
         # NEW: Store calibration results for current execution
-        self.calibration_results: dict[str, "CalibrationResult"] = {}
+        self.calibration_results: dict[str, CalibrationResult] = {}
 
 
 
@@ -1399,7 +1397,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         adv_config: AdvancedModuleConfig = (
             self.config.advanced_modules or CONSERVATIVE_ADVANCED_CONFIG
         )
-    
+
     def _validate_executor_config(self) -> None:
         """Section 3.2: Validate config at construction time.
         
@@ -1411,13 +1409,13 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         """
         if self.config.timeout_s <= 0:
             raise ValueError(f"config.timeout_s must be > 0, got {self.config.timeout_s}")
-        
+
         if self.config.retry < 0:
             raise ValueError(f"config.retry must be >= 0, got {self.config.retry}")
-        
+
         if self.config.seed < 0:
             raise ValueError(f"config.seed must be >= 0, got {self.config.seed}")
-        
+
         config_hash = self.config.compute_hash()
         logger.info(
             "executor_config_validated",
@@ -1438,7 +1436,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             "info_theory": {"count": 0, "total_time": 0.0},
             "meta_learning": {"count": 0, "total_time": 0.0},
         }
-        
+
         # Log only hard facts with academic basis
         logger.info(
             "executor_initialized",
@@ -1459,35 +1457,35 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # Initialize advanced modules with academically-informed parameters
         # Parameters combine VERIFIED academic principles with EMPIRICAL practical defaults
         # See advanced_module_config.py for honest categorization
-        
+
         # Quantum-inspired optimization (Nielsen & Chuang 2010)
         # FORMULA-DERIVED: iterations ≈ √num_methods from Grover's algorithm
         # EMPIRICAL: num_methods chosen for policy analysis (not from paper)
         self.quantum_optimizer = QuantumExecutionOptimizer(
             num_methods=adv_config.quantum_num_methods
         )
-        
+
         # Neuromorphic computing (Maass 1997)
         # VERIFIED: Paper discusses spiking neurons and STDP
         # EMPIRICAL: 8-12 stages range based on practice (not explicit in paper)
         self.neuromorphic_controller = NeuromorphicFlowController(
             num_stages=adv_config.neuromorphic_num_stages
         )
-        
+
         # Causal inference (Spirtes et al. 2000; Pearl 2009)
         # VERIFIED: PC algorithm and independence testing (α=0.05)
         # EMPIRICAL: 10-30 variables for computational tractability (not explicit)
         self.causal_graph = CausalGraph(
             num_variables=adv_config.causal_num_variables
         )
-        
+
         # Information-theoretic flow optimization (Shannon 1948; Cover & Thomas 2006)
         # FORMULA-DERIVED: log₂(N) stages from information theory
         # EMPIRICAL: Practical minimum samples
         self.info_optimizer = InformationFlowOptimizer(
             num_stages=adv_config.info_num_stages
         )
-        
+
         # Meta-learning strategy (Thrun & Pratt 1998; Hospedales et al. 2021)
         # VERIFIED: Learning rate range 0.01-0.1 from Thrun & Pratt
         # EMPIRICAL: Number of strategies based on exploration-exploitation (not explicit)
@@ -1496,18 +1494,18 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             epsilon=adv_config.meta_epsilon,
             learning_rate=adv_config.meta_learning_rate,
         )
-        
+
         # Attention mechanism (Vaswani et al. 2017; Bahdanau et al. 2014)
         # CLARIFIED: Vaswani uses 64 as per-head dimension (with 8 heads, d_model=512)
         # EMPIRICAL: We use 64 as conservative total for resource-constrained scenarios
         self.attention = AttentionMechanism(
             embedding_dim=adv_config.attention_embedding_dim
         )
-        
+
         # Topological data analysis (Carlsson 2009)
         # VERIFIED: Dimension 1 sufficient, <1000 points practical
         self.topology_analyzer = PersistentHomology()
-        
+
         # Category theory and probabilistic programming
         # No parameterization needed - theoretical constructs
         self.category_executor = CategoryTheoryExecutor()
@@ -1524,7 +1522,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # NOTE: Validation NOT called in base class because most executors
         # define method_sequence in execute(), not in _get_method_sequence().
         # Executors that want validation must call it explicitly in their __init__.
-    
+
     def _get_policy_area_for_question(self, question_id: str) -> str:
         """
         Map question ID to policy area using injected questionnaire provider.
@@ -1555,7 +1553,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 question_id=question_id,
                 fallback="PA01"
             )
-        
+
         # Fallback to PA01
         return "PA01"
 
@@ -1579,23 +1577,23 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 "Execution will proceed without signal enhancement, which may reduce analysis quality."
             )
             return None
-        
+
         if HAS_OTEL and tracer:
             with tracer.start_as_current_span("signals.fetch") as span:
                 span.set_attribute("policy_area", policy_area)
                 fetch_start = time.time()
-                
+
                 signal_pack = self.signal_registry.get(policy_area)
-                
+
                 fetch_duration = time.time() - fetch_start
                 span.set_attribute("fetch_duration_ms", fetch_duration * 1000)
-                
+
                 if signal_pack:
                     span.set_attribute("signal_version", signal_pack.version)
                     signal_hash = signal_pack.compute_hash()[:16]
                     span.set_attribute("signal_hash", signal_hash)
                     span.set_status(Status(StatusCode.OK))
-                    
+
                     # Track usage with enhanced metadata
                     self.used_signals.append({
                         "version": signal_pack.version,
@@ -1606,15 +1604,15 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                         "timestamp_utc": time.time(),
                         "pattern_count": len(signal_pack.patterns) if hasattr(signal_pack, 'patterns') else 0,
                     })
-                    
+
                     logger.info(
                         f"Fetched signals for {policy_area}: version={signal_pack.version}, "
                         f"hash={signal_hash}"
                     )
-                    
+
                     # Sort patterns for determinism (stable ordering across runs)
                     patterns = sorted(signal_pack.patterns) if isinstance(signal_pack.patterns, list) else signal_pack.patterns
-                    
+
                     return {
                         "patterns": patterns,  # Sorted for determinism
                         "indicators": signal_pack.indicators,
@@ -1641,15 +1639,15 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     "timestamp_utc": time.time(),
                     "pattern_count": len(signal_pack.patterns) if hasattr(signal_pack, 'patterns') else 0,
                 })
-                
+
                 # Sort patterns for determinism (stable ordering across runs)
                 patterns = sorted(signal_pack.patterns) if isinstance(signal_pack.patterns, list) else signal_pack.patterns
-                
+
                 logger.info(
                     f"Fetched signals for {policy_area}: version={signal_pack.version}, "
                     f"hash={signal_hash}"
                 )
-                
+
                 return {
                     "patterns": patterns,  # Sorted for determinism
                     "indicators": signal_pack.indicators,
@@ -1658,7 +1656,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     "entities": signal_pack.entities,
                     "thresholds": signal_pack.thresholds,
                 }
-            
+
             # Log signal miss (requested but not found)
             logger.warning(
                 f"Signal pack not found for policy_area='{policy_area}' in {self.__class__.__name__}. "
@@ -1686,7 +1684,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             raise RuntimeError(
                 f"Calibration version incompatibility in {self.__class__.__name__}: {e}"
             ) from e
-        
+
         # Validate each method has calibration
         seq = getattr(self, "_get_method_sequence", lambda: [])()
         for class_name, method_name in seq:
@@ -1701,7 +1699,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     f"Default/placeholder calibration not allowed for "
                     f"{class_name}.{method_name} in {self.__class__.__name__}"
                 )
-    
+
     def get_calibration_manifest_data(self) -> dict[str, Any]:
         """
         Get calibration information for verification manifest.
@@ -1710,22 +1708,22 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             Dictionary with calibration version, hash, method count, and missing methods
         """
         import hashlib
-        
+
         seq = getattr(self, "_get_method_sequence", lambda: [])()
         methods_calibrated = []
         methods_missing = []
-        
+
         for class_name, method_name in seq:
             calib = resolve_calibration(class_name, method_name, strict=False)
             if calib:
                 methods_calibrated.append(f"{class_name}.{method_name}")
             else:
                 methods_missing.append(f"{class_name}.{method_name}")
-        
+
         # Compute hash of calibrated methods
         calibration_data = "".join(sorted(methods_calibrated)).encode()
         calibration_hash = hashlib.sha256(calibration_data).hexdigest()[:16]
-        
+
         return {
             "version": CALIBRATION_VERSION,
             "hash": calibration_hash,
@@ -1734,8 +1732,8 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         }
 
     def execute_with_optimization(self, doc, method_executor,
-                                  method_sequence: list[tuple[str, str]], 
-                                  *, 
+                                  method_sequence: list[tuple[str, str]],
+                                  *,
                                   policy_unit_id: str | None = None,
                                   correlation_id: str | None = None) -> dict[str, Any]:
         """Execute with advanced optimization strategies and deterministic seeding
@@ -1754,41 +1752,41 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         """
         execution_start = time.time()
         self.executor = method_executor
-        
+
         # ============================================================
         # CALIBRATION PHASE (NEW - inserted per corrected spec)
         # ============================================================
         calibration_results = {}
         skipped_methods = []
-        
+
         if self.calibration is not None:
             logger.info("calibration_phase_start")
-            
+
             # Build context for calibration
             try:
                 from saaaaaa.core.calibration.data_structures import ContextTuple
-                
+
                 # Extract context information from doc
                 question_id = getattr(doc, 'question_id', 'Q000')
                 dimension_id = getattr(doc, 'dimension_id', 'DIM00')
                 policy_area_id = getattr(doc, 'policy_area_id', 'PA00')
                 unit_quality = getattr(doc, 'unit_quality', 0.75)
-                
+
                 context = ContextTuple(
                     question_id=question_id,
                     dimension=dimension_id,
                     policy_area=policy_area_id,
                     unit_quality=unit_quality
                 )
-                
+
                 # Get PDT structure if available
                 pdt_structure = getattr(doc, 'pdt_structure', None)
-                
+
                 # Calibrate each method in the sequence
                 for class_name, method_name in method_sequence:
                     method_id = f"{class_name}.{method_name}"
                     method_version = "v1.0.0"  # Default version
-                    
+
                     try:
                         # THIS IS THE CRITICAL CALL THAT WAS MISSING:
                         cal_result = self.calibration.calibrate(
@@ -1799,9 +1797,9 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                             graph_config=self.config.compute_hash() if hasattr(self.config, 'compute_hash') else None,
                             subgraph_id=f"{question_id}_{class_name}"
                         )
-                        
+
                         calibration_results[method_id] = cal_result
-                        
+
                         logger.info(
                             "method_calibrated",
                             extra={
@@ -1810,7 +1808,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                                 "class": class_name
                             }
                         )
-                        
+
                     except Exception as e:
                         logger.error(
                             "calibration_failed",
@@ -1821,12 +1819,12 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                             exc_info=True
                         )
                         # Continue without calibration for this method
-                
+
                 logger.info(
                     "calibration_phase_complete",
                     extra={"num_calibrated": len(calibration_results)}
                 )
-                
+
             except Exception as e:
                 logger.error(
                     "calibration_phase_error",
@@ -1835,14 +1833,14 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 )
         else:
             logger.info("calibration_disabled", extra={"reason": "orchestrator_is_none"})
-        
+
         # ============================================================
         # END CALIBRATION PHASE
         # ============================================================
-        
+
         results = {}
         current_data = doc.raw_text
-        
+
         # Section 3.3: Use config.timeout_s for execution timeout budget
         total_timeout_budget = self.config.timeout_s
         logger.info(
@@ -1855,7 +1853,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 "num_methods": len(method_sequence),
             }
         )
-        
+
         # Derive policy_unit_id from environment or doc if not provided
         if policy_unit_id is None:
             policy_unit_id = os.getenv("POLICY_UNIT_ID", "default-policy")
@@ -1865,32 +1863,32 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
 
         # Start OpenTelemetry span for entire execution
         span_context = tracer.start_as_current_span("executor.execute") if HAS_OTEL and tracer else None
-        
+
         try:
             if span_context:
                 span = span_context.__enter__()
                 span.set_attribute("num_methods", len(method_sequence))
                 span.set_attribute("policy_unit_id", policy_unit_id)
                 span.set_attribute("correlation_id", correlation_id)
-            
+
             # DETERMINISTIC EXECUTION CONTEXT - makes all random operations reproducible!
             with deterministic(policy_unit_id, correlation_id) as seeds:
                 # Create local RNG for deterministic random operations
                 rng = np.random.default_rng(seeds.np)
-                
+
                 logger.info(f"Executing with DETERMINISTIC seeding: policy_unit_id={policy_unit_id}, "
                           f"correlation_id={correlation_id}, seed={seeds.py}")
-                
+
                 # Fetch signals at the beginning of execution
                 # Get question_id for signal tracking (extract from doc or method_sequence)
                 question_id = getattr(doc, 'question_id', None) or 'Q000'
-                
+
                 # Determine policy area for this question
                 policy_area = self._get_policy_area_for_question(question_id)
-                
+
                 # Fetch signals and store for use during execution
                 signals = self._fetch_signals(policy_area)
-                
+
                 # Initialize consumption proof tracker
                 consumption_proof = None
                 if signals:
@@ -1899,26 +1897,26 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                         question_id=question_id,
                         policy_area=policy_area,
                     )
-                    
+
                     if span_context:
                         span.set_attribute("signals.fetched", True)
                         span.set_attribute("signals.pattern_count", len(signals.get("patterns", [])))
                         span.set_attribute("signals.policy_area", policy_area)
-                    
+
                     # Store signals in context for methods to access
                     self._argument_context['signals'] = signals
                     self._argument_context['consumption_proof'] = consumption_proof
-                    
+
                     logger.info(f"Signals loaded: {len(signals.get('patterns', []))} patterns, "
                                f"{len(signals.get('indicators', []))} indicators, "
                                f"policy_area={policy_area}")
-                    
+
                     # CRITICAL: Actually USE the signals for pattern matching
                     # This demonstrates real signal consumption
                     import re
                     text = current_data if isinstance(current_data, str) else str(current_data)
                     patterns_to_try = signals.get('patterns', [])[:50]  # Limit for performance
-                    
+
                     for pattern in patterns_to_try:
                         try:
                             matches = re.findall(pattern, text, re.IGNORECASE)
@@ -1927,7 +1925,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                         except re.error:
                             # Invalid regex pattern, skip
                             pass
-                    
+
                     logger.info(f"Signal consumption: {len(consumption_proof.consumed_patterns)} pattern matches recorded")
                 elif span_context:
                     span.set_attribute("signals.fetched", False)
@@ -1949,16 +1947,16 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
 
                 # Section 5.3: Runtime sequence tracking
                 executed_sequence = []
-                
+
                 for idx, (class_name, method_name) in enumerate(method_sequence):
                     method_key = f"{class_name}.{method_name}"
-                    
+
                     # ============================================================
                     # METHOD SKIPPING BASED ON CALIBRATION (NEW)
                     # ============================================================
                     if method_key in calibration_results:
                         cal_score = calibration_results[method_key].final_score
-                        
+
                         if cal_score < self.CALIBRATION_SKIP_THRESHOLD:
                             logger.warning(
                                 "method_skipped_low_calibration",
@@ -1968,19 +1966,19 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                                     "threshold": self.CALIBRATION_SKIP_THRESHOLD
                                 }
                             )
-                            
+
                             skipped_methods.append({
                                 "method_id": method_key,
                                 "calibration_score": cal_score,
                                 "threshold": self.CALIBRATION_SKIP_THRESHOLD,
                                 "reason": "calibration_score_below_threshold"
                             })
-                            
+
                             continue  # SKIP THIS METHOD
                     # ============================================================
                     # END METHOD SKIPPING
                     # ============================================================
-                    
+
                     executed_sequence.append((class_name, method_name))
 
                     self.probabilistic_executor.define_prior(
@@ -2103,7 +2101,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     )
                 except Exception as e:
                     logger.warning(f"Failed to save consumption proof: {e}")
-            
+
             result = {
                 'modality': 'TYPE_A',
                 'elements': self._extract(results),
@@ -2120,7 +2118,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     'consumption_proof': consumption_proof.get_consumption_proof() if consumption_proof else None,
                 }
             }
-            
+
             # ============================================================
             # ADD CALIBRATION RESULTS TO OUTPUT (NEW)
             # ============================================================
@@ -2149,13 +2147,13 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             # ============================================================
             # END CALIBRATION RESULTS
             # ============================================================
-            
+
             return result
-            
+
         finally:
             if span_context:
                 span_context.__exit__(None, None, None)
-    
+
     def execute_chunk(self, chunk_doc, chunk_id: int):
         """
         Execute on single chunk with restricted scope.
@@ -2173,16 +2171,16 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # Store chunk context for argument resolution
         self._current_chunk_id = chunk_id
         self._chunk_mode = True
-        
+
         try:
             # Get method sequence for this executor
             method_sequence = self._get_method_sequence()
-            
+
             # Filter methods based on chunk type if available
             if chunk_doc.chunks and chunk_id < len(chunk_doc.chunks):
                 chunk_type = chunk_doc.chunks[chunk_id].chunk_type
                 method_sequence = self._filter_methods_for_chunk(method_sequence, chunk_type)
-            
+
             # Execute with chunk boundaries enforced
             return self.execute_with_optimization(
                 chunk_doc,
@@ -2193,10 +2191,10 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             # Clean up chunk context
             self._chunk_mode = False
             self._current_chunk_id = None
-    
+
     def _filter_methods_for_chunk(
-        self, 
-        methods: list[tuple[str, str]], 
+        self,
+        methods: list[tuple[str, str]],
         chunk_type: str
     ) -> list[tuple[str, str]]:
         """
@@ -2220,22 +2218,22 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             "temporal": ["timeline", "temporal", "schedule", "phase"],
             "entity": ["entity", "responsible", "stakeholder", "actor"],
         }
-        
+
         patterns = CHUNK_METHOD_PATTERNS.get(chunk_type, [])
         if not patterns:
             # No filtering if chunk type unknown
             return methods
-        
+
         # Filter methods that match chunk type patterns
         filtered = []
         for class_name, method_name in methods:
             method_lower = method_name.lower()
             class_lower = class_name.lower()
-            
+
             # Check if method or class name matches any pattern
             if any(pattern in method_lower or pattern in class_lower for pattern in patterns):
                 filtered.append((class_name, method_name))
-        
+
         # If filtering results in empty list, return original
         # (better to execute all than execute none)
         return filtered if filtered else methods
@@ -2370,22 +2368,22 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
     ) -> Any:
         """Enhanced argument resolution with sophisticated graph and segment handling"""
         ctx = self._argument_context
-        
+
         # ========================================================================
         # NEW: CHUNK-AWARE ARGUMENT RESOLUTION
         # ========================================================================
-        
+
         # Check if in chunk mode
         if hasattr(self, '_chunk_mode') and self._chunk_mode:
             chunk_id = getattr(self, '_current_chunk_id', None)
-            
+
             if chunk_id is not None and doc.chunks and chunk_id < len(doc.chunks):
                 chunk = doc.chunks[chunk_id]
-                
+
                 # Provide chunk-scoped text
                 if name in {'text', 'raw_text', 'document_text'}:
                     return chunk.text
-                
+
                 # Provide chunk-scoped sentences
                 if name in {'sentences', 'relevant_sentences', 'sentence_list'}:
                     if chunk.sentences and doc.sentences:
@@ -2398,7 +2396,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                             and s.start >= chunk.start_pos and s.end <= chunk.end_pos
                         ]
                     return []
-                
+
                 # Provide chunk-scoped tables
                 if name in {'tables', 'table_data', 'raw_tables'}:
                     if chunk.tables and doc.tables:
@@ -2411,7 +2409,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                             and t.start >= chunk.start_pos and t.end <= chunk.end_pos
                         ]
                     return []
-                
+
                 # Restrict window size to chunk boundaries
                 if name in {'window_size', 'context_window'}:
                     max_window = chunk.end_pos - chunk.start_pos
@@ -2422,33 +2420,33 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # SIGNAL CHANNEL INTEGRATION - Inject signals into method arguments
         # ========================================================================
-        
+
         signals = ctx.get('signals')
         if signals:
             # Inject signal patterns
             if name in {'patterns', 'fiscal_patterns', 'signal_patterns'}:
                 return signals.get('patterns', [])
-            
+
             # Inject indicators
             if name in {'indicators', 'signal_indicators'}:
                 return signals.get('indicators', [])
-            
+
             # Inject regex patterns
             if name in {'regex', 'regex_patterns', 'signal_regex'}:
                 return signals.get('regex', [])
-            
+
             # Inject verbs
             if name in {'verbs', 'signal_verbs'}:
                 return signals.get('verbs', [])
-            
+
             # Inject entities
             if name in {'entities', 'signal_entities'}:
                 return signals.get('entities', [])
-            
+
             # Inject thresholds
             if name in {'thresholds', 'signal_thresholds'}:
                 return signals.get('thresholds', {})
-            
+
             # Inject all signals as dict
             if name in {'signals', 'signal_pack'}:
                 return signals
@@ -2456,7 +2454,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # STANDARD ARGUMENTS (existing implementation retained)
         # ========================================================================
-        
+
         if name in {'data', 'payload', 'input_data'}:
             return current_data
 
@@ -2484,13 +2482,13 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: SOPHISTICATED SEGMENTS RESOLUTION
         # ========================================================================
-        
+
         if name in {'segments', 'text_segments', 'segment_list'}:
             segments = ctx.get('segments')
-            
+
             if segments is not None:
                 return segments
-            
+
             # Strategy 1: Use sentences if available (most common case)
             sentences = ctx.get('sentences')
             if sentences and isinstance(sentences, list):
@@ -2501,19 +2499,19 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     'source': 'context'
                 }
                 return sentences
-            
+
             # Strategy 2: Intelligent text segmentation using semantic boundaries
             text = ctx.get('text', '')
             if text:
                 # Split on paragraph boundaries first
                 paragraphs = [p.strip() for p in text.split('\n\n') if p.strip()]
-                
+
                 if paragraphs:
                     segments = paragraphs
                 else:
                     # Fallback: sentence-like splitting on period boundaries
                     segments = [s.strip() for s in text.split('.') if s.strip()]
-                
+
                 ctx['segments'] = segments
                 ctx['segment_metadata'] = {
                     'strategy': 'semantic_split',
@@ -2521,7 +2519,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     'avg_length': sum(len(s) for s in segments) / max(len(segments), 1)
                 }
                 return segments
-            
+
             # Strategy 3: Return empty list as safe fallback
             ctx['segments'] = []
             ctx['segment_metadata'] = {'strategy': 'empty_fallback'}
@@ -2530,24 +2528,24 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: GRAPH OBJECT RESOLUTION (DiGraph for causal analysis)
         # ========================================================================
-        
+
         if name in {'grafo', 'graph', 'causal_graph', 'dag'}:
             # Strategy 1: Return cached graph from context
             grafo = ctx.get('grafo')
             if grafo is not None:
                 return grafo
-            
+
             # Strategy 2: Check if instance has a graph attribute
             if hasattr(instance, 'grafo'):
                 grafo = instance.grafo
                 ctx['grafo'] = grafo
                 return grafo
-            
+
             if hasattr(instance, 'graph'):
                 grafo = instance.graph
                 ctx['grafo'] = grafo
                 return grafo
-            
+
             # Strategy 3: Construct graph from statements if available
             statements = ctx.get('statements')
             if statements:
@@ -2555,7 +2553,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 if grafo is not None:
                     ctx['grafo'] = grafo
                     return grafo
-            
+
             # Strategy 4: Return empty graph as standard fallback
             grafo = self._create_empty_graph()
             ctx['grafo'] = grafo
@@ -2564,7 +2562,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: GRAPH NODE RESOLUTION (origen, destino for causal links)
         # ========================================================================
-        
+
         if name in {'origen', 'source', 'source_node', 'from_node'}:
             # Strategy 1: Extract from current_data if it's a dict or tuple
             if isinstance(current_data, dict):
@@ -2574,24 +2572,24 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     return current_data['source']
                 if 'from' in current_data:
                     return current_data['from']
-            
+
             # Strategy 2: Extract from tuple (common pattern: (origen, destino))
             if isinstance(current_data, tuple) and len(current_data) >= 2:
                 return current_data[0]
-            
+
             # Strategy 3: Infer from graph context (first node in recent edges)
             graph_edges = ctx.get('graph_edges', [])
             if graph_edges and isinstance(graph_edges[-1], (tuple, list)):
                 return graph_edges[-1][0]
-            
+
             # Strategy 4: Use first node from tracked nodes
             graph_nodes = ctx.get('graph_nodes', [])
             if graph_nodes:
                 return graph_nodes[0]
-            
+
             # Strategy 5: Return None (method will need to handle)
             return _ARG_UNSET
-        
+
         if name in {'destino', 'target', 'target_node', 'to_node'}:
             # Strategy 1: Extract from current_data if it's a dict or tuple
             if isinstance(current_data, dict):
@@ -2601,51 +2599,51 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     return current_data['target']
                 if 'to' in current_data:
                     return current_data['to']
-            
+
             # Strategy 2: Extract from tuple (common pattern: (origen, destino))
             if isinstance(current_data, tuple) and len(current_data) >= 2:
                 return current_data[1]
-            
+
             # Strategy 3: Infer from graph context (second node in recent edges)
             graph_edges = ctx.get('graph_edges', [])
             if graph_edges and isinstance(graph_edges[-1], (tuple, list)) and len(graph_edges[-1]) >= 2:
                 return graph_edges[-1][1]
-            
+
             # Strategy 4: Use second node from tracked nodes
             graph_nodes = ctx.get('graph_nodes', [])
             if len(graph_nodes) >= 2:
                 return graph_nodes[1]
-            
+
             # Strategy 5: Return None (method will need to handle)
             return _ARG_UNSET
 
         # ========================================================================
         # ENHANCED: STATEMENTS RESOLUTION (for graph construction)
         # ========================================================================
-        
+
         if name in {'statements', 'policy_statements', 'causal_statements'}:
             statements = ctx.get('statements')
-            
+
             if statements:
                 return statements
-            
+
             # Extract statements from current_data if it's a list
             if isinstance(current_data, list):
                 ctx['statements'] = current_data
                 return current_data
-            
+
             # Use sentences as statements if available
             sentences = ctx.get('sentences')
             if sentences:
                 ctx['statements'] = sentences
                 return sentences
-            
+
             return []
 
         # ========================================================================
         # EXISTING SOPHISTICATED RESOLUTIONS (all retained)
         # ========================================================================
-        
+
         if name == 'match_position':
             positions = ctx.get('positions') or []
             if positions:
@@ -2738,7 +2736,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: GRAPH AND NODE FALLBACKS
         # ========================================================================
-        
+
         if name in {'grafo', 'graph', 'causal_graph', 'dag'}:
             # Import NetworkX for graph creation
             try:
@@ -2751,15 +2749,15 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
             except ImportError:
                 logger.warning("NetworkX not available, returning None for graph parameter")
                 return None
-        
+
         if name in {'origen', 'source', 'source_node', 'from_node'}:
             # Return a default node identifier
             return "node_0"
-        
+
         if name in {'destino', 'target', 'target_node', 'to_node'}:
             # Return a default node identifier
             return "node_1"
-        
+
         if name in {'statements', 'policy_statements', 'causal_statements'}:
             # Use sentences as statement fallback
             return ctx.get('sentences', [])
@@ -2767,13 +2765,13 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: SEGMENTS FALLBACK
         # ========================================================================
-        
+
         if name in {'segments', 'text_segments', 'segment_list'}:
             # Multi-strategy fallback
             sentences = ctx.get('sentences')
             if sentences:
                 return sentences
-            
+
             text = ctx.get('text', '')
             if text:
                 # Intelligent paragraph segmentation
@@ -2781,64 +2779,64 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                 if not segments:
                     segments = [s.strip() + '.' for s in text.split('.') if s.strip()]
                 return segments
-            
+
             return []
 
         # ========================================================================
         # EXISTING SOPHISTICATED FALLBACKS (all retained)
         # ========================================================================
-        
+
         if name in {'matches', 'match_list'}:
             return []
-        
+
         if name in {'positions', 'match_positions'}:
             return []
-        
+
         if name == 'confidence':
             return 0.0
-        
+
         if name == 'pattern_specificity':
             return ctx.get('pattern_specificity', 0.8)
-        
+
         if name in {'total_corpus_size', 'text_length', 'corpus_size'}:
             return max(1, ctx.get('text_length') or 1)
-        
+
         if name == 'compiled_patterns':
             patterns = self._extract_all_patterns(instance)
             ctx['compiled_patterns'] = patterns
             return patterns
-        
+
         if name == 'relevant_sentences':
             return ctx.get('sentences', [])
-        
+
         if name == 'window_size':
             config = getattr(instance, 'config', None)
             return getattr(config, 'context_window_chars', 400)
-        
+
         if name == 'match_position':
             return 0
-        
+
         if name in {'dimension', 'policy_dimension'}:
             dimension, category, _ = self._derive_dimension_category(instance)
             ctx.setdefault('category', category)
             ctx['dimension'] = dimension
             return dimension
-        
+
         if name in {'category', 'policy_category'}:
             dimension, category, _ = self._derive_dimension_category(instance)
             ctx.setdefault('dimension', dimension)
             ctx['category'] = category
             return category
-        
+
         if name in {'values', 'value_array'}:
             return np.array([0.0], dtype=float)
 
         if name in {'text', 'raw_text', 'document_text'}:
             return ctx.get('text', '')
-        
+
         if name in {'sentences', 'sentence_list'}:
             return ctx.get('sentences', [])
-        
+
         if name in {'tables', 'table_data'}:
             return ctx.get('tables', [])
 
@@ -2863,7 +2861,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: TRACK GRAPH OBJECTS FROM RESULTS
         # ========================================================================
-        
+
         # Track DiGraph objects from causal methods
         if class_name == 'TeoriaCambio' and method_name == 'construir_grafo_causal':
             try:
@@ -2875,12 +2873,12 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     logger.debug(f"Cached DiGraph with {len(ctx['graph_nodes'])} nodes, {len(ctx['graph_edges'])} edges")
             except ImportError:
                 pass
-        
+
         # Track statements from extraction methods
         if 'extract' in method_name.lower() and 'statement' in method_name.lower():
             if isinstance(result, list):
                 ctx['statements'] = result
-        
+
         # Track nodes and edges from causal extraction
         if class_name == 'CausalExtractor':
             if isinstance(result, dict):
@@ -2894,7 +2892,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # ENHANCED: TRACK SEGMENTS FROM RESULTS
         # ========================================================================
-        
+
         # Track segments from segmentation methods
         if 'segment' in method_name.lower():
             if isinstance(result, list) and all(isinstance(item, str) for item in result):
@@ -2908,7 +2906,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
         # ========================================================================
         # EXISTING SOPHISTICATED TRACKING (all retained)
         # ========================================================================
-        
+
         # Track matches and positions from pattern matching
         if isinstance(result, tuple) and len(result) == 2:
             possible_matches, possible_positions = result
@@ -2968,26 +2966,26 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
     def _construct_causal_graph(self, statements: list, instance: Any) -> Any:
         """Construct causal graph from statements with sophisticated extraction"""
         grafo = self._create_empty_graph()
-        
+
         # Extract potential causal relationships from statements
         causal_indicators = [
             'porque', 'ya que', 'debido a', 'causa', 'resultado',
             'therefore', 'because', 'due to', 'causes', 'results in',
             'conduce a', 'genera', 'produce', 'implica'
         ]
-        
+
         nodes = []
         edges = []
-        
+
         for idx, statement in enumerate(statements):
                 if not isinstance(statement, str):
                     continue
-                
+
                 statement_lower = statement.lower()
-                
+
                 # Check if statement contains causal indicators
                 has_causal = any(indicator in statement_lower for indicator in causal_indicators)
-                
+
                 if has_causal:
                     # Simple node extraction: split on causal words
                     for indicator in causal_indicators:
@@ -3003,13 +3001,13 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
                     # Add as isolated node
                     node_id = f"node_{len(nodes)}"
                     nodes.append(node_id)
-        
+
         # Build graph
         grafo.add_nodes_from(set(nodes))
         grafo.add_edges_from(edges)
-        
+
         logger.debug(f"Constructed causal graph with {len(grafo.nodes())} nodes, {len(grafo.edges())} edges")
-        
+
         return grafo
 
     @staticmethod
@@ -3189,7 +3187,7 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
 
 class D1Q1_Executor(AdvancedDataFlowExecutor):
     """D1-Q1: Líneas Base y Brechas Cuantificadas"""
-    
+
     def __init__(
         self,
         method_executor,
@@ -3201,7 +3199,7 @@ class D1Q1_Executor(AdvancedDataFlowExecutor):
         # Validate method sequence at construction time
         self._validate_method_sequences()
         self._validate_calibrations()
-    
+
     def _get_method_sequence(self) -> list[tuple[str, str]]:
         """Return method sequence for this executor."""
         return [
@@ -3236,7 +3234,7 @@ class D1Q1_Executor(AdvancedDataFlowExecutor):
 class D1Q2_Executor(AdvancedDataFlowExecutor):
     """D1-Q2: Normalización y Fuentes"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3271,7 +3269,7 @@ class D1Q2_Executor(AdvancedDataFlowExecutor):
 class D1Q3_Executor(AdvancedDataFlowExecutor):
     """D1-Q3: Asignación de Recursos"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3316,7 +3314,7 @@ class D1Q3_Executor(AdvancedDataFlowExecutor):
 class D1Q4_Executor(AdvancedDataFlowExecutor):
     """D1-Q4: Capacidad Institucional"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3355,7 +3353,7 @@ class D1Q4_Executor(AdvancedDataFlowExecutor):
 class D1Q5_Executor(AdvancedDataFlowExecutor):
     """D1-Q5: Restricciones Temporales"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3392,7 +3390,7 @@ class D1Q5_Executor(AdvancedDataFlowExecutor):
 class D2Q1_Executor(AdvancedDataFlowExecutor):
     """D2-Q1: Formato Tabular y Trazabilidad"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3435,7 +3433,7 @@ class D2Q1_Executor(AdvancedDataFlowExecutor):
 class D2Q2_Executor(AdvancedDataFlowExecutor):
     """D2-Q2: Causalidad de Actividades"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3481,7 +3479,7 @@ class D2Q2_Executor(AdvancedDataFlowExecutor):
 class D2Q3_Executor(AdvancedDataFlowExecutor):
     """D2-Q3: Responsables de Actividades"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3519,7 +3517,7 @@ class D2Q3_Executor(AdvancedDataFlowExecutor):
 class D2Q4_Executor(AdvancedDataFlowExecutor):
     """D2-Q4: Cuantificación de Actividades"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3560,7 +3558,7 @@ class D2Q4_Executor(AdvancedDataFlowExecutor):
 class D2Q5_Executor(AdvancedDataFlowExecutor):
     """D2-Q5: Eslabón Causal Diagnóstico-Actividades"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3602,7 +3600,7 @@ class D2Q5_Executor(AdvancedDataFlowExecutor):
 class D3Q1_Executor(AdvancedDataFlowExecutor):
     """D3-Q1: Indicadores de Producto"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3643,7 +3641,7 @@ class D3Q1_Executor(AdvancedDataFlowExecutor):
 class D3Q2_Executor(AdvancedDataFlowExecutor):
     """D3-Q2: Cuantificación de Productos"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3685,7 +3683,7 @@ class D3Q2_Executor(AdvancedDataFlowExecutor):
 class D3Q3_Executor(AdvancedDataFlowExecutor):
     """D3-Q3: Responsables de Productos"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3723,7 +3721,7 @@ class D3Q3_Executor(AdvancedDataFlowExecutor):
 class D3Q4_Executor(AdvancedDataFlowExecutor):
     """D3-Q4: Plazos de Productos"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3763,7 +3761,7 @@ class D3Q4_Executor(AdvancedDataFlowExecutor):
 class D3Q5_Executor(AdvancedDataFlowExecutor):
     """D3-Q5: Eslabón Causal Producto-Resultado"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3820,7 +3818,7 @@ class D3Q5_Executor(AdvancedDataFlowExecutor):
 class D4Q1_Executor(AdvancedDataFlowExecutor):
     """D4-Q1: Indicadores de Resultado"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3861,7 +3859,7 @@ class D4Q1_Executor(AdvancedDataFlowExecutor):
 class D4Q2_Executor(AdvancedDataFlowExecutor):
     """D4-Q2: Cadena Causal y Supuestos"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3908,7 +3906,7 @@ class D4Q2_Executor(AdvancedDataFlowExecutor):
 class D4Q3_Executor(AdvancedDataFlowExecutor):
     """D4-Q3: Justificación de Ambición"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3951,7 +3949,7 @@ class D4Q3_Executor(AdvancedDataFlowExecutor):
 class D4Q4_Executor(AdvancedDataFlowExecutor):
     """D4-Q4: Población Objetivo"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -3989,7 +3987,7 @@ class D4Q4_Executor(AdvancedDataFlowExecutor):
 class D4Q5_Executor(AdvancedDataFlowExecutor):
     """D4-Q5: Alineación con Objetivos Superiores"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4027,7 +4025,7 @@ class D4Q5_Executor(AdvancedDataFlowExecutor):
 class D5Q1_Executor(AdvancedDataFlowExecutor):
     """D5-Q1: Indicadores de Impacto"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4066,7 +4064,7 @@ class D5Q1_Executor(AdvancedDataFlowExecutor):
 class D5Q2_Executor(AdvancedDataFlowExecutor):
     """D5-Q2: Eslabón Causal Resultado-Impacto"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4114,7 +4112,7 @@ class D5Q2_Executor(AdvancedDataFlowExecutor):
 class D5Q3_Executor(AdvancedDataFlowExecutor):
     """D5-Q3: Evidencia de Causalidad"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4155,7 +4153,7 @@ class D5Q3_Executor(AdvancedDataFlowExecutor):
 class D5Q4_Executor(AdvancedDataFlowExecutor):
     """D5-Q4: Plazos de Impacto"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4192,7 +4190,7 @@ class D5Q4_Executor(AdvancedDataFlowExecutor):
 class D5Q5_Executor(AdvancedDataFlowExecutor):
     """D5-Q5: Sostenibilidad Financiera"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4229,7 +4227,7 @@ class D5Q5_Executor(AdvancedDataFlowExecutor):
 class D6Q1_Executor(AdvancedDataFlowExecutor):
     """D6-Q1: Integridad de Teoría de Cambio"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4285,7 +4283,7 @@ class D6Q1_Executor(AdvancedDataFlowExecutor):
 class D6Q2_Executor(AdvancedDataFlowExecutor):
     """D6-Q2: Proporcionalidad y Continuidad (Anti-Milagro)"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4346,7 +4344,7 @@ class D6Q2_Executor(AdvancedDataFlowExecutor):
 class D6Q3_Executor(AdvancedDataFlowExecutor):
     """D6-Q3: Inconsistencias (Sistema Bicameral - Ruta 1)"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4391,7 +4389,7 @@ class D6Q3_Executor(AdvancedDataFlowExecutor):
 class D6Q4_Executor(AdvancedDataFlowExecutor):
     """D6-Q4: Adaptación (Sistema Bicameral - Ruta 2)"""
 
-    
+
     def __init__(
         self,
         method_executor,
@@ -4451,7 +4449,7 @@ class D6Q4_Executor(AdvancedDataFlowExecutor):
 class D6Q5_Executor(AdvancedDataFlowExecutor):
     """D6-Q5: Contextualización y Enfoque Diferencial"""
 
-    
+
     def __init__(
         self,
         method_executor,

@@ -10,8 +10,8 @@ No fallback logic, no "best effort" embeddings. Either dependencies are present
 and configured correctly, or the system fails fast with clear error messages.
 """
 
-import os
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def _is_model_cached(model_name: str) -> bool:
         True if model appears to be cached locally, False otherwise
     """
     from pathlib import Path
-    
+
     # Check common HuggingFace cache locations
     cache_dirs = [
         os.path.expanduser("~/.cache/huggingface/hub"),
@@ -39,12 +39,12 @@ def _is_model_cached(model_name: str) -> bool:
         os.getenv("HF_HOME"),
         os.getenv("TRANSFORMERS_CACHE"),
     ]
-    
+
     # Convert model name to cache directory pattern
     # HF uses "models--org--name" format in cache
     model_slug = model_name.replace("/", "--")
     cache_pattern = f"*{model_slug}*"
-    
+
     for cache_dir in cache_dirs:
         if cache_dir and os.path.exists(cache_dir):
             cache_path = Path(cache_dir)
@@ -52,7 +52,7 @@ def _is_model_cached(model_name: str) -> bool:
             # Check just the top-level directories, not recursive
             if any(model_slug in p.name for p in cache_path.iterdir()):
                 return True
-    
+
     return False
 
 
@@ -70,13 +70,13 @@ class DependencyLockdown:
     - Critical dependencies fail fast if missing
     - Optional dependencies are clearly marked as degraded when missing
     """
-    
+
     def __init__(self):
         """Initialize dependency lockdown based on environment configuration."""
         self.hf_allowed = os.getenv("HF_ONLINE", "0") == "1"
         self._enforce_offline_mode()
         self._log_configuration()
-    
+
     def _enforce_offline_mode(self) -> None:
         """Enforce HuggingFace offline mode if HF_ONLINE is not enabled."""
         if not self.hf_allowed:
@@ -92,7 +92,7 @@ class DependencyLockdown:
                 "Dependency lockdown: HuggingFace online mode ENABLED "
                 "(HF_ONLINE=1). Models may be downloaded from HuggingFace Hub."
             )
-    
+
     def _log_configuration(self) -> None:
         """Log current dependency lockdown configuration."""
         logger.info(
@@ -101,7 +101,7 @@ class DependencyLockdown:
             f"HF_HUB_OFFLINE={os.getenv('HF_HUB_OFFLINE', 'unset')}, "
             f"TRANSFORMERS_OFFLINE={os.getenv('TRANSFORMERS_OFFLINE', 'unset')}"
         )
-    
+
     def check_online_model_access(
         self,
         model_name: str,
@@ -123,7 +123,7 @@ class DependencyLockdown:
                 f"To enable online downloads, set HF_ONLINE=1 environment variable. "
                 f"No fallback to degraded mode - this is a hard failure."
             )
-    
+
     def check_critical_dependency(
         self,
         module_name: str,
@@ -150,7 +150,7 @@ class DependencyLockdown:
                 f"No degraded mode available - this is a mandatory dependency. "
                 f"Original error: {e}"
             ) from e
-    
+
     def check_optional_dependency(
         self,
         module_name: str,
@@ -181,7 +181,7 @@ class DependencyLockdown:
                 f"Install with: pip install {pip_package}"
             )
             return False
-    
+
     def get_mode_description(self) -> dict[str, str | bool]:
         """Get current dependency lockdown mode description.
         

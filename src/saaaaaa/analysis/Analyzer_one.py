@@ -14,9 +14,12 @@ Python 3.11+ Compatible Version
 
 from __future__ import annotations
 
+import argparse
+import contextlib
 import hashlib
 import json
 import logging
+import os
 import re
 import time
 import warnings
@@ -26,18 +29,53 @@ from datetime import datetime
 from pathlib import Path
 from typing import (
     Any,
-    Optional,
 )
+
+import docx
+import PyPDF2
+
+from saaaaaa.utils.method_config_loader import MethodConfigLoader
+
+from .factory import load_json, read_text_file, save_json, write_text_file
 
 warnings.filterwarnings('ignore')
 
 # Constants
+HIGH_SEVERITY_THRESHOLD = 0.5
+MEDIUM_SEVERITY_THRESHOLD = 0.7
+HIGH_BOTTLENECK_SCORE = 0.2
+MEDIUM_BOTTLENECK_SCORE = 0.1
+MIN_SENTENCE_LENGTH = 10
+MIN_PARAGRAPH_LENGTH = 20
 SAMPLE_MUNICIPAL_PLAN = "sample_municipal_plan.txt"
 RANDOM_SEED = 42
+DEFAULT_MAX_FEATURES = 1000
+DEFAULT_NGRAM_RANGE = (1, 3)
+DEFAULT_SIMILARITY_THRESHOLD = 0.3
+FALLBACK_VECTOR_DIM = 100
+THEORETICAL_MAX_SEGMENTS = 50
+TARGET_THROUGHPUT = 50.0
+TARGET_EFFICIENCY = 0.8
+MAX_EXPECTED_CONCEPTS = 20
+MIN_SEGMENT_LENGTH = 20
+MAX_SEGMENTS_LIMIT = 100
+SEGMENT_LENGTH_WORD_COUNT = 50
+CRITICALITY_EFFICIENCY_THRESHOLD = 0.5
+CRITICALITY_THROUGHPUT_THRESHOLD = 20
+CRITICALITY_SCORE_THRESHOLD = 0.4
+NORMALIZED_LOSS_DIVISOR = 100.0
+MIN_WORD_LENGTH = 3
+TOP_N_KEYWORDS = 10
+NEGATIVE_INDICATOR_THRESHOLD = 3
+LOW_CONTENT_WORD_COUNT_THRESHOLD = 50
+HIGH_RISK_FACTOR_THRESHOLD = 2
+NUM_QUESTIONS_PER_DIMENSION = 5
+
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 # Missing imports for sklearn, nltk, numpy, pandas
 try:
@@ -136,16 +174,15 @@ class SemanticAnalyzer:
     """Advanced semantic analysis for municipal documents."""
 
     def __init__(
-        self, 
+        self,
         ontology: MunicipalOntology,
-        config_loader: Optional['MethodConfigLoader'] = None,
-        max_features: Optional[int] = None,
-        ngram_range: Optional[tuple[int, int]] = None,
-        similarity_threshold: Optional[float] = None
+        config_loader: MethodConfigLoader | None = None,
+        max_features: int | None = None,
+        ngram_range: tuple[int, int] | None = None,
+        similarity_threshold: float | None = None
     ) -> None:
         """
         Initialize SemanticAnalyzer.
-        
         Args:
             ontology: Municipal ontology for semantic classification
             config_loader: Optional MethodConfigLoader for canonical parameter access
@@ -154,7 +191,7 @@ class SemanticAnalyzer:
             similarity_threshold: Similarity threshold for concept detection (overrides config_loader)
         """
         self.ontology = ontology
-        
+
         # Load parameters from canonical JSON if config_loader provided
         if config_loader is not None:
             try:
@@ -172,12 +209,12 @@ class SemanticAnalyzer:
                     )
             except (KeyError, AttributeError) as e:
                 logger.warning(f"Failed to load parameters from config_loader: {e}. Using defaults.")
-        
+
         # Use defaults if not provided
-        self.max_features = max_features if max_features is not None else 1000
-        self.ngram_range = ngram_range if ngram_range is not None else (1, 3)
-        self.similarity_threshold = similarity_threshold if similarity_threshold is not None else 0.3
-        
+        self.max_features = max_features if max_features is not None else DEFAULT_MAX_FEATURES
+        self.ngram_range = ngram_range if ngram_range is not None else DEFAULT_NGRAM_RANGE
+        self.similarity_threshold = similarity_threshold if similarity_threshold is not None else DEFAULT_SIMILARITY_THRESHOLD
+
         if TfidfVectorizer is not None:
             self.vectorizer = TfidfVectorizer(
                 max_features=self.max_features,
@@ -290,12 +327,12 @@ class SemanticAnalyzer:
 
         # Fallback
         if np is not None:
-            return np.zeros((len(segments), 100))
+            return np.zeros((len(segments), FALLBACK_VECTOR_DIM))
         else:
             # Return list of lists if numpy is not available
-            return [[0.0] * 100 for _ in range(len(segments))]
+            return [[0.0] * FALLBACK_VECTOR_DIM for _ in range(len(segments))]
 
-    def _process_segment(self, segment: str, idx: int, vector) -> dict[str, Any]:
+    def _process_segment(self, segment: str, idx: int, vector: list) -> dict[str, Any]:
         """Process individual segment and extract features."""
 
         # Basic text statistics
@@ -305,12 +342,12 @@ class SemanticAnalyzer:
         if sent_tokenize is not None:
             try:
                 sentences = sent_tokenize(segment)
-            except:
+            except Exception:
                 # Fallback to simple splitting
-                sentences = [s.strip() for s in re.split(r'[.!?]+', segment) if len(s.strip()) > 10]
+                sentences = [s.strip() for s in re.split(r'[.!?]+', segment) if len(s.strip()) > MIN_SEGMENT_LENGTH]
         else:
             # Fallback to simple splitting
-            sentences = [s.strip() for s in re.split(r'[.!?]+', segment) if len(s.strip()) > 10]
+            sentences = [s.strip() for s in re.split(r'[.!?]+', segment) if len(s.strip()) > MIN_SEGMENT_LENGTH]
 
         # Calculate semantic density (simplified)
         semantic_density = len(set(words)) / len(words) if words else 0.0
@@ -329,7 +366,7 @@ class SemanticAnalyzer:
             "word_count": len(words),
             "sentence_count": len(sentences),
             "semantic_density": semantic_density,
-            "coherence_score": coherence_score
+            "coherence_score": coherence_score,
         }
 
     def _classify_value_chain_link(self, segment: str) -> dict[str, float]:
@@ -395,8 +432,7 @@ class SemanticAnalyzer:
                 unique_concepts.add(category)
 
         # Normalize complexity
-        max_expected_concepts = 20
-        return min(1.0, len(unique_concepts) / max_expected_concepts)
+        return min(1.0, len(unique_concepts) / MAX_EXPECTED_CONCEPTS)
 
 # ---------------------------------------------------------------------------
 # 3. PERFORMANCE ANALYZER
@@ -462,8 +498,7 @@ class PerformanceAnalyzer:
             avg_coherence = sum(seg["coherence_score"] for seg in segments) / len(segments)
 
         # Capacity utilization
-        theoretical_max_segments = 50
-        capacity_utilization = len(segments) / theoretical_max_segments
+        capacity_utilization = len(segments) / THEORETICAL_MAX_SEGMENTS
 
         # Efficiency score
         efficiency_score = (total_semantic_content / len(segments)) * avg_coherence
@@ -491,10 +526,10 @@ class PerformanceAnalyzer:
 
         # Analyze capacity constraints
         for constraint_type, constraint_value in link_config.capacity_constraints.items():
-            if constraint_value < 0.7:
+            if constraint_value < MEDIUM_SEVERITY_THRESHOLD:
                 bottleneck_analysis["capacity_constraints"][constraint_type] = {
                     "current_capacity": constraint_value,
-                    "severity": "high" if constraint_value < 0.5 else "medium"
+                    "severity": "high" if constraint_value < HIGH_SEVERITY_THRESHOLD else "medium"
                 }
 
         # Calculate bottleneck scores
@@ -510,7 +545,7 @@ class PerformanceAnalyzer:
 
             bottleneck_analysis["bottleneck_scores"][bottleneck_type] = {
                 "score": score,
-                "severity": "high" if score > 0.2 else "medium" if score > 0.1 else "low"
+                "severity": "high" if score > HIGH_BOTTLENECK_SCORE else "medium" if score > MEDIUM_BOTTLENECK_SCORE else "low"
             }
 
         return bottleneck_analysis
@@ -519,13 +554,11 @@ class PerformanceAnalyzer:
         """Calculate operational loss functions."""
 
         # Throughput loss (quadratic)
-        target_throughput = 50.0
-        throughput_gap = max(0, target_throughput - metrics["throughput"])
+        throughput_gap = max(0, TARGET_THROUGHPUT - metrics["throughput"])
         throughput_loss = throughput_gap ** 2
 
         # Efficiency loss (exponential)
-        target_efficiency = 0.8
-        efficiency_gap = max(0, target_efficiency - metrics["efficiency_score"])
+        efficiency_gap = max(0, TARGET_EFFICIENCY - metrics["efficiency_score"])
 
         if np is not None:
             efficiency_loss = np.exp(efficiency_gap * 2) - 1
@@ -546,7 +579,7 @@ class PerformanceAnalyzer:
             "throughput_loss": float(throughput_loss),
             "efficiency_loss": float(efficiency_loss),
             "time_loss": float(time_loss),
-            "composite_loss": float(composite_loss)
+            "composite_loss": float(composite_loss),
         }
 
     def _generate_recommendations(self, performance_analysis: dict[str, Any]) -> list[dict[str, Any]]:
@@ -555,7 +588,7 @@ class PerformanceAnalyzer:
         recommendations = []
 
         for link_name, metrics in performance_analysis["value_chain_metrics"].items():
-            if metrics["efficiency_score"] < 0.5:
+            if metrics["efficiency_score"] < CRITICALITY_EFFICIENCY_THRESHOLD:
                 recommendations.append({
                     "link": link_name,
                     "type": "efficiency_improvement",
@@ -563,7 +596,7 @@ class PerformanceAnalyzer:
                     "description": f"Critical efficiency improvement needed for {link_name}"
                 })
 
-            if metrics["throughput"] < 20:
+            if metrics["throughput"] < CRITICALITY_THROUGHPUT_THRESHOLD:
                 recommendations.append({
                     "link": link_name,
                     "type": "throughput_optimization",
@@ -591,10 +624,9 @@ class TextMiningEngine:
             except LookupError:
                 # Download if not available
                 try:
-                    import nltk
                     nltk.download('stopwords')
                     self.stop_words = set(stopwords.words('spanish'))
-                except:
+                except Exception:
                     logger.warning("Could not download NLTK stopwords. Using empty set.")
 
     def diagnose_critical_links(self, semantic_cube: dict[str, Any],
@@ -642,20 +674,20 @@ class TextMiningEngine:
             criticality_score = 0.0
 
             # Low efficiency indicates criticality
-            if metrics["efficiency_score"] < 0.5:
+            if metrics["efficiency_score"] < CRITICALITY_EFFICIENCY_THRESHOLD:
                 criticality_score += 0.4
 
             # Low throughput indicates criticality
-            if metrics["throughput"] < 20:
+            if metrics["throughput"] < CRITICALITY_THROUGHPUT_THRESHOLD:
                 criticality_score += 0.3
 
             # High loss functions indicate criticality
             if link_name in performance_analysis["operational_loss_functions"]:
                 loss = performance_analysis["operational_loss_functions"][link_name]["composite_loss"]
-                normalized_loss = min(1.0, loss / 100)
+                normalized_loss = min(1.0, loss / NORMALIZED_LOSS_DIVISOR)
                 criticality_score += normalized_loss * 0.3
 
-            if criticality_score > 0.4:
+            if criticality_score > CRITICALITY_SCORE_THRESHOLD:
                 critical_links[link_name] = criticality_score
 
         return critical_links
@@ -669,14 +701,14 @@ class TextMiningEngine:
         # Combine all text
         combined_text = " ".join([seg["text"] for seg in segments])
         words = [word.lower() for word in combined_text.split()
-                 if word.lower() not in self.stop_words and len(word) > 2]
+                 if word.lower() not in self.stop_words and len(word) > MIN_WORD_LENGTH]
 
         # Extract keywords
         word_freq = Counter(words)
-        keywords = [word for word, count in word_freq.most_common(10)]
+        keywords = [word for word, count in word_freq.most_common(TOP_N_KEYWORDS)]
 
         # Simple sentiment analysis
-        positive_words = ['bueno', 'excelente', 'positivo', 'lograr', 'éxito']
+        positive_words = ["bueno", "excelente", "positivo", "lograr", "éxito"]
         negative_words = ['problema', 'dificultad', 'limitación', 'falta', 'déficit']
 
         positive_count = sum(1 for word in words if word in positive_words)
@@ -694,10 +726,10 @@ class TextMiningEngine:
             "keywords": keywords,
             "sentiment": sentiment,
             "positive_indicators": positive_count,
-            "negative_indicators": negative_count
+            "negative_indicators": negative_count,
         }
 
-    def _assess_risks(self, segments: list[dict], text_analysis: dict[str, Any]) -> dict[str, Any]:
+    def _assess_risks(self, text_analysis: dict[str, Any]) -> dict[str, Any]:
         """Assess risks for a value chain link."""
 
         risk_assessment = {
@@ -710,15 +742,15 @@ class TextMiningEngine:
             risk_assessment["risk_factors"].append("Negative sentiment detected")
 
         # Content-based risk
-        if text_analysis["negative_indicators"] > 3:
+        if text_analysis["negative_indicators"] > NEGATIVE_INDICATOR_THRESHOLD:
             risk_assessment["risk_factors"].append("High frequency of negative indicators")
 
         # Volume-based risk
-        if text_analysis["word_count"] < 50:
+        if text_analysis["word_count"] < LOW_CONTENT_WORD_COUNT_THRESHOLD:
             risk_assessment["risk_factors"].append("Limited content volume")
 
         # Overall risk level
-        if len(risk_assessment["risk_factors"]) > 2:
+        if len(risk_assessment["risk_factors"]) > HIGH_RISK_FACTOR_THRESHOLD:
             risk_assessment["overall_risk"] = "high"
         elif len(risk_assessment["risk_factors"]) > 0:
             risk_assessment["overall_risk"] = "medium"
@@ -745,7 +777,7 @@ class TextMiningEngine:
                 "timeline": "ongoing"
             })
 
-        if text_analysis["word_count"] < 50:
+        if text_analysis["word_count"] < LOW_CONTENT_WORD_COUNT_THRESHOLD:
             interventions.append({
                 "type": "documentation",
                 "description": "Improve documentation and content development",
@@ -815,7 +847,6 @@ class MunicipalAnalyzer:
         """Load and segment document."""
 
         # Delegate to factory for I/O operation
-        from .factory import read_text_file
 
         content = read_text_file(document_path)
 
@@ -826,10 +857,10 @@ class MunicipalAnalyzer:
         segments = []
         for sentence in sentences:
             cleaned = sentence.strip()
-            if len(cleaned) > 20 and not cleaned.startswith(('Página', 'Page')):
+            if len(cleaned) > MIN_SEGMENT_LENGTH and not cleaned.startswith(("Página", "Page")):
                 segments.append(cleaned)
 
-        return segments[:100]  # Limit for processing efficiency
+        return segments[:MAX_SEGMENTS_LIMIT]  # Limit for processing efficiency
 
     def _generate_summary(self, semantic_cube: dict[str, Any],
                           performance_analysis: dict[str, Any],
@@ -871,7 +902,7 @@ class MunicipalAnalyzer:
             },
             "risk_assessment": {
                 "critical_links_identified": critical_links_count,
-                "overall_risk_level": "high" if critical_links_count > 2 else "medium" if critical_links_count > 0 else "low"
+                "overall_risk_level": "high" if critical_links_count > HIGH_RISK_FACTOR_THRESHOLD else "medium" if critical_links_count > 0 else "low"
             }
         }
 
@@ -879,7 +910,9 @@ class MunicipalAnalyzer:
 # 6. EXAMPLE USAGE AND UTILITIES
 # ---------------------------------------------------------------------------
 
-def example_usage():
+
+
+def example_usage() -> None:
     """Example usage of the Municipal Analyzer."""
 
     # Initialize analyzer
@@ -909,7 +942,6 @@ def example_usage():
 
     # Save sample to file
     # Delegate to factory for I/O operation
-    from .factory import write_text_file
 
     write_text_file(sample_text, SAMPLE_MUNICIPAL_PLAN)
 
@@ -994,11 +1026,8 @@ def example_usage():
         return None
     finally:
         # Clean up
-        try:
-            import os
+        with contextlib.suppress(FileNotFoundError, OSError):
             os.remove(SAMPLE_MUNICIPAL_PLAN)
-        except (FileNotFoundError, OSError):
-            pass
 
 @dataclass
 class CanonicalQuestionContract:
@@ -1231,9 +1260,6 @@ class DocumentProcessor:
         try:
             # Delegate to factory for I/O operation
             # Note: PyPDF2 requires file handle, so we need a special approach
-            from pathlib import Path
-
-            import PyPDF2
             pdf_path_obj = Path(pdf_path)
 
             with open(pdf_path_obj, 'rb') as file:
@@ -1253,7 +1279,6 @@ class DocumentProcessor:
     def load_docx(docx_path: str) -> str:
         """Load text from DOCX file."""
         try:
-            import docx
             doc = docx.Document(docx_path)
             text = ""
             for paragraph in doc.paragraphs:
@@ -1278,30 +1303,29 @@ class DocumentProcessor:
                 except LookupError:
                     # Download if not available
                     try:
-                        import nltk
                         nltk.download('punkt')
                         return sent_tokenize(text, language='spanish')
-                    except:
+                    except Exception:
                         # Fallback to simple splitting
-                        return [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > 10]
+                        return [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > MIN_SENTENCE_LENGTH]
                 except Exception:
                     # Fallback to simple splitting
-                    return [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > 10]
+                    return [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > MIN_SENTENCE_LENGTH]
             else:
                 # Fallback to simple splitting
-                return [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > 10]
+                return [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > MIN_SENTENCE_LENGTH]
 
         elif method == "paragraph":
-            return [p.strip() for p in text.split('\n\n') if len(p.strip()) > 20]
+            return [p.strip() for p in text.split('\n\n') if len(p.strip()) > MIN_PARAGRAPH_LENGTH]
 
         elif method == "fixed_length":
             words = text.split()
             segments = []
-            segment_length = 50  # words per segment
+            segment_length = SEGMENT_LENGTH_WORD_COUNT  # words per segment
 
             for i in range(0, len(words), segment_length):
                 segment = " ".join(words[i:i + segment_length])
-                if len(segment) > 20:
+                if len(segment) > MIN_SEGMENT_LENGTH:
                     segments.append(segment)
 
             return segments
@@ -1325,7 +1349,6 @@ class DocumentProcessor:
             raise FileNotFoundError(f"Rubric file not found: {rubric_file}")
 
         # Delegate to factory for I/O operation
-        from .factory import load_json
 
         questionnaire_data = load_json(questionnaire_file)
         rubric_data = load_json(rubric_file)
@@ -1374,7 +1397,7 @@ class DocumentProcessor:
                 raw_number = int(str(question.get("question_no")))
             except (TypeError, ValueError):
                 raw_number = 0
-            normalized_number = ((raw_number - 1) % 5) + 1 if raw_number else 0
+            normalized_number = ((raw_number - 1) % NUM_QUESTIONS_PER_DIMENSION) + 1 if raw_number else 0
             key = (legacy_policy_area, dimension_legacy, normalized_number)
             rubric_lookup[key] = question
 
@@ -1540,7 +1563,6 @@ class ResultsExporter:
     def export_to_json(results: dict[str, Any], output_path: str) -> None:
         """Export results to JSON file."""
         # Delegate to factory for I/O operation
-        from .factory import save_json
 
         try:
             save_json(results, output_path)
@@ -1680,7 +1702,6 @@ class ResultsExporter:
                     lines.append(f"  Risk Level: {risk.get('overall_risk', 'unknown')}\n")
 
             # Delegate to factory for I/O operation
-            from .factory import write_text_file
             write_text_file(''.join(lines), output_path)
             logger.info(f"Summary report exported: {output_path}")
 
@@ -1724,7 +1745,6 @@ class ConfigurationManager:
 
         if Path(self.config_path).exists():
             # Delegate to factory for I/O operation
-            from .factory import load_json
 
             try:
                 user_config = load_json(self.config_path)
@@ -1742,7 +1762,6 @@ class ConfigurationManager:
     def save_config(self) -> None:
         """Save current configuration to file."""
         # Delegate to factory for I/O operation
-        from .factory import save_json
 
         try:
             save_json(self.config, self.config_path)
@@ -1842,7 +1861,6 @@ class BatchProcessor:
                         lines.append(f"  Risk Level: {risk_summary.get('overall_risk_level', 'unknown')}\n")
 
             # Delegate to factory for I/O operation
-            from .factory import write_text_file
             write_text_file(''.join(lines), summary_file)
             logger.info(f"Batch summary created: {summary_file}")
 
@@ -1852,8 +1870,6 @@ class BatchProcessor:
 # Simple CLI interface
 def main() -> None:
     """Simple command-line interface."""
-    import argparse
-
     parser = argparse.ArgumentParser(description="Municipal Development Plan Analyzer")
     parser.add_argument("input", help="Input file or directory path")
     parser.add_argument("--output", "-o", default=".", help="Output directory")

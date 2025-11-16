@@ -20,10 +20,10 @@ Usage:
     report = OUTPUT_DIR / 'analysis_report.json'
 """
 
-from pathlib import Path
-from typing import Final, Optional
 import os
 import sys
+from pathlib import Path
+from typing import Final
 
 # ============================================================================
 # Project Root Detection

@@ -8,11 +8,15 @@ For new code, use: saaaaaa.processing.spc_ingestion
 """
 
 from .models import (
+    KPI,
+    Budget,
     CanonPolicyPackage,
     Chunk,
     ChunkGraph,
     ChunkResolution,
     Confidence,
+    Entity,
+    GeoFacet,
     IntegrityIndex,
     PolicyFacet,
     PolicyManifest,
@@ -20,10 +24,6 @@ from .models import (
     QualityMetrics,
     TextSpan,
     TimeFacet,
-    GeoFacet,
-    Budget,
-    KPI,
-    Entity,
 )
 
 __all__ = [

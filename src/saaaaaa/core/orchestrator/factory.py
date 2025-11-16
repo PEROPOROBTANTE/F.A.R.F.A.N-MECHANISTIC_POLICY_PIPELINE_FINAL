@@ -28,7 +28,7 @@ import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Final, Optional
+from typing import Any, Optional
 
 from ..contracts import (
     CDAFFrameworkInputContract,
@@ -44,13 +44,13 @@ from ..contracts import (
 from . import get_questionnaire_provider
 from .core import MethodExecutor
 from .questionnaire import (
-    CanonicalQuestionnaire,
     EXPECTED_HASH,
     EXPECTED_MACRO_QUESTION_COUNT,
-    EXPECTED_MICRO_QUESTION_COUNT,
     EXPECTED_MESO_QUESTION_COUNT,
+    EXPECTED_MICRO_QUESTION_COUNT,
     EXPECTED_TOTAL_QUESTION_COUNT,
     QUESTIONNAIRE_PATH,
+    CanonicalQuestionnaire,
     load_questionnaire,
 )
 
@@ -668,14 +668,14 @@ def build_processor(
     if enable_signals:
         try:
             from .core_module_factory import CoreModuleFactory as SignalFactory
-            
+
             # Create signal-enabled factory
             signal_factory = SignalFactory(
                 questionnaire_data=questionnaire_data,
                 enable_signals=True,
             )
             signal_registry = signal_factory._signal_registry
-            
+
             logger.info(
                 "signals_enabled_in_processor",
                 enabled=True,
@@ -717,7 +717,7 @@ def compute_monolith_hash(monolith: dict[str, Any]) -> str:
         Hexadecimal SHA-256 hash string
     """
     import hashlib
-    
+
     serialized = json.dumps(
         monolith,
         sort_keys=True,

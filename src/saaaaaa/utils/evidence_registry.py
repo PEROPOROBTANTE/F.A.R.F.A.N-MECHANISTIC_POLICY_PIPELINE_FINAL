@@ -99,12 +99,12 @@ class EvidenceRegistry:
         Use factory.compute_monolith_hash() to generate this value.
         """
         previous_hash = self._records[-1].entry_hash if self._records else "GENESIS"
-        
+
         # Merge monolith_hash into metadata if provided
         enriched_metadata = dict(metadata or {})
         if monolith_hash is not None:
             enriched_metadata['monolith_hash'] = monolith_hash
-        
+
         record = EvidenceRecord.create(
             index=len(self._records),
             method_name=method_name,

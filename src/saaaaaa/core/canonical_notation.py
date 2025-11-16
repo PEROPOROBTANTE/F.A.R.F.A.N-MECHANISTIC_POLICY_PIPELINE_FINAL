@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 @dataclass(frozen=True)
 class DimensionInfo:
     """Dimension metadata from canonical notation."""
-    
+
     code: str  # e.g., "DIM01"
     name: str  # e.g., "INSUMOS"
     label: str  # e.g., "Diagnóstico y Recursos"
@@ -37,7 +37,7 @@ class DimensionInfo:
 @dataclass(frozen=True)
 class PolicyAreaInfo:
     """Policy area metadata from canonical notation."""
-    
+
     code: str  # e.g., "PA01"
     name: str  # e.g., "Derechos de las mujeres e igualdad de género"
     legacy_id: str  # e.g., "P1"
@@ -64,13 +64,13 @@ def _load_canonical_notation() -> dict[str, Any]:
             "Cannot import questionnaire module. "
             "Ensure saaaaaa.core.orchestrator is available."
         ) from e
-    
+
     canonical = load_questionnaire()
     data = dict(canonical.data)
-    
+
     if "canonical_notation" not in data:
         raise KeyError("canonical_notation section missing from questionnaire")
-    
+
     return data["canonical_notation"]
 
 
@@ -88,14 +88,14 @@ def get_dimension_info(dimension_key: str) -> DimensionInfo:
         KeyError: If dimension not found
     """
     notation = _load_canonical_notation()
-    
+
     if "dimensions" not in notation:
         raise KeyError("dimensions section missing from canonical_notation")
-    
+
     dims = notation["dimensions"]
     if dimension_key not in dims:
         raise KeyError(f"Dimension {dimension_key} not found in canonical notation")
-    
+
     dim = dims[dimension_key]
     return DimensionInfo(
         code=dim["code"],
@@ -118,14 +118,14 @@ def get_policy_area_info(policy_area_key: str) -> PolicyAreaInfo:
         KeyError: If policy area not found
     """
     notation = _load_canonical_notation()
-    
+
     if "policy_areas" not in notation:
         raise KeyError("policy_areas section missing from canonical_notation")
-    
+
     areas = notation["policy_areas"]
     if policy_area_key not in areas:
         raise KeyError(f"Policy area {policy_area_key} not found in canonical notation")
-    
+
     area = areas[policy_area_key]
     return PolicyAreaInfo(
         code=policy_area_key,
@@ -142,10 +142,10 @@ def get_all_dimensions() -> dict[str, DimensionInfo]:
         Dictionary mapping dimension keys to DimensionInfo objects
     """
     notation = _load_canonical_notation()
-    
+
     if "dimensions" not in notation:
         raise KeyError("dimensions section missing from canonical_notation")
-    
+
     dims = notation["dimensions"]
     return {
         key: DimensionInfo(
@@ -165,10 +165,10 @@ def get_all_policy_areas() -> dict[str, PolicyAreaInfo]:
         Dictionary mapping policy area codes to PolicyAreaInfo objects
     """
     notation = _load_canonical_notation()
-    
+
     if "policy_areas" not in notation:
         raise KeyError("policy_areas section missing from canonical_notation")
-    
+
     areas = notation["policy_areas"]
     return {
         code: PolicyAreaInfo(
@@ -183,22 +183,22 @@ def get_all_policy_areas() -> dict[str, PolicyAreaInfo]:
 # Convenience enums built from canonical notation
 class CanonicalDimension(Enum):
     """Analytical dimensions from canonical notation (lazy-loaded)."""
-    
+
     @classmethod
     def from_canonical(cls, key: str) -> str:
         """Get dimension label from canonical notation."""
         return get_dimension_info(key).label
-    
+
     @property
     def code(self) -> str:
         """Get dimension code."""
         return get_dimension_info(self.name).code
-    
+
     @property
     def label(self) -> str:
         """Get dimension label."""
         return get_dimension_info(self.name).label
-    
+
     # Enum values (keys match questionnaire)
     D1 = "D1"
     D2 = "D2"
@@ -210,22 +210,22 @@ class CanonicalDimension(Enum):
 
 class CanonicalPolicyArea(Enum):
     """Policy areas from canonical notation (lazy-loaded)."""
-    
+
     @classmethod
     def from_canonical(cls, code: str) -> str:
         """Get policy area name from canonical notation."""
         return get_policy_area_info(code).name
-    
+
     @property
     def name_long(self) -> str:
         """Get full policy area name."""
         return get_policy_area_info(self.value).name
-    
+
     @property
     def legacy_id(self) -> str:
         """Get legacy policy area ID (P1-P10)."""
         return get_policy_area_info(self.value).legacy_id
-    
+
     # Enum values (codes from questionnaire)
     PA01 = "PA01"
     PA02 = "PA02"

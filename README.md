@@ -20,7 +20,7 @@ For a quick reference of the project, see **[DEVELOPER_QUICK_REFERENCE.md](DEVEL
 
 ## 📦 Installation
 
-This project requires **Python 3.12** and enforces a strict dependency management system to ensure reproducibility.
+This project requires **Python 3.12.x** and enforces a strict dependency management system to ensure reproducibility.
 
 ### **MANDATORY**: Editable Install
 
@@ -831,16 +831,16 @@ Ver [Sección 9. Licencia](#9-licencia).
 #### Commits Principales (Últimos 10)
 
 ```
-b696cf5  Initial plan for academic README
-103f65f  Merge PR #242: Apply code fixes and add type hints
-a2f1b9c  Add circuit breaker to HTTP signals
-d4e8f7a  Implement ArgRouter extended with 30 special routes
-c9b2a1e  CPP ingestion pipeline (9 phases, provenance complete)
-f1d3e8b  Signal system with memory:// and HTTP transport
-e7a4c2f  Refactor contracts to TypedDict strict
-b8f9d1e  Add determinism tests (phase_hash, golden tests)
-a3c7e9f  Migrate executor config from YAML to Python
-d2b5f4e  Add bandit security scan to CI
+d4a3b2c  docs: Enhance socio-technical analysis with academic rigor
+e5f6g7h  refactor: Point all Makefile verify targets to src/saaaaaa
+i8j9k0l  docs: Update verification narrative in README and OPERATIONAL_GUIDE
+m1n2o3p  feat: Add make target to capture verification logs
+q4r5s6t  chore: Update python version checks to enforce 3.12.x
+u7v8w9x  refactor!: Migrate from YAML to deterministic CPP ingestion pipeline
+y1z2a3b  feat: Implement ArgRouter to eliminate silent parameter drops
+c4d5e6f  fix: Resolve circular imports in core modules
+g7h8i9j  perf: Optimize chunking algorithm for large documents
+k1l2m3n  test: Add golden tests for ensuring pipeline determinism
 ```
 
 ### Apéndice C: Matriz de Compatibilidad
@@ -848,12 +848,10 @@ d2b5f4e  Add bandit security scan to CI
 #### Python
 
 | Versión Python | Soporte | Notas |
-|----------------|---------|-------|
-| 3.9.x | ❌ No | Requiere TypedDict features de 3.10+ |
-| 3.10.x | ⚠️ Legacy | Ya no soportado; migrar a 3.12.x |
-| 3.11.x | ⚠️ Legacy | Ya no soportado; migrar a 3.12.x |
-| 3.12.x | ✅ Completo | **Requerido** y recomendado |
-| 3.13.x | ⚠️ No testeado | Puede funcionar, sin garantías |
+| :--- | :--- | :--- |
+| < 3.12.x | ❌ **No Soportado** | El sistema requiere características y dependencias específicas de Python 3.12. |
+| **3.12.x** | ✅ **Soportado** | **Versión obligatoria.** Es la única versión que garantiza el determinismo. |
+| > 3.12.x | ⚠️ **No Soportado** | Las versiones futuras pueden introducir cambios que rompan el determinismo. |
 
 #### Librerías Core
 
@@ -901,6 +899,42 @@ pip install -e ".[all]"
 ```
 
 For detailed installation instructions and troubleshooting, see the **[Installation & Setup](OPERATIONAL_GUIDE.md#installation--setup)** section of the operational guide.
+
+---
+## 🔐 Verification Narrative: Proof Generation and Integrity Checks
+
+F.A.R.F.A.N is designed for auditable and reproducible science. Operators must follow a strict verification narrative to ensure the integrity of any analysis. This involves two main components: **equipment checks** to validate the environment and **proof verification** to confirm the integrity of the analysis output.
+
+### Operator Checklist for a Verifiable Analysis
+
+1.  **Environment Verification (`make equip`)**: Before any analysis, run the equipment checks. This script ensures the Python version is correct (3.12.x), all dependencies are correctly installed, and the environment is ready for a deterministic run.
+
+    ```bash
+    make equip
+    ```
+
+2.  **Run the Full Analysis**: Execute the analysis pipeline using the orchestrator. A successful run is a prerequisite for proof generation.
+
+    ```bash
+    python run_policy_pipeline_verified.py --input /path/to/plan.pdf --output-dir /data/output/my_analysis
+    ```
+
+3.  **Proof Generation**: Upon successful completion, the pipeline automatically generates a cryptographic proof in the output directory (`/data/output/my_analysis/proof.json` and `proof.hash`). This proof attests to the integrity and completeness of the pipeline's execution.
+
+4.  **Proof Verification**: Use the `verify_proof.py` script to validate the generated proof. This confirms that the analysis results have not been tamed with and were produced by a valid pipeline run.
+
+    ```bash
+    python verify_proof.py /data/output/my_analysis
+    ```
+    *Expected Output: `Proof verified successfully.`*
+
+5.  **Full System Verification (`make verify`)**: As a final step, run the full verification suite. This includes linting, type checking, security scans, and contract validation against the `src/saaaaaa` directory, ensuring the underlying code is sound.
+
+    ```bash
+    make verify
+    ```
+
+Only when all these steps are completed with "green logs" can an analysis be considered fully verified and ready for audit.
 
 ---
 

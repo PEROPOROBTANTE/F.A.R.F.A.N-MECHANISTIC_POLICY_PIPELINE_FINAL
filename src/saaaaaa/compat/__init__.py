@@ -22,14 +22,6 @@ from __future__ import annotations
 import sys
 from typing import Any
 
-from .safe_imports import (
-    ImportErrorDetailed,
-    check_import_available,
-    get_import_version,
-    lazy_import,
-    try_import,
-)
-
 # Lazy loading utilities for heavy dependencies
 from .lazy_deps import (
     get_numpy,
@@ -39,6 +31,13 @@ from .lazy_deps import (
     get_spacy,
     get_torch,
     get_transformers,
+)
+from .safe_imports import (
+    ImportErrorDetailed,
+    check_import_available,
+    get_import_version,
+    lazy_import,
+    try_import,
 )
 
 # Backward compatibility alias
@@ -111,7 +110,7 @@ _typing_extensions_available = check_import_available("typing_extensions")
 
 if _typing_extensions_available:
     import typing_extensions
-    
+
     # Use typing_extensions versions if available (they're usually more up-to-date)
     TypeAlias = typing_extensions.TypeAlias
     ParamSpec = typing_extensions.ParamSpec
@@ -121,7 +120,7 @@ if _typing_extensions_available:
     TypedDict = typing_extensions.TypedDict
     Final = typing_extensions.Final
     Annotated = typing_extensions.Annotated
-    
+
 else:
     # Fall back to stdlib typing
     # This may not have all features on older Python versions
@@ -132,10 +131,10 @@ else:
         Protocol,  # 3.8+
         TypedDict,  # 3.8+
     )
-    
+
     # TypeAlias added in 3.10
     if sys.version_info >= (3, 10):
-        from typing import TypeAlias, ParamSpec, Concatenate
+        from typing import Concatenate, ParamSpec, TypeAlias
     else:
         # Polyfill for older versions
         TypeAlias = type  # type: ignore[misc, assignment]
@@ -162,7 +161,7 @@ def get_platform_info() -> dict[str, Any]:
     >>> print(f"Running on {info['system']} {info['architecture']}")
     """
     import platform
-    
+
     return {
         "system": platform.system(),
         "release": platform.release(),

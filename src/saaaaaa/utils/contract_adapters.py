@@ -20,22 +20,19 @@ from __future__ import annotations
 
 import hashlib
 import logging
-from typing import Any, Dict, Optional, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from pydantic import ValidationError
 
 from .enhanced_contracts import (
     AnalysisInputV2,
-    AnalysisOutputV2,
-    DocumentMetadataV2,
-    ExecutionContextV2,
-    ProcessedTextV2,
     ContractValidationError,
+    DocumentMetadataV2,
     FlowCompatibilityError,
+    ProcessedTextV2,
     compute_content_digest,
-    utc_now_iso,
 )
-
 
 logger = logging.getLogger(__name__)
 
@@ -45,9 +42,9 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 def adapt_document_metadata_v1_to_v2(
-    v1_metadata: Dict[str, Any],
+    v1_metadata: dict[str, Any],
     policy_unit_id: str,
-    file_content: Optional[bytes] = None
+    file_content: bytes | None = None
 ) -> DocumentMetadataV2:
     """
     Adapt V1 DocumentMetadata (dict/TypedDict) to V2 Pydantic model.
@@ -81,10 +78,10 @@ def adapt_document_metadata_v1_to_v2(
         file_name = v1_metadata.get("file_name", "")
         num_pages = v1_metadata.get("num_pages", 1)
         file_size_bytes = v1_metadata.get("file_size_bytes", 0)
-        
+
         # V1 uses "file_hash", V2 uses "content_digest" (SHA-256)
         content_digest = v1_metadata.get("file_hash", "")
-        
+
         # If file_hash is not SHA-256 (64 hex chars), compute it from content if available
         if len(content_digest) != 64 or not all(c in '0123456789abcdef' for c in content_digest.lower()):
             if file_content:
@@ -93,7 +90,7 @@ def adapt_document_metadata_v1_to_v2(
                 # Fallback: use a placeholder (should be computed properly in production)
                 logger.warning("No valid SHA-256 hash available for document metadata")
                 content_digest = "0" * 64  # Placeholder
-        
+
         # Create V2 instance
         return DocumentMetadataV2(
             file_path=file_path,
@@ -108,7 +105,7 @@ def adapt_document_metadata_v1_to_v2(
             title=v1_metadata.get("title"),
             creation_date=v1_metadata.get("creation_date"),
         )
-        
+
     except ValidationError as e:
         raise ContractValidationError(
             f"Failed to adapt V1 metadata to V2: {e}",
@@ -117,7 +114,7 @@ def adapt_document_metadata_v1_to_v2(
 
 
 def adapt_analysis_input_v1_to_v2(
-    v1_input: Dict[str, Any],
+    v1_input: dict[str, Any],
     policy_unit_id: str
 ) -> AnalysisInputV2:
     """
@@ -142,12 +139,12 @@ def adapt_analysis_input_v1_to_v2(
     try:
         text = v1_input.get("text", "")
         document_id = v1_input.get("document_id", "")
-        
+
         if not text:
             raise ContractValidationError("text field is required", field="text")
         if not document_id:
             raise ContractValidationError("document_id field is required", field="document_id")
-        
+
         # Use factory method to auto-compute digest
         return AnalysisInputV2.create_from_text(
             text=text,
@@ -157,7 +154,7 @@ def adapt_analysis_input_v1_to_v2(
             context=v1_input.get("context"),
             sentences=v1_input.get("sentences"),
         )
-        
+
     except ValidationError as e:
         raise ContractValidationError(
             f"Failed to adapt V1 analysis input to V2: {e}",
@@ -258,17 +255,17 @@ def validate_flow_compatibility(
             producer=producer_name,
             consumer=consumer_name
         )
-    
+
     # Check for required fields
     missing_fields = [field for field in consumer_expected_fields if field not in output_dict]
-    
+
     if missing_fields:
         raise FlowCompatibilityError(
             f"Flow compatibility error: {producer_name} output missing required fields for {consumer_name}: {missing_fields}",
             producer=producer_name,
             consumer=consumer_name
         )
-    
+
     logger.debug(
         f"Flow compatibility validated: {producer_name} -> {consumer_name}"
     )
@@ -325,7 +322,7 @@ def validate_pipeline_stage_io(
             )
     else:
         validated_input = actual_input
-    
+
     # Validate output
     if not isinstance(actual_output, output_contract):
         if isinstance(actual_output, dict) and hasattr(output_contract, "model_validate"):
@@ -343,7 +340,7 @@ def validate_pipeline_stage_io(
             )
     else:
         validated_output = actual_output
-    
+
     return validated_input, validated_output
 
 
@@ -351,7 +348,7 @@ def validate_pipeline_stage_io(
 # BACKWARD COMPATIBILITY HELPERS
 # ============================================================================
 
-def v2_to_v1_dict(v2_model: Any) -> Dict[str, Any]:
+def v2_to_v1_dict(v2_model: Any) -> dict[str, Any]:
     """
     Convert V2 Pydantic model to V1-compatible dict.
     
@@ -379,7 +376,7 @@ def v2_to_v1_dict(v2_model: Any) -> Dict[str, Any]:
         full_dict = v2_model.model_dump()
     else:
         full_dict = dict(v2_model)
-    
+
     # Remove V2-specific fields
     v2_specific_fields = {
         "schema_version",
@@ -394,7 +391,7 @@ def v2_to_v1_dict(v2_model: Any) -> Dict[str, Any]:
         "execution_id",
         "parent_correlation_id",
     }
-    
+
     return {k: v for k, v in full_dict.items() if k not in v2_specific_fields}
 
 
@@ -408,7 +405,7 @@ class ContractMigrationHelper:
     
     Provides utilities for gradual migration and compatibility testing.
     """
-    
+
     @staticmethod
     def wrap_v1_function_with_v2_contracts(
         func: callable,
@@ -432,9 +429,9 @@ class ContractMigrationHelper:
             # TODO: Implement input/output adaptation based on function signature
             # For now, just pass through
             return func(*args, **kwargs)
-        
+
         return wrapper
-    
+
     @staticmethod
     def log_migration_status(component_name: str, migrated: bool) -> None:
         """
@@ -456,16 +453,16 @@ class ContractMigrationHelper:
 
 if __name__ == "__main__":
     import doctest
-    
+
     # Run doctests
     print("Running doctests...")
     doctest.testmod(verbose=True)
-    
+
     # Additional tests
     print("\n" + "="*60)
     print("Contract Adapter Tests")
     print("="*60)
-    
+
     # Test 1: V1 to V2 metadata adaptation
     print("\n1. Testing V1 to V2 metadata adaptation:")
     v1_meta = {
@@ -479,7 +476,7 @@ if __name__ == "__main__":
     assert v2_meta.policy_unit_id == "PDM-001"
     assert v2_meta.num_pages == 10
     print(f"   ✓ Adapted metadata: policy_unit_id={v2_meta.policy_unit_id}")
-    
+
     # Test 2: V1 to V2 analysis input adaptation
     print("\n2. Testing V1 to V2 analysis input adaptation:")
     v1_input = {"text": "Sample policy text", "document_id": "DOC-123"}
@@ -488,7 +485,7 @@ if __name__ == "__main__":
     assert v2_input.policy_unit_id == "PDM-001"
     assert len(v2_input.input_digest) == 64  # SHA-256
     print(f"   ✓ Adapted input: digest={v2_input.input_digest[:16]}...")
-    
+
     # Test 3: Flow compatibility validation
     print("\n3. Testing flow compatibility validation:")
     output = {"text": "test", "document_id": "123", "extra_field": "value"}
@@ -499,7 +496,7 @@ if __name__ == "__main__":
         "analyzer"
     )
     print("   ✓ Flow compatibility validated")
-    
+
     # Test 4: V2 to V1 conversion
     print("\n4. Testing V2 to V1 backward compatibility:")
     v2_model = AnalysisInputV2.create_from_text(
@@ -512,7 +509,7 @@ if __name__ == "__main__":
     assert "schema_version" not in v1_dict  # V2-specific field removed
     assert "correlation_id" not in v1_dict
     print(f"   ✓ V2 to V1 conversion: {list(v1_dict.keys())}")
-    
+
     # Test 5: ProcessedText creation
     print("\n5. Testing ProcessedTextV2 creation:")
     processed = adapt_dict_to_processed_text_v2(
@@ -524,7 +521,7 @@ if __name__ == "__main__":
     assert processed.language == "es"
     assert len(processed.input_digest) == 64
     print(f"   ✓ ProcessedText created: language={processed.language}")
-    
+
     print("\n" + "="*60)
     print("All adapter tests passed!")
     print("="*60)

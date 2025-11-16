@@ -4,12 +4,11 @@ Minimal but secure authentication for admin panel access
 """
 
 import hashlib
+import logging
 import secrets
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional, Dict
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -45,8 +44,8 @@ class AdminAuthenticator:
 
     def __init__(self, session_timeout_minutes: int = 60):
         self.session_timeout = session_timeout_minutes
-        self.sessions: Dict[str, AdminSession] = {}
-        self.login_attempts: Dict[str, list] = {}
+        self.sessions: dict[str, AdminSession] = {}
+        self.login_attempts: dict[str, list] = {}
 
         # Default credentials (should be changed in production)
         # Default password: "atroz_admin_2024"
@@ -89,7 +88,7 @@ class AdminAuthenticator:
 
         return True
 
-    def authenticate(self, username: str, password: str, ip_address: str) -> Optional[str]:
+    def authenticate(self, username: str, password: str, ip_address: str) -> str | None:
         """
         Authenticate user and create session.
 
@@ -137,7 +136,7 @@ class AdminAuthenticator:
         logger.info(f"Successful login for user: {username} from IP: {ip_address}")
         return session_id
 
-    def validate_session(self, session_id: str, ip_address: Optional[str] = None) -> bool:
+    def validate_session(self, session_id: str, ip_address: str | None = None) -> bool:
         """
         Validate if session is active and valid.
 
@@ -168,7 +167,7 @@ class AdminAuthenticator:
         session.update_activity()
         return True
 
-    def get_session(self, session_id: str) -> Optional[AdminSession]:
+    def get_session(self, session_id: str) -> AdminSession | None:
         """Get session details if valid"""
         if self.validate_session(session_id):
             return self.sessions[session_id]
@@ -231,7 +230,7 @@ class AdminAuthenticator:
 
 
 # Global authenticator instance
-_authenticator: Optional[AdminAuthenticator] = None
+_authenticator: AdminAuthenticator | None = None
 
 
 def get_authenticator() -> AdminAuthenticator:
@@ -245,7 +244,8 @@ def get_authenticator() -> AdminAuthenticator:
 def require_auth(func):
     """Decorator for Flask routes requiring authentication"""
     from functools import wraps
-    from flask import request, jsonify
+
+    from flask import jsonify, request
 
     @wraps(func)
     def wrapper(*args, **kwargs):

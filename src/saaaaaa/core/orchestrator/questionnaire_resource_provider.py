@@ -26,12 +26,11 @@ QUESTIONNAIRE INTEGRITY:
 
 from __future__ import annotations
 
-import json
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Literal
 
 import structlog
 
@@ -72,7 +71,7 @@ class Pattern:
         question_id: Source question ID
         metadata: Additional metadata
     """
-    
+
     id: str
     category: str
     pattern: str
@@ -81,7 +80,7 @@ class Pattern:
     flags: str = "i"
     question_id: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
-    
+
     def compile_regex(self) -> re.Pattern[str] | None:
         """
         Compile pattern as regex if match_type is REGEX.
@@ -91,7 +90,7 @@ class Pattern:
         """
         if self.match_type != "REGEX":
             return None
-        
+
         # Convert flags string to re flags
         flags_int = 0
         if "i" in self.flags.lower():
@@ -100,7 +99,7 @@ class Pattern:
             flags_int |= re.MULTILINE
         if "s" in self.flags.lower():
             flags_int |= re.DOTALL
-        
+
         try:
             return re.compile(self.pattern, flags_int)
         except re.error as e:
@@ -123,7 +122,7 @@ class ValidationSpec:
         minimum: Minimum count/value if applicable
         question_id: Source question ID
     """
-    
+
     type: str
     required: bool = False
     minimum: int = 0
@@ -194,7 +193,7 @@ class QuestionnaireResourceProvider:
 
         self._patterns_cache: dict[str, list[Pattern]] | None = None
         self._validations_cache: list[ValidationSpec] | None = None
-    
+
     @classmethod
     def from_file(cls, path: str | Path) -> QuestionnaireResourceProvider:
         """
@@ -222,7 +221,7 @@ class QuestionnaireResourceProvider:
         canonical = load_questionnaire()
 
         return cls(canonical)
-    
+
     def extract_all_patterns(self) -> list[Pattern]:
         """
         Extract all patterns from questionnaire.
@@ -237,16 +236,16 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is not None:
             return list(self._patterns_cache.values())[0] if self._patterns_cache else []
-        
+
         all_patterns: list[Pattern] = []
         blocks = self._data.get("blocks", {})
-        
+
         # Extract from micro questions
         micro_questions = blocks.get("micro_questions", [])
         for question in micro_questions:
             q_id = question.get("question_id", "UNKNOWN")
             patterns = question.get("patterns", [])
-            
+
             for p in patterns:
                 pattern = Pattern(
                     id=p.get("id", f"{q_id}-{len(all_patterns)}"),
@@ -258,13 +257,13 @@ class QuestionnaireResourceProvider:
                     question_id=q_id,
                 )
                 all_patterns.append(pattern)
-        
+
         # Extract from meso questions
         meso_questions = blocks.get("meso_questions", [])
         for question in meso_questions:
             cluster_id = question.get("cluster_id", "UNKNOWN")
             patterns = question.get("patterns", [])
-            
+
             for p in patterns:
                 pattern = Pattern(
                     id=f"MESO-{cluster_id}-{len(all_patterns)}",
@@ -276,7 +275,7 @@ class QuestionnaireResourceProvider:
                     metadata={"source": "meso"},
                 )
                 all_patterns.append(pattern)
-        
+
         # Extract from macro question
         macro_question = blocks.get("macro_question", {})
         patterns = macro_question.get("patterns", [])
@@ -291,7 +290,7 @@ class QuestionnaireResourceProvider:
                 metadata={"source": "macro", "priority": p.get("priority", 999)},
             )
             all_patterns.append(pattern)
-        
+
         logger.info(
             "patterns_extracted",
             total_count=len(all_patterns),
@@ -299,14 +298,14 @@ class QuestionnaireResourceProvider:
             meso_count=len([p for p in all_patterns if p.metadata.get("source") == "meso"]),
             macro_count=len([p for p in all_patterns if p.metadata.get("source") == "macro"]),
         )
-        
+
         # Cache by category for fast lookup
         self._patterns_cache = defaultdict(list)
         for p in all_patterns:
             self._patterns_cache[p.category].append(p)
-        
+
         return all_patterns
-    
+
     def get_temporal_patterns(self) -> list[Pattern]:
         """
         Get all temporal patterns (target: 34).
@@ -318,12 +317,12 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         patterns = self._patterns_cache.get("TEMPORAL", [])
-        
+
         logger.debug("temporal_patterns_retrieved", count=len(patterns))
         return patterns
-    
+
     def get_indicator_patterns(self) -> list[Pattern]:
         """
         Get all indicator patterns (target: 157).
@@ -335,12 +334,12 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         patterns = self._patterns_cache.get("INDICADOR", [])
-        
+
         logger.debug("indicator_patterns_retrieved", count=len(patterns))
         return patterns
-    
+
     def get_source_patterns(self) -> list[Pattern]:
         """
         Get all source/citation patterns (target: 19).
@@ -352,13 +351,13 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         # FUENTE_OFICIAL is the actual category in the data
         patterns = self._patterns_cache.get("FUENTE_OFICIAL", [])
-        
+
         logger.debug("source_patterns_retrieved", count=len(patterns))
         return patterns
-    
+
     def get_territorial_patterns(self) -> list[Pattern]:
         """
         Get all territorial patterns (71).
@@ -368,12 +367,12 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         patterns = self._patterns_cache.get("TERRITORIAL", [])
-        
+
         logger.debug("territorial_patterns_retrieved", count=len(patterns))
         return patterns
-    
+
     def compile_patterns_for_category(self, category: PatternCategory) -> list[re.Pattern[str]]:
         """
         Compile all patterns for a category into regex objects.
@@ -386,24 +385,24 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         patterns = self._patterns_cache.get(category, [])
         compiled = []
-        
+
         for p in patterns:
             regex = p.compile_regex()
             if regex is not None:
                 compiled.append(regex)
-        
+
         logger.debug(
             "patterns_compiled",
             category=category,
             total=len(patterns),
             compiled=len(compiled),
         )
-        
+
         return compiled
-    
+
     def extract_all_validations(self) -> list[ValidationSpec]:
         """
         Extract all validation specifications from questionnaire.
@@ -417,15 +416,15 @@ class QuestionnaireResourceProvider:
         """
         if self._validations_cache is not None:
             return self._validations_cache
-        
+
         validations: list[ValidationSpec] = []
         validation_types = set()
         blocks = self._data.get("blocks", {})
-        
+
         micro_questions = blocks.get("micro_questions", [])
         for question in micro_questions:
             q_id = question.get("question_id", "UNKNOWN")
-            
+
             # Extract from validations list
             val_list = question.get("validations", [])
             for val in val_list:
@@ -434,7 +433,7 @@ class QuestionnaireResourceProvider:
                         ValidationSpec(type=val, required=True, question_id=q_id)
                     )
                     validation_types.add(val)
-            
+
             # Extract from expected_elements
             expected = question.get("expected_elements", [])
             for elem in expected:
@@ -449,18 +448,18 @@ class QuestionnaireResourceProvider:
                         )
                     )
                     validation_types.add(elem_type)
-        
+
         self._validations_cache = validations
-        
+
         logger.info(
             "validations_extracted",
             total_count=len(validations),
             unique_types=len(validation_types),
             types=sorted(validation_types)[:10],  # Log first 10
         )
-        
+
         return validations
-    
+
     def get_patterns_by_question(self, question_id: str) -> list[Pattern]:
         """
         Get all patterns associated with a specific question.
@@ -473,10 +472,10 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         all_patterns = self.extract_all_patterns()
         return [p for p in all_patterns if p.question_id == question_id]
-    
+
     def get_policy_area_for_question(self, question_id: str) -> str:
         """
         Get the policy area for a given question ID.
@@ -491,11 +490,11 @@ class QuestionnaireResourceProvider:
         """
         blocks = self._data.get("blocks", {})
         micro_questions = blocks.get("micro_questions", [])
-        
+
         for question in micro_questions:
             if question.get("question_id") == question_id:
                 return question.get("policy_area_id", "PA01")
-        
+
         # Default fallback
         logger.warning(
             "question_not_found_in_provider",
@@ -503,7 +502,7 @@ class QuestionnaireResourceProvider:
             fallback="PA01"
         )
         return "PA01"
-    
+
     def get_pattern_statistics(self) -> dict[str, Any]:
         """
         Get statistics about extracted patterns.
@@ -513,7 +512,7 @@ class QuestionnaireResourceProvider:
         """
         if self._patterns_cache is None:
             self.extract_all_patterns()
-        
+
         stats = {
             "total_patterns": sum(len(patterns) for patterns in self._patterns_cache.values()),
             "categories": {
@@ -525,9 +524,9 @@ class QuestionnaireResourceProvider:
             "source_count": len(self._patterns_cache.get("FUENTE_OFICIAL", [])),
             "validation_count": len(self._validations_cache) if self._validations_cache else 0,
         }
-        
+
         return stats
-    
+
     def verify_target_counts(self) -> dict[str, bool]:
         """
         Verify that pattern extraction meets target counts.
@@ -536,7 +535,7 @@ class QuestionnaireResourceProvider:
             Dict with boolean flags for each target
         """
         stats = self.get_pattern_statistics()
-        
+
         return {
             "total_patterns_ok": stats["total_patterns"] >= 2200,  # Target: 2207
             "temporal_patterns_ok": stats["temporal_count"] == 34,

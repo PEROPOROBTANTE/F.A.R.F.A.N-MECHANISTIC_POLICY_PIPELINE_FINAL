@@ -15,9 +15,8 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, replace
 from enum import Enum
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +71,7 @@ class CalibrationContext:
     unit_of_analysis: UnitOfAnalysis = UnitOfAnalysis.UNKNOWN
     method_position: int = 0
     total_methods: int = 0
-    
+
     @classmethod
     def from_question_id(cls, question_id: str) -> CalibrationContext:
         """Create context from question ID.
@@ -89,7 +88,7 @@ class CalibrationContext:
         # Parse question ID format: D{dimension}Q{question}
         pattern = r"[dD](\d+)[qQ](\d+)"
         match = re.match(pattern, question_id)
-        
+
         if match:
             dimension = int(match.group(1))
             question_num = int(match.group(2))
@@ -101,7 +100,7 @@ class CalibrationContext:
         else:
             logger.warning(f"Invalid question ID format: {question_id}")
             return cls(question_id=question_id, dimension=0, question_num=0)
-    
+
     def with_policy_area(self, policy_area: PolicyArea) -> CalibrationContext:
         """Create a copy with updated policy area.
         
@@ -112,7 +111,7 @@ class CalibrationContext:
             New CalibrationContext with updated policy_area
         """
         return replace(self, policy_area=policy_area)
-    
+
     def with_unit_of_analysis(self, unit_of_analysis: UnitOfAnalysis) -> CalibrationContext:
         """Create a copy with updated unit of analysis.
         
@@ -123,7 +122,7 @@ class CalibrationContext:
             New CalibrationContext with updated unit_of_analysis
         """
         return replace(self, unit_of_analysis=unit_of_analysis)
-    
+
     def with_method_position(self, position: int, total: int) -> CalibrationContext:
         """Create a copy with updated method position.
         
@@ -158,8 +157,8 @@ class CalibrationModifier:
     uncertainty_penalty_multiplier: float = 1.0
     aggregation_weight_multiplier: float = 1.0
     sensitivity_multiplier: float = 1.0
-    
-    def apply(self, calibration: "MethodCalibration") -> "MethodCalibration":
+
+    def apply(self, calibration: MethodCalibration) -> MethodCalibration:
         """Apply modifier to a calibration.
         
         Args:
@@ -170,36 +169,36 @@ class CalibrationModifier:
         """
         # Import at runtime to avoid circular dependency at module load time
         from saaaaaa.core.orchestrator.calibration_registry import MethodCalibration
-        
+
         # Apply multipliers and clamp to valid ranges
         min_evidence = int(calibration.min_evidence_snippets * self.min_evidence_multiplier)
         max_evidence = int(calibration.max_evidence_snippets * self.max_evidence_multiplier)
-        
+
         # Ensure min <= max
         if min_evidence > max_evidence:
             min_evidence, max_evidence = max_evidence, min_evidence
-        
+
         # Clamp evidence counts to reasonable ranges
         min_evidence = max(1, min_evidence)
         max_evidence = max(min_evidence, min(100, max_evidence))
-        
+
         # Apply multipliers and clamp to [0.0, 1.0]
         contradiction_tolerance = max(0.0, min(1.0,
             calibration.contradiction_tolerance * self.contradiction_tolerance_multiplier
         ))
-        
+
         uncertainty_penalty = max(0.0, min(1.0,
             calibration.uncertainty_penalty * self.uncertainty_penalty_multiplier
         ))
-        
+
         aggregation_weight = max(0.0,
             calibration.aggregation_weight * self.aggregation_weight_multiplier
         )
-        
+
         sensitivity = max(0.0, min(1.0,
             calibration.sensitivity * self.sensitivity_multiplier
         ))
-        
+
         return MethodCalibration(
             score_min=calibration.score_min,
             score_max=calibration.score_max,
@@ -271,9 +270,9 @@ _UNIT_OF_ANALYSIS_MODIFIERS = {
 
 
 def resolve_contextual_calibration(
-    base_calibration: "MethodCalibration",
-    context: Optional[CalibrationContext] = None
-) -> "MethodCalibration":
+    base_calibration: MethodCalibration,
+    context: CalibrationContext | None = None
+) -> MethodCalibration:
     """Resolve calibration with context-aware adjustments.
     
     Applies modifiers based on:
@@ -290,29 +289,29 @@ def resolve_contextual_calibration(
     """
     if context is None:
         return base_calibration
-    
+
     result = base_calibration
-    
+
     # Apply dimension modifier
     if context.dimension > 0 and context.dimension in _DIMENSION_MODIFIERS:
         modifier = _DIMENSION_MODIFIERS[context.dimension]
         result = modifier.apply(result)
         logger.debug(f"Applied dimension {context.dimension} modifier")
-    
+
     # Apply policy area modifier
     if context.policy_area != PolicyArea.UNKNOWN:
         if context.policy_area in _POLICY_AREA_MODIFIERS:
             modifier = _POLICY_AREA_MODIFIERS[context.policy_area]
             result = modifier.apply(result)
             logger.debug(f"Applied policy area {context.policy_area.value} modifier")
-    
+
     # Apply unit of analysis modifier
     if context.unit_of_analysis != UnitOfAnalysis.UNKNOWN:
         if context.unit_of_analysis in _UNIT_OF_ANALYSIS_MODIFIERS:
             modifier = _UNIT_OF_ANALYSIS_MODIFIERS[context.unit_of_analysis]
             result = modifier.apply(result)
             logger.debug(f"Applied unit of analysis {context.unit_of_analysis.value} modifier")
-    
+
     return result
 
 

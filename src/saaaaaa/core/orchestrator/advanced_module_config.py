@@ -101,10 +101,10 @@ for policy document analysis workflows.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 
 
 @dataclass(frozen=True)
@@ -125,7 +125,7 @@ class AcademicReference:
     venue: str
     doi_or_isbn: str
     justification: str
-    
+
     def cite_apa(self) -> str:
         """Format citation in simplified APA style.
         
@@ -199,7 +199,7 @@ class AdvancedModuleConfig(BaseModel):
         topology_max_points: Maximum points for TDA
             Default: 1000 (VERIFIED: Carlsson 2009 practical limit for Vietoris-Rips filtration)
     """
-    
+
     # Quantum Computing Parameters
     quantum_num_methods: int = Field(
         default=100,
@@ -213,7 +213,7 @@ class AdvancedModuleConfig(BaseModel):
         le=20,
         description="Grover iterations: k≈√N (FORMULA-DERIVED: Nielsen & Chuang 2010)"
     )
-    
+
     # Neuromorphic Computing Parameters
     neuromorphic_num_stages: int = Field(
         default=10,
@@ -233,7 +233,7 @@ class AdvancedModuleConfig(BaseModel):
         le=0.99,
         description="Membrane potential decay (EMPIRICAL: biological constant)"
     )
-    
+
     # Causal Inference Parameters
     causal_num_variables: int = Field(
         default=20,
@@ -253,7 +253,7 @@ class AdvancedModuleConfig(BaseModel):
         le=6,
         description="Max parents per node (EMPIRICAL: Pearl 2009 interpretability principle)"
     )
-    
+
     # Information Theory Parameters
     info_num_stages: int = Field(
         default=10,
@@ -267,7 +267,7 @@ class AdvancedModuleConfig(BaseModel):
         le=500,
         description="Entropy samples (EMPIRICAL: practical min, Cover & Thomas 2006 principles)"
     )
-    
+
     # Meta-Learning Parameters
     meta_num_strategies: int = Field(
         default=5,
@@ -287,7 +287,7 @@ class AdvancedModuleConfig(BaseModel):
         le=0.2,
         description="Exploration rate (EMPIRICAL: standard RL)"
     )
-    
+
     # Attention Mechanism Parameters
     attention_embedding_dim: int = Field(
         default=64,
@@ -301,7 +301,7 @@ class AdvancedModuleConfig(BaseModel):
         le=16,
         description="Attention heads (VERIFIED: Vaswani et al. 2017 standard, though with d_model=512)"
     )
-    
+
     # Topological Data Analysis Parameters
     topology_max_dimension: int = Field(
         default=1,
@@ -315,19 +315,19 @@ class AdvancedModuleConfig(BaseModel):
         le=5000,
         description="Max points for TDA (VERIFIED: Carlsson 2009 - <1000 practical for Vietoris-Rips)"
     )
-    
+
     # Section 7.3: Module version control
     advanced_module_version: str = Field(
         default="1.0.0",
         description="Version of advanced module configuration (Section 7.3)"
     )
-    
+
     model_config = {
         "frozen": True,  # Section 7.1: Lock academic parameters
         "validate_assignment": False,
         "extra": "forbid",
     }
-    
+
     def model_post_init(self, __context: Any) -> None:
         """Validate academic constraints after initialization.
         
@@ -339,7 +339,7 @@ class AdvancedModuleConfig(BaseModel):
         import math
         optimal_iterations = math.sqrt(self.quantum_num_methods)
         tolerance = 0.5  # 50% tolerance
-        
+
         if not (optimal_iterations * (1 - tolerance) <= self.quantum_iterations <= optimal_iterations * (1 + tolerance)):
             import warnings
             warnings.warn(
@@ -348,7 +348,7 @@ class AdvancedModuleConfig(BaseModel):
                 f"Nielsen & Chuang (2010) recommend iterations ≈ √N for Grover's algorithm.",
                 UserWarning
             )
-    
+
     @classmethod
     def get_academic_references(cls) -> dict[str, list[AcademicReference]]:
         """Get all academic references used for parameter choices.
@@ -460,7 +460,7 @@ class AdvancedModuleConfig(BaseModel):
                 ),
             ],
         }
-    
+
     def describe_academic_basis(self) -> str:
         """Generate human-readable description of academic grounding.
         

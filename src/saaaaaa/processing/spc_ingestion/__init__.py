@@ -18,9 +18,9 @@ The pipeline performs:
 6. Quality validation and strategic ranking
 """
 
-from pathlib import Path
 import importlib.util
 import logging
+from pathlib import Path
 
 from saaaaaa.config.paths import QUESTIONNAIRE_FILE
 from saaaaaa.processing.cpp_ingestion.models import CanonPolicyPackage
@@ -116,9 +116,9 @@ class CPPIngestionPipeline:
 
         # Read document
         try:
-            with open(document_path, 'r', encoding='utf-8') as f:
+            with open(document_path, encoding='utf-8') as f:
                 document_text = f.read()
-        except IOError as e:
+        except OSError as e:
             logger.error(f"Failed to read document: {e}")
             raise
 

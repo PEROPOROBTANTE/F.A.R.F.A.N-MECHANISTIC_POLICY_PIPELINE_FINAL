@@ -30,6 +30,7 @@ from typing import Any
 
 from .core import MethodExecutor, PreprocessedDocument
 
+
 class MethodPriority(Enum):
     """Priority levels for orchestration methods."""
 

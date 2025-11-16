@@ -97,7 +97,7 @@ class JSONContractLoader:
                 "loaded via factory.load_questionnaire() which enforces hash verification. "
                 "Use factory.load_questionnaire() for canonical loading."
             )
-        
+
         text = path.read_text(encoding="utf-8")
         data = json.loads(text)
         if not isinstance(data, dict):

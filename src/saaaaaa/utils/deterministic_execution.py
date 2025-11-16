@@ -22,14 +22,14 @@ import logging
 import random
 import time
 import uuid
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import datetime, timezone
-from typing import Any, Callable, Iterator, Optional
+from typing import Any
 
 import numpy as np
 
 from .enhanced_contracts import StructuredLogger, utc_now_iso
-
 
 # ============================================================================
 # DETERMINISTIC SEED MANAGEMENT
@@ -48,7 +48,7 @@ class DeterministicSeedManager:
         ...     value = random.random()
         >>> # Seed is automatically restored after context
     """
-    
+
     def __init__(self, base_seed: int = 42):
         """
         Initialize seed manager with base seed.
@@ -59,14 +59,14 @@ class DeterministicSeedManager:
         self.base_seed = base_seed
         self._seed_counter = 0
         self._initialize_seeds(base_seed)
-        
+
     def _initialize_seeds(self, seed: int) -> None:
         """Initialize all random number generators with deterministic seeds."""
         random.seed(seed)
         np.random.seed(seed)
         # For reproducibility, also set hash seed
         # Note: PYTHONHASHSEED should be set in environment for full determinism
-        
+
     def get_derived_seed(self, operation_name: str) -> int:
         """
         Generate a deterministic seed for a specific operation.
@@ -85,11 +85,11 @@ class DeterministicSeedManager:
             True
         """
         # Use cryptographic hash for stable seed derivation
-        hash_input = f"{self.base_seed}:{operation_name}".encode('utf-8')
+        hash_input = f"{self.base_seed}:{operation_name}".encode()
         hash_digest = hashlib.sha256(hash_input).digest()
         # Convert first 4 bytes to int
         return int.from_bytes(hash_digest[:4], byteorder='big')
-    
+
     @contextmanager
     def scoped_seed(self, operation_name: str) -> Iterator[int]:
         """
@@ -111,19 +111,19 @@ class DeterministicSeedManager:
         # Save current state
         random_state = random.getstate()
         np_state = np.random.get_state()
-        
+
         # Set new seed
         derived_seed = self.get_derived_seed(operation_name)
         self._initialize_seeds(derived_seed)
-        
+
         try:
             yield derived_seed
         finally:
             # Restore state
             random.setstate(random_state)
             np.random.set_state(np_state)
-    
-    def get_event_id(self, operation_name: str, timestamp_utc: Optional[str] = None) -> str:
+
+    def get_event_id(self, operation_name: str, timestamp_utc: str | None = None) -> str:
         """
         Generate a reproducible event ID for an operation.
         
@@ -141,7 +141,7 @@ class DeterministicSeedManager:
             64
         """
         ts = timestamp_utc or utc_now_iso()
-        hash_input = f"{self.base_seed}:{operation_name}:{ts}".encode('utf-8')
+        hash_input = f"{self.base_seed}:{operation_name}:{ts}".encode()
         return hashlib.sha256(hash_input).hexdigest()
 
 
@@ -165,7 +165,7 @@ class DeterministicExecutor:
         ... def my_function(x: int) -> int:
         ...     return x + random.randint(0, 10)
     """
-    
+
     def __init__(
         self,
         base_seed: int = 42,
@@ -183,7 +183,7 @@ class DeterministicExecutor:
         self.seed_manager = DeterministicSeedManager(base_seed)
         self.logger = StructuredLogger(logger_name) if enable_logging else None
         self.enable_logging = enable_logging
-        
+
     def deterministic(
         self,
         operation_name: str,
@@ -206,18 +206,18 @@ class DeterministicExecutor:
                 # Generate correlation and event IDs
                 correlation_id = str(uuid.uuid4())
                 event_id = self.seed_manager.get_event_id(operation_name)
-                
+
                 # Start timing
                 start_time = time.perf_counter()
-                
+
                 # Execute with scoped seed
                 try:
                     with self.seed_manager.scoped_seed(operation_name) as seed:
                         result = func(*args, **kwargs)
-                        
+
                         # Calculate latency
                         latency_ms = (time.perf_counter() - start_time) * 1000
-                        
+
                         # Log success
                         if self.enable_logging and self.logger:
                             log_data = {
@@ -229,7 +229,7 @@ class DeterministicExecutor:
                                 log_data["inputs"] = str(args)[:100]  # Truncate for safety
                             if log_outputs:
                                 log_data["outputs"] = str(result)[:100]
-                                
+
                             self.logger.log_execution(
                                 operation=operation_name,
                                 correlation_id=correlation_id,
@@ -237,13 +237,13 @@ class DeterministicExecutor:
                                 latency_ms=latency_ms,
                                 **log_data
                             )
-                        
+
                         return result
-                        
+
                 except Exception as e:
                     # Calculate latency even on error
                     latency_ms = (time.perf_counter() - start_time) * 1000
-                    
+
                     # Log error
                     if self.enable_logging and self.logger:
                         self.logger.log_execution(
@@ -254,10 +254,10 @@ class DeterministicExecutor:
                             event_id=event_id,
                             error=str(e)[:200]  # Truncate for safety
                         )
-                    
+
                     # Re-raise with event ID
                     raise RuntimeError(f"[{event_id}] {operation_name} failed: {e}") from e
-            
+
             return wrapper
         return decorator
 
@@ -300,11 +300,11 @@ def parse_utc_timestamp(timestamp_str: str) -> datetime:
         2024
     """
     dt = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
-    
+
     # Enforce UTC
     if dt.tzinfo is None or dt.utcoffset() != timezone.utc.utcoffset(None):
         raise ValueError(f"Timestamp must be UTC: {timestamp_str}")
-        
+
     return dt
 
 
@@ -330,15 +330,15 @@ def isolated_execution() -> Iterator[None]:
         ...     pass
     """
     # For now, minimal isolation - can be extended with more restrictions
-    import sys
     import io
-    
+    import sys
+
     # Capture stdout/stderr to detect violations
     old_stdout = sys.stdout
     old_stderr = sys.stderr
     stdout_capture = io.StringIO()
     stderr_capture = io.StringIO()
-    
+
     try:
         sys.stdout = stdout_capture
         sys.stderr = stderr_capture
@@ -346,7 +346,7 @@ def isolated_execution() -> Iterator[None]:
     finally:
         sys.stdout = old_stdout
         sys.stderr = old_stderr
-        
+
         # Log any captured output as warning (side effect violation)
         if stdout_capture.getvalue():
             logging.warning(
@@ -366,71 +366,71 @@ def isolated_execution() -> Iterator[None]:
 
 if __name__ == "__main__":
     import doctest
-    
+
     # Run doctests
     print("Running doctests...")
     doctest.testmod(verbose=True)
-    
+
     # Additional tests
     print("\n" + "="*60)
     print("Deterministic Execution Tests")
     print("="*60)
-    
+
     # Test 1: Seed manager determinism
     print("\n1. Testing seed manager determinism:")
     manager1 = DeterministicSeedManager(42)
     manager2 = DeterministicSeedManager(42)
-    
+
     seed1_a = manager1.get_derived_seed("test_op")
     seed1_b = manager1.get_derived_seed("test_op")
     seed2_a = manager2.get_derived_seed("test_op")
-    
+
     assert seed1_a == seed1_b == seed2_a, "Seeds must be deterministic"
     print(f"   ✓ Deterministic seeds: {seed1_a} == {seed1_b} == {seed2_a}")
-    
+
     # Test 2: Scoped seed restoration
     print("\n2. Testing scoped seed restoration:")
     manager = DeterministicSeedManager(42)
-    
+
     initial_value = random.random()
     with manager.scoped_seed("temp_operation"):
         _ = random.random()  # Different value inside scope
     restored_value = random.random()
-    
+
     # Reset and check if we can reproduce
     manager._initialize_seeds(42)
     reproduced_value = random.random()
-    
+
     print(f"   ✓ Initial value: {initial_value:.6f}")
     print(f"   ✓ Reproduced value: {reproduced_value:.6f}")
     assert abs(initial_value - reproduced_value) < 1e-10, "Seed restoration failed"
     print("   ✓ Seed restoration successful")
-    
+
     # Test 3: Deterministic executor
     print("\n3. Testing deterministic executor:")
     executor = DeterministicExecutor(base_seed=42, enable_logging=False)
-    
+
     @executor.deterministic(operation_name="test_function")
     def sample_function(n: int) -> float:
         return sum(random.random() for _ in range(n))
-    
+
     result1 = sample_function(5)
-    
+
     # Reset and run again
     executor.seed_manager._initialize_seeds(42)
     result2 = sample_function(5)
-    
+
     print(f"   ✓ Result 1: {result1:.6f}")
     print(f"   ✓ Result 2: {result2:.6f}")
     assert abs(result1 - result2) < 1e-10, "Deterministic execution failed"
     print("   ✓ Deterministic execution verified")
-    
+
     # Test 4: UTC enforcement
     print("\n4. Testing UTC enforcement:")
     utc_now = enforce_utc_now()
     print(f"   ✓ UTC now: {utc_now.isoformat()}")
     assert utc_now.tzinfo is not None, "Must have timezone"
-    
+
     # Test 5: Event ID reproducibility
     print("\n5. Testing event ID reproducibility:")
     manager = DeterministicSeedManager(42)
@@ -439,7 +439,7 @@ if __name__ == "__main__":
     assert event_id1 == event_id2, "Event IDs must be reproducible"
     print(f"   ✓ Event ID: {event_id1[:16]}...")
     print("   ✓ Event ID reproducibility verified")
-    
+
     print("\n" + "="*60)
     print("All tests passed!")
     print("="*60)

@@ -18,8 +18,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
 from datetime import datetime, timezone
-from typing import Any, Mapping
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -37,9 +38,9 @@ def _canonical_json_bytes(obj: Any) -> bytes:
         Canonical JSON bytes (sorted keys, compact separators)
     """
     return json.dumps(
-        obj, 
-        separators=(",", ":"), 
-        sort_keys=True, 
+        obj,
+        separators=(",", ":"),
+        sort_keys=True,
         ensure_ascii=False
     ).encode("utf-8")
 
@@ -116,7 +117,7 @@ class ContractEnvelope(BaseModel):
         >>> len(env.event_id)
         64
     """
-    
+
     schema_version: str = Field(default=CANONICAL_SCHEMA_VERSION)
     timestamp_utc: str = Field(default_factory=utcnow_iso)
     policy_unit_id: str = Field(min_length=1)
@@ -146,7 +147,7 @@ class ContractEnvelope(BaseModel):
         policy_unit_id: str,
         correlation_id: str | None = None,
         schema_version: str = CANONICAL_SCHEMA_VERSION,
-    ) -> "ContractEnvelope":
+    ) -> ContractEnvelope:
         """
         Wrap a payload with universal metadata envelope.
         
@@ -181,16 +182,16 @@ class ContractEnvelope(BaseModel):
 
 if __name__ == "__main__":
     import doctest
-    
+
     # Run doctests
     print("Running doctests...")
     doctest.testmod(verbose=True)
-    
+
     # Minimal deterministic check
     print("\n" + "="*60)
     print("ContractEnvelope Integration Tests")
     print("="*60)
-    
+
     print("\n1. Testing deterministic digest computation:")
     p = {"a": 1, "b": [2, 3]}
     e1 = ContractEnvelope.wrap(p, policy_unit_id="PU_123")
@@ -199,23 +200,23 @@ if __name__ == "__main__":
     assert e1.event_id == e2.event_id
     print(f"   ✓ Digest is deterministic: {e1.content_digest[:16]}...")
     print(f"   ✓ Event ID is deterministic: {e1.event_id[:16]}...")
-    
+
     print("\n2. Testing envelope immutability:")
     try:
         e1.payload = {"modified": True}
         print("   ✗ FAILED: Envelope should be immutable")
     except Exception:
         print("   ✓ Envelope is immutable (frozen)")
-    
+
     print("\n3. Testing UTC timestamp validation:")
     assert e1.timestamp_utc.endswith('Z')
     print(f"   ✓ Timestamp is UTC: {e1.timestamp_utc}")
-    
+
     print("\n4. Testing correlation ID:")
     e3 = ContractEnvelope.wrap(p, policy_unit_id="PU_123", correlation_id="corr-456")
     assert e3.correlation_id == "corr-456"
     print(f"   ✓ Correlation ID: {e3.correlation_id}")
-    
+
     print("\n" + "="*60)
     print("ContractEnvelope doctest OK - All tests passed!")
     print("="*60)

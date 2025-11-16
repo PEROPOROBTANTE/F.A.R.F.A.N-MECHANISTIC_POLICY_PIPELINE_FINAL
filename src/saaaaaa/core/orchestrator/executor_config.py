@@ -16,7 +16,7 @@ from __future__ import annotations
 import hashlib
 import os
 from dataclasses import dataclass, field
-from typing import Literal, Any
+from typing import Any, Literal
 
 # Optional dependency - blake3
 try:
@@ -39,7 +39,6 @@ except ImportError:
 from pydantic import BaseModel, Field, field_validator
 
 from .advanced_module_config import AdvancedModuleConfig
-
 
 PolicyArea = Literal["fiscal", "salud", "ambiente", "energía", "transporte"]
 
@@ -72,7 +71,7 @@ class ExecutorConfig(BaseModel):
         - Ranges documented for property-based testing
         - Advanced modules use peer-reviewed academic parameter values
     """
-    
+
     max_tokens: int = Field(
         default=2048,
         ge=256,
@@ -127,13 +126,13 @@ class ExecutorConfig(BaseModel):
         default=None,
         description="Academic research-based configuration for advanced modules"
     )
-    
+
     model_config = {
         "frozen": True,
         "validate_assignment": False,
         "extra": "forbid",  # Reject unknown parameters
     }
-    
+
     @field_validator("thresholds")
     @classmethod
     def validate_thresholds(cls, v: dict[str, float]) -> dict[str, float]:
@@ -144,7 +143,7 @@ class ExecutorConfig(BaseModel):
                     f"Threshold '{key}' must be in range [0.0, 1.0], got {value}"
                 )
         return v
-    
+
     @classmethod
     def from_env(cls, prefix: str = "EXECUTOR_") -> ExecutorConfig:
         """
@@ -174,9 +173,9 @@ class ExecutorConfig(BaseModel):
             config = ExecutorConfig.from_env()
         """
         import json
-        
+
         kwargs: dict[str, Any] = {}
-        
+
         # Simple scalar parameters
         if val := os.getenv(f"{prefix}MAX_TOKENS"):
             kwargs["max_tokens"] = int(val)
@@ -190,23 +189,23 @@ class ExecutorConfig(BaseModel):
             kwargs["policy_area"] = val  # type: ignore[assignment]
         if val := os.getenv(f"{prefix}SEED"):
             kwargs["seed"] = int(val)
-            
+
         # Boolean parameter
         if val := os.getenv(f"{prefix}ENABLE_SYMBOLIC_SPARSE"):
             kwargs["enable_symbolic_sparse"] = val.lower() in ("true", "1", "yes")
-            
+
         # List parameters (comma-separated)
         if val := os.getenv(f"{prefix}REGEX_PACK"):
             kwargs["regex_pack"] = [s.strip() for s in val.split(",") if s.strip()]
         if val := os.getenv(f"{prefix}ENTITIES_WHITELIST"):
             kwargs["entities_whitelist"] = [s.strip() for s in val.split(",") if s.strip()]
-            
+
         # Dict parameter (JSON)
         if val := os.getenv(f"{prefix}THRESHOLDS"):
             kwargs["thresholds"] = json.loads(val)
-        
+
         return cls(**kwargs)
-    
+
     @classmethod
     def from_cli_args(
         cls,
@@ -234,7 +233,7 @@ class ExecutorConfig(BaseModel):
             ExecutorConfig instance with values from CLI args
         """
         kwargs: dict[str, Any] = {}
-        
+
         if max_tokens is not None:
             kwargs["max_tokens"] = max_tokens
         if temperature is not None:
@@ -255,9 +254,9 @@ class ExecutorConfig(BaseModel):
             kwargs["enable_symbolic_sparse"] = enable_symbolic_sparse
         if seed is not None:
             kwargs["seed"] = seed
-        
+
         return cls(**kwargs)
-    
+
     @classmethod
     def from_cli(cls, app: Any = None) -> ExecutorConfig:
         """
@@ -286,14 +285,14 @@ class ExecutorConfig(BaseModel):
         # If no app provided, return default config
         if app is None:
             return cls()
-        
+
         # Check if typer is available
         try:
             import typer
         except ImportError:
             # Typer not available, return default config
             return cls()
-        
+
         # Register flags with typer app if it's a Typer instance
         if hasattr(app, 'command'):
             # This creates a command that shows all available flags
@@ -329,10 +328,10 @@ class ExecutorConfig(BaseModel):
                 )
                 typer.echo(config.describe())
                 return config
-        
+
         # Return default config
         return cls()
-    
+
     def describe(self) -> str:
         """
         Generate human-readable description of configuration contract surface.
@@ -353,7 +352,7 @@ class ExecutorConfig(BaseModel):
             "ExecutorConfig Contract Surface",
             "=" * 50,
         ]
-        
+
         lines.append(f"max_tokens: {self.max_tokens} (range: 256-8192)")
         lines.append(f"temperature: {self.temperature} (range: 0.0-2.0, 0.0=deterministic)")
         lines.append(f"timeout_s: {self.timeout_s} (range: 1.0-300.0)")
@@ -361,21 +360,21 @@ class ExecutorConfig(BaseModel):
         lines.append(f"policy_area: {self.policy_area} (optional filter)")
         lines.append(f"regex_pack: {len(self.regex_pack)} patterns")
         lines.append(f"thresholds: {len(self.thresholds)} thresholds defined")
-        
+
         if self.thresholds:
             for key, value in sorted(self.thresholds.items()):
                 lines.append(f"  - {key}: {value}")
-        
+
         lines.append(f"entities_whitelist: {len(self.entities_whitelist)} entities")
         lines.append(f"enable_symbolic_sparse: {self.enable_symbolic_sparse}")
         lines.append(f"seed: {self.seed} (deterministic: {self.seed != 0})")
-        
+
         lines.append("")
         lines.append("Effective Configuration Hash (BLAKE3):")
         lines.append(f"  {self.compute_hash()}")
-        
+
         return "\n".join(lines)
-    
+
     def merge_overrides(self, overrides: ExecutorConfig | None) -> ExecutorConfig:
         """
         Merge override configuration with this configuration.
@@ -400,14 +399,14 @@ class ExecutorConfig(BaseModel):
         """
         if overrides is None:
             return self
-        
+
         # Get only the explicitly set fields from overrides
         # For Pydantic v2, we use model_dump with exclude_unset
         override_dict = overrides.model_dump(exclude_unset=True)
-        
+
         # Create new config by copying self and updating with overrides
         return self.model_copy(update=override_dict)
-    
+
     def compute_hash(self) -> str:
         """
         Compute deterministic BLAKE3 hash of configuration.
@@ -426,11 +425,11 @@ class ExecutorConfig(BaseModel):
         import json
         config_dict = self.model_dump()
         config_json = json.dumps(config_dict, sort_keys=True, indent=None)
-        
+
         # Compute BLAKE3 hash
         hasher = blake3.blake3(config_json.encode("utf-8"))
         return hasher.hexdigest()
-    
+
     def validate_latency_budget(self, max_latency_s: float = 120.0) -> bool:
         """
         Validate that retry * timeout_s is within acceptable latency budget.
@@ -464,14 +463,14 @@ class ExecutorMetadata:
     - Input/output hashes
     - Signal sources
     """
-    
+
     config_hash: str
     execution_time_s: float
     input_hash: str
     output_hash: str
     used_signals: dict[str, Any] = field(default_factory=dict)
     timestamp_utc: str = ""
-    
+
     def __post_init__(self) -> None:
         """Validate metadata fields."""
         if self.execution_time_s < 0:
