@@ -4680,11 +4680,19 @@ class FrontierExecutorOrchestrator:
         for i, chunk_dict in enumerate(chunks):
             # Convert dict to ChunkData for chunk_router
             from .core import ChunkData, PreprocessedDocument
+
+            # ChunkData requires all fields with correct types per core.py:244-259
             chunk = ChunkData(
-                id=chunk_dict.get('id', f'{policy_area}_chunk_{i}'),
-                chunk_type=chunk_dict.get('chunk_type', 'diagnostic'),
+                id=i,  # int, not string
                 text=chunk_dict.get('text', ''),
-                metadata=chunk_dict.get('metadata', {})
+                chunk_type=chunk_dict.get('chunk_type', 'diagnostic'),
+                sentences=chunk_dict.get('sentences', []),
+                tables=chunk_dict.get('tables', []),
+                start_pos=chunk_dict.get('start_pos', 0),
+                end_pos=chunk_dict.get('end_pos', len(chunk_dict.get('text', ''))),
+                confidence=chunk_dict.get('confidence', 1.0),
+                edges_out=chunk_dict.get('edges_out', []),
+                edges_in=chunk_dict.get('edges_in', [])
             )
 
             # Route to executor
@@ -4699,12 +4707,13 @@ class FrontierExecutorOrchestrator:
             executor_class = self.executors.get(executor_key)
 
             if executor_class:
-                executor = executor_class(method_executor, signal_registry=self.signal_registry)
+                executor = executor_class(method_executor, self.signal_registry)
 
                 # Create PreprocessedDocument for chunk execution
-                # This document contains the chunk in the proper format expected by execute_chunk
+                # document_id must be string, chunk.id is int
+                chunk_id_str = chunk_dict.get('id', f'{policy_area}_chunk_{i}')
                 chunk_doc = PreprocessedDocument(
-                    document_id=chunk.id,
+                    document_id=chunk_id_str,
                     raw_text=chunk.text,
                     sentences=[],  # Will be extracted during execution if needed
                     tables=[],
@@ -4712,10 +4721,10 @@ class FrontierExecutorOrchestrator:
                         'policy_area': policy_area,
                         'chunk_type': chunk.chunk_type,
                         'chunk_index': i,
-                        **chunk.metadata
+                        **chunk_dict.get('metadata', {})  # metadata from chunk_dict, not chunk
                     },
-                    chunks=[chunk],  # Include the chunk data
-                    chunk_index={chunk.id: 0},  # Map chunk ID to position
+                    chunks=[chunk],  # Include the ChunkData object
+                    chunk_index={chunk_id_str: 0},  # Map string ID to position
                     processing_mode='chunked'  # Enable chunk-aware processing
                 )
 

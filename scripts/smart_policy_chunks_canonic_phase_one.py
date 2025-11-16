@@ -1433,19 +1433,19 @@ class PolicyAreaChunkCalibrator:
         Returns:
             List of chunk dictionaries
         """
-        # Use the actual SemanticChunkingProducer
-        from saaaaaa.processing.semantic_chunking_policy import chunk_document
+        # Use the actual SemanticChunkingProducer (instance method, not standalone function)
+        from saaaaaa.processing.semantic_chunking_policy import SemanticChunkingProducer
 
-        result = chunk_document(
-            text=text,
-            chunk_size=params.get('chunk_size', 1000),
-            overlap=params.get('overlap', 150),
-            min_chunk_size=params.get('min_chunk_size', 300)
-        )
+        # Instantiate the producer
+        producer = SemanticChunkingProducer()
+
+        # chunk_document signature: (text: str, preserve_structure: bool = True) -> list[dict[str, Any]]
+        result_chunks = producer.chunk_document(text=text, preserve_structure=True)
 
         # Convert to our format
         chunks = []
-        for i, chunk_result in enumerate(result.get('chunks', [])):
+        for i, chunk_result in enumerate(result_chunks):
+            # chunk_result is a dict with keys like 'text', 'embedding', 'section_type', etc.
             chunks.append({
                 'id': f"{policy_area}_chunk_{i+1}",
                 'text': chunk_result.get('text', ''),
@@ -1453,7 +1453,11 @@ class PolicyAreaChunkCalibrator:
                 'chunk_index': i,
                 'length': len(chunk_result.get('text', '')),
                 'metadata': metadata or {},
-                'semantic_metadata': chunk_result.get('metadata', {})
+                'semantic_metadata': {
+                    'section_type': chunk_result.get('section_type'),
+                    'section_id': chunk_result.get('section_id'),
+                    'has_embedding': 'embedding' in chunk_result
+                }
             })
 
         return chunks
