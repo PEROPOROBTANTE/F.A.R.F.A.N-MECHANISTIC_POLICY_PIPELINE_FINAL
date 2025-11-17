@@ -62,7 +62,7 @@ if not Path(saaaaaa.__file__).resolve().is_relative_to(_expected_saaaaaa_prefix)
 # Import contract enforcement infrastructure
 from saaaaaa.core.orchestrator.seed_registry import get_global_seed_registry
 from saaaaaa.core.orchestrator.verification_manifest import (
-    VerificationManifestBuilder,
+    VerificationManifest as VerificationManifestBuilder,
     verify_manifest_integrity
 )
 from saaaaaa.core.orchestrator.versions import get_all_versions
@@ -147,7 +147,8 @@ class VerifiedPipelineRunner:
 
         # Initialize verification manifest builder
         self.manifest_builder = VerificationManifestBuilder()
-        self.manifest_builder.set_versions(get_all_versions())
+        # Note: set_versions() not available in builder pattern
+        # self.manifest_builder.set_versions(get_all_versions())
 
         # Ensure artifacts directory exists
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)

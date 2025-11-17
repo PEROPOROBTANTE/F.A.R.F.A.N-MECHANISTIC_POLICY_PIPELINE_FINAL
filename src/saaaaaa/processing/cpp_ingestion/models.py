@@ -109,7 +109,9 @@ class Chunk:
     text_span: TextSpan
     resolution: ChunkResolution
     bytes_hash: str
-    
+    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
+    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
+
     # Facets and metadata
     policy_facets: PolicyFacet = field(default_factory=PolicyFacet)
     time_facets: TimeFacet = field(default_factory=TimeFacet)

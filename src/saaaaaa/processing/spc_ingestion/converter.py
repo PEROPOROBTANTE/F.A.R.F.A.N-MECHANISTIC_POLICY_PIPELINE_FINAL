@@ -255,6 +255,8 @@ class SmartChunkConverter:
             ),
             resolution=resolution,
             bytes_hash=smart_chunk.content_hash,
+            policy_area_id=getattr(smart_chunk, 'policy_area_id', None),  # PA01-PA10
+            dimension_id=getattr(smart_chunk, 'dimension_id', None),      # DIM01-DIM06
             policy_facets=policy_facets,
             time_facets=time_facets,
             geo_facets=geo_facets,
