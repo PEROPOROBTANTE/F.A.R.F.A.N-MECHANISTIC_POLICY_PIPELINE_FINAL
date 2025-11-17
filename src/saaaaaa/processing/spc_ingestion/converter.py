@@ -486,12 +486,43 @@ class SmartChunkConverter:
             }
 
             # Add embeddings if available (as lists for JSON serialization)
+            # CRITICAL: Fail-fast if embeddings cannot be preserved (no silent data loss)
             if hasattr(sc, 'semantic_embedding') and sc.semantic_embedding is not None:
                 try:
                     import numpy as np
+                except ImportError as e:
+                    self.logger.error(
+                        f"Chunk {sc.chunk_id}: NumPy is required for embedding preservation but not available"
+                    )
+                    raise RuntimeError(
+                        "NumPy is required for SPC embedding preservation. "
+                        "Install with: pip install numpy>=1.26.0"
+                    ) from e
+
+                # Validate embedding type
+                if not isinstance(sc.semantic_embedding, np.ndarray):
+                    self.logger.error(
+                        f"Chunk {sc.chunk_id}: semantic_embedding is not np.ndarray, "
+                        f"got {type(sc.semantic_embedding)}"
+                    )
+                    raise TypeError(
+                        f"Expected semantic_embedding to be np.ndarray, got {type(sc.semantic_embedding)}"
+                    )
+
+                # Convert to list for JSON serialization
+                try:
                     chunk_data['semantic_embedding'] = sc.semantic_embedding.tolist()
-                except Exception:
-                    pass  # Skip if conversion fails
+                    chunk_data['embedding_dim'] = sc.semantic_embedding.shape[0]
+                    self.logger.debug(
+                        f"Chunk {sc.chunk_id}: Preserved embedding with dimension {sc.semantic_embedding.shape[0]}"
+                    )
+                except (AttributeError, IndexError) as e:
+                    self.logger.error(
+                        f"Chunk {sc.chunk_id}: Failed to convert embedding to list: {e}"
+                    )
+                    raise RuntimeError(
+                        f"Embedding conversion failed for chunk {sc.chunk_id}: {e}"
+                    ) from e
 
             # Add causal chain summary
             if hasattr(sc, 'causal_chain') and sc.causal_chain:
