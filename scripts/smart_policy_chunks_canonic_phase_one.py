@@ -26,6 +26,7 @@ from sklearn.cluster import DBSCAN, AgglomerativeClustering
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import TfidfVectorizer
 import spacy
+from nltk.tokenize import sent_tokenize
 # Note: SentenceTransformer import removed - embedding handled by canonical producers
 import warnings
 warnings.filterwarnings('ignore')
@@ -261,22 +262,19 @@ class SmartPolicyChunk:
     chunk_id: str
     document_id: str
     content_hash: str
-    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
-    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
-
     text: str
     normalized_text: str
     semantic_density: float
-    
     section_hierarchy: List[str]
     document_position: Tuple[int, int]
     chunk_type: ChunkType
-    
     causal_chain: List[CausalEvidence]
     policy_entities: List[PolicyEntity]
     implicit_assumptions: List[Tuple[str, float]]
     contextual_presuppositions: List[Tuple[str, float]]
     
+    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
+    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
     argument_structure: Optional[ArgumentStructure] = None
     temporal_dynamics: Optional[TemporalDynamics] = None
     discourse_markers: List[Tuple[str, str]] = field(default_factory=list)

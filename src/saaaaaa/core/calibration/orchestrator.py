@@ -51,8 +51,7 @@ class CalibrationOrchestrator:
         intrinsic_calibration_path: Path | str = None,
         compatibility_path: Path | str = None,
         method_registry_path: Path | str = None,
-        method_signatures_path: Path | str = None,
-        intrinsic_calibration_path: Path | str = None
+        method_signatures_path: Path | str = None
     ):
         self.config = config or DEFAULT_CALIBRATION_CONFIG
 
