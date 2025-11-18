@@ -4570,22 +4570,88 @@ class FrontierExecutorOrchestrator:
         self.signal_registry = signal_registry or SignalRegistry()
         self.chunk_router = ChunkRouter()
 
-    def execute_question(self, question_id: str, doc, method_executor) -> dict[str, Any]:
-        """Execute specific question with frontier optimizations"""
-        if question_id not in self.executors:
-            logger.error(f"Unknown question ID: {question_id}")
-            raise ValueError(f"Unknown question ID: {question_id}")
+        # REPAIRED: Initialize question ID normalization and verification
+        self._verify_executor_coverage()
 
-        logger.info(f"Executing question {question_id}")
+    @staticmethod
+    def normalize_question_id(question_id: str) -> str:
+        """Normalize question ID from questionnaire_monolith format to executor format.
+
+        The questionnaire_monolith.json uses format "D1-Q1" (with hyphen),
+        while executors use format "D1Q1" (no hyphen). This method provides
+        bidirectional normalization.
+
+        Args:
+            question_id: Question ID in either format (e.g., "D1-Q1" or "D1Q1")
+
+        Returns:
+            Normalized question ID in executor format (e.g., "D1Q1")
+
+        Examples:
+            >>> FrontierExecutorOrchestrator.normalize_question_id("D1-Q1")
+            "D1Q1"
+            >>> FrontierExecutorOrchestrator.normalize_question_id("D1Q1")
+            "D1Q1"
+        """
+        return question_id.replace("-", "").replace("_", "")
+
+    def _verify_executor_coverage(self) -> None:
+        """Verify that all expected micro-questions have corresponding executors.
+
+        This verification ensures that the orchestrator can handle all 30 micro-questions
+        (6 dimensions × 5 questions each) defined in the questionnaire monolith.
+
+        Raises:
+            RuntimeError: If any expected question lacks a corresponding executor
+        """
+        expected_questions = []
+        for dim in range(1, 7):  # D1 through D6
+            for q in range(1, 6):  # Q1 through Q5
+                expected_questions.append(f"D{dim}Q{q}")
+
+        missing_executors = [q for q in expected_questions if q not in self.executors]
+
+        if missing_executors:
+            raise RuntimeError(
+                f"Executor coverage incomplete: missing executors for questions {missing_executors}. "
+                f"Expected 30 executors (6 dimensions × 5 questions), found {len(self.executors)}."
+            )
+
+        logger.info(
+            "executor_coverage_verified",
+            total_executors=len(self.executors),
+            expected_questions=len(expected_questions),
+            coverage="100%"
+        )
+
+    def execute_question(self, question_id: str, doc, method_executor) -> dict[str, Any]:
+        """Execute specific question with frontier optimizations.
+
+        Args:
+            question_id: Question ID in either format (e.g., "D1-Q1" or "D1Q1")
+            doc: Document to analyze
+            method_executor: Executor for running analysis methods
+
+        Returns:
+            Analysis results dictionary
+        """
+        # REPAIRED: Normalize question ID to handle both formats
+        normalized_id = self.normalize_question_id(question_id)
+
+        if normalized_id not in self.executors:
+            logger.error(f"Unknown question ID: {question_id} (normalized: {normalized_id})")
+            raise ValueError(f"Unknown question ID: {question_id} (normalized: {normalized_id})")
+
+        logger.info(f"Executing question {question_id} (normalized: {normalized_id})")
         start_time = time.time()
 
-        executor_class = self.executors[question_id]
+        executor_class = self.executors[normalized_id]
         executor = executor_class(method_executor)
 
         result = executor.execute(doc, method_executor)
 
         execution_time = time.time() - start_time
-        logger.info(f"Question {question_id} completed in {execution_time:.3f}s")
+        logger.info(f"Question {normalized_id} completed in {execution_time:.3f}s")
 
         return result
 
