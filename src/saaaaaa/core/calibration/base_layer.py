@@ -36,15 +36,25 @@ class BaseLayerEvaluator:
     DEFAULT_IMPL_WEIGHT = 0.35
     DEFAULT_DEPLOY_WEIGHT = 0.25
 
+    # Default quality thresholds (used if not in config)
+    DEFAULT_EXCELLENT_THRESHOLD = 0.8
+    DEFAULT_GOOD_THRESHOLD = 0.6
+    DEFAULT_ACCEPTABLE_THRESHOLD = 0.4
+
     # Penalty score for methods without calibration data
     UNCALIBRATED_PENALTY = 0.1
 
-    def __init__(self, intrinsic_calibration_path: Path | str):
+    def __init__(
+        self,
+        intrinsic_calibration_path: Path | str,
+        parameter_loader=None
+    ):
         """
         Initialize evaluator with intrinsic calibration data.
 
         Args:
             intrinsic_calibration_path: Path to intrinsic_calibration.json
+            parameter_loader: Optional MethodParameterLoader for loading thresholds
 
         Raises:
             FileNotFoundError: If calibration file doesn't exist
@@ -57,6 +67,27 @@ class BaseLayerEvaluator:
         self.theory_weight: float = self.DEFAULT_THEORY_WEIGHT
         self.impl_weight: float = self.DEFAULT_IMPL_WEIGHT
         self.deploy_weight: float = self.DEFAULT_DEPLOY_WEIGHT
+
+        # Quality thresholds (load from config if available)
+        if parameter_loader:
+            try:
+                base_thresholds = parameter_loader.get_base_layer_quality_thresholds()
+                self.excellent_threshold = base_thresholds.get("excellent", self.DEFAULT_EXCELLENT_THRESHOLD)
+                self.good_threshold = base_thresholds.get("good", self.DEFAULT_GOOD_THRESHOLD)
+                self.acceptable_threshold = base_thresholds.get("acceptable", self.DEFAULT_ACCEPTABLE_THRESHOLD)
+            except Exception as e:
+                logger.warning(
+                    "failed_to_load_quality_thresholds_using_defaults",
+                    extra={"error": str(e)}
+                )
+                self.excellent_threshold = self.DEFAULT_EXCELLENT_THRESHOLD
+                self.good_threshold = self.DEFAULT_GOOD_THRESHOLD
+                self.acceptable_threshold = self.DEFAULT_ACCEPTABLE_THRESHOLD
+        else:
+            # Use defaults
+            self.excellent_threshold = self.DEFAULT_EXCELLENT_THRESHOLD
+            self.good_threshold = self.DEFAULT_GOOD_THRESHOLD
+            self.acceptable_threshold = self.DEFAULT_ACCEPTABLE_THRESHOLD
 
         self._load()
 
@@ -209,12 +240,12 @@ class BaseLayerEvaluator:
             self.deploy_weight * b_deploy
         )
 
-        # Determine quality level
-        if base_score >= 0.8:
+        # Determine quality level using configurable thresholds
+        if base_score >= self.excellent_threshold:
             quality = "excellent"
-        elif base_score >= 0.6:
+        elif base_score >= self.good_threshold:
             quality = "good"
-        elif base_score >= 0.4:
+        elif base_score >= self.acceptable_threshold:
             quality = "acceptable"
         else:
             quality = "needs_improvement"

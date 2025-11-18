@@ -155,6 +155,44 @@ class MethodParameterLoader:
             "insufficient": float(quality_levels.get("insufficient", 0.0))
         }
 
+    def get_base_layer_quality_thresholds(self) -> Dict[str, float]:
+        """
+        Get BASE LAYER specific quality thresholds.
+
+        These differ from global quality thresholds as they apply specifically
+        to intrinsic method quality (base layer @b), not final calibration scores.
+
+        Returns:
+            Dictionary with keys: excellent, good, acceptable, needs_improvement
+            Each value is a float threshold in [0.0, 1.0]
+
+        Example:
+            >>> loader.get_base_layer_quality_thresholds()
+            {'excellent': 0.8, 'good': 0.6, 'acceptable': 0.4, 'needs_improvement': 0.0}
+        """
+        self._ensure_loaded()
+
+        base_thresholds = self._data.get("_global_thresholds", {}).get("base_layer_quality_levels", {})
+
+        if not base_thresholds:
+            logger.warning(
+                "base_layer_quality_thresholds_not_found_using_defaults",
+                extra={"using_defaults": True}
+            )
+            return {
+                "excellent": 0.8,
+                "good": 0.6,
+                "acceptable": 0.4,
+                "needs_improvement": 0.0
+            }
+
+        return {
+            "excellent": float(base_thresholds.get("excellent", 0.8)),
+            "good": float(base_thresholds.get("good", 0.6)),
+            "acceptable": float(base_thresholds.get("acceptable", 0.4)),
+            "needs_improvement": float(base_thresholds.get("needs_improvement", 0.0))
+        }
+
     def get_validation_threshold_for_role(self, role: str, default: float = 0.70) -> float:
         """
         Get validation threshold for a method role type.

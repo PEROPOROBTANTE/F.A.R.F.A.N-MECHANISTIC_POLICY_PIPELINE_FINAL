@@ -9,12 +9,21 @@
 
   "_global_thresholds": {
     "quality_levels": {
-      "description": "Standard quality level thresholds used across multiple methods",
+      "description": "Standard quality level thresholds for OVERALL calibration scores",
       "excellent": 0.85,
       "good": 0.70,
       "acceptable": 0.55,
       "insufficient": 0.0,
       "source": "migrated_from_aggregation.py_and_scoring.py"
+    },
+    "base_layer_quality_levels": {
+      "description": "Quality level thresholds for BASE LAYER (@b) intrinsic scores",
+      "excellent": 0.8,
+      "good": 0.6,
+      "acceptable": 0.4,
+      "needs_improvement": 0.0,
+      "source": "migrated_from_base_layer.py:213-220",
+      "note": "These differ from overall quality levels because base layer scores represent intrinsic method quality, not final aggregated calibration"
     },
     "validation_thresholds_by_role": {
       "description": "Minimum calibration scores required for method validation by role type",
