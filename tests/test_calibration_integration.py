@@ -20,7 +20,6 @@ from src.saaaaaa.core.calibration.layer_requirements import LayerRequirementsRes
 from src.saaaaaa.core.calibration.orchestrator import CalibrationOrchestrator
 from src.saaaaaa.core.calibration.validator import CalibrationValidator
 from src.saaaaaa.core.calibration.data_structures import LayerID
-from src.saaaaaa.core.calibration.pdt_structure import PDTStructure
 
 
 class TestIntrinsicLoader:
