@@ -28,12 +28,6 @@ IO_OPERATIONS = {
     "input",
 }
 
-# Modules that are allowed to import I/O packages
-IO_ALLOWED_MODULES = {
-    "builtins",  # For type hints only
-}
-
-
 class CorePurityChecker(ast.NodeVisitor):
     """AST visitor to detect I/O operations and __main__ blocks."""
 
