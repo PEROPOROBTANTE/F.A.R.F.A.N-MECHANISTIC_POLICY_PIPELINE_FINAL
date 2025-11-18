@@ -253,7 +253,7 @@ transformers              4.41.2
 ```bash
 python -c "
 from saaaaaa.processing.policy_processor import IndustrialPolicyProcessor
-from saaaaaa.analysis.contradiction_deteccion import PolicyContradictionDetector
+from saaaaaa.analysis.contradiction_detection import PolicyContradictionDetector
 from saaaaaa.processing.embedding_policy import PolicyAnalysisEmbedder
 print('✓ All critical classes import successfully')
 "
