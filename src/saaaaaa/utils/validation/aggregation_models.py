@@ -71,7 +71,7 @@ class AreaAggregationConfig(BaseModel):
     area_id: str = Field(..., pattern=r'^PA\d{2}$')
     expected_dimension_count: int = Field(default=6, ge=1, le=10)
     weights: AggregationWeights | None = None
-    group_by_keys: list[str] = Field(default=['area_id'], min_length=1)
+    group_by_keys: list[str] = Field(default_factory=lambda: ['area_id'], min_length=1)
 
 
 class ClusterAggregationConfig(BaseModel):
