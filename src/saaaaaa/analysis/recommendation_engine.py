@@ -21,10 +21,10 @@ Python: 3.10+
 
 import logging
 import re
-from pathlib import Path
-from typing import Dict, Any
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 import jsonschema
 
@@ -110,7 +110,7 @@ class RecommendationSet:
 class RecommendationEngine:
     """
     Core recommendation engine that evaluates rules and generates recommendations.
-    
+
     Uses canonical notation for dimension and policy area validation.
     """
 
@@ -129,7 +129,7 @@ class RecommendationEngine:
             schema_path: Path to JSON schema for validation
             questionnaire_provider: QuestionnaireResourceProvider instance (injected via DI)
             orchestrator: Orchestrator instance for accessing thresholds and patterns
-        
+
         ARCHITECTURAL NOTE: Thresholds should come from questionnaire monolith
         via QuestionnaireResourceProvider, not from hardcoded values.
         """
@@ -144,7 +144,7 @@ class RecommendationEngine:
             'MESO': [],
             'MACRO': []
         }
-        
+
         # Load canonical notation for validation
         self._load_canonical_notation()
 
@@ -158,7 +158,7 @@ class RecommendationEngine:
             f"{len(self.rules_by_level['MESO'])} MESO, "
             f"{len(self.rules_by_level['MACRO'])} MACRO rules"
         )
-    
+
     def _load_canonical_notation(self) -> None:
         """Load canonical notation for validation"""
         try:
@@ -217,15 +217,15 @@ class RecommendationEngine:
         """Reload rules from disk (useful for hot-reloading)"""
         self.rules_by_level = {'MICRO': [], 'MESO': [], 'MACRO': []}
         self._load_rules()
-    
+
     def get_thresholds_from_monolith(self) -> dict[str, Any]:
         """
         Get scoring thresholds from questionnaire monolith.
-        
+
         Returns:
             Dictionary of thresholds by question_id or default thresholds
-        
-        ARCHITECTURAL NOTE: This method demonstrates proper access to 
+
+        ARCHITECTURAL NOTE: This method demonstrates proper access to
         questionnaire data via QuestionnaireResourceProvider, not direct I/O.
         """
         if self.questionnaire_provider is None:
@@ -235,23 +235,23 @@ class RecommendationEngine:
                 'default_meso_threshold': 55.0,
                 'default_macro_threshold': 65.0
             }
-        
+
         # Get questionnaire data via provider
         questionnaire_data = self.questionnaire_provider.get_data()
-        
+
         # Extract thresholds from monolith structure
         thresholds = {}
         blocks = questionnaire_data.get('blocks', {})
         micro_questions = blocks.get('micro_questions', [])
-        
+
         for question in micro_questions:
             question_id = question.get('question_id')
             scoring_info = question.get('scoring', {})
             threshold = scoring_info.get('threshold')
-            
+
             if question_id and threshold is not None:
                 thresholds[question_id] = threshold
-        
+
         logger.info(f"Loaded {len(thresholds)} thresholds from questionnaire monolith")
         return thresholds
 
@@ -672,7 +672,7 @@ class RecommendationEngine:
     # VALIDATION UTILITIES
     # ========================================================================
 
-    def _validate_rule(self, rule: Dict[str, Any]) -> None:
+    def _validate_rule(self, rule: dict[str, Any]) -> None:
         """Apply structural validation to guarantee rigorous recommendations."""
         rule_id = rule.get('rule_id')
         if not isinstance(rule_id, str) or not rule_id.strip():
@@ -709,7 +709,7 @@ class RecommendationEngine:
             raise ValueError(f"Rule {rule_id} is missing budget block required for enhanced rules")
         self._validate_budget(rule_id, budget)
 
-    def _validate_micro_when(self, rule_id: str, when: Dict[str, Any]) -> None:
+    def _validate_micro_when(self, rule_id: str, when: dict[str, Any]) -> None:
         required_keys = ('pa_id', 'dim_id', 'score_lt')
         for key in required_keys:
             if key not in when:
@@ -728,7 +728,7 @@ class RecommendationEngine:
         if not 0 <= float(score_lt) <= 3:
             raise ValueError(f"Rule {rule_id} MICRO threshold must be between 0 and 3")
 
-    def _validate_meso_when(self, rule_id: str, when: Dict[str, Any]) -> None:
+    def _validate_meso_when(self, rule_id: str, when: dict[str, Any]) -> None:
         cluster_id = when.get('cluster_id')
         if not isinstance(cluster_id, str) or not cluster_id.strip():
             raise ValueError(f"Rule {rule_id} missing cluster_id for MESO condition")
@@ -748,9 +748,8 @@ class RecommendationEngine:
             condition_counter += 1
 
         variance_threshold = when.get('variance_threshold')
-        if variance_threshold is not None:
-            if not self._is_number(variance_threshold):
-                raise ValueError(f"Rule {rule_id} has non-numeric variance_threshold")
+        if variance_threshold is not None and not self._is_number(variance_threshold):
+            raise ValueError(f"Rule {rule_id} has non-numeric variance_threshold")
 
         weak_pa_id = when.get('weak_pa_id')
         if weak_pa_id is not None:
@@ -763,7 +762,7 @@ class RecommendationEngine:
                 f"Rule {rule_id} must specify at least one discriminant condition for MESO"
             )
 
-    def _validate_macro_when(self, rule_id: str, when: Dict[str, Any]) -> None:
+    def _validate_macro_when(self, rule_id: str, when: dict[str, Any]) -> None:
         discriminants = 0
 
         macro_band = when.get('macro_band')
@@ -799,7 +798,7 @@ class RecommendationEngine:
                 f"Rule {rule_id} must specify at least one MACRO discriminant condition"
             )
 
-    def _validate_template(self, rule_id: str, template: Dict[str, Any], level: str) -> None:
+    def _validate_template(self, rule_id: str, template: dict[str, Any], level: str) -> None:
         required_fields = ['problem', 'intervention', 'indicator', 'responsible', 'horizon', 'verification', 'template_id', 'template_params']
         for field in required_fields:
             if field not in template:
@@ -934,7 +933,7 @@ class RecommendationEngine:
                         f"Rule {rule_id} verification artifact field '{key}' cannot be empty"
                     )
 
-    def _validate_execution(self, rule_id: str, execution: Dict[str, Any]) -> None:
+    def _validate_execution(self, rule_id: str, execution: dict[str, Any]) -> None:
         if not isinstance(execution, dict):
             raise ValueError(f"Rule {rule_id} execution block must be an object")
 
@@ -961,7 +960,7 @@ class RecommendationEngine:
         if any(not isinstance(role, str) or not role.strip() for role in roles):
             raise ValueError(f"Rule {rule_id} execution approval_roles must contain non-empty strings")
 
-    def _validate_budget(self, rule_id: str, budget: Dict[str, Any]) -> None:
+    def _validate_budget(self, rule_id: str, budget: dict[str, Any]) -> None:
         if not isinstance(budget, dict):
             raise ValueError(f"Rule {rule_id} budget block must be an object")
 
@@ -1023,7 +1022,7 @@ class RecommendationEngine:
     @staticmethod
     def _is_number(value: Any) -> bool:
         return isinstance(value, (int, float)) and not isinstance(value, bool)
-    
+
     def generate_all_recommendations(
         self,
         micro_scores: dict[str, float],

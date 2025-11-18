@@ -18,10 +18,10 @@ The pipeline performs:
 6. Quality validation and strategic ranking
 """
 
-from pathlib import Path
 import importlib.util
 import logging
 import unicodedata  # For NFC normalization
+from pathlib import Path
 
 from saaaaaa.config.paths import QUESTIONNAIRE_FILE
 from saaaaaa.processing.cpp_ingestion.models import CanonPolicyPackage
@@ -65,7 +65,7 @@ class CPPIngestionPipeline:
     - No hidden filesystem dependencies
     """
 
-    def __init__(self, questionnaire_path: Path | None = None):
+    def __init__(self, questionnaire_path: Path | None = None) -> None:
         """
         Initialize the SPC ingestion pipeline with converter.
 
@@ -121,18 +121,18 @@ class CPPIngestionPipeline:
                 return text
             except ImportError:
                 logger.error("PyMuPDF (fitz) not available for PDF extraction")
-                raise IOError(
+                raise OSError(
                     "PDF extraction requires PyMuPDF (install with: pip install PyMuPDF). "
                     "Alternatively, convert PDF to text manually."
                 )
             except Exception as e:
                 logger.error(f"Failed to extract PDF: {e}")
-                raise IOError(f"PDF extraction failed: {e}")
+                raise OSError(f"PDF extraction failed: {e}")
 
         elif suffix in ['.txt', '.md']:
             # Plain text or markdown
             try:
-                with open(document_path, 'r', encoding='utf-8') as f:
+                with open(document_path, encoding='utf-8') as f:
                     text = f.read()
 
                 # Normalize to NFC for deterministic hashing and span calculation
@@ -140,7 +140,7 @@ class CPPIngestionPipeline:
 
                 logger.info(f"Loaded {len(text)} characters from {suffix} file")
                 return text
-            except IOError as e:
+            except OSError as e:
                 logger.error(f"Failed to read text file: {e}")
                 raise
 
@@ -191,7 +191,7 @@ class CPPIngestionPipeline:
         # Load document text (supports PDF, TXT, MD)
         try:
             document_text = self._load_document_text(document_path)
-        except (IOError, ValueError) as e:
+        except (OSError, ValueError) as e:
             logger.error(f"Failed to load document: {e}")
             raise
 

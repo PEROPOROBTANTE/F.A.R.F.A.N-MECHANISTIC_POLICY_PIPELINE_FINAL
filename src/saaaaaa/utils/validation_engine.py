@@ -78,7 +78,7 @@ class ValidationEngine:
             questionnaire_provider: QuestionnaireResourceProvider instance (injected via DI)
                                    If None, validation operations requiring questionnaire
                                    data will use ValidationPredicates without provider.
-        
+
         ARCHITECTURAL NOTE: Direct cuestionario_data parameter REMOVED.
         Questionnaire access must go through QuestionnaireResourceProvider.
         """
@@ -135,7 +135,7 @@ class ValidationEngine:
         questionnaire_data = {}
         if self.questionnaire_provider is not None:
             questionnaire_data = self.questionnaire_provider.get_data()
-        
+
         result = self.predicates.verify_expected_elements(
             question_spec, questionnaire_data
         )

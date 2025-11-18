@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 from uuid import uuid4
 
 logger = logging.getLogger(__name__)
@@ -66,12 +66,12 @@ class Event:
     level: EventLevel = EventLevel.INFO
     source: str = ""
     message: str = ""
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    parent_event_id: Optional[str] = None
-    duration_ms: Optional[float] = None
-    tags: List[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
+    parent_event_id: str | None = None
+    duration_ms: float | None = None
+    tags: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert event to dictionary."""
         return {
             "event_id": self.event_id,
@@ -103,14 +103,14 @@ class EventSpan:
     span_id: str = field(default_factory=lambda: str(uuid4()))
     name: str = ""
     category: EventCategory = EventCategory.PERFORMANCE
-    parent_span_id: Optional[str] = None
+    parent_span_id: str | None = None
     start_time: datetime = field(default_factory=datetime.utcnow)
-    end_time: Optional[datetime] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    tags: List[str] = field(default_factory=list)
+    end_time: datetime | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+    tags: list[str] = field(default_factory=list)
 
     @property
-    def duration_ms(self) -> Optional[float]:
+    def duration_ms(self) -> float | None:
         """Calculate duration in milliseconds."""
         if self.end_time:
             delta = self.end_time - self.start_time
@@ -122,7 +122,7 @@ class EventSpan:
         """Check if span is complete."""
         return self.end_time is not None
 
-    def complete(self, metadata: Optional[Dict[str, Any]] = None) -> None:
+    def complete(self, metadata: dict[str, Any] | None = None) -> None:
         """Mark span as complete."""
         self.end_time = datetime.utcnow()
         if metadata:
@@ -169,7 +169,7 @@ class EventTracker:
         ...     pass
     """
 
-    def __init__(self, name: str = "FARFAN Pipeline"):
+    def __init__(self, name: str = "FARFAN Pipeline") -> None:
         """
         Initialize event tracker.
 
@@ -177,8 +177,8 @@ class EventTracker:
             name: Name of the tracking session
         """
         self.name = name
-        self.events: List[Event] = []
-        self.spans: Dict[str, EventSpan] = {}
+        self.events: list[Event] = []
+        self.spans: dict[str, EventSpan] = {}
         self.session_id = str(uuid4())
         self.started_at = datetime.utcnow()
 
@@ -188,9 +188,9 @@ class EventTracker:
         source: str,
         message: str,
         level: EventLevel = EventLevel.INFO,
-        metadata: Optional[Dict[str, Any]] = None,
-        parent_event_id: Optional[str] = None,
-        tags: Optional[List[str]] = None
+        metadata: dict[str, Any] | None = None,
+        parent_event_id: str | None = None,
+        tags: list[str] | None = None
     ) -> Event:
         """
         Record an event.
@@ -236,9 +236,9 @@ class EventTracker:
         self,
         name: str,
         category: EventCategory = EventCategory.PERFORMANCE,
-        parent_span_id: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
-        tags: Optional[List[str]] = None
+        parent_span_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
+        tags: list[str] | None = None
     ) -> EventSpan:
         """
         Start a new performance span.
@@ -277,7 +277,7 @@ class EventTracker:
     def complete_span(
         self,
         span: EventSpan,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: dict[str, Any] | None = None
     ) -> Event:
         """
         Complete a span and record its event.
@@ -301,9 +301,9 @@ class EventTracker:
         self,
         name: str,
         category: EventCategory = EventCategory.PERFORMANCE,
-        parent_span_id: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
-        tags: Optional[List[str]] = None
+        parent_span_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
+        tags: list[str] | None = None
     ):
         """
         Context manager for automatic span tracking.
@@ -343,13 +343,13 @@ class EventTracker:
 
     def filter_events(
         self,
-        category: Optional[EventCategory] = None,
-        level: Optional[EventLevel] = None,
-        source: Optional[str] = None,
-        start_time: Optional[datetime] = None,
-        end_time: Optional[datetime] = None,
-        tags: Optional[List[str]] = None
-    ) -> List[Event]:
+        category: EventCategory | None = None,
+        level: EventLevel | None = None,
+        source: str | None = None,
+        start_time: datetime | None = None,
+        end_time: datetime | None = None,
+        tags: list[str] | None = None
+    ) -> list[Event]:
         """
         Filter events by criteria.
 
@@ -386,7 +386,7 @@ class EventTracker:
 
         return filtered
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """
         Get statistics about recorded events.
 
@@ -528,7 +528,7 @@ class EventTracker:
 
 
 # Global tracker instance for convenience
-_global_tracker: Optional[EventTracker] = None
+_global_tracker: EventTracker | None = None
 
 
 def get_global_tracker() -> EventTracker:

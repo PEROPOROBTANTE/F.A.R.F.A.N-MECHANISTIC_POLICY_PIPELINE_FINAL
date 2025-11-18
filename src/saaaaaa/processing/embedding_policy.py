@@ -33,7 +33,7 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, List, Literal, Protocol, TypedDict
+from typing import TYPE_CHECKING, Any, Literal, Protocol, TypedDict
 
 import numpy as np
 from sentence_transformers import CrossEncoder, SentenceTransformer
@@ -59,7 +59,7 @@ MODEL_PARAPHRASE_MULTILINGUAL = "sentence-transformers/paraphrase-multilingual-m
 class PolicyDomain(Enum):
     """
     Colombian PDM policy areas (PA01-PA10) per canonical notation.
-    
+
     Values are loaded from questionnaire_monolith.json canonical_notation.
     Use CanonicalPolicyArea from saaaaaa.core.canonical_notation for dynamic access.
     """
@@ -79,7 +79,7 @@ class PolicyDomain(Enum):
 class AnalyticalDimension(Enum):
     """
     Analytical dimensions (D1-D6) per canonical notation.
-    
+
     Values reference canonical notation from questionnaire_monolith.json.
     Use CanonicalDimension from saaaaaa.core.canonical_notation for dynamic access.
     """
@@ -692,7 +692,7 @@ class BayesianNumericalAnalyzer:
 
     def serialize_posterior_samples(
         self, samples: NDArray[np.float32]
-    ) -> List[PosteriorSampleRecord]:
+    ) -> list[PosteriorSampleRecord]:
         """Convert posterior samples into standardized coherence records.
 
         Safely handles None or non-array inputs and limits the number of
@@ -790,17 +790,17 @@ class PolicyCrossEncoderReranker:
             model_name: HuggingFace model name (multilingual preferred)
             max_length: Maximum sequence length for cross-encoder
             retry_handler: Optional RetryHandler for model loading
-            
+
         Raises:
             RuntimeError: If online model download is required but HF_ONLINE=0
         """
         self._logger = logging.getLogger(self.__class__.__name__)
         self.retry_handler = retry_handler
-        
+
         # Check dependency lockdown before attempting model load
-        from saaaaaa.core.dependency_lockdown import get_dependency_lockdown, _is_model_cached
+        from saaaaaa.core.dependency_lockdown import _is_model_cached, get_dependency_lockdown
         lockdown = get_dependency_lockdown()
-        
+
         # Check if we're trying to download a remote model when offline
         if not _is_model_cached(model_name):
             lockdown.check_online_model_access(
@@ -914,11 +914,11 @@ class PolicyAnalysisEmbedder:
         self.config = config
         self._logger = logging.getLogger(self.__class__.__name__)
         self.retry_handler = retry_handler
-        
+
         # Check dependency lockdown before attempting model loads
-        from saaaaaa.core.dependency_lockdown import get_dependency_lockdown, _is_model_cached
+        from saaaaaa.core.dependency_lockdown import _is_model_cached, get_dependency_lockdown
         lockdown = get_dependency_lockdown()
-        
+
         # Check if we're trying to download remote models when offline
         if not _is_model_cached(config.embedding_model):
             lockdown.check_online_model_access(

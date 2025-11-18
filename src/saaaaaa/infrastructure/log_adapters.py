@@ -8,6 +8,7 @@ For testing, use InMemoryLogAdapter instead.
 import logging
 from typing import Any
 
+
 class StandardLogAdapter:
     """Standard logging adapter using Python's logging module.
 

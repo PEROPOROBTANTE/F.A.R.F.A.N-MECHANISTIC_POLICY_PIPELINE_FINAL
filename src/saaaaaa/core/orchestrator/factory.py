@@ -28,7 +28,8 @@ import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Final, Optional
+from types import MappingProxyType
+from typing import Any, Optional
 
 from ..contracts import (
     CDAFFrameworkInputContract,
@@ -44,13 +45,13 @@ from ..contracts import (
 from . import get_questionnaire_provider
 from .core import MethodExecutor
 from .questionnaire import (
-    CanonicalQuestionnaire,
     EXPECTED_HASH,
     EXPECTED_MACRO_QUESTION_COUNT,
-    EXPECTED_MICRO_QUESTION_COUNT,
     EXPECTED_MESO_QUESTION_COUNT,
+    EXPECTED_MICRO_QUESTION_COUNT,
     EXPECTED_TOTAL_QUESTION_COUNT,
     QUESTIONNAIRE_PATH,
+    CanonicalQuestionnaire,
     load_questionnaire,
 )
 
@@ -153,7 +154,7 @@ def load_catalog(path: Path | None = None) -> dict[str, Any]:
 
     Returns:
         Loaded catalog data
-    
+
     Raises:
         FileNotFoundError: If catalog file doesn't exist
         json.JSONDecodeError: If file is not valid JSON
@@ -175,7 +176,7 @@ def load_method_map(path: Path | None = None) -> dict[str, Any]:
 
     Returns:
         Loaded method map data
-    
+
     Raises:
         FileNotFoundError: If method map file doesn't exist
         json.JSONDecodeError: If file is not valid JSON
@@ -279,7 +280,7 @@ def load_schema(path: Path | None = None) -> dict[str, Any]:
 
     Returns:
         Loaded schema data
-    
+
     Raises:
         FileNotFoundError: If schema file doesn't exist
         json.JSONDecodeError: If file is not valid JSON
@@ -700,7 +701,7 @@ def build_processor(
                 enable_signals=True,
             )
             signal_registry = signal_factory._signal_registry
-            
+
             logger.info(
                 "signals_enabled_in_processor",
                 enabled=True,
@@ -729,20 +730,20 @@ def build_processor(
 def compute_monolith_hash(monolith: dict[str, Any]) -> str:
     """
     Compute deterministic SHA-256 hash of questionnaire monolith.
-    
+
     This function ensures:
     - Key order independence via sort_keys=True
     - Consistent unicode handling via ensure_ascii=True
     - No whitespace variation via separators
-    
+
     Args:
         monolith: Questionnaire monolith dictionary
-        
+
     Returns:
         Hexadecimal SHA-256 hash string
     """
     import hashlib
-    
+
     serialized = json.dumps(
         monolith,
         sort_keys=True,
@@ -756,13 +757,13 @@ def compute_monolith_hash(monolith: dict[str, Any]) -> str:
 # For backward compatibility, keep this stub that delegates to questionnaire module
 def validate_questionnaire_structure(data: dict[str, Any]) -> None:
     """DEPRECATED: Import from questionnaire module instead.
-    
+
     This stub is maintained for backward compatibility only.
     Use: from .questionnaire import _validate_questionnaire_structure
-    
+
     Args:
         data: Questionnaire data to validate
-        
+
     Raises:
         ValueError: If validation fails
         TypeError: If top-level structure is invalid

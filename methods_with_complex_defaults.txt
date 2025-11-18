@@ -1,0 +1,219 @@
+METHODS WITH COMPLEX DEFAULT VALUES
+================================================================================
+
+File: src/saaaaaa/observability/opentelemetry_integration.py
+Function: start_span
+Parameter: kind
+Default: SpanKind.INTERNAL
+Line: 213
+--------------------------------------------------------------------------------
+File: src/saaaaaa/observability/opentelemetry_integration.py
+Function: start_as_current_span
+Parameter: kind
+Default: SpanKind.INTERNAL
+Line: 275
+--------------------------------------------------------------------------------
+File: src/saaaaaa/api/api_server.py
+Function: cached
+Parameter: ttl
+Default: APIConfig.CACHE_TTL
+Line: 183
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: input_uri
+Default: typer.Argument(..., help='Input document URI')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: ingest_enable_ocr
+Default: typer.Option(True, help='Enable OCR')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: ingest_ocr_threshold
+Default: typer.Option(0.85, help='OCR threshold')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: ingest_max_mb
+Default: typer.Option(250, help='Max file size in MB')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: normalize_unicode_form
+Default: typer.Option('NFC', help='Unicode form (NFC/NFKC)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: normalize_keep_diacritics
+Default: typer.Option(True, help='Keep diacritics')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_priority_resolution
+Default: typer.Option('MESO', help='Priority resolution (MICRO/MESO/MACRO)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_overlap_max
+Default: typer.Option(0.15, help='Max overlap fraction')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_max_tokens_micro
+Default: typer.Option(400, help='Max tokens for micro')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_max_tokens_meso
+Default: typer.Option(1200, help='Max tokens for meso')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_source
+Default: typer.Option('memory', help='Signals source (memory/http)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_http_timeout_s
+Default: typer.Option(3.0, help='HTTP timeout in seconds')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_ttl_s
+Default: typer.Option(3600, help='Signals TTL in seconds')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_allow_threshold_override
+Default: typer.Option(False, help='Allow threshold override')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: aggregate_feature_set
+Default: typer.Option('full', help='Feature set (minimal/full)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: aggregate_group_by
+Default: typer.Option('policy_area,year', help='Aggregation keys (comma-separated)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: score_metrics
+Default: typer.Option('precision,coverage,risk', help='Metrics (comma-separated)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: score_calibration_mode
+Default: typer.Option('none', help='Calibration mode (none/isotonic/platt)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: report_formats
+Default: typer.Option('json,md', help='Report formats (comma-separated)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: report_include_provenance
+Default: typer.Option(True, help='Include provenance')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: dry_run
+Default: typer.Option(False, help='Dry run (validation only)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: print_contracts
+Default: typer.Option(False, help='Print contracts and exit')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/processing/embedding_policy.py
+Function: __init__
+Parameter: model_name
+Default: DEFAULT_CROSS_ENCODER_MODEL
+Line: 780
+--------------------------------------------------------------------------------
+File: src/saaaaaa/utils/contract_io.py
+Function: wrap
+Parameter: schema_version
+Default: CANONICAL_SCHEMA_VERSION
+Line: 142
+--------------------------------------------------------------------------------
+File: src/saaaaaa/utils/signature_validator.py
+Function: __init__
+Parameter: registry_path
+Default: Path('data/signature_registry.json')
+Line: 56
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/teoria_cambio.py
+Function: __init__
+Parameter: graph_type
+Default: GraphType.CAUSAL_DAG
+Line: 512
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/bayesian_multilevel_system.py
+Function: __init__
+Parameter: output_dir
+Default: Path('data/bayesian_outputs')
+Line: 1038
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/contradiction_deteccion.py
+Function: __init__
+Parameter: device
+Default: 'cuda' if torch.cuda.is_available() else 'cpu'
+Line: 327
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/contradiction_deteccion.py
+Function: detect
+Parameter: dimension
+Default: PolicyDimension.ESTRATEGICO
+Line: 390
+--------------------------------------------------------------------------------
+File: src/saaaaaa/optimization/rl_strategy.py
+Function: __init__
+Parameter: strategy
+Default: OptimizationStrategy.THOMPSON_SAMPLING
+Line: 383
+--------------------------------------------------------------------------------
+File: src/saaaaaa/patterns/event_tracking.py
+Function: record_event
+Parameter: level
+Default: EventLevel.INFO
+Line: 185
+--------------------------------------------------------------------------------
+File: src/saaaaaa/patterns/event_tracking.py
+Function: start_span
+Parameter: category
+Default: EventCategory.PERFORMANCE
+Line: 235
+--------------------------------------------------------------------------------
+File: src/saaaaaa/patterns/event_tracking.py
+Function: span
+Parameter: category
+Default: EventCategory.PERFORMANCE
+Line: 300
+--------------------------------------------------------------------------------

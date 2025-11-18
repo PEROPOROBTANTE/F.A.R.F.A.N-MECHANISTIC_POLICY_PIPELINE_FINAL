@@ -51,7 +51,7 @@ class LayerRequirementsResolver:
     """
 
     # Role-to-layers mapping based on theoretical requirements
-    ROLE_LAYER_MAP = {
+    ROLE_LAYER_MAP: dict[str, set[LayerID]] = {
         # Analytical methods: Full rigor (all 8 layers)
         "analyzer": {
             LayerID.BASE,
@@ -157,7 +157,7 @@ class LayerRequirementsResolver:
     }
 
     # Conservative fallback: All layers
-    DEFAULT_LAYERS = {
+    DEFAULT_LAYERS: set[LayerID] = {
         LayerID.BASE,
         LayerID.UNIT,
         LayerID.QUESTION,
@@ -169,9 +169,9 @@ class LayerRequirementsResolver:
     }
 
     # Executor detection pattern: D[1-6]Q[1-5]_Executor
-    EXECUTOR_PATTERN = re.compile(r'D[1-6]Q[1-5]_Executor')
+    EXECUTOR_PATTERN: re.Pattern[str] = re.compile(r'D[1-6]Q[1-5]_Executor')
 
-    def __init__(self, intrinsic_loader: IntrinsicScoreLoader):
+    def __init__(self, intrinsic_loader: IntrinsicScoreLoader) -> None:
         """
         Initialize the resolver.
 
@@ -213,7 +213,7 @@ class LayerRequirementsResolver:
         """
         return bool(cls.EXECUTOR_PATTERN.search(method_id))
 
-    def get_required_layers(self, method_id: str) -> Set[LayerID]:
+    def get_required_layers(self, method_id: str) -> set[LayerID]:
         """
         Get the set of calibration layers required for a method.
 
@@ -354,7 +354,7 @@ class LayerRequirementsResolver:
         role = self.intrinsic_loader.get_layer(method_id)
         required_layers = self.get_required_layers(method_id)
 
-        layer_order = {
+        layer_order: dict[str, int] = {
             "b": 0,
             "u": 1,
             "q": 2,
@@ -376,7 +376,7 @@ class LayerRequirementsResolver:
         else:
             return f"unknown role → {len(required_layers)} layers (conservative): {layer_names}"
 
-    def get_skipped_layers(self, method_id: str) -> Set[LayerID]:
+    def get_skipped_layers(self, method_id: str) -> set[LayerID]:
         """
         Get the set of layers that will be skipped for a method.
 
@@ -391,7 +391,7 @@ class LayerRequirementsResolver:
             {LayerID.QUESTION, LayerID.DIMENSION, LayerID.POLICY, ...}
         """
         required = self.get_required_layers(method_id)
-        all_layers = {
+        all_layers: set[LayerID] = {
             LayerID.BASE,
             LayerID.UNIT,
             LayerID.QUESTION,

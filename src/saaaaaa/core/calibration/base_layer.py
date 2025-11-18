@@ -12,7 +12,7 @@ by rigorous_calibration_triage.py using intrinsic_calibration_rubric.json.
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 from .data_structures import LayerID, LayerScore
 
@@ -47,8 +47,8 @@ class BaseLayerEvaluator:
     def __init__(
         self,
         intrinsic_calibration_path: Path | str,
-        parameter_loader=None
-    ):
+        parameter_loader: Optional[Any] = None
+    ) -> None:
         """
         Initialize evaluator with intrinsic calibration data.
 
@@ -61,7 +61,7 @@ class BaseLayerEvaluator:
             ValueError: If calibration file has invalid structure
         """
         self.calibration_path = Path(intrinsic_calibration_path)
-        self.calibrations: Dict[str, Dict[str, Any]] = {}
+        self.calibrations: dict[str, dict[str, Any]] = {}
 
         # These will be loaded from JSON (or use defaults)
         self.theory_weight: float = self.DEFAULT_THEORY_WEIGHT
@@ -98,7 +98,7 @@ class BaseLayerEvaluator:
                 f"Base layer component weights must sum to 1.0, got {total_weight}"
             )
 
-    def _load(self):
+    def _load(self) -> None:
         """Load intrinsic calibration scores and weights from JSON."""
         if not self.calibration_path.exists():
             raise FileNotFoundError(
@@ -106,7 +106,7 @@ class BaseLayerEvaluator:
                 f"Run scripts/rigorous_calibration_triage.py to generate it."
             )
 
-        with open(self.calibration_path, 'r', encoding='utf-8') as f:
+        with open(self.calibration_path, encoding='utf-8') as f:
             data = json.load(f)
 
         # Validate structure
@@ -204,7 +204,7 @@ class BaseLayerEvaluator:
 
         Formula:
             @b = w_theory · b_theory + w_impl · b_impl + w_deploy · b_deploy
-            where w_theory=0.4, w_impl=0.4, w_deploy=0.2
+            where w_theory=0.4, w_impl=0.35, w_deploy=0.25
         """
         # Check if method has calibration data
         if method_id not in self.calibrations:
@@ -285,7 +285,7 @@ class BaseLayerEvaluator:
             }
         )
 
-    def get_calibration_info(self, method_id: str) -> Optional[Dict[str, Any]]:
+    def get_calibration_info(self, method_id: str) -> dict[str, Any] | None:
         """
         Get full calibration info for a method (including evidence).
 
@@ -299,7 +299,7 @@ class BaseLayerEvaluator:
         """
         return self.calibrations.get(method_id)
 
-    def get_coverage_stats(self) -> Dict[str, Any]:
+    def get_coverage_stats(self) -> dict[str, Any]:
         """
         Get statistics about calibration coverage.
 
@@ -312,7 +312,7 @@ class BaseLayerEvaluator:
         total = len(self.calibrations)
 
         # Count by layer
-        by_layer = {}
+        by_layer: dict[str, int] = {}
         for cal in self.calibrations.values():
             layer = cal["layer"]
             by_layer[layer] = by_layer.get(layer, 0) + 1

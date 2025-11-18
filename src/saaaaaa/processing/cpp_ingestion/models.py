@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 
 class ChunkResolution(Enum):
@@ -61,8 +61,8 @@ class GeoFacet:
 @dataclass
 class ProvenanceMap:
     """Provenance information for chunk extraction."""
-    source_page: Optional[int] = None
-    source_section: Optional[str] = None
+    source_page: int | None = None
+    source_section: str | None = None
     extraction_method: str = "semantic_chunking"
 
 
@@ -84,9 +84,9 @@ BudgetInfo = Budget
 class KPI:
     """Key Performance Indicator extracted from policy."""
     indicator_name: str
-    target_value: Optional[float] = None
-    unit: Optional[str] = None
-    year: Optional[int] = None
+    target_value: float | None = None
+    unit: str | None = None
+    year: int | None = None
 
 
 @dataclass
@@ -101,7 +101,7 @@ class Entity:
 class Chunk:
     """
     A semantic chunk of policy text with metadata.
-    
+
     This is the fundamental unit of the CPP/SPC ingestion pipeline.
     """
     id: str
@@ -109,19 +109,19 @@ class Chunk:
     text_span: TextSpan
     resolution: ChunkResolution
     bytes_hash: str
-    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
-    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
+    policy_area_id: str | None = None  # PA01-PA10 canonical code
+    dimension_id: str | None = None    # DIM01-DIM06 canonical code
 
     # Facets and metadata
     policy_facets: PolicyFacet = field(default_factory=PolicyFacet)
     time_facets: TimeFacet = field(default_factory=TimeFacet)
     geo_facets: GeoFacet = field(default_factory=GeoFacet)
     confidence: Confidence = field(default_factory=Confidence)
-    
+
     # Optional structured data
-    provenance: Optional[ProvenanceMap] = None
-    budget: Optional[Budget] = None
-    kpi: Optional[KPI] = None
+    provenance: ProvenanceMap | None = None
+    budget: Budget | None = None
+    kpi: KPI | None = None
     entities: list[Entity] = field(default_factory=list)
 
 
@@ -186,17 +186,17 @@ class IntegrityIndex:
 class CanonPolicyPackage:
     """
     Canon Policy Package - Complete output from phase-one ingestion.
-    
+
     This is the top-level container for all ingestion results.
     Also known as Smart Policy Chunks (SPC) in newer terminology.
     """
     schema_version: str
     chunk_graph: ChunkGraph
-    
+
     # Optional high-level metadata
-    policy_manifest: Optional[PolicyManifest] = None
-    quality_metrics: Optional[QualityMetrics] = None
-    integrity_index: Optional[IntegrityIndex] = None
-    
+    policy_manifest: PolicyManifest | None = None
+    quality_metrics: QualityMetrics | None = None
+    integrity_index: IntegrityIndex | None = None
+
     # Raw metadata
     metadata: dict[str, Any] = field(default_factory=dict)

@@ -26,10 +26,10 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from dataclasses import asdict
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from saaaaaa.processing.cpp_ingestion.models import (
+    KPI,
     Budget,
     CanonPolicyPackage,
     Chunk,
@@ -39,7 +39,6 @@ from saaaaaa.processing.cpp_ingestion.models import (
     Entity,
     GeoFacet,
     IntegrityIndex,
-    KPI,
     PolicyFacet,
     PolicyManifest,
     ProvenanceMap,
@@ -60,13 +59,13 @@ if TYPE_CHECKING:
         text: str
         normalized_text: str
         semantic_density: float
-        section_hierarchy: List[str]
+        section_hierarchy: list[str]
         document_position: tuple[int, int]
         chunk_type: Any  # ChunkType enum
-        causal_chain: List[Any]
-        policy_entities: List[Any]
-        related_chunks: List[tuple[str, float]]
-        confidence_metrics: Dict[str, float]
+        causal_chain: list[Any]
+        policy_entities: list[Any]
+        related_chunks: list[tuple[str, float]]
+        confidence_metrics: dict[str, float]
         coherence_score: float
         completeness_index: float
         strategic_importance: float
@@ -94,14 +93,14 @@ class SmartChunkConverter:
         'MIXTO': ChunkResolution.MESO,
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the converter."""
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def convert_to_canon_package(
         self,
-        smart_chunks: List[Any],  # List[SmartPolicyChunk]
-        document_metadata: Dict[str, Any]
+        smart_chunks: list[Any],  # List[SmartPolicyChunk]
+        document_metadata: dict[str, Any]
     ) -> CanonPolicyPackage:
         """
         Convert list of SmartPolicyChunk to CanonPolicyPackage.
@@ -176,11 +175,11 @@ class SmartChunkConverter:
 
         # Create PolicyManifest
         policy_manifest = PolicyManifest(
-            axes=sorted(list(all_axes)),
-            programs=sorted(list(all_programs)),
-            projects=sorted(list(all_projects)),
-            years=sorted(list(all_years)),
-            territories=sorted(list(all_territories)),
+            axes=sorted(all_axes),
+            programs=sorted(all_programs),
+            projects=sorted(all_projects),
+            years=sorted(all_years),
+            territories=sorted(all_territories),
             indicators=[],  # Would extract from KPIs if available
             budget_rows=sum(1 for c in chunk_graph.chunks.values() if c.budget is not None)
         )
@@ -322,7 +321,7 @@ class SmartChunkConverter:
                 periods.append(ctx.temporal_horizon)
 
         return TimeFacet(
-            years=sorted(list(set(years)))[:10],  # Unique and sorted
+            years=sorted(set(years))[:10],  # Unique and sorted
             periods=periods[:5]
         )
 
@@ -355,7 +354,7 @@ class SmartChunkConverter:
             extraction_method="smart_policy_chunking_v3.0"
         )
 
-    def _extract_entities(self, smart_chunk: Any) -> List[Entity]:
+    def _extract_entities(self, smart_chunk: Any) -> list[Entity]:
         """Extract entities from SPC policy_entities."""
         entities = []
 
@@ -370,7 +369,7 @@ class SmartChunkConverter:
 
         return entities
 
-    def _extract_budget(self, smart_chunk: Any) -> Optional[Budget]:
+    def _extract_budget(self, smart_chunk: Any) -> Budget | None:
         """
         Extract budget with comprehensive error handling and logging (H1.4).
 
@@ -482,7 +481,7 @@ class SmartChunkConverter:
         self.logger.debug("No year found in budget context, defaulting to 2024")
         return 2024
 
-    def _extract_kpi(self, smart_chunk: Any) -> Optional[KPI]:
+    def _extract_kpi(self, smart_chunk: Any) -> KPI | None:
         """Extract KPI if chunk contains indicator information."""
         # Check if chunk_type suggests this is a metric
         chunk_type_str = smart_chunk.chunk_type.value if hasattr(smart_chunk.chunk_type, 'value') else str(smart_chunk.chunk_type)
@@ -505,7 +504,7 @@ class SmartChunkConverter:
 
     def _calculate_quality_metrics(
         self,
-        smart_chunks: List[Any],
+        smart_chunks: list[Any],
         chunk_graph: ChunkGraph
     ) -> QualityMetrics:
         """Calculate quality metrics from SPC data."""
@@ -531,7 +530,7 @@ class SmartChunkConverter:
         temporal_robustness = chunks_with_time / len(chunk_graph.chunks) if chunk_graph.chunks else 0.0
 
         # Chunk context coverage (from edges)
-        chunks_with_edges = len(set(e[0] for e in chunk_graph.edges) | set(e[1] for e in chunk_graph.edges))
+        chunks_with_edges = len({e[0] for e in chunk_graph.edges} | {e[1] for e in chunk_graph.edges})
         chunk_context_coverage = chunks_with_edges / len(chunk_graph.chunks) if chunk_graph.chunks else 0.0
 
         return QualityMetrics(
@@ -546,8 +545,8 @@ class SmartChunkConverter:
 
     def _generate_integrity_index(
         self,
-        chunk_hashes: Dict[str, str],
-        document_metadata: Dict[str, Any]
+        chunk_hashes: dict[str, str],
+        document_metadata: dict[str, Any]
     ) -> IntegrityIndex:
         """
         Generate cryptographic integrity index.
@@ -566,9 +565,9 @@ class SmartChunkConverter:
 
     def _preserve_spc_rich_data(
         self,
-        smart_chunks: List[Any],
-        document_metadata: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        smart_chunks: list[Any],
+        document_metadata: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Preserve SPC rich data in metadata for executor access.
 

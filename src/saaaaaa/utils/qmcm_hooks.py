@@ -54,7 +54,7 @@ class QMCMRecorder:
             execution_status: 'success', 'error', or 'skipped'
             execution_time_ms: Execution time in milliseconds
             monolith_hash: SHA-256 hash of questionnaire_monolith.json (recommended)
-        
+
         ARCHITECTURAL NOTE: Including monolith_hash ties each method call
         to the specific questionnaire version, enabling reproducibility.
         Use factory.compute_monolith_hash() to generate this value.
@@ -70,7 +70,7 @@ class QMCMRecorder:
             "execution_status": execution_status,
             "execution_time_ms": round(execution_time_ms, 2)
         }
-        
+
         # Include monolith_hash if provided
         if monolith_hash is not None:
             call_record["monolith_hash"] = monolith_hash
@@ -174,7 +174,7 @@ def qmcm_record(method=None, *, monolith_hash: str | None = None):
         @qmcm_record
         def my_method(self, arg1: str, arg2: int) -> dict:
             return {"result": "data"}
-        
+
         # With monolith hash (recommended for questionnaire-dependent methods)
         @qmcm_record(monolith_hash=compute_monolith_hash(questionnaire))
         def my_questionnaire_method(self, question_id: str) -> dict:
@@ -229,7 +229,7 @@ def qmcm_record(method=None, *, monolith_hash: str | None = None):
                 raise
 
         return wrapper
-    
+
     # Handle both @qmcm_record and @qmcm_record() usage
     if method is None:
         return decorator

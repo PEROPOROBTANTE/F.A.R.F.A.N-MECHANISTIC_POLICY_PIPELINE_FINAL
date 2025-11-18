@@ -26,7 +26,12 @@ from collections import deque
 from dataclasses import asdict, dataclass, field, is_dataclass
 from datetime import datetime
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Callable, Literal, ParamSpec, TypedDict, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, ParamSpec, TypedDict, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from .questionnaire import CanonicalQuestionnaire
 
 from ...analysis.recommendation_engine import RecommendationEngine
 from ...processing.aggregation import (
@@ -40,15 +45,11 @@ from ...processing.aggregation import (
     MacroScore,
     ScoredResult,
 )
-
+from ..dependency_lockdown import get_dependency_lockdown
 from .arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
 from .calibration_registry import resolve_calibration
 from .class_registry import ClassRegistryError, build_class_registry
-from ..dependency_lockdown import get_dependency_lockdown
 from .versions import CALIBRATION_VERSION
-
-if TYPE_CHECKING:
-    from document_ingestion import PreprocessedDocument as IngestionPreprocessedDocument
 
 logger = logging.getLogger(__name__)
 
@@ -60,8 +61,8 @@ PHASE_TIMEOUT_DEFAULT = int(os.getenv("PHASE_TIMEOUT_SECONDS", "300"))
 
 class PhaseTimeoutError(RuntimeError):
     """Raised when a phase exceeds its timeout."""
-    
-    def __init__(self, phase_id: int | str, phase_name: str, timeout_s: float):
+
+    def __init__(self, phase_id: int | str, phase_name: str, timeout_s: float) -> None:
         self.phase_id = phase_id
         self.phase_name = phase_name
         self.timeout_s = timeout_s
@@ -86,7 +87,7 @@ async def execute_phase_with_timeout(
     **kwargs: P.kwargs,
 ) -> T:
     """Execute an async phase with timeout and comprehensive logging.
-    
+
     Args:
         phase_id: Numeric phase identifier
         phase_name: Human-readable phase name
@@ -96,10 +97,10 @@ async def execute_phase_with_timeout(
         args: Legacy parameter for positional arguments (for backward compatibility)
         timeout_s: Timeout in seconds (default: 300.0)
         **kwargs: Keyword arguments for coro
-        
+
     Returns:
         Result from coro
-        
+
     Raises:
         PhaseTimeoutError: If execution exceeds timeout_s
         Exception: Any exception raised by coro
@@ -109,10 +110,10 @@ async def execute_phase_with_timeout(
     target = coro or handler
     if target is None:
         raise ValueError("Either 'coro' or 'handler' must be provided")
-    
+
     # Support both varargs (*args in signature) and args kwarg (legacy)
     call_args = varargs if varargs else (args or ())
-    
+
     start = time.perf_counter()
     logger.info(
         "phase_execution_started",
@@ -174,23 +175,23 @@ async def execute_phase_with_timeout(
 
 def _normalize_monolith_for_hash(monolith: dict | MappingProxyType) -> dict:
     """Normalize monolith for hash computation and JSON serialization.
-    
+
     Converts MappingProxyType to dict recursively to ensure:
     1. JSON serialization doesn't fail
     2. Hash computation is consistent
-    
+
     Args:
         monolith: Monolith data (may be MappingProxyType or dict)
-        
+
     Returns:
         Normalized dict suitable for hashing and JSON serialization
-        
+
     Raises:
         RuntimeError: If normalization fails or produces inconsistent results
     """
     if isinstance(monolith, MappingProxyType):
         monolith = dict(monolith)
-    
+
     # Deep-convert nested mapping proxies if they exist
     def _convert(obj: Any) -> Any:
         if isinstance(obj, MappingProxyType):
@@ -200,16 +201,16 @@ def _normalize_monolith_for_hash(monolith: dict | MappingProxyType) -> dict:
         if isinstance(obj, list):
             return [_convert(v) for v in obj]
         return obj
-    
+
     normalized = _convert(monolith)
-    
+
     # Verify normalization is idempotent
     try:
         # Test that we can serialize it
         json.dumps(normalized, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     except (TypeError, ValueError) as exc:
         raise RuntimeError(f"Monolith normalization failed: {exc}") from exc
-    
+
     return normalized
 
 
@@ -231,7 +232,7 @@ class ClusterScoreData:
 @dataclass
 class MacroEvaluation:
     """Type-safe macro evaluation result.
-    
+
     This replaces polymorphic dict/object handling with a strict contract.
     All downstream consumers must treat macro scores as this type.
     """
@@ -243,7 +244,7 @@ class MacroEvaluation:
 @dataclass(frozen=True)
 class ChunkData:
     """Single semantic chunk from SPC (Smart Policy Chunks).
-    
+
     Preserves chunk structure and metadata from the ingestion pipeline,
     enabling chunk-aware executor routing and scoped processing.
     """
@@ -265,7 +266,7 @@ class PreprocessedDocument:
 
     This is the normalized document format used internally by the orchestrator.
     It can be constructed from ingestion payloads or created directly.
-    
+
     New in SPC exploitation: Preserves chunk structure when processing_mode='chunked',
     enabling chunk-aware executor routing and reducing redundant processing.
     """
@@ -274,7 +275,7 @@ class PreprocessedDocument:
     sentences: list[Any]
     tables: list[Any]
     metadata: dict[str, Any]
-    
+
     # NEW CHUNK FIELDS for SPC exploitation
     chunks: list[ChunkData] = field(default_factory=list)
     chunk_index: dict[str, int] = field(default_factory=dict)  # Fast lookup: entity_id → chunk_id
@@ -283,7 +284,7 @@ class PreprocessedDocument:
 
     def __post_init__(self) -> None:
         """Validate document fields after initialization.
-        
+
         Raises:
             ValueError: If raw_text is empty or whitespace-only
         """
@@ -305,15 +306,15 @@ class PreprocessedDocument:
         cls, document: Any, *, document_id: str | None = None, use_spc_ingestion: bool = True
     ) -> PreprocessedDocument:
         """Normalize arbitrary ingestion payloads into orchestrator documents.
-        
+
         Args:
             document: Document to normalize (PreprocessedDocument or CanonPolicyPackage)
             document_id: Optional document ID override
             use_spc_ingestion: Must be True (SPC is now the only supported ingestion method)
-            
+
         Returns:
             PreprocessedDocument instance
-            
+
         Raises:
             ValueError: If use_spc_ingestion is False
             TypeError: If document type is not supported
@@ -324,7 +325,7 @@ class PreprocessedDocument:
                 "SPC ingestion is now required. Set use_spc_ingestion=True or remove the parameter. "
                 "Legacy ingestion methods (document_ingestion module) are no longer supported."
             )
-        
+
         # Reject class types - only accept instances
         if isinstance(document, type):
             class_name = getattr(document, '__name__', str(document))
@@ -346,22 +347,22 @@ class PreprocessedDocument:
                     "Document has chunk_graph attribute but it is None. "
                     "Ensure SPC ingestion pipeline completed successfully."
                 )
-            
+
             # Validate chunk_graph has chunks
             if not hasattr(chunk_graph, 'chunks') or not chunk_graph.chunks:
                 raise ValueError(
                     "Document chunk_graph is empty. "
                     "Ensure SPC ingestion pipeline completed successfully and extracted chunks."
                 )
-            
+
             try:
                 from saaaaaa.utils.spc_adapter import SPCAdapter
                 adapter = SPCAdapter()
                 preprocessed = adapter.to_preprocessed_document(document, document_id=document_id)
-                
+
                 # Comprehensive SPC ingestion validation
                 validation_results = []
-                
+
                 # Validate raw_text
                 if not preprocessed.raw_text or not preprocessed.raw_text.strip():
                     raise ValueError(
@@ -370,20 +371,20 @@ class PreprocessedDocument:
                     )
                 text_length = len(preprocessed.raw_text)
                 validation_results.append(f"raw_text: {text_length} chars")
-                
+
                 # Validate sentences extracted
                 sentence_count = len(preprocessed.sentences) if preprocessed.sentences else 0
                 if sentence_count == 0:
                     logger.warning("SPC ingestion produced zero sentences - document may be malformed")
                 validation_results.append(f"sentences: {sentence_count}")
-                
+
                 # Validate chunk_graph exists
                 chunk_count = preprocessed.metadata.get("chunk_count", 0)
                 validation_results.append(f"chunks: {chunk_count}")
-                
+
                 # Log successful validation
                 logger.info(f"SPC ingestion validation passed: {', '.join(validation_results)}")
-                
+
                 return preprocessed
             except ImportError as e:
                 raise ImportError(
@@ -816,8 +817,8 @@ class MethodExecutor:
     """
 
     def __init__(
-        self, 
-        dispatcher: Any | None = None, 
+        self,
+        dispatcher: Any | None = None,
         calibrations: dict[str, Any] | None = None,
         signal_registry: Any | None = None,
     ) -> None:
@@ -825,7 +826,7 @@ class MethodExecutor:
         self.degraded_mode = False
         self.degraded_reasons: list[str] = []
         self.signal_registry = signal_registry
-        
+
         try:
             registry = build_class_registry()
         except (ClassRegistryError, ModuleNotFoundError, ImportError) as exc:
@@ -847,7 +848,7 @@ class MethodExecutor:
 
         self.raw_calibrations = calibrations  # Will be empty dict after migration
         self.calibrations = self._map_calibrations_to_classes(calibrations)  # Will be empty dict
-        
+
         # Add calibration metadata for traceability
         self.calibration_version = CALIBRATION_VERSION
         self.calibration_hash = "n/a"  # Placeholder - hash function removed
@@ -893,7 +894,7 @@ class MethodExecutor:
 
         # Create ExtendedArgRouter with the registry for enhanced validation and metrics
         self._router = ExtendedArgRouter(registry)
-        
+
         # Check for critical degradation
         if len(self.instances) == 0 and len(registry) > 0:
             self.degraded_mode = True
@@ -903,7 +904,7 @@ class MethodExecutor:
 
     def _map_calibrations_to_classes(self, calibrations: dict[str, Any]) -> dict[str, dict[str, Any]]:
         """Map legacy YAML calibrations to classes.
-        
+
         NOTE: This method is deprecated and will always return an empty dict
         since calibrations parameter is always {} (YAML loading disabled).
         Kept for backward compatibility during transition period.
@@ -942,7 +943,7 @@ class MethodExecutor:
             raise RuntimeError(f"No calibration registered for {class_name}.{method_name}")
         if calib.is_default_like():
             raise RuntimeError(f"Placeholder calibration detected for {class_name}.{method_name}")
-        
+
         instance = self.instances.get(class_name)
         if not instance:
             logger.warning("No instance available for class %s", class_name)
@@ -966,7 +967,7 @@ class MethodExecutor:
 
     def get_routing_metrics(self) -> dict[str, Any]:
         """Get routing metrics from ExtendedArgRouter.
-        
+
         Returns:
             Dict with routing statistics including:
             - total_routes: Total number of routes processed
@@ -980,23 +981,23 @@ class MethodExecutor:
 
 def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orchestrator_class: type) -> None:
     """Validate phase definitions for structural coherence.
-    
+
     This is a hard gate: if phase definitions are broken, the orchestrator cannot start.
     No "limited mode" is allowed when the base schema is corrupted.
-    
+
     Args:
         phase_list: List of phase tuples (id, mode, handler, label)
         orchestrator_class: Orchestrator class to check for handler methods
-        
+
     Raises:
         RuntimeError: If phase definitions are invalid
     """
     if not phase_list:
         raise RuntimeError("FASES cannot be empty - no phases defined for orchestration")
-    
+
     # Extract phase IDs
     phase_ids = [phase[0] for phase in phase_list]
-    
+
     # Check for duplicate phase IDs
     seen_ids = set()
     for phase_id in phase_ids:
@@ -1006,7 +1007,7 @@ def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orch
                 "Phase IDs must be unique."
             )
         seen_ids.add(phase_id)
-    
+
     # Check that IDs are contiguous starting from 0
     # For performance: check sorted and validate range
     if phase_ids != sorted(phase_ids):
@@ -1022,7 +1023,7 @@ def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orch
             f"Phase IDs must be contiguous from 0 to {len(phase_list) - 1}. "
             f"Got highest ID: {phase_ids[-1]}"
         )
-    
+
     # Validate each phase
     valid_modes = {"sync", "async"}
     for phase_id, mode, handler_name, label in phase_list:
@@ -1032,14 +1033,14 @@ def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orch
                 f"Phase {phase_id} ({label}): invalid mode '{mode}'. "
                 f"Mode must be one of {valid_modes}"
             )
-        
+
         # Validate handler exists as method in orchestrator
         if not hasattr(orchestrator_class, handler_name):
             raise RuntimeError(
                 f"Phase {phase_id} ({label}): handler method '{handler_name}' "
                 f"does not exist in {orchestrator_class.__name__}"
             )
-        
+
         # Validate handler is callable
         handler = getattr(orchestrator_class, handler_name, None)
         if not callable(handler):
@@ -1134,7 +1135,7 @@ class Orchestrator:
         self,
         catalog: dict[str, Any] | None = None,
         monolith: dict[str, Any] | None = None,
-        questionnaire: "CanonicalQuestionnaire | None" = None,
+        questionnaire: CanonicalQuestionnaire | None = None,
         method_map: dict[str, Any] | None = None,
         schema: dict[str, Any] | None = None,
         catalog_path: str | None = None,
@@ -1286,7 +1287,7 @@ class Orchestrator:
             # No data provided - will need to load later or fail
             # This allows construction without I/O but requires data to be set before use
             self.catalog = None
-        
+
         # ========================================================================
         # PROMPT_NONEMPTY_EXECUTION_GRAPH_ENFORCER: Validate catalog is non-empty
         # Cannot proceed with empty catalog
@@ -1303,7 +1304,7 @@ class Orchestrator:
                 catalog_methods = self.catalog.get("methods")
             elif hasattr(self.catalog, "methods"):
                 catalog_methods = getattr(self.catalog, "methods", None)
-            
+
             if catalog_methods is not None and not catalog_methods:
                 raise RuntimeError(
                     "Method catalog.methods is empty - cannot run pipeline. "
@@ -1311,7 +1312,7 @@ class Orchestrator:
                 )
 
         self.executor = MethodExecutor()
-        
+
         # ========================================================================
         # PROMPT_NONEMPTY_EXECUTION_GRAPH_ENFORCER: Validate MethodExecutor.instances is non-empty
         # No "limited mode" when instances registry is empty
@@ -1322,7 +1323,7 @@ class Orchestrator:
                 "Cannot start orchestration without method instances. "
                 "Check that class registry is properly configured."
             )
-        
+
         self.calibrations: dict[str, Any] = getattr(self.executor, "raw_calibrations", {})
 
         # Import executors from the executors module
@@ -1385,7 +1386,7 @@ class Orchestrator:
         except Exception as e:
             logger.warning(f"Failed to get questionnaire provider: {e}")
             questionnaire_provider = None
-        
+
         # Note: Passing orchestrator=self is safe here because RecommendationEngine
         # only stores the reference in __init__ and doesn't access orchestrator
         # attributes during initialization. The orchestrator is fully set up at
@@ -1426,20 +1427,21 @@ class Orchestrator:
         logger.info(f"--- Starting Sophisticated Engineering Operation for: {policy_area_id} ---")
 
         # 1. Generate 10 smart policy chunks
-        from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
         from pathlib import Path
+
+        from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
 
         document_path = Path(f"data/policy_areas/{policy_area_id}.txt")
         logger.info(f"Processing document: {document_path}")
-        
+
         ingestion_pipeline = CPPIngestionPipeline()
         canon_package = asyncio.run(ingestion_pipeline.process(document_path, max_chunks=10))
-        
+
         logger.info(f"Generated {len(canon_package.chunk_graph.chunks)} chunks for {policy_area_id}.")
 
         # 2. Load signals
-        from .signal_loader import build_signal_pack_from_monolith
         from .questionnaire import load_questionnaire
+        from .signal_loader import build_signal_pack_from_monolith
 
         questionnaire = load_questionnaire()
         signal_pack = build_signal_pack_from_monolith(policy_area_id, questionnaire=questionnaire)
@@ -1450,7 +1452,7 @@ class Orchestrator:
 
         # Simple mock for the signal registry, as the executor expects an object with a 'get' method.
         class MockSignalRegistry:
-            def __init__(self, pack):
+            def __init__(self, pack) -> None:
                 self._pack = pack
             def get(self, _policy_area):
                 return self._pack
@@ -1466,7 +1468,7 @@ class Orchestrator:
             "canon_policy_package": canon_package.to_dict(),
             "signal_pack": signal_pack.to_dict(),
         }
-        
+
         logger.info(f"Distributing work package to executor for {policy_area_id}.")
         # This simulates the distribution. The executor method will provide the evidence of receipt.
         if hasattr(executor_instance, 'receive_and_process_work_package'):
@@ -1730,12 +1732,12 @@ class Orchestrator:
     def get_system_health(self) -> dict[str, Any]:
         """
         Comprehensive system health check.
-        
+
         Returns health status with component checks for:
         - Method executor
         - Questionnaire provider (if available)
         - Resource limits and usage
-        
+
         Returns:
             Dict with overall status ('healthy', 'degraded', 'unhealthy')
             and component-specific health information
@@ -1770,7 +1772,7 @@ class Orchestrator:
                 'status': 'healthy' if provider.has_data() else 'unhealthy'
             }
             health['components']['questionnaire_provider'] = questionnaire_health
-            
+
             if not provider.has_data():
                 health['status'] = 'degraded'
         except Exception as e:
@@ -1789,18 +1791,18 @@ class Orchestrator:
                 'worker_budget': usage.get('worker_budget', 0),
                 'status': 'healthy'
             }
-            
+
             # Warning thresholds
             if usage.get('cpu_percent', 0) > 80:
                 resource_health['status'] = 'degraded'
                 resource_health['warning'] = 'High CPU usage'
                 health['status'] = 'degraded'
-            
+
             if usage.get('rss_mb', 0) > 3500:  # Near 4GB limit
                 resource_health['status'] = 'degraded'
                 resource_health['warning'] = 'High memory usage'
                 health['status'] = 'degraded'
-            
+
             health['components']['resources'] = resource_health
         except Exception as e:
             health['status'] = 'unhealthy'
@@ -1819,7 +1821,7 @@ class Orchestrator:
     def export_metrics(self) -> dict[str, Any]:
         """
         Export all metrics for monitoring.
-        
+
         Returns:
             Dict containing:
             - timestamp: Current UTC timestamp
@@ -1829,7 +1831,7 @@ class Orchestrator:
             - phase_status: Status of all phases
         """
         abort_timestamp = self.abort_signal.get_timestamp()
-        
+
         return {
             'timestamp': datetime.utcnow().isoformat(),
             'phase_metrics': self.get_phase_metrics(),
@@ -1851,7 +1853,7 @@ class Orchestrator:
         if self._monolith_data is not None:
             # Normalize monolith for hash and serialization (handles MappingProxyType)
             monolith = _normalize_monolith_for_hash(self._monolith_data)
-            
+
             # Stable, content-based hash for reproducibility
             monolith_hash = hashlib.sha256(
                 json.dumps(monolith, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
@@ -1877,7 +1879,7 @@ class Orchestrator:
         # Use pre-loaded method_map data (I/O-free path)
         if self._method_map_data is not None:
             method_map = self._method_map_data
-            
+
             # ========================================================================
             # PROMPT_NONEMPTY_EXECUTION_GRAPH_ENFORCER: Validate method_map is non-empty
             # Cannot route methods with empty map
@@ -1887,7 +1889,7 @@ class Orchestrator:
                     "Method map is empty - cannot route methods. "
                     "A non-empty method map is required for orchestration."
                 )
-            
+
             summary = method_map.get("summary", {})
             total_methods = summary.get("total_methods")
             if total_methods != EXPECTED_METHOD_COUNT:
@@ -2038,7 +2040,7 @@ class Orchestrator:
                 "ingestion", "Empty document", reason=error_msg
             )
             raise ValueError(error_msg)
-        
+
         # Log ingestion metrics and validate chunk count
         chunk_count = preprocessed.metadata.get("chunk_count", 0)
         if chunk_count == 0:
@@ -2047,11 +2049,11 @@ class Orchestrator:
                 "ingestion", "No chunks", reason=error_msg
             )
             raise ValueError(error_msg)
-        
+
         text_length = len(preprocessed.raw_text)
         sentence_count = len(preprocessed.sentences) if preprocessed.sentences else 0
         adapter_source = preprocessed.metadata.get("adapter_source", "unknown")
-        
+
         # Store ingestion information for verification manifest
         ingestion_info = {
             "method": "SPC",  # Only SPC is supported
@@ -2063,11 +2065,11 @@ class Orchestrator:
         }
         if "chunk_overlap" in preprocessed.metadata:
             ingestion_info["chunk_overlap"] = preprocessed.metadata["chunk_overlap"]
-        
+
         # Store in context for manifest generation
         if hasattr(self, "_context"):
             self._context["ingestion_info"] = ingestion_info
-        
+
         logger.info(
             f"Document ingested successfully: document_id={document_id}, "
             f"method=SPC, text_length={text_length}, chunk_count={chunk_count}, "
@@ -2088,20 +2090,20 @@ class Orchestrator:
         micro_questions = config.get("micro_questions", [])
         instrumentation.items_total = len(micro_questions)
         ordered_questions: list[dict[str, Any]] = []
-        
+
         # NEW: Initialize chunk router for chunk-aware execution
         chunk_routes: dict[int, Any] = {}
         if document.processing_mode == "chunked" and document.chunks:
             try:
                 from saaaaaa.core.orchestrator.chunk_router import ChunkRouter
                 router = ChunkRouter()
-                
+
                 # Route chunks to executors
                 for chunk in document.chunks:
                     route = router.route_chunk(chunk)
                     if not route.skip_reason:
                         chunk_routes[chunk.id] = route
-                
+
                 logger.info(
                     f"Chunk-aware execution enabled: routed {len(chunk_routes)} chunks "
                     f"from {len(document.chunks)} total chunks"
@@ -2135,7 +2137,7 @@ class Orchestrator:
         }
 
         results: list[MicroQuestionRun] = []
-        
+
         # NEW: Track chunk execution metrics
         execution_metrics = {
             "chunk_executions": 0,  # Actual chunk-level executions
@@ -2202,7 +2204,7 @@ class Orchestrator:
                 else:
                     try:
                         executor_instance = executor_class(self.executor)
-                        
+
                         # NEW: Chunk-aware execution
                         if chunk_routes and document.processing_mode == "chunked":
                             # Find chunks relevant to this base_slot
@@ -2210,12 +2212,12 @@ class Orchestrator:
                                 chunk_id for chunk_id, route in chunk_routes.items()
                                 if base_slot in route.executor_class or route.executor_class == base_slot
                             ]
-                            
+
                             if relevant_chunk_ids:
                                 # Track metrics
                                 execution_metrics["chunk_executions"] += len(relevant_chunk_ids)
                                 execution_metrics["total_chunks_processed"] += len(relevant_chunk_ids)
-                                
+
                                 # Execute on relevant chunks only
                                 chunk_evidences = []
                                 for chunk_id in relevant_chunk_ids:
@@ -2236,7 +2238,7 @@ class Orchestrator:
                                         logger.warning(
                                             f"Chunk {chunk_id} execution failed for {base_slot}: {chunk_exc}"
                                         )
-                                
+
                                 # Aggregate chunk results
                                 if chunk_evidences:
                                     # Use first evidence as base, merge others
@@ -2262,7 +2264,7 @@ class Orchestrator:
                             evidence = await asyncio.to_thread(
                                 executor_instance.execute, document, self.executor
                             )
-                        
+
                         circuit["failures"] = 0
                     except Exception as exc:  # pragma: no cover - dependencias externas
                         circuit["failures"] += 1
@@ -2314,20 +2316,20 @@ class Orchestrator:
             for task in tasks:
                 task.cancel()
             raise
-        
+
         # Log chunk execution metrics
         if chunk_routes and document.processing_mode == "chunked":
             total_possible = len(micro_questions) * len(document.chunks)
             actual_executed = execution_metrics["chunk_executions"] + execution_metrics["full_doc_executions"]
             savings_pct = ((total_possible - actual_executed) / max(total_possible, 1)) * 100 if total_possible > 0 else 0
-            
+
             logger.info(
                 f"Chunk execution metrics: {execution_metrics['chunk_executions']} chunk-scoped, "
                 f"{execution_metrics['full_doc_executions']} full-doc, "
                 f"{total_possible} total possible, "
                 f"savings: {savings_pct:.1f}%"
             )
-            
+
             # Store metrics for verification manifest
             if not hasattr(self, '_execution_metrics'):
                 self._execution_metrics = {}
@@ -2405,7 +2407,7 @@ class Orchestrator:
                 else:
                     elements_found = getattr(item.evidence, "elements", [])
                     raw_results = getattr(item.evidence, "raw_results", {})
-                
+
                 scoring_evidence = ScoringEvidence(
                     elements_found=elements_found,
                     confidence_scores=raw_results.get("confidence_scores", []),
@@ -2876,7 +2878,7 @@ class Orchestrator:
                 else:
                     # Already a numeric value
                     macro_score_numeric = macro_score_normalized
-                
+
                 # Validate that extracted value is numeric
                 if macro_score_numeric is not None and not isinstance(macro_score_numeric, (int, float)):
                     logger.warning(
@@ -3019,30 +3021,30 @@ def describe_pipeline_shape(
     executor_instances: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Describe the actual pipeline shape from live data.
-    
+
     Computes phase count, question count, and executor count from real data
     instead of using hard-coded constants.
-    
+
     Args:
         monolith: Questionnaire monolith (if available)
         executor_instances: MethodExecutor.instances dict (if available)
-        
+
     Returns:
         Dict with actual pipeline metrics
     """
     shape: dict[str, Any] = {
         "phases": len(Orchestrator.FASES),
     }
-    
+
     if monolith:
         micro_questions = monolith.get("blocks", {}).get("micro_questions", [])
         meso_questions = monolith.get("blocks", {}).get("meso_questions", [])
         macro_question = monolith.get("blocks", {}).get("macro_question", {})
         question_total = len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
         shape["expected_micro_questions"] = question_total
-    
+
     if executor_instances:
         shape["registered_executors"] = len(executor_instances)
-    
+
     return shape
 

@@ -19,9 +19,12 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime, timezone
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, Field, field_validator
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 CANONICAL_SCHEMA_VERSION = "io-1.0"
 
@@ -29,17 +32,17 @@ CANONICAL_SCHEMA_VERSION = "io-1.0"
 def _canonical_json_bytes(obj: Any) -> bytes:
     """
     Convert object to canonical JSON bytes for deterministic hashing.
-    
+
     Args:
         obj: Object to serialize
-        
+
     Returns:
         Canonical JSON bytes (sorted keys, compact separators)
     """
     return json.dumps(
-        obj, 
-        separators=(",", ":"), 
-        sort_keys=True, 
+        obj,
+        separators=(",", ":"),
+        sort_keys=True,
         ensure_ascii=False
     ).encode("utf-8")
 
@@ -47,13 +50,13 @@ def _canonical_json_bytes(obj: Any) -> bytes:
 def sha256_hex(obj: Any) -> str:
     """
     Compute SHA-256 hex digest of object via canonical JSON.
-    
+
     Args:
         obj: Object to hash
-        
+
     Returns:
         64-character hexadecimal SHA-256 digest
-        
+
     Examples:
         >>> sha256_hex({"b": 2, "a": 1})
         'eed6d51ab37ca6df16a330c85094467efcab7b5746c0e02bc728a05069ede38b'
@@ -66,10 +69,10 @@ def sha256_hex(obj: Any) -> str:
 def utcnow_iso() -> str:
     """
     Get current UTC timestamp in ISO-8601 format with Z suffix.
-    
+
     Returns:
         ISO-8601 timestamp string with Z suffix
-        
+
     Examples:
         >>> ts = utcnow_iso()
         >>> ts.endswith('Z')
@@ -116,7 +119,7 @@ class ContractEnvelope(BaseModel):
         >>> len(env.event_id)
         64
     """
-    
+
     schema_version: str = Field(default=CANONICAL_SCHEMA_VERSION)
     timestamp_utc: str = Field(default_factory=utcnow_iso)
     policy_unit_id: str = Field(min_length=1)
@@ -146,19 +149,19 @@ class ContractEnvelope(BaseModel):
         policy_unit_id: str,
         correlation_id: str | None = None,
         schema_version: str = CANONICAL_SCHEMA_VERSION,
-    ) -> "ContractEnvelope":
+    ) -> ContractEnvelope:
         """
         Wrap a payload with universal metadata envelope.
-        
+
         Args:
             payload: The phase deliverable/expectation to wrap
             policy_unit_id: Policy unit identifier
             correlation_id: Optional request correlation ID
             schema_version: Schema version (default: io-1.0)
-            
+
         Returns:
             ContractEnvelope with computed digests and event ID
-            
+
         Examples:
             >>> payload = {"status": "ok"}
             >>> env = ContractEnvelope.wrap(payload, policy_unit_id="PDM-001")
@@ -181,16 +184,16 @@ class ContractEnvelope(BaseModel):
 
 if __name__ == "__main__":
     import doctest
-    
+
     # Run doctests
     print("Running doctests...")
     doctest.testmod(verbose=True)
-    
+
     # Minimal deterministic check
     print("\n" + "="*60)
     print("ContractEnvelope Integration Tests")
     print("="*60)
-    
+
     print("\n1. Testing deterministic digest computation:")
     p = {"a": 1, "b": [2, 3]}
     e1 = ContractEnvelope.wrap(p, policy_unit_id="PU_123")
@@ -199,23 +202,23 @@ if __name__ == "__main__":
     assert e1.event_id == e2.event_id
     print(f"   ✓ Digest is deterministic: {e1.content_digest[:16]}...")
     print(f"   ✓ Event ID is deterministic: {e1.event_id[:16]}...")
-    
+
     print("\n2. Testing envelope immutability:")
     try:
         e1.payload = {"modified": True}
         print("   ✗ FAILED: Envelope should be immutable")
     except Exception:
         print("   ✓ Envelope is immutable (frozen)")
-    
+
     print("\n3. Testing UTC timestamp validation:")
     assert e1.timestamp_utc.endswith('Z')
     print(f"   ✓ Timestamp is UTC: {e1.timestamp_utc}")
-    
+
     print("\n4. Testing correlation ID:")
     e3 = ContractEnvelope.wrap(p, policy_unit_id="PU_123", correlation_id="corr-456")
     assert e3.correlation_id == "corr-456"
     print(f"   ✓ Correlation ID: {e3.correlation_id}")
-    
+
     print("\n" + "="*60)
     print("ContractEnvelope doctest OK - All tests passed!")
     print("="*60)

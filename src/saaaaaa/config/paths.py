@@ -20,10 +20,10 @@ Usage:
     report = OUTPUT_DIR / 'analysis_report.json'
 """
 
-from pathlib import Path
-from typing import Final, Optional
 import os
 import sys
+from pathlib import Path
+from typing import Final
 
 # ============================================================================
 # Project Root Detection
@@ -129,7 +129,7 @@ TEST_OUTPUT_DIR: Final[Path] = PROJECT_ROOT / 'tests' / 'output'
 # Utilities
 # ============================================================================
 
-def ensure_directories_exist():
+def ensure_directories_exist() -> None:
     """
     Create all required directories if they don't exist.
 

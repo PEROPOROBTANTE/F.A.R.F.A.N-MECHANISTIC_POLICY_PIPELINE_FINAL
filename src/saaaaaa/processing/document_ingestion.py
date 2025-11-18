@@ -25,7 +25,7 @@ The SPC (Smart Policy Chunks) system provides:
 DO NOT import or use this module for any new code.
 ==============================================================
     outcome = pipeline.ingest(input_path, output_dir)
-    
+
     # Convert to PreprocessedDocument for orchestrator
     adapter = SPCAdapter()
     doc = adapter.to_preprocessed_document(outcome.cpp)

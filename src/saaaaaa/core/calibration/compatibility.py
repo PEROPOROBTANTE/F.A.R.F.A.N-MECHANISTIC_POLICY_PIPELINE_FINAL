@@ -13,9 +13,12 @@ Compatibility Scores (from theoretical model):
 import json
 import logging
 from pathlib import Path
-from typing import Dict
+from typing import TYPE_CHECKING
 
 from .data_structures import CompatibilityMapping
+
+if TYPE_CHECKING:
+    from .data_structures import LayerScore
 
 logger = logging.getLogger(__name__)
 
@@ -23,39 +26,39 @@ logger = logging.getLogger(__name__)
 class CompatibilityRegistry:
     """
     Registry of method compatibility mappings.
-    
+
     This loads from a JSON file that defines which methods work
     in which contexts (questions, dimensions, policies).
     """
-    
-    def __init__(self, config_path: Path | str):
+
+    def __init__(self, config_path: Path | str) -> None:
         """
         Initialize registry from configuration file.
-        
+
         Args:
             config_path: Path to method_compatibility.json
         """
         self.config_path = Path(config_path)
-        self.mappings: Dict[str, CompatibilityMapping] = {}
+        self.mappings: dict[str, CompatibilityMapping] = {}
         self._load()
-    
-    def _load(self):
+
+    def _load(self) -> None:
         """Load compatibility mappings from JSON."""
         if not self.config_path.exists():
             raise FileNotFoundError(
                 f"Compatibility config not found: {self.config_path}\n"
                 f"Create this file with method compatibility definitions."
             )
-        
-        with open(self.config_path, 'r', encoding='utf-8') as f:
+
+        with open(self.config_path, encoding='utf-8') as f:
             data = json.load(f)
-        
+
         # Validate structure
         if "method_compatibility" not in data:
             raise ValueError(
                 "Config must have 'method_compatibility' key at top level"
             )
-        
+
         # Load each method's compatibility
         for method_id, compat_data in data["method_compatibility"].items():
             self.mappings[method_id] = CompatibilityMapping(
@@ -64,7 +67,7 @@ class CompatibilityRegistry:
                 dimensions=compat_data.get("dimensions", {}),
                 policies=compat_data.get("policies", {}),
             )
-            
+
             logger.info(
                 "compatibility_loaded",
                 extra={
@@ -74,16 +77,16 @@ class CompatibilityRegistry:
                     "num_policies": len(compat_data.get("policies", {})),
                 }
             )
-        
+
         logger.info(
             "compatibility_registry_loaded",
             extra={"total_methods": len(self.mappings)}
         )
-    
+
     def get(self, method_id: str) -> CompatibilityMapping:
         """
         Get compatibility mapping for a method.
-        
+
         If method not found, returns a mapping with all penalties (0.1).
         """
         if method_id not in self.mappings:
@@ -101,26 +104,26 @@ class CompatibilityRegistry:
                 dimensions={},
                 policies={},
             )
-        
+
         return self.mappings[method_id]
-    
+
     def validate_anti_universality(self, threshold: float = 0.9) -> dict[str, bool]:
         """
         Check Anti-Universality Theorem for all methods.
-        
+
         Returns:
             Dict mapping method_id to compliance status (True = compliant)
-        
+
         Raises:
             ValueError if any method violates the theorem
         """
         results = {}
         violations = []
-        
+
         for method_id, mapping in self.mappings.items():
             is_compliant = mapping.check_anti_universality(threshold)
             results[method_id] = is_compliant
-            
+
             if not is_compliant:
                 violations.append(method_id)
                 logger.error(
@@ -132,13 +135,13 @@ class CompatibilityRegistry:
                         "avg_p": sum(mapping.policies.values()) / len(mapping.policies) if mapping.policies else 0,
                     }
                 )
-        
+
         if violations:
             raise ValueError(
                 f"Anti-Universality Theorem violated by methods: {violations}\n"
                 f"No method can have avg compatibility ≥ {threshold} across ALL contexts."
             )
-        
+
         return results
 
 
@@ -149,7 +152,7 @@ class ContextualLayerEvaluator:
     These scores are direct lookups from the compatibility registry.
     """
 
-    def __init__(self, registry: CompatibilityRegistry):
+    def __init__(self, registry: CompatibilityRegistry) -> None:
         self.registry = registry
 
     def _evaluate_question_raw(self, method_id: str, question_id: str) -> float:
