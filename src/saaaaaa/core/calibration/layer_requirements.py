@@ -77,6 +77,12 @@ class LayerRequirementsResolver:
             LayerID.CHAIN,
             LayerID.META
         },
+        "ingestion": {  # ADDED: Found in JSON as "ingestion" (29 methods)
+            LayerID.BASE,
+            LayerID.UNIT,
+            LayerID.CHAIN,
+            LayerID.META
+        },
         "structure": {
             LayerID.BASE,
             LayerID.UNIT,
@@ -126,6 +132,25 @@ class LayerRequirementsResolver:
         },
         "orchestrator": {
             LayerID.BASE,
+            LayerID.CHAIN,
+            LayerID.META
+        },
+
+        # ADDED: Executor type (2 methods in JSON - script executors, not D1Q1-D6Q5)
+        "executor": {
+            LayerID.BASE,
+            LayerID.CHAIN,
+            LayerID.META
+        },
+
+        # ADDED: Unknown type (227 methods) - Use conservative approach
+        "unknown": {
+            LayerID.BASE,
+            LayerID.UNIT,
+            LayerID.QUESTION,
+            LayerID.DIMENSION,
+            LayerID.POLICY,
+            LayerID.CONGRUENCE,
             LayerID.CHAIN,
             LayerID.META
         },
