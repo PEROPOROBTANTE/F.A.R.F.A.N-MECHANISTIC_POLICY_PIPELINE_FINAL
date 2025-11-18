@@ -60,7 +60,9 @@ echo -e "${GREEN}✓ System dependencies installed${NC}"
 echo ""
 echo -e "${YELLOW}[3/8] Creating virtual environment...${NC}"
 if [ -d "farfan-env" ]; then
-    echo "Removing old virtual environment..."
+    echo -e "${YELLOW}WARNING: Removing existing virtual environment...${NC}"
+    echo "Press Ctrl+C within 5 seconds to cancel..."
+    sleep 5
     rm -rf farfan-env
 fi
 
