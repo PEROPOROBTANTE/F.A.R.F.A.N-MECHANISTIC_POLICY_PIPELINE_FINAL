@@ -226,7 +226,7 @@ def _create_calibration_orchestrator(self) -> "CalibrationOrchestrator | None":
    - Lines 37-45: Added calibration imports
    - Lines 70-83: Extended WiringComponents
    - Lines 156-180: Updated bootstrap sequence
-   - Lines 441-481: Repaired signal seeding (10 policy areas)
+   - Lines 534-574: Repaired signal seeding (10 policy areas)
    - Lines 442-517: Added calibration orchestrator creation
 
 2. **`src/saaaaaa/core/orchestrator/executors.py`**
