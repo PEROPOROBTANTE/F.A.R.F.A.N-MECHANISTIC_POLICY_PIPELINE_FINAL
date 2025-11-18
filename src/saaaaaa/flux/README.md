@@ -34,15 +34,58 @@ FLUX is a production-grade pipeline system with explicit contracts, typed config
 
 ## Architecture
 
+### Integration with SPC Phase-One
+
+**IMPORTANT**: FLUX phases are complementary to SPC (Smart Policy Chunks) Phase-One ingestion.
+
+**Canonical Entry Point**: Use `CPPIngestionPipeline` from `saaaaaa.processing.spc_ingestion` for document ingestion. SPC is the ONLY authorized Phase-One system.
+
+**FLUX Role**: FLUX provides downstream processing phases that consume SPC output:
+
 ### Pipeline Phases
 
-1. **Ingest**: Document acquisition and integrity validation
-2. **Normalize**: Unicode normalization and text extraction  
+1. ~~**Ingest**~~: **REMOVED** - Use SPC `CPPIngestionPipeline` instead
+2. **Normalize**: Unicode normalization and sentence segmentation (receives `IngestDeliverable` from SPC or external source)
 3. **Chunk**: Multi-resolution chunking (micro/meso/macro)
 4. **Signals**: Cross-cutting pattern enrichment
 5. **Aggregate**: Feature engineering with PyArrow
 6. **Score**: Multi-metric scoring with Polars
 7. **Report**: Artifact generation and provenance
+
+### Typical Usage Pattern
+
+```python
+# Phase-One: SPC Ingestion (CANONICAL ENTRY POINT)
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+from pathlib import Path
+
+pipeline = CPPIngestionPipeline()
+cpp_result = await pipeline.process(
+    document_path=Path("policy.pdf"),
+    document_id="POL-2024-001",
+    title="Plan Nacional 2024"
+)
+
+# cpp_result is now a CanonPolicyPackage with:
+# - chunks[], chunk_graph, quality_metrics, provenance_map
+
+# Phase-Two+: FLUX Processing (OPTIONAL)
+from saaaaaa.flux import run_normalize, NormalizeConfig
+from saaaaaa.flux.models import IngestDeliverable, DocManifest
+
+# Convert SPC output to FLUX input if needed
+ing = IngestDeliverable(
+    manifest=DocManifest(document_id=cpp_result.manifest.document_id),
+    raw_text=cpp_result.get_full_text(),  # or use chunks
+    provenance_ok=True
+)
+
+# Run FLUX normalize phase
+normalize_cfg = NormalizeConfig(unicode_form="NFC", keep_diacritics=True)
+norm_result = run_normalize(normalize_cfg, ing, policy_unit_id="POL-2024-001")
+
+# Continue with chunk, signals, aggregate, score, report as needed
+```
 
 ### Phase Contracts
 

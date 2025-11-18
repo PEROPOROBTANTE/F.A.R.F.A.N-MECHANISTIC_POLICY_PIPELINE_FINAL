@@ -17,50 +17,50 @@ Academic References:
      → VERIFIED: Grover's algorithm optimal iteration count formula: k ≈ π/4 · √N
      → EMPIRICAL: Search space 32-128 chosen for policy analysis (not from paper)
      → For N=100: k ≈ √100 ≈ 10 iterations (formula-derived, verified)
-   
+
 2. Neuromorphic Computing:
    - Maass, W. (1997). "Networks of spiking neurons: The third generation of neural network models"
      Neural Networks, 10(9), 1659-1671. DOI: 10.1016/S0893-6080(97)00011-7
      → VERIFIED: Discusses spiking neurons and STDP learning
      → EMPIRICAL: 8-12 stages chosen based on common practice (not specified in paper)
      → VERIFIED: Threshold values normalized to biological ranges
-   
+
 3. Causal Inference & Graph Structure:
    - Spirtes, P., Glymour, C., & Scheines, R. (2000). "Causation, Prediction, and Search"
      MIT Press. ISBN: 978-0262194402
      → VERIFIED: PC algorithm for causal discovery
      → VERIFIED: Independence test with α=0.05 standard
      → EMPIRICAL: 10-30 variables chosen for computational tractability (not explicit in book)
-   
+
    - Pearl, J. (2009). "Causality: Models, Reasoning and Inference" (2nd ed.)
      Cambridge University Press. ISBN: 978-0521895606
      → VERIFIED: Discusses graph sparsity for interpretability
      → EMPIRICAL: 2-4 parents chosen as practical default (principle from Pearl, number empirical)
-   
+
 4. Information Theory:
    - Shannon, C. E. (1948). "A Mathematical Theory of Communication"
      Bell System Technical Journal, 27(3), 379-423. DOI: 10.1002/j.1538-7305.1948.tb01338.x
      → VERIFIED: Information theory fundamentals, entropy definitions
      → EMPIRICAL: log₂(N) stages derived from information-theoretic principles (application-specific)
-   
+
    - Cover, T. M., & Thomas, J. A. (2006). "Elements of Information Theory" (2nd ed.)
      Wiley-Interscience. ISBN: 978-0471241959
      → VERIFIED: Mutual information estimation theory
      → EMPIRICAL: 100 samples chosen as practical minimum (principle-based, not explicit)
-   
+
 5. Meta-Learning:
    - Thrun, S., & Pratt, L. (1998). "Learning to Learn"
      Springer. ISBN: 978-0792380474
      → VERIFIED: Meta-learning theory and transfer learning
      → VERIFIED: Learning rate range 0.01-0.1 for gradient descent
      → EMPIRICAL: 3-7 strategies based on exploration-exploitation balance (not explicit)
-   
+
    - Hospedales, T., et al. (2021). "Meta-Learning in Neural Networks: A Survey"
      IEEE Transactions on Pattern Analysis and Machine Intelligence, 44(9), 5149-5169.
      DOI: 10.1109/TPAMI.2021.3079209
      → VERIFIED: Comprehensive survey of meta-learning approaches
      → EMPIRICAL: 5 strategies as practical default (survey doesn't specify number)
-   
+
 6. Attention Mechanisms:
    - Vaswani, A., et al. (2017). "Attention is All You Need"
      Advances in Neural Information Processing Systems, 30.
@@ -68,12 +68,12 @@ Academic References:
      → CLARIFICATION: 64 is per-head dimension in their architecture (not a "minimum")
      → VERIFIED: Scaling factor 1/√d_k for numerical stability
      → EMPIRICAL: We use 64 total as conservative default for resource-constrained scenarios
-   
+
    - Bahdanau, D., Cho, K., & Bengio, Y. (2014). "Neural Machine Translation by Jointly Learning to Align and Translate"
      arXiv:1409.0473
      → VERIFIED: Introduces attention mechanism for sequence-to-sequence
      → EMPIRICAL: Embedding dimensions chosen for specific use case
-   
+
 7. Topological Data Analysis:
    - Carlsson, G. (2009). "Topology and data"
      Bulletin of the American Mathematical Society, 46(2), 255-308. DOI: 10.1090/S0273-0979-09-01249-X
@@ -101,16 +101,16 @@ for policy document analysis workflows.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 
 
 @dataclass(frozen=True)
 class AcademicReference:
     """Academic citation for a parameter choice.
-    
+
     Attributes:
         authors: Author list (e.g., "Nielsen, M. A., & Chuang, I. L.")
         year: Publication year
@@ -125,14 +125,14 @@ class AcademicReference:
     venue: str
     doi_or_isbn: str
     justification: str
-    
+
     def cite_apa(self) -> str:
         """Format citation in simplified APA style.
-        
+
         Note: This is a simplified citation format for documentation purposes.
         For formal academic citations, consult the official APA Publication Manual
         or use a dedicated citation management tool.
-        
+
         Returns:
             Simplified APA-style citation string
         """
@@ -142,64 +142,64 @@ class AcademicReference:
 class AdvancedModuleConfig(BaseModel):
     """
     Research-based configuration for advanced executor modules.
-    
+
     Section 7.1: All academic-derived parameters are immutable (frozen).
     All parameters are grounded in peer-reviewed academic literature.
     Each field includes academic justification and citation.
-    
+
     Attributes:
         quantum_num_methods: Number of methods in quantum search space
             Default: 100 (EMPIRICAL: chosen for policy analysis, not from Nielsen & Chuang)
-            
+
         quantum_iterations: Grover algorithm iteration count
             Default: 10 (FORMULA-DERIVED: ≈√100 from Nielsen & Chuang formula k ≈ π/4 · √N)
-            
+
         neuromorphic_num_stages: Number of stages in spiking neural network
             Default: 10 (EMPIRICAL: based on common practice, Maass 1997 discusses STDP but doesn't specify range)
-            
+
         neuromorphic_threshold: Firing threshold for spiking neurons
             Default: 1.0 (VERIFIED: normalized from biological neuron threshold ~-55mV, Maass 1997)
-            
+
         neuromorphic_decay: Membrane potential decay rate
             Default: 0.9 (EMPIRICAL: typical biological decay constant)
-            
+
         causal_num_variables: Number of variables in causal graph
             Default: 20 (EMPIRICAL: chosen for tractability with PC algorithm from Spirtes et al. 2000)
-            
+
         causal_independence_alpha: Statistical significance for independence tests
             Default: 0.05 (VERIFIED: standard p-value threshold, Spirtes et al. 2000)
-            
+
         causal_max_parents: Maximum parents per node (graph sparsity)
             Default: 4 (EMPIRICAL: based on Pearl 2009 interpretability principles)
-            
+
         info_num_stages: Information flow analysis stages
             Default: 10 (FORMULA-DERIVED: ≈log₂(1024) from Shannon 1948 information theory)
-            
+
         info_entropy_window: Window size for entropy calculation
             Default: 100 (EMPIRICAL: practical minimum based on Cover & Thomas 2006 principles)
-            
+
         meta_num_strategies: Number of meta-learning strategies
             Default: 5 (EMPIRICAL: balance of exploration-exploitation, Thrun & Pratt 1998 and Hospedales et al. 2021 provide theory)
-            
+
         meta_learning_rate: Meta-learner update rate
             Default: 0.05 (VERIFIED: within 0.01-0.1 range from Thrun & Pratt 1998)
-            
+
         meta_epsilon: Exploration rate for epsilon-greedy
             Default: 0.1 (EMPIRICAL: standard RL exploration rate)
-            
+
         attention_embedding_dim: Embedding dimension for attention mechanism
             Default: 64 (CLARIFIED: Vaswani et al. 2017 uses 64 as per-head dim; we use as total for conservative default)
-            
+
         attention_num_heads: Number of attention heads
             Default: 8 (VERIFIED: standard in Vaswani et al. 2017, though with larger d_model)
-            
+
         topology_max_dimension: Maximum homology dimension
             Default: 1 (VERIFIED: Carlsson 2009 states dimension 1 sufficient for most applications)
-            
+
         topology_max_points: Maximum points for TDA
             Default: 1000 (VERIFIED: Carlsson 2009 practical limit for Vietoris-Rips filtration)
     """
-    
+
     # Quantum Computing Parameters
     quantum_num_methods: int = Field(
         default=100,
@@ -213,7 +213,7 @@ class AdvancedModuleConfig(BaseModel):
         le=20,
         description="Grover iterations: k≈√N (FORMULA-DERIVED: Nielsen & Chuang 2010)"
     )
-    
+
     # Neuromorphic Computing Parameters
     neuromorphic_num_stages: int = Field(
         default=10,
@@ -233,7 +233,7 @@ class AdvancedModuleConfig(BaseModel):
         le=0.99,
         description="Membrane potential decay (EMPIRICAL: biological constant)"
     )
-    
+
     # Causal Inference Parameters
     causal_num_variables: int = Field(
         default=20,
@@ -253,7 +253,7 @@ class AdvancedModuleConfig(BaseModel):
         le=6,
         description="Max parents per node (EMPIRICAL: Pearl 2009 interpretability principle)"
     )
-    
+
     # Information Theory Parameters
     info_num_stages: int = Field(
         default=10,
@@ -267,7 +267,7 @@ class AdvancedModuleConfig(BaseModel):
         le=500,
         description="Entropy samples (EMPIRICAL: practical min, Cover & Thomas 2006 principles)"
     )
-    
+
     # Meta-Learning Parameters
     meta_num_strategies: int = Field(
         default=5,
@@ -287,7 +287,7 @@ class AdvancedModuleConfig(BaseModel):
         le=0.2,
         description="Exploration rate (EMPIRICAL: standard RL)"
     )
-    
+
     # Attention Mechanism Parameters
     attention_embedding_dim: int = Field(
         default=64,
@@ -301,7 +301,7 @@ class AdvancedModuleConfig(BaseModel):
         le=16,
         description="Attention heads (VERIFIED: Vaswani et al. 2017 standard, though with d_model=512)"
     )
-    
+
     # Topological Data Analysis Parameters
     topology_max_dimension: int = Field(
         default=1,
@@ -315,22 +315,22 @@ class AdvancedModuleConfig(BaseModel):
         le=5000,
         description="Max points for TDA (VERIFIED: Carlsson 2009 - <1000 practical for Vietoris-Rips)"
     )
-    
+
     # Section 7.3: Module version control
     advanced_module_version: str = Field(
         default="1.0.0",
         description="Version of advanced module configuration (Section 7.3)"
     )
-    
+
     model_config = {
         "frozen": True,  # Section 7.1: Lock academic parameters
         "validate_assignment": False,
         "extra": "forbid",
     }
-    
+
     def model_post_init(self, __context: Any) -> None:
         """Validate academic constraints after initialization.
-        
+
         Note: Using model_validator would be better for Pydantic v2,
         but __post_init__ provides clear validation logic.
         """
@@ -339,20 +339,20 @@ class AdvancedModuleConfig(BaseModel):
         import math
         optimal_iterations = math.sqrt(self.quantum_num_methods)
         tolerance = 0.5  # 50% tolerance
-        
+
         if not (optimal_iterations * (1 - tolerance) <= self.quantum_iterations <= optimal_iterations * (1 + tolerance)):
             import warnings
             warnings.warn(
                 f"quantum_iterations ({self.quantum_iterations}) deviates from optimal "
                 f"√quantum_num_methods (≈{optimal_iterations:.1f}). "
                 f"Nielsen & Chuang (2010) recommend iterations ≈ √N for Grover's algorithm.",
-                UserWarning
+                UserWarning, stacklevel=2
             )
-    
+
     @classmethod
     def get_academic_references(cls) -> dict[str, list[AcademicReference]]:
         """Get all academic references used for parameter choices.
-        
+
         Returns:
             Dictionary mapping parameter category to list of academic references
         """
@@ -460,10 +460,10 @@ class AdvancedModuleConfig(BaseModel):
                 ),
             ],
         }
-    
+
     def describe_academic_basis(self) -> str:
         """Generate human-readable description of academic grounding.
-        
+
         Returns:
             Formatted string with parameter values and academic justifications
         """

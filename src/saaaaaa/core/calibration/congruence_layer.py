@@ -9,7 +9,7 @@ Evaluates method ensemble congruence using three components:
 Formula: C_play(G|ctx) = c_scale · c_sem · c_fusion
 """
 import logging
-from typing import List, Dict, Any
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class CongruenceLayerEvaluator:
         registry: Dictionary mapping method IDs to their metadata
     """
 
-    def __init__(self, method_registry: Dict[str, Any]):
+    def __init__(self, method_registry: dict[str, Any]) -> None:
         """
         Initialize evaluator with method registry.
 
@@ -34,10 +34,10 @@ class CongruenceLayerEvaluator:
 
     def evaluate(
         self,
-        method_ids: List[str],
+        method_ids: list[str],
         subgraph_id: str,
         fusion_rule: str = "weighted_average",
-        provided_inputs: List[str] = None
+        provided_inputs: list[str] = None
     ) -> float:
         """
         Evaluate congruence of method ensemble.
@@ -102,7 +102,7 @@ class CongruenceLayerEvaluator:
 
         return C_play
 
-    def _compute_scale_congruence(self, method_ids: List[str]) -> float:
+    def _compute_scale_congruence(self, method_ids: list[str]) -> float:
         """
         Compute c_scale: Range compatibility.
 
@@ -145,7 +145,7 @@ class CongruenceLayerEvaluator:
         logger.warning("ranges_incompatible", extra={"ranges": ranges})
         return 0.0
 
-    def _compute_semantic_congruence(self, method_ids: List[str]) -> float:
+    def _compute_semantic_congruence(self, method_ids: list[str]) -> float:
         """
         Compute c_sem: Semantic overlap (Jaccard index).
 
@@ -197,9 +197,9 @@ class CongruenceLayerEvaluator:
 
     def _compute_fusion_validity(
         self,
-        method_ids: List[str],
+        method_ids: list[str],
         fusion_rule: str,
-        provided_inputs: List[str]
+        provided_inputs: list[str]
     ) -> float:
         """
         Compute c_fusion: Fusion rule validity.

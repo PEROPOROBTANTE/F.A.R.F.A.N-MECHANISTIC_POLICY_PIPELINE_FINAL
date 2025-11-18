@@ -51,14 +51,14 @@ from scipy import stats
 # === NLP Y TRANSFORMERS ===
 # Check dependency lockdown before importing transformers
 from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
-_lockdown = get_dependency_lockdown()
-
-from sentence_transformers import SentenceTransformer#, util
+from sentence_transformers import SentenceTransformer, util
 from sklearn.cluster import DBSCAN, AgglomerativeClustering
 
 # === MACHINE LEARNING Y SCORING ===
 from sklearn.feature_extraction.text import TfidfVectorizer
 from transformers import pipeline
+
+_lockdown = get_dependency_lockdown()
 
 # ============================================================================
 # LOGGING CONFIGURATION

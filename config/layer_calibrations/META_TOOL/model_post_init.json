@@ -1,0 +1,150 @@
+{
+  "_metadata": {
+    "method_id": "src.saaaaaa.core.orchestrator.advanced_module_config.AdvancedModuleConfig.model_post_init",
+    "canonical_name": "src.saaaaaa.core.orchestrator.advanced_module_config.AdvancedModuleConfig.model_post_init",
+    "unique_id": "44fdceaa7d92804d",
+    "calibration_date": "2025-11-18",
+    "calibrated_by": "layer_based_calibration_system",
+    "spec_version": "1.0.0",
+    "spec_reference": "canonic_calibration_methods.md"
+  },
+
+  "role": "META_TOOL",
+  "required_layers": ["@b", "@chain", "@m"],
+
+  "layer_scores": {
+    "@b": {
+      "value": 0.5148,
+      "formula": "x_@b = w_th·b_theory + w_imp·b_impl + w_dep·b_deploy",
+      "components": {
+        "b_theory": {
+          "value": 0.560,
+          "subcomponents": {
+            "grounded_in_valid_statistics": 0.5,
+            "logical_consistency": 0.5,
+            "appropriate_assumptions": 0.7
+          },
+          "weights": {
+            "w_stat": 0.4,
+            "w_logic": 0.3,
+            "w_assume": 0.3
+          },
+          "rationale": "Validates mathematical formula (Grover √N) from Nielsen & Chuang 2010, has docstring, explicitly documents tolerance assumption"
+        },
+        "b_impl": {
+          "value": 0.468,
+          "subcomponents": {
+            "impl_tests": 0.2,
+            "impl_robust": 0.5,
+            "impl_enforce": 0.9,
+            "impl_docs": 0.55
+          },
+          "weights": {
+            "w_tests": 0.40,
+            "w_robust": 0.25,
+            "w_enforce": 0.20,
+            "w_docs": 0.15
+          },
+          "rationale": "No direct tests, basic error handling (conditional+warning), strong enforcement (Pydantic BaseModel frozen=True), good documentation with type hints"
+        },
+        "b_deploy": {
+          "value": 0.508,
+          "subcomponents": {
+            "validation_runs": 0.480,
+            "stability_coefficient": 0.540,
+            "failure_rate": 0.510
+          },
+          "weights": {
+            "w_val": 0.4,
+            "w_stab": 0.35,
+            "w_fail": 0.25
+          },
+          "layer_maturity_baseline": 0.6,
+          "rationale": "META_TOOL role, scaled from utility baseline 0.6"
+        }
+      },
+      "weights": {
+        "w_th": 0.4,
+        "w_imp": 0.35,
+        "w_dep": 0.25
+      }
+    },
+
+    "@chain": {
+      "value": 1.0,
+      "rule": "all_contracts_pass ∧ no_warnings",
+      "rationale": "Pydantic post-init hook, called by framework, no external edges, validates self state, no input schema mismatches, all contracts pass"
+    },
+
+    "@m": {
+      "value": 0.5820,
+      "formula": "x_@m = 0.5·m_transp + 0.4·m_gov + 0.1·m_cost",
+      "components": {
+        "m_transp": {
+          "value": 0.7,
+          "conditions_met": "2/3",
+          "rationale": "Formula transparent (√N check), partial trace (warnings), partial logging (warnings module)"
+        },
+        "m_gov": {
+          "value": 0.33,
+          "conditions_met": "1/3",
+          "rationale": "Not version tagged, no config hash, valid Pydantic signature"
+        },
+        "m_cost": {
+          "value": 1.0,
+          "rationale": "Fast runtime (simple sqrt check), minimal memory (no allocations)"
+        }
+      },
+      "weights": {
+        "w_transp": 0.5,
+        "w_gov": 0.4,
+        "w_cost": 0.1
+      }
+    }
+  },
+
+  "fusion_parameters": {
+    "source": "config/fusion_specification.json",
+    "role": "META_TOOL",
+    "formula": "Cal(I) = Σ(a_ℓ · x_ℓ) + Σ(a_ℓk · min(x_ℓ, x_k))",
+    "linear_weights": {
+      "@b": 0.40,
+      "@chain": 0.30,
+      "@m": 0.20
+    },
+    "interaction_weights": {
+      "(@b, @chain)": 0.10
+    },
+    "weight_sum_validation": {
+      "linear_sum": 0.90,
+      "interaction_sum": 0.10,
+      "total": 1.0
+    }
+  },
+
+  "final_calibration": {
+    "linear_term": 0.6223,
+    "linear_computation": "0.40×0.5148 + 0.30×1.0000 + 0.20×0.5820",
+    "interaction_term": 0.0515,
+    "interaction_computation": "0.10×min(0.5148, 1.0000)",
+    "final_score": 0.6738,
+    "final_computation": "0.6223 + 0.0515 = 0.6738"
+  },
+
+  "calibration_metadata": {
+    "triage_result": {
+      "q1_analytically_active": true,
+      "q1_reason": "Validates academic constraints (Grover formula relationship)",
+      "q2_parametric": false,
+      "q2_reason": "No parametric keywords in docstring",
+      "q3_safety_critical": true,
+      "q3_reason": "Returns None but validates constraints; bugs could allow bad configs",
+      "requires_calibration": true
+    },
+    "rubric_reference": "config/intrinsic_calibration_rubric.json",
+    "exclusion_check": "NOT EXCLUDED (validation method, safety critical)",
+    "role_determination": "META_TOOL (validates configuration, meta-level utility)",
+    "canonical_role_match": "META_TOOL → L_*(META_TOOL) = {@b, @chain, @m} (Definition 4.2)",
+    "layer_count": 3
+  }
+}

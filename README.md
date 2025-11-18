@@ -6,6 +6,41 @@
 
 ---
 
+## ⚡ Quick Start
+
+```bash
+# 1. Install dependencies (one-time setup)
+bash install.sh
+
+# 2. Activate environment
+source farfan-env/bin/activate
+
+# 3. Run health check
+bash comprehensive_health_check.sh
+
+# 4. Execute pipeline on test plan
+python scripts/run_policy_pipeline_verified.py \
+    --plan data/plans/Plan_1.pdf \
+    --artifacts-dir artifacts/plan1
+```
+
+**Expected time**: 2-3 minutes for complete analysis
+
+---
+
+## 📚 Documentation
+
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| **[INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)** | Complete installation instructions with troubleshooting | All users |
+| **[RUNBOOK.md](RUNBOOK.md)** | Operational runbook with launch, health checks, and commands | Operators, DevOps |
+| **[TEST_PLAN.md](TEST_PLAN.md)** | Comprehensive test plan (plan prueba) with 10 test cases | QA, Testers |
+| **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)** | User operational guide for analysis workflows | Analysts, Users |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System architecture and technical design | Developers, Architects |
+| **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)** | Quick reference for developers | Developers |
+
+---
+
 ## 🚀 Getting Started
 
 For a complete guide to installation, system activation, and your first analysis, please refer to the **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)**. This is the recommended starting point for all users.
@@ -14,7 +49,7 @@ For a complete guide to installation, system activation, and your first analysis
 
 For a deep dive into the system's architecture, including the 9-phase pipeline, cross-cut signals, and deterministic protocols, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
-##  quick reference
+## 🔧 Quick Reference
 
 For a quick reference of the project, see **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)**.
 
@@ -185,7 +220,7 @@ Sistemas previos en evaluación de políticas (e.g., análisis ToC con DAG valid
 
 F.A.R.F.A.N integra:
 
-1. **Determinismo de Pipeline**: 9 fases con postcondiciones verificables; fallo en cualquier fase → ABORT (no degradación gradual).
+1. **Determinismo de Pipeline**: Pipeline canónico con postcondiciones verificables; fallo en cualquier fase → ABORT (no degradación gradual).
 2. **Señales Transversales**: Registro centralizado de patrones, indicadores, umbrales desde cuestionario monolito hacia todos los ejecutores, con transporte memory:// (in-process) o HTTP (con circuit breaker).
 3. **Proveniencia Completa**: Cada token → `{page_id, bbox, byte_range, parser_id}` mediante Arrow IPC, permitiendo auditoría forense.
 4. **ArgRouter Extendido**: 30+ rutas especiales eliminan caídas silenciosas de parámetros (argrouter_coverage = 1.0).
@@ -199,77 +234,57 @@ F.A.R.F.A.N integra:
 
 ### 2.1. Pipeline de Procesamiento
 
-El sistema implementa un pipeline de 9 fases con dependencias secuenciales estrictas:
+El sistema implementa un pipeline canónico con punto de entrada único:
 
+#### **Phase-One: SPC Ingestion (Smart Policy Chunks)**
+
+**Punto de entrada canónico**: `CPPIngestionPipeline` en `src/saaaaaa/processing/spc_ingestion/__init__.py`
+
+SPC es el ÚNICO sistema de ingestión autorizado. Implementa 15 subprocesos internos que procesan documentos de política a través de análisis estructural, semántico, presupuestario y temporal:
+
+```python
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+
+# ÚNICO punto de entrada autorizado
+pipeline = CPPIngestionPipeline()
+result = await pipeline.process(
+    document_path=Path("policy.pdf"),
+    document_id="POL-2024-001",
+    title="Plan Nacional 2024"
+)
+
+# Resultado: CanonPolicyPackage con:
+# - chunks[] (SmartPolicyChunks con embeddings BGE-M3)
+# - chunk_graph (relaciones causales/jerárquicas)
+# - quality_metrics (provenance_completeness, structural_consistency, etc.)
+# - provenance_map (trazabilidad token→source)
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 1: Acquisition & Integrity                                 │
-│   Input:  file_path (Path)                                      │
-│   Output: manifest.initial {blake3_hash, mime_type, byte_size}  │
-│   Gate:   blake3_hash must be 64 hex chars                      │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 2: Format Decomposition                                    │
-│   Input:  manifest.initial                                      │
-│   Output: raw_object_tree {pages[], fonts[], images[]}          │
-│   Gate:   len(pages) > 0                                        │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 3: Structural Normalization (Policy-Aware)                 │
-│   Input:  raw_object_tree                                       │
-│   Output: policy_graph.prelim {Ejes, Programas, Proyectos}      │
-│   Gate:   structural_consistency_score ≥ 1.0                    │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 4: Text Extraction & Normalization                         │
-│   Input:  policy_graph.prelim                                   │
-│   Output: content_stream.v1 (Unicode NFC, stable offsets)       │
-│   Gate:   All text normalized to NFC                            │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 5: OCR (Conditional)                                       │
-│   Input:  content_stream.v1, image_pages[]                      │
-│   Output: ocr_layer {text, confidence_scores}                   │
-│   Gate:   avg(confidence) ≥ ocr_confidence_threshold (0.85)     │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 6: Tables & Budget Handling                                │
-│   Input:  content_stream.v1                                     │
-│   Output: tables_figures.subgraph {KPIs[], Budgets[]}           │
-│   Gate:   budget_consistency_score ≥ 0.95                       │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 7: Provenance Binding                                      │
-│   Input:  content_stream.v1, raw_object_tree                    │
-│   Output: provenance_map.arrow (token→page/bbox/byte_range)     │
-│   Gate:   provenance_completeness = 1.0 (NO partial coverage)   │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 8: Advanced Chunking                                       │
-│   Input:  content_stream.v1, policy_graph.prelim                │
-│   Output: chunk_graph {chunks[], edges[]}                       │
-│   Gate:   boundary_f1 ≥ 0.85, chunk_overlap ≤ 0.15              │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 9: Canonical Packing                                       │
-│   Input:  All outputs from phases 1-8                           │
-│   Output: CanonPolicyPackage (CPP) {content, provenance,        │
-│           chunk_graph, integrity_index}                         │
-│   Gate:   Merkle root recomputation matches stored hash         │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+**Garantías de SPC Phase-One**:
+
+1. **Provenance Completeness = 1.0**: Cada token trazable a fuente (CRITICAL gate)
+2. **Structural Consistency = 1.0**: Estructura de política perfectamente parseada (CRITICAL gate)
+3. **Boundary F1 ≥ 0.85**: Precisión de límites de chunks (HIGH gate)
+4. **Budget Consistency ≥ 0.95**: Coherencia de datos presupuestarios (MEDIUM gate)
+5. **Temporal Robustness ≥ 0.80**: Calidad de datos temporales (MEDIUM gate)
+
+**Subprocesos Internos de SPC** (NO expuestos como API externa):
+- Validación de integridad (BLAKE3)
+- Extracción y normalización de texto (Unicode NFC)
+- Análisis estructural (Ejes/Programas/Proyectos)
+- Chunking estratégico con BGE-M3 embeddings
+- Extracción de presupuestos y KPIs
+- Análisis temporal y geográfico
+- Generación de grafo de chunks
+- Empaquetado en CanonPolicyPackage
+
+**Output**: `CanonPolicyPackage` - formato canónico para downstream phases.
+
+---
 
 **Postcondiciones por Fase**: Cada fase declara invariantes verificables. Violación → ABORT con diagnóstico detallado (no "best effort").
 
-**Ejemplo de Fallo**: Si FASE 7 produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
+**Ejemplo de Fallo**: Si SPC produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
 
 ### 2.2. Sistema de Contratos
 
@@ -552,7 +567,7 @@ Configuraciones externas (JSON, TOML) solo en orchestrator layer, nunca en core.
 
 **Comando**:
 ```bash
-PYTHONPATH=src pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
+python -m pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
 ```
 
 ---
@@ -638,19 +653,22 @@ pip install -r requirements.txt
 
 # 3. Instalar paquete en modo editable
 pip install -e .
+
+# 4. Verificar instalación editable
+python -m saaaaaa.devtools.ensure_install
 ```
 
 #### 5.1.2. Ejecución
 
 ```bash
 # Ejecutar golden tests
-PYTHONPATH=src pytest tests/test_regression_*.py -v
+python -m pytest tests/test_regression_*.py -v
 
 # Golden test específico (CPP ingestion)
-PYTHONPATH=src pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
+python -m pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
 
 # Golden test de determinismo
-PYTHONPATH=src pytest tests/test_determinism.py::test_phase_hash_stability -v
+python -m pytest tests/test_determinism.py::test_phase_hash_stability -v
 ```
 
 #### 5.1.3. Verificación de Output

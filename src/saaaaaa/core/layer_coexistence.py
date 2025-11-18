@@ -20,14 +20,13 @@ Canonical Layer Notation (from questionnaire_monolith.json):
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Set, Optional
 from enum import Enum
 
 
 class Layer(Enum):
     """
     Canonical layer identifiers.
-    
+
     Source: questionnaire_monolith.json and theoretical framework specification.
     These are the ONLY valid layer identifiers in the system.
     """
@@ -42,7 +41,7 @@ class Layer(Enum):
 class LayerScore:
     """
     Score from a single layer for a method.
-    
+
     Attributes:
         layer: The layer identifier
         value: Numerical score in [0, 1]
@@ -52,9 +51,9 @@ class LayerScore:
     layer: Layer
     value: float
     weight: float = 1.0
-    metadata: Dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=dict)
 
-    def __new__(cls, layer: Layer, value: float, weight: float = 1.0, metadata: Dict = None):
+    def __new__(cls, layer: Layer, value: float, weight: float = 1.0, metadata: dict = None):
         """Validate score bounds before instance creation"""
         if not 0 <= value <= 1:
             raise ValueError(f"Layer score must be in [0,1], got {value}")
@@ -64,7 +63,7 @@ class LayerScore:
             metadata = {}
         return super().__new__(cls)
 
-    def __init__(self, layer: Layer, value: float, weight: float = 1.0, metadata: Dict = None):
+    def __init__(self, layer: Layer, value: float, weight: float = 1.0, metadata: dict = None) -> None:
         # dataclass will set fields, but we need to ensure metadata is not None
         if metadata is None:
             object.__setattr__(self, 'metadata', {})
@@ -72,9 +71,9 @@ class LayerScore:
 class MethodSignature:
     """
     Complete signature for a method under Layer Coexistence framework.
-    
+
     This is the canonical method notation that every calibrated method must expose.
-    
+
     Attributes:
         method_id: Unique identifier (ClassName.method_name)
         active_layers: Set of layers relevant to this method (L(M))
@@ -85,14 +84,14 @@ class MethodSignature:
         calibration_rule: Human-readable calibration rule description
     """
     method_id: str
-    active_layers: Set[Layer]
-    input_schema: Dict
-    output_schema: Dict
+    active_layers: set[Layer]
+    input_schema: dict
+    output_schema: dict
     fusion_operator_name: str
-    fusion_parameters: Dict
+    fusion_parameters: dict
     calibration_rule: str
-    
-    def to_dict(self) -> Dict:
+
+    def to_dict(self) -> dict:
         """Export to dictionary for serialization"""
         return {
             'method_id': self.method_id,
@@ -103,9 +102,9 @@ class MethodSignature:
             'fusion_parameters': self.fusion_parameters,
             'calibration_rule': self.calibration_rule
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict) -> 'MethodSignature':
+    def from_dict(cls, data: dict) -> 'MethodSignature':
         """Load from dictionary"""
         return cls(
             method_id=data['method_id'],
@@ -121,59 +120,59 @@ class MethodSignature:
 class FusionOperator:
     """
     Abstract base class for fusion operators F_M.
-    
+
     All fusion operators must satisfy:
     - Monotonicity: ∂F/∂x_ℓ ≥ 0 for all layers ℓ
     - Boundedness: F: [0,1]^n → [0,1]
     - Interpretability: Clear semantic meaning of output
-    
+
     Subclasses must implement:
     - fuse(scores: List[LayerScore]) -> float
     - verify_properties() -> Dict[str, bool]
     - get_formula() -> str
     """
-    
-    def __init__(self, name: str, parameters: Dict):
+
+    def __init__(self, name: str, parameters: dict) -> None:
         self.name = name
         self.parameters = parameters
-    
-    def fuse(self, scores: List[LayerScore]) -> float:
+
+    def fuse(self, scores: list[LayerScore]) -> float:
         """
         Aggregate layer scores into calibrated output.
-        
+
         Args:
             scores: List of LayerScore objects
-            
+
         Returns:
             Calibrated score in [0, 1]
         """
         raise NotImplementedError("Subclasses must implement fuse()")
-    
-    def verify_properties(self) -> Dict[str, bool]:
+
+    def verify_properties(self) -> dict[str, bool]:
         """
         Verify mathematical properties (monotonicity, boundedness, etc.)
-        
+
         Returns:
             Dict mapping property name to verification result
         """
         raise NotImplementedError("Subclasses must implement verify_properties()")
-    
+
     def get_formula(self) -> str:
         """
         Return explicit mathematical formula in canonical notation.
-        
+
         Returns:
             LaTeX-style formula string
         """
         raise NotImplementedError("Subclasses must implement get_formula()")
-    
-    def get_trace(self, scores: List[LayerScore]) -> List[str]:
+
+    def get_trace(self, scores: list[LayerScore]) -> list[str]:
         """
         Generate step-by-step arithmetic trace.
-        
+
         Args:
             scores: List of LayerScore objects
-            
+
         Returns:
             List of computation steps as strings
         """
@@ -183,111 +182,111 @@ class FusionOperator:
 class WeightedAverageFusion(FusionOperator):
     """
     Weighted average fusion operator.
-    
+
     Formula: F_M(x) = Σ(w_ℓ · x_ℓ) / Σ(w_ℓ)
-    
+
     Properties:
     - Monotonic: Yes (∂F/∂x_ℓ = w_ℓ/Σw > 0)
     - Bounded: Yes (min(x) ≤ F ≤ max(x))
     - Idempotent: Yes (F(c, c, ..., c) = c)
     - Compensatory: Full (low scores can be compensated by high scores)
-    
+
     Reference: Standard weighted mean in MCDA (Keeney & Raiffa, 1976, Ch. 3)
     """
-    
-    def __init__(self, parameters: Optional[Dict] = None):
+
+    def __init__(self, parameters: dict | None = None) -> None:
         super().__init__("WeightedAverage", parameters or {})
         self.normalize_weights = parameters.get('normalize_weights', True) if parameters else True
-    
-    def fuse(self, scores: List[LayerScore]) -> float:
+
+    def fuse(self, scores: list[LayerScore]) -> float:
         """Compute weighted average"""
         if not scores:
             return 0.0
-        
+
         weighted_sum = sum(score.value * score.weight for score in scores)
         weight_sum = sum(score.weight for score in scores)
-        
+
         if weight_sum == 0:
             return 0.0
-        
+
         return weighted_sum / weight_sum
-    
-    def verify_properties(self) -> Dict[str, bool]:
+
+    def verify_properties(self) -> dict[str, bool]:
         """Verify mathematical properties"""
         # Test monotonicity with sample inputs
         test_scores_low = [LayerScore(Layer.QUESTION, 0.3, 1.0)]
         test_scores_high = [LayerScore(Layer.QUESTION, 0.7, 1.0)]
-        
+
         result_low = self.fuse(test_scores_low)
         result_high = self.fuse(test_scores_high)
-        
+
         return {
             'monotonic': result_high >= result_low,
             'bounded': 0 <= result_low <= 1 and 0 <= result_high <= 1,
             'idempotent': abs(self.fuse([LayerScore(Layer.QUESTION, 0.5, 1.0)]) - 0.5) < 1e-10
         }
-    
+
     def get_formula(self) -> str:
         """Return LaTeX formula"""
         return r"F_{WA}(x) = \frac{\sum_{\ell \in L(M)} w_\ell \cdot x_\ell}{\sum_{\ell \in L(M)} w_\ell}"
-    
-    def get_trace(self, scores: List[LayerScore]) -> List[str]:
+
+    def get_trace(self, scores: list[LayerScore]) -> list[str]:
         """Generate computation trace"""
         trace = []
         trace.append(f"Weighted Average Fusion: {len(scores)} layers")
-        
-        for i, score in enumerate(scores):
+
+        for _i, score in enumerate(scores):
             trace.append(f"  Layer {score.layer.value}: x = {score.value:.4f}, w = {score.weight:.4f}")
-        
+
         weighted_sum = sum(s.value * s.weight for s in scores)
         weight_sum = sum(s.weight for s in scores)
-        
+
         trace.append(f"Weighted sum: Σ(w·x) = {weighted_sum:.4f}")
         trace.append(f"Weight sum: Σ(w) = {weight_sum:.4f}")
         if weight_sum == 0:
-            trace.append(f"Result: No valid weights, returning 0.0")
+            trace.append("Result: No valid weights, returning 0.0")
         else:
             trace.append(f"Result: {weighted_sum:.4f} / {weight_sum:.4f} = {weighted_sum/weight_sum:.4f}")
-        
+
         return trace
 
 
 class OWAFusion(FusionOperator):
     """
     Ordered Weighted Averaging (OWA) fusion operator.
-    
+
     Formula: F_OWA(x) = Σ(v_i · x_(i))
     where x_(i) is the i-th largest value and v_i are position weights
-    
+
     Properties:
     - Monotonic: Yes (if all v_i ≥ 0)
     - Bounded: Yes
     - Allows modeling of optimism/pessimism (andness/orness)
-    
+
     Reference: Yager (1988) "On ordered weighted averaging aggregation operators"
                Int. J. General Systems, 14(3), 183-194
-    
+
     Parameters:
         weights: Position-based weights [v_1, v_2, ..., v_n]
         Should sum to 1 for proper normalization
     """
-    
-    def __init__(self, parameters: Dict):
+
+    def __init__(self, parameters: dict) -> None:
         super().__init__("OWA", parameters)
         self.position_weights = parameters.get('weights', [])
-        
+
         if len(self.position_weights) == 0:
             raise ValueError("OWA requires position weights")
-    
-    def fuse(self, scores: List[LayerScore]) -> float:
+
+    def fuse(self, scores: list[LayerScore]) -> float:
         """Compute OWA aggregation"""
         if not scores:
             return 0.0
-        
+
         # Sort scores in descending order
         values = [score.value for score in scores]
         sorted_values = sorted(values, reverse=True)
-        
+
         # Pad or truncate weights if necessary
         n = len(sorted_values)
         if len(self.position_weights) < n:
@@ -295,17 +294,17 @@ class OWAFusion(FusionOperator):
             extended_weights = list(self.position_weights) + [1.0/n] * (n - len(self.position_weights))
         else:
             extended_weights = self.position_weights[:n]
-        
+
         # Normalize weights
         weight_sum = sum(extended_weights)
         if weight_sum > 0:
             extended_weights = [w / weight_sum for w in extended_weights]
-        
+
         # Compute weighted sum
-        result = sum(w * v for w, v in zip(extended_weights, sorted_values))
+        result = sum(w * v for w, v in zip(extended_weights, sorted_values, strict=False))
         return float(result)
-    
-    def verify_properties(self) -> Dict[str, bool]:
+
+    def verify_properties(self) -> dict[str, bool]:
         """Verify OWA properties"""
         # Check monotonicity, boundedness
         test_scores = [
@@ -313,37 +312,37 @@ class OWAFusion(FusionOperator):
             LayerScore(Layer.DIMENSION, 0.5, 1.0),
             LayerScore(Layer.POLICY_AREA, 0.8, 1.0)
         ]
-        
+
         result = self.fuse(test_scores)
         weight_sum = sum(self.position_weights)
-        
+
         return {
             'monotonic': True,  # Always true if weights are non-negative
             'bounded': 0 <= result <= 1,
             'weights_sum_to_one': abs(weight_sum - 1.0) < 1e-6
         }
-    
+
     def get_formula(self) -> str:
         """Return LaTeX formula"""
         return r"F_{OWA}(x) = \sum_{i=1}^{n} v_i \cdot x_{(i)} \text{ where } x_{(i)} \text{ is i-th largest}"
-    
-    def get_trace(self, scores: List[LayerScore]) -> List[str]:
+
+    def get_trace(self, scores: list[LayerScore]) -> list[str]:
         """Generate computation trace"""
         trace = []
         trace.append(f"OWA Fusion: {len(scores)} layers")
-        
+
         values = [(score.layer.value, score.value) for score in scores]
         values_sorted = sorted(values, key=lambda x: x[1], reverse=True)
-        
+
         trace.append("Sorted values (descending):")
         for i, (layer, val) in enumerate(values_sorted):
             weight_idx = min(i, len(self.position_weights) - 1)
             weight = self.position_weights[weight_idx]
             trace.append(f"  Position {i+1}: {layer} = {val:.4f}, weight = {weight:.4f}")
-        
+
         result = self.fuse(scores)
         trace.append(f"Result: {result:.4f}")
-        
+
         return trace
 
 
@@ -354,19 +353,19 @@ FUSION_OPERATORS = {
 }
 
 
-def create_fusion_operator(name: str, parameters: Optional[Dict] = None) -> FusionOperator:
+def create_fusion_operator(name: str, parameters: dict | None = None) -> FusionOperator:
     """
     Factory function to create fusion operators.
-    
+
     Args:
         name: Operator name from FUSION_OPERATORS
         parameters: Operator-specific parameters
-        
+
     Returns:
         Configured FusionOperator instance
     """
     if name not in FUSION_OPERATORS:
         raise ValueError(f"Unknown fusion operator: {name}. Available: {list(FUSION_OPERATORS.keys())}")
-    
+
     operator_class = FUSION_OPERATORS[name]
     return operator_class(parameters or {})

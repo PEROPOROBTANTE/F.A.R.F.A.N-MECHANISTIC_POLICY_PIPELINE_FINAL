@@ -97,7 +97,25 @@ def sample_dimension_scores() -> list[DimensionScore]:
 # VALIDATION TESTS
 # ============================================================================
 
-from saaaaaa.processing.aggregation import validate_scored_results, ValidationError
+from saaaaaa.processing.aggregation import validate_scored_results, ValidationError, run_aggregation_pipeline
+
+def test_run_aggregation_pipeline(minimal_monolith):
+    """Test the high-level aggregation pipeline orchestrator."""
+    scored_results = [
+        {
+            "question_global": i, "base_slot": f"s{i}", "policy_area": "P1",
+            "dimension": "D1", "score": float(i), "quality_level": "BUENO",
+            "evidence": {}, "raw_results": {}
+        } for i in range(5)
+    ]
+
+    cluster_scores = run_aggregation_pipeline(scored_results, minimal_monolith)
+
+    assert cluster_scores is not None
+    # Based on the test data, we expect one cluster.
+    assert len(cluster_scores) > 0
+    assert isinstance(cluster_scores[0], ClusterScore)
+
 
 def test_validate_scored_results_success():
     """Test successful validation of scored results."""

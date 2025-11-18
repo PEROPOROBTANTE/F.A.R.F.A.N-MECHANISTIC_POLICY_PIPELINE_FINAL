@@ -306,7 +306,7 @@ if decision_data and decision_data.get('decision') == "REQUIRES_CALIBRATION":
 
 ### Run Verification Script
 ```bash
-$ PYTHONPATH=src python3 scripts/verify_canonical_systems.py
+$ python3 scripts/verify_canonical_systems.py
 ```
 
 **Output**:

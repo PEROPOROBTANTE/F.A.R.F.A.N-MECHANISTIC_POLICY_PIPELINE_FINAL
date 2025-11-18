@@ -19,10 +19,11 @@ Version: 1.0.0
 """
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 from uuid import uuid4
 
 logger = logging.getLogger(__name__)
@@ -62,11 +63,11 @@ class SagaStep:
     execute_fn: Callable[..., Any]
     compensate_fn: Callable[..., Any]
     status: SagaStepStatus = SagaStepStatus.PENDING
-    result: Optional[Any] = None
-    error: Optional[Exception] = None
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    compensated_at: Optional[datetime] = None
+    result: Any | None = None
+    error: Exception | None = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    compensated_at: datetime | None = None
 
     def execute(self, *args, **kwargs) -> Any:
         """
@@ -131,12 +132,12 @@ class SagaEvent:
     event_id: str = field(default_factory=lambda: str(uuid4()))
     saga_id: str = ""
     event_type: str = ""
-    step_id: Optional[str] = None
-    step_name: Optional[str] = None
+    step_id: str | None = None
+    step_name: str | None = None
     timestamp: datetime = field(default_factory=datetime.utcnow)
-    data: Dict[str, Any] = field(default_factory=dict)
+    data: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert event to dictionary."""
         return {
             "event_id": self.event_id,
@@ -163,7 +164,7 @@ class SagaOrchestrator:
         >>> result = saga.execute()
     """
 
-    def __init__(self, saga_id: Optional[str] = None, name: str = "Unnamed Saga"):
+    def __init__(self, saga_id: str | None = None, name: str = "Unnamed Saga") -> None:
         """
         Initialize saga orchestrator.
 
@@ -173,18 +174,18 @@ class SagaOrchestrator:
         """
         self.saga_id = saga_id or str(uuid4())
         self.name = name
-        self.steps: List[SagaStep] = []
+        self.steps: list[SagaStep] = []
         self.status = SagaStatus.INITIALIZED
-        self.events: List[SagaEvent] = []
+        self.events: list[SagaEvent] = []
         self.created_at = datetime.utcnow()
-        self.completed_at: Optional[datetime] = None
+        self.completed_at: datetime | None = None
 
     def add_step(
         self,
         name: str,
         execute_fn: Callable[..., Any],
         compensate_fn: Callable[..., Any],
-        step_id: Optional[str] = None
+        step_id: str | None = None
     ) -> "SagaOrchestrator":
         """
         Add a step to the saga.
@@ -208,7 +209,7 @@ class SagaOrchestrator:
         self._record_event("step_added", step.step_id, step.name, {"step_count": len(self.steps)})
         return self
 
-    def execute(self, *args, **kwargs) -> Dict[str, Any]:
+    def execute(self, *args, **kwargs) -> dict[str, Any]:
         """
         Execute all saga steps in sequence with automatic compensation on failure.
 
@@ -225,7 +226,7 @@ class SagaOrchestrator:
         self.status = SagaStatus.IN_PROGRESS
         self._record_event("saga_started", data={"step_count": len(self.steps)})
 
-        executed_steps: List[SagaStep] = []
+        executed_steps: list[SagaStep] = []
 
         try:
             # Execute all steps in order
@@ -268,9 +269,9 @@ class SagaOrchestrator:
 
     def _compensate(
         self,
-        executed_steps: List[SagaStep],
+        executed_steps: list[SagaStep],
         original_error: Exception
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Execute compensating actions for all completed steps.
 
@@ -334,9 +335,9 @@ class SagaOrchestrator:
     def _record_event(
         self,
         event_type: str,
-        step_id: Optional[str] = None,
-        step_name: Optional[str] = None,
-        data: Optional[Dict[str, Any]] = None
+        step_id: str | None = None,
+        step_name: str | None = None,
+        data: dict[str, Any] | None = None
     ) -> None:
         """Record an event in the saga lifecycle."""
         event = SagaEvent(
@@ -354,7 +355,7 @@ class SagaOrchestrator:
             return (self.completed_at - self.created_at).total_seconds()
         return (datetime.utcnow() - self.created_at).total_seconds()
 
-    def get_audit_trail(self) -> List[Dict[str, Any]]:
+    def get_audit_trail(self) -> list[dict[str, Any]]:
         """
         Get complete audit trail of saga execution.
 
@@ -363,7 +364,7 @@ class SagaOrchestrator:
         """
         return [event.to_dict() for event in self.events]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert saga to dictionary for serialization."""
         return {
             "saga_id": self.saga_id,
@@ -389,7 +390,7 @@ class SagaOrchestrator:
 
 
 # Example compensating functions for common operations
-def compensate_file_write(file_path: str, original_content: Optional[str] = None) -> None:
+def compensate_file_write(file_path: str, original_content: str | None = None) -> None:
     """Compensate a file write operation by restoring original content or deleting."""
     import os
     if original_content is not None:
@@ -401,7 +402,7 @@ def compensate_file_write(file_path: str, original_content: Optional[str] = None
 
 def compensate_database_insert(db_connection, table: str, record_id: Any) -> None:
     """Compensate a database insert by deleting the record.
-    
+
     Note: This is a simplified example. In production, validate table name
     against a whitelist to prevent SQL injection attacks.
     """
@@ -410,7 +411,7 @@ def compensate_database_insert(db_connection, table: str, record_id: Any) -> Non
     allowed_tables = {"users", "orders", "transactions", "policies", "executors"}
     if table not in allowed_tables:
         raise ValueError(f"Invalid table name: {table}. Allowed tables: {allowed_tables}")
-    
+
     cursor = db_connection.cursor()
     cursor.execute(f"DELETE FROM {table} WHERE id = ?", (record_id,))
     db_connection.commit()

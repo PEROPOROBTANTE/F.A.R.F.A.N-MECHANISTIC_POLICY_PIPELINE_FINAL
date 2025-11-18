@@ -5,8 +5,8 @@ Data compiled from official government sources (2024)
 """
 
 from dataclasses import dataclass
-from typing import List, Dict
 from enum import Enum
+from typing import Any
 
 
 class PDETSubregion(Enum):
@@ -41,7 +41,7 @@ class PDETMunicipality:
 
 
 # Complete PDET Municipality Dataset (170 municipalities)
-PDET_MUNICIPALITIES: List[PDETMunicipality] = [
+PDET_MUNICIPALITIES: list[PDETMunicipality] = [
     # ALTO PATÍA Y NORTE DEL CAUCA (24 municipalities)
     PDETMunicipality("Argelia", "Cauca", PDETSubregion.ALTO_PATIA, 31000, 661.0, "19050"),
     PDETMunicipality("Balboa", "Cauca", PDETSubregion.ALTO_PATIA, 22000, 388.0, "19075"),
@@ -248,12 +248,12 @@ PDET_MUNICIPALITIES: List[PDETMunicipality] = [
 ]
 
 
-def get_municipalities_by_subregion(subregion: PDETSubregion) -> List[PDETMunicipality]:
+def get_municipalities_by_subregion(subregion: PDETSubregion) -> list[PDETMunicipality]:
     """Get all municipalities for a specific subregion"""
     return [m for m in PDET_MUNICIPALITIES if m.subregion == subregion]
 
 
-def get_municipalities_by_department(department: str) -> List[PDETMunicipality]:
+def get_municipalities_by_department(department: str) -> list[PDETMunicipality]:
     """Get all municipalities for a specific department"""
     return [m for m in PDET_MUNICIPALITIES if m.department == department]
 
@@ -271,7 +271,7 @@ def get_total_pdet_population() -> int:
     return sum(m.population for m in PDET_MUNICIPALITIES)
 
 
-def get_subregion_statistics() -> Dict[str, Dict[str, Any]]:
+def get_subregion_statistics() -> dict[str, dict[str, Any]]:
     """Get statistics for each subregion"""
     stats = {}
     for subregion in PDETSubregion:
@@ -280,13 +280,13 @@ def get_subregion_statistics() -> Dict[str, Dict[str, Any]]:
             "municipality_count": len(municipalities),
             "total_population": sum(m.population for m in municipalities),
             "total_area_km2": sum(m.area_km2 for m in municipalities),
-            "departments": list(set(m.department for m in municipalities))
+            "departments": list({m.department for m in municipalities})
         }
     return stats
 
 
 # Module-level validation
 assert len(PDET_MUNICIPALITIES) == 170, f"Expected 170 municipalities, got {len(PDET_MUNICIPALITIES)}"
-assert len(set(m.name for m in PDET_MUNICIPALITIES)) == 170, "Duplicate municipality names detected"
+assert len({m.name for m in PDET_MUNICIPALITIES}) == 170, "Duplicate municipality names detected"
 
 print(f"PDET Colombia Data Module loaded: {len(PDET_MUNICIPALITIES)} municipalities across {len(PDETSubregion)} subregions")

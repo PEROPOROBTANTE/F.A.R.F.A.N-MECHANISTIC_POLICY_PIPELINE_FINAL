@@ -142,7 +142,7 @@ $ python scripts/audit_catalog_registry_alignment.py
 
 Run alignment audit regularly:
 ```bash
-PYTHONPATH=src python scripts/audit_catalog_registry_alignment.py
+python scripts/audit_catalog_registry_alignment.py
 ```
 
 ### Red Flags (Require Immediate Action)

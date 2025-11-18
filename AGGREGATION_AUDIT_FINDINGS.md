@@ -98,7 +98,7 @@ avg_score = sum(d.score for d in area_dim_scores) / len(area_dim_scores)
 Esto contrasta con `DimensionAggregator`, que sí maneja pesos.
 
 **Impacto:**
-La incapacidad de ponderar las puntuaciones de las dimensiones al calcular la puntuación de un área de política limita la flexibilidad del modelo de puntuación. Ciertas dimensiones pueden ser más importantes que otras en un área de política determinada, y el modelo de agregación actual no puede reflejar estos matices.
+1La incapacidad de ponderar las puntuaciones de las dimensiones al calcular la puntuación de un área de política limita la flexibilidad del modelo de puntuación. Ciertas dimensiones pueden ser más importantes que otras en un área de política determinada, y el modelo de agregación actual no puede reflejar estos matices.
 
 **Acción de Remediación Propuesta:**
 1.  Modificar la firma del método `AreaPolicyAggregator.aggregate_area` para aceptar un parámetro `weights: list[float] | None = None`.

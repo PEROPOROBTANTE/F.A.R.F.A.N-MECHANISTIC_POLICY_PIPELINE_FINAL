@@ -5,7 +5,7 @@ Evaluates governance compliance using weighted formula:
 x_@m = 0.5·m_transp + 0.4·m_gov + 0.1·m_cost
 """
 import logging
-from typing import Optional
+
 from .config import MetaLayerConfig
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class MetaLayerEvaluator:
         config: MetaLayerConfig with weights and thresholds
     """
 
-    def __init__(self, config: MetaLayerConfig):
+    def __init__(self, config: MetaLayerConfig) -> None:
         """
         Initialize evaluator with meta layer config.
 
@@ -45,7 +45,7 @@ class MetaLayerEvaluator:
         full_trace: bool = False,
         logs_conform: bool = False,
         signature_valid: bool = False,
-        execution_time_s: Optional[float] = None
+        execution_time_s: float | None = None
     ) -> float:
         """
         Compute the weighted score x_@m = w_transparency·m_transp + w_governance·m_gov + w_cost·m_cost,
@@ -156,7 +156,7 @@ class MetaLayerEvaluator:
             m_gov ∈ {0.0, 0.33, 0.66, 1.0}
         """
         # Check version
-        has_version = bool(version and version != "unknown" and version != "1.0")
+        has_version = bool(version and version not in {"unknown", "1.0"})
 
         # Check config hash
         has_hash = bool(config_hash and len(config_hash) > 0)
@@ -173,7 +173,7 @@ class MetaLayerEvaluator:
         else:
             return 0.0
 
-    def _compute_cost(self, execution_time_s: Optional[float] = None) -> float:
+    def _compute_cost(self, execution_time_s: float | None = None) -> float:
         """
         Compute m_cost based on runtime.
 

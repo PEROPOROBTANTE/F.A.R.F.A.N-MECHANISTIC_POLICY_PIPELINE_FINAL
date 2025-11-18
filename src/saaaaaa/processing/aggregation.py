@@ -26,12 +26,48 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, TypeVar, Iterable
+from typing import TYPE_CHECKING, Any, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
 
 T = TypeVar('T')
 
 def group_by(items: Iterable[T], key_func: Callable[[T], tuple]) -> dict[tuple, list[T]]:
-    """Groups a list of items by a key function."""
+    """
+    Groups a sequence of items into a dictionary based on a key function.
+
+    This utility function iterates over a collection, applies a key function to each
+    item, and collects items into lists, keyed by the result of the key function.
+
+    The key function must return a tuple. This is because dictionary keys must be
+    hashable, and tuples are hashable whereas lists are not. Using a tuple allows
+    for grouping by multiple attributes.
+
+    If the input iterable `items` is empty, this function will return an empty
+    dictionary.
+
+    Example:
+        >>> from dataclasses import dataclass
+        >>> @dataclass
+        ... class Record:
+        ...     category: str
+        ...     value: int
+        ...
+        >>> data = [Record("A", 1), Record("B", 2), Record("A", 3)]
+        >>> group_by(data, key_func=lambda r: (r.category,))
+        {('A',): [Record(category='A', value=1), Record(category='A', value=3)],
+         ('B',): [Record(category='B', value=2)]}
+
+    Args:
+        items: An iterable of items to be grouped.
+        key_func: A callable that accepts an item and returns a tuple to be
+                  used as the grouping key.
+
+    Returns:
+        A dictionary where keys are the result of the key function and values are
+        lists of items belonging to that group.
+    """
     grouped = defaultdict(list)
     for item in items:
         grouped[key_func(item)].append(item)
@@ -84,7 +120,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ScoredResult:
-    """Scored result for a micro question."""
+    """Represents a single, scored micro-question, forming the input for aggregation."""
     question_global: int
     base_slot: str
     policy_area: str
@@ -96,7 +132,7 @@ class ScoredResult:
 
 @dataclass
 class DimensionScore:
-    """Aggregated score for a dimension."""
+    """Represents the aggregated score for a single dimension within a policy area."""
     dimension_id: str
     area_id: str
     score: float
@@ -107,7 +143,7 @@ class DimensionScore:
 
 @dataclass
 class AreaScore:
-    """Aggregated score for a policy area."""
+    """Represents the aggregated score for a policy area, based on its constituent dimensions."""
     area_id: str
     area_name: str
     score: float
@@ -115,26 +151,26 @@ class AreaScore:
     dimension_scores: list[DimensionScore]
     validation_passed: bool = True
     validation_details: dict[str, Any] = field(default_factory=dict)
-    cluster_id: str | None = None  # Added for grouping
+    cluster_id: str | None = None  # Used for grouping into clusters
 
 @dataclass
 class ClusterScore:
-    """Aggregated score for a MESO cluster."""
+    """Represents the aggregated score for a MESO cluster, based on its policy areas."""
     cluster_id: str
     cluster_name: str
     areas: list[str]
     score: float
-    coherence: float
+    coherence: float  # Coherence metric for the scores within this cluster
     area_scores: list[AreaScore]
     validation_passed: bool = True
     validation_details: dict[str, Any] = field(default_factory=dict)
 
 @dataclass
 class MacroScore:
-    """Holistic macro evaluation score."""
+    """Represents the final, holistic macro evaluation score for the entire system."""
     score: float
     quality_level: str
-    cross_cutting_coherence: float
+    cross_cutting_coherence: float  # Coherence across all clusters
     systemic_gaps: list[str]
     strategic_alignment: float
     cluster_scores: list[ClusterScore]
@@ -184,7 +220,7 @@ class DimensionAggregator:
         Args:
             monolith: Questionnaire monolith configuration (optional, required for run())
             abort_on_insufficient: Whether to abort on insufficient coverage
-            
+
         Raises:
             ValueError: If monolith is None and required for operations
         """
@@ -200,7 +236,7 @@ class DimensionAggregator:
             self.niveles = None
 
         logger.info("DimensionAggregator initialized")
-        
+
         # Validate canonical notation if available
         if HAS_CANONICAL_NOTATION:
             try:
@@ -216,27 +252,27 @@ class DimensionAggregator:
     def validate_dimension_id(self, dimension_id: str) -> bool:
         """
         Validate dimension ID against canonical notation.
-        
+
         Args:
             dimension_id: Dimension ID to validate (e.g., "DIM01")
-            
+
         Returns:
             True if dimension ID is valid
-            
+
         Raises:
             ValidationError: If dimension ID is invalid and abort_on_insufficient is True
         """
         if not HAS_CANONICAL_NOTATION:
             logger.debug("Canonical notation not available, skipping validation")
             return True
-        
+
         try:
             canonical_dims = get_all_dimensions()
             # Check if dimension_id is a valid code
             valid_codes = {info.code for info in canonical_dims.values()}
             if dimension_id in valid_codes:
                 return True
-            
+
             msg = f"Invalid dimension ID: {dimension_id}. Valid codes: {sorted(valid_codes)}"
             logger.error(msg)
             if self.abort_on_insufficient:
@@ -249,25 +285,25 @@ class DimensionAggregator:
     def validate_policy_area_id(self, area_id: str) -> bool:
         """
         Validate policy area ID against canonical notation.
-        
+
         Args:
             area_id: Policy area ID to validate (e.g., "PA01")
-            
+
         Returns:
             True if policy area ID is valid
-            
+
         Raises:
             ValidationError: If policy area ID is invalid and abort_on_insufficient is True
         """
         if not HAS_CANONICAL_NOTATION:
             logger.debug("Canonical notation not available, skipping validation")
             return True
-        
+
         try:
             canonical_areas = get_all_policy_areas()
             if area_id in canonical_areas:
                 return True
-            
+
             msg = f"Invalid policy area ID: {area_id}. Valid codes: {sorted(canonical_areas.keys())}"
             logger.error(msg)
             if self.abort_on_insufficient:
@@ -279,16 +315,16 @@ class DimensionAggregator:
 
     def validate_weights(self, weights: list[float]) -> tuple[bool, str]:
         """
-        Validate that weights sum to 1.0 (within tolerance).
+        Ensures that a list of weights sums to 1.0 within a small tolerance.
 
         Args:
-            weights: List of weights
+            weights: A list of floating-point weights.
 
         Returns:
-            Tuple of (is_valid, message)
+            A tuple containing a boolean indicating validity and a descriptive message.
 
         Raises:
-            WeightValidationError: If weights don't sum to 1.0 or if no weights provided
+            WeightValidationError: If `abort_on_insufficient` is True and validation fails.
         """
         if not weights:
             msg = "No weights provided"
@@ -316,17 +352,17 @@ class DimensionAggregator:
         expected_count: int = 5
     ) -> tuple[bool, str]:
         """
-        Validate coverage requirements.
+        Checks if the number of results meets a minimum expectation.
 
         Args:
-            results: List of scored results
-            expected_count: Expected number of results
+            results: A list of ScoredResult objects.
+            expected_count: The minimum number of results required.
 
         Returns:
-            Tuple of (is_valid, message)
+            A tuple containing a boolean indicating validity and a descriptive message.
 
         Raises:
-            CoverageError: If coverage is insufficient
+            CoverageError: If `abort_on_insufficient` is True and coverage is insufficient.
         """
         actual_count = len(results)
 
@@ -349,14 +385,17 @@ class DimensionAggregator:
         weights: list[float] | None = None
     ) -> float:
         """
-        Calculate weighted average of scores.
+        Calculates a weighted average, defaulting to an equal weighting if none provided.
 
         Args:
-            scores: List of scores
-            weights: Optional list of weights (defaults to equal weights)
+            scores: A list of scores to be averaged.
+            weights: An optional list of weights. If None, equal weights are assumed.
 
         Returns:
-            Weighted average score
+            The calculated weighted average.
+
+        Raises:
+            WeightValidationError: If the weights are invalid (e.g., mismatched length).
         """
         if not scores:
             return 0.0
@@ -565,14 +604,93 @@ class DimensionAggregator:
         Returns:
             A list of DimensionScore objects.
         """
-        def make_key(r):
+        def key_func(r):
             return tuple(getattr(r, key) for key in group_by_keys)
-        key_func = make_key
         grouped_results = group_by(scored_results, key_func)
 
         dimension_scores = []
         for group_key, results in grouped_results.items():
-            group_by_values = dict(zip(group_by_keys, group_key))
+            group_by_values = dict(zip(group_by_keys, group_key, strict=False))
+            score = self.aggregate_dimension(results, group_by_values)
+            dimension_scores.append(score)
+
+        return dimension_scores
+
+def run_aggregation_pipeline(
+    scored_results: list[dict[str, Any]],
+    monolith: dict[str, Any],
+    abort_on_insufficient: bool = True
+) -> list[ClusterScore]:
+    """
+    Orchestrates the end-to-end aggregation pipeline.
+
+    This function provides a high-level entry point to the aggregation system,
+    demonstrating the sequential wiring of the aggregator components. It ensures
+    that data flows from raw scored results through dimension, area, and
+    finally cluster aggregation in a controlled and validated manner.
+
+    Note on Parallelization: This implementation is sequential. For very large
+    datasets, the `group_by` operations in each aggregator's `run` method
+    could be parallelized (e.g., using `concurrent.futures`) to process
+    independent groups concurrently.
+
+    Args:
+        scored_results: A list of dictionaries, each representing a raw scored result.
+        monolith: The central monolith configuration object.
+        abort_on_insufficient: If True, the pipeline will stop on validation errors.
+
+    Returns:
+        A list of aggregated ClusterScore objects.
+    """
+    # 1. Input Validation (Pre-flight check)
+    validated_scored_results = validate_scored_results(scored_results)
+
+    # 2. FASE 4: Dimension Aggregation
+    dim_aggregator = DimensionAggregator(monolith, abort_on_insufficient)
+    dimension_scores = dim_aggregator.run(
+        validated_scored_results,
+        group_by_keys=["policy_area", "dimension"]
+    )
+
+    # 3. FASE 5: Area Policy Aggregation
+    area_aggregator = AreaPolicyAggregator(monolith, abort_on_insufficient)
+    area_scores = area_aggregator.run(
+        dimension_scores,
+        group_by_keys=["area_id"]
+    )
+
+    # 4. FASE 6: Cluster Aggregation
+    cluster_aggregator = ClusterAggregator(monolith, abort_on_insufficient)
+    cluster_definitions = monolith["blocks"]["niveles_abstraccion"]["clusters"]
+    cluster_scores = cluster_aggregator.run(
+        area_scores,
+        cluster_definitions
+    )
+
+    return cluster_scores
+
+    def run(
+        self,
+        scored_results: list[ScoredResult],
+        group_by_keys: list[str]
+    ) -> list[DimensionScore]:
+        """
+        Run the dimension aggregation process.
+
+        Args:
+            scored_results: List of all scored results.
+            group_by_keys: List of keys to group by.
+
+        Returns:
+            A list of DimensionScore objects.
+        """
+        def key_func(r):
+            return tuple(getattr(r, key) for key in group_by_keys)
+        grouped_results = group_by(scored_results, key_func)
+
+        dimension_scores = []
+        for group_key, results in grouped_results.items():
+            group_by_values = dict(zip(group_by_keys, group_key, strict=False))
             score = self.aggregate_dimension(results, group_by_values)
             dimension_scores.append(score)
 
@@ -596,7 +714,7 @@ class AreaPolicyAggregator:
         Args:
             monolith: Questionnaire monolith configuration (optional, required for run())
             abort_on_insufficient: Whether to abort on insufficient coverage
-            
+
         Raises:
             ValueError: If monolith is None and required for operations
         """
@@ -888,7 +1006,7 @@ class AreaPolicyAggregator:
 
         area_scores = []
         for group_key, scores in grouped_scores.items():
-            group_by_values = dict(zip(group_by_keys, group_key))
+            group_by_values = dict(zip(group_by_keys, group_key, strict=False))
             # Weights are not currently defined for area aggregation, so we pass None.
             score = self.aggregate_area(scores, group_by_values, weights=None)
             area_scores.append(score)
@@ -913,7 +1031,7 @@ class ClusterAggregator:
         Args:
             monolith: Questionnaire monolith configuration (optional, required for run())
             abort_on_insufficient: Whether to abort on insufficient coverage
-            
+
         Raises:
             ValueError: If monolith is None and required for operations
         """
@@ -1236,9 +1354,9 @@ class ClusterAggregator:
             score.cluster_id = area_to_cluster.get(score.area_id)
 
         # Group by cluster_id
-        def cluster_id_key(a):
+        def key_func(a):
             return (a.cluster_id,)
-        grouped_scores = group_by([s for s in area_scores if hasattr(s, 'cluster_id')], cluster_id_key)
+        grouped_scores = group_by([s for s in area_scores if hasattr(s, 'cluster_id')], key_func)
 
         cluster_scores = []
         for group_key, scores in grouped_scores.items():
@@ -1267,7 +1385,7 @@ class MacroAggregator:
         Args:
             monolith: Questionnaire monolith configuration (optional, required for run())
             abort_on_insufficient: Whether to abort on insufficient coverage
-            
+
         Raises:
             ValueError: If monolith is None and required for operations
         """

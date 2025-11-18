@@ -47,8 +47,8 @@ SmartPolicyChunk {
 | Component | Purpose | Location |
 |-----------|---------|----------|
 | **Orchestrator** | Main engine | `src/saaaaaa/core/orchestrator/core.py` |
-| **Choreographer** | Question executor | `src/saaaaaa/core/orchestrator/choreographer.py` |
-| **FlowController** | DAG builder | `src/saaaaaa/core/orchestrator/choreographer.py` |
+| **(Deprecated) Choreographer** | Legacy facade REMOVED in Q4 2025 | _removed_ |
+| **FlowController** | DAG builder (handled inside orchestrator executors) | `src/saaaaaa/core/orchestrator/executors.py` |
 | **ExtendedArgRouter** | Method invoker | `src/saaaaaa/core/orchestrator/arg_router.py` |
 
 ### Execution Flow per Question (305 total)
@@ -208,7 +208,7 @@ SPCAdapter (deterministic ordering)
      ↓
 PreprocessedDocument (orchestrator-ready)
      ↓
-Orchestrator + Choreographer (305 questions)
+Orchestrator (305 questions)
      ↓
 38+ Executors (dynamic dispatch)
      ↓
@@ -234,15 +234,13 @@ q = load_questionnaire()  # ONLY way to load
 
 ### 2. Executing a Question
 ```python
-from saaaaaa.core.orchestrator.choreographer import Choreographer
+from saaaaaa.core.orchestrator.core import Orchestrator
+from saaaaaa.processing.document_ingestion import ingest_document
 
-choreographer = Choreographer()
-result = choreographer.execute_question(
-    question_global=1,
-    monolith=questionnaire.data,
-    method_catalog=catalog
-)
-# Returns QuestionResult with evidence dict
+doc = ingest_document(pdf_path="plan.pdf")
+orchestrator = Orchestrator()
+results = orchestrator.process_development_plan(doc)
+# Returns the full multi-question assessment; legacy Choreographer shim removed
 ```
 
 ### 3. Routing Arguments to Method
@@ -340,4 +338,3 @@ The FARFAN pipeline is a sophisticated, multi-phase system that:
 9. **Reports results** with comprehensive metrics
 
 **The code follows Hexagonal Architecture principles**: pure business logic in core, I/O at boundaries, and dependency injection throughout.
-

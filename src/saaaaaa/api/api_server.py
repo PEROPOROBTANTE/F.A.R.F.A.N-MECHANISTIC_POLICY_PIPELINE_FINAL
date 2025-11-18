@@ -84,7 +84,7 @@ class APIConfig:
 # ============================================================================
 
 # Initialize Flask app with static folder
-app = Flask(__name__, 
+app = Flask(__name__,
             static_folder='static',
             static_url_path='/static')
 app.config['SECRET_KEY'] = APIConfig.SECRET_KEY
@@ -236,7 +236,7 @@ class DataService:
             # Try to load sample data for realistic scores
             sample_data_path = Path(__file__).parent.parent.parent.parent / 'examples' / 'all_data_sample.json'
             if sample_data_path.exists():
-                with open(sample_data_path, 'r') as f:
+                with open(sample_data_path) as f:
                     self.baseline_data = json.load(f)
                 logger.info(f"Loaded baseline data from {sample_data_path}")
             else:

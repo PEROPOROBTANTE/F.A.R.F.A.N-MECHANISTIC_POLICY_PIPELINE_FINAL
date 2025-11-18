@@ -14,6 +14,7 @@ from typing import Any
 import jsonschema
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class SchemaInitializationError(Exception):
     """Raised when schema initialization validation fails."""
     pass

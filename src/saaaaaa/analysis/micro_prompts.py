@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class QMCMRecord:
     """Record in the Question→Method Contribution Map
-    
+
     Aligned with questionnaire_monolith.json structure:
     - base_slot: Question slot identifier from monolith
     - scoring_modality: Scoring mechanism (binary, ordinal, numeric, etc.)

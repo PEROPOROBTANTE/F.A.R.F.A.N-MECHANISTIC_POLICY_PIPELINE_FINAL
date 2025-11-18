@@ -71,14 +71,15 @@ SAAAAAA/
 
 ## Import Resolution
 
-The system uses `PYTHONPATH` to enable imports from both:
-1. Root-level strategic files (compatibility wrappers)
-2. Core package in `src/saaaaaa/`
+All consumers must install the project in editable mode:
 
-In CI/CD workflows, set:
 ```bash
-export PYTHONPATH=$GITHUB_WORKSPACE/src:$PYTHONPATH
+pip install -e .
 ```
+
+Once installed, invoke tools with `python -m ...` so the interpreter
+resolves imports through the package metadata rather than via `PYTHONPATH`
+hacks. This guarantees the same module graph locally and in CI.
 
 ## Provenance Tracking
 

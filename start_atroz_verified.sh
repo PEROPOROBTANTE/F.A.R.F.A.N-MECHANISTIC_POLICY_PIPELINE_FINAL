@@ -339,16 +339,14 @@ echo ""
 # If api_server.py exists, use it; otherwise provide instructions
 if [ -f "${SCRIPT_DIR}/src/saaaaaa/api/api_server.py" ]; then
     cd "$SCRIPT_DIR"
-    export FLASK_APP=src.saaaaaa.api.api_server
+    export FLASK_APP=saaaaaa.api.api_server
     export FLASK_ENV=development
-    export PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH}"
-
     python3 -m flask run --host=0.0.0.0 --port=${API_PORT}
 else
     print_status "WARN" "api_server.py not found"
     echo ""
     echo -e "${YELLOW}To start the server manually:${NC}"
-    echo -e "  ${CYAN}export FLASK_APP=src.saaaaaa.api.api_server${NC}"
+    echo -e "  ${CYAN}export FLASK_APP=saaaaaa.api.api_server${NC}"
     echo -e "  ${CYAN}export FLASK_ENV=development${NC}"
     echo -e "  ${CYAN}python3 -m flask run --host=0.0.0.0 --port=${API_PORT}${NC}"
     echo ""
