@@ -41,10 +41,9 @@ from scipy.special import rel_entr
 
 # Check dependency lockdown before importing transformers
 from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
+from transformers import AutoModel, AutoTokenizer
 
 _lockdown = get_dependency_lockdown()
-
-from transformers import AutoModel, AutoTokenizer
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray

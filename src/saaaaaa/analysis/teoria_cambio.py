@@ -66,6 +66,10 @@ try:
 except ImportError:  # pragma: no cover - jsonschema es opcional
     Draft7Validator = None
 
+# CategoriaCausal moved to saaaaaa.core.types to break architectural dependency
+# (core.orchestrator was importing from analysis, which violates layer rules)
+from saaaaaa.core.types import CategoriaCausal
+
 # --- Configuración de Logging ---
 def configure_logging() -> None:
     """Configura un sistema de logging de alto rendimiento para la salida estándar."""
@@ -86,18 +90,6 @@ STATUS_PASSED = "✅ PASÓ"
 # ============================================================================
 # 2. ENUMS Y ESTRUCTURAS DE DATOS (DATACLASSES)
 # ============================================================================
-
-class CategoriaCausal(Enum):
-    """
-    Jerarquía axiomática de categorías causales en una teoría de cambio.
-    El orden numérico impone la secuencia lógica obligatoria.
-    """
-
-    INSUMOS = 1
-    ACTIVIDADES = 2
-    PRODUCTOS = 3
-    RESULTADOS = 4
-    CAUSALIDAD = 5
 
 class GraphType(Enum):
     """Tipología de grafos para la aplicación de análisis especializados."""

@@ -50,8 +50,8 @@ verify:
 	@echo "✓ Canonical notation check passed\n"
 	
 	@echo "=== Step 4: Import Linter (Layer Contracts) ==="
-	@PYTHONPATH=src lint-imports || echo "⚠️  Import linter had issues (skipping for now)"
-	@echo "✓ Import contracts check attempted\n"
+	@PYTHONPATH=src lint-imports || (echo "❌ Import contracts violated" && exit 1)
+	@echo "✓ Import contracts satisfied\n"
 	
 	@echo "=== Step 5: Ruff Linting ==="
 	@ruff check src/saaaaaa 2>&1 | grep "Found" || echo "⚠️  Ruff check completed with warnings"

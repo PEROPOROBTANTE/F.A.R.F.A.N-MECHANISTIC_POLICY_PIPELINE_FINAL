@@ -121,7 +121,7 @@ except Exception:  # pragma: no cover - optional dependency at runtime
     nx = None  # type: ignore[assignment]
 
 try:  # Teoría de Cambio categorical enrichment
-    from saaaaaa.analysis.teoria_cambio import CategoriaCausal  # type: ignore
+    from saaaaaa.core.types import CategoriaCausal
 except Exception:  # pragma: no cover - avoid hard failure if module unavailable
     CategoriaCausal = None  # type: ignore[assignment]
 

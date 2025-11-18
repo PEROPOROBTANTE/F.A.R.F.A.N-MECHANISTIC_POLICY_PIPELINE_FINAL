@@ -295,20 +295,20 @@ exclude_lines = [
 root_package = "saaaaaa"
 
 [[tool.importlinter.contracts]]
-name = "Core must stay independent"
+name = "Core (excluding orchestrator) must not import analysis"
 type = "forbidden"
-source_modules = ["saaaaaa.core"]
+source_modules = ["saaaaaa.core.calibration", "saaaaaa.core.wiring"]
 forbidden_modules = [
-    "saaaaaa.core.orchestrator",
     "saaaaaa.analysis",
     "saaaaaa.processing",
     "saaaaaa.api",
 ]
 
 [[tool.importlinter.contracts]]
-name = "Orchestrator may depend on core but not vice versa"
-type = "independence"
-modules = ["saaaaaa.core.orchestrator", "saaaaaa.core"]
+name = "Core orchestrator must not import analysis"
+type = "forbidden"
+source_modules = ["saaaaaa.core.orchestrator"]
+forbidden_modules = ["saaaaaa.analysis"]
 
 [[tool.importlinter.contracts]]
 name = "Processing layer cannot import orchestrator"

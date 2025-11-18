@@ -38,7 +38,7 @@ except ImportError:
 
 from pydantic import BaseModel, Field, field_validator
 
-from .advanced_module_config import AdvancedModuleConfig
+from .advanced_module_config import CONSERVATIVE_ADVANCED_CONFIG, AdvancedModuleConfig
 
 PolicyArea = Literal["fiscal", "salud", "ambiente", "energía", "transporte"]
 
@@ -495,8 +495,6 @@ def compute_input_hash(data: str | bytes) -> str:
 
 
 # Default conservative config for fallback scenarios
-from .advanced_module_config import CONSERVATIVE_ADVANCED_CONFIG
-
 CONSERVATIVE_CONFIG = ExecutorConfig(
     max_tokens=1024,
     temperature=0.0,  # Fully deterministic
