@@ -1,198 +1,219 @@
-src.saaaaaa.analysis.bayesian_multilevel_system.MacroLevelAnalysis.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.bayesian_multilevel_system.MesoLevelAnalysis.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.bayesian_multilevel_system.MicroLevelAnalysis.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.bayesian_multilevel_system.MultiLevelBayesianOrchestrator.__init__ :: output_dir = Path('data/bayesian_outputs')
-src.saaaaaa.analysis.bayesian_multilevel_system.PeerContext.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.contradiction_deteccion.PolicyContradictionDetector.__init__ :: device = 'cuda' if torch.cuda.is_available() else 'cpu'
-src.saaaaaa.analysis.contradiction_deteccion.PolicyContradictionDetector.detect :: dimension = PolicyDimension.ESTRATEGICO
-src.saaaaaa.analysis.contradiction_deteccion.PolicyStatement.__init__ :: dependencies = factory:set
-src.saaaaaa.analysis.contradiction_deteccion.PolicyStatement.__init__ :: entities = factory:list
-src.saaaaaa.analysis.contradiction_deteccion.PolicyStatement.__init__ :: quantitative_claims = factory:list
-src.saaaaaa.analysis.contradiction_deteccion.PolicyStatement.__init__ :: temporal_markers = factory:list
-src.saaaaaa.analysis.derek_beach.MetaNode.__init__ :: audit_flags = factory:list
-src.saaaaaa.analysis.derek_beach.MetaNode.__init__ :: causal_justification = factory:list
-src.saaaaaa.analysis.derek_beach.MetaNode.__init__ :: contextual_risks = factory:list
-src.saaaaaa.analysis.financiero_viabilidad_tablas.CausalEdge.__init__ :: evidence_quotes = factory:list
-src.saaaaaa.analysis.financiero_viabilidad_tablas.CausalEffect.__init__ :: confounders_adjusted = factory:list
-src.saaaaaa.analysis.financiero_viabilidad_tablas.CausalEffect.__init__ :: mediating_paths = factory:list
-src.saaaaaa.analysis.macro_prompts.BayesianPortfolio.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.macro_prompts.ContradictionReport.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.macro_prompts.CoverageAnalysis.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.macro_prompts.ImplementationRoadmap.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.macro_prompts.PeerNormalization.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.micro_prompts.AuditResult.__init__ :: timestamp = factory:time.time
-src.saaaaaa.analysis.micro_prompts.PosteriorJustification.__init__ :: timestamp = factory:time.time
-src.saaaaaa.analysis.micro_prompts.ProvenanceNode.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.micro_prompts.QMCMRecord.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.micro_prompts.StressTestResult.__init__ :: timestamp = factory:time.time
-src.saaaaaa.analysis.recommendation_engine.Recommendation.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.recommendation_engine.RecommendationSet.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.report_assembly.QuestionAnalysis.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.report_assembly.ReportMetadata.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.scoring.Evidence.__init__ :: confidence_scores = factory:list
-src.saaaaaa.analysis.scoring.Evidence.__init__ :: elements_found = factory:list
-src.saaaaaa.analysis.scoring.Evidence.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.scoring.Evidence.__init__ :: pattern_matches = factory:dict
-src.saaaaaa.analysis.scoring.ScoredResult.__init__ :: scoring_details = factory:dict
-src.saaaaaa.analysis.scoring.ScoringConfig.__init__ :: type_d_weights = factory:lambda: [0.4, 0.3, 0.3]
-src.saaaaaa.analysis.scoring.scoring.ModalityConfig.__init__ :: required_evidence_keys = factory:list
-src.saaaaaa.analysis.scoring.scoring.ScoredResult.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.scoring.scoring.ScoredResult.__init__ :: timestamp = factory:lambda: datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
-src.saaaaaa.analysis.teoria_cambio.AdvancedDAGValidator.__init__ :: graph_type = GraphType.CAUSAL_DAG
-src.saaaaaa.analysis.teoria_cambio.AdvancedGraphNode.__init__ :: dependencies = factory:set
-src.saaaaaa.analysis.teoria_cambio.AdvancedGraphNode.__init__ :: metadata = factory:dict
-src.saaaaaa.analysis.teoria_cambio.ValidacionResultado.__init__ :: caminos_completos = factory:list
-src.saaaaaa.analysis.teoria_cambio.ValidacionResultado.__init__ :: categorias_faltantes = factory:list
-src.saaaaaa.analysis.teoria_cambio.ValidacionResultado.__init__ :: sugerencias = factory:list
-src.saaaaaa.analysis.teoria_cambio.ValidacionResultado.__init__ :: violaciones_orden = factory:list
-src.saaaaaa.api.api_server.cached :: ttl = APIConfig.CACHE_TTL
-src.saaaaaa.audit.audit_system.AuditFinding.__init__ :: details = factory:dict
-src.saaaaaa.audit.audit_system.AuditFinding.__init__ :: timestamp = factory:datetime.utcnow
-src.saaaaaa.core.calibration.config.CalibrationSystemConfig.__init__ :: choquet = factory:ChoquetAggregationConfig
-src.saaaaaa.core.calibration.config.CalibrationSystemConfig.__init__ :: meta_layer = factory:MetaLayerConfig
-src.saaaaaa.core.calibration.config.CalibrationSystemConfig.__init__ :: unit_layer = factory:UnitLayerConfig
-src.saaaaaa.core.calibration.config.ChoquetAggregationConfig.__init__ :: interaction_rationales = factory:lambda: {('u', 'chain'): 'Plan quality only matters with sound wiring', ('chain', 'C'): 'Ensemble validity requires chain integrity', ('q', 'd'): 'Question-dimension alignment synergy', ('d', 'p'): 'Dimension-policy coherence synergy'}
-src.saaaaaa.core.calibration.config.ChoquetAggregationConfig.__init__ :: interaction_weights = factory:lambda: {('u', 'chain'): 0.15, ('chain', 'C'): 0.12, ('q', 'd'): 0.08, ('d', 'p'): 0.05}
-src.saaaaaa.core.calibration.config.ChoquetAggregationConfig.__init__ :: linear_weights = factory:lambda: {'b': 0.122951, 'u': 0.098361, 'q': 0.081967, 'd': 0.065574, 'p': 0.04918, 'C': 0.081967, 'chain': 0.065574, 'm': 0.034426}
-src.saaaaaa.core.calibration.data_structures.CalibrationResult.__init__ :: computation_metadata = factory:dict
-src.saaaaaa.core.calibration.data_structures.LayerScore.__init__ :: components = factory:dict
-src.saaaaaa.core.calibration.data_structures.LayerScore.__init__ :: metadata = factory:dict
-src.saaaaaa.core.calibration.pdt_structure.PDTStructure.__init__ :: block_sequence = factory:list
-src.saaaaaa.core.calibration.pdt_structure.PDTStructure.__init__ :: blocks_found = factory:dict
-src.saaaaaa.core.calibration.pdt_structure.PDTStructure.__init__ :: headers = factory:list
-src.saaaaaa.core.calibration.pdt_structure.PDTStructure.__init__ :: indicator_rows = factory:list
-src.saaaaaa.core.calibration.pdt_structure.PDTStructure.__init__ :: ppi_rows = factory:list
-src.saaaaaa.core.calibration.pdt_structure.PDTStructure.__init__ :: sections_found = factory:dict
-src.saaaaaa.core.layer_influence_model.LayerActivationRule.__init__ :: prerequisites = factory:set
-src.saaaaaa.core.layer_influence_model.LayerInfluence.__init__ :: conditions = factory:dict
-src.saaaaaa.core.orchestrator.calibration_context.CalibrationContext.__init__ :: policy_area = PolicyArea.UNKNOWN
-src.saaaaaa.core.orchestrator.calibration_context.CalibrationContext.__init__ :: unit_of_analysis = UnitOfAnalysis.UNKNOWN
-src.saaaaaa.core.orchestrator.contract_loader.LoadResult.__init__ :: errors = factory:list
-src.saaaaaa.core.orchestrator.contract_loader.LoadResult.__init__ :: files_loaded = factory:list
-src.saaaaaa.core.orchestrator.core.ChunkData.__init__ :: edges_in = factory:list
-src.saaaaaa.core.orchestrator.core.ChunkData.__init__ :: edges_out = factory:list
-src.saaaaaa.core.orchestrator.core.Evidence.__init__ :: elements = factory:list
-src.saaaaaa.core.orchestrator.core.Evidence.__init__ :: raw_results = factory:dict
-src.saaaaaa.core.orchestrator.core.PreprocessedDocument.__init__ :: chunk_graph = factory:dict
-src.saaaaaa.core.orchestrator.core.PreprocessedDocument.__init__ :: chunk_index = factory:dict
-src.saaaaaa.core.orchestrator.core.PreprocessedDocument.__init__ :: chunks = factory:list
-src.saaaaaa.core.orchestrator.core.ScoredMicroQuestion.__init__ :: metadata = factory:dict
-src.saaaaaa.core.orchestrator.core.ScoredMicroQuestion.__init__ :: scoring_details = factory:dict
-src.saaaaaa.core.orchestrator.evidence_registry.EvidenceRecord.__init__ :: metadata = factory:dict
-src.saaaaaa.core.orchestrator.evidence_registry.EvidenceRecord.__init__ :: parent_evidence_ids = factory:list
-src.saaaaaa.core.orchestrator.evidence_registry.EvidenceRecord.__init__ :: timestamp = factory:time.time
-src.saaaaaa.core.orchestrator.evidence_registry.ProvenanceDAG.__init__ :: by_method = factory:lambda: defaultdict(list)
-src.saaaaaa.core.orchestrator.evidence_registry.ProvenanceDAG.__init__ :: by_question = factory:lambda: defaultdict(list)
-src.saaaaaa.core.orchestrator.evidence_registry.ProvenanceDAG.__init__ :: by_type = factory:lambda: defaultdict(list)
-src.saaaaaa.core.orchestrator.evidence_registry.ProvenanceDAG.__init__ :: nodes = factory:dict
-src.saaaaaa.core.orchestrator.evidence_registry.ProvenanceNode.__init__ :: children = factory:list
-src.saaaaaa.core.orchestrator.evidence_registry.ProvenanceNode.__init__ :: parents = factory:list
-src.saaaaaa.core.orchestrator.executor_config.ExecutorMetadata.__init__ :: used_signals = factory:dict
-src.saaaaaa.core.orchestrator.executors.ExecutionMetrics.__init__ :: meta_learner_strategy_selections = factory:dict
-src.saaaaaa.core.orchestrator.executors.ExecutionMetrics.__init__ :: method_execution_times = factory:dict
-src.saaaaaa.core.orchestrator.executors.ExecutionMetrics.__init__ :: quantum_convergence_times = factory:list
-src.saaaaaa.core.orchestrator.executors.ValidationResult.__init__ :: context = factory:dict
-src.saaaaaa.core.orchestrator.questionnaire_resource_provider.Pattern.__init__ :: metadata = factory:dict
-src.saaaaaa.core.orchestrator.seed_registry.SeedRecord.__init__ :: seed_version = SEED_VERSION
-src.saaaaaa.core.orchestrator.seed_registry.SeedRecord.__init__ :: timestamp = factory:datetime.utcnow
-src.saaaaaa.core.orchestrator.signal_consumption.SignalConsumptionProof.__init__ :: consumed_patterns = factory:list
-src.saaaaaa.core.orchestrator.signal_consumption.SignalConsumptionProof.__init__ :: proof_chain = factory:list
-src.saaaaaa.core.orchestrator.signal_consumption.SignalConsumptionProof.__init__ :: timestamp = factory:time.time
-src.saaaaaa.core.orchestrator.signals.CacheEntry.__init__ :: last_accessed = factory:time.time
-src.saaaaaa.core.orchestrator.signals.SignalUsageMetadata.__init__ :: timestamp_utc = factory:lambda: datetime.now(timezone.utc).isoformat()
-src.saaaaaa.core.wiring.bootstrap.WiringComponents.__init__ :: init_hashes = factory:dict
-src.saaaaaa.flux.cli.run :: aggregate_feature_set = typer.Option('full', help='Feature set (minimal/full)')
-src.saaaaaa.flux.cli.run :: aggregate_group_by = typer.Option('policy_area,year', help='Aggregation keys (comma-separated)')
-src.saaaaaa.flux.cli.run :: chunk_max_tokens_meso = typer.Option(1200, help='Max tokens for meso')
-src.saaaaaa.flux.cli.run :: chunk_max_tokens_micro = typer.Option(400, help='Max tokens for micro')
-src.saaaaaa.flux.cli.run :: chunk_overlap_max = typer.Option(0.15, help='Max overlap fraction')
-src.saaaaaa.flux.cli.run :: chunk_priority_resolution = typer.Option('MESO', help='Priority resolution (MICRO/MESO/MACRO)')
-src.saaaaaa.flux.cli.run :: dry_run = typer.Option(False, help='Dry run (validation only)')
-src.saaaaaa.flux.cli.run :: ingest_enable_ocr = typer.Option(True, help='Enable OCR')
-src.saaaaaa.flux.cli.run :: ingest_max_mb = typer.Option(250, help='Max file size in MB')
-src.saaaaaa.flux.cli.run :: ingest_ocr_threshold = typer.Option(0.85, help='OCR threshold')
-src.saaaaaa.flux.cli.run :: input_uri = typer.Argument(..., help='Input document URI')
-src.saaaaaa.flux.cli.run :: normalize_keep_diacritics = typer.Option(True, help='Keep diacritics')
-src.saaaaaa.flux.cli.run :: normalize_unicode_form = typer.Option('NFC', help='Unicode form (NFC/NFKC)')
-src.saaaaaa.flux.cli.run :: print_contracts = typer.Option(False, help='Print contracts and exit')
-src.saaaaaa.flux.cli.run :: report_formats = typer.Option('json,md', help='Report formats (comma-separated)')
-src.saaaaaa.flux.cli.run :: report_include_provenance = typer.Option(True, help='Include provenance')
-src.saaaaaa.flux.cli.run :: score_calibration_mode = typer.Option('none', help='Calibration mode (none/isotonic/platt)')
-src.saaaaaa.flux.cli.run :: score_metrics = typer.Option('precision,coverage,risk', help='Metrics (comma-separated)')
-src.saaaaaa.flux.cli.run :: signals_allow_threshold_override = typer.Option(False, help='Allow threshold override')
-src.saaaaaa.flux.cli.run :: signals_http_timeout_s = typer.Option(3.0, help='HTTP timeout in seconds')
-src.saaaaaa.flux.cli.run :: signals_source = typer.Option('memory', help='Signals source (memory/http)')
-src.saaaaaa.flux.cli.run :: signals_ttl_s = typer.Option(3600, help='Signals TTL in seconds')
-src.saaaaaa.observability.opentelemetry_integration.Span.__init__ :: kind = SpanKind.INTERNAL
-src.saaaaaa.observability.opentelemetry_integration.Span.__init__ :: status = SpanStatus.UNSET
-src.saaaaaa.observability.opentelemetry_integration.Tracer.start_as_current_span :: kind = SpanKind.INTERNAL
-src.saaaaaa.observability.opentelemetry_integration.Tracer.start_span :: kind = SpanKind.INTERNAL
-src.saaaaaa.optimization.rl_strategy.BanditArm.__init__ :: recent_rewards = factory:lambda: deque(maxlen=100)
-src.saaaaaa.optimization.rl_strategy.ExecutorMetrics.__init__ :: execution_id = factory:lambda: str(uuid4())
-src.saaaaaa.optimization.rl_strategy.ExecutorMetrics.__init__ :: metadata = factory:dict
-src.saaaaaa.optimization.rl_strategy.ExecutorMetrics.__init__ :: timestamp = factory:datetime.utcnow
-src.saaaaaa.optimization.rl_strategy.RLStrategyOptimizer.__init__ :: strategy = OptimizationStrategy.THOMPSON_SAMPLING
-src.saaaaaa.patterns.event_tracking.Event.__init__ :: category = EventCategory.SYSTEM
-src.saaaaaa.patterns.event_tracking.Event.__init__ :: event_id = factory:lambda: str(uuid4())
-src.saaaaaa.patterns.event_tracking.Event.__init__ :: level = EventLevel.INFO
-src.saaaaaa.patterns.event_tracking.Event.__init__ :: metadata = factory:dict
-src.saaaaaa.patterns.event_tracking.Event.__init__ :: tags = factory:list
-src.saaaaaa.patterns.event_tracking.Event.__init__ :: timestamp = factory:datetime.utcnow
-src.saaaaaa.patterns.event_tracking.EventSpan.__init__ :: category = EventCategory.PERFORMANCE
-src.saaaaaa.patterns.event_tracking.EventSpan.__init__ :: metadata = factory:dict
-src.saaaaaa.patterns.event_tracking.EventSpan.__init__ :: span_id = factory:lambda: str(uuid4())
-src.saaaaaa.patterns.event_tracking.EventSpan.__init__ :: start_time = factory:datetime.utcnow
-src.saaaaaa.patterns.event_tracking.EventSpan.__init__ :: tags = factory:list
-src.saaaaaa.patterns.event_tracking.EventTracker.record_event :: level = EventLevel.INFO
-src.saaaaaa.patterns.event_tracking.EventTracker.span :: category = EventCategory.PERFORMANCE
-src.saaaaaa.patterns.event_tracking.EventTracker.start_span :: category = EventCategory.PERFORMANCE
-src.saaaaaa.patterns.saga.SagaEvent.__init__ :: data = factory:dict
-src.saaaaaa.patterns.saga.SagaEvent.__init__ :: event_id = factory:lambda: str(uuid4())
-src.saaaaaa.patterns.saga.SagaEvent.__init__ :: timestamp = factory:datetime.utcnow
-src.saaaaaa.patterns.saga.SagaStep.__init__ :: status = SagaStepStatus.PENDING
-src.saaaaaa.processing.aggregation.AreaScore.__init__ :: validation_details = factory:dict
-src.saaaaaa.processing.aggregation.ClusterScore.__init__ :: validation_details = factory:dict
-src.saaaaaa.processing.aggregation.DimensionScore.__init__ :: validation_details = factory:dict
-src.saaaaaa.processing.aggregation.MacroScore.__init__ :: validation_details = factory:dict
-src.saaaaaa.processing.cpp_ingestion.models.CanonPolicyPackage.__init__ :: metadata = factory:dict
-src.saaaaaa.processing.cpp_ingestion.models.Chunk.__init__ :: confidence = factory:Confidence
-src.saaaaaa.processing.cpp_ingestion.models.Chunk.__init__ :: entities = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.Chunk.__init__ :: geo_facets = factory:GeoFacet
-src.saaaaaa.processing.cpp_ingestion.models.Chunk.__init__ :: policy_facets = factory:PolicyFacet
-src.saaaaaa.processing.cpp_ingestion.models.Chunk.__init__ :: time_facets = factory:TimeFacet
-src.saaaaaa.processing.cpp_ingestion.models.ChunkGraph.__init__ :: chunks = factory:dict
-src.saaaaaa.processing.cpp_ingestion.models.ChunkGraph.__init__ :: edges = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.GeoFacet.__init__ :: regions = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.GeoFacet.__init__ :: territories = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.IntegrityIndex.__init__ :: chunk_hashes = factory:dict
-src.saaaaaa.processing.cpp_ingestion.models.PolicyFacet.__init__ :: axes = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyFacet.__init__ :: programs = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyFacet.__init__ :: projects = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyManifest.__init__ :: axes = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyManifest.__init__ :: indicators = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyManifest.__init__ :: programs = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyManifest.__init__ :: projects = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyManifest.__init__ :: territories = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.PolicyManifest.__init__ :: years = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.TimeFacet.__init__ :: periods = factory:list
-src.saaaaaa.processing.cpp_ingestion.models.TimeFacet.__init__ :: years = factory:list
-src.saaaaaa.processing.document_ingestion.RawDocument.__init__ :: metadata = _EMPTY_MAPPING
-src.saaaaaa.processing.embedding_policy.PolicyCrossEncoderReranker.__init__ :: model_name = DEFAULT_CROSS_ENCODER_MODEL
-src.saaaaaa.processing.embedding_policy.PolicyEmbeddingConfig.__init__ :: cross_encoder_model = DEFAULT_CROSS_ENCODER_MODEL
-src.saaaaaa.processing.embedding_policy.PolicyEmbeddingConfig.__init__ :: embedding_model = MODEL_PARAPHRASE_MULTILINGUAL
-src.saaaaaa.processing.policy_processor.EvidenceBundle.__init__ :: context_windows = factory:list
-src.saaaaaa.processing.policy_processor.EvidenceBundle.__init__ :: match_positions = factory:list
-src.saaaaaa.processing.policy_processor.EvidenceBundle.__init__ :: matches = factory:list
-src.saaaaaa.processing.policy_processor.ProcessorConfig.__init__ :: critical_dimension_overrides = factory:lambda: {'D1': 0.55, 'D6': 0.55}
-src.saaaaaa.processing.policy_processor.ProcessorConfig.__init__ :: minimum_dimension_scores = factory:lambda: {'D1': 0.5, 'D2': 0.5, 'D3': 0.5, 'D4': 0.5, 'D5': 0.5, 'D6': 0.5}
-src.saaaaaa.utils.contract_io.ContractEnvelope.wrap :: schema_version = CANONICAL_SCHEMA_VERSION
-src.saaaaaa.utils.proof_generator.ProofData.__init__ :: artifacts_manifest = factory:dict
-src.saaaaaa.utils.proof_generator.ProofData.__init__ :: execution_metadata = factory:dict
-src.saaaaaa.utils.schema_monitor.SchemaStats.__init__ :: key_frequency = factory:Counter
-src.saaaaaa.utils.schema_monitor.SchemaStats.__init__ :: missing_keys = factory:set
-src.saaaaaa.utils.schema_monitor.SchemaStats.__init__ :: new_keys = factory:set
-src.saaaaaa.utils.schema_monitor.SchemaStats.__init__ :: type_by_key = factory:lambda: defaultdict(Counter)
-src.saaaaaa.utils.signature_validator.FunctionSignature.__init__ :: timestamp = factory:lambda: datetime.now().isoformat()
-src.saaaaaa.utils.signature_validator.SignatureRegistry.__init__ :: registry_path = Path('data/signature_registry.json')
-src.saaaaaa.utils.validation.architecture_validator.ArchitectureValidationResult.__init__ :: global_methods = factory:tuple
-src.saaaaaa.utils.validation_engine.ValidationReport.__init__ :: results = factory:list
+METHODS WITH COMPLEX DEFAULT VALUES
+================================================================================
+
+File: src/saaaaaa/observability/opentelemetry_integration.py
+Function: start_span
+Parameter: kind
+Default: SpanKind.INTERNAL
+Line: 213
+--------------------------------------------------------------------------------
+File: src/saaaaaa/observability/opentelemetry_integration.py
+Function: start_as_current_span
+Parameter: kind
+Default: SpanKind.INTERNAL
+Line: 275
+--------------------------------------------------------------------------------
+File: src/saaaaaa/api/api_server.py
+Function: cached
+Parameter: ttl
+Default: APIConfig.CACHE_TTL
+Line: 183
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: input_uri
+Default: typer.Argument(..., help='Input document URI')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: ingest_enable_ocr
+Default: typer.Option(True, help='Enable OCR')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: ingest_ocr_threshold
+Default: typer.Option(0.85, help='OCR threshold')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: ingest_max_mb
+Default: typer.Option(250, help='Max file size in MB')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: normalize_unicode_form
+Default: typer.Option('NFC', help='Unicode form (NFC/NFKC)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: normalize_keep_diacritics
+Default: typer.Option(True, help='Keep diacritics')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_priority_resolution
+Default: typer.Option('MESO', help='Priority resolution (MICRO/MESO/MACRO)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_overlap_max
+Default: typer.Option(0.15, help='Max overlap fraction')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_max_tokens_micro
+Default: typer.Option(400, help='Max tokens for micro')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: chunk_max_tokens_meso
+Default: typer.Option(1200, help='Max tokens for meso')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_source
+Default: typer.Option('memory', help='Signals source (memory/http)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_http_timeout_s
+Default: typer.Option(3.0, help='HTTP timeout in seconds')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_ttl_s
+Default: typer.Option(3600, help='Signals TTL in seconds')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: signals_allow_threshold_override
+Default: typer.Option(False, help='Allow threshold override')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: aggregate_feature_set
+Default: typer.Option('full', help='Feature set (minimal/full)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: aggregate_group_by
+Default: typer.Option('policy_area,year', help='Aggregation keys (comma-separated)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: score_metrics
+Default: typer.Option('precision,coverage,risk', help='Metrics (comma-separated)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: score_calibration_mode
+Default: typer.Option('none', help='Calibration mode (none/isotonic/platt)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: report_formats
+Default: typer.Option('json,md', help='Report formats (comma-separated)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: report_include_provenance
+Default: typer.Option(True, help='Include provenance')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: dry_run
+Default: typer.Option(False, help='Dry run (validation only)')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/flux/cli.py
+Function: run
+Parameter: print_contracts
+Default: typer.Option(False, help='Print contracts and exit')
+Line: 90
+--------------------------------------------------------------------------------
+File: src/saaaaaa/processing/embedding_policy.py
+Function: __init__
+Parameter: model_name
+Default: DEFAULT_CROSS_ENCODER_MODEL
+Line: 780
+--------------------------------------------------------------------------------
+File: src/saaaaaa/utils/contract_io.py
+Function: wrap
+Parameter: schema_version
+Default: CANONICAL_SCHEMA_VERSION
+Line: 142
+--------------------------------------------------------------------------------
+File: src/saaaaaa/utils/signature_validator.py
+Function: __init__
+Parameter: registry_path
+Default: Path('data/signature_registry.json')
+Line: 56
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/teoria_cambio.py
+Function: __init__
+Parameter: graph_type
+Default: GraphType.CAUSAL_DAG
+Line: 512
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/bayesian_multilevel_system.py
+Function: __init__
+Parameter: output_dir
+Default: Path('data/bayesian_outputs')
+Line: 1038
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/contradiction_deteccion.py
+Function: __init__
+Parameter: device
+Default: 'cuda' if torch.cuda.is_available() else 'cpu'
+Line: 327
+--------------------------------------------------------------------------------
+File: src/saaaaaa/analysis/contradiction_deteccion.py
+Function: detect
+Parameter: dimension
+Default: PolicyDimension.ESTRATEGICO
+Line: 390
+--------------------------------------------------------------------------------
+File: src/saaaaaa/optimization/rl_strategy.py
+Function: __init__
+Parameter: strategy
+Default: OptimizationStrategy.THOMPSON_SAMPLING
+Line: 383
+--------------------------------------------------------------------------------
+File: src/saaaaaa/patterns/event_tracking.py
+Function: record_event
+Parameter: level
+Default: EventLevel.INFO
+Line: 185
+--------------------------------------------------------------------------------
+File: src/saaaaaa/patterns/event_tracking.py
+Function: start_span
+Parameter: category
+Default: EventCategory.PERFORMANCE
+Line: 235
+--------------------------------------------------------------------------------
+File: src/saaaaaa/patterns/event_tracking.py
+Function: span
+Parameter: category
+Default: EventCategory.PERFORMANCE
+Line: 300
+--------------------------------------------------------------------------------
