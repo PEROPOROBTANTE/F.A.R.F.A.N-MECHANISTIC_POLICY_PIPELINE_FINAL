@@ -40,11 +40,13 @@ echo ""
 
 # Check 3: Dependencies
 echo "3. Critical Dependencies"
-if python verify_dependencies.py 2>&1 | grep -q "Passed: [56]/6"; then
-    echo -e "${GREEN}✓ All dependencies verified${NC}"
+DEP_OUTPUT=$(python verify_dependencies.py 2>&1)
+PASSED=$(echo "$DEP_OUTPUT" | grep -oP 'Passed: \K[0-9]+(?=/6)')
+if [ -n "$PASSED" ] && [ "$PASSED" -ge 5 ]; then
+    echo -e "${GREEN}✓ All dependencies verified ($PASSED/6)${NC}"
     ((HEALTH_SCORE++))
 else
-    echo -e "${RED}✗ Some dependencies missing${NC}"
+    echo -e "${RED}✗ Some dependencies missing ($PASSED/6)${NC}"
 fi
 echo ""
 
