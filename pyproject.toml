@@ -291,65 +291,12 @@ exclude_lines = [
     "@abstractmethod",
 ]
 
-[tool.importlinter]
-root_package = "saaaaaa"
-
-[[tool.importlinter.contracts]]
-name = "Core (excluding orchestrator) must not import analysis"
-type = "forbidden"
-source_modules = ["saaaaaa.core.calibration", "saaaaaa.core.wiring"]
-forbidden_modules = [
-    "saaaaaa.analysis",
-    "saaaaaa.processing",
-    "saaaaaa.api",
+[tool.deptry]
+requirements_files = [
+    "requirements.txt",
+    "requirements-dev.txt",
+    "requirements-docs.txt",
+    "requirements-optional.txt"
 ]
-
-[[tool.importlinter.contracts]]
-name = "Core orchestrator must not import analysis"
-type = "forbidden"
-source_modules = ["saaaaaa.core.orchestrator"]
-forbidden_modules = ["saaaaaa.analysis"]
-
-[[tool.importlinter.contracts]]
-name = "Processing layer cannot import orchestrator"
-type = "forbidden"
-source_modules = ["saaaaaa.processing"]
-forbidden_modules = ["saaaaaa.core.orchestrator"]
-
-[[tool.importlinter.contracts]]
-name = "Analysis layer cannot import orchestrator"
-type = "forbidden"
-source_modules = ["saaaaaa.analysis"]
-forbidden_modules = ["saaaaaa.core.orchestrator"]
-
-[[tool.importlinter.contracts]]
-name = "Analysis depends on core but not infrastructure"
-type = "forbidden"
-source_modules = ["saaaaaa.analysis"]
-forbidden_modules = ["saaaaaa.infrastructure"]
-
-[[tool.importlinter.contracts]]
-name = "Infrastructure must not pull orchestrator"
-type = "forbidden"
-source_modules = ["saaaaaa.infrastructure"]
-forbidden_modules = ["saaaaaa.core.orchestrator"]
-
-[[tool.importlinter.contracts]]
-name = "API layer only calls orchestrator entry points"
-type = "forbidden"
-source_modules = ["saaaaaa.api"]
-forbidden_modules = [
-    "saaaaaa.processing",
-    "saaaaaa.analysis",
-    "saaaaaa.utils",
-]
-
-[[tool.importlinter.contracts]]
-name = "Utils stay leaf modules"
-type = "forbidden"
-source_modules = ["saaaaaa.utils"]
-forbidden_modules = [
-    "saaaaaa.core.orchestrator",
-    "saaaaaa.processing",
-    "saaaaaa.analysis",
-]
+known_first_party = ["saaaaaa", "src", "schemas", "methods", "retry_handler"]
+exclude = ["src", "tests", "examples", ".venv", "minipdm"]

@@ -65,7 +65,8 @@ try:
     print(f"  Output: {output_dir}")
     print(f"  Starting ingestion...")
 
-    result = pipeline.ingest(pdf_path, output_dir)
+    import asyncio
+    result = asyncio.run(pipeline.process(pdf_path, document_id="test_doc", title="Test Plan"))
 
     print(f"✓ Ingestion completed!")
     print(f"  Result type: {type(result)}")
