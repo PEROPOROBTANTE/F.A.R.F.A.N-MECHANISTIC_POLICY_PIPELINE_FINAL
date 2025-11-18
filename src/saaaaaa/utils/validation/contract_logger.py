@@ -27,6 +27,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
+
 class ContractErrorLogger:
     """Structured logger for contract validation errors."""
 

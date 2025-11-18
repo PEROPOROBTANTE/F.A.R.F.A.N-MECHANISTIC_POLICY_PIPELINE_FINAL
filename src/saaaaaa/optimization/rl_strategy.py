@@ -30,7 +30,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from uuid import uuid4
 
 import numpy as np
@@ -61,8 +61,8 @@ class ExecutorMetrics:
     quality_score: float = 0.0  # 0.0 to 1.0
     tokens_used: int = 0
     cost_usd: float = 0.0
-    error: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    error: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def reward(self) -> float:
@@ -214,7 +214,7 @@ class BanditArm:
 
         return exploitation + exploration
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert arm to dictionary."""
         return {
             "arm_id": self.arm_id,
@@ -234,7 +234,7 @@ class BanditAlgorithm(ABC):
     """Base class for bandit algorithms."""
 
     @abstractmethod
-    def select_arm(self, arms: List[BanditArm], rng: np.random.Generator) -> BanditArm:
+    def select_arm(self, arms: list[BanditArm], rng: np.random.Generator) -> BanditArm:
         """
         Select an arm to pull.
 
@@ -258,7 +258,7 @@ class ThompsonSamplingAlgorithm(BanditAlgorithm):
     ✅ AUDIT_VERIFIED: Thompson Sampling implementation
     """
 
-    def select_arm(self, arms: List[BanditArm], rng: np.random.Generator) -> BanditArm:
+    def select_arm(self, arms: list[BanditArm], rng: np.random.Generator) -> BanditArm:
         """Select arm using Thompson Sampling."""
         if not arms:
             raise ValueError("No arms available")
@@ -284,7 +284,7 @@ class UCB1Algorithm(BanditAlgorithm):
     ✅ AUDIT_VERIFIED: UCB1 implementation
     """
 
-    def __init__(self, c: float = 2.0):
+    def __init__(self, c: float = 2.0) -> None:
         """
         Initialize UCB1 algorithm.
 
@@ -293,7 +293,7 @@ class UCB1Algorithm(BanditAlgorithm):
         """
         self.c = c
 
-    def select_arm(self, arms: List[BanditArm], rng: np.random.Generator) -> BanditArm:
+    def select_arm(self, arms: list[BanditArm], rng: np.random.Generator) -> BanditArm:
         """Select arm using UCB1."""
         if not arms:
             raise ValueError("No arms available")
@@ -327,7 +327,7 @@ class EpsilonGreedyAlgorithm(BanditAlgorithm):
     ✅ AUDIT_VERIFIED: Epsilon-Greedy implementation
     """
 
-    def __init__(self, epsilon: float = 0.1, decay: bool = False):
+    def __init__(self, epsilon: float = 0.1, decay: bool = False) -> None:
         """
         Initialize Epsilon-Greedy algorithm.
 
@@ -340,7 +340,7 @@ class EpsilonGreedyAlgorithm(BanditAlgorithm):
         self.decay = decay
         self.total_selections = 0
 
-    def select_arm(self, arms: List[BanditArm], rng: np.random.Generator) -> BanditArm:
+    def select_arm(self, arms: list[BanditArm], rng: np.random.Generator) -> BanditArm:
         """Select arm using Epsilon-Greedy."""
         if not arms:
             raise ValueError("No arms available")
@@ -383,9 +383,9 @@ class RLStrategyOptimizer:
     def __init__(
         self,
         strategy: OptimizationStrategy = OptimizationStrategy.THOMPSON_SAMPLING,
-        arms: Optional[List[str]] = None,
+        arms: list[str] | None = None,
         seed: int = 42
-    ):
+    ) -> None:
         """
         Initialize RL strategy optimizer.
 
@@ -400,7 +400,7 @@ class RLStrategyOptimizer:
         self.created_at = datetime.utcnow()
 
         # Initialize arms
-        self.arms: Dict[str, BanditArm] = {}
+        self.arms: dict[str, BanditArm] = {}
         if arms:
             for arm_name in arms:
                 self.add_arm(arm_name)
@@ -409,7 +409,7 @@ class RLStrategyOptimizer:
         self.algorithm = self._create_algorithm(strategy)
 
         # Execution history
-        self.history: List[Tuple[str, ExecutorMetrics]] = []
+        self.history: list[tuple[str, ExecutorMetrics]] = []
 
     def _create_algorithm(self, strategy: OptimizationStrategy) -> BanditAlgorithm:
         """Create bandit algorithm based on strategy."""
@@ -480,7 +480,7 @@ class RLStrategyOptimizer:
             f"success_rate={arm.success_rate:.2%}"
         )
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """
         Get optimizer statistics.
 
@@ -533,7 +533,7 @@ class RLStrategyOptimizer:
         Args:
             input_path: Path to input file
         """
-        with open(input_path, 'r', encoding='utf-8') as f:
+        with open(input_path, encoding='utf-8') as f:
             state = json.load(f)
 
         # Restore arms
@@ -561,7 +561,7 @@ class RLStrategyOptimizer:
         stats = self.get_statistics()
 
         print("\n" + "=" * 80)
-        print(f"🤖 RL STRATEGY OPTIMIZER SUMMARY")
+        print("🤖 RL STRATEGY OPTIMIZER SUMMARY")
         print("=" * 80)
         print(f"Strategy: {self.strategy.value}")
         print(f"Total Pulls: {stats['total_pulls']}")

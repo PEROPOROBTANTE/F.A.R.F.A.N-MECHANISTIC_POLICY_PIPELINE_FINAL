@@ -182,14 +182,13 @@ class BeachEvidentialTest:
             else:
                 return 0.01, "DOUBLY_DECISIVE_ELIMINATED: Conclusive"
 
-        else:  # straw_in_wind
-            # Marginal update only
-            if evidence_found:
-                posterior = min(0.95, prior * min(bayes_factor, 2.0))
-                return posterior, "STRAW_IN_WIND: Weak support"
-            else:
-                posterior = max(0.05, prior / min(bayes_factor, 2.0))
-                return posterior, "STRAW_IN_WIND: Weak disconfirmation"
+        # Marginal update only
+        elif evidence_found:
+            posterior = min(0.95, prior * min(bayes_factor, 2.0))
+            return posterior, "STRAW_IN_WIND: Weak support"
+        else:
+            posterior = max(0.05, prior / min(bayes_factor, 2.0))
+            return posterior, "STRAW_IN_WIND: Weak disconfirmation"
 
 # ============================================================================
 # Custom Exceptions - Structured Error Semantics
@@ -1682,12 +1681,11 @@ class CausalExtractor:
             return 'resultado'
         elif any(word in text_lower for word in ['impacto', 'transformación', 'desarrollo', 'bienestar']):
             return 'impacto'
+        # Default classification based on position and complexity
+        elif len(text) < 100:
+            return 'producto'
         else:
-            # Default classification based on position and complexity
-            if len(text) < 100:
-                return 'producto'
-            else:
-                return 'resultado'
+            return 'resultado'
 
     def _extract_causal_justifications(self, text: str) -> list[dict[str, Any]]:
         """
@@ -2147,7 +2145,6 @@ class FinancialAuditor:
         self.logger.info(f"D3-Q3 Counterfactual Budget Check completed: "
                          f"{self.d3_q3_analysis['well_traced_count']}/{len(d3_q3_scores)} "
                          f"products with excellent traceability")
-        return None
 
     def _calculate_sufficiency(self, allocation: float, target: float) -> float:
         """
@@ -6078,8 +6075,7 @@ class BayesianCounterfactualAuditor:
         # 1. CONTROLES NEGATIVOS: nodos irrelevantes
         irrelevant_nodes = [
             n for n in dag.nodes()
-            if n != target and n != treatment
-            and not nx.has_path(dag, n, target)
+            if n not in (target, treatment) and not nx.has_path(dag, n, target)
         ]
 
         negative_effects = []

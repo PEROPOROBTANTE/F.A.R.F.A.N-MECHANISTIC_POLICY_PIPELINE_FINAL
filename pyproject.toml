@@ -290,3 +290,66 @@ exclude_lines = [
     "raise NotImplementedError",
     "@abstractmethod",
 ]
+
+[tool.importlinter]
+root_package = "saaaaaa"
+
+[[tool.importlinter.contracts]]
+name = "Core must stay independent"
+type = "forbidden"
+source_modules = ["saaaaaa.core"]
+forbidden_modules = [
+    "saaaaaa.core.orchestrator",
+    "saaaaaa.analysis",
+    "saaaaaa.processing",
+    "saaaaaa.api",
+]
+
+[[tool.importlinter.contracts]]
+name = "Orchestrator may depend on core but not vice versa"
+type = "independence"
+modules = ["saaaaaa.core.orchestrator", "saaaaaa.core"]
+
+[[tool.importlinter.contracts]]
+name = "Processing layer cannot import orchestrator"
+type = "forbidden"
+source_modules = ["saaaaaa.processing"]
+forbidden_modules = ["saaaaaa.core.orchestrator"]
+
+[[tool.importlinter.contracts]]
+name = "Analysis layer cannot import orchestrator"
+type = "forbidden"
+source_modules = ["saaaaaa.analysis"]
+forbidden_modules = ["saaaaaa.core.orchestrator"]
+
+[[tool.importlinter.contracts]]
+name = "Analysis depends on core but not infrastructure"
+type = "forbidden"
+source_modules = ["saaaaaa.analysis"]
+forbidden_modules = ["saaaaaa.infrastructure"]
+
+[[tool.importlinter.contracts]]
+name = "Infrastructure must not pull orchestrator"
+type = "forbidden"
+source_modules = ["saaaaaa.infrastructure"]
+forbidden_modules = ["saaaaaa.core.orchestrator"]
+
+[[tool.importlinter.contracts]]
+name = "API layer only calls orchestrator entry points"
+type = "forbidden"
+source_modules = ["saaaaaa.api"]
+forbidden_modules = [
+    "saaaaaa.processing",
+    "saaaaaa.analysis",
+    "saaaaaa.utils",
+]
+
+[[tool.importlinter.contracts]]
+name = "Utils stay leaf modules"
+type = "forbidden"
+source_modules = ["saaaaaa.utils"]
+forbidden_modules = [
+    "saaaaaa.core.orchestrator",
+    "saaaaaa.processing",
+    "saaaaaa.analysis",
+]

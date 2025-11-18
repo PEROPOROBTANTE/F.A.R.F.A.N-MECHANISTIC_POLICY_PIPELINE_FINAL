@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+
 def enhance_template(rule: dict[str, Any]) -> dict[str, Any]:
     """
     Feature 1: Eliminate Hardcoded Template Strings

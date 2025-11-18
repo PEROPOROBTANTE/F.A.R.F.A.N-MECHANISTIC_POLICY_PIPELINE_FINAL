@@ -33,6 +33,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Check dependency lockdown before importing transformers
 from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
+
 _lockdown = get_dependency_lockdown()
 
 from sentence_transformers import SentenceTransformer

@@ -47,7 +47,7 @@ class SPCAdapter:
     SmartPolicyChunk data into the format expected by the orchestrator.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the SPC adapter."""
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -232,8 +232,8 @@ class SPCAdapter:
         # Build structured text (no sections available from SPC)
         structured_text = StructuredTextV1(
             full_text=full_text,
-            sections=tuple(),
-            page_boundaries=tuple()
+            sections=(),
+            page_boundaries=()
         )
 
         # Build document indexes

@@ -1,13 +1,14 @@
 # stdlib
 from __future__ import annotations
 
-import json
 import logging
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 # third-party (pinned in pyproject)
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +109,6 @@ class QualityGates:
         requires: source_paths not empty
         ensures: no YAML reads detected
         """
-        yaml_patterns = [".yaml", ".yml"]
 
         yaml_reads: list[str] = []
         files_checked = 0
@@ -123,7 +123,7 @@ class QualityGates:
                     if py_file.is_file():
                         files_checked += 1
                         content = py_file.read_text(encoding="utf-8")
-                        
+
                         # Check for YAML loading patterns
                         if any(
                             pattern in content

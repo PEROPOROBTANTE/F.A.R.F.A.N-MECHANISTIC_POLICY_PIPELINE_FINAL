@@ -7,8 +7,7 @@ import os
 import re
 import time
 import unicodedata
-from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 # third-party (pinned in pyproject)
 import polars as pl
@@ -16,25 +15,12 @@ import pyarrow as pa
 from blake3 import blake3
 from opentelemetry import metrics, trace
 from pydantic import BaseModel, ValidationError
-from tenacity import retry, stop_after_attempt, wait_exponential_jitter
-
-from saaaaaa.utils.paths import reports_dir
-from saaaaaa.processing.spc_ingestion import StrategicChunkingSystem
 
 # Contract infrastructure - ACTUAL INTEGRATION
 from saaaaaa.utils.contract_io import ContractEnvelope
-from saaaaaa.utils.determinism_helpers import deterministic
 from saaaaaa.utils.json_logger import get_json_logger, log_io_event
+from saaaaaa.utils.paths import reports_dir
 
-from .configs import (
-    AggregateConfig,
-    ChunkConfig,
-    IngestConfig,
-    NormalizeConfig,
-    ReportConfig,
-    ScoreConfig,
-    SignalsConfig,
-)
 from .models import (
     AggregateDeliverable,
     AggregateExpectation,
@@ -52,6 +38,18 @@ from .models import (
     SignalsDeliverable,
     SignalsExpectation,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from .configs import (
+        AggregateConfig,
+        ChunkConfig,
+        NormalizeConfig,
+        ReportConfig,
+        ScoreConfig,
+        SignalsConfig,
+    )
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer("flux")
@@ -168,14 +166,14 @@ def run_normalize(
     """
     start_time = time.time()
     start_monotonic = time.monotonic()
-    
+
     # Derive policy_unit_id from environment or generate default
     if policy_unit_id is None:
         policy_unit_id = os.getenv("POLICY_UNIT_ID", "default-policy")
     if correlation_id is None:
         import uuid
         correlation_id = str(uuid.uuid4())
-    
+
     # Get contract-aware JSON logger
     contract_logger = get_json_logger("flux.normalize")
 
@@ -186,7 +184,7 @@ def run_normalize(
             policy_unit_id=policy_unit_id,
             correlation_id=correlation_id
         )
-        
+
         # Compatibility check
         assert_compat(ing, NormalizeExpectation)
 
@@ -367,7 +365,7 @@ def run_normalize(
         duration_ms = (time.time() - start_time) * 1000
         phase_latency_histogram.record(duration_ms, {"phase": "normalize"})
         phase_counter.add(1, {"phase": "normalize"})
-        
+
         # Structured JSON logging with envelope metadata
         log_io_event(
             contract_logger,
@@ -419,14 +417,14 @@ def run_chunk(
     """
     start_time = time.time()
     start_monotonic = time.monotonic()
-    
+
     # Derive policy_unit_id from environment or generate default
     if policy_unit_id is None:
         policy_unit_id = os.getenv("POLICY_UNIT_ID", "default-policy")
     if correlation_id is None:
         import uuid
         correlation_id = str(uuid.uuid4())
-    
+
     # Get contract-aware JSON logger
     contract_logger = get_json_logger("flux.chunk")
 
@@ -437,7 +435,7 @@ def run_chunk(
             policy_unit_id=policy_unit_id,
             correlation_id=correlation_id
         )
-        
+
         # Compatibility check
         assert_compat(norm, ChunkExpectation)
 
@@ -472,7 +470,7 @@ def run_chunk(
             )
 
         valid_resolutions = {"micro", "meso", "macro"}
-        if not all(k in valid_resolutions for k in out.chunk_index.keys()):
+        if not all(k in valid_resolutions for k in out.chunk_index):
             raise PostconditionError(
                 "run_chunk",
                 "valid chunk_index keys",
@@ -495,7 +493,7 @@ def run_chunk(
         duration_ms = (time.time() - start_time) * 1000
         phase_latency_histogram.record(duration_ms, {"phase": "chunk"})
         phase_counter.add(1, {"phase": "chunk"})
-        
+
         # Structured JSON logging with envelope metadata
         log_io_event(
             contract_logger,
@@ -546,8 +544,8 @@ def run_signals(
     requires: compatible input from chunk, registry_get callable
     ensures: enriched_chunks not empty, used_signals recorded, metadata propagated
     """
-    contract_logger = get_json_logger("flux.signals")
-    started_monotonic = time.monotonic()
+    get_json_logger("flux.signals")
+    time.monotonic()
     start_time = time.time()
 
     with tracer.start_as_current_span("signals") as span:
@@ -556,7 +554,7 @@ def run_signals(
             span.set_attribute("correlation_id", correlation_id)
         if policy_unit_id:
             span.set_attribute("policy_unit_id", policy_unit_id)
-        
+
         # Compatibility check
         assert_compat(ch, SignalsExpectation)
 
@@ -671,8 +669,8 @@ def run_aggregate(
     requires: compatible input from signals, group_by not empty
     ensures: features table has required columns, aggregation_meta recorded, metadata propagated
     """
-    contract_logger = get_json_logger("flux.aggregate")
-    started_monotonic = time.monotonic()
+    get_json_logger("flux.aggregate")
+    time.monotonic()
     start_time = time.time()
 
     with tracer.start_as_current_span("aggregate") as span:
@@ -681,7 +679,7 @@ def run_aggregate(
             span.set_attribute("correlation_id", correlation_id)
         if policy_unit_id:
             span.set_attribute("policy_unit_id", policy_unit_id)
-        
+
         # Compatibility check
         assert_compat(sig, AggregateExpectation)
 
@@ -790,8 +788,8 @@ def run_score(
     requires: compatible input from aggregate, metrics not empty
     ensures: scores dataframe not empty, has required columns, metadata propagated
     """
-    contract_logger = get_json_logger("flux.score")
-    started_monotonic = time.monotonic()
+    get_json_logger("flux.score")
+    time.monotonic()
     start_time = time.time()
 
     with tracer.start_as_current_span("score") as span:
@@ -800,7 +798,7 @@ def run_score(
             span.set_attribute("correlation_id", correlation_id)
         if policy_unit_id:
             span.set_attribute("policy_unit_id", policy_unit_id)
-        
+
         # Compatibility check
         assert_compat(agg, ScoreExpectation)
 
@@ -909,8 +907,8 @@ def run_report(
     requires: compatible input from score, manifest not None
     ensures: artifacts not empty, summary contains required fields, metadata propagated
     """
-    contract_logger = get_json_logger("flux.report")
-    started_monotonic = time.monotonic()
+    get_json_logger("flux.report")
+    time.monotonic()
     start_time = time.time()
 
     with tracer.start_as_current_span("report") as span:
@@ -919,7 +917,7 @@ def run_report(
             span.set_attribute("correlation_id", correlation_id)
         if policy_unit_id:
             span.set_attribute("policy_unit_id", policy_unit_id)
-        
+
         # Compatibility check
         assert_compat(sc, ReportExpectation)
 

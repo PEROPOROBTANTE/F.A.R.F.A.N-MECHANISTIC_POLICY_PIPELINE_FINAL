@@ -15,7 +15,7 @@ import json
 import logging
 import threading
 from pathlib import Path
-from typing import Dict, Optional, Any
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class IntrinsicScoreLoader:
     DEFAULT_W_IMPL = 0.35
     DEFAULT_W_DEPLOY = 0.25
 
-    def __init__(self, calibration_path: Path | str = "config/intrinsic_calibration.json"):
+    def __init__(self, calibration_path: Path | str = "config/intrinsic_calibration.json") -> None:
         """
         Initialize the loader.
 
@@ -65,8 +65,8 @@ class IntrinsicScoreLoader:
         lazily on first access for optimal performance.
         """
         self.calibration_path = Path(calibration_path)
-        self._data: Optional[Dict[str, Any]] = None
-        self._methods: Optional[Dict[str, Dict[str, Any]]] = None
+        self._data: dict[str, Any] | None = None
+        self._methods: dict[str, dict[str, Any]] | None = None
         self._lock = threading.Lock()
         self._loaded = False
 
@@ -108,7 +108,7 @@ class IntrinsicScoreLoader:
                     f"Intrinsic calibration file not found: {self.calibration_path}"
                 )
 
-            with open(self.calibration_path, 'r') as f:
+            with open(self.calibration_path) as f:
                 self._data = json.load(f)
 
             self._methods = self._data.get("methods", {})
@@ -167,7 +167,7 @@ class IntrinsicScoreLoader:
 
             self._loaded = True
 
-    def _compute_statistics(self) -> Dict[str, int]:
+    def _compute_statistics(self) -> dict[str, int]:
         """Compute statistics about the loaded calibration data."""
         stats = {
             "total": len(self._methods),
@@ -216,7 +216,7 @@ class IntrinsicScoreLoader:
                 extra={"total_warnings": warning_count}
             )
 
-    def _compute_intrinsic_score(self, method_data: Dict[str, Any]) -> float:
+    def _compute_intrinsic_score(self, method_data: dict[str, Any]) -> float:
         """
         Compute intrinsic score from b_theory, b_impl, b_deploy.
 
@@ -313,7 +313,7 @@ class IntrinsicScoreLoader:
             )
             return default
 
-    def get_method_data(self, method_id: str) -> Optional[Dict[str, Any]]:
+    def get_method_data(self, method_id: str) -> dict[str, Any] | None:
         """
         Get full calibration data for a method.
 
@@ -365,7 +365,7 @@ class IntrinsicScoreLoader:
 
         return self._methods[method_id].get("calibration_status") == "excluded"
 
-    def get_layer(self, method_id: str) -> Optional[str]:
+    def get_layer(self, method_id: str) -> str | None:
         """
         Get the layer/role designation for a method.
 
@@ -382,7 +382,7 @@ class IntrinsicScoreLoader:
 
         return self._methods[method_id].get("layer")
 
-    def get_statistics(self) -> Dict[str, int]:
+    def get_statistics(self) -> dict[str, int]:
         """
         Get statistics about the loaded calibration data.
 

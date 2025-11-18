@@ -12,7 +12,7 @@ by rigorous_calibration_triage.py using intrinsic_calibration_rubric.json.
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
 
 from .data_structures import LayerID, LayerScore
 
@@ -40,7 +40,7 @@ class BaseLayerEvaluator:
     # Penalty score for methods without calibration data
     UNCALIBRATED_PENALTY = 0.1
 
-    def __init__(self, intrinsic_calibration_path: Path | str):
+    def __init__(self, intrinsic_calibration_path: Path | str) -> None:
         """
         Initialize evaluator with intrinsic calibration data.
 
@@ -52,7 +52,7 @@ class BaseLayerEvaluator:
             ValueError: If calibration file has invalid structure
         """
         self.calibration_path = Path(intrinsic_calibration_path)
-        self.calibrations: Dict[str, Dict[str, Any]] = {}
+        self.calibrations: dict[str, dict[str, Any]] = {}
         self._load()
 
         # Verify aggregation weights sum to 1.0
@@ -62,7 +62,7 @@ class BaseLayerEvaluator:
                 f"Base layer component weights must sum to 1.0, got {total_weight}"
             )
 
-    def _load(self):
+    def _load(self) -> None:
         """Load intrinsic calibration scores from JSON."""
         if not self.calibration_path.exists():
             raise FileNotFoundError(
@@ -70,7 +70,7 @@ class BaseLayerEvaluator:
                 f"Run scripts/rigorous_calibration_triage.py to generate it."
             )
 
-        with open(self.calibration_path, 'r', encoding='utf-8') as f:
+        with open(self.calibration_path, encoding='utf-8') as f:
             data = json.load(f)
 
         # Validate structure
@@ -223,7 +223,7 @@ class BaseLayerEvaluator:
             }
         )
 
-    def get_calibration_info(self, method_id: str) -> Optional[Dict[str, Any]]:
+    def get_calibration_info(self, method_id: str) -> dict[str, Any] | None:
         """
         Get full calibration info for a method (including evidence).
 
@@ -237,7 +237,7 @@ class BaseLayerEvaluator:
         """
         return self.calibrations.get(method_id)
 
-    def get_coverage_stats(self) -> Dict[str, Any]:
+    def get_coverage_stats(self) -> dict[str, Any]:
         """
         Get statistics about calibration coverage.
 

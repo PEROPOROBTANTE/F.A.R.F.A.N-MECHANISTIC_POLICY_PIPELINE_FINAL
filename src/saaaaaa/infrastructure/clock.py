@@ -7,6 +7,7 @@ For testing, use FrozenClockAdapter instead.
 
 from datetime import datetime, timezone
 
+
 class SystemClockAdapter:
     """Real clock adapter using datetime.now().
 

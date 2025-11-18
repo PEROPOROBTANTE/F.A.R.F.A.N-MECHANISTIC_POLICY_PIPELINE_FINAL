@@ -34,13 +34,14 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any, Literal
 
 import numpy as np
-import scipy.stats as stats
 import torch
+from scipy import stats
 from scipy.spatial.distance import cosine
 from scipy.special import rel_entr
 
 # Check dependency lockdown before importing transformers
 from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
+
 _lockdown = get_dependency_lockdown()
 
 from transformers import AutoModel, AutoTokenizer

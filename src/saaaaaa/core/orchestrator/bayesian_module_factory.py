@@ -18,23 +18,24 @@ NOTE: This factory is distinct from factory.py (CoreModuleFactory).
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import structlog
 
 from .questionnaire_resource_provider import (
-    QuestionnaireResourceProvider,
     Pattern,
+    QuestionnaireResourceProvider,
     ValidationSpec,
 )
+from .signal_loader import build_all_signal_packs
 from .signals import (
+    InMemorySignalSource,
     SignalClient,
     SignalRegistry,
-    InMemorySignalSource,
 )
-from .signal_loader import build_all_signal_packs
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = structlog.get_logger(__name__)
 
@@ -42,10 +43,10 @@ logger = structlog.get_logger(__name__)
 class BayesianModuleFactory:
     """
     Factory for creating module instances with injected questionnaire resources.
-    
+
     This factory creates instances of the 19 core module classes, injecting
     patterns, validations, and other resources extracted from the questionnaire.
-    
+
     Module Classes (19):
     1. BayesianNumericalAnalyzer
     2. BayesianEvidenceScorer
@@ -66,23 +67,23 @@ class BayesianModuleFactory:
     17. BayesianImpactPredictor
     18. BayesianAlignmentChecker
     19. BayesianQualityController
-    
+
     Usage:
         factory = BayesianModuleFactory(questionnaire_data)
         analyzer = factory.create_bayesian_numerical_analyzer()
         scorer = factory.create_bayesian_evidence_scorer()
     """
-    
+
     def __init__(
         self,
         questionnaire_data: dict[str, Any],
         signal_registry=None,
         signal_client=None,
         enable_signals: bool = True,
-    ):
+    ) -> None:
         """
         Initialize factory with questionnaire data and optional signal infrastructure.
-        
+
         Args:
             questionnaire_data: Parsed questionnaire monolith JSON
             signal_registry: Optional SignalRegistry for cross-cut signal propagation
@@ -92,7 +93,7 @@ class BayesianModuleFactory:
         self._provider = QuestionnaireResourceProvider(questionnaire_data)
         self._questionnaire_data = questionnaire_data
         self._instances: dict[str, Any] = {}
-        
+
         # Extract resources upfront
         self._all_patterns = self._provider.extract_all_patterns()
         self._temporal_patterns = self._provider.get_temporal_patterns()
@@ -100,17 +101,17 @@ class BayesianModuleFactory:
         self._source_patterns = self._provider.get_source_patterns()
         self._territorial_patterns = self._provider.get_territorial_patterns()
         self._validations = self._provider.extract_all_validations()
-        
+
         # Auto-create signal infrastructure if enabled
         if enable_signals:
             if signal_client is None:
                 # Create in-memory signal source
                 memory_source = InMemorySignalSource()
-                
+
                 # Load ALL 10 policy areas from monolith
                 logger.info("loading_signal_packs_from_monolith")
                 all_packs = build_all_signal_packs(questionnaire_data)
-                
+
                 for pa_code, signal_pack in all_packs.items():
                     memory_source.register(pa_code, signal_pack)
                     logger.debug(
@@ -118,7 +119,7 @@ class BayesianModuleFactory:
                         policy_area=pa_code,
                         patterns=len(signal_pack.patterns),
                     )
-                
+
                 self.signal_client = SignalClient(
                     base_url="memory://",
                     memory_source=memory_source,
@@ -130,11 +131,11 @@ class BayesianModuleFactory:
                 )
             else:
                 self.signal_client = signal_client
-            
+
             if signal_registry is None:
                 # Create and pre-populate registry
                 self._signal_registry = SignalRegistry(max_size=100, default_ttl_s=86400)
-                
+
                 # Pre-populate registry with all policy areas
                 for pa_code in [f"PA{i:02d}" for i in range(1, 11)]:
                     pack = self.signal_client.fetch_signal_pack(pa_code)
@@ -144,7 +145,7 @@ class BayesianModuleFactory:
                             "signal_registry_preloaded",
                             policy_area=pa_code,
                         )
-                
+
                 logger.info(
                     "signal_registry_created",
                     size=len(self._signal_registry._cache),
@@ -155,7 +156,7 @@ class BayesianModuleFactory:
         else:
             self.signal_client = signal_client
             self._signal_registry = signal_registry
-        
+
         logger.info(
             "core_module_factory_initialized",
             total_patterns=len(self._all_patterns),
@@ -166,37 +167,37 @@ class BayesianModuleFactory:
             has_signal_registry=self._signal_registry is not None,
             signals_enabled=enable_signals,
         )
-    
+
     @classmethod
-    def from_provider(cls, provider: QuestionnaireResourceProvider) -> "BayesianModuleFactory":
+    def from_provider(cls, provider: QuestionnaireResourceProvider) -> BayesianModuleFactory:
         """
         Create factory from existing provider.
-        
+
         Args:
             provider: QuestionnaireResourceProvider instance
-            
+
         Returns:
             CoreModuleFactory instance
         """
         # Access internal data (requires provider to expose it)
         return cls(provider._data)
-    
+
     def get_provider(self) -> QuestionnaireResourceProvider:
         """Get the underlying resource provider."""
         return self._provider
-    
+
     def get_signal_registry(self):
         """Get the signal registry if available."""
         return self._signal_registry
-    
+
     # ==========================
     # Module Creation Methods
     # ==========================
-    
+
     def create_bayesian_numerical_analyzer(self) -> BayesianNumericalAnalyzer:
         """
         Create BayesianNumericalAnalyzer with indicator patterns.
-        
+
         Returns:
             Configured BayesianNumericalAnalyzer instance
         """
@@ -206,13 +207,13 @@ class BayesianModuleFactory:
                 temporal_patterns=self._temporal_patterns,
             )
             logger.debug("created_bayesian_numerical_analyzer")
-        
+
         return self._instances["numerical_analyzer"]
-    
+
     def create_bayesian_evidence_scorer(self) -> BayesianEvidenceScorer:
         """
         Create BayesianEvidenceScorer with source patterns.
-        
+
         Returns:
             Configured BayesianEvidenceScorer instance
         """
@@ -222,13 +223,13 @@ class BayesianModuleFactory:
                 validations=self._validations,
             )
             logger.debug("created_bayesian_evidence_scorer")
-        
+
         return self._instances["evidence_scorer"]
-    
+
     def create_bayesian_mechanism_inference(self) -> BayesianMechanismInference:
         """
         Create BayesianMechanismInference with causal patterns.
-        
+
         Returns:
             Configured BayesianMechanismInference instance
         """
@@ -238,18 +239,18 @@ class BayesianModuleFactory:
                 p for p in self._all_patterns
                 if p.category in ("coherence", "cross_reference")
             ]
-            
+
             self._instances["mechanism_inference"] = BayesianMechanismInference(
                 coherence_patterns=coherence_patterns,
             )
             logger.debug("created_bayesian_mechanism_inference")
-        
+
         return self._instances["mechanism_inference"]
-    
+
     def create_bayesian_temporal_coherence(self) -> BayesianTemporalCoherence:
         """
         Create BayesianTemporalCoherence with temporal patterns.
-        
+
         Returns:
             Configured BayesianTemporalCoherence instance
         """
@@ -258,13 +259,13 @@ class BayesianModuleFactory:
                 temporal_patterns=self._temporal_patterns,
             )
             logger.debug("created_bayesian_temporal_coherence")
-        
+
         return self._instances["temporal_coherence"]
-    
+
     def create_bayesian_source_reliability(self) -> BayesianSourceReliability:
         """
         Create BayesianSourceReliability with source patterns.
-        
+
         Returns:
             Configured BayesianSourceReliability instance
         """
@@ -273,13 +274,13 @@ class BayesianModuleFactory:
                 source_patterns=self._source_patterns,
             )
             logger.debug("created_bayesian_source_reliability")
-        
+
         return self._instances["source_reliability"]
-    
+
     def create_all_modules(self) -> dict[str, Any]:
         """
         Create all 19 module instances.
-        
+
         Returns:
             Dict mapping module names to instances
         """
@@ -290,20 +291,20 @@ class BayesianModuleFactory:
             "temporal_coherence": self.create_bayesian_temporal_coherence(),
             "source_reliability": self.create_bayesian_source_reliability(),
         }
-        
+
         # TODO: Create remaining 14 modules when class stubs are available
         logger.info(
             "all_modules_created",
             count=len(modules),
             modules=list(modules.keys()),
         )
-        
+
         return modules
-    
+
     def get_resource_statistics(self) -> dict[str, Any]:
         """
         Get statistics about injected resources.
-        
+
         Returns:
             Dict with resource counts and metadata
         """
@@ -331,12 +332,12 @@ class BayesianModuleFactory:
 
 class BayesianNumericalAnalyzer:
     """Stub for BayesianNumericalAnalyzer with injected patterns."""
-    
+
     def __init__(
         self,
         indicator_patterns: list[Pattern],
         temporal_patterns: list[Pattern],
-    ):
+    ) -> None:
         self.indicator_patterns = indicator_patterns
         self.temporal_patterns = temporal_patterns
         logger.debug(
@@ -348,12 +349,12 @@ class BayesianNumericalAnalyzer:
 
 class BayesianEvidenceScorer:
     """Stub for BayesianEvidenceScorer with injected patterns."""
-    
+
     def __init__(
         self,
         source_patterns: list[Pattern],
         validations: list[ValidationSpec],
-    ):
+    ) -> None:
         self.source_patterns = source_patterns
         self.validations = validations
         logger.debug(
@@ -365,8 +366,8 @@ class BayesianEvidenceScorer:
 
 class BayesianMechanismInference:
     """Stub for BayesianMechanismInference with injected patterns."""
-    
-    def __init__(self, coherence_patterns: list[Pattern]):
+
+    def __init__(self, coherence_patterns: list[Pattern]) -> None:
         self.coherence_patterns = coherence_patterns
         logger.debug(
             "bayesian_mechanism_inference_init",
@@ -376,8 +377,8 @@ class BayesianMechanismInference:
 
 class BayesianTemporalCoherence:
     """Stub for BayesianTemporalCoherence with injected patterns."""
-    
-    def __init__(self, temporal_patterns: list[Pattern]):
+
+    def __init__(self, temporal_patterns: list[Pattern]) -> None:
         self.temporal_patterns = temporal_patterns
         logger.debug(
             "bayesian_temporal_coherence_init",
@@ -387,8 +388,8 @@ class BayesianTemporalCoherence:
 
 class BayesianSourceReliability:
     """Stub for BayesianSourceReliability with injected patterns."""
-    
-    def __init__(self, source_patterns: list[Pattern]):
+
+    def __init__(self, source_patterns: list[Pattern]) -> None:
         self.source_patterns = source_patterns
         logger.debug(
             "bayesian_source_reliability_init",

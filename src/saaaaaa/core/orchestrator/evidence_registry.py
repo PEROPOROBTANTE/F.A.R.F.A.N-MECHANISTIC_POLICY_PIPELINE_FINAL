@@ -586,19 +586,18 @@ class EvidenceRegistry:
                         f"Line {line_num}: First record has previous_hash={record.previous_hash}, "
                         f"expected None or empty string. Chain may have been corrupted or truncated."
                     )
-            else:
-                # Subsequent records should link to the previous record
-                if previous_record is not None:
-                    expected_previous_hash = previous_record.entry_hash
-                    actual_previous_hash = record.previous_hash
+            # Subsequent records should link to the previous record
+            elif previous_record is not None:
+                expected_previous_hash = previous_record.entry_hash
+                actual_previous_hash = record.previous_hash
 
-                    if actual_previous_hash != expected_previous_hash:
-                        raise ValueError(
-                            f"Chain broken at line {line_num}: "
-                            f"expected previous_hash={expected_previous_hash}, "
-                            f"got previous_hash={actual_previous_hash}. "
-                            f"Evidence ordering may be corrupted."
-                        )
+                if actual_previous_hash != expected_previous_hash:
+                    raise ValueError(
+                        f"Chain broken at line {line_num}: "
+                        f"expected previous_hash={expected_previous_hash}, "
+                        f"got previous_hash={actual_previous_hash}. "
+                        f"Evidence ordering may be corrupted."
+                    )
 
             previous_record = record
 
@@ -896,7 +895,7 @@ class EvidenceRegistry:
 
     def stats(self) -> dict[str, int]:
         """Get simplified evidence registry statistics.
-        
+
         Returns:
             Dict with counts for records, types, methods, and questions.
         """

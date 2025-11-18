@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from saaaaaa.core.canonical_notation import CanonicalDimension
 
@@ -62,10 +62,10 @@ class AuditFinding:
     status: AuditStatus
     component: str
     message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
     timestamp: datetime = field(default_factory=datetime.utcnow)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert finding to dictionary."""
         return {
             "category": self.category.value,
@@ -92,8 +92,8 @@ class ExecutorAuditInfo:
     has_execute_method: bool
     accesses_questionnaire_directly: bool
     uses_dependency_injection: bool
-    file_path: Optional[str] = None
-    line_number: Optional[int] = None
+    file_path: str | None = None
+    line_number: int | None = None
 
 
 class AuditSystem:
@@ -128,7 +128,7 @@ class AuditSystem:
         "semantic_chunking_policy.py"
     ]
 
-    def __init__(self, repo_root: Path):
+    def __init__(self, repo_root: Path) -> None:
         """
         Initialize audit system.
 
@@ -136,7 +136,7 @@ class AuditSystem:
             repo_root: Root directory of the repository
         """
         self.repo_root = repo_root
-        self.findings: List[AuditFinding] = []
+        self.findings: list[AuditFinding] = []
 
     def add_finding(
         self,
@@ -144,7 +144,7 @@ class AuditSystem:
         status: AuditStatus,
         component: str,
         message: str,
-        details: Optional[Dict[str, Any]] = None
+        details: dict[str, Any] | None = None
     ) -> None:
         """Add an audit finding."""
         finding = AuditFinding(
@@ -157,7 +157,7 @@ class AuditSystem:
         self.findings.append(finding)
         logger.info(str(finding))
 
-    def audit_executor_architecture(self) -> Dict[str, Any]:
+    def audit_executor_architecture(self) -> dict[str, Any]:
         """
         Audit the 30-executor architecture (D1Q1-D6Q5).
 
@@ -181,7 +181,7 @@ class AuditSystem:
             return {"status": "FAILED", "executors_found": 0}
 
         # Parse the executors file
-        with open(executors_file, 'r', encoding='utf-8') as f:
+        with open(executors_file, encoding='utf-8') as f:
             content = f.read()
 
         try:
@@ -199,12 +199,11 @@ class AuditSystem:
         # Find all executor classes
         executor_classes = {}
         for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef):
-                if node.name.endswith("_Executor"):
-                    executor_classes[node.name] = {
-                        "line_number": node.lineno,
-                        "methods": [m.name for m in node.body if isinstance(m, ast.FunctionDef)]
-                    }
+            if isinstance(node, ast.ClassDef) and node.name.endswith("_Executor"):
+                executor_classes[node.name] = {
+                    "line_number": node.lineno,
+                    "methods": [m.name for m in node.body if isinstance(m, ast.FunctionDef)]
+                }
 
         # Audit each expected executor
         executor_audit_info = []
@@ -271,7 +270,7 @@ class AuditSystem:
                 AuditCategory.EXECUTOR_ARCHITECTURE,
                 AuditStatus.VERIFIED,
                 "FrontierExecutorOrchestrator",
-                f"All 30 dimension-question executors verified (D1Q1-D6Q5)",
+                "All 30 dimension-question executors verified (D1Q1-D6Q5)",
                 {
                     "expected": 30,
                     "found": found_count,
@@ -298,7 +297,7 @@ class AuditSystem:
             "executor_details": executor_audit_info
         }
 
-    def audit_questionnaire_access(self) -> Dict[str, Any]:
+    def audit_questionnaire_access(self) -> dict[str, Any]:
         """
         Audit questionnaire access patterns to ensure dependency injection.
 
@@ -341,7 +340,7 @@ class AuditSystem:
                 continue
 
             # Read and analyze the script
-            with open(script_path, 'r', encoding='utf-8') as f:
+            with open(script_path, encoding='utf-8') as f:
                 content = f.read()
 
             # Check for violations
@@ -403,7 +402,7 @@ class AuditSystem:
         # Check factory.py as the authorized loader
         factory_path = self.repo_root / "src/saaaaaa/core/orchestrator/factory.py"
         if factory_path.exists():
-            with open(factory_path, 'r', encoding='utf-8') as f:
+            with open(factory_path, encoding='utf-8') as f:
                 factory_content = f.read()
 
             has_load_function = 'load_questionnaire' in factory_content
@@ -462,7 +461,7 @@ class AuditSystem:
             "violations": violations
         }
 
-    def audit_factory_pattern(self) -> Dict[str, Any]:
+    def audit_factory_pattern(self) -> dict[str, Any]:
         """
         Audit factory pattern implementation.
 
@@ -491,7 +490,7 @@ class AuditSystem:
         # Check factory.py
         if factory_path.exists():
             results["factory_exists"] = True
-            with open(factory_path, 'r', encoding='utf-8') as f:
+            with open(factory_path, encoding='utf-8') as f:
                 factory_content = f.read()
 
             # Parse AST
@@ -529,7 +528,7 @@ class AuditSystem:
         # Check questionnaire.py
         if questionnaire_path.exists():
             results["questionnaire_module_exists"] = True
-            with open(questionnaire_path, 'r', encoding='utf-8') as f:
+            with open(questionnaire_path, encoding='utf-8') as f:
                 questionnaire_content = f.read()
 
             # Parse AST
@@ -589,7 +588,7 @@ class AuditSystem:
             **results
         }
 
-    def audit_method_signatures(self) -> Dict[str, Any]:
+    def audit_method_signatures(self) -> dict[str, Any]:
         """
         Audit method signatures across core modules.
 
@@ -622,7 +621,7 @@ class AuditSystem:
             if not file_path.exists():
                 continue
 
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 content = f.read()
 
             try:
@@ -724,7 +723,7 @@ class AuditSystem:
             "incomplete_methods": incomplete_methods
         }
 
-    def audit_configuration_system(self) -> Dict[str, Any]:
+    def audit_configuration_system(self) -> dict[str, Any]:
         """
         Audit configuration system for type-safety and parameters.
 
@@ -760,7 +759,7 @@ class AuditSystem:
                 results[config_name] = False
                 continue
 
-            with open(config_path, 'r', encoding='utf-8') as f:
+            with open(config_path, encoding='utf-8') as f:
                 content = f.read()
 
             # Check for Pydantic BaseModel
@@ -820,7 +819,7 @@ class AuditSystem:
             **results
         }
 
-    def generate_audit_report(self, output_path: Optional[Path] = None) -> Dict[str, Any]:
+    def generate_audit_report(self, output_path: Path | None = None) -> dict[str, Any]:
         """
         Generate comprehensive audit report.
 
@@ -868,7 +867,7 @@ class AuditSystem:
 
         return report
 
-    def _generate_summary(self) -> Dict[str, Any]:
+    def _generate_summary(self) -> dict[str, Any]:
         """Generate summary of audit findings."""
         summary = {
             "total_findings": len(self.findings),
@@ -916,7 +915,7 @@ class AuditSystem:
         print("\n" + "=" * 80)
 
 
-def main():
+def main() -> None:
     """Main entry point for audit system."""
     import argparse
 

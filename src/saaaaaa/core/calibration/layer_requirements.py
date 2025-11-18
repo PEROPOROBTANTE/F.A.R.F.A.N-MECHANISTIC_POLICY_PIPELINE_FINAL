@@ -11,7 +11,6 @@ Design:
 - Integrates with IntrinsicScoreLoader to read role from calibration JSON
 """
 import logging
-from typing import Set
 
 from .data_structures import LayerID
 from .intrinsic_loader import IntrinsicScoreLoader
@@ -141,7 +140,7 @@ class LayerRequirementsResolver:
         LayerID.META
     }
 
-    def __init__(self, intrinsic_loader: IntrinsicScoreLoader):
+    def __init__(self, intrinsic_loader: IntrinsicScoreLoader) -> None:
         """
         Initialize the resolver.
 
@@ -160,7 +159,7 @@ class LayerRequirementsResolver:
                     f"base layer is required for all methods"
                 )
 
-    def get_required_layers(self, method_id: str) -> Set[LayerID]:
+    def get_required_layers(self, method_id: str) -> set[LayerID]:
         """
         Get the set of calibration layers required for a method.
 
@@ -304,7 +303,7 @@ class LayerRequirementsResolver:
         else:
             return f"unknown role → {len(required_layers)} layers (conservative): {layer_names}"
 
-    def get_skipped_layers(self, method_id: str) -> Set[LayerID]:
+    def get_skipped_layers(self, method_id: str) -> set[LayerID]:
         """
         Get the set of layers that will be skipped for a method.
 

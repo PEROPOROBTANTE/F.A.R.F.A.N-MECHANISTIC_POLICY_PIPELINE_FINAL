@@ -11,8 +11,12 @@ Design Philosophy:
 - All parameters must be explicitly typed
 - Protocols enable static verification without inheritance
 """
-from typing import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
+
 from .data_structures import LayerScore
+
+if TYPE_CHECKING:
+    from .pdt_structure import PDTStructure
 
 
 @runtime_checkable
