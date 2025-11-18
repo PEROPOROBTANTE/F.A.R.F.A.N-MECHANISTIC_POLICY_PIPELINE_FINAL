@@ -1140,7 +1140,7 @@ FAILED_TESTS=0
 
 # TC-001: Dependencies
 echo "Running TC-001: Dependency Verification..."
-if python verify_dependencies.py > /tmp/tc001.log 2>&1 && grep -q "Passed: [56]/6" /tmp/tc001.log; then
+if python verify_dependencies.py > /tmp/tc001.log 2>&1 && python3 -c "import re; log=open('/tmp/tc001.log').read(); match=re.search(r'Passed: (\d+)/(\d+)', log); exit(0) if match and int(match.group(1)) == int(match.group(2)) else exit(1)" ; then
     echo "✓ TC-001 PASSED"
 else
     echo "✗ TC-001 FAILED"
