@@ -31,7 +31,40 @@ from typing import Any, Callable, TypeVar, Iterable
 T = TypeVar('T')
 
 def group_by(items: Iterable[T], key_func: Callable[[T], tuple]) -> dict[tuple, list[T]]:
-    """Groups a list of items by a key function."""
+    """
+    Groups a sequence of items into a dictionary based on a key function.
+
+    This utility function iterates over a collection, applies a key function to each
+    item, and collects items into lists, keyed by the result of the key function.
+
+    The key function must return a tuple. This is because dictionary keys must be
+    hashable, and tuples are hashable whereas lists are not. Using a tuple allows
+    for grouping by multiple attributes.
+
+    If the input iterable `items` is empty, this function will return an empty
+    dictionary.
+
+    Example:
+        >>> from dataclasses import dataclass
+        >>> @dataclass
+        ... class Record:
+        ...     category: str
+        ...     value: int
+        ...
+        >>> data = [Record("A", 1), Record("B", 2), Record("A", 3)]
+        >>> group_by(data, key_func=lambda r: (r.category,))
+        {('A',): [Record(category='A', value=1), Record(category='A', value=3)],
+         ('B',): [Record(category='B', value=2)]}
+
+    Args:
+        items: An iterable of items to be grouped.
+        key_func: A callable that accepts an item and returns a tuple to be
+                  used as the grouping key.
+
+    Returns:
+        A dictionary where keys are the result of the key function and values are
+        lists of items belonging to that group.
+    """
     grouped = defaultdict(list)
     for item in items:
         grouped[key_func(item)].append(item)
