@@ -1236,8 +1236,9 @@ class ClusterAggregator:
             score.cluster_id = area_to_cluster.get(score.area_id)
 
         # Group by cluster_id
-        key_func = lambda a: (a.cluster_id,)
-        grouped_scores = group_by([s for s in area_scores if hasattr(s, 'cluster_id')], key_func)
+        def cluster_id_key(a):
+            return (a.cluster_id,)
+        grouped_scores = group_by([s for s in area_scores if hasattr(s, 'cluster_id')], cluster_id_key)
 
         cluster_scores = []
         for group_key, scores in grouped_scores.items():
