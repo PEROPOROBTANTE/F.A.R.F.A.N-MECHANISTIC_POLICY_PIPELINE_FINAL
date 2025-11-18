@@ -1,12 +1,14 @@
 # stdlib
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 # third-party (pinned in pyproject)
-import polars as pl
-import pyarrow as pa
 from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    import polars as pl
+    import pyarrow as pa
 
 
 class DocManifest(BaseModel):
@@ -21,7 +23,7 @@ class DocManifest(BaseModel):
 
 class PhaseOutcome(BaseModel):
     """Outcome from a pipeline phase execution.
-    
+
     Authoritative boundary contract between phases and orchestrators.
     All metadata must be preserved across phase boundaries.
     """

@@ -571,7 +571,7 @@
   ],
   "delete": [
     {
-      "path": ".augment/rules/CATEGORIZATION.md",
+      "path": ".augment/rules/CATEGORIZATION.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -580,7 +580,7 @@
       ]
     },
     {
-      "path": ".augment/rules/GENERAL.md",
+      "path": ".augment/rules/GENERAL.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -589,7 +589,7 @@
       ]
     },
     {
-      "path": ".augment/rules/RULE FOR DESIGN.md",
+      "path": ".augment/rules/RULE FOR DESIGN.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -598,7 +598,7 @@
       ]
     },
     {
-      "path": ".augment/rules/rule-corefiles.md",
+      "path": ".augment/rules/rule-corefiles.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -607,7 +607,7 @@
       ]
     },
     {
-      "path": ".augment/rules/rule-coreographer-capacities.md",
+      "path": ".augment/rules/rule-coreographer-capacities.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -616,7 +616,7 @@
       ]
     },
     {
-      "path": ".augment/rules/rule-coreographer_flux.md",
+      "path": ".augment/rules/rule-coreographer_flux.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -625,7 +625,7 @@
       ]
     },
     {
-      "path": ".augment/rules/rule-design-patter.md",
+      "path": ".augment/rules/rule-design-patter.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -634,7 +634,7 @@
       ]
     },
     {
-      "path": ".importlinter",
+      "path": ".importlinter", APROBADO
       "reason": "Not reachable from entry points",
       "rules": [
         "unreachable-import-graph",
@@ -643,7 +643,7 @@
       ]
     },
     {
-      "path": ".pre-commit-config.yaml",
+      "path": ".pre-commit-config.yaml", APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -652,7 +652,7 @@
       ]
     },
     {
-      "path": ".vscode/settings.json",
+      "path": ".vscode/settings.json", APROBADO
       "reason": "Development tooling; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -661,7 +661,7 @@
       ]
     },
     {
-      "path": "ARCHITECTURE_REFACTORING.md",
+      "path": "ARCHITECTURE_REFACTORING.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -670,7 +670,7 @@
       ]
     },
     {
-      "path": "ATROZ_DASHBOARD_DEPLOYMENT.md",
+      "path": "ATROZ_DASHBOARD_DEPLOYMENT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -679,7 +679,7 @@
       ]
     },
     {
-      "path": "AUDIT_FIX_REPORT.md",
+      "path": "AUDIT_FIX_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -697,7 +697,7 @@
       ]
     },
     {
-      "path": "CPP_IMPLEMENTATION_SUMMARY.md",
+      "path": "CPP_IMPLEMENTATION_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -706,7 +706,7 @@
       ]
     },
     {
-      "path": "DASHBOARD_FEATURES.md",
+      "path": "DASHBOARD_FEATURES.md", 
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -715,7 +715,7 @@
       ]
     },
     {
-      "path": "DEPENDENCY_SETUP.md",
+      "path": "DEPENDENCY_SETUP.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -724,7 +724,7 @@
       ]
     },
     {
-      "path": "DEPLOYMENT_VERIFICATION.md",
+      "path": "DEPLOYMENT_VERIFICATION.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -733,7 +733,7 @@
       ]
     },
     {
-      "path": "DOCUMENTATION_OVERVIEW.txt",
+      "path": "DOCUMENTATION_OVERVIEW.txt",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -742,7 +742,7 @@
       ]
     },
     {
-      "path": "EXECUTORS_ASSESSMENT_REPORT.md",
+      "path": "EXECUTORS_ASSESSMENT_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -751,7 +751,7 @@
       ]
     },
     {
-      "path": "FLUX_IMPLEMENTATION_SUMMARY.md",
+      "path": "FLUX_IMPLEMENTATION_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -760,7 +760,7 @@
       ]
     },
     {
-      "path": "GITHUB_PAGES_SETUP.md",
+      "path": "GITHUB_PAGES_SETUP.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -769,7 +769,7 @@
       ]
     },
     {
-      "path": "IMPORT_AUDIT.md",
+      "path": "IMPORT_AUDIT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -778,7 +778,7 @@
       ]
     },
     {
-      "path": "IMPORT_CERTIFICATION.md",
+      "path": "IMPORT_CERTIFICATION.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -787,7 +787,7 @@
       ]
     },
     {
-      "path": "IMPORT_VERIFICATION_REPORT.md",
+      "path": "IMPORT_VERIFICATION_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -796,7 +796,7 @@
       ]
     },
     {
-      "path": "IO_MIGRATION_GUIDE.md",
+      "path": "IO_MIGRATION_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -814,7 +814,7 @@
       ]
     },
     {
-      "path": "OPERATIONAL_GUIDE.md",
+      "path": "OPERATIONAL_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -823,7 +823,7 @@
       ]
     },
     {
-      "path": "ORCHESTRATOR_EXCELLENCE_RUNBOOK.md",
+      "path": "ORCHESTRATOR_EXCELLENCE_RUNBOOK.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -832,7 +832,7 @@
       ]
     },
     {
-      "path": "ORCHESTRATOR_EXCELLENCE_SUMMARY.md",
+      "path": "ORCHESTRATOR_EXCELLENCE_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -841,7 +841,7 @@
       ]
     },
     {
-      "path": "OperationalizationAuditor_v3.0_COMPLETO.yaml",
+      "path": "OperationalizationAuditor_v3.0_COMPLETO.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -850,7 +850,7 @@
       ]
     },
     {
-      "path": "PROJECT_STRUCTURE.md",
+      "path": "PROJECT_STRUCTURE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -859,7 +859,7 @@
       ]
     },
     {
-      "path": "QUICKSTART.md",
+      "path": "QUICKSTART.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -868,7 +868,7 @@
       ]
     },
     {
-      "path": "QUICK_REFERENCE.md",
+      "path": "QUICK_REFERENCE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -877,7 +877,7 @@
       ]
     },
     {
-      "path": "RESOLUCION_ORGANIZACION.md",
+      "path": "RESOLUCION_ORGANIZACION.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -895,7 +895,7 @@
       ]
     },
     {
-      "path": "TEST_IMPORT_MATRIX.md",
+      "path": "TEST_IMPORT_MATRIX.md",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -904,7 +904,7 @@
       ]
     },
     {
-      "path": "VERIFICATION_QUICKSTART.md",
+      "path": "VERIFICATION_QUICKSTART.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -913,7 +913,7 @@
       ]
     },
     {
-      "path": "VFARFAN_D1Q1_COMPLETE_10_AREAS.yaml",
+      "path": "VFARFAN_D1Q1_COMPLETE_10_AREAS.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -922,7 +922,7 @@
       ]
     },
     {
-      "path": "WORKFLOW_FIXES_SUMMARY.md",
+      "path": "WORKFLOW_FIXES_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -940,7 +940,7 @@
       ]
     },
     {
-      "path": "calibracion_bayesiana.yaml",
+      "path": "calibracion_bayesiana.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -949,7 +949,7 @@
       ]
     },
     {
-      "path": "catalogo_principal.yaml",
+      "path": "catalogo_principal.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -958,7 +958,7 @@
       ]
     },
     {
-      "path": "causal_exctractor.yaml",
+      "path": "causal_exctractor.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -967,7 +967,7 @@
       ]
     },
     {
-      "path": "causalextractor.yaml",
+      "path": "causalextractor.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1075,7 +1075,7 @@
       ]
     },
     {
-      "path": "config/schemas/CHOREOGRAPHER_SCHEMA_INVENTORY.md",
+      "path": "config/schemas/CHOREOGRAPHER_SCHEMA_INVENTORY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1084,7 +1084,7 @@
       ]
     },
     {
-      "path": "config/schemas/analyzer_one/performance_analysis.schema.json",
+      "path": "config/schemas/analyzer_one/performance_analysis.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1093,7 +1093,7 @@
       ]
     },
     {
-      "path": "config/schemas/analyzer_one/semantic_cube.schema.json",
+      "path": "config/schemas/analyzer_one/semantic_cube.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1102,7 +1102,7 @@
       ]
     },
     {
-      "path": "config/schemas/contract_error_log.schema.json",
+      "path": "config/schemas/contract_error_log.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1111,7 +1111,7 @@
       ]
     },
     {
-      "path": "config/schemas/contradiction_deteccion/contradiction_evidence.schema.json",
+      "path": "config/schemas/contradiction_deteccion/contradiction_evidence.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1120,7 +1120,7 @@
       ]
     },
     {
-      "path": "config/schemas/contradiction_deteccion/policy_statement.schema.json",
+      "path": "config/schemas/contradiction_deteccion/policy_statement.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1130,7 +1130,7 @@
     },
     {
       "path": "config/schemas/derek_beach/audit_result.schema.json",
-      "reason": "Configuration/data file; not used at runtime",
+      "reason": "Configuration/data file; not used at runtime",APROBADO
       "rules": [
         "unreachable-import-graph",
         "no-dynamic-match",
@@ -1147,7 +1147,7 @@
       ]
     },
     {
-      "path": "config/schemas/derek_beach/meta_node.schema.json",
+      "path": "config/schemas/derek_beach/meta_node.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1165,7 +1165,7 @@
       ]
     },
     {
-      "path": "config/schemas/embedding_policy/semantic_chunk.schema.json",
+      "path": "config/schemas/embedding_policy/semantic_chunk.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1174,7 +1174,7 @@
       ]
     },
     {
-      "path": "config/schemas/execution_mapping.schema.json",
+      "path": "config/schemas/execution_mapping.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1183,7 +1183,7 @@
       ]
     },
     {
-      "path": "config/schemas/execution_step.schema.json",
+      "path": "config/schemas/execution_step.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1192,7 +1192,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/causal_dag.schema.json",
+      "path": "config/schemas/financiero_viabilidad/causal_dag.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1201,7 +1201,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/causal_edge.schema.json",
+      "path": "config/schemas/financiero_viabilidad/causal_edge.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1210,7 +1210,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/causal_effect.schema.json",
+      "path": "config/schemas/financiero_viabilidad/causal_effect.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1219,7 +1219,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/causal_node.schema.json",
+      "path": "config/schemas/financiero_viabilidad/causal_node.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1228,7 +1228,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/counterfactual_scenario.schema.json",
+      "path": "config/schemas/financiero_viabilidad/counterfactual_scenario.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1237,7 +1237,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/extracted_table.schema.json",
+      "path": "config/schemas/financiero_viabilidad/extracted_table.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1246,7 +1246,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/financial_indicator.schema.json",
+      "path": "config/schemas/financiero_viabilidad/financial_indicator.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1255,7 +1255,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/quality_score.schema.json",
+      "path": "config/schemas/financiero_viabilidad/quality_score.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1264,7 +1264,7 @@
       ]
     },
     {
-      "path": "config/schemas/financiero_viabilidad/responsible_entity.schema.json",
+      "path": "config/schemas/financiero_viabilidad/responsible_entity.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1273,7 +1273,7 @@
       ]
     },
     {
-      "path": "config/schemas/policy_processor/evidence_bundle.schema.json",
+      "path": "config/schemas/policy_processor/evidence_bundle.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1282,7 +1282,7 @@
       ]
     },
     {
-      "path": "config/schemas/preprocessed_document.py",
+      "path": "config/schemas/preprocessed_document.py",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1291,7 +1291,7 @@
       ]
     },
     {
-      "path": "config/schemas/question_segmentation.schema.json",
+      "path": "config/schemas/question_segmentation.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1300,7 +1300,7 @@
       ]
     },
     {
-      "path": "config/schemas/questionnaire.schema.json",
+      "path": "config/schemas/questionnaire.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1309,7 +1309,7 @@
       ]
     },
     {
-      "path": "config/schemas/report_assembly/macro_convergence.schema.json",
+      "path": "config/schemas/report_assembly/macro_convergence.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1318,7 +1318,7 @@
       ]
     },
     {
-      "path": "config/schemas/report_assembly/meso_cluster.schema.json",
+      "path": "config/schemas/report_assembly/meso_cluster.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1327,7 +1327,7 @@
       ]
     },
     {
-      "path": "config/schemas/report_assembly/micro_answer.schema.json",
+      "path": "config/schemas/report_assembly/micro_answer.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1336,7 +1336,7 @@
       ]
     },
     {
-      "path": "config/schemas/report_assembly/producer_api.schema.json",
+      "path": "config/schemas/report_assembly/producer_api.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1345,7 +1345,7 @@
       ]
     },
     {
-      "path": "config/schemas/rubric.schema.json",
+      "path": "config/schemas/rubric.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1354,7 +1354,7 @@
       ]
     },
     {
-      "path": "config/schemas/rubric_scoring.schema.json",
+      "path": "config/schemas/rubric_scoring.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1363,7 +1363,7 @@
       ]
     },
     {
-      "path": "config/schemas/semantic_chunking_policy/analysis_result.schema.json",
+      "path": "config/schemas/semantic_chunking_policy/analysis_result.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1372,7 +1372,7 @@
       ]
     },
     {
-      "path": "config/schemas/semantic_chunking_policy/chunk.schema.json",
+      "path": "config/schemas/semantic_chunking_policy/chunk.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1381,7 +1381,7 @@
       ]
     },
     {
-      "path": "config/schemas/teoria_cambio/advanced_graph_node.schema.json",
+      "path": "config/schemas/teoria_cambio/advanced_graph_node.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1390,7 +1390,7 @@
       ]
     },
     {
-      "path": "config/schemas/teoria_cambio/monte_carlo_result.schema.json",
+      "path": "config/schemas/teoria_cambio/monte_carlo_result.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1399,7 +1399,7 @@
       ]
     },
     {
-      "path": "config/schemas/teoria_cambio/validacion_resultado.schema.json",
+      "path": "config/schemas/teoria_cambio/validacion_resultado.schema.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1408,7 +1408,7 @@
       ]
     },
     {
-      "path": "config/schemas/v1/questionnaire.schema.v1.json",
+      "path": "config/schemas/v1/questionnaire.schema.v1.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1417,7 +1417,7 @@
       ]
     },
     {
-      "path": "config/schemas/v1/rubric_scoring.schema.v1.json",
+      "path": "config/schemas/v1/rubric_scoring.schema.v1.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1426,7 +1426,7 @@
       ]
     },
     {
-      "path": "config/strategic_files.txt",
+      "path": "config/strategic_files.txt",APROBADO
       "reason": "Not reachable from entry points",
       "rules": [
         "unreachable-import-graph",
@@ -1435,7 +1435,7 @@
       ]
     },
     {
-      "path": "cpp_ingestion/Cargo.toml",
+      "path": "cpp_ingestion/Cargo.toml",APROBADO
       "reason": "Not reachable from entry points",
       "rules": [
         "unreachable-import-graph",
@@ -1444,7 +1444,7 @@
       ]
     },
     {
-      "path": "data/bayesian_outputs/posterior_table_macro.csv",
+      "path": "data/bayesian_outputs/posterior_table_macro.csv",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1453,7 +1453,7 @@
       ]
     },
     {
-      "path": "data/bayesian_outputs/posterior_table_meso.csv",
+      "path": "data/bayesian_outputs/posterior_table_meso.csv",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1462,7 +1462,7 @@
       ]
     },
     {
-      "path": "data/bayesian_outputs/posterior_table_micro.csv",
+      "path": "data/bayesian_outputs/posterior_table_micro.csv",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1471,7 +1471,7 @@
       ]
     },
     {
-      "path": "data/interaction_matrix.csv",
+      "path": "data/interaction_matrix.csv",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1480,7 +1480,7 @@
       ]
     },
     {
-      "path": "data/plans/BROAD_METADATA.json",
+      "path": "data/plans/BROAD_METADATA.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1525,7 +1525,7 @@
       ]
     },
     {
-      "path": "docs/ARCHITECTURE_DIAGRAM.md",
+      "path": "docs/ARCHITECTURE_DIAGRAM.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1534,7 +1534,7 @@
       ]
     },
     {
-      "path": "docs/ARCHITECTURE_REFACTORING.md",
+      "path": "docs/ARCHITECTURE_REFACTORING.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1543,7 +1543,7 @@
       ]
     },
     {
-      "path": "docs/ARQUITECTURA_ORQUESTADOR_COREOGRAFO.md",
+      "path": "docs/ARQUITECTURA_ORQUESTADOR_COREOGRAFO.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1561,7 +1561,7 @@
       ]
     },
     {
-      "path": "docs/AUDIT_REPORT.json",
+      "path": "docs/AUDIT_REPORT.json",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1570,7 +1570,7 @@
       ]
     },
     {
-      "path": "docs/BAYESIAN_MULTILEVEL_README.md",
+      "path": "docs/BAYESIAN_MULTILEVEL_README.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1579,7 +1579,7 @@
       ]
     },
     {
-      "path": "docs/CHANGELOG_REFACTORING.md",
+      "path": "docs/CHANGELOG_REFACTORING.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1588,7 +1588,7 @@
       ]
     },
     {
-      "path": "docs/CI_CD_GOVERNANCE.md",
+      "path": "docs/CI_CD_GOVERNANCE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1597,7 +1597,7 @@
       ]
     },
     {
-      "path": "docs/COMPONENT_AUDIT_REPORT.md",
+      "path": "docs/COMPONENT_AUDIT_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1606,7 +1606,7 @@
       ]
     },
     {
-      "path": "docs/CONCURRENCY_MODULE_SUMMARY.md",
+      "path": "docs/CONCURRENCY_MODULE_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1615,7 +1615,7 @@
       ]
     },
     {
-      "path": "docs/CONTRACT_ACCEPTANCE_CRITERIA.md",
+      "path": "docs/CONTRACT_ACCEPTANCE_CRITERIA.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1624,7 +1624,7 @@
       ]
     },
     {
-      "path": "docs/CONTRACT_AUDIT_REPORT.md",
+      "path": "docs/CONTRACT_AUDIT_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1633,7 +1633,7 @@
       ]
     },
     {
-      "path": "docs/CPP_ARCHITECTURE.md",
+      "path": "docs/CPP_ARCHITECTURE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1642,7 +1642,7 @@
       ]
     },
     {
-      "path": "docs/DATA_CONTRACTS.md",
+      "path": "docs/DATA_CONTRACTS.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1651,7 +1651,7 @@
       ]
     },
     {
-      "path": "docs/DEFENSIVE_SIGNATURES.md",
+      "path": "docs/DEFENSIVE_SIGNATURES.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1660,7 +1660,7 @@
       ]
     },
     {
-      "path": "docs/ENHANCED_RECOMMENDATION_ENGINE_README.md",
+      "path": "docs/ENHANCED_RECOMMENDATION_ENGINE_README.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1669,7 +1669,7 @@
       ]
     },
     {
-      "path": "docs/EVALUATION_EXECUTIVE_SUMMARY.md",
+      "path": "docs/EVALUATION_EXECUTIVE_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1678,7 +1678,7 @@
       ]
     },
     {
-      "path": "docs/EVIDENCE_REGISTRY_ENHANCEMENTS.md",
+      "path": "docs/EVIDENCE_REGISTRY_ENHANCEMENTS.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1687,7 +1687,7 @@
       ]
     },
     {
-      "path": "docs/EXECUTION_REPORT.md",
+      "path": "docs/EXECUTION_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1696,7 +1696,7 @@
       ]
     },
     {
-      "path": "docs/EXECUTOR_MONITORING_GUIDE.md",
+      "path": "docs/EXECUTOR_MONITORING_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1705,7 +1705,7 @@
       ]
     },
     {
-      "path": "docs/FINAL_DELIVERABLE_SUMMARY.md",
+      "path": "docs/FINAL_DELIVERABLE_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1714,7 +1714,7 @@
       ]
     },
     {
-      "path": "docs/GOLD_CANARIO_TEST_SUITE_README.md",
+      "path": "docs/GOLD_CANARIO_TEST_SUITE_README.md",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1723,7 +1723,7 @@
       ]
     },
     {
-      "path": "docs/GOLD_CANARIO_TEST_SUMMARY.txt",
+      "path": "docs/GOLD_CANARIO_TEST_SUMMARY.txt",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1732,7 +1732,7 @@
       ]
     },
     {
-      "path": "docs/GOVERNANCE_IMPLEMENTATION.md",
+      "path": "docs/GOVERNANCE_IMPLEMENTATION.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1741,7 +1741,7 @@
       ]
     },
     {
-      "path": "docs/IMPLEMENTATION_SUMMARY.md",
+      "path": "docs/IMPLEMENTATION_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1750,7 +1750,7 @@
       ]
     },
     {
-      "path": "docs/IMPLEMENTATION_SUMMARY_CONTRACTS.md",
+      "path": "docs/IMPLEMENTATION_SUMMARY_CONTRACTS.md"
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1759,7 +1759,7 @@
       ]
     },
     {
-      "path": "docs/INTEGRATION_STATUS.md",
+      "path": "docs/INTEGRATION_STATUS.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1768,7 +1768,7 @@
       ]
     },
     {
-      "path": "docs/INTEGRATION_SUMMARY.md",
+      "path": "docs/INTEGRATION_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1777,7 +1777,7 @@
       ]
     },
     {
-      "path": "docs/INVENTORY_COMPLETE.md",
+      "path": "docs/INVENTORY_COMPLETE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1786,7 +1786,7 @@
       ]
     },
     {
-      "path": "docs/JSON_CATALOGUE_RULEBOOK.md",
+      "path": "docs/JSON_CATALOGUE_RULEBOOK.md"
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1795,7 +1795,7 @@
       ]
     },
     {
-      "path": "docs/MACRO_PROMPTS_IMPLEMENTATION_SUMMARY.md",
+      "path": "docs/MACRO_PROMPTS_IMPLEMENTATION_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1804,7 +1804,7 @@
       ]
     },
     {
-      "path": "docs/MACRO_PROMPTS_README.md",
+      "path": "docs/MACRO_PROMPTS_README.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1813,7 +1813,7 @@
       ]
     },
     {
-      "path": "docs/MESO_INTEGRATION_STRATEGY.md",
+      "path": "docs/MESO_INTEGRATION_STRATEGY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1822,7 +1822,7 @@
       ]
     },
     {
-      "path": "docs/MESO_REFACTORING_SUMMARY.md",
+      "path": "docs/MESO_REFACTORING_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1831,7 +1831,7 @@
       ]
     },
     {
-      "path": "docs/MICRO_PROMPTS_GUIDE.md",
+      "path": "docs/MICRO_PROMPTS_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1840,7 +1840,7 @@
       ]
     },
     {
-      "path": "docs/MIGRATION_GUIDE.md",
+      "path": "docs/MIGRATION_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1849,7 +1849,7 @@
       ]
     },
     {
-      "path": "docs/ORCHESTRATOR_COMPREHENSIVE_EVALUATION.md",
+      "path": "docs/ORCHESTRATOR_COMPREHENSIVE_EVALUATION.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1858,7 +1858,7 @@
       ]
     },
     {
-      "path": "docs/PIPELINE_E2E_AUDIT_REPORT.md",
+      "path": "docs/PIPELINE_E2E_AUDIT_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1867,7 +1867,7 @@
       ]
     },
     {
-      "path": "docs/PROSPECTIVE_DEFECTS.md",
+      "path": "docs/PROSPECTIVE_DEFECTS.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1876,7 +1876,7 @@
       ]
     },
     {
-      "path": "docs/PR_SUMMARY.md",
+      "path": "docs/PR_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1894,7 +1894,7 @@
       ]
     },
     {
-      "path": "docs/QUALITY_VALIDATION_REPORT.md",
+      "path": "docs/QUALITY_VALIDATION_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1912,7 +1912,7 @@
       ]
     },
     {
-      "path": "docs/README.inventory.md",
+      "path": "docs/README.inventory.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1939,7 +1939,7 @@
       ]
     },
     {
-      "path": "docs/REPOSITORY_STRUCTURE.md",
+      "path": "docs/REPOSITORY_STRUCTURE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1948,7 +1948,7 @@
       ]
     },
     {
-      "path": "docs/RUNTIME_ERROR_FIXES_GUIDE.md",
+      "path": "docs/RUNTIME_ERROR_FIXES_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1957,7 +1957,7 @@
       ]
     },
     {
-      "path": "docs/SCHEMA_AUDIT_REPORT.md",
+      "path": "docs/SCHEMA_AUDIT_REPORT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -1966,7 +1966,7 @@
       ]
     },
     {
-      "path": "docs/SIGNATURE_FIX_SUMMARY.md",
+      "path": "docs/SIGNATURE_FIX_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2011,7 +2011,7 @@
       ]
     },
     {
-      "path": "docs/SYSTEM_AUDIT_SUMMARY.md",
+      "path": "docs/SYSTEM_AUDIT_SUMMARY.md", APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2020,7 +2020,7 @@
       ]
     },
     {
-      "path": "docs/TYPE_SAFETY_GUIDE.md",
+      "path": "docs/TYPE_SAFETY_GUIDE.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2029,7 +2029,7 @@
       ]
     },
     {
-      "path": "docs/UNIT_TEST_DEVELOPMENT_SUMMARY.md",
+      "path": "docs/UNIT_TEST_DEVELOPMENT_SUMMARY.md",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2038,7 +2038,7 @@
       ]
     },
     {
-      "path": "docs/VALIDATION_IMPLEMENTATION_SUMMARY.md",
+      "path": "docs/VALIDATION_IMPLEMENTATION_SUMMARY.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2047,7 +2047,7 @@
       ]
     },
     {
-      "path": "docs/audit.json",
+      "path": "docs/audit.json",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2065,7 +2065,7 @@
       ]
     },
     {
-      "path": "docs/dependency_graph.dot",
+      "path": "docs/dependency_graph.dot",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2074,7 +2074,7 @@
       ]
     },
     {
-      "path": "docs/scoring_implementation.md",
+      "path": "docs/scoring_implementation.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2101,7 +2101,7 @@
       ]
     },
     {
-      "path": "examples/all_data_sample.json",
+      "path": "examples/all_data_sample.json",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2110,7 +2110,7 @@
       ]
     },
     {
-      "path": "examples/cluster_data_sample.json",
+      "path": "examples/cluster_data_sample.json",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2137,7 +2137,7 @@
       ]
     },
     {
-      "path": "examples/demo_aguja_i.py",
+      "path": "examples/demo_aguja_i.py",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2146,7 +2146,7 @@
       ]
     },
     {
-      "path": "examples/demo_bayesian_multilevel.py",
+      "path": "examples/demo_bayesian_multilevel.py",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2155,7 +2155,7 @@
       ]
     },
     {
-      "path": "examples/demo_macro_prompts.py",
+      "path": "examples/demo_macro_prompts.py",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2164,7 +2164,7 @@
       ]
     },
     {
-      "path": "examples/demo_scoring.py",
+      "path": "examples/demo_scoring.py",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2173,7 +2173,7 @@
       ]
     },
     {
-      "path": "examples/demo_tres_agujas.py",
+      "path": "examples/demo_tres_agujas.py",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2182,7 +2182,7 @@
       ]
     },
     {
-      "path": "examples/integration_guide_bayesian.py",
+      "path": "examples/integration_guide_bayesian.py",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2191,7 +2191,7 @@
       ]
     },
     {
-      "path": "examples/macro_data_sample.json",
+      "path": "examples/macro_data_sample.json",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2200,7 +2200,7 @@
       ]
     },
     {
-      "path": "examples/micro_scores_sample.json",
+      "path": "examples/micro_scores_sample.json",APROBADO
       "reason": "Example/demo file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2209,7 +2209,7 @@
       ]
     },
     {
-      "path": "financia_callibrator.yaml",
+      "path": "financia_callibrator.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2218,7 +2218,7 @@
       ]
     },
     {
-      "path": "requirements_cpp.txt",
+      "path": "requirements_cpp.txt",APROBADO
       "reason": "Not reachable from entry points",
       "rules": [
         "unreachable-import-graph",
@@ -2227,7 +2227,7 @@
       ]
     },
     {
-      "path": "scripts/README_DEPLOYMENT.md",
+      "path": "scripts/README_DEPLOYMENT.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2236,7 +2236,7 @@
       ]
     },
     {
-      "path": "scripts/bootstrap_validate.py",
+      "path": "scripts/bootstrap_validate.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2245,7 +2245,7 @@
       ]
     },
     {
-      "path": "scripts/build_cpp_rust.sh",
+      "path": "scripts/build_cpp_rust.sh",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2263,7 +2263,7 @@
       ]
     },
     {
-      "path": "scripts/generate_all_reports.sh",
+      "path": "scripts/generate_all_reports.sh",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2272,7 +2272,7 @@
       ]
     },
     {
-      "path": "scripts/generate_inventory.py",
+      "path": "scripts/generate_inventory.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2281,7 +2281,7 @@
       ]
     },
     {
-      "path": "scripts/inventory_generator.py",
+      "path": "scripts/inventory_generator.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2299,7 +2299,7 @@
       ]
     },
     {
-      "path": "scripts/run_all_producers.sh",
+      "path": "scripts/run_all_producers.sh",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2308,7 +2308,7 @@
       ]
     },
     {
-      "path": "scripts/scan_no_yaml_in_executors.py",
+      "path": "scripts/scan_no_yaml_in_executors.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2317,7 +2317,7 @@
       ]
     },
     {
-      "path": "scripts/setup.sh",
+      "path": "scripts/setup.sh",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2380,7 +2380,7 @@
       ]
     },
     {
-      "path": "scripts/verify_system_complete.py",
+      "path": "scripts/verify_system_complete.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2398,7 +2398,7 @@
       ]
     },
     {
-      "path": "src/saaaaaa/controls/graphs/dependency_graph.md",
+      "path": "src/saaaaaa/controls/graphs/dependency_graph.md",APROBADO
       "reason": "Documentation; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2407,7 +2407,7 @@
       ]
     },
     {
-      "path": "src/saaaaaa/controls/inventories/code_inventory.json",
+      "path": "src/saaaaaa/controls/inventories/code_inventory.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2416,7 +2416,7 @@
       ]
     },
     {
-      "path": "src/saaaaaa/utils/validation/architecture_validation_report.json",
+      "path": "src/saaaaaa/utils/validation/architecture_validation_report.json",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2425,7 +2425,7 @@
       ]
     },
     {
-      "path": "tests/data/__init__.py",
+      "path": "tests/data/__init__.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2515,7 +2515,7 @@
       ]
     },
     {
-      "path": "tests/test_coreographer.py",
+      "path": "tests/test_coreographer.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2524,7 +2524,7 @@
       ]
     },
     {
-      "path": "tests/test_cpp_adapter.py",
+      "path": "tests/test_cpp_adapter.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2533,7 +2533,7 @@
       ]
     },
     {
-      "path": "tests/test_cpp_ingestion.py",
+      "path": "tests/test_cpp_ingestion.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2596,7 +2596,7 @@
       ]
     },
     {
-      "path": "tests/test_flux_integration.py",
+      "path": "tests/test_flux_integration.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2605,7 +2605,7 @@
       ]
     },
     {
-      "path": "tests/test_gold_canario_integration.py",
+      "path": "tests/test_gold_canario_integration.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2614,7 +2614,7 @@
       ]
     },
     {
-      "path": "tests/test_gold_canario_macro_reporting.py",
+      "path": "tests/test_gold_canario_macro_reporting.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2623,7 +2623,7 @@
       ]
     },
     {
-      "path": "tests/test_gold_canario_meso_reporting.py",
+      "path": "tests/test_gold_canario_meso_reporting.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2632,7 +2632,7 @@
       ]
     },
     {
-      "path": "tests/test_gold_canario_micro_bayesian.py",
+      "path": "tests/test_gold_canario_micro_bayesian.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2641,7 +2641,7 @@
       ]
     },
     {
-      "path": "tests/test_gold_canario_micro_stress.py",
+      "path": "tests/test_gold_canario_micro_stress.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2650,7 +2650,7 @@
       ]
     },
     {
-      "path": "tests/test_infrastructure.py",
+      "path": "tests/test_infrastructure.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2659,7 +2659,7 @@
       ]
     },
     {
-      "path": "tests/test_property_based.py",
+      "path": "tests/test_property_based.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2686,7 +2686,7 @@
       ]
     },
     {
-      "path": "tests/test_regression_semantic_chunking.py",
+      "path": "tests/test_regression_semantic_chunking.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2695,7 +2695,7 @@
       ]
     },
     {
-      "path": "tests/test_runtime_error_fixes.py",
+      "path": "tests/test_runtime_error_fixes.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2704,7 +2704,7 @@
       ]
     },
     {
-      "path": "tests/test_schema_validation.py",
+      "path": "tests/test_schema_validation.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2713,7 +2713,7 @@
       ]
     },
     {
-      "path": "tests/test_score_normalization_fix.py",
+      "path": "tests/test_score_normalization_fix.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2722,7 +2722,7 @@
       ]
     },
     {
-      "path": "tests/test_scoring.py",
+      "path": "tests/test_scoring.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2776,7 +2776,7 @@
       ]
     },
     {
-      "path": "tools/integrity/check_cross_refs.py",
+      "path": "tools/integrity/check_cross_refs.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2785,7 +2785,7 @@
       ]
     },
     {
-      "path": "tools/integrity/dump_artifacts.py",
+      "path": "tools/integrity/dump_artifacts.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2794,7 +2794,7 @@
       ]
     },
     {
-      "path": "tools/lint/__init__.py",
+      "path": "tools/lint/__init__.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2803,7 +2803,7 @@
       ]
     },
     {
-      "path": "tools/lint/json_lint.py",
+      "path": "tools/lint/json_lint.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2812,7 +2812,7 @@
       ]
     },
     {
-      "path": "tools/scan_core_purity.py",
+      "path": "tools/scan_core_purity.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2821,7 +2821,7 @@
       ]
     },
     {
-      "path": "tools/testing/generate_synthetic_traffic.py",
+      "path": "tools/testing/generate_synthetic_traffic.py",APROBADO
       "reason": "Test file; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2830,7 +2830,7 @@
       ]
     },
     {
-      "path": "tools/type_safety_checks.py",
+      "path": "tools/type_safety_checks.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2839,7 +2839,7 @@
       ]
     },
     {
-      "path": "tools/validate_execution_mapping.py",
+      "path": "tools/validate_execution_mapping.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2848,7 +2848,7 @@
       ]
     },
     {
-      "path": "tools/validate_strategic_files.py",
+      "path": "tools/validate_strategic_files.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2866,7 +2866,7 @@
       ]
     },
     {
-      "path": "tools/validation/validate_error_logs.py",
+      "path": "tools/validation/validate_error_logs.py",APROBADO
       "reason": "Development scripts; not required for runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2884,7 +2884,7 @@
       ]
     },
     {
-      "path": "trazabilidad_cohrencia.yaml",
+      "path": "trazabilidad_cohrencia.yaml",APROBADO
       "reason": "Configuration/data file; not used at runtime",
       "rules": [
         "unreachable-import-graph",
@@ -2943,7 +2943,7 @@
       "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
     },
     {
-      "path": "embedding.ymal",
+      "path": "embedding.ymal",APROBADO
       "ambiguity": "Classification unclear; requires human review"
     },
     {
@@ -2955,11 +2955,11 @@
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
-      "path": "orchestrator/coreographer.py",
+      "path": "orchestrator/coreographer.py",APROBADO
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
-      "path": "orchestrator/executors.py",
+      "path": "orchestrator/executors.py",APROBADO
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
@@ -2967,7 +2967,7 @@
       "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
     },
     {
-      "path": "runtime_error_fixes.py",
+      "path": "runtime_error_fixes.py",APROBADO
       "ambiguity": "Root-level Python file; might be compatibility shim or standalone script"
     },
     {
@@ -3043,7 +3043,7 @@
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
-      "path": "src/saaaaaa/controls/inventories/__init__.py",
+      "path": "src/saaaaaa/controls/inventories/__init__.py",APROBADO
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
@@ -3055,7 +3055,7 @@
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
-      "path": "src/saaaaaa/core/orchestrator/choreographer.py",
+      "path": "src/saaaaaa/core/orchestrator/choreographer.py",APROBADO
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
@@ -3095,11 +3095,11 @@
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
-      "path": "src/saaaaaa/processing/cpp_ingestion/__init__.py",
+      "path": "src/saaaaaa/processing/cpp_ingestion/__init__.py",APROBADO
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {
-      "path": "src/saaaaaa/processing/cpp_ingestion/chunking.py",
+      "path": "src/saaaaaa/processing/cpp_ingestion/chunking.py",APROBADO
       "ambiguity": "Python module not in import graph; usage unclear"
     },
     {

@@ -3,25 +3,27 @@ Calibration orchestrator - integrates all layers.
 
 This is the TOP-LEVEL entry point for calibration.
 """
-import logging
 import json
-from pathlib import Path
+import logging
 from datetime import datetime
+from pathlib import Path
 
-from .data_structures import (
-    LayerID, LayerScore, ContextTuple, CalibrationSubject, CalibrationResult
-)
-from .config import CalibrationSystemConfig, DEFAULT_CALIBRATION_CONFIG
 from .base_layer import BaseLayerEvaluator
-from .unit_layer import UnitLayerEvaluator
-from .pdt_structure import PDTStructure
-from .compatibility import CompatibilityRegistry, ContextualLayerEvaluator
-from .congruence_layer import CongruenceLayerEvaluator
 from .chain_layer import ChainLayerEvaluator
-from .meta_layer import MetaLayerEvaluator
 from .choquet_aggregator import ChoquetAggregator
-from .intrinsic_loader import IntrinsicScoreLoader
-from .layer_requirements import LayerRequirementsResolver
+from .compatibility import CompatibilityRegistry, ContextualLayerEvaluator
+from .config import DEFAULT_CALIBRATION_CONFIG, CalibrationSystemConfig
+from .congruence_layer import CongruenceLayerEvaluator
+from .data_structures import (
+    CalibrationResult,
+    CalibrationSubject,
+    ContextTuple,
+    LayerID,
+    LayerScore,
+)
+from .meta_layer import MetaLayerEvaluator
+from .pdt_structure import PDTStructure
+from .unit_layer import UnitLayerEvaluator
 
 logger = logging.getLogger(__name__)
 
@@ -51,9 +53,8 @@ class CalibrationOrchestrator:
         intrinsic_calibration_path: Path | str = None,
         compatibility_path: Path | str = None,
         method_registry_path: Path | str = None,
-        method_signatures_path: Path | str = None,
-        intrinsic_calibration_path: Path | str = None
-    ):
+        method_signatures_path: Path | str = None
+    ) -> None:
         self.config = config or DEFAULT_CALIBRATION_CONFIG
 
         # Initialize BASE layer evaluator
@@ -137,7 +138,7 @@ class CalibrationOrchestrator:
         self.aggregator = ChoquetAggregator(self.config.choquet)
 
         # Log intrinsic calibration statistics
-        intrinsic_stats = self.intrinsic_loader.get_statistics()
+        self.intrinsic_loader.get_statistics()
         logger.info(
             "calibration_orchestrator_initialized",
             extra={
@@ -146,7 +147,7 @@ class CalibrationOrchestrator:
                 "base_evaluator_loaded": self.base_evaluator is not None,
             }
         )
-    
+
     def calibrate(
         self,
         method_id: str,
@@ -158,9 +159,9 @@ class CalibrationOrchestrator:
     ) -> CalibrationResult:
         """
         Perform complete calibration for a method in a context.
-        
+
         This executes all 7 layers + Choquet aggregation.
-        
+
         Args:
             method_id: Method identifier (e.g., "pattern_extractor_v2")
             method_version: Method version (e.g., "v2.1.0")
@@ -168,12 +169,12 @@ class CalibrationOrchestrator:
             pdt_structure: Parsed PDT structure
             graph_config: Hash of computational graph
             subgraph_id: Identifier for interplay subgraph
-        
+
         Returns:
             CalibrationResult with final score and full breakdown
         """
         start_time = datetime.utcnow()
-        
+
         # Create calibration subject
         subject = CalibrationSubject(
             method_id=method_id,
@@ -182,7 +183,7 @@ class CalibrationOrchestrator:
             subgraph_id=subgraph_id,
             context=context
         )
-        
+
         logger.info(
             "calibration_start",
             extra={
@@ -192,7 +193,7 @@ class CalibrationOrchestrator:
                 "policy": context.policy_area
             }
         )
-        
+
         # Collect layer scores
         layer_scores = {}
 
@@ -212,7 +213,7 @@ class CalibrationOrchestrator:
                 rationale="BASE layer: intrinsic calibration not available (penalty applied)",
                 metadata={"penalty": True, "reason": "no_calibration_file"}
             )
-        
+
         # Layer 2: Unit (@u)
         if not self.layer_resolver.should_skip_layer(method_id, LayerID.UNIT):
             unit_score = self.unit_evaluator.evaluate(pdt_structure)
@@ -222,7 +223,7 @@ class CalibrationOrchestrator:
                 "layer_skipped",
                 extra={"method": method_id, "layer": "u", "reason": "not_required_for_role"}
             )
-        
+
         # Layers 3-5: Contextual (@q, @d, @p)
         # Check which contextual layers are required
         needs_q = not self.layer_resolver.should_skip_layer(method_id, LayerID.QUESTION)
@@ -272,21 +273,21 @@ class CalibrationOrchestrator:
                     logger.debug("layer_skipped", extra={"method": method_id, "layer": "p"})
             else:
                 # No compatibility data - use penalties for required layers only
-                for layer, name in [(LayerID.QUESTION, "question"),
+                for layer, _name in [(LayerID.QUESTION, "question"),
                                    (LayerID.DIMENSION, "dimension"),
                                    (LayerID.POLICY, "policy")]:
                     if not self.layer_resolver.should_skip_layer(method_id, layer):
                         layer_scores[layer] = LayerScore(
                             layer=layer,
                             score=0.1,
-                            rationale=f"No compatibility data - penalty applied"
+                            rationale="No compatibility data - penalty applied"
                         )
         else:
             logger.debug(
                 "contextual_layers_skipped",
                 extra={"method": method_id, "layers": ["q", "d", "p"]}
             )
-        
+
         # Layer 6: Congruence (@C)
         if not self.layer_resolver.should_skip_layer(method_id, LayerID.CONGRUENCE):
             congruence_score = self.congruence_evaluator.evaluate(
@@ -305,7 +306,7 @@ class CalibrationOrchestrator:
                 "layer_skipped",
                 extra={"method": method_id, "layer": "C", "reason": "not_required_for_role"}
             )
-        
+
         # Layer 7: Chain (@chain)
         if not self.layer_resolver.should_skip_layer(method_id, LayerID.CHAIN):
             chain_score = self.chain_evaluator.evaluate(
@@ -322,7 +323,7 @@ class CalibrationOrchestrator:
                 "layer_skipped",
                 extra={"method": method_id, "layer": "chain", "reason": "not_required_for_role"}
             )
-        
+
         # Layer 8: Meta (@m)
         if not self.layer_resolver.should_skip_layer(method_id, LayerID.META):
             # FIXED: Pass all required arguments to meta layer
@@ -346,7 +347,7 @@ class CalibrationOrchestrator:
                 "layer_skipped",
                 extra={"method": method_id, "layer": "m", "reason": "not_required_for_role"}
             )
-        
+
         # Choquet aggregation
         end_time = datetime.utcnow()
         metadata = {
@@ -355,13 +356,13 @@ class CalibrationOrchestrator:
             "duration_ms": (end_time - start_time).total_seconds() * 1000,
             "config_hash": self.config.compute_system_hash(),
         }
-        
+
         result = self.aggregator.aggregate(
             subject=subject,
             layer_scores=layer_scores,
             metadata=metadata
         )
-        
+
         logger.info(
             "calibration_complete",
             extra={
@@ -370,5 +371,5 @@ class CalibrationOrchestrator:
                 "duration_ms": metadata["duration_ms"]
             }
         )
-        
+
         return result

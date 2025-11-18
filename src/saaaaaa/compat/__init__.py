@@ -22,14 +22,6 @@ from __future__ import annotations
 import sys
 from typing import Any
 
-from .safe_imports import (
-    ImportErrorDetailed,
-    check_import_available,
-    get_import_version,
-    lazy_import,
-    try_import,
-)
-
 # Lazy loading utilities for heavy dependencies
 from .lazy_deps import (
     get_numpy,
@@ -39,6 +31,13 @@ from .lazy_deps import (
     get_spacy,
     get_torch,
     get_transformers,
+)
+from .safe_imports import (
+    ImportErrorDetailed,
+    check_import_available,
+    get_import_version,
+    lazy_import,
+    try_import,
 )
 
 # Backward compatibility alias
@@ -111,7 +110,7 @@ _typing_extensions_available = check_import_available("typing_extensions")
 
 if _typing_extensions_available:
     import typing_extensions
-    
+
     # Use typing_extensions versions if available (they're usually more up-to-date)
     TypeAlias = typing_extensions.TypeAlias
     ParamSpec = typing_extensions.ParamSpec
@@ -121,26 +120,21 @@ if _typing_extensions_available:
     TypedDict = typing_extensions.TypedDict
     Final = typing_extensions.Final
     Annotated = typing_extensions.Annotated
-    
+
 else:
     # Fall back to stdlib typing
     # This may not have all features on older Python versions
-    from typing import (
+    # TypeAlias added in 3.10
+    from typing import (  # type: ignore[misc, assignment]
         Annotated,  # 3.9+
+        Concatenate,
         Final,  # 3.8+
         Literal,  # 3.8+
+        ParamSpec,
         Protocol,  # 3.8+
+        TypeAlias,
         TypedDict,  # 3.8+
     )
-    
-    # TypeAlias added in 3.10
-    if sys.version_info >= (3, 10):
-        from typing import TypeAlias, ParamSpec, Concatenate
-    else:
-        # Polyfill for older versions
-        TypeAlias = type  # type: ignore[misc, assignment]
-        ParamSpec = Any  # type: ignore[misc, assignment]
-        Concatenate = Any  # type: ignore[misc, assignment]
 
 
 # ============================================================================
@@ -150,19 +144,19 @@ else:
 def get_platform_info() -> dict[str, Any]:
     """
     Get comprehensive platform information for debugging.
-    
+
     Returns
     -------
     dict[str, Any]
         Platform details including OS, architecture, Python version
-    
+
     Examples
     --------
     >>> info = get_platform_info()
     >>> print(f"Running on {info['system']} {info['architecture']}")
     """
     import platform
-    
+
     return {
         "system": platform.system(),
         "release": platform.release(),
@@ -177,19 +171,19 @@ def get_platform_info() -> dict[str, Any]:
 def check_minimum_python_version(major: int, minor: int) -> bool:
     """
     Check if Python version meets minimum requirement.
-    
+
     Parameters
     ----------
     major : int
         Required major version
     minor : int
         Required minor version
-    
+
     Returns
     -------
     bool
         True if current version >= required version
-    
+
     Examples
     --------
     >>> if not check_minimum_python_version(3, 10):

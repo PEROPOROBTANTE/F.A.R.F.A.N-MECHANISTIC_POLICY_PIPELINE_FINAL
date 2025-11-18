@@ -12,50 +12,46 @@ This package implements the 7-layer method calibration framework:
 Final scores are produced via Choquet 2-Additive aggregation.
 """
 
-from .data_structures import (
-    LayerID,
-    LayerScore,
-    ContextTuple,
-    CalibrationSubject,
-    CompatibilityMapping,
-    InteractionTerm,
-    CalibrationResult,
-)
-
-from .config import (
-    UnitLayerConfig,
-    MetaLayerConfig,
-    ChoquetAggregationConfig,
-    CalibrationSystemConfig,
-    DEFAULT_CALIBRATION_CONFIG,
-)
-
-from .pdt_structure import PDTStructure
-
+from .base_layer import BaseLayerEvaluator
+from .chain_layer import ChainLayerEvaluator
+from .choquet_aggregator import ChoquetAggregator
 from .compatibility import (
     CompatibilityRegistry,
     ContextualLayerEvaluator,
 )
-
-from .base_layer import BaseLayerEvaluator
-from .unit_layer import UnitLayerEvaluator
+from .config import (
+    DEFAULT_CALIBRATION_CONFIG,
+    CalibrationSystemConfig,
+    ChoquetAggregationConfig,
+    MetaLayerConfig,
+    UnitLayerConfig,
+)
 from .congruence_layer import CongruenceLayerEvaluator
-from .chain_layer import ChainLayerEvaluator
+from .data_structures import (
+    CalibrationResult,
+    CalibrationSubject,
+    CompatibilityMapping,
+    ContextTuple,
+    InteractionTerm,
+    LayerID,
+    LayerScore,
+)
 from .meta_layer import MetaLayerEvaluator
-from .choquet_aggregator import ChoquetAggregator
 from .orchestrator import CalibrationOrchestrator
+from .pdt_structure import PDTStructure
 
 # Import protocols for type checking
 from .protocols import (
-    LayerEvaluator,
     BaseLayerEvaluatorProtocol,
-    UnitLayerEvaluatorProtocol,
-    ContextualLayerEvaluatorProtocol,
-    CongruenceLayerEvaluatorProtocol,
     ChainLayerEvaluatorProtocol,
+    CongruenceLayerEvaluatorProtocol,
+    ContextualLayerEvaluatorProtocol,
+    LayerEvaluator,
     MetaLayerEvaluatorProtocol,
+    UnitLayerEvaluatorProtocol,
     validate_evaluator_protocol,
 )
+from .unit_layer import UnitLayerEvaluator
 
 __all__ = [
     # Data structures

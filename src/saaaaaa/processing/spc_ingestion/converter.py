@@ -26,10 +26,10 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from dataclasses import asdict
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from saaaaaa.processing.cpp_ingestion.models import (
+    KPI,
     Budget,
     CanonPolicyPackage,
     Chunk,
@@ -39,7 +39,6 @@ from saaaaaa.processing.cpp_ingestion.models import (
     Entity,
     GeoFacet,
     IntegrityIndex,
-    KPI,
     PolicyFacet,
     PolicyManifest,
     ProvenanceMap,
@@ -60,13 +59,13 @@ if TYPE_CHECKING:
         text: str
         normalized_text: str
         semantic_density: float
-        section_hierarchy: List[str]
+        section_hierarchy: list[str]
         document_position: tuple[int, int]
         chunk_type: Any  # ChunkType enum
-        causal_chain: List[Any]
-        policy_entities: List[Any]
-        related_chunks: List[tuple[str, float]]
-        confidence_metrics: Dict[str, float]
+        causal_chain: list[Any]
+        policy_entities: list[Any]
+        related_chunks: list[tuple[str, float]]
+        confidence_metrics: dict[str, float]
         coherence_score: float
         completeness_index: float
         strategic_importance: float
@@ -94,14 +93,14 @@ class SmartChunkConverter:
         'MIXTO': ChunkResolution.MESO,
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the converter."""
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def convert_to_canon_package(
         self,
-        smart_chunks: List[Any],  # List[SmartPolicyChunk]
-        document_metadata: Dict[str, Any]
+        smart_chunks: list[Any],  # List[SmartPolicyChunk]
+        document_metadata: dict[str, Any]
     ) -> CanonPolicyPackage:
         """
         Convert list of SmartPolicyChunk to CanonPolicyPackage.
@@ -112,7 +111,29 @@ class SmartChunkConverter:
 
         Returns:
             CanonPolicyPackage ready for orchestrator consumption
+
+        Raises:
+            ValueError: If smart_chunks is empty or invalid
         """
+        # Defensive validation: ensure smart_chunks is non-empty
+        if not smart_chunks or len(smart_chunks) == 0:
+            raise ValueError(
+                "Cannot convert empty smart_chunks list to CanonPolicyPackage. "
+                "Minimum 1 chunk required from StrategicChunkingSystem."
+            )
+
+        # Defensive validation: check critical attributes on first chunk
+        first_chunk = smart_chunks[0]
+        required_attrs = ['chunk_id', 'document_id', 'text', 'document_position', 'chunk_type']
+        missing_attrs = [attr for attr in required_attrs if not hasattr(first_chunk, attr)]
+
+        if missing_attrs:
+            raise ValueError(
+                f"SmartPolicyChunk missing critical attributes: {missing_attrs}. "
+                f"Ensure StrategicChunkingSystem produced valid SmartPolicyChunk instances. "
+                f"Chunk type: {type(first_chunk)}"
+            )
+
         self.logger.info(f"Converting {len(smart_chunks)} SmartPolicyChunks to CanonPolicyPackage")
 
         # Build ChunkGraph
@@ -154,11 +175,11 @@ class SmartChunkConverter:
 
         # Create PolicyManifest
         policy_manifest = PolicyManifest(
-            axes=sorted(list(all_axes)),
-            programs=sorted(list(all_programs)),
-            projects=sorted(list(all_projects)),
-            years=sorted(list(all_years)),
-            territories=sorted(list(all_territories)),
+            axes=sorted(all_axes),
+            programs=sorted(all_programs),
+            projects=sorted(all_projects),
+            years=sorted(all_years),
+            territories=sorted(all_territories),
             indicators=[],  # Would extract from KPIs if available
             budget_rows=sum(1 for c in chunk_graph.chunks.values() if c.budget is not None)
         )
@@ -233,6 +254,8 @@ class SmartChunkConverter:
             ),
             resolution=resolution,
             bytes_hash=smart_chunk.content_hash,
+            policy_area_id=getattr(smart_chunk, 'policy_area_id', None),  # PA01-PA10
+            dimension_id=getattr(smart_chunk, 'dimension_id', None),      # DIM01-DIM06
             policy_facets=policy_facets,
             time_facets=time_facets,
             geo_facets=geo_facets,
@@ -298,7 +321,7 @@ class SmartChunkConverter:
                 periods.append(ctx.temporal_horizon)
 
         return TimeFacet(
-            years=sorted(list(set(years)))[:10],  # Unique and sorted
+            years=sorted(set(years))[:10],  # Unique and sorted
             periods=periods[:5]
         )
 
@@ -331,7 +354,7 @@ class SmartChunkConverter:
             extraction_method="smart_policy_chunking_v3.0"
         )
 
-    def _extract_entities(self, smart_chunk: Any) -> List[Entity]:
+    def _extract_entities(self, smart_chunk: Any) -> list[Entity]:
         """Extract entities from SPC policy_entities."""
         entities = []
 
@@ -346,39 +369,119 @@ class SmartChunkConverter:
 
         return entities
 
-    def _extract_budget(self, smart_chunk: Any) -> Optional[Budget]:
-        """Extract budget information if present in strategic_context."""
+    def _extract_budget(self, smart_chunk: Any) -> Budget | None:
+        """
+        Extract budget with comprehensive error handling and logging (H1.4).
+
+        Implements 4 regex patterns and robust year extraction with 4 fallback strategies.
+        """
+        if not (hasattr(smart_chunk, 'strategic_context') and smart_chunk.strategic_context):
+            return None
+
+        ctx = smart_chunk.strategic_context
+        if not (hasattr(ctx, 'budget_linkage') and ctx.budget_linkage):
+            return None
+
+        import re
+        budget_text = ctx.budget_linkage
+
+        # H1.4: 4 regex patterns for robust budget extraction
+        patterns = [
+            # Pattern 1: Currency symbol with optional scale
+            r'[\$]?\s*([0-9,]+(?:\.[0-9]+)?)\s*(millones|mil millones|billion|billones)?',
+            # Pattern 2: "X millones de pesos"
+            r'(\d+(?:\.\d+)?)\s*millones?\s+de\s+pesos',
+            # Pattern 3: COP currency code
+            r'COP\s*\$?\s*([0-9,]+(?:\.[0-9]+)?)',
+            # Pattern 4: "presupuesto de $X"
+            r'presupuesto\s+de\s+\$?\s*([0-9,]+(?:\.[0-9]+)?)',
+        ]
+
+        amount = None
+        scale_multiplier = 1
+
+        for pattern in patterns:
+            match = re.search(pattern, budget_text, re.IGNORECASE)
+            if match:
+                try:
+                    amount_str = match.group(1).replace(',', '')
+                    amount = float(amount_str)
+
+                    # Detect scale from second group or text
+                    scale_text = budget_text.lower()
+                    if 'millones' in scale_text or 'million' in scale_text:
+                        scale_multiplier = 1_000_000
+                    elif 'mil millones' in scale_text or 'billion' in scale_text or 'billones' in scale_text:
+                        scale_multiplier = 1_000_000_000
+
+                    amount *= scale_multiplier
+                    break  # Stop at first match
+
+                except (ValueError, IndexError) as e:
+                    self.logger.warning(f"Budget pattern matched but parsing failed: {e}")
+                    continue
+
+        if amount is None:
+            return None
+
+        # H1.4: Extract year with 4 fallback strategies
+        year = self._extract_budget_year(budget_text, smart_chunk)
+
+        # Build Budget object
+        use = ctx.policy_intent if hasattr(ctx, 'policy_intent') else "General"
+
+        self.logger.debug(
+            f"Extracted budget: amount={amount:,.2f}, year={year}, "
+            f"source='Strategic Context', use='{use[:30]}'"
+        )
+
+        return Budget(
+            source="Strategic Context",
+            use=use,
+            amount=amount,
+            year=year,
+            currency="COP"
+        )
+
+    def _extract_budget_year(self, budget_text: str, smart_chunk: Any) -> int:
+        """
+        Extract budget year with 4 fallback strategies (H1.4).
+
+        Strategy 1: Extract from budget_text itself
+        Strategy 2: Extract from temporal_dynamics markers
+        Strategy 3: Use temporal_horizon from strategic_context
+        Strategy 4: Default to 2024
+        """
+        import re
+
+        # Strategy 1: Look for year in budget_text
+        year_match = re.search(r'\b(202[0-9]|203[0-9])\b', budget_text)
+        if year_match:
+            return int(year_match.group(1))
+
+        # Strategy 2: Check temporal_dynamics markers
+        if hasattr(smart_chunk, 'temporal_dynamics') and smart_chunk.temporal_dynamics:
+            temp = smart_chunk.temporal_dynamics
+            if hasattr(temp, 'temporal_markers') and temp.temporal_markers:
+                for marker in temp.temporal_markers:
+                    marker_text = marker[0] if isinstance(marker, (list, tuple)) else str(marker)
+                    year_match = re.search(r'\b(202[0-9]|203[0-9])\b', marker_text)
+                    if year_match:
+                        return int(year_match.group(1))
+
+        # Strategy 3: Check strategic_context temporal_horizon
         if hasattr(smart_chunk, 'strategic_context') and smart_chunk.strategic_context:
             ctx = smart_chunk.strategic_context
-            if hasattr(ctx, 'budget_linkage') and ctx.budget_linkage:
-                # Parse budget_linkage string for amount
-                import re
-                budget_text = ctx.budget_linkage
-                # Look for currency amounts (e.g., "$1,000,000" or "1000 millones")
-                amount_match = re.search(r'[\$]?\s*([0-9,]+(?:\.[0-9]+)?)\s*(millones|mil|billion)?', budget_text, re.IGNORECASE)
-                if amount_match:
-                    try:
-                        amount_str = amount_match.group(1).replace(',', '')
-                        amount = float(amount_str)
-                        # Adjust for millions/billions
-                        if 'millones' in budget_text.lower() or 'million' in budget_text.lower():
-                            amount *= 1_000_000
-                        elif 'billion' in budget_text.lower():
-                            amount *= 1_000_000_000
+            if hasattr(ctx, 'temporal_horizon') and ctx.temporal_horizon:
+                horizon_match = re.search(r'\b(202[0-9]|203[0-9])\b', ctx.temporal_horizon)
+                if horizon_match:
+                    return int(horizon_match.group(1))
 
-                        return Budget(
-                            source="Strategic Context",
-                            use=ctx.policy_intent if hasattr(ctx, 'policy_intent') else "General",
-                            amount=amount,
-                            year=2024,  # Default
-                            currency="COP"
-                        )
-                    except (ValueError, AttributeError):
-                        pass
+        # Strategy 4: Default to 2024
+        self.logger.debug("No year found in budget context, defaulting to 2024")
+        return 2024
 
-        return None
-
-    def _extract_kpi(self, smart_chunk: Any) -> Optional[KPI]:
+    def _extract_kpi(self, smart_chunk: Any) -> KPI | None:
         """Extract KPI if chunk contains indicator information."""
         # Check if chunk_type suggests this is a metric
         chunk_type_str = smart_chunk.chunk_type.value if hasattr(smart_chunk.chunk_type, 'value') else str(smart_chunk.chunk_type)
@@ -401,7 +504,7 @@ class SmartChunkConverter:
 
     def _calculate_quality_metrics(
         self,
-        smart_chunks: List[Any],
+        smart_chunks: list[Any],
         chunk_graph: ChunkGraph
     ) -> QualityMetrics:
         """Calculate quality metrics from SPC data."""
@@ -427,7 +530,7 @@ class SmartChunkConverter:
         temporal_robustness = chunks_with_time / len(chunk_graph.chunks) if chunk_graph.chunks else 0.0
 
         # Chunk context coverage (from edges)
-        chunks_with_edges = len(set(e[0] for e in chunk_graph.edges) | set(e[1] for e in chunk_graph.edges))
+        chunks_with_edges = len({e[0] for e in chunk_graph.edges} | {e[1] for e in chunk_graph.edges})
         chunk_context_coverage = chunks_with_edges / len(chunk_graph.chunks) if chunk_graph.chunks else 0.0
 
         return QualityMetrics(
@@ -442,24 +545,29 @@ class SmartChunkConverter:
 
     def _generate_integrity_index(
         self,
-        chunk_hashes: Dict[str, str],
-        document_metadata: Dict[str, Any]
+        chunk_hashes: dict[str, str],
+        document_metadata: dict[str, Any]
     ) -> IntegrityIndex:
-        """Generate cryptographic integrity index."""
-        # Generate root hash from all chunk hashes
+        """
+        Generate cryptographic integrity index.
+
+        Uses BLAKE2b-256 to compute aggregate hash of all chunk hashes.
+        NOT a true Merkle tree - simply hashes sorted JSON representation.
+        """
+        # Generate root hash from all chunk hashes (sorted for determinism)
         combined = json.dumps(chunk_hashes, sort_keys=True).encode('utf-8')
-        blake3_root = hashlib.blake2b(combined, digest_size=32).hexdigest()
+        blake2b_root = hashlib.blake2b(combined, digest_size=32).hexdigest()
 
         return IntegrityIndex(
-            blake3_root=blake3_root,
+            blake2b_root=blake2b_root,
             chunk_hashes=chunk_hashes
         )
 
     def _preserve_spc_rich_data(
         self,
-        smart_chunks: List[Any],
-        document_metadata: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        smart_chunks: list[Any],
+        document_metadata: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Preserve SPC rich data in metadata for executor access.
 
@@ -486,12 +594,43 @@ class SmartChunkConverter:
             }
 
             # Add embeddings if available (as lists for JSON serialization)
+            # CRITICAL: Fail-fast if embeddings cannot be preserved (no silent data loss)
             if hasattr(sc, 'semantic_embedding') and sc.semantic_embedding is not None:
                 try:
                     import numpy as np
+                except ImportError as e:
+                    self.logger.error(
+                        f"Chunk {sc.chunk_id}: NumPy is required for embedding preservation but not available"
+                    )
+                    raise RuntimeError(
+                        "NumPy is required for SPC embedding preservation. "
+                        "Install with: pip install numpy>=1.26.0"
+                    ) from e
+
+                # Validate embedding type
+                if not isinstance(sc.semantic_embedding, np.ndarray):
+                    self.logger.error(
+                        f"Chunk {sc.chunk_id}: semantic_embedding is not np.ndarray, "
+                        f"got {type(sc.semantic_embedding)}"
+                    )
+                    raise TypeError(
+                        f"Expected semantic_embedding to be np.ndarray, got {type(sc.semantic_embedding)}"
+                    )
+
+                # Convert to list for JSON serialization
+                try:
                     chunk_data['semantic_embedding'] = sc.semantic_embedding.tolist()
-                except Exception:
-                    pass  # Skip if conversion fails
+                    chunk_data['embedding_dim'] = sc.semantic_embedding.shape[0]
+                    self.logger.debug(
+                        f"Chunk {sc.chunk_id}: Preserved embedding with dimension {sc.semantic_embedding.shape[0]}"
+                    )
+                except (AttributeError, IndexError) as e:
+                    self.logger.error(
+                        f"Chunk {sc.chunk_id}: Failed to convert embedding to list: {e}"
+                    )
+                    raise RuntimeError(
+                        f"Embedding conversion failed for chunk {sc.chunk_id}: {e}"
+                    ) from e
 
             # Add causal chain summary
             if hasattr(sc, 'causal_chain') and sc.causal_chain:

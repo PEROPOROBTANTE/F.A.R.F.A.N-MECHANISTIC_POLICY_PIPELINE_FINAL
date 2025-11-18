@@ -10,28 +10,28 @@ No fallback logic, no "best effort" embeddings. Either dependencies are present
 and configured correctly, or the system fails fast with clear error messages.
 """
 
-import os
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 
 def _is_model_cached(model_name: str) -> bool:
     """Check if a HuggingFace model is cached locally.
-    
+
     Uses a heuristic check of common cache locations to determine if a model
     is likely available offline. This is a best-effort check - false positives
     are acceptable (will fail later when model actually loads), but false negatives
     should be minimized to avoid blocking offline usage of cached models.
-    
+
     Args:
         model_name: HuggingFace model name (e.g., "sentence-transformers/model")
-        
+
     Returns:
         True if model appears to be cached locally, False otherwise
     """
     from pathlib import Path
-    
+
     # Check common HuggingFace cache locations
     cache_dirs = [
         os.path.expanduser("~/.cache/huggingface/hub"),
@@ -39,12 +39,11 @@ def _is_model_cached(model_name: str) -> bool:
         os.getenv("HF_HOME"),
         os.getenv("TRANSFORMERS_CACHE"),
     ]
-    
+
     # Convert model name to cache directory pattern
     # HF uses "models--org--name" format in cache
     model_slug = model_name.replace("/", "--")
-    cache_pattern = f"*{model_slug}*"
-    
+
     for cache_dir in cache_dirs:
         if cache_dir and os.path.exists(cache_dir):
             cache_path = Path(cache_dir)
@@ -52,7 +51,7 @@ def _is_model_cached(model_name: str) -> bool:
             # Check just the top-level directories, not recursive
             if any(model_slug in p.name for p in cache_path.iterdir()):
                 return True
-    
+
     return False
 
 
@@ -63,20 +62,20 @@ class DependencyLockdownError(RuntimeError):
 
 class DependencyLockdown:
     """Enforces strict dependency controls to prevent hidden/magic behavior.
-    
+
     This class ensures that:
     - Online model downloads are explicitly controlled via HF_ONLINE env var
     - HuggingFace models only download when explicitly allowed
     - Critical dependencies fail fast if missing
     - Optional dependencies are clearly marked as degraded when missing
     """
-    
-    def __init__(self):
+
+    def __init__(self) -> None:
         """Initialize dependency lockdown based on environment configuration."""
         self.hf_allowed = os.getenv("HF_ONLINE", "0") == "1"
         self._enforce_offline_mode()
         self._log_configuration()
-    
+
     def _enforce_offline_mode(self) -> None:
         """Enforce HuggingFace offline mode if HF_ONLINE is not enabled."""
         if not self.hf_allowed:
@@ -92,7 +91,7 @@ class DependencyLockdown:
                 "Dependency lockdown: HuggingFace online mode ENABLED "
                 "(HF_ONLINE=1). Models may be downloaded from HuggingFace Hub."
             )
-    
+
     def _log_configuration(self) -> None:
         """Log current dependency lockdown configuration."""
         logger.info(
@@ -101,18 +100,18 @@ class DependencyLockdown:
             f"HF_HUB_OFFLINE={os.getenv('HF_HUB_OFFLINE', 'unset')}, "
             f"TRANSFORMERS_OFFLINE={os.getenv('TRANSFORMERS_OFFLINE', 'unset')}"
         )
-    
+
     def check_online_model_access(
         self,
         model_name: str,
         operation: str = "model download"
     ) -> None:
         """Check if online model access is allowed, raise if not.
-        
+
         Args:
             model_name: Name of the model being accessed
             operation: Description of the operation (for error message)
-            
+
         Raises:
             DependencyLockdownError: If online access is not allowed
         """
@@ -123,7 +122,7 @@ class DependencyLockdown:
                 f"To enable online downloads, set HF_ONLINE=1 environment variable. "
                 f"No fallback to degraded mode - this is a hard failure."
             )
-    
+
     def check_critical_dependency(
         self,
         module_name: str,
@@ -131,12 +130,12 @@ class DependencyLockdown:
         phase: str | None = None
     ) -> None:
         """Check if a critical dependency is available, fail fast if not.
-        
+
         Args:
             module_name: Python module name to import
             pip_package: pip package name for installation instructions
             phase: Optional phase name where dependency is required
-            
+
         Raises:
             DependencyLockdownError: If critical dependency is missing
         """
@@ -150,7 +149,7 @@ class DependencyLockdown:
                 f"No degraded mode available - this is a mandatory dependency. "
                 f"Original error: {e}"
             ) from e
-    
+
     def check_optional_dependency(
         self,
         module_name: str,
@@ -158,15 +157,15 @@ class DependencyLockdown:
         feature: str
     ) -> bool:
         """Check if an optional dependency is available.
-        
+
         Args:
             module_name: Python module name to import
             pip_package: pip package name for installation instructions
             feature: Feature name that requires this dependency
-            
+
         Returns:
             True if dependency is available, False otherwise
-            
+
         Note:
             This does NOT raise an error, but logs a warning about degraded mode.
             Caller must explicitly handle degraded mode and log it clearly.
@@ -181,10 +180,10 @@ class DependencyLockdown:
                 f"Install with: pip install {pip_package}"
             )
             return False
-    
+
     def get_mode_description(self) -> dict[str, str | bool]:
         """Get current dependency lockdown mode description.
-        
+
         Returns:
             Dictionary with mode information for logging/debugging
         """
@@ -202,7 +201,7 @@ _lockdown_instance: DependencyLockdown | None = None
 
 def get_dependency_lockdown() -> DependencyLockdown:
     """Get or create the global dependency lockdown instance.
-    
+
     Returns:
         Global DependencyLockdown instance
     """

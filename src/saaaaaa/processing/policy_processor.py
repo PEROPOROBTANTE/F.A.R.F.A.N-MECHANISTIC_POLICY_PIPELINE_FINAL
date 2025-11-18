@@ -1,22 +1,4 @@
 """
-⚠️  LEGACY MODULE - IndustrialPolicyProcessor (Pre-SPC Architecture)
-=======================================================================
-
-⚠️  WARNING: This module represents PRE-SPC architecture (before Smart Policy Chunks).
-
-For NEW code, use:
-    from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
-
-This module is kept for:
-- Backward compatibility with existing tests
-- Historical reference
-- Gradual migration support
-
-DO NOT use IndustrialPolicyProcessor in new scripts or features.
-Use the SPC (Smart Policy Chunks) ingestion pipeline instead.
-
----
-
 Causal Framework Policy Plan Processor - Industrial Grade
 =========================================================
 
@@ -680,8 +662,11 @@ class IndustrialPolicyProcessor:
     framework analysis with Bayesian evidence scoring and graph-theoretic
     validation for Colombian local development plans.
 
-    NOTE: This is a LEGACY component. Questionnaire access has been removed.
-    Modern pipelines use SPC (Smart Policy Chunks) ingestion instead.
+    This processor provides core analysis capabilities for policy documents.
+
+    DEPRECATION NOTE: The questionnaire_path parameter is deprecated.
+    Modern pipelines use SPC (Smart Policy Chunks) ingestion which handles
+    questionnaire integration separately.
     """
 
     def __init__(
@@ -697,6 +682,17 @@ class IndustrialPolicyProcessor:
         confidence_calculator: BayesianConfidenceCalculator | None = None,
         municipal_analyzer: MunicipalAnalyzer | None = None,
     ) -> None:
+        # DEPRECATION WARNING: questionnaire_path parameter is deprecated
+        if questionnaire_path is not None:
+            import warnings
+            warnings.warn(
+                "The 'questionnaire_path' parameter is deprecated and will be ignored. "
+                "Modern SPC pipelines handle questionnaire integration separately. "
+                "Use CPPIngestionPipeline instead.",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
         self.config = config or ProcessorConfig()
         self.config.validate()
 
@@ -1460,13 +1456,28 @@ class PolicyAnalysisPipeline:
     """
     End-to-end orchestrator for Colombian local development plan analysis
     implementing the complete DECALOGO causal framework evaluation workflow.
+
+    DEPRECATION NOTE: The questionnaire_path parameter is deprecated.
+    Modern pipelines use SPC (Smart Policy Chunks) ingestion which handles
+    questionnaire integration separately.
     """
 
     def __init__(
         self,
         config: ProcessorConfig | None = None,
-        questionnaire_path: Path | None = None,
+        questionnaire_path: Path | None = None,  # DEPRECATED: Kept for API compatibility only
     ) -> None:
+        # DEPRECATION WARNING: questionnaire_path parameter is deprecated
+        if questionnaire_path is not None:
+            import warnings
+            warnings.warn(
+                "The 'questionnaire_path' parameter is deprecated and will be ignored. "
+                "Modern SPC pipelines handle questionnaire integration separately. "
+                "Use CPPIngestionPipeline instead.",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
         self.config = config or ProcessorConfig()
         self.sanitizer = AdvancedTextSanitizer(self.config)
 

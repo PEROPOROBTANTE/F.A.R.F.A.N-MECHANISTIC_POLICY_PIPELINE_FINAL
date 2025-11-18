@@ -16,7 +16,7 @@ from __future__ import annotations
 import hashlib
 import os
 from dataclasses import dataclass, field
-from typing import Literal, Any
+from typing import Any, Literal
 
 # Optional dependency - blake3
 try:
@@ -30,7 +30,7 @@ except ImportError:
         @staticmethod
         def blake3(data: bytes) -> object:
             class HashResult:
-                def __init__(self, data: bytes):
+                def __init__(self, data: bytes) -> None:
                     self._hash = hashlib.sha256(data)
                 def hexdigest(self) -> str:
                     return self._hash.hexdigest()
@@ -40,17 +40,16 @@ from pydantic import BaseModel, Field, field_validator
 
 from .advanced_module_config import AdvancedModuleConfig
 
-
 PolicyArea = Literal["fiscal", "salud", "ambiente", "energía", "transporte"]
 
 
 class ExecutorConfig(BaseModel):
     """
     Complete configuration for executor runtime behavior.
-    
+
     All parameters are explicitly typed with safe defaults.
     No magic numbers - every threshold and setting is documented.
-    
+
     Attributes:
         max_tokens: Maximum tokens for LLM generation (range: 256-8192)
         temperature: Sampling temperature for generation (range: 0.0-2.0, 0.0=deterministic)
@@ -64,7 +63,7 @@ class ExecutorConfig(BaseModel):
         seed: Random seed for deterministic execution (range: 0-2^31-1)
         advanced_modules: Academic research-based configuration for advanced executor modules
                          (quantum, neuromorphic, causal, information theory, meta-learning, attention)
-        
+
     Design:
         - Frozen model prevents mutation after construction
         - validate_assignment disabled for performance
@@ -72,7 +71,7 @@ class ExecutorConfig(BaseModel):
         - Ranges documented for property-based testing
         - Advanced modules use peer-reviewed academic parameter values
     """
-    
+
     max_tokens: int = Field(
         default=2048,
         ge=256,
@@ -127,13 +126,13 @@ class ExecutorConfig(BaseModel):
         default=None,
         description="Academic research-based configuration for advanced modules"
     )
-    
+
     model_config = {
         "frozen": True,
         "validate_assignment": False,
         "extra": "forbid",  # Reject unknown parameters
     }
-    
+
     @field_validator("thresholds")
     @classmethod
     def validate_thresholds(cls, v: dict[str, float]) -> dict[str, float]:
@@ -144,15 +143,15 @@ class ExecutorConfig(BaseModel):
                     f"Threshold '{key}' must be in range [0.0, 1.0], got {value}"
                 )
         return v
-    
+
     @classmethod
     def from_env(cls, prefix: str = "EXECUTOR_") -> ExecutorConfig:
         """
         Create configuration from environment variables.
-        
+
         Args:
             prefix: Environment variable prefix (default: "EXECUTOR_")
-            
+
         Environment Variables:
             EXECUTOR_MAX_TOKENS: int
             EXECUTOR_TEMPERATURE: float
@@ -164,19 +163,19 @@ class ExecutorConfig(BaseModel):
             EXECUTOR_ENTITIES_WHITELIST: comma-separated list
             EXECUTOR_ENABLE_SYMBOLIC_SPARSE: bool (true/false/1/0)
             EXECUTOR_SEED: int
-            
+
         Returns:
             ExecutorConfig instance with values from environment
-            
+
         Example:
             export EXECUTOR_MAX_TOKENS=4096
             export EXECUTOR_TEMPERATURE=0.7
             config = ExecutorConfig.from_env()
         """
         import json
-        
+
         kwargs: dict[str, Any] = {}
-        
+
         # Simple scalar parameters
         if val := os.getenv(f"{prefix}MAX_TOKENS"):
             kwargs["max_tokens"] = int(val)
@@ -190,23 +189,23 @@ class ExecutorConfig(BaseModel):
             kwargs["policy_area"] = val  # type: ignore[assignment]
         if val := os.getenv(f"{prefix}SEED"):
             kwargs["seed"] = int(val)
-            
+
         # Boolean parameter
         if val := os.getenv(f"{prefix}ENABLE_SYMBOLIC_SPARSE"):
             kwargs["enable_symbolic_sparse"] = val.lower() in ("true", "1", "yes")
-            
+
         # List parameters (comma-separated)
         if val := os.getenv(f"{prefix}REGEX_PACK"):
             kwargs["regex_pack"] = [s.strip() for s in val.split(",") if s.strip()]
         if val := os.getenv(f"{prefix}ENTITIES_WHITELIST"):
             kwargs["entities_whitelist"] = [s.strip() for s in val.split(",") if s.strip()]
-            
+
         # Dict parameter (JSON)
         if val := os.getenv(f"{prefix}THRESHOLDS"):
             kwargs["thresholds"] = json.loads(val)
-        
+
         return cls(**kwargs)
-    
+
     @classmethod
     def from_cli_args(
         cls,
@@ -223,18 +222,18 @@ class ExecutorConfig(BaseModel):
     ) -> ExecutorConfig:
         """
         Create configuration from CLI arguments.
-        
+
         This is designed to work with Typer CLI generation.
         All parameters are optional; defaults are used for unspecified values.
-        
+
         Args:
             See ExecutorConfig attributes for parameter descriptions
-            
+
         Returns:
             ExecutorConfig instance with values from CLI args
         """
         kwargs: dict[str, Any] = {}
-        
+
         if max_tokens is not None:
             kwargs["max_tokens"] = max_tokens
         if temperature is not None:
@@ -255,30 +254,30 @@ class ExecutorConfig(BaseModel):
             kwargs["enable_symbolic_sparse"] = enable_symbolic_sparse
         if seed is not None:
             kwargs["seed"] = seed
-        
+
         return cls(**kwargs)
-    
+
     @classmethod
     def from_cli(cls, app: Any = None) -> ExecutorConfig:
         """
         Create configuration from CLI with auto-registered Typer flags.
-        
+
         This method integrates with Typer to automatically register command-line
         flags for all ExecutorConfig parameters. If an app is provided, it registers
         the flags. Otherwise, it returns a default instance.
-        
+
         Args:
             app: Optional Typer application instance for flag registration
-            
+
         Returns:
             ExecutorConfig instance (default if no app provided)
-            
+
         Example:
             >>> import typer
             >>> app = typer.Typer()
             >>> config = ExecutorConfig.from_cli(app)
             >>> # Now `app` has all executor config flags registered
-            
+
         Note:
             This satisfies the config_parametrization validation requirement.
             For actual CLI parsing, use from_cli_args() with parsed arguments.
@@ -286,14 +285,14 @@ class ExecutorConfig(BaseModel):
         # If no app provided, return default config
         if app is None:
             return cls()
-        
+
         # Check if typer is available
         try:
             import typer
         except ImportError:
             # Typer not available, return default config
             return cls()
-        
+
         # Register flags with typer app if it's a Typer instance
         if hasattr(app, 'command'):
             # This creates a command that shows all available flags
@@ -329,17 +328,17 @@ class ExecutorConfig(BaseModel):
                 )
                 typer.echo(config.describe())
                 return config
-        
+
         # Return default config
         return cls()
-    
+
     def describe(self) -> str:
         """
         Generate human-readable description of configuration contract surface.
-        
+
         Returns:
             Formatted string describing all parameters and their effective values
-            
+
         Example:
             >>> config = ExecutorConfig(max_tokens=4096, temperature=0.7)
             >>> print(config.describe())
@@ -353,7 +352,7 @@ class ExecutorConfig(BaseModel):
             "ExecutorConfig Contract Surface",
             "=" * 50,
         ]
-        
+
         lines.append(f"max_tokens: {self.max_tokens} (range: 256-8192)")
         lines.append(f"temperature: {self.temperature} (range: 0.0-2.0, 0.0=deterministic)")
         lines.append(f"timeout_s: {self.timeout_s} (range: 1.0-300.0)")
@@ -361,36 +360,36 @@ class ExecutorConfig(BaseModel):
         lines.append(f"policy_area: {self.policy_area} (optional filter)")
         lines.append(f"regex_pack: {len(self.regex_pack)} patterns")
         lines.append(f"thresholds: {len(self.thresholds)} thresholds defined")
-        
+
         if self.thresholds:
             for key, value in sorted(self.thresholds.items()):
                 lines.append(f"  - {key}: {value}")
-        
+
         lines.append(f"entities_whitelist: {len(self.entities_whitelist)} entities")
         lines.append(f"enable_symbolic_sparse: {self.enable_symbolic_sparse}")
         lines.append(f"seed: {self.seed} (deterministic: {self.seed != 0})")
-        
+
         lines.append("")
         lines.append("Effective Configuration Hash (BLAKE3):")
         lines.append(f"  {self.compute_hash()}")
-        
+
         return "\n".join(lines)
-    
+
     def merge_overrides(self, overrides: ExecutorConfig | None) -> ExecutorConfig:
         """
         Merge override configuration with this configuration.
-        
+
         Deterministic merge strategy:
         - Only explicitly set values in overrides are applied
         - Original values are preserved for unset override fields
         - Returns new immutable config (no mutation)
-        
+
         Args:
             overrides: Optional override configuration
-            
+
         Returns:
             New ExecutorConfig with merged values
-            
+
         Example:
             >>> base = ExecutorConfig(max_tokens=2048)
             >>> override = ExecutorConfig(max_tokens=4096, temperature=0.7)
@@ -400,24 +399,24 @@ class ExecutorConfig(BaseModel):
         """
         if overrides is None:
             return self
-        
+
         # Get only the explicitly set fields from overrides
         # For Pydantic v2, we use model_dump with exclude_unset
         override_dict = overrides.model_dump(exclude_unset=True)
-        
+
         # Create new config by copying self and updating with overrides
         return self.model_copy(update=override_dict)
-    
+
     def compute_hash(self) -> str:
         """
         Compute deterministic BLAKE3 hash of configuration.
-        
+
         Used for:
         - Configuration fingerprinting
         - Cache key generation
         - Drift detection
         - Reproducibility verification
-        
+
         Returns:
             Hex string of BLAKE3 hash (64 chars)
         """
@@ -426,21 +425,21 @@ class ExecutorConfig(BaseModel):
         import json
         config_dict = self.model_dump()
         config_json = json.dumps(config_dict, sort_keys=True, indent=None)
-        
+
         # Compute BLAKE3 hash
         hasher = blake3.blake3(config_json.encode("utf-8"))
         return hasher.hexdigest()
-    
+
     def validate_latency_budget(self, max_latency_s: float = 120.0) -> bool:
         """
         Validate that retry * timeout_s is within acceptable latency budget.
-        
+
         Args:
             max_latency_s: Maximum acceptable latency budget in seconds
-            
+
         Returns:
             True if within budget, False otherwise
-            
+
         Raises:
             ValueError: If latency budget is exceeded
         """
@@ -457,21 +456,21 @@ class ExecutorConfig(BaseModel):
 class ExecutorMetadata:
     """
     Immutable metadata for executor execution results.
-    
+
     Tracks:
     - Configuration used
     - Timing information
     - Input/output hashes
     - Signal sources
     """
-    
+
     config_hash: str
     execution_time_s: float
     input_hash: str
     output_hash: str
     used_signals: dict[str, Any] = field(default_factory=dict)
     timestamp_utc: str = ""
-    
+
     def __post_init__(self) -> None:
         """Validate metadata fields."""
         if self.execution_time_s < 0:
@@ -483,10 +482,10 @@ class ExecutorMetadata:
 def compute_input_hash(data: str | bytes) -> str:
     """
     Compute BLAKE3 hash of input data for traceability.
-    
+
     Args:
         data: Input data as string or bytes
-        
+
     Returns:
         Hex string of BLAKE3 hash
     """

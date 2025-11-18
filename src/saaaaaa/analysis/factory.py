@@ -13,7 +13,7 @@ import json
 import logging
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 try:
     import yaml
@@ -146,7 +146,7 @@ def list_calibration_files() -> dict[str, Path]:
 
 def load_calibration(name: str) -> dict[str, Any]:
     """Load a single calibration YAML by name (stem or filename).
-    
+
     DEPRECATED: External YAML calibration loading is deprecated.
     Use internal calibration_registry.py for all calibrations.
     This function is maintained only for backwards compatibility.
@@ -157,7 +157,7 @@ def load_calibration(name: str) -> dict[str, Any]:
         DeprecationWarning,
         stacklevel=2
     )
-    
+
     # Raise error to block usage - deprecated path
     raise RuntimeError(
         "Deprecated calibration path: External YAML calibration loading is no longer supported. "
@@ -168,7 +168,7 @@ def load_calibration(name: str) -> dict[str, Any]:
 
 def load_all_calibrations(include_metadata: bool = True) -> dict[str, dict[str, Any]]:
     """Load all detected calibration YAML files.
-    
+
     DEPRECATED: External YAML calibration loading is deprecated.
     Use internal calibration_registry.py for all calibrations.
     This function is maintained only for backwards compatibility.
@@ -179,24 +179,24 @@ def load_all_calibrations(include_metadata: bool = True) -> dict[str, dict[str, 
     Returns:
         Empty dictionary - YAML calibrations no longer supported
     """
-    import warnings
     import logging
-    
+    import warnings
+
     logger = logging.getLogger(__name__)
-    
+
     warnings.warn(
         "load_all_calibrations() is deprecated. Use calibration_registry.CALIBRATIONS for internal calibrations.",
         DeprecationWarning,
         stacklevel=2
     )
-    
+
     logger.warning(
         "DEPRECATED: load_all_calibrations() called. "
         "External YAML calibration loading is no longer supported. "
         "Use calibration_registry.CALIBRATIONS instead. "
         "Returning empty dict."
     )
-    
+
     # Return empty dict - no YAML calibrations loaded
     return {}
 

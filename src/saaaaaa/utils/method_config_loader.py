@@ -20,13 +20,13 @@ class MethodConfigLoader:
             "CAUSAL.BMI.infer_mech_v1",
             "kl_divergence_threshold"
         )
-    
+
     Note:
         The loader expects the JSON spec to follow the canonical schema with
         keys: specification_metadata, methods, and epistemic_validation_summary.
     """
 
-    def __init__(self, spec_path: str | Path):
+    def __init__(self, spec_path: str | Path) -> None:
         self.spec_path = Path(spec_path)
         with open(self.spec_path) as f:
             self.spec = json.load(f)
@@ -40,10 +40,10 @@ class MethodConfigLoader:
             for method in self.spec["methods"]
         }
 
-    def validate_spec_schema(self):
+    def validate_spec_schema(self) -> None:
         """
         Validate JSON spec matches expected schema.
-        
+
         Raises:
             ValueError: If spec is missing required keys
         """
@@ -128,17 +128,17 @@ class MethodConfigLoader:
     def _parse_range(self, spec: str) -> tuple[float, float]:
         """
         Parse range specification like '[0.0, 1.0], inclusive' or '[100, 10000], integer'.
-        
+
         Args:
             spec: Range specification string with format "[min, max], modifiers"
                   Modifiers can include: inclusive, exclusive, integer
-        
+
         Returns:
             Tuple of (min_val, max_val) as floats
-            
+
         Raises:
             ValueError: If spec format is invalid
-        
+
         Note:
             The inclusive/exclusive and integer modifiers are parsed but not
             currently enforced in validation. This maintains compatibility with
@@ -157,16 +157,16 @@ class MethodConfigLoader:
     def _parse_set(self, spec: str | list) -> set:
         """
         Parse set specification safely.
-        
+
         Args:
             spec: Either a list or a string representation of a Python literal
-        
+
         Returns:
             Set of allowed values
-            
+
         Raises:
             ValueError: If spec cannot be parsed safely
-            
+
         Note:
             Uses ast.literal_eval() for safe parsing of string specs.
             Only Python literals (strings, numbers, tuples, lists, dicts,

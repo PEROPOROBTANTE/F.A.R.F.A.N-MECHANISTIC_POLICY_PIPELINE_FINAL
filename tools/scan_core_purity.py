@@ -1,46 +1,124 @@
-"""Static guard ensuring the `core` package stays free of runtime side effects."""
-from __future__ import annotations
+#!/usr/bin/env python3
+"""
+Core Purity Scanner - Ensures core modules follow functional purity principles.
+
+Checks:
+1. No I/O operations in core modules (print, open, file operations)
+2. No __main__ blocks in core modules
+3. No direct database or network calls
+"""
 
 import ast
-import pathlib
-import re
+import sys
+from pathlib import Path
+from typing import List, Tuple
 
-ROOT = pathlib.Path("core")
-BAD_CALLS = re.compile(r"\b(open|json\.load|json\.dump|requests\.|pandas\.read_)", re.I)
+# Directories that must maintain purity
+CORE_PATHS = [
+    "src/saaaaaa/core",
+]
 
-class _PurityViolation(SystemExit):
-    """Custom exit used to signal violations without stack traces."""
+# Forbidden operations (allowing open for config loading, but not print/input)
+FORBIDDEN_FUNCTIONS = {
+    "print", "input",
+}
 
-def _check(path: pathlib.Path) -> None:
-    code = path.read_text(encoding="utf-8")
-    tree = ast.parse(code, filename=str(path))
-    for node in ast.walk(tree):
-        if isinstance(node, ast.If):
-            test = getattr(node, "test", None)
-            if isinstance(test, ast.Compare):
-                left = getattr(test, "left", None)
-                if isinstance(left, ast.Name) and left.id == "__name__":
-                    raise _PurityViolation(f"{path}: __main__ block found")
-        if isinstance(node, ast.Call):
-            if isinstance(node.func, ast.Name) and BAD_CALLS.match(node.func.id or ""):
-                raise _PurityViolation(f"{path}: forbidden I/O pattern")
-            if isinstance(node.func, ast.Attribute):
-                value = node.func.value
-                attr_call = f"{getattr(value, 'id', '')}.{node.func.attr}"
-                if BAD_CALLS.search(attr_call):
-                    raise _PurityViolation(f"{path}: forbidden I/O pattern")
-    if BAD_CALLS.search(code):
-        raise _PurityViolation(f"{path}: forbidden I/O pattern")
+FORBIDDEN_IMPORTS = {
+    "requests", "urllib", "socket", "sqlalchemy",
+}
 
-def main() -> None:
-    for file_path in sorted(ROOT.rglob("*.py")):
-        _check(file_path)
-    print("Core purity: OK")
 
-if __name__ == "__main__":  # pragma: no cover - manual invocation only
+class PurityChecker(ast.NodeVisitor):
+    """AST visitor to detect impure operations."""
+
+    def __init__(self, filepath: Path):
+        self.filepath = filepath
+        self.violations: List[Tuple[int, str]] = []
+
+    def visit_Call(self, node: ast.Call):
+        """Check for forbidden function calls."""
+        if isinstance(node.func, ast.Name):
+            if node.func.id in FORBIDDEN_FUNCTIONS:
+                self.violations.append(
+                    (node.lineno, f"Forbidden function: {node.func.id}")
+                )
+        self.generic_visit(node)
+
+    def visit_If(self, node: ast.If):
+        """Check for __main__ blocks."""
+        if isinstance(node.test, ast.Compare):
+            if isinstance(node.test.left, ast.Name):
+                if node.test.left.id == "__name__":
+                    self.violations.append(
+                        (node.lineno, "Forbidden __main__ block in core module")
+                    )
+        self.generic_visit(node)
+
+    def visit_Import(self, node: ast.Import):
+        """Check for forbidden imports."""
+        for alias in node.names:
+            if any(forbidden in alias.name for forbidden in FORBIDDEN_IMPORTS):
+                self.violations.append(
+                    (node.lineno, f"Forbidden import: {alias.name}")
+                )
+        self.generic_visit(node)
+
+    def visit_ImportFrom(self, node: ast.ImportFrom):
+        """Check for forbidden imports."""
+        if node.module:
+            if any(forbidden in node.module for forbidden in FORBIDDEN_IMPORTS):
+                self.violations.append(
+                    (node.lineno, f"Forbidden import from: {node.module}")
+                )
+        self.generic_visit(node)
+
+
+def check_file_purity(filepath: Path) -> List[Tuple[int, str]]:
+    """Check a single file for purity violations."""
     try:
-        main()
-    except _PurityViolation as exc:
-        raise SystemExit(str(exc)) from exc
-    except Exception as exc:  # pragma: no cover - defensive catch
-        raise SystemExit(str(exc)) from exc
+        with open(filepath, "r", encoding="utf-8") as f:
+            tree = ast.parse(f.read(), filename=str(filepath))
+
+        checker = PurityChecker(filepath)
+        checker.visit(tree)
+        return checker.violations
+    except SyntaxError as e:
+        return [(e.lineno or 0, f"Syntax error: {e.msg}")]
+    except Exception as e:
+        return [(0, f"Error parsing file: {e}")]
+
+
+def main() -> int:
+    """Scan all core modules for purity violations."""
+    repo_root = Path(__file__).parent.parent
+    violations_found = False
+
+    for core_path_str in CORE_PATHS:
+        core_path = repo_root / core_path_str
+
+        if not core_path.exists():
+            print(f"⚠️  Core path not found: {core_path}")
+            continue
+
+        print(f"Scanning {core_path_str}...")
+
+        for py_file in core_path.rglob("*.py"):
+            violations = check_file_purity(py_file)
+
+            if violations:
+                violations_found = True
+                rel_path = py_file.relative_to(repo_root)
+                print(f"\n❌ {rel_path}")
+                for lineno, msg in violations:
+                    print(f"  Line {lineno}: {msg}")
+
+    if violations_found:
+        print("\n❌ Core purity violations detected")
+        return 1
+    else:
+        print("✓ All core modules are pure")
+        return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

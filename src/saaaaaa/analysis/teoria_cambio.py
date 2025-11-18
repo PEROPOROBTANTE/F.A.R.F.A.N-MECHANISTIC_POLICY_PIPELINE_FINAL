@@ -59,7 +59,7 @@ from typing import Any, ClassVar, Optional
 # --- Dependencias de Terceros ---
 import networkx as nx
 import numpy as np
-import scipy.stats as stats
+from scipy import stats
 
 try:
     from jsonschema import Draft7Validator
@@ -313,18 +313,18 @@ class TeoriaCambio:
             grafo.number_of_edges(),
         )
         return grafo
-    
+
     def construir_grafo_from_spc(self, preprocessed_doc) -> nx.DiGraph:
         """
         Construir grafo causal desde estructura SPC (Smart Policy Chunks).
-        
+
         Este método permite construir grafos causales a partir de la estructura
         semántica preservada por SPC, en lugar de extraer relaciones causales
         únicamente del texto.
-        
+
         Args:
             preprocessed_doc: PreprocessedDocument con modo chunked
-            
+
         Returns:
             NetworkX DiGraph con relaciones causales derivadas de SPC
         """
@@ -333,37 +333,37 @@ class TeoriaCambio:
             # Fallback to text-based construction for flat mode
             self.logger.warning("Document not in chunked mode, using standard causal graph")
             return self.construir_grafo_causal()
-        
+
         try:
             from saaaaaa.analysis.spc_causal_bridge import SPCCausalBridge
-            
+
             # Use SPC bridge to construct base graph
             bridge = SPCCausalBridge()
             chunk_graph = getattr(preprocessed_doc, 'chunk_graph', {})
-            
+
             if not chunk_graph:
                 self.logger.warning("No chunk graph available, using standard causal graph")
                 return self.construir_grafo_causal()
-            
+
             base_graph = bridge.build_causal_graph_from_spc(chunk_graph)
-            
+
             if base_graph is None:
                 self.logger.warning("Failed to build SPC graph, using standard causal graph")
                 return self.construir_grafo_causal()
-            
+
             # Enhance with content analysis from chunks
             chunks = getattr(preprocessed_doc, 'chunks', [])
             if chunks:
                 base_graph = bridge.enhance_graph_with_content(base_graph, chunks)
-            
+
             self.logger.info(
                 "Grafo causal SPC construido: %d nodos, %d aristas.",
                 base_graph.number_of_nodes(),
                 base_graph.number_of_edges(),
             )
-            
+
             return base_graph
-            
+
         except ImportError as e:
             self.logger.error(f"SPCCausalBridge not available: {e}")
             return self.construir_grafo_causal()

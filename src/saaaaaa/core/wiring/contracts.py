@@ -13,11 +13,11 @@ from pydantic import BaseModel, Field, field_validator
 
 class CPPDeliverable(BaseModel):
     """Contract for CPP ingestion output (Deliverable).
-    
+
     Note: CPP (Canon Policy Package) is the legacy name for SPC (Smart Policy Chunks).
     Use SPCDeliverable for new code.
     """
-    
+
     chunk_graph: dict[str, Any] = Field(
         description="Chunk graph with all chunks"
     )
@@ -32,12 +32,12 @@ class CPPDeliverable(BaseModel):
     schema_version: str = Field(
         description="CPP schema version"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
     }
-    
+
     @field_validator("provenance_completeness")
     @classmethod
     def validate_completeness(cls, v: float) -> float:
@@ -52,10 +52,10 @@ class CPPDeliverable(BaseModel):
 
 class SPCDeliverable(BaseModel):
     """Contract for SPC (Smart Policy Chunks) ingestion output (Deliverable).
-    
+
     This is the preferred terminology for new code. SPC is the successor to CPP.
     """
-    
+
     chunk_graph: dict[str, Any] = Field(
         description="Chunk graph with all chunks"
     )
@@ -70,12 +70,12 @@ class SPCDeliverable(BaseModel):
     schema_version: str = Field(
         description="SPC schema version"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
     }
-    
+
     @field_validator("provenance_completeness")
     @classmethod
     def validate_completeness(cls, v: float) -> float:
@@ -90,7 +90,7 @@ class SPCDeliverable(BaseModel):
 
 class AdapterExpectation(BaseModel):
     """Contract for CPPAdapter input (Expectation)."""
-    
+
     chunk_graph: dict[str, Any] = Field(
         description="Must have chunk_graph with chunks"
     )
@@ -102,7 +102,7 @@ class AdapterExpectation(BaseModel):
         le=1.0,
         description="Must be exactly 1.0"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",  # Allow additional fields
@@ -111,7 +111,7 @@ class AdapterExpectation(BaseModel):
 
 class PreprocessedDocumentDeliverable(BaseModel):
     """Contract for CPPAdapter output (Deliverable)."""
-    
+
     sentence_metadata: list[dict[str, Any]] = Field(
         min_length=1,
         description="Must have at least one sentence"
@@ -128,7 +128,7 @@ class PreprocessedDocumentDeliverable(BaseModel):
         min_length=1,
         description="Document ID must be non-empty"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
@@ -137,7 +137,7 @@ class PreprocessedDocumentDeliverable(BaseModel):
 
 class OrchestratorExpectation(BaseModel):
     """Contract for Orchestrator input (Expectation)."""
-    
+
     sentence_metadata: list[dict[str, Any]] = Field(
         min_length=1,
         description="Requires sentence_metadata"
@@ -146,7 +146,7 @@ class OrchestratorExpectation(BaseModel):
         min_length=1,
         description="Requires document_id"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -155,7 +155,7 @@ class OrchestratorExpectation(BaseModel):
 
 class ArgRouterPayloadDeliverable(BaseModel):
     """Contract for Orchestrator to ArgRouter (Deliverable)."""
-    
+
     class_name: str = Field(
         min_length=1,
         description="Target class name"
@@ -167,7 +167,7 @@ class ArgRouterPayloadDeliverable(BaseModel):
     payload: dict[str, Any] = Field(
         description="Method arguments payload"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
@@ -176,7 +176,7 @@ class ArgRouterPayloadDeliverable(BaseModel):
 
 class ArgRouterExpectation(BaseModel):
     """Contract for ArgRouter input (Expectation)."""
-    
+
     class_name: str = Field(
         min_length=1,
         description="Class must exist in registry"
@@ -188,7 +188,7 @@ class ArgRouterExpectation(BaseModel):
     payload: dict[str, Any] = Field(
         description="Payload with required arguments"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -197,7 +197,7 @@ class ArgRouterExpectation(BaseModel):
 
 class ExecutorInputDeliverable(BaseModel):
     """Contract for ArgRouter to Executor (Deliverable)."""
-    
+
     args: tuple[Any, ...] = Field(
         description="Positional arguments"
     )
@@ -207,7 +207,7 @@ class ExecutorInputDeliverable(BaseModel):
     method_signature: str = Field(
         description="Target method signature for validation"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
@@ -216,7 +216,7 @@ class ExecutorInputDeliverable(BaseModel):
 
 class SignalPackDeliverable(BaseModel):
     """Contract for SignalsClient output (Deliverable)."""
-    
+
     version: str = Field(
         description="Signal pack version (must be present)"
     )
@@ -231,12 +231,12 @@ class SignalPackDeliverable(BaseModel):
         default_factory=list,
         description="KPI indicators"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",  # Allow additional signal fields
     }
-    
+
     @field_validator("version")
     @classmethod
     def validate_version(cls, v: str) -> str:
@@ -248,7 +248,7 @@ class SignalPackDeliverable(BaseModel):
 
 class SignalRegistryExpectation(BaseModel):
     """Contract for SignalRegistry input (Expectation)."""
-    
+
     version: str = Field(
         min_length=1,
         description="Requires version"
@@ -257,7 +257,7 @@ class SignalRegistryExpectation(BaseModel):
         min_length=1,
         description="Requires policy_area"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -266,7 +266,7 @@ class SignalRegistryExpectation(BaseModel):
 
 class EnrichedChunkDeliverable(BaseModel):
     """Contract for Executor output (Deliverable)."""
-    
+
     chunk_id: str = Field(
         min_length=1,
         description="Chunk identifier"
@@ -278,7 +278,7 @@ class EnrichedChunkDeliverable(BaseModel):
     enrichment: dict[str, Any] = Field(
         description="Enrichment data"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -287,12 +287,12 @@ class EnrichedChunkDeliverable(BaseModel):
 
 class AggregateExpectation(BaseModel):
     """Contract for Aggregate input (Expectation)."""
-    
+
     enriched_chunks: list[dict[str, Any]] = Field(
         min_length=1,
         description="Must have at least one enriched chunk"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -301,7 +301,7 @@ class AggregateExpectation(BaseModel):
 
 class FeatureTableDeliverable(BaseModel):
     """Contract for Aggregate output (Deliverable)."""
-    
+
     table_type: str = Field(
         description="Must be 'pyarrow.Table'"
     )
@@ -313,7 +313,7 @@ class FeatureTableDeliverable(BaseModel):
         min_length=1,
         description="Must have required columns"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
@@ -322,7 +322,7 @@ class FeatureTableDeliverable(BaseModel):
 
 class ScoreExpectation(BaseModel):
     """Contract for Score input (Expectation)."""
-    
+
     table_type: str = Field(
         description="Must be pa.Table"
     )
@@ -330,7 +330,7 @@ class ScoreExpectation(BaseModel):
         min_length=1,
         description="Required columns for scoring"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -339,7 +339,7 @@ class ScoreExpectation(BaseModel):
 
 class ScoresDeliverable(BaseModel):
     """Contract for Score output (Deliverable)."""
-    
+
     dataframe_type: str = Field(
         description="Must be 'polars.DataFrame'"
     )
@@ -351,7 +351,7 @@ class ScoresDeliverable(BaseModel):
         min_length=1,
         description="Metrics that were computed"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
@@ -360,7 +360,7 @@ class ScoresDeliverable(BaseModel):
 
 class ReportExpectation(BaseModel):
     """Contract for Report input (Expectation)."""
-    
+
     dataframe_type: str = Field(
         description="Must be pl.DataFrame"
     )
@@ -371,7 +371,7 @@ class ReportExpectation(BaseModel):
     manifest_present: bool = Field(
         description="Manifest must be provided"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "allow",
@@ -380,7 +380,7 @@ class ReportExpectation(BaseModel):
 
 class ReportDeliverable(BaseModel):
     """Contract for Report output (Deliverable)."""
-    
+
     report_uris: dict[str, str] = Field(
         min_length=1,
         description="Mapping of report name to URI"
@@ -388,7 +388,7 @@ class ReportDeliverable(BaseModel):
     all_reports_generated: bool = Field(
         description="All declared reports generated"
     )
-    
+
     model_config = {
         "frozen": True,
         "extra": "forbid",
