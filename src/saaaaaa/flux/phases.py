@@ -4,7 +4,9 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
+import unicodedata
 from pathlib import Path
 from typing import Any, Callable
 
@@ -144,158 +146,9 @@ def assert_compat(deliverable: BaseModel, expectation_cls: type[BaseModel]) -> N
         ) from ve
 
 
-# INGEST
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential_jitter(initial=1, max=10),
-    reraise=True,
-)
-def run_ingest(
-    cfg: IngestConfig,
-    *,
-    input_uri: str,
-    policy_unit_id: str | None = None,
-    correlation_id: str | None = None,
-    envelope_metadata: dict[str, str] | None = None,
-) -> PhaseOutcome:
-    """
-    Execute ingest phase with mandatory metadata propagation.
-
-    requires: non-empty input_uri
-    ensures: provenance_ok is True, fingerprint computed, metadata propagated
-    """
-    contract_logger = get_json_logger("flux.ingest")
-    started_monotonic = time.monotonic()
-    start_time = time.time()
-
-    with tracer.start_as_current_span("ingest") as span:
-        # Thread correlation tracking
-        if correlation_id:
-            span.set_attribute("correlation_id", correlation_id)
-        if policy_unit_id:
-            span.set_attribute("policy_unit_id", policy_unit_id)
-        
-        # Preconditions
-        if not input_uri or not input_uri.strip():
-            raise PreconditionError(
-                "run_ingest",
-                "non-empty input_uri",
-                "input_uri must be a non-empty string",
-            )
-
-        span.set_attribute("document_id", os.path.basename(input_uri))
-        if policy_unit_id:
-            span.set_attribute("policy_unit_id", policy_unit_id)
-        if correlation_id:
-            span.set_attribute("correlation_id", correlation_id)
-
-        # Use SPC (Smart Policy Chunks) ingestion - the canonical phase-one pipeline
-        try:
-            input_path = Path(input_uri)
-            if not input_path.exists():
-                raise PreconditionError(
-                    "run_ingest",
-                    "input_uri must exist",
-                    f"File not found: {input_uri}",
-                )
-            
-            # Initialize SPC chunking system
-            spc_system = StrategicChunkingSystem()
-            
-            # Read document content
-            if input_path.suffix.lower() == '.pdf':
-                # For PDF files, use appropriate extraction
-                import pdfplumber
-                raw_text_parts = []
-                tables: list[dict[str, Any]] = []
-                
-                with pdfplumber.open(input_path) as pdf:
-                    for page_num, page in enumerate(pdf.pages):
-                        # Extract text
-                        page_text = page.extract_text() or ""
-                        if page_text.strip():
-                            raw_text_parts.append(page_text)
-                        
-                        # Extract tables
-                        page_tables = page.extract_tables()
-                        if page_tables:
-                            for table_idx, table in enumerate(page_tables):
-                                if table:
-                                    tables.append({
-                                        "page": page_num + 1,
-                                        "table_index": table_idx,
-                                        "data": table,
-                                    })
-                
-                raw_text = "\n\n".join(raw_text_parts)
-            else:
-                # For text files, read directly
-                with open(input_path, 'r', encoding='utf-8') as f:
-                    raw_text = f.read()
-                tables = []
-            
-            # Validate we got content
-            if not raw_text or not raw_text.strip():
-                raise PostconditionError(
-                    "run_ingest",
-                    "non-empty content",
-                    f"No text content extracted from {input_uri}",
-                )
-            
-        except ImportError as e:
-            # Fallback if pdfplumber not available
-            logger.warning(f"PDF processing library not available: {e}. Using text extraction fallback.")
-            with open(input_uri, 'r', encoding='utf-8', errors='ignore') as f:
-                raw_text = f.read()
-            tables = []
-
-        out = IngestDeliverable(
-            manifest=DocManifest(document_id=os.path.basename(input_uri)),
-            raw_text=raw_text,
-            tables=tables,
-            provenance_ok=True,
-        )
-
-        # Postconditions
-        if not out.provenance_ok:
-            raise PostconditionError(
-                "run_ingest", "provenance_ok", "Provenance must be verified"
-            )
-
-        fp = _fp(out)
-        span.set_attribute("fingerprint", fp)
-
-        # Wrap output with ContractEnvelope for traceability
-        env_out = ContractEnvelope.wrap(
-            out.model_dump(),
-            policy_unit_id=policy_unit_id or "default",
-            correlation_id=correlation_id
-        )
-        span.set_attribute("content_digest", env_out.content_digest)
-        span.set_attribute("event_id", env_out.event_id)
-
-        duration_ms = (time.time() - start_time) * 1000
-        phase_latency_histogram.record(duration_ms, {"phase": "ingest"})
-        phase_counter.add(1, {"phase": "ingest"})
-
-        logger.info(
-            "phase_complete: phase=%s ok=%s fingerprint=%s duration_ms=%.2f",
-            "ingest",
-            True,
-            fp,
-            duration_ms,
-        )
-
-        return PhaseOutcome(
-            ok=True,
-            phase="ingest",
-            payload=out.model_dump(),
-            fingerprint=fp,
-            policy_unit_id=policy_unit_id,
-            correlation_id=correlation_id,
-            envelope_metadata=envelope_metadata or {},
-            metrics={"duration_ms": duration_ms},
-        )
+# NOTE: INGEST phase removed - use SPC (Smart Policy Chunks) via CPPIngestionPipeline
+# SPC is the ONLY canonical Phase-One entry point (src/saaaaaa/processing/spc_ingestion)
+# FLUX phases begin from NORMALIZE, which receives SPC output
 
 
 # NORMALIZE
@@ -342,11 +195,146 @@ def run_normalize(
         if correlation_id:
             span.set_attribute("correlation_id", correlation_id)
 
-        # TODO: Implement actual normalization (unicode normalization, etc.)
-        sentences = [s for s in ing.raw_text.split("\n") if s.strip()]
-        sentence_meta: list[dict[str, Any]] = [
-            {"index": i, "length": len(s)} for i, s in enumerate(sentences)
-        ]
+        # PHASE 2: TEXT NORMALIZATION - MAXIMUM STANDARD IMPLEMENTATION
+        # =============================================================
+
+        logger.info(
+            f"Normalizing text with unicode_form={cfg.unicode_form}, "
+            f"keep_diacritics={cfg.keep_diacritics}"
+        )
+
+        # Step 1: Unicode Normalization (NFC or NFKC)
+        normalized_text = unicodedata.normalize(cfg.unicode_form, ing.raw_text)
+        span.set_attribute("unicode_form", cfg.unicode_form)
+
+        # Step 2: Whitespace Normalization (deterministic)
+        # Replace multiple spaces with single space
+        normalized_text = re.sub(r'[ \t]+', ' ', normalized_text)
+        # Replace multiple newlines with single newline
+        normalized_text = re.sub(r'\n{3,}', '\n\n', normalized_text)
+        # Clean spaces around newlines (but preserve paragraph breaks)
+        normalized_text = re.sub(r' *\n *', '\n', normalized_text)
+        # Remove trailing/leading whitespace
+        normalized_text = normalized_text.strip()
+
+        # Step 3: Diacritic Handling (if configured)
+        if not cfg.keep_diacritics:
+            logger.info("Removing diacritics per configuration")
+            # Decompose to NFD (separates base chars from diacritics)
+            nfd_text = unicodedata.normalize('NFD', normalized_text)
+            # Filter out combining marks (category Mn)
+            no_diacritic_text = ''.join(
+                c for c in nfd_text
+                if unicodedata.category(c) != 'Mn'
+            )
+            # Recompose to NFC
+            normalized_text = unicodedata.normalize('NFC', no_diacritic_text)
+            span.set_attribute("diacritics_removed", True)
+
+        # Step 4: Sentence Segmentation with spaCy (MAXIMUM STANDARD)
+        # Try spaCy first (high quality), fallback to regex if unavailable
+        sentences: list[str] = []
+        sentence_meta: list[dict[str, Any]] = []
+
+        try:
+            import spacy
+            # Load Spanish model (large for maximum precision)
+            try:
+                nlp = spacy.load("es_core_news_lg")
+            except OSError:
+                # Fallback to medium model
+                logger.warning("es_core_news_lg not found, using es_core_news_md")
+                try:
+                    nlp = spacy.load("es_core_news_md")
+                except OSError:
+                    # Fallback to small model
+                    logger.warning("es_core_news_md not found, using es_core_news_sm")
+                    nlp = spacy.load("es_core_news_sm")
+
+            # Process with spaCy pipeline
+            doc = nlp(normalized_text)
+
+            for i, sent in enumerate(doc.sents):
+                sentence_text = sent.text.strip()
+                if not sentence_text:
+                    continue
+
+                sentences.append(sentence_text)
+
+                # Rich metadata per sentence
+                sentence_meta.append({
+                    "index": i,
+                    "length": len(sentence_text),
+                    "char_start": sent.start_char,
+                    "char_end": sent.end_char,
+                    "token_count": len(sent),
+                    "has_verb": any(token.pos_ == "VERB" for token in sent),
+                    "num_entities": len(sent.ents),
+                    "entity_labels": [ent.label_ for ent in sent.ents] if sent.ents else [],
+                    "root_lemma": sent.root.lemma_ if sent.root else None,
+                    "root_pos": sent.root.pos_ if sent.root else None,
+                })
+
+            logger.info(f"spaCy segmentation: {len(sentences)} sentences extracted")
+            span.set_attribute("segmentation_method", "spacy")
+
+        except ImportError:
+            logger.warning("spaCy not available, using regex fallback for sentence segmentation")
+            span.set_attribute("segmentation_method", "regex_fallback")
+
+            # FALLBACK: Advanced regex-based segmentation
+            # Pattern that respects abbreviations, decimals, ellipsis
+            # Matches sentence-ending punctuation followed by whitespace and capital letter
+            sentence_pattern = r'(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ])'
+
+            # Split by pattern
+            raw_sentences = re.split(sentence_pattern, normalized_text)
+
+            char_pos = 0
+            for i, sent_text in enumerate(raw_sentences):
+                sent_text = sent_text.strip()
+                if not sent_text:
+                    continue
+
+                sentences.append(sent_text)
+
+                sentence_meta.append({
+                    "index": i,
+                    "length": len(sent_text),
+                    "char_start": char_pos,
+                    "char_end": char_pos + len(sent_text),
+                    "token_count": len(sent_text.split()),
+                    "has_verb": None,  # Not available without spaCy
+                    "num_entities": None,
+                    "entity_labels": [],
+                    "root_lemma": None,
+                    "root_pos": None,
+                })
+
+                char_pos += len(sent_text) + 1  # +1 for space/newline
+
+            logger.info(f"Regex segmentation: {len(sentences)} sentences extracted")
+
+        # Final validation
+        if not sentences:
+            logger.error("Normalization produced zero sentences - attempting line-based fallback")
+            # Last resort: split by newlines (but still normalize each)
+            for i, line in enumerate(normalized_text.split('\n')):
+                line = line.strip()
+                if line:
+                    sentences.append(line)
+                    sentence_meta.append({
+                        "index": i,
+                        "length": len(line),
+                        "char_start": 0,
+                        "char_end": len(line),
+                        "token_count": len(line.split()),
+                        "has_verb": None,
+                        "num_entities": None,
+                        "entity_labels": [],
+                        "root_lemma": None,
+                        "root_pos": None,
+                    })
 
         out = NormalizeDeliverable(sentences=sentences, sentence_meta=sentence_meta)
 

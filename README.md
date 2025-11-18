@@ -185,7 +185,7 @@ Sistemas previos en evaluación de políticas (e.g., análisis ToC con DAG valid
 
 F.A.R.F.A.N integra:
 
-1. **Determinismo de Pipeline**: 9 fases con postcondiciones verificables; fallo en cualquier fase → ABORT (no degradación gradual).
+1. **Determinismo de Pipeline**: Pipeline canónico con postcondiciones verificables; fallo en cualquier fase → ABORT (no degradación gradual).
 2. **Señales Transversales**: Registro centralizado de patrones, indicadores, umbrales desde cuestionario monolito hacia todos los ejecutores, con transporte memory:// (in-process) o HTTP (con circuit breaker).
 3. **Proveniencia Completa**: Cada token → `{page_id, bbox, byte_range, parser_id}` mediante Arrow IPC, permitiendo auditoría forense.
 4. **ArgRouter Extendido**: 30+ rutas especiales eliminan caídas silenciosas de parámetros (argrouter_coverage = 1.0).
@@ -199,77 +199,57 @@ F.A.R.F.A.N integra:
 
 ### 2.1. Pipeline de Procesamiento
 
-El sistema implementa un pipeline de 9 fases con dependencias secuenciales estrictas:
+El sistema implementa un pipeline canónico con punto de entrada único:
 
+#### **Phase-One: SPC Ingestion (Smart Policy Chunks)**
+
+**Punto de entrada canónico**: `CPPIngestionPipeline` en `src/saaaaaa/processing/spc_ingestion/__init__.py`
+
+SPC es el ÚNICO sistema de ingestión autorizado. Implementa 15 subprocesos internos que procesan documentos de política a través de análisis estructural, semántico, presupuestario y temporal:
+
+```python
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+
+# ÚNICO punto de entrada autorizado
+pipeline = CPPIngestionPipeline()
+result = await pipeline.process(
+    document_path=Path("policy.pdf"),
+    document_id="POL-2024-001",
+    title="Plan Nacional 2024"
+)
+
+# Resultado: CanonPolicyPackage con:
+# - chunks[] (SmartPolicyChunks con embeddings BGE-M3)
+# - chunk_graph (relaciones causales/jerárquicas)
+# - quality_metrics (provenance_completeness, structural_consistency, etc.)
+# - provenance_map (trazabilidad token→source)
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 1: Acquisition & Integrity                                 │
-│   Input:  file_path (Path)                                      │
-│   Output: manifest.initial {blake3_hash, mime_type, byte_size}  │
-│   Gate:   blake3_hash must be 64 hex chars                      │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 2: Format Decomposition                                    │
-│   Input:  manifest.initial                                      │
-│   Output: raw_object_tree {pages[], fonts[], images[]}          │
-│   Gate:   len(pages) > 0                                        │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 3: Structural Normalization (Policy-Aware)                 │
-│   Input:  raw_object_tree                                       │
-│   Output: policy_graph.prelim {Ejes, Programas, Proyectos}      │
-│   Gate:   structural_consistency_score ≥ 1.0                    │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 4: Text Extraction & Normalization                         │
-│   Input:  policy_graph.prelim                                   │
-│   Output: content_stream.v1 (Unicode NFC, stable offsets)       │
-│   Gate:   All text normalized to NFC                            │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 5: OCR (Conditional)                                       │
-│   Input:  content_stream.v1, image_pages[]                      │
-│   Output: ocr_layer {text, confidence_scores}                   │
-│   Gate:   avg(confidence) ≥ ocr_confidence_threshold (0.85)     │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 6: Tables & Budget Handling                                │
-│   Input:  content_stream.v1                                     │
-│   Output: tables_figures.subgraph {KPIs[], Budgets[]}           │
-│   Gate:   budget_consistency_score ≥ 0.95                       │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 7: Provenance Binding                                      │
-│   Input:  content_stream.v1, raw_object_tree                    │
-│   Output: provenance_map.arrow (token→page/bbox/byte_range)     │
-│   Gate:   provenance_completeness = 1.0 (NO partial coverage)   │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 8: Advanced Chunking                                       │
-│   Input:  content_stream.v1, policy_graph.prelim                │
-│   Output: chunk_graph {chunks[], edges[]}                       │
-│   Gate:   boundary_f1 ≥ 0.85, chunk_overlap ≤ 0.15              │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 9: Canonical Packing                                       │
-│   Input:  All outputs from phases 1-8                           │
-│   Output: CanonPolicyPackage (CPP) {content, provenance,        │
-│           chunk_graph, integrity_index}                         │
-│   Gate:   Merkle root recomputation matches stored hash         │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+**Garantías de SPC Phase-One**:
+
+1. **Provenance Completeness = 1.0**: Cada token trazable a fuente (CRITICAL gate)
+2. **Structural Consistency = 1.0**: Estructura de política perfectamente parseada (CRITICAL gate)
+3. **Boundary F1 ≥ 0.85**: Precisión de límites de chunks (HIGH gate)
+4. **Budget Consistency ≥ 0.95**: Coherencia de datos presupuestarios (MEDIUM gate)
+5. **Temporal Robustness ≥ 0.80**: Calidad de datos temporales (MEDIUM gate)
+
+**Subprocesos Internos de SPC** (NO expuestos como API externa):
+- Validación de integridad (BLAKE3)
+- Extracción y normalización de texto (Unicode NFC)
+- Análisis estructural (Ejes/Programas/Proyectos)
+- Chunking estratégico con BGE-M3 embeddings
+- Extracción de presupuestos y KPIs
+- Análisis temporal y geográfico
+- Generación de grafo de chunks
+- Empaquetado en CanonPolicyPackage
+
+**Output**: `CanonPolicyPackage` - formato canónico para downstream phases.
+
+---
 
 **Postcondiciones por Fase**: Cada fase declara invariantes verificables. Violación → ABORT con diagnóstico detallado (no "best effort").
 
-**Ejemplo de Fallo**: Si FASE 7 produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
+**Ejemplo de Fallo**: Si SPC produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
 
 ### 2.2. Sistema de Contratos
 
