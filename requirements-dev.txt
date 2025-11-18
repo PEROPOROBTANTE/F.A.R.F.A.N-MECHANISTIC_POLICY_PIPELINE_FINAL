@@ -15,6 +15,6 @@ pyright==1.1.395
 pytest==8.3.4
 pytest-asyncio==0.25.2
 pytest-cov==6.0.0
-pycycle==0.0.9
+pycycle==0.0.8
 ruff==0.9.1
 schemathesis==3.39.16
