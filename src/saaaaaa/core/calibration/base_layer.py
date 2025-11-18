@@ -12,7 +12,7 @@ by rigorous_calibration_triage.py using intrinsic_calibration_rubric.json.
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from .data_structures import LayerID, LayerScore
 
@@ -31,21 +31,30 @@ class BaseLayerEvaluator:
         score = evaluator.evaluate("pattern_extractor_v2")
     """
 
-    # Aggregation weights for base layer components
-    # These define how b_theory, b_impl, b_deploy combine into final @b score
-    THEORY_WEIGHT = 0.4   # Theoretical foundation importance
-    IMPL_WEIGHT = 0.4     # Implementation quality importance
-    DEPLOY_WEIGHT = 0.2   # Deployment maturity importance
+    # Default weights (used if not in JSON)
+    DEFAULT_THEORY_WEIGHT = 0.4
+    DEFAULT_IMPL_WEIGHT = 0.35
+    DEFAULT_DEPLOY_WEIGHT = 0.25
+
+    # Default quality thresholds (used if not in config)
+    DEFAULT_EXCELLENT_THRESHOLD = 0.8
+    DEFAULT_GOOD_THRESHOLD = 0.6
+    DEFAULT_ACCEPTABLE_THRESHOLD = 0.4
 
     # Penalty score for methods without calibration data
     UNCALIBRATED_PENALTY = 0.1
 
-    def __init__(self, intrinsic_calibration_path: Path | str) -> None:
+    def __init__(
+        self,
+        intrinsic_calibration_path: Path | str,
+        parameter_loader: Optional[Any] = None
+    ) -> None:
         """
         Initialize evaluator with intrinsic calibration data.
 
         Args:
             intrinsic_calibration_path: Path to intrinsic_calibration.json
+            parameter_loader: Optional MethodParameterLoader for loading thresholds
 
         Raises:
             FileNotFoundError: If calibration file doesn't exist
@@ -53,17 +62,44 @@ class BaseLayerEvaluator:
         """
         self.calibration_path = Path(intrinsic_calibration_path)
         self.calibrations: dict[str, dict[str, Any]] = {}
+
+        # These will be loaded from JSON (or use defaults)
+        self.theory_weight: float = self.DEFAULT_THEORY_WEIGHT
+        self.impl_weight: float = self.DEFAULT_IMPL_WEIGHT
+        self.deploy_weight: float = self.DEFAULT_DEPLOY_WEIGHT
+
+        # Quality thresholds (load from config if available)
+        if parameter_loader:
+            try:
+                base_thresholds = parameter_loader.get_base_layer_quality_thresholds()
+                self.excellent_threshold = base_thresholds.get("excellent", self.DEFAULT_EXCELLENT_THRESHOLD)
+                self.good_threshold = base_thresholds.get("good", self.DEFAULT_GOOD_THRESHOLD)
+                self.acceptable_threshold = base_thresholds.get("acceptable", self.DEFAULT_ACCEPTABLE_THRESHOLD)
+            except Exception as e:
+                logger.warning(
+                    "failed_to_load_quality_thresholds_using_defaults",
+                    extra={"error": str(e)}
+                )
+                self.excellent_threshold = self.DEFAULT_EXCELLENT_THRESHOLD
+                self.good_threshold = self.DEFAULT_GOOD_THRESHOLD
+                self.acceptable_threshold = self.DEFAULT_ACCEPTABLE_THRESHOLD
+        else:
+            # Use defaults
+            self.excellent_threshold = self.DEFAULT_EXCELLENT_THRESHOLD
+            self.good_threshold = self.DEFAULT_GOOD_THRESHOLD
+            self.acceptable_threshold = self.DEFAULT_ACCEPTABLE_THRESHOLD
+
         self._load()
 
         # Verify aggregation weights sum to 1.0
-        total_weight = self.THEORY_WEIGHT + self.IMPL_WEIGHT + self.DEPLOY_WEIGHT
+        total_weight = self.theory_weight + self.impl_weight + self.deploy_weight
         if abs(total_weight - 1.0) > 1e-6:
             raise ValueError(
                 f"Base layer component weights must sum to 1.0, got {total_weight}"
             )
 
     def _load(self) -> None:
-        """Load intrinsic calibration scores from JSON."""
+        """Load intrinsic calibration scores and weights from JSON."""
         if not self.calibration_path.exists():
             raise FileNotFoundError(
                 f"Intrinsic calibration file not found: {self.calibration_path}\n"
@@ -77,6 +113,32 @@ class BaseLayerEvaluator:
         if "methods" not in data:
             raise ValueError(
                 "Intrinsic calibration file must have 'methods' key at top level"
+            )
+
+        # Load weights from JSON if available
+        if "_base_weights" in data:
+            base_weights = data["_base_weights"]
+            self.theory_weight = float(base_weights.get("w_th", self.DEFAULT_THEORY_WEIGHT))
+            self.impl_weight = float(base_weights.get("w_imp", self.DEFAULT_IMPL_WEIGHT))
+            self.deploy_weight = float(base_weights.get("w_dep", self.DEFAULT_DEPLOY_WEIGHT))
+
+            logger.info(
+                "base_layer_weights_loaded",
+                extra={
+                    "theory_weight": self.theory_weight,
+                    "impl_weight": self.impl_weight,
+                    "deploy_weight": self.deploy_weight,
+                    "source": "intrinsic_calibration.json"
+                }
+            )
+        else:
+            logger.info(
+                "base_layer_weights_using_defaults",
+                extra={
+                    "theory_weight": self.theory_weight,
+                    "impl_weight": self.impl_weight,
+                    "deploy_weight": self.deploy_weight
+                }
             )
 
         # Load each method's calibration
@@ -142,7 +204,7 @@ class BaseLayerEvaluator:
 
         Formula:
             @b = w_theory · b_theory + w_impl · b_impl + w_deploy · b_deploy
-            where w_theory=0.4, w_impl=0.4, w_deploy=0.2
+            where w_theory=0.4, w_impl=0.35, w_deploy=0.25
         """
         # Check if method has calibration data
         if method_id not in self.calibrations:
@@ -173,17 +235,17 @@ class BaseLayerEvaluator:
 
         # Aggregate components using weights
         base_score = (
-            self.THEORY_WEIGHT * b_theory +
-            self.IMPL_WEIGHT * b_impl +
-            self.DEPLOY_WEIGHT * b_deploy
+            self.theory_weight * b_theory +
+            self.impl_weight * b_impl +
+            self.deploy_weight * b_deploy
         )
 
-        # Determine quality level
-        if base_score >= 0.8:
+        # Determine quality level using configurable thresholds
+        if base_score >= self.excellent_threshold:
             quality = "excellent"
-        elif base_score >= 0.6:
+        elif base_score >= self.good_threshold:
             quality = "good"
-        elif base_score >= 0.4:
+        elif base_score >= self.acceptable_threshold:
             quality = "acceptable"
         else:
             quality = "needs_improvement"
@@ -208,9 +270,9 @@ class BaseLayerEvaluator:
                 "b_theory": b_theory,
                 "b_impl": b_impl,
                 "b_deploy": b_deploy,
-                "theory_weight": self.THEORY_WEIGHT,
-                "impl_weight": self.IMPL_WEIGHT,
-                "deploy_weight": self.DEPLOY_WEIGHT,
+                "theory_weight": self.theory_weight,
+                "impl_weight": self.impl_weight,
+                "deploy_weight": self.deploy_weight,
             },
             rationale=f"Intrinsic quality: {quality} "
                      f"(theory={b_theory:.2f}, impl={b_impl:.2f}, deploy={b_deploy:.2f})",
@@ -218,7 +280,7 @@ class BaseLayerEvaluator:
                 "calibration_status": "loaded",
                 "layer": cal["layer"],
                 "last_updated": cal["last_updated"],
-                "formula": f"{self.THEORY_WEIGHT}*theory + {self.IMPL_WEIGHT}*impl + {self.DEPLOY_WEIGHT}*deploy",
+                "formula": f"{self.theory_weight}*theory + {self.impl_weight}*impl + {self.deploy_weight}*deploy",
                 "quality_level": quality,
             }
         )
@@ -250,7 +312,7 @@ class BaseLayerEvaluator:
         total = len(self.calibrations)
 
         # Count by layer
-        by_layer = {}
+        by_layer: dict[str, int] = {}
         for cal in self.calibrations.values():
             layer = cal["layer"]
             by_layer[layer] = by_layer.get(layer, 0) + 1

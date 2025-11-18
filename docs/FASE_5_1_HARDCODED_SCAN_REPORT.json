@@ -1,0 +1,4765 @@
+{
+  "Type_A_Scores": [
+    {
+      "type": "assignment",
+      "variable": "score",
+      "value": 0.0,
+      "line": 214,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "total_struct_score",
+      "value": 0.0,
+      "line": 265,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    }
+  ],
+  "Type_B_Thresholds": [
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 151,
+      "col": 11,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 160,
+      "col": 15,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 165,
+      "col": 11,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 172,
+      "col": 11,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 179,
+      "col": 11,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 187,
+      "col": 19,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 274,
+      "col": 11,
+      "context": "MetaLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 346,
+      "col": 11,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 357,
+      "col": 15,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 361,
+      "col": 15,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "GtE",
+      "value": 0.85,
+      "line": 101,
+      "col": 11,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "GtE",
+      "value": 0.7,
+      "line": 103,
+      "col": 13,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "GtE",
+      "value": 0.5,
+      "line": 105,
+      "col": 13,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 162,
+      "col": 19,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 162,
+      "col": 48,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 240,
+      "col": 56,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 246,
+      "col": 45,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 344,
+      "col": 15,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 386,
+      "col": 15,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 386,
+      "col": 25,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 386,
+      "col": 35,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 386,
+      "col": 45,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 409,
+      "col": 68,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 431,
+      "col": 46,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 65,
+      "col": 15,
+      "context": "LayerScore.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 129,
+      "col": 15,
+      "context": "ContextTuple.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 374,
+      "col": 15,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 381,
+      "col": 11,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 390,
+      "col": 19,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 135,
+      "col": 13,
+      "context": "MetaLayerEvaluator._compute_transparency",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 162,
+      "col": 40,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 171,
+      "col": 13,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 193,
+      "col": 11,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 96,
+      "col": 15,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 102,
+      "col": 15,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 120,
+      "col": 15,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.99,
+      "line": 152,
+      "col": 15,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 162,
+      "col": 15,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-09,
+      "line": 183,
+      "col": 11,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 199,
+      "col": 24,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 204,
+      "col": 15,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 254,
+      "col": 15,
+      "context": "CalibrationValidator.validate_config_files",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 277,
+      "col": 20,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 281,
+      "col": 16,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 284,
+      "col": 15,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 170,
+      "col": 16,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 106,
+      "col": 15,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.5,
+      "line": 108,
+      "col": 19,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 60,
+      "col": 11,
+      "context": "BaseLayerEvaluator.__init__",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "GtE",
+      "value": 0.8,
+      "line": 182,
+      "col": 11,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "GtE",
+      "value": 0.6,
+      "line": 184,
+      "col": 13,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "GtE",
+      "value": 0.4,
+      "line": 186,
+      "col": 13,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 0.0,
+      "line": 259,
+      "col": 11,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 181,
+      "col": 11,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 144,
+      "col": 19,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 151,
+      "col": 19,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 445,
+      "col": 11,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1.0,
+      "line": 445,
+      "col": 37,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 44,
+      "col": 16,
+      "context": "compute_base_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "LtE",
+      "value": 1.0,
+      "line": 116,
+      "col": 12,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 144,
+      "col": 11,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1.0,
+      "line": 144,
+      "col": 26,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Lt",
+      "value": 0.0,
+      "line": 159,
+      "col": 11,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1.0,
+      "line": 159,
+      "col": 26,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 217,
+      "col": 46,
+      "context": "compute_question_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 341,
+      "col": 9,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 359,
+      "col": 9,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 264,
+      "col": 11,
+      "context": "ContextualLayerEvaluator.evaluate_question_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.7,
+      "line": 266,
+      "col": 13,
+      "context": "ContextualLayerEvaluator.evaluate_question_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.3,
+      "line": 268,
+      "col": 13,
+      "context": "ContextualLayerEvaluator.evaluate_question_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 300,
+      "col": 11,
+      "context": "ContextualLayerEvaluator.evaluate_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.7,
+      "line": 302,
+      "col": 13,
+      "context": "ContextualLayerEvaluator.evaluate_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.3,
+      "line": 304,
+      "col": 13,
+      "context": "ContextualLayerEvaluator.evaluate_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 1.0,
+      "line": 336,
+      "col": 11,
+      "context": "ContextualLayerEvaluator.evaluate_policy_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.7,
+      "line": 338,
+      "col": 13,
+      "context": "ContextualLayerEvaluator.evaluate_policy_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.3,
+      "line": 340,
+      "col": 13,
+      "context": "ContextualLayerEvaluator.evaluate_policy_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Gt",
+      "value": 1e-06,
+      "line": 125,
+      "col": 19,
+      "context": "IntrinsicScoreLoader._ensure_loaded",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 95,
+      "col": 11,
+      "context": "ValidationReport.pass_rate",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 360,
+      "col": 11,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "comparison",
+      "operator": "Eq",
+      "value": 0.0,
+      "line": 363,
+      "col": 13,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "default_threshold",
+      "value": 0.7,
+      "line": 430,
+      "col": 8,
+      "context": "CalibrationValidator._get_threshold_for_method",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    }
+  ],
+  "Type_C_Weights": [
+    {
+      "type": "assignment",
+      "variable": "total_weight",
+      "value": 0.0,
+      "line": 206,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "weighted_score",
+      "value": 0.0,
+      "line": 207,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "THEORY_WEIGHT",
+      "value": 0.4,
+      "line": 36,
+      "col": 4,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "IMPL_WEIGHT",
+      "value": 0.4,
+      "line": 37,
+      "col": 4,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "DEPLOY_WEIGHT",
+      "value": 0.2,
+      "line": 38,
+      "col": 4,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "DEFAULT_W_THEORY",
+      "value": 0.4,
+      "line": 53,
+      "col": 4,
+      "context": "IntrinsicScoreLoader",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "DEFAULT_W_IMPL",
+      "value": 0.35,
+      "line": 54,
+      "col": 4,
+      "context": "IntrinsicScoreLoader",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "DEFAULT_W_DEPLOY",
+      "value": 0.25,
+      "line": 55,
+      "col": 4,
+      "context": "IntrinsicScoreLoader",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    }
+  ],
+  "Type_D_Constants": [
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 52,
+      "col": 33,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 53,
+      "col": 37,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 54,
+      "col": 39,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 60,
+      "col": 37,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 67,
+      "col": 30,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 73,
+      "col": 29,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 77,
+      "col": 44,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 101,
+      "col": 40,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 151,
+      "col": 28,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 160,
+      "col": 23,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 165,
+      "col": 30,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 172,
+      "col": 30,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 179,
+      "col": 30,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 187,
+      "col": 19,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 187,
+      "col": 35,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 20,
+      "col": 18,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 240,
+      "col": 28,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 247,
+      "col": 35,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 248,
+      "col": 31,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 249,
+      "col": 36,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 254,
+      "col": 35,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 255,
+      "col": 38,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 256,
+      "col": 36,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 262,
+      "col": 28,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 274,
+      "col": 28,
+      "context": "MetaLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 224,
+      "col": 18,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 346,
+      "col": 23,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 352,
+      "col": 40,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 357,
+      "col": 24,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 361,
+      "col": 24,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 374,
+      "col": 21,
+      "context": "ChoquetAggregationConfig.compute_hash",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 374,
+      "col": 28,
+      "context": "ChoquetAggregationConfig.compute_hash",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 379,
+      "col": 56,
+      "context": "ChoquetAggregationConfig.compute_hash",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 280,
+      "col": 18,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 411,
+      "col": 43,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 416,
+      "col": 32,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 419,
+      "col": 33,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 420,
+      "col": 30,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 421,
+      "col": 33,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 454,
+      "col": 56,
+      "context": "CalibrationSystemConfig.compute_system_hash",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 383,
+      "col": 18,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 43,
+      "col": 22,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 62,
+      "col": 22,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 77,
+      "col": 22,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 86,
+      "col": 22,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 98,
+      "col": 22,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 105,
+      "col": 24,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 122,
+      "col": 12,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 124,
+      "col": 54,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 125,
+      "col": 61,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "H",
+      "value": 0.0,
+      "line": 131,
+      "col": 12,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 131,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 133,
+      "col": 24,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "H",
+      "value": 1.0,
+      "line": 136,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 136,
+      "col": 20,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "H",
+      "value": 0.5,
+      "line": 138,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 138,
+      "col": 20,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "H",
+      "value": 0.0,
+      "line": 140,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 140,
+      "col": 20,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "inversions",
+      "value": 0.0,
+      "line": 144,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 144,
+      "col": 21,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 156,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 160,
+      "col": 38,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 162,
+      "col": 33,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 162,
+      "col": 12,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 162,
+      "col": 62,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 162,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 162,
+      "col": 69,
+      "context": "UnitLayerEvaluator._compute_structural_compliance",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 197,
+      "col": 26,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 202,
+      "col": 26,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 206,
+      "col": 23,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 207,
+      "col": 25,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 212,
+      "col": 47,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 214,
+      "col": 24,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "checks_passed",
+      "value": 0.0,
+      "line": 217,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 217,
+      "col": 32,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "checks_total",
+      "value": 0.0,
+      "line": 218,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 218,
+      "col": 31,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 221,
+      "col": 36,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 222,
+      "col": 55,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 223,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 226,
+      "col": 36,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 227,
+      "col": 59,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 228,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 231,
+      "col": 36,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 232,
+      "col": 56,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 233,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 236,
+      "col": 36,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 237,
+      "col": 57,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 238,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 240,
+      "col": 71,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 240,
+      "col": 78,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 242,
+      "col": 40,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 246,
+      "col": 60,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 246,
+      "col": 67,
+      "context": "UnitLayerEvaluator._compute_mandatory_sections",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 252,
+      "col": 66,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 254,
+      "col": 28,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 255,
+      "col": 26,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 256,
+      "col": 27,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 257,
+      "col": 27,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 265,
+      "col": 29,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 267,
+      "col": 35,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 268,
+      "col": 35,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 272,
+      "col": 16,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 280,
+      "col": 139,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 281,
+      "col": 28,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "linked_count",
+      "value": 0.0,
+      "line": 287,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 287,
+      "col": 23,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 296,
+      "col": 36,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "logic_violations",
+      "value": 0.0,
+      "line": 301,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 301,
+      "col": 27,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 309,
+      "col": 44,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 312,
+      "col": 40,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 314,
+      "col": 18,
+      "context": "UnitLayerEvaluator._compute_indicator_quality",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 331,
+      "col": 21,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 331,
+      "col": 56,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 336,
+      "col": 28,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 337,
+      "col": 33,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 343,
+      "col": 12,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 344,
+      "col": 38,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 344,
+      "col": 43,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "violations",
+      "value": 0.0,
+      "line": 349,
+      "col": 8,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 349,
+      "col": 21,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 351,
+      "col": 49,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 354,
+      "col": 50,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 356,
+      "col": 30,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 359,
+      "col": 41,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 359,
+      "col": 61,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 360,
+      "col": 44,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 360,
+      "col": 66,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 362,
+      "col": 30,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 364,
+      "col": 24,
+      "context": "UnitLayerEvaluator._compute_ppi_completeness",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 386,
+      "col": 20,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 386,
+      "col": 30,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 386,
+      "col": 40,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 386,
+      "col": 50,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 387,
+      "col": 23,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 388,
+      "col": 26,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 388,
+      "col": 34,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 388,
+      "col": 42,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 388,
+      "col": 50,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "placeholder_count",
+      "value": 0.0,
+      "line": 401,
+      "col": 12,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 401,
+      "col": 32,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "total_fields",
+      "value": 0.0,
+      "line": 402,
+      "col": 12,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 402,
+      "col": 27,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 405,
+      "col": 36,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 407,
+      "col": 45,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 409,
+      "col": 83,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 409,
+      "col": 90,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 411,
+      "col": 84,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 416,
+      "col": 44,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 418,
+      "col": 67,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 429,
+      "col": 57,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 430,
+      "col": 59,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 431,
+      "col": 55,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 431,
+      "col": 62,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 65,
+      "col": 15,
+      "context": "LayerScore.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 65,
+      "col": 36,
+      "context": "LayerScore.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 34,
+      "col": 18,
+      "context": "LayerScore",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 129,
+      "col": 15,
+      "context": "ContextTuple.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 129,
+      "col": 43,
+      "context": "ContextTuple.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 81,
+      "col": 18,
+      "context": "ContextTuple",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 144,
+      "col": 18,
+      "context": "CalibrationSubject",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 253,
+      "col": 19,
+      "context": "CompatibilityMapping.check_anti_universality",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 191,
+      "col": 18,
+      "context": "CompatibilityMapping",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 316,
+      "col": 43,
+      "context": "InteractionTerm.compute",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 317,
+      "col": 43,
+      "context": "InteractionTerm.compute",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 275,
+      "col": 18,
+      "context": "InteractionTerm",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 374,
+      "col": 15,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 374,
+      "col": 42,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 390,
+      "col": 19,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 390,
+      "col": 47,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 330,
+      "col": 18,
+      "context": "CalibrationResult",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 44,
+      "col": 33,
+      "context": "MetaLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 45,
+      "col": 27,
+      "context": "MetaLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 46,
+      "col": 29,
+      "context": "MetaLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 47,
+      "col": 32,
+      "context": "MetaLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 132,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_transparency",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 135,
+      "col": 22,
+      "context": "MetaLayerEvaluator._compute_transparency",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 138,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_transparency",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 162,
+      "col": 59,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 168,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 171,
+      "col": 22,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 174,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 191,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 193,
+      "col": 30,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 195,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 198,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 209,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 59,
+      "col": 19,
+      "context": "CalibrationValidator.validate_layer_completeness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 65,
+      "col": 15,
+      "context": "CalibrationValidator.validate_layer_completeness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 96,
+      "col": 24,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 102,
+      "col": 24,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "tolerance",
+      "value": 1e-09,
+      "line": 112,
+      "col": 8,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 113,
+      "col": 23,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 120,
+      "col": 30,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "all_policies_maximal",
+      "value": 1.0,
+      "line": 149,
+      "col": 8,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 149,
+      "col": 31,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 152,
+      "col": 48,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "all_policies_maximal",
+      "value": 0.0,
+      "line": 153,
+      "col": 16,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 153,
+      "col": 39,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 162,
+      "col": 30,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 181,
+      "col": 41,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 181,
+      "col": 67,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 181,
+      "col": 93,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 183,
+      "col": 28,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 199,
+      "col": 24,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 199,
+      "col": 40,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 204,
+      "col": 30,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 254,
+      "col": 34,
+      "context": "CalibrationValidator.validate_config_files",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 277,
+      "col": 20,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 277,
+      "col": 36,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 281,
+      "col": 16,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 281,
+      "col": 43,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 284,
+      "col": 30,
+      "context": "CalibrationValidator.validate_boundedness",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 71,
+      "col": 37,
+      "context": "PDTStructure",
+      "file": "src/saaaaaa/core/calibration/pdt_structure.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 88,
+      "col": 31,
+      "context": "PDTStructure",
+      "file": "src/saaaaaa/core/calibration/pdt_structure.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 92,
+      "col": 32,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "linear_contribution",
+      "value": 0.0,
+      "line": 96,
+      "col": 8,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 96,
+      "col": 30,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 101,
+      "col": 41,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "interaction_contribution",
+      "value": 0.0,
+      "line": 126,
+      "col": 8,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 126,
+      "col": 35,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 137,
+      "col": 52,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 138,
+      "col": 52,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 140,
+      "col": 45,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 141,
+      "col": 45,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 170,
+      "col": 16,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 170,
+      "col": 38,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 203,
+      "col": 32,
+      "context": "ChoquetAggregator.aggregate",
+      "file": "src/saaaaaa/core/calibration/choquet_aggregator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 52,
+      "col": 19,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 79,
+      "col": 19,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 106,
+      "col": 32,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 108,
+      "col": 27,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 114,
+      "col": 72,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 115,
+      "col": 15,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 159,
+      "col": 19,
+      "context": "ChainLayerEvaluator.compute_chain_quality",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "UNCALIBRATED_PENALTY",
+      "value": 0.1,
+      "line": 41,
+      "col": 4,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 60,
+      "col": 30,
+      "context": "BaseLayerEvaluator.__init__",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 95,
+      "col": 57,
+      "context": "BaseLayerEvaluator._load",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 96,
+      "col": 53,
+      "context": "BaseLayerEvaluator._load",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 97,
+      "col": 57,
+      "context": "BaseLayerEvaluator._load",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 164,
+      "col": 31,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 256,
+      "col": 50,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 256,
+      "col": 55,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 259,
+      "col": 19,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "avg_theory",
+      "value": 0.0,
+      "line": 264,
+      "col": 12,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "avg_impl",
+      "value": 0.0,
+      "line": 264,
+      "col": 12,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "avg_deploy",
+      "value": 0.0,
+      "line": 264,
+      "col": 12,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 264,
+      "col": 49,
+      "context": "BaseLayerEvaluator.get_coverage_stats",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 58,
+      "col": 35,
+      "context": "CongruenceLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 60,
+      "col": 73,
+      "context": "CongruenceLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 61,
+      "col": 23,
+      "context": "CongruenceLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 63,
+      "col": 83,
+      "context": "CongruenceLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 64,
+      "col": 23,
+      "context": "CongruenceLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 121,
+      "col": 23,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 128,
+      "col": 23,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 133,
+      "col": 29,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 136,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 139,
+      "col": 32,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 139,
+      "col": 37,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 146,
+      "col": 15,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 162,
+      "col": 23,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 170,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 173,
+      "col": 32,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 174,
+      "col": 25,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 176,
+      "col": 29,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 181,
+      "col": 25,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 183,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_semantic_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 222,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_fusion_validity",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 228,
+      "col": 23,
+      "context": "CongruenceLayerEvaluator._compute_fusion_validity",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 241,
+      "col": 66,
+      "context": "CongruenceLayerEvaluator._compute_fusion_validity",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 243,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_fusion_validity",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 254,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_fusion_validity",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "TOLERANCE",
+      "value": 1e-09,
+      "line": 136,
+      "col": 8,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 144,
+      "col": 28,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 151,
+      "col": 28,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 159,
+      "col": 34,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 162,
+      "col": 87,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 176,
+      "col": 56,
+      "context": "CalibrationEngine._compute_config_hash",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 177,
+      "col": 57,
+      "context": "CalibrationEngine._compute_config_hash",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 178,
+      "col": 53,
+      "context": "CalibrationEngine._compute_config_hash",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 197,
+      "col": 21,
+      "context": "CalibrationEngine._compute_graph_hash",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 300,
+      "col": 32,
+      "context": "CalibrationEngine._detect_interplay",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 358,
+      "col": 36,
+      "context": "CalibrationEngine._compute_layer_scores",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 359,
+      "col": 30,
+      "context": "CalibrationEngine._compute_layer_scores",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 360,
+      "col": 35,
+      "context": "CalibrationEngine._compute_layer_scores",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 361,
+      "col": 30,
+      "context": "CalibrationEngine._compute_layer_scores",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 362,
+      "col": 35,
+      "context": "CalibrationEngine._compute_layer_scores",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 363,
+      "col": 31,
+      "context": "CalibrationEngine._compute_layer_scores",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "linear_sum",
+      "value": 0.0,
+      "line": 404,
+      "col": 8,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 404,
+      "col": 21,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "interaction_sum",
+      "value": 0.0,
+      "line": 419,
+      "col": 8,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 419,
+      "col": 26,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 445,
+      "col": 30,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 445,
+      "col": 56,
+      "context": "CalibrationEngine._apply_fusion",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 560,
+      "col": 67,
+      "context": "CalibrationEngine.calibrate",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 44,
+      "col": 16,
+      "context": "compute_base_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 44,
+      "col": 32,
+      "context": "compute_base_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "has_hard_mismatch",
+      "value": 0.0,
+      "line": 81,
+      "col": 4,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 81,
+      "col": 24,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "has_soft_violation",
+      "value": 0.0,
+      "line": 82,
+      "col": 4,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 82,
+      "col": 25,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "has_warnings",
+      "value": 0.0,
+      "line": 83,
+      "col": 4,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 83,
+      "col": 19,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 86,
+      "col": 50,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "has_hard_mismatch",
+      "value": 1.0,
+      "line": 89,
+      "col": 8,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 89,
+      "col": 28,
+      "context": "compute_chain_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 116,
+      "col": 12,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 116,
+      "col": 35,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 124,
+      "col": 15,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 133,
+      "col": 15,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 140,
+      "col": 19,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 144,
+      "col": 19,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 144,
+      "col": 34,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 155,
+      "col": 40,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 156,
+      "col": 16,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 159,
+      "col": 19,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 159,
+      "col": 34,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 217,
+      "col": 58,
+      "context": "compute_question_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 252,
+      "col": 41,
+      "context": "compute_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "c_sem",
+      "value": 1.0,
+      "line": 305,
+      "col": 4,
+      "context": "compute_interplay_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 305,
+      "col": 12,
+      "context": "compute_interplay_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 330,
+      "col": 45,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 331,
+      "col": 39,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 332,
+      "col": 44,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 341,
+      "col": 25,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 348,
+      "col": 39,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 349,
+      "col": 44,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 350,
+      "col": 40,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 359,
+      "col": 22,
+      "context": "compute_meta_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 217,
+      "col": 61,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 223,
+      "col": 37,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 342,
+      "col": 33,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 343,
+      "col": 27,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 344,
+      "col": 29,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 345,
+      "col": 32,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 130,
+      "col": 116,
+      "context": "CompatibilityRegistry.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 131,
+      "col": 119,
+      "context": "CompatibilityRegistry.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 132,
+      "col": 113,
+      "context": "CompatibilityRegistry.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 264,
+      "col": 20,
+      "context": "ContextualLayerEvaluator.evaluate_question_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 300,
+      "col": 20,
+      "context": "ContextualLayerEvaluator.evaluate_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 336,
+      "col": 20,
+      "context": "ContextualLayerEvaluator.evaluate_policy_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 71,
+      "col": 23,
+      "context": "IntrinsicScoreLoader.__init__",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 125,
+      "col": 36,
+      "context": "IntrinsicScoreLoader._ensure_loaded",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 168,
+      "col": 27,
+      "context": "IntrinsicScoreLoader._ensure_loaded",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 174,
+      "col": 24,
+      "context": "IntrinsicScoreLoader._compute_statistics",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 175,
+      "col": 24,
+      "context": "IntrinsicScoreLoader._compute_statistics",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 176,
+      "col": 30,
+      "context": "IntrinsicScoreLoader._compute_statistics",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 182,
+      "col": 37,
+      "context": "IntrinsicScoreLoader._compute_statistics",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 184,
+      "col": 37,
+      "context": "IntrinsicScoreLoader._compute_statistics",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 186,
+      "col": 43,
+      "context": "IntrinsicScoreLoader._compute_statistics",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "assignment",
+      "variable": "warning_count",
+      "value": 0.0,
+      "line": 197,
+      "col": 8,
+      "context": "IntrinsicScoreLoader._validate_computed_methods",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 197,
+      "col": 24,
+      "context": "IntrinsicScoreLoader._validate_computed_methods",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 203,
+      "col": 37,
+      "context": "IntrinsicScoreLoader._validate_computed_methods",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 230,
+      "col": 57,
+      "context": "IntrinsicScoreLoader._compute_intrinsic_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 231,
+      "col": 53,
+      "context": "IntrinsicScoreLoader._compute_intrinsic_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 232,
+      "col": 57,
+      "context": "IntrinsicScoreLoader._compute_intrinsic_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 242,
+      "col": 23,
+      "context": "IntrinsicScoreLoader._compute_intrinsic_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 242,
+      "col": 32,
+      "context": "IntrinsicScoreLoader._compute_intrinsic_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 252,
+      "col": 19,
+      "context": "IntrinsicScoreLoader._compute_intrinsic_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.5,
+      "line": 254,
+      "col": 57,
+      "context": "IntrinsicScoreLoader.get_score",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 347,
+      "col": 19,
+      "context": "IntrinsicScoreLoader.is_calibrated",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 364,
+      "col": 19,
+      "context": "IntrinsicScoreLoader.is_excluded",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 323,
+      "col": 23,
+      "context": "LayerRequirementsResolver.should_skip_layer",
+      "file": "src/saaaaaa/core/calibration/layer_requirements.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 358,
+      "col": 17,
+      "context": "LayerRequirementsResolver.get_layer_summary",
+      "file": "src/saaaaaa/core/calibration/layer_requirements.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 359,
+      "col": 17,
+      "context": "LayerRequirementsResolver.get_layer_summary",
+      "file": "src/saaaaaa/core/calibration/layer_requirements.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 60,
+      "col": 23,
+      "context": "MethodParameterLoader.__init__",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 121,
+      "col": 27,
+      "context": "MethodParameterLoader._ensure_loaded",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 142,
+      "col": 41,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 148,
+      "col": 32,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 155,
+      "col": 69,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 268,
+      "col": 19,
+      "context": "MethodParameterLoader.executor_requires_all_layers",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 270,
+      "col": 77,
+      "context": "MethodParameterLoader.executor_requires_all_layers",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 95,
+      "col": 33,
+      "context": "ValidationReport.pass_rate",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 96,
+      "col": 19,
+      "context": "ValidationReport.pass_rate",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 206,
+      "col": 34,
+      "context": "CalibrationValidator.validate_method",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 207,
+      "col": 26,
+      "context": "CalibrationValidator.validate_method",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 289,
+      "col": 25,
+      "context": "CalibrationValidator.validate_method",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 295,
+      "col": 34,
+      "context": "CalibrationValidator.validate_method",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 328,
+      "col": 31,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 329,
+      "col": 31,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 353,
+      "col": 21,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 354,
+      "col": 21,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 355,
+      "col": 26,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 1.0,
+      "line": 356,
+      "col": 22,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 360,
+      "col": 30,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.0,
+      "line": 363,
+      "col": 23,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    }
+  ],
+  "Uncategorized": [
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 39,
+      "col": 17,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 40,
+      "col": 17,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 41,
+      "col": 17,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 42,
+      "col": 17,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 59,
+      "col": 35,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.02,
+      "line": 61,
+      "col": 32,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 62,
+      "col": 32,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 68,
+      "col": 25,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 69,
+      "col": 21,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 76,
+      "col": 43,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 109,
+      "col": 24,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 110,
+      "col": 22,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 111,
+      "col": 23,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 114,
+      "col": 32,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.85,
+      "line": 121,
+      "col": 37,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.2,
+      "line": 133,
+      "col": 26,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 134,
+      "col": 27,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 135,
+      "col": 29,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 138,
+      "col": 32,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 141,
+      "col": 32,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.01,
+      "line": 144,
+      "col": 36,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 145,
+      "col": 38,
+      "context": "UnitLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 151,
+      "col": 35,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 165,
+      "col": 37,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 172,
+      "col": 37,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 179,
+      "col": 37,
+      "context": "UnitLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 241,
+      "col": 26,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 242,
+      "col": 20,
+      "context": "MetaLayerConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 274,
+      "col": 35,
+      "context": "MetaLayerConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.122951,
+      "line": 307,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.098361,
+      "line": 308,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.081967,
+      "line": 309,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.065574,
+      "line": 310,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.04918,
+      "line": 311,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.081967,
+      "line": 312,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.065574,
+      "line": 313,
+      "col": 17,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.034426,
+      "line": 314,
+      "col": 13,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.15,
+      "line": 322,
+      "col": 24,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.12,
+      "line": 323,
+      "col": 24,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.08,
+      "line": 324,
+      "col": 20,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.05,
+      "line": 325,
+      "col": 20,
+      "context": "ChoquetAggregationConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 346,
+      "col": 30,
+      "context": "ChoquetAggregationConfig.__post_init__",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.9,
+      "line": 412,
+      "col": 35,
+      "context": "CalibrationSystemConfig",
+      "file": "src/saaaaaa/core/calibration/config.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.85,
+      "line": 101,
+      "col": 22,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 103,
+      "col": 24,
+      "context": "UnitLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 383,
+      "col": 30,
+      "context": "UnitLayerEvaluator._aggregate_components",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 421,
+      "col": 81,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.2,
+      "line": 434,
+      "col": 75,
+      "context": "UnitLayerEvaluator._compute_gaming_penalty",
+      "file": "src/saaaaaa/core/calibration/unit_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 223,
+      "col": 47,
+      "context": "CompatibilityMapping.get_question_score",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 231,
+      "col": 46,
+      "context": "CompatibilityMapping.get_dimension_score",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 239,
+      "col": 41,
+      "context": "CompatibilityMapping.get_policy_score",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.9,
+      "line": 241,
+      "col": 57,
+      "context": "CompatibilityMapping.check_anti_universality",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 381,
+      "col": 46,
+      "context": "CalibrationResult.__post_init__",
+      "file": "src/saaaaaa/core/calibration/data_structures.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 134,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_transparency",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 136,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_transparency",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.66,
+      "line": 170,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.33,
+      "line": 172,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_governance",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 200,
+      "col": 19,
+      "context": "MetaLayerEvaluator._compute_cost",
+      "file": "src/saaaaaa/core/calibration/meta_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-09,
+      "line": 112,
+      "col": 20,
+      "context": "CalibrationValidator.validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.99,
+      "line": 152,
+      "col": 55,
+      "context": "CalibrationValidator.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-09,
+      "line": 183,
+      "col": 35,
+      "context": "CalibrationValidator.validate_intrinsic_calibration",
+      "file": "src/saaaaaa/core/calibration/validators.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 91,
+      "col": 19,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.6,
+      "line": 109,
+      "col": 27,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 111,
+      "col": 27,
+      "context": "ChainLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/chain_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 36,
+      "col": 20,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 37,
+      "col": 18,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.2,
+      "line": 38,
+      "col": 20,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 41,
+      "col": 27,
+      "context": "BaseLayerEvaluator",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 60,
+      "col": 37,
+      "context": "BaseLayerEvaluator.__init__",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 182,
+      "col": 25,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.6,
+      "line": 184,
+      "col": 27,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 186,
+      "col": 27,
+      "context": "BaseLayerEvaluator.evaluate",
+      "file": "src/saaaaaa/core/calibration/base_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 142,
+      "col": 19,
+      "context": "CongruenceLayerEvaluator._compute_scale_congruence",
+      "file": "src/saaaaaa/core/calibration/congruence_layer.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-09,
+      "line": 136,
+      "col": 20,
+      "context": "CalibrationEngine._validate_fusion_weights",
+      "file": "src/saaaaaa/core/calibration/engine.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 138,
+      "col": 56,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.6,
+      "line": 141,
+      "col": 37,
+      "context": "compute_unit_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.9,
+      "line": 279,
+      "col": 44,
+      "context": "compute_policy_layer",
+      "file": "src/saaaaaa/core/calibration/layer_computers.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 291,
+      "col": 34,
+      "context": "CalibrationOrchestrator.calibrate",
+      "file": "src/saaaaaa/core/calibration/orchestrator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.1,
+      "line": 94,
+      "col": 37,
+      "context": "CompatibilityRegistry.get",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.9,
+      "line": 107,
+      "col": 60,
+      "context": "CompatibilityRegistry.validate_anti_universality",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 266,
+      "col": 22,
+      "context": "ContextualLayerEvaluator.evaluate_question_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 268,
+      "col": 22,
+      "context": "ContextualLayerEvaluator.evaluate_question_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 302,
+      "col": 22,
+      "context": "ContextualLayerEvaluator.evaluate_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 304,
+      "col": 22,
+      "context": "ContextualLayerEvaluator.evaluate_dimension_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 338,
+      "col": 22,
+      "context": "ContextualLayerEvaluator.evaluate_policy_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.3,
+      "line": 340,
+      "col": 22,
+      "context": "ContextualLayerEvaluator.evaluate_policy_layer",
+      "file": "src/saaaaaa/core/calibration/compatibility.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.4,
+      "line": 53,
+      "col": 23,
+      "context": "IntrinsicScoreLoader",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.35,
+      "line": 54,
+      "col": 21,
+      "context": "IntrinsicScoreLoader",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.25,
+      "line": 55,
+      "col": 23,
+      "context": "IntrinsicScoreLoader",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 1e-06,
+      "line": 125,
+      "col": 43,
+      "context": "IntrinsicScoreLoader._ensure_loaded",
+      "file": "src/saaaaaa/core/calibration/intrinsic_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.85,
+      "line": 145,
+      "col": 29,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 146,
+      "col": 24,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.55,
+      "line": 147,
+      "col": 30,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.85,
+      "line": 152,
+      "col": 63,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 153,
+      "col": 53,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.55,
+      "line": 154,
+      "col": 65,
+      "context": "MethodParameterLoader.get_quality_thresholds",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 158,
+      "col": 76,
+      "context": "MethodParameterLoader.get_validation_threshold_for_role",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 199,
+      "col": 74,
+      "context": "MethodParameterLoader.get_executor_threshold",
+      "file": "src/saaaaaa/core/calibration/parameter_loader.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.8,
+      "line": 366,
+      "col": 41,
+      "context": "CalibrationValidator.validate_plan_executors",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    },
+    {
+      "type": "constant",
+      "value": 0.7,
+      "line": 430,
+      "col": 28,
+      "context": "CalibrationValidator._get_threshold_for_method",
+      "file": "src/saaaaaa/core/calibration/validator.py"
+    }
+  ]
+}

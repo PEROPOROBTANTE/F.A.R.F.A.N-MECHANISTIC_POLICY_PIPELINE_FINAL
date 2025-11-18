@@ -1,0 +1,299 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "description": "Centralized method parameters including thresholds, priors, and configuration values",
+    "last_updated": "2025-11-18",
+    "migration_status": "initial_creation",
+    "note": "This file centralizes all method-specific parameters that were previously hardcoded"
+  },
+
+  "_global_thresholds": {
+    "quality_levels": {
+      "description": "Standard quality level thresholds for OVERALL calibration scores",
+      "excellent": 0.85,
+      "good": 0.70,
+      "acceptable": 0.55,
+      "insufficient": 0.0,
+      "source": "migrated_from_aggregation.py_and_scoring.py"
+    },
+    "base_layer_quality_levels": {
+      "description": "Quality level thresholds for BASE LAYER (@b) intrinsic scores",
+      "excellent": 0.8,
+      "good": 0.6,
+      "acceptable": 0.4,
+      "needs_improvement": 0.0,
+      "source": "migrated_from_base_layer.py:213-220",
+      "note": "These differ from overall quality levels because base layer scores represent intrinsic method quality, not final aggregated calibration"
+    },
+    "validation_thresholds_by_role": {
+      "description": "Minimum calibration scores required for method validation by role type",
+      "analyzer": 0.70,
+      "processor": 0.50,
+      "ingest": 0.50,
+      "structure": 0.50,
+      "extract": 0.50,
+      "aggregate": 0.65,
+      "report": 0.55,
+      "utility": 0.30,
+      "orchestrator": 0.40,
+      "meta": 0.40,
+      "transform": 0.40,
+      "unknown": 0.70
+    }
+  },
+
+  "_executor_thresholds": {
+    "description": "Validation thresholds for the 30 executor methods (D1Q1-D6Q5)",
+    "note": "All executors require high confidence as they produce final question scores",
+    "default_executor_threshold": 0.70,
+    "executors": {
+      "D1Q1_Executor": {
+        "threshold": 0.70,
+        "rationale": "Baseline quantification requires high precision",
+        "requires_all_8_layers": true
+      },
+      "D1Q2_Executor": {
+        "threshold": 0.65,
+        "rationale": "Normalization and sources - moderate rigor",
+        "requires_all_8_layers": true
+      },
+      "D1Q3_Executor": {
+        "threshold": 0.70,
+        "rationale": "Critical baseline analysis",
+        "requires_all_8_layers": true
+      },
+      "D1Q4_Executor": {
+        "threshold": 0.70,
+        "rationale": "Baseline verification",
+        "requires_all_8_layers": true
+      },
+      "D1Q5_Executor": {
+        "threshold": 0.70,
+        "rationale": "Baseline completeness check",
+        "requires_all_8_layers": true
+      },
+      "D2Q1_Executor": {
+        "threshold": 0.75,
+        "rationale": "Theory of change - high criticality",
+        "requires_all_8_layers": true
+      },
+      "D2Q2_Executor": {
+        "threshold": 0.75,
+        "rationale": "Theory of change validation",
+        "requires_all_8_layers": true
+      },
+      "D2Q3_Executor": {
+        "threshold": 0.75,
+        "rationale": "Causal mechanisms",
+        "requires_all_8_layers": true
+      },
+      "D2Q4_Executor": {
+        "threshold": 0.70,
+        "rationale": "Theory of change coherence",
+        "requires_all_8_layers": true
+      },
+      "D2Q5_Executor": {
+        "threshold": 0.70,
+        "rationale": "Theory of change completeness",
+        "requires_all_8_layers": true
+      },
+      "D3Q1_Executor": {
+        "threshold": 0.70,
+        "rationale": "Indicator analysis",
+        "requires_all_8_layers": true
+      },
+      "D3Q2_Executor": {
+        "threshold": 0.70,
+        "rationale": "Indicator quality",
+        "requires_all_8_layers": true
+      },
+      "D3Q3_Executor": {
+        "threshold": 0.70,
+        "rationale": "Indicator coverage",
+        "requires_all_8_layers": true
+      },
+      "D3Q4_Executor": {
+        "threshold": 0.65,
+        "rationale": "Indicator validation",
+        "requires_all_8_layers": true
+      },
+      "D3Q5_Executor": {
+        "threshold": 0.65,
+        "rationale": "Indicator completeness",
+        "requires_all_8_layers": true
+      },
+      "D4Q1_Executor": {
+        "threshold": 0.80,
+        "rationale": "Financial viability - very high criticality",
+        "requires_all_8_layers": true
+      },
+      "D4Q2_Executor": {
+        "threshold": 0.80,
+        "rationale": "Budget coherence - very high criticality",
+        "requires_all_8_layers": true
+      },
+      "D4Q3_Executor": {
+        "threshold": 0.75,
+        "rationale": "Financial sustainability",
+        "requires_all_8_layers": true
+      },
+      "D4Q4_Executor": {
+        "threshold": 0.75,
+        "rationale": "Financial traceability",
+        "requires_all_8_layers": true
+      },
+      "D4Q5_Executor": {
+        "threshold": 0.75,
+        "rationale": "Financial completeness",
+        "requires_all_8_layers": true
+      },
+      "D5Q1_Executor": {
+        "threshold": 0.70,
+        "rationale": "Participation analysis",
+        "requires_all_8_layers": true
+      },
+      "D5Q2_Executor": {
+        "threshold": 0.70,
+        "rationale": "Participation mechanisms",
+        "requires_all_8_layers": true
+      },
+      "D5Q3_Executor": {
+        "threshold": 0.65,
+        "rationale": "Participation inclusivity",
+        "requires_all_8_layers": true
+      },
+      "D5Q4_Executor": {
+        "threshold": 0.65,
+        "rationale": "Participation validation",
+        "requires_all_8_layers": true
+      },
+      "D5Q5_Executor": {
+        "threshold": 0.65,
+        "rationale": "Participation completeness",
+        "requires_all_8_layers": true
+      },
+      "D6Q1_Executor": {
+        "threshold": 0.70,
+        "rationale": "Sustainability analysis",
+        "requires_all_8_layers": true
+      },
+      "D6Q2_Executor": {
+        "threshold": 0.70,
+        "rationale": "Environmental impact",
+        "requires_all_8_layers": true
+      },
+      "D6Q3_Executor": {
+        "threshold": 0.70,
+        "rationale": "Long-term viability",
+        "requires_all_8_layers": true
+      },
+      "D6Q4_Executor": {
+        "threshold": 0.65,
+        "rationale": "Sustainability validation",
+        "requires_all_8_layers": true
+      },
+      "D6Q5_Executor": {
+        "threshold": 0.65,
+        "rationale": "Sustainability completeness",
+        "requires_all_8_layers": true
+      }
+    }
+  },
+
+  "methods": {
+    "semantic_chunking_policy.SemanticChunker.chunk": {
+      "similarity_threshold": {
+        "value": 0.80,
+        "source": "migrated_from_semantic_chunking_policy.py:806",
+        "description": "Semantic similarity threshold for chunking",
+        "needs_validation": false
+      }
+    },
+    "derek_beach.BeachAnalyzer.classify_evidence_strength": {
+      "evidence_type_base_scores": {
+        "strong": 0.90,
+        "moderate": 0.70,
+        "weak": 0.50,
+        "default": 0.60,
+        "source": "migrated_from_derek_beach.py:1366-1372",
+        "description": "Base confidence scores by evidence type",
+        "needs_validation": false
+      }
+    },
+    "derek_beach.BeachAnalyzer.alignment_threshold": {
+      "value": 0.60,
+      "source": "migrated_from_derek_beach.py:2725",
+      "description": "Threshold for mechanism alignment",
+      "needs_validation": false
+    },
+    "aggregation.DimensionAggregator.aggregate": {
+      "quality_thresholds": {
+        "excellent": 0.85,
+        "good": 0.70,
+        "acceptable": 0.55,
+        "source": "migrated_from_aggregation.py:375-377",
+        "description": "Uses _global_thresholds.quality_levels",
+        "needs_validation": false
+      }
+    },
+    "financiero_viabilidad_tablas.TableAnalyzer.similarity_threshold": {
+      "value": 0.85,
+      "source": "migrated_from_financiero_viabilidad_tablas.py:879",
+      "description": "Similarity threshold for table matching",
+      "needs_validation": false
+    },
+    "financiero_viabilidad_tablas.TableAnalyzer.confidence_threshold": {
+      "value": 0.70,
+      "source": "migrated_from_financiero_viabilidad_tablas.py:2417",
+      "description": "Minimum confidence for financial table validation",
+      "needs_validation": false
+    },
+    "signal_loader.SignalLoader.confidence_levels": {
+      "min_confidence": 0.85,
+      "max_confidence": 0.85,
+      "avg_confidence": 0.85,
+      "source": "migrated_from_signal_loader.py:172-174",
+      "description": "Signal confidence levels",
+      "needs_validation": true,
+      "note": "All three values identical - likely needs refinement"
+    }
+  },
+
+  "_migration_notes": {
+    "total_hardcoded_found": "100+ instances",
+    "categories": [
+      "quality_thresholds",
+      "weights",
+      "hard_gates",
+      "ml_parameters",
+      "meta_layer_thresholds",
+      "chain_layer_mappings",
+      "default_parameters"
+    ],
+    "migration_priority": {
+      "high": [
+        "quality_level_thresholds (0.85, 0.70, 0.55)",
+        "executor_validation_thresholds",
+        "derek_beach_confidence_scores",
+        "financial_viability_thresholds"
+      ],
+      "medium": [
+        "semantic_chunking_parameters",
+        "signal_loader_confidence",
+        "ml_hyperparameters"
+      ],
+      "low": [
+        "default_function_parameters",
+        "utility_method_parameters"
+      ]
+    },
+    "files_with_most_hardcoded": [
+      "config.py (50+ parameters - weights, thresholds, gates)",
+      "aggregation.py (12+ threshold values)",
+      "derek_beach.py (30+ confidence/score values)",
+      "scoring.py (10+ threshold and weight values)",
+      "executors.py (8+ ML and return values)",
+      "meta_layer.py (9 discrete score values)"
+    ]
+  }
+}
