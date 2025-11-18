@@ -60,6 +60,8 @@ class DimensionAggregationConfig(BaseModel):
     area_id: str = Field(..., pattern=r'^PA\d{2}$')
     weights: AggregationWeights | None = None
     expected_question_count: int = Field(default=5, ge=1, le=10)
+    group_by_keys: list[str] = Field(default=['dimension', 'policy_area'], min_length=1)
+
 
 class AreaAggregationConfig(BaseModel):
     """Configuration for area-level aggregation."""
@@ -69,6 +71,8 @@ class AreaAggregationConfig(BaseModel):
     area_id: str = Field(..., pattern=r'^PA\d{2}$')
     expected_dimension_count: int = Field(default=6, ge=1, le=10)
     weights: AggregationWeights | None = None
+    group_by_keys: list[str] = Field(default=['area_id'], min_length=1)
+
 
 class ClusterAggregationConfig(BaseModel):
     """Configuration for cluster-level aggregation."""
@@ -78,6 +82,7 @@ class ClusterAggregationConfig(BaseModel):
     cluster_id: str = Field(..., pattern=r'^CL\d{2}$')
     policy_area_ids: list[str] = Field(..., min_length=1)
     weights: AggregationWeights | None = None
+    group_by_keys: list[str] = Field(default=['cluster_id'], min_length=1)
 
     @field_validator('policy_area_ids')
     @classmethod

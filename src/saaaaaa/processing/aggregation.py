@@ -24,8 +24,54 @@ Architecture:
 from __future__ import annotations
 
 import logging
+from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable, TypeVar, Iterable
+
+T = TypeVar('T')
+
+def group_by(items: Iterable[T], key_func: Callable[[T], tuple]) -> dict[tuple, list[T]]:
+    """Groups a list of items by a key function."""
+    grouped = defaultdict(list)
+    for item in items:
+        grouped[key_func(item)].append(item)
+    return dict(grouped)
+
+def validate_scored_results(results: list[dict[str, Any]]) -> list[ScoredResult]:
+    """
+    Validates a list of dictionaries and converts them to ScoredResult objects.
+
+    Args:
+        results: A list of dictionaries representing scored results.
+
+    Returns:
+        A list of ScoredResult objects.
+
+    Raises:
+        ValidationError: If any of the dictionaries are invalid.
+    """
+    validated_results = []
+    required_keys = {
+        "question_global": int, "base_slot": str, "policy_area": str, "dimension": str,
+        "score": float, "quality_level": str, "evidence": dict, "raw_results": dict
+    }
+    for i, res_dict in enumerate(results):
+        missing_keys = set(required_keys.keys()) - set(res_dict.keys())
+        if missing_keys:
+            raise ValidationError(
+                f"Invalid ScoredResult at index {i}: missing keys {missing_keys}"
+            )
+        for key, expected_type in required_keys.items():
+            if not isinstance(res_dict[key], expected_type):
+                raise ValidationError(
+                    f"Invalid type for key '{key}' at index {i}. "
+                    f"Expected {expected_type}, got {type(res_dict[key])}."
+                )
+        try:
+            validated_results.append(ScoredResult(**res_dict))
+        except TypeError as e:
+            raise ValidationError(f"Invalid ScoredResult at index {i}: {e}") from e
+    return validated_results
 
 # Import canonical notation for validation
 try:
@@ -69,6 +115,7 @@ class AreaScore:
     dimension_scores: list[DimensionScore]
     validation_passed: bool = True
     validation_details: dict[str, Any] = field(default_factory=dict)
+    cluster_id: str | None = None  # Added for grouping
 
 @dataclass
 class ClusterScore:
@@ -395,36 +442,33 @@ class DimensionAggregator:
 
     def aggregate_dimension(
         self,
-        dimension_id: str,
-        area_id: str,
         scored_results: list[ScoredResult],
-        weights: list[float] | None = None
+        group_by_values: dict[str, Any],
+        weights: list[float] | None = None,
     ) -> DimensionScore:
         """
         Aggregate a single dimension from micro question results.
 
         Args:
-            dimension_id: Dimension ID (e.g., "DIM01")
-            area_id: Policy area ID (e.g., "PA01")
-            scored_results: List of scored results for this dimension/area
-            weights: Optional weights for questions (defaults to equal weights)
+            scored_results: List of scored results for this dimension/area.
+            group_by_values: Dictionary of grouping keys and their values.
+            weights: Optional weights for questions (defaults to equal weights).
 
         Returns:
-            DimensionScore with aggregated score and quality level
+            DimensionScore with aggregated score and quality level.
 
         Raises:
-            ValidationError: If validation fails
-            CoverageError: If coverage is insufficient
+            ValidationError: If validation fails.
+            CoverageError: If coverage is insufficient.
         """
+        dimension_id = group_by_values.get("dimension", "UNKNOWN")
+        area_id = group_by_values.get("policy_area", "UNKNOWN")
         logger.info(f"Aggregating dimension {dimension_id} for area {area_id}")
 
         validation_details = {}
 
-        # Filter results for this dimension/area
-        dim_results = [
-            r for r in scored_results
-            if r.dimension == dimension_id and r.policy_area == area_id
-        ]
+        # In this context, scored_results are already grouped, so we can use them directly.
+        dim_results = scored_results
 
         # Validate coverage
         try:
@@ -505,6 +549,32 @@ class DimensionAggregator:
             validation_passed=True,
             validation_details=validation_details
         )
+
+    def run(
+        self,
+        scored_results: list[ScoredResult],
+        group_by_keys: list[str]
+    ) -> list[DimensionScore]:
+        """
+        Run the dimension aggregation process.
+
+        Args:
+            scored_results: List of all scored results.
+            group_by_keys: List of keys to group by.
+
+        Returns:
+            A list of DimensionScore objects.
+        """
+        key_func = lambda r: tuple(getattr(r, key) for key in group_by_keys)
+        grouped_results = group_by(scored_results, key_func)
+
+        dimension_scores = []
+        for group_key, results in grouped_results.items():
+            group_by_values = dict(zip(group_by_keys, group_key))
+            score = self.aggregate_dimension(results, group_by_values)
+            dimension_scores.append(score)
+
+        return dimension_scores
 
 class AreaPolicyAggregator:
     """
@@ -686,31 +756,31 @@ class AreaPolicyAggregator:
 
     def aggregate_area(
         self,
-        area_id: str,
-        dimension_scores: list[DimensionScore]
+        dimension_scores: list[DimensionScore],
+        group_by_values: dict[str, Any],
+        weights: list[float] | None = None,
     ) -> AreaScore:
         """
         Aggregate a single policy area from dimension scores.
 
         Args:
-            area_id: Policy area ID (e.g., "PA01")
-            dimension_scores: List of dimension scores for this area
+            dimension_scores: List of dimension scores for this area.
+            group_by_values: Dictionary of grouping keys and their values.
+            weights: Optional list of weights for dimension scores.
 
         Returns:
-            AreaScore with aggregated score and quality level
+            AreaScore with aggregated score and quality level.
 
         Raises:
-            ValidationError: If validation fails
+            ValidationError: If validation fails.
         """
+        area_id = group_by_values.get("area_id", "UNKNOWN")
         logger.info(f"Aggregating policy area {area_id}")
 
         validation_details = {}
 
-        # Filter dimension scores for this area
-        area_dim_scores = [
-            d for d in dimension_scores
-            if d.area_id == area_id
-        ]
+        # The dimension_scores are already grouped.
+        area_dim_scores = dimension_scores
 
         # Validate hermeticity
         try:
@@ -762,8 +832,9 @@ class AreaPolicyAggregator:
             "normalized": normalized
         }
 
-        # Calculate average score
-        avg_score = sum(d.score for d in area_dim_scores) / len(area_dim_scores)
+        # Calculate weighted average score
+        scores = [d.score for d in area_dim_scores]
+        avg_score = DimensionAggregator().calculate_weighted_average(scores, weights=weights)
 
         # Apply rubric thresholds
         quality_level = self.apply_rubric_thresholds(avg_score)
@@ -793,6 +864,33 @@ class AreaPolicyAggregator:
             validation_passed=True,
             validation_details=validation_details
         )
+
+    def run(
+        self,
+        dimension_scores: list[DimensionScore],
+        group_by_keys: list[str]
+    ) -> list[AreaScore]:
+        """
+        Run the area aggregation process.
+
+        Args:
+            dimension_scores: List of all dimension scores.
+            group_by_keys: List of keys to group by.
+
+        Returns:
+            A list of AreaScore objects.
+        """
+        key_func = lambda d: tuple(getattr(d, key) for key in group_by_keys)
+        grouped_scores = group_by(dimension_scores, key_func)
+
+        area_scores = []
+        for group_key, scores in grouped_scores.items():
+            group_by_values = dict(zip(group_by_keys, group_key))
+            # Weights are not currently defined for area aggregation, so we pass None.
+            score = self.aggregate_area(scores, group_by_values, weights=None)
+            area_scores.append(score)
+
+        return area_scores
 
 class ClusterAggregator:
     """
@@ -982,32 +1080,32 @@ class ClusterAggregator:
 
     def aggregate_cluster(
         self,
-        cluster_id: str,
         area_scores: list[AreaScore],
-        weights: list[float] | None = None
+        group_by_values: dict[str, Any],
+        weights: list[float] | None = None,
     ) -> ClusterScore:
         """
         Aggregate a single MESO cluster from area scores.
 
         Args:
-            cluster_id: Cluster ID (e.g., "CL01")
-            area_scores: List of area scores for this cluster
-            weights: Optional cluster-specific weights
+            area_scores: List of area scores for this cluster.
+            group_by_values: Dictionary of grouping keys and their values.
+            weights: Optional cluster-specific weights.
 
         Returns:
-            ClusterScore with aggregated score and coherence
+            ClusterScore with aggregated score and coherence.
 
         Raises:
-            ValidationError: If validation fails
+            ValidationError: If validation fails.
         """
+        cluster_id = group_by_values.get("cluster_id", "UNKNOWN")
         logger.info(f"Aggregating cluster {cluster_id}")
 
         validation_details = {}
 
         # Get cluster definition
         cluster_def = next(
-            (c for c in self.clusters if c["cluster_id"] == cluster_id),
-            None
+            (c for c in self.clusters if c["cluster_id"] == cluster_id), None
         )
 
         if not cluster_def:
@@ -1020,17 +1118,14 @@ class ClusterAggregator:
                 coherence=0.0,
                 area_scores=[],
                 validation_passed=False,
-                validation_details={"error": "Definition not found", "type": "config"}
+                validation_details={"error": "Definition not found", "type": "config"},
             )
 
         cluster_name = cluster_def["i18n"]["keys"]["label_es"]
         expected_areas = cluster_def["policy_area_ids"]
 
-        # Filter area scores for this cluster
-        cluster_area_scores = [
-            a for a in area_scores
-            if a.area_id in expected_areas
-        ]
+        # The area_scores are already grouped.
+        cluster_area_scores = area_scores
 
         # Validate hermeticity
         try:
@@ -1111,6 +1206,44 @@ class ClusterAggregator:
             validation_passed=True,
             validation_details=validation_details
         )
+
+    def run(
+        self,
+        area_scores: list[AreaScore],
+        cluster_definitions: list[dict[str, Any]]
+    ) -> list[ClusterScore]:
+        """
+        Run the cluster aggregation process.
+
+        Args:
+            area_scores: List of all area scores.
+            cluster_definitions: List of cluster definitions from the monolith.
+
+        Returns:
+            A list of ClusterScore objects.
+        """
+        # Create a mapping from area_id to cluster_id
+        area_to_cluster = {}
+        for cluster in cluster_definitions:
+            for area_id in cluster["policy_area_ids"]:
+                area_to_cluster[area_id] = cluster["cluster_id"]
+
+        # Assign cluster_id to each area score
+        for score in area_scores:
+            score.cluster_id = area_to_cluster.get(score.area_id)
+
+        # Group by cluster_id
+        key_func = lambda a: (a.cluster_id,)
+        grouped_scores = group_by([s for s in area_scores if hasattr(s, 'cluster_id')], key_func)
+
+        cluster_scores = []
+        for group_key, scores in grouped_scores.items():
+            cluster_id = group_key[0]
+            group_by_values = {"cluster_id": cluster_id}
+            score = self.aggregate_cluster(scores, group_by_values)
+            cluster_scores.append(score)
+
+        return cluster_scores
 
 class MacroAggregator:
     """
