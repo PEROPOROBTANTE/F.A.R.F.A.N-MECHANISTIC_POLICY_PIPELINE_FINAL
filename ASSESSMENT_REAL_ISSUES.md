@@ -31,7 +31,7 @@ Here's what's **actually** broken vs. what I claimed was fixed.
 ### 4. Calibration Module Imports - TRULY FIXED ✅
 - **Fixed**: Added missing classes to `data_structures.py`
 - **Added**: CalibrationConfigError, MethodRole, ComputationGraph, etc.
-- **Verification**: `PYTHONPATH=src python3 -c "from saaaaaa.core.calibration import engine"` → works
+- **Verification**: `python3 -c "from saaaaaa.core.calibration import engine"` → works
 - **Status**: CONFIRMED WORKING
 
 ### 5. Auto-Fixed Linting - PARTIAL SUCCESS ⚠️

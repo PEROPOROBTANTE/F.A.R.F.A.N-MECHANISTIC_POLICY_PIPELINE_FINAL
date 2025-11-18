@@ -3223,6 +3223,8 @@ class D1Q1_Executor(AdvancedDataFlowExecutor):
             ('SemanticAnalyzer', '_classify_policy_domain'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
             ('BayesianNumericalAnalyzer', '_classify_evidence_strength'),
+            ('Dimension1Analyzer', 'analyze_question_1'),
+            ('Dimension1Validator', 'validate_question_1'),
         ]
 
     def execute(self, doc, method_executor):
@@ -3280,6 +3282,8 @@ class D1Q2_Executor(AdvancedDataFlowExecutor):
             ('BayesianConfidenceCalculator', 'calculate_posterior'),
             ('PolicyAnalysisEmbedder', '_extract_numerical_values'),
             ('BayesianNumericalAnalyzer', '_compute_coherence'),
+            ('Dimension1Analyzer', 'analyze_question_2'),
+            ('Dimension1Validator', 'validate_question_2'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3325,6 +3329,8 @@ class D1Q3_Executor(AdvancedDataFlowExecutor):
             ('FinancialAuditor', 'trace_financial_allocation'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
             ('BayesianNumericalAnalyzer', 'compare_policies'),
+            ('Dimension1Analyzer', 'analyze_question_3'),
+            ('Dimension1Validator', 'validate_question_3'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3364,6 +3370,8 @@ class D1Q4_Executor(AdvancedDataFlowExecutor):
             ('TextMiningEngine', '_identify_critical_links'),
             ('PDETMunicipalPlanAnalyzer', 'identify_responsible_entities'),
             ('PDETMunicipalPlanAnalyzer', '_classify_entity_type'),
+            ('Dimension1Analyzer', 'analyze_question_4'),
+            ('Dimension1Validator', 'validate_question_4'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3401,6 +3409,8 @@ class D1Q5_Executor(AdvancedDataFlowExecutor):
             ('TemporalLogicVerifier', '_classify_temporal_type'),
             ('SemanticAnalyzer', '_calculate_semantic_complexity'),
             ('PerformanceAnalyzer', '_calculate_throughput_metrics'),
+            ('Dimension1Analyzer', 'analyze_question_5'),
+            ('Dimension1Validator', 'validate_question_5'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3444,6 +3454,8 @@ class D2Q1_Executor(AdvancedDataFlowExecutor):
             ('TemporalLogicVerifier', '_check_deadline_constraints'),
             ('PolicyContradictionDetector', '_detect_temporal_conflicts'),
             ('SemanticProcessor', '_detect_table'),
+            ('Dimension2Analyzer', 'analyze_question_1'),
+            ('Dimension2Validator', 'validate_question_1'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3490,6 +3502,8 @@ class D2Q2_Executor(AdvancedDataFlowExecutor):
             ('TeoriaCambio', '_es_conexion_valida'),
             ('TextMiningEngine', 'diagnose_critical_links'),
             ('TextMiningEngine', '_analyze_link_text'),
+            ('Dimension2Analyzer', 'analyze_question_2'),
+            ('Dimension2Validator', 'validate_question_2'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3528,6 +3542,8 @@ class D2Q3_Executor(AdvancedDataFlowExecutor):
             ('PolicyContradictionDetector', '_get_context_window'),
             ('PolicyAnalysisEmbedder', 'semantic_search'),
             ('SemanticAnalyzer', '_classify_policy_domain'),
+            ('Dimension2Analyzer', 'analyze_question_3'),
+            ('Dimension2Validator', 'validate_question_3'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3569,6 +3585,8 @@ class D2Q4_Executor(AdvancedDataFlowExecutor):
             ('PolicyContradictionDetector', '_get_context_window'),
             ('BayesianConfidenceCalculator', 'calculate_posterior'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
+            ('Dimension2Analyzer', 'analyze_question_4'),
+            ('Dimension2Validator', 'validate_question_4'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3611,6 +3629,8 @@ class D2Q5_Executor(AdvancedDataFlowExecutor):
             ('TeoriaCambio', '_encontrar_caminos_completos'),
             ('TextMiningEngine', 'diagnose_critical_links'),
             ('TextMiningEngine', '_analyze_link_text'),
+            ('Dimension2Analyzer', 'analyze_question_5'),
+            ('Dimension2Validator', 'validate_question_5'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3652,6 +3672,8 @@ class D3Q1_Executor(AdvancedDataFlowExecutor):
             ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
             ('PolicyAnalysisEmbedder', '_extract_numerical_values'),
+            ('Dimension3Analyzer', 'analyze_question_1'),
+            ('Dimension3Validator', 'validate_question_1'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3694,6 +3716,8 @@ class D3Q2_Executor(AdvancedDataFlowExecutor):
             ('PolicyContradictionDetector', '_get_context_window'),
             ('BayesianConfidenceCalculator', 'calculate_posterior'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
+            ('Dimension3Analyzer', 'analyze_question_2'),
+            ('Dimension3Validator', 'validate_question_2'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3732,6 +3756,8 @@ class D3Q3_Executor(AdvancedDataFlowExecutor):
             ('PolicyContradictionDetector', '_build_knowledge_graph'),
             ('PolicyAnalysisEmbedder', 'semantic_search'),
             ('SemanticAnalyzer', '_classify_policy_domain'),
+            ('Dimension3Analyzer', 'analyze_question_3'),
+            ('Dimension3Validator', 'validate_question_3'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3772,6 +3798,8 @@ class D3Q4_Executor(AdvancedDataFlowExecutor):
             ('PerformanceAnalyzer', '_calculate_throughput_metrics'),
             ('PerformanceAnalyzer', '_detect_bottlenecks'),
             ('TextMiningEngine', '_assess_risks'),
+            ('Dimension3Analyzer', 'analyze_question_4'),
+            ('Dimension3Validator', 'validate_question_4'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3829,6 +3857,8 @@ class D3Q5_Executor(AdvancedDataFlowExecutor):
             ('TeoriaCambio', '_encontrar_caminos_completos'),
             ('TextMiningEngine', 'diagnose_critical_links'),
             ('TextMiningEngine', '_analyze_link_text'),
+            ('Dimension3Analyzer', 'analyze_question_5'),
+            ('Dimension3Validator', 'validate_question_5'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3870,6 +3900,8 @@ class D4Q1_Executor(AdvancedDataFlowExecutor):
             ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
             ('PolicyAnalysisEmbedder', '_extract_numerical_values'),
+            ('Dimension4Analyzer', 'analyze_question_1'),
+            ('Dimension4Validator', 'validate_question_1'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3917,6 +3949,8 @@ class D4Q2_Executor(AdvancedDataFlowExecutor):
             ('TeoriaCambio', '_es_conexion_valida'),
             ('TeoriaCambio', 'validacion_completa'),
             ('TeoriaCambio', '_validar_orden_causal'),
+            ('Dimension4Analyzer', 'analyze_question_2'),
+            ('Dimension4Validator', 'validate_question_2'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3960,6 +3994,8 @@ class D4Q3_Executor(AdvancedDataFlowExecutor):
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
             ('BayesianNumericalAnalyzer', 'compare_policies'),
             ('BayesianNumericalAnalyzer', '_classify_evidence_strength'),
+            ('Dimension4Analyzer', 'analyze_question_3'),
+            ('Dimension4Validator', 'validate_question_3'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -3998,6 +4034,8 @@ class D4Q4_Executor(AdvancedDataFlowExecutor):
             ('SemanticAnalyzer', 'extract_semantic_cube'),
             ('PolicyAnalysisEmbedder', 'semantic_search'),
             ('PolicyAnalysisEmbedder', '_filter_by_pdq'),
+            ('Dimension4Analyzer', 'analyze_question_4'),
+            ('Dimension4Validator', 'validate_question_4'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4036,6 +4074,8 @@ class D4Q5_Executor(AdvancedDataFlowExecutor):
             ('SemanticAnalyzer', 'extract_semantic_cube'),
             ('PolicyAnalysisEmbedder', 'semantic_search'),
             ('PolicyAnalysisEmbedder', 'compare_policy_interventions'),
+            ('Dimension4Analyzer', 'analyze_question_5'),
+            ('Dimension4Validator', 'validate_question_5'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4075,6 +4115,8 @@ class D5Q1_Executor(AdvancedDataFlowExecutor):
             ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
             ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
+            ('Dimension5Analyzer', 'analyze_question_1'),
+            ('Dimension5Validator', 'validate_question_1'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4123,6 +4165,8 @@ class D5Q2_Executor(AdvancedDataFlowExecutor):
             ('TeoriaCambio', '_es_conexion_valida'),
             ('TeoriaCambio', '_encontrar_caminos_completos'),
             ('TextMiningEngine', 'diagnose_critical_links'),
+            ('Dimension5Analyzer', 'analyze_question_2'),
+            ('Dimension5Validator', 'validate_question_2'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4164,6 +4208,8 @@ class D5Q3_Executor(AdvancedDataFlowExecutor):
             ('BayesianMechanismInference', '_test_necessity'),
             ('BayesianMechanismInference', '_test_sufficiency'),
             ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
+            ('Dimension5Analyzer', 'analyze_question_3'),
+            ('Dimension5Validator', 'validate_question_3'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4201,6 +4247,8 @@ class D5Q4_Executor(AdvancedDataFlowExecutor):
             ('PolicyContradictionDetector', '_calculate_confidence_interval'),
             ('PerformanceAnalyzer', '_calculate_throughput_metrics'),
             ('PerformanceAnalyzer', '_detect_bottlenecks'),
+            ('Dimension5Analyzer', 'analyze_question_4'),
+            ('Dimension5Validator', 'validate_question_4'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4238,6 +4286,8 @@ class D5Q5_Executor(AdvancedDataFlowExecutor):
             ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
             ('FinancialAuditor', 'trace_financial_allocation'),
             ('FinancialAuditor', '_calculate_sufficiency'),
+            ('Dimension5Analyzer', 'analyze_question_5'),
+            ('Dimension5Validator', 'validate_question_5'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4294,6 +4344,8 @@ class D6Q1_Executor(AdvancedDataFlowExecutor):
             ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
             ('PDETMunicipalPlanAnalyzer', '_identify_causal_nodes'),
             ('PDETMunicipalPlanAnalyzer', '_identify_causal_edges'),
+            ('Dimension6Analyzer', 'analyze_question_1'),
+            ('Dimension6Validator', 'validate_question_1'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4355,6 +4407,8 @@ class D6Q2_Executor(AdvancedDataFlowExecutor):
             ('CausalInferenceSetup', '_get_dynamics_pattern'),
             ('OperationalizationAuditor', '_audit_systemic_risk'),
             ('OperationalizationAuditor', 'bayesian_counterfactual_audit'),
+            ('Dimension6Analyzer', 'analyze_question_2'),
+            ('Dimension6Validator', 'validate_question_2'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4400,6 +4454,8 @@ class D6Q3_Executor(AdvancedDataFlowExecutor):
             ('TextMiningEngine', '_identify_critical_links'),
             ('TeoriaCambio', 'validacion_completa'),
             ('TeoriaCambio', '_validar_orden_causal'),
+            ('Dimension6Analyzer', 'analyze_question_3'),
+            ('Dimension6Validator', 'validate_question_3'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4460,6 +4516,8 @@ class D6Q4_Executor(AdvancedDataFlowExecutor):
             ('MechanismTypeConfig', 'check_sum_to_one'),
             ('PDETMunicipalPlanAnalyzer', 'generate_recommendations'),
             ('PDETMunicipalPlanAnalyzer', '_generate_optimal_remediations'),
+            ('Dimension6Analyzer', 'analyze_question_4'),
+            ('Dimension6Validator', 'validate_question_4'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 
@@ -4507,6 +4565,8 @@ class D6Q5_Executor(AdvancedDataFlowExecutor):
             ('PolicyAnalysisEmbedder', '_filter_by_pdq'),
             ('PolicyAnalysisEmbedder', 'compare_policy_interventions'),
             ('AdvancedSemanticChunker', '_infer_pdq_context'),
+            ('Dimension6Analyzer', 'analyze_question_5'),
+            ('Dimension6Validator', 'validate_question_5'),
         ]
         return self.execute_with_optimization(doc, method_executor, method_sequence)
 

@@ -41,18 +41,16 @@ DEBUG: sys.path = ['/home/user/.../src', ...]
 
 ### Hardening Applied
 
-Added defensive assertion in `scripts/run_policy_pipeline_verified.py:44-58`:
+Added defensive assertion in `saaaaaa/scripts/run_policy_pipeline_verified.py`:
 
 ```python
-# Assert no shadowing: saaaaaa must come from this repo's src/
-_expected_saaaaaa_prefix = str(REPO_ROOT / "src" / "saaaaaa")
-if not saaaaaa.__file__.startswith(_expected_saaaaaa_prefix):
+_expected_saaaaaa_prefix = (PROJECT_ROOT / "src" / "saaaaaa").resolve()
+if not Path(saaaaaa.__file__).resolve().is_relative_to(_expected_saaaaaa_prefix):
     raise RuntimeError(
-        f"MODULE SHADOWING DETECTED!\n"
+        "MODULE SHADOWING DETECTED!\n"
         f"  Expected saaaaaa from: {_expected_saaaaaa_prefix}\n"
         f"  Actually loaded from:  {saaaaaa.__file__}\n"
-        f"This means an old installed package is shadowing the repo code.\n"
-        f"Fix: uninstall old package or adjust PYTHONPATH/sys.path"
+        "Fix: uninstall old package before running the verified pipeline."
     )
 ```
 

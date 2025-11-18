@@ -20,16 +20,20 @@ Usage:
     report = OUTPUT_DIR / 'analysis_report.json'
 """
 
+import logging
 import os
 import sys
 from pathlib import Path
-from typing import Final
+from typing import Final, Tuple
 
 # ============================================================================
 # Project Root Detection
 # ============================================================================
 
-def _detect_project_root() -> Path:
+logger = logging.getLogger("saaaaaa.config.paths")
+
+
+def _detect_project_root() -> Tuple[Path, str]:
     """
     Detect project root directory reliably in both dev and production.
 
@@ -40,7 +44,7 @@ def _detect_project_root() -> Path:
     """
     # Check environment variable first (explicit override)
     if env_root := os.getenv('SAAAAAA_PROJECT_ROOT'):
-        return Path(env_root).resolve()
+        return Path(env_root).resolve(), "env"
 
     # Detect from this file's location
     # src/saaaaaa/config/paths.py → project_root
@@ -51,14 +55,17 @@ def _detect_project_root() -> Path:
 
     # Verify this looks like our project (has setup.py or pyproject.toml)
     if (candidate / 'setup.py').exists() or (candidate / 'pyproject.toml').exists():
-        return candidate
+        return candidate, "markers"
 
-    # Fallback: current working directory
-    return Path.cwd()
+    raise RuntimeError(
+        "Unable to determine project root. "
+        "Set the SAAAAAA_PROJECT_ROOT environment variable."
+    )
 
 
 # Project root (base for all other paths)
-PROJECT_ROOT: Final[Path] = _detect_project_root()
+PROJECT_ROOT, PROJECT_ROOT_SOURCE = _detect_project_root()
+logger.info("Project root detected via %s: %s", PROJECT_ROOT_SOURCE, PROJECT_ROOT)
 
 # ============================================================================
 # Core Directories

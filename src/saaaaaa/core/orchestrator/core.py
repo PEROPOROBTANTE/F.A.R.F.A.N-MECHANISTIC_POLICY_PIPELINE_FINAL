@@ -26,6 +26,7 @@ from collections import deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field, is_dataclass
 from datetime import datetime
+from pathlib import Path
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Any, Literal, ParamSpec, TypedDict, TypeVar
 
@@ -35,6 +36,7 @@ if TYPE_CHECKING:
     from .questionnaire import CanonicalQuestionnaire
 
 from ...analysis.recommendation_engine import RecommendationEngine
+from ...config.paths import PROJECT_ROOT, RULES_DIR
 from ...processing.aggregation import (
     AreaPolicyAggregator,
     AreaScore,
@@ -51,8 +53,40 @@ from .arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRout
 from .calibration_registry import resolve_calibration
 from .class_registry import ClassRegistryError, build_class_registry
 from .versions import CALIBRATION_VERSION
+from ...utils.paths import safe_join
 
 logger = logging.getLogger(__name__)
+_CORE_MODULE_DIR = Path(__file__).resolve().parent
+
+
+def resolve_workspace_path(
+    path: str | Path,
+    *,
+    project_root: Path = PROJECT_ROOT,
+    rules_dir: Path = RULES_DIR,
+    module_dir: Path = _CORE_MODULE_DIR,
+) -> Path:
+    """Resolve repository-relative paths deterministically."""
+    path_obj = Path(path)
+
+    if path_obj.is_absolute():
+        return path_obj
+
+    sanitized = safe_join(project_root, *path_obj.parts)
+    candidates = [
+        sanitized,
+        safe_join(module_dir, *path_obj.parts),
+        safe_join(rules_dir, *path_obj.parts),
+    ]
+
+    if not path_obj.parts or path_obj.parts[0] != "rules":
+        candidates.append(safe_join(rules_dir, "METODOS", *path_obj.parts))
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    return sanitized
 
 # Environment-configurable expectations for validation
 EXPECTED_QUESTION_COUNT = int(os.getenv("EXPECTED_QUESTION_COUNT", "305"))
@@ -1714,20 +1748,8 @@ class Orchestrator:
         """Resolve a relative or absolute path, searching multiple candidate locations."""
         if path is None:
             return None
-
-        candidates = [path]
-        if not os.path.isabs(path):
-            base_dir = os.path.dirname(__file__)
-            candidates.append(os.path.join(base_dir, path))
-            candidates.append(os.path.join(os.getcwd(), path))
-            if not path.startswith("rules"):
-                candidates.append(os.path.join(os.getcwd(), "rules", "METODOS", path))
-
-        for candidate in candidates:
-            if candidate and os.path.exists(candidate):
-                return candidate
-
-        return path
+        resolved = resolve_workspace_path(path)
+        return str(resolved)
 
     def _get_phase_timeout(self, phase_id: int) -> float:
         """Get timeout for a specific phase."""
@@ -3273,4 +3295,3 @@ def describe_pipeline_shape(
         shape["registered_executors"] = len(executor_instances)
 
     return shape
-

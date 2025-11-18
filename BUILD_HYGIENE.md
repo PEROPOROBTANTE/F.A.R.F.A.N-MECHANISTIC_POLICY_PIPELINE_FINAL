@@ -67,6 +67,10 @@ All Python packages must have an `__init__.py` file, even if empty.
 
 3. **Testing**: pytest automatically handles paths when installed with `-e .`
 
+4. **Verification**: `python tools/lint/check_pythonpath_references.py` ensures no new
+   `PYTHONPATH` instructions are introduced. The `Path Compliance` GitHub workflow
+   runs this lint plus the path audit and fixtures on every push.
+
 ## Centralized Configuration
 
 Configuration is centralized in `orchestrator/settings.py`:

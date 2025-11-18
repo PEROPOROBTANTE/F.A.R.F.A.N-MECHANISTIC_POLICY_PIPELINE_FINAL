@@ -51,7 +51,7 @@
 - Deleted setup.cfg (using pyproject.toml only)
 - Fixed Makefile to FAIL on violations (not skip)
 
-**Verification**: `PYTHONPATH=src lint-imports` now runs and reports violations
+**Verification**: `lint-imports` now runs and reports violations
 **Status**: VERIFIED - NOW DETECTS REAL VIOLATIONS
 
 ### 5. **17 E402 IMPORT ERRORS** ✅
@@ -84,7 +84,7 @@
 - Updated layer_computers.py: Added missing imports
 - Updated validators.py: LayerType→LayerID
 
-**Verification**: `PYTHONPATH=src python3 -c "from saaaaaa.core.calibration import engine"` → works
+**Verification**: `python3 -c "from saaaaaa.core.calibration import engine"` → works
 **Status**: VERIFIED
 
 ### 7. **TYPE STUBS INSTALLED** ✅
@@ -217,7 +217,7 @@ pip install -r requirements.txt  # 80+ packages
 
 ### Priority 4: Run Test Suite
 ```bash
-PYTHONPATH=src pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
 ### Priority 5: Remaining Style Issues

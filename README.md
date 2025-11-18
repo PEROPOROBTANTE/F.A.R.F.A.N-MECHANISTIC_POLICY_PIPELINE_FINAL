@@ -567,7 +567,7 @@ Configuraciones externas (JSON, TOML) solo en orchestrator layer, nunca en core.
 
 **Comando**:
 ```bash
-PYTHONPATH=src pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
+python -m pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
 ```
 
 ---
@@ -653,19 +653,22 @@ pip install -r requirements.txt
 
 # 3. Instalar paquete en modo editable
 pip install -e .
+
+# 4. Verificar instalación editable
+python -m saaaaaa.devtools.ensure_install
 ```
 
 #### 5.1.2. Ejecución
 
 ```bash
 # Ejecutar golden tests
-PYTHONPATH=src pytest tests/test_regression_*.py -v
+python -m pytest tests/test_regression_*.py -v
 
 # Golden test específico (CPP ingestion)
-PYTHONPATH=src pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
+python -m pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
 
 # Golden test de determinismo
-PYTHONPATH=src pytest tests/test_determinism.py::test_phase_hash_stability -v
+python -m pytest tests/test_determinism.py::test_phase_hash_stability -v
 ```
 
 #### 5.1.3. Verificación de Output

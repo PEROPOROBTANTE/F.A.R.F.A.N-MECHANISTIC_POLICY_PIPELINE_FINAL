@@ -164,10 +164,10 @@ Validation: ✅ PASS
 ### ✅ Import Verification
 
 ```bash
-$ PYTHONPATH=src python3 -c "from saaaaaa.config.paths import PROJECT_ROOT"
+$ python3 -c "from saaaaaa.config.paths import PROJECT_ROOT"
 # ✅ Success
 
-$ PYTHONPATH=src python3 src/saaaaaa/config/paths.py
+$ python3 -m saaaaaa.config.paths
 # ✅ Pass
 ```
 

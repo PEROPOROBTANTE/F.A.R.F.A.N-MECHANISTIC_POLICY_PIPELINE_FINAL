@@ -50,7 +50,7 @@ verify:
 	@echo "✓ Canonical notation check passed\n"
 	
 	@echo "=== Step 4: Import Linter (Layer Contracts) ==="
-	@PYTHONPATH=src lint-imports || (echo "❌ Import contracts violated" && exit 1)
+	@lint-imports || (echo "❌ Import contracts violated" && exit 1)
 	@echo "✓ Import contracts satisfied\n"
 	
 	@echo "=== Step 5: Ruff Linting ==="
@@ -146,6 +146,10 @@ audit-paths:
 	@echo "=== PATH AUDIT ==="
 	@$(PYTHON) scripts/audit_paths.py
 	@echo "✓ Path audit complete. See PATHS_AUDIT.md for details."
+
+lint-path-policy:
+	@echo "=== PATH POLICY LINT ==="
+	@$(PYTHON) tools/lint/check_pythonpath_references.py
 
 # Path testing - run all path validation tests
 test-paths:

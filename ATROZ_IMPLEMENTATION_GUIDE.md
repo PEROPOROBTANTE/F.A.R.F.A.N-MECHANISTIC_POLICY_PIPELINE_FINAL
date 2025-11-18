@@ -196,9 +196,8 @@ Press Ctrl+C to stop the server
 ### Method 2: Manual Startup
 ```bash
 source venv/bin/activate
-export FLASK_APP=src.saaaaaa.api.api_server
+export FLASK_APP=saaaaaa.api.api_server
 export FLASK_ENV=development
-export PYTHONPATH=".:$PYTHONPATH"
 python3 -m flask run --host=0.0.0.0 --port=5000
 ```
 
