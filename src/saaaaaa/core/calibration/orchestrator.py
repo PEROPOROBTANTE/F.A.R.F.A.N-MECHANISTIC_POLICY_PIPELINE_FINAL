@@ -51,10 +51,20 @@ class CalibrationOrchestrator:
         intrinsic_calibration_path: Path | str = None,
         compatibility_path: Path | str = None,
         method_registry_path: Path | str = None,
-        method_signatures_path: Path | str = None,
-        intrinsic_calibration_path: Path | str = None
+        method_signatures_path: Path | str = None
     ):
         self.config = config or DEFAULT_CALIBRATION_CONFIG
+
+        # Initialize IntrinsicScoreLoader (singleton pattern, lazy-loaded)
+        if intrinsic_calibration_path:
+            self.intrinsic_loader = IntrinsicScoreLoader(intrinsic_calibration_path)
+        else:
+            # Try default path
+            default_intrinsic = Path("config/intrinsic_calibration.json")
+            self.intrinsic_loader = IntrinsicScoreLoader(default_intrinsic)
+
+        # Initialize LayerRequirementsResolver
+        self.layer_resolver = LayerRequirementsResolver(self.intrinsic_loader)
 
         # Initialize BASE layer evaluator
         if intrinsic_calibration_path:
