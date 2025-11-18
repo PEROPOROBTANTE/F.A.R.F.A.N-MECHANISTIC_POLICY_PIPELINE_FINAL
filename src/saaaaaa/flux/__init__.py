@@ -37,7 +37,7 @@ from .models import (
 from .phases import (
     run_aggregate,
     run_chunk,
-    run_ingest,
+    # run_ingest removed - use SPC CPPIngestionPipeline as canonical entry point
     run_normalize,
     run_report,
     run_score,
@@ -71,8 +71,7 @@ __all__ = [
     "ScoreDeliverable",
     "ReportExpectation",
     "ReportDeliverable",
-    # Phases
-    "run_ingest",
+    # Phases (Note: run_ingest removed - use SPC CPPIngestionPipeline)
     "run_normalize",
     "run_chunk",
     "run_signals",
