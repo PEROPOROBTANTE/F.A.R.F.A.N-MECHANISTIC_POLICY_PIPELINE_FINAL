@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 """
-Verification script for CPP ingestion pipeline.
+LEGACY SCRIPT - DO NOT USE
 
-This script tests just the CPP ingestion and adaptation phases without
-requiring the full orchestrator dependencies (torch, transformers, etc.).
+This script targets the deprecated CPP ingestion implementation that no longer
+exists in this repository. The canonical ingestion path is:
 
-Usage:
-    python verify_cpp_ingestion.py
+    scripts/run_policy_pipeline_verified.py
+      → saaaaaa.processing.spc_ingestion.CPPIngestionPipeline
+      → saaaaaa.utils.spc_adapter.SPCAdapter
+      → Orchestrator
 
-Note: Run this script after installing the package with: pip install -e .
+Running this script will fail. Kept only for historical reference.
+
+==============================================================================
+DEPRECATED: Use scripts/run_policy_pipeline_verified.py instead
+==============================================================================
 """
 
 import sys

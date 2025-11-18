@@ -112,7 +112,29 @@ class SmartChunkConverter:
 
         Returns:
             CanonPolicyPackage ready for orchestrator consumption
+
+        Raises:
+            ValueError: If smart_chunks is empty or invalid
         """
+        # Defensive validation: ensure smart_chunks is non-empty
+        if not smart_chunks or len(smart_chunks) == 0:
+            raise ValueError(
+                "Cannot convert empty smart_chunks list to CanonPolicyPackage. "
+                "Minimum 1 chunk required from StrategicChunkingSystem."
+            )
+
+        # Defensive validation: check critical attributes on first chunk
+        first_chunk = smart_chunks[0]
+        required_attrs = ['chunk_id', 'document_id', 'text', 'document_position', 'chunk_type']
+        missing_attrs = [attr for attr in required_attrs if not hasattr(first_chunk, attr)]
+
+        if missing_attrs:
+            raise ValueError(
+                f"SmartPolicyChunk missing critical attributes: {missing_attrs}. "
+                f"Ensure StrategicChunkingSystem produced valid SmartPolicyChunk instances. "
+                f"Chunk type: {type(first_chunk)}"
+            )
+
         self.logger.info(f"Converting {len(smart_chunks)} SmartPolicyChunks to CanonPolicyPackage")
 
         # Build ChunkGraph
@@ -233,6 +255,8 @@ class SmartChunkConverter:
             ),
             resolution=resolution,
             bytes_hash=smart_chunk.content_hash,
+            policy_area_id=getattr(smart_chunk, 'policy_area_id', None),  # PA01-PA10
+            dimension_id=getattr(smart_chunk, 'dimension_id', None),      # DIM01-DIM06
             policy_facets=policy_facets,
             time_facets=time_facets,
             geo_facets=geo_facets,
@@ -347,36 +371,116 @@ class SmartChunkConverter:
         return entities
 
     def _extract_budget(self, smart_chunk: Any) -> Optional[Budget]:
-        """Extract budget information if present in strategic_context."""
+        """
+        Extract budget with comprehensive error handling and logging (H1.4).
+
+        Implements 4 regex patterns and robust year extraction with 4 fallback strategies.
+        """
+        if not (hasattr(smart_chunk, 'strategic_context') and smart_chunk.strategic_context):
+            return None
+
+        ctx = smart_chunk.strategic_context
+        if not (hasattr(ctx, 'budget_linkage') and ctx.budget_linkage):
+            return None
+
+        import re
+        budget_text = ctx.budget_linkage
+
+        # H1.4: 4 regex patterns for robust budget extraction
+        patterns = [
+            # Pattern 1: Currency symbol with optional scale
+            r'[\$]?\s*([0-9,]+(?:\.[0-9]+)?)\s*(millones|mil millones|billion|billones)?',
+            # Pattern 2: "X millones de pesos"
+            r'(\d+(?:\.\d+)?)\s*millones?\s+de\s+pesos',
+            # Pattern 3: COP currency code
+            r'COP\s*\$?\s*([0-9,]+(?:\.[0-9]+)?)',
+            # Pattern 4: "presupuesto de $X"
+            r'presupuesto\s+de\s+\$?\s*([0-9,]+(?:\.[0-9]+)?)',
+        ]
+
+        amount = None
+        scale_multiplier = 1
+
+        for pattern in patterns:
+            match = re.search(pattern, budget_text, re.IGNORECASE)
+            if match:
+                try:
+                    amount_str = match.group(1).replace(',', '')
+                    amount = float(amount_str)
+
+                    # Detect scale from second group or text
+                    scale_text = budget_text.lower()
+                    if 'millones' in scale_text or 'million' in scale_text:
+                        scale_multiplier = 1_000_000
+                    elif 'mil millones' in scale_text or 'billion' in scale_text or 'billones' in scale_text:
+                        scale_multiplier = 1_000_000_000
+
+                    amount *= scale_multiplier
+                    break  # Stop at first match
+
+                except (ValueError, IndexError) as e:
+                    self.logger.warning(f"Budget pattern matched but parsing failed: {e}")
+                    continue
+
+        if amount is None:
+            return None
+
+        # H1.4: Extract year with 4 fallback strategies
+        year = self._extract_budget_year(budget_text, smart_chunk)
+
+        # Build Budget object
+        use = ctx.policy_intent if hasattr(ctx, 'policy_intent') else "General"
+
+        self.logger.debug(
+            f"Extracted budget: amount={amount:,.2f}, year={year}, "
+            f"source='Strategic Context', use='{use[:30]}'"
+        )
+
+        return Budget(
+            source="Strategic Context",
+            use=use,
+            amount=amount,
+            year=year,
+            currency="COP"
+        )
+
+    def _extract_budget_year(self, budget_text: str, smart_chunk: Any) -> int:
+        """
+        Extract budget year with 4 fallback strategies (H1.4).
+
+        Strategy 1: Extract from budget_text itself
+        Strategy 2: Extract from temporal_dynamics markers
+        Strategy 3: Use temporal_horizon from strategic_context
+        Strategy 4: Default to 2024
+        """
+        import re
+
+        # Strategy 1: Look for year in budget_text
+        year_match = re.search(r'\b(202[0-9]|203[0-9])\b', budget_text)
+        if year_match:
+            return int(year_match.group(1))
+
+        # Strategy 2: Check temporal_dynamics markers
+        if hasattr(smart_chunk, 'temporal_dynamics') and smart_chunk.temporal_dynamics:
+            temp = smart_chunk.temporal_dynamics
+            if hasattr(temp, 'temporal_markers') and temp.temporal_markers:
+                for marker in temp.temporal_markers:
+                    marker_text = marker[0] if isinstance(marker, (list, tuple)) else str(marker)
+                    year_match = re.search(r'\b(202[0-9]|203[0-9])\b', marker_text)
+                    if year_match:
+                        return int(year_match.group(1))
+
+        # Strategy 3: Check strategic_context temporal_horizon
         if hasattr(smart_chunk, 'strategic_context') and smart_chunk.strategic_context:
             ctx = smart_chunk.strategic_context
-            if hasattr(ctx, 'budget_linkage') and ctx.budget_linkage:
-                # Parse budget_linkage string for amount
-                import re
-                budget_text = ctx.budget_linkage
-                # Look for currency amounts (e.g., "$1,000,000" or "1000 millones")
-                amount_match = re.search(r'[\$]?\s*([0-9,]+(?:\.[0-9]+)?)\s*(millones|mil|billion)?', budget_text, re.IGNORECASE)
-                if amount_match:
-                    try:
-                        amount_str = amount_match.group(1).replace(',', '')
-                        amount = float(amount_str)
-                        # Adjust for millions/billions
-                        if 'millones' in budget_text.lower() or 'million' in budget_text.lower():
-                            amount *= 1_000_000
-                        elif 'billion' in budget_text.lower():
-                            amount *= 1_000_000_000
+            if hasattr(ctx, 'temporal_horizon') and ctx.temporal_horizon:
+                horizon_match = re.search(r'\b(202[0-9]|203[0-9])\b', ctx.temporal_horizon)
+                if horizon_match:
+                    return int(horizon_match.group(1))
 
-                        return Budget(
-                            source="Strategic Context",
-                            use=ctx.policy_intent if hasattr(ctx, 'policy_intent') else "General",
-                            amount=amount,
-                            year=2024,  # Default
-                            currency="COP"
-                        )
-                    except (ValueError, AttributeError):
-                        pass
-
-        return None
+        # Strategy 4: Default to 2024
+        self.logger.debug("No year found in budget context, defaulting to 2024")
+        return 2024
 
     def _extract_kpi(self, smart_chunk: Any) -> Optional[KPI]:
         """Extract KPI if chunk contains indicator information."""
@@ -445,13 +549,18 @@ class SmartChunkConverter:
         chunk_hashes: Dict[str, str],
         document_metadata: Dict[str, Any]
     ) -> IntegrityIndex:
-        """Generate cryptographic integrity index."""
-        # Generate root hash from all chunk hashes
+        """
+        Generate cryptographic integrity index.
+
+        Uses BLAKE2b-256 to compute aggregate hash of all chunk hashes.
+        NOT a true Merkle tree - simply hashes sorted JSON representation.
+        """
+        # Generate root hash from all chunk hashes (sorted for determinism)
         combined = json.dumps(chunk_hashes, sort_keys=True).encode('utf-8')
-        blake3_root = hashlib.blake2b(combined, digest_size=32).hexdigest()
+        blake2b_root = hashlib.blake2b(combined, digest_size=32).hexdigest()
 
         return IntegrityIndex(
-            blake3_root=blake3_root,
+            blake2b_root=blake2b_root,
             chunk_hashes=chunk_hashes
         )
 

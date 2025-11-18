@@ -109,7 +109,9 @@ class Chunk:
     text_span: TextSpan
     resolution: ChunkResolution
     bytes_hash: str
-    
+    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
+    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
+
     # Facets and metadata
     policy_facets: PolicyFacet = field(default_factory=PolicyFacet)
     time_facets: TimeFacet = field(default_factory=TimeFacet)
@@ -172,8 +174,11 @@ class QualityMetrics:
 class IntegrityIndex:
     """
     Cryptographic integrity verification data.
+
+    Uses BLAKE2b (not BLAKE3) for aggregate hash computation.
+    Implementation uses hashlib.blake2b over JSON-serialized chunk hashes.
     """
-    blake3_root: str
+    blake2b_root: str  # Aggregate hash (BLAKE2b-256) of all chunk hashes
     chunk_hashes: dict[str, str] = field(default_factory=dict)
 
 

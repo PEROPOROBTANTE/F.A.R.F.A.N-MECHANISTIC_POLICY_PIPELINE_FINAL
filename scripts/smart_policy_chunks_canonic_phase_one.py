@@ -261,7 +261,9 @@ class SmartPolicyChunk:
     chunk_id: str
     document_id: str
     content_hash: str
-    
+    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
+    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
+
     text: str
     normalized_text: str
     semantic_density: float
@@ -1607,23 +1609,32 @@ class PolicyAreaChunkCalibrator:
 # =============================================================================
 
 class StrategicChunkingSystem:
-    def __init__(self):
+    def __init__(self, random_seed: int = 42):
         """
         Initialize the Strategic Chunking System with canonical components.
-        
+
         Integrates production-grade canonical modules:
         - PolicyAnalysisEmbedder for semantic embeddings
         - SemanticProcessor for chunking with PDM structure awareness
         - IndustrialPolicyProcessor for causal evidence extraction
         - BayesianEvidenceScorer for probabilistic confidence scoring
-        
+
+        Args:
+            random_seed: Seed for deterministic RNG (default: 42)
+
         Inputs:
             None
         Outputs:
             None - initializes system state
         """
-        self.config = SmartChunkConfig()
+        # Fix seeds for deterministic execution (HOSTILE AUDIT REQUIREMENT)
+        import random
+        np.random.seed(random_seed)
+        random.seed(random_seed)
         self.logger = logging.getLogger("SPC")  # Unified logger name
+        self.logger.info(f"Initialized with deterministic seed: {random_seed}")
+
+        self.config = SmartChunkConfig()
         
         # =====================================================================
         # CANONICAL SOTA PRODUCERS - Frontier approach components
@@ -1636,7 +1647,38 @@ class StrategicChunkingSystem:
         self._spc_policy = create_policy_processor()         # canonical PDQ/dimension evidence
         
         self.logger.info("SOTA canonical producers initialized: EmbeddingPolicyProducer, SemanticChunkingProducer, PolicyProcessor")
-        
+
+        # =====================================================================
+        # POLICY AREA × DIMENSION KEYWORD MAPS - Structured extraction
+        # =====================================================================
+
+        # PA01-PA10 keyword maps for content extraction
+        self._pa_keywords = {
+            "PA01": ["mujeres", "género", "igualdad", "feminismo", "violencia género", "empoderamiento", "equidad"],
+            "PA02": ["violencia", "conflicto armado", "protección", "prevención", "grupos delincuenciales", "economías ilegales", "seguridad"],
+            "PA03": ["ambiente", "cambio climático", "desastres", "medio ambiente", "ecología", "sostenibilidad", "recursos naturales"],
+            "PA04": ["derechos económicos", "derechos sociales", "derechos culturales", "educación", "salud", "vivienda", "trabajo"],
+            "PA05": ["víctimas", "construcción de paz", "reconciliación", "reparación", "memoria", "justicia transicional"],
+            "PA06": ["niñez", "adolescencia", "juventud", "entornos protectores", "desarrollo infantil", "educación inicial"],
+            "PA07": ["tierras", "territorios", "tenencia", "reforma agraria", "ordenamiento territorial", "catastro"],
+            "PA08": ["líderes", "lideresas", "defensores", "defensoras", "derechos humanos", "protección líderes", "amenazas"],
+            "PA09": ["privadas libertad", "cárceles", "sistema penitenciario", "hacinamiento", "reinserción", "reclusos"],
+            "PA10": ["migración", "transfronteriza", "migrantes", "refugiados", "movilidad humana", "frontera"]
+        }
+
+        # DIM01-DIM06 keyword maps for dimension alignment
+        self._dim_keywords = {
+            "DIM01": ["diagnóstico", "recursos", "presupuesto", "financiación", "insumos", "inversión", "dotación"],
+            "DIM02": ["actividades", "intervención", "diseño", "estrategias", "acciones", "programas", "proyectos"],
+            "DIM03": ["productos", "outputs", "entregables", "resultados intermedios", "metas", "indicadores producto"],
+            "DIM04": ["resultados", "outcomes", "efectos", "logros", "cambios", "impacto directo", "beneficiarios"],
+            "DIM05": ["impactos", "largo plazo", "transformación", "cambio estructural", "sostenibilidad", "legado"],
+            "DIM06": ["causalidad", "teoría de cambio", "cadena causal", "lógica intervención", "marco lógico", "supuestos"]
+        }
+
+        self.logger.info(f"PA keyword maps: {len(self._pa_keywords)} policy areas")
+        self.logger.info(f"DIM keyword maps: {len(self._dim_keywords)} dimensions")
+
         # =====================================================================
         # SPECIALIZED COMPONENTS - Keep (no canonical equivalent)
         # =====================================================================
@@ -1942,7 +1984,9 @@ class StrategicChunkingSystem:
             chunk_id=chunk_id,
             document_id=document_id,
             content_hash=content_hash,
-            
+            policy_area_id=strategic_unit.get("policy_area_id"),  # PA01-PA10
+            dimension_id=strategic_unit.get("dimension_id"),      # DIM01-DIM06
+
             text=text,
             normalized_text=normalized_text,
             semantic_density=self._calculate_semantic_density(text),
@@ -2908,6 +2952,163 @@ class StrategicChunkingSystem:
                 })
         return frameworks
 
+    def _extract_content_for_pa_dimension(
+        self,
+        document_text: str,
+        policy_area: str,
+        dimension: str,
+        sentences: List[str],
+        sentence_positions: List[Tuple[int, int]],
+        sentence_embeddings: Optional[np.ndarray] = None
+    ) -> Dict[str, Any]:
+        """
+        Extract most relevant content for a specific (PA, DIM) combination.
+
+        Uses embedding-based similarity to find sentences most aligned with
+        the policy area and dimension keywords.
+
+        Args:
+            document_text: Full document text
+            policy_area: Policy area code (PA01-PA10)
+            dimension: Dimension code (DIM01-DIM06)
+            sentences: List of document sentences
+            sentence_positions: List of (start, end) byte positions for each sentence
+            sentence_embeddings: Pre-computed embeddings (optional, computed if None)
+
+        Returns:
+            Dictionary with segment metadata and text
+        """
+        # Generate query embedding from PA + DIM keywords
+        pa_keywords = self._pa_keywords.get(policy_area, [])
+        dim_keywords = self._dim_keywords.get(dimension, [])
+        query_text = " ".join(pa_keywords + dim_keywords)
+
+        # Get query embedding
+        query_embedding = self._spc_sem.embed_text(query_text)
+
+        # Compute sentence embeddings if not provided
+        if sentence_embeddings is None:
+            sentence_embeddings = self._spc_sem.embed_batch(sentences)
+
+        # Compute cosine similarity between query and all sentences
+        from sklearn.metrics.pairwise import cosine_similarity
+        similarities = cosine_similarity(
+            query_embedding.reshape(1, -1),
+            sentence_embeddings
+        )[0]
+
+        # Find top-K most similar sentences (K=10)
+        top_k = min(10, len(sentences))
+        top_indices = np.argsort(similarities)[-top_k:][::-1]
+
+        # Extract contiguous region around top sentences
+        if len(top_indices) == 0:
+            # Fallback: return first 800 chars
+            segment_text = document_text[:800]
+            segment_start = 0
+            segment_end = len(segment_text)
+        else:
+            # Find min/max positions to create contiguous chunk
+            min_idx = min(top_indices)
+            max_idx = max(top_indices)
+
+            # Expand window by ±2 sentences for context
+            start_idx = max(0, min_idx - 2)
+            end_idx = min(len(sentences) - 1, max_idx + 2)
+
+            # Get byte positions
+            segment_start = sentence_positions[start_idx][0]
+            segment_end = sentence_positions[end_idx][1]
+            segment_text = document_text[segment_start:segment_end]
+
+        # Compute relevance score (mean of top-K similarities)
+        relevance_score = float(np.mean(similarities[top_indices])) if len(top_indices) > 0 else 0.0
+
+        return {
+            "text": segment_text,
+            "position": (segment_start, segment_end),
+            "policy_area": policy_area,
+            "dimension": dimension,
+            "relevance_score": relevance_score,
+            "top_sentence_indices": top_indices.tolist(),
+            "query_keywords": pa_keywords + dim_keywords
+        }
+
+    def _generate_60_structured_segments(
+        self,
+        document_text: str,
+        structural_analysis: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate EXACTLY 60 structured segments aligned by (PA × DIM) matrix.
+
+        This replaces FASE 4 semantic segmentation with structured extraction.
+        Each segment is explicitly aligned to one Policy Area and one Dimension.
+
+        Args:
+            document_text: Full document text
+            structural_analysis: Output from FASE 3 (document structure analysis)
+
+        Returns:
+            List of 60 segment dictionaries, one per (PA, DIM) combination
+        """
+        from saaaaaa.core.canonical_notation import get_all_policy_areas, get_all_dimensions
+
+        self.logger.info("FASE 4: Generating 60 structured segments (PA × DIM matrix)")
+
+        # Split document into sentences for embedding-based extraction
+        sentences = sent_tokenize(document_text, language='spanish')
+
+        # Compute sentence positions
+        sentence_positions = []
+        current_pos = 0
+        for sent in sentences:
+            start = document_text.find(sent, current_pos)
+            end = start + len(sent)
+            sentence_positions.append((start, end))
+            current_pos = end
+
+        # Pre-compute sentence embeddings (once for all 60 extractions)
+        self.logger.info(f"Computing embeddings for {len(sentences)} sentences...")
+        sentence_embeddings = self._spc_sem.embed_batch(sentences)
+
+        # Generate 60 segments
+        policy_areas = get_all_policy_areas()  # PA01..PA10
+        dimensions = get_all_dimensions()      # D1..D6
+
+        structured_segments = []
+
+        for pa_code, pa_info in policy_areas.items():
+            for dim_key, dim_info in dimensions.items():
+                segment = self._extract_content_for_pa_dimension(
+                    document_text=document_text,
+                    policy_area=pa_code,
+                    dimension=dim_info.code,
+                    sentences=sentences,
+                    sentence_positions=sentence_positions,
+                    sentence_embeddings=sentence_embeddings
+                )
+
+                # Add PA and DIM metadata
+                segment['policy_area_id'] = pa_code
+                segment['dimension_id'] = dim_info.code
+                segment['pa_name'] = pa_info.name
+                segment['dim_label'] = dim_info.label
+
+                structured_segments.append(segment)
+
+                self.logger.debug(
+                    f"  Extracted segment for {pa_code} × {dim_info.code}: "
+                    f"{len(segment['text'])} chars, relevance={segment['relevance_score']:.3f}"
+                )
+
+        assert len(structured_segments) == 60, \
+            f"Expected 60 segments, got {len(structured_segments)}"
+
+        self.logger.info(f"✅ Generated exactly {len(structured_segments)} structured segments")
+
+        return structured_segments
+
     def generate_smart_chunks(self, document_text: str, document_metadata: Dict) -> List[SmartPolicyChunk]:
         """
         Main pipeline phase: Generate Smart Policy Chunks with full analysis.
@@ -2937,13 +3138,14 @@ class StrategicChunkingSystem:
         global_topics = self.topic_modeler.extract_global_topics(document_parts)
         global_kg = self.kg_builder.build_policy_knowledge_graph(normalized_text)
         
-        # FASE 4: Preservación de contexto y segmentación
-        context_preserved_segments = self.context_preserver.preserve_strategic_context(
-            document_text, 
-            structural_analysis, 
-            global_topics
+        # FASE 4: Structured (PA × DIM) segmentation - EXACTLY 60 chunks
+        # REPLACED: Old semantic segmentation with structured extraction
+        # OLD: context_preserved_segments = self.context_preserver.preserve_strategic_context(...)
+        context_preserved_segments = self._generate_60_structured_segments(
+            document_text=document_text,
+            structural_analysis=structural_analysis
         )
-        self.logger.info(f"Segmentos generados con contexto: {len(context_preserved_segments)}")
+        self.logger.info(f"✅ Generated {len(context_preserved_segments)} structured segments (PA × DIM)")
         
         # FASE 5: Extracción de cadenas causales completas
         causal_chains = self.causal_analyzer.extract_complete_causal_chains(

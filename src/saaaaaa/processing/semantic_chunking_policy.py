@@ -1,16 +1,28 @@
 """
-Causal Policy Analysis Framework - State-of-the-Art Edition
-Specialized for Colombian Municipal Development Plans (PDM)
+INTERNAL SPC COMPONENT
+
+⚠️  USAGE RESTRICTION ⚠️
+==============================================================================
+This module implements SOTA semantic chunking and policy analysis for Smart
+Policy Chunks. It MUST NOT be used as a standalone ingestion pipeline in the
+canonical FARFAN flow.
+
+Canonical entrypoint is scripts/run_policy_pipeline_verified.py.
+
+This module is an INTERNAL COMPONENT of:
+    scripts/smart_policy_chunks_canonic_phase_one.py (StrategicChunkingSystem)
+
+DO NOT use this module directly as an independent pipeline. It is consumed
+internally by the SPC core and should only be imported from within:
+    - smart_policy_chunks_canonic_phase_one.py
+    - Unit tests for SPC components
+
 Scientific Foundation:
 - Semantic: BGE-M3 (2024, SOTA multilingual dense retrieval)
 - Chunking: Semantic-aware with policy structure recognition
 - Math: Information-theoretic Bayesian evidence accumulation
 - Causal: Directed Acyclic Graph inference with interventional calculus
-Design Principles:
-- Zero placeholders, zero heuristics
-- Calibrated to Colombian PDM structure (Ley 152/1994, DNP guidelines)
-- Production-grade error handling
-- Lazy loading for resource efficiency
+==============================================================================
 """
 from __future__ import annotations
 

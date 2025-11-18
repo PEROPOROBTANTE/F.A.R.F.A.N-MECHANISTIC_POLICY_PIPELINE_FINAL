@@ -1,33 +1,29 @@
 """
-DOCUMENT INGESTION MODULE (DEPRECATED - Use cpp_ingestion instead)
+LEGACY INGESTION MODULE (DEPRECATED)
 
 ⚠️  DEPRECATION WARNING ⚠️
 ==============================================================
-This module is DEPRECATED and maintained only for backward compatibility.
+This module implements a pre-SPC ingestion pipeline that produces
+PreprocessedDocument directly from PDFs/text. It MUST NOT be used in the
+canonical F.A.R.F.A.N pipeline.
 
-The canonical ingestion system is now:
-    saaaaaa.processing.cpp_ingestion (Canon Policy Package)
+Canonical Phase One path is:
 
-The CPP ingestion system provides:
-- Deterministic 9-phase pipeline with quality gates
-- Advanced policy-aware chunking (8 mechanisms)
-- Complete provenance tracking (100% token-to-page mapping)
-- Multi-resolution chunks (micro/meso/macro)
-- Arrow IPC serialization for performance
-- BLAKE3 integrity verification
-- Merkle root support
+    scripts/run_policy_pipeline_verified.py
+      → saaaaaa.processing.spc_ingestion.CPPIngestionPipeline
+      → saaaaaa.utils.spc_adapter.SPCAdapter
+      → Orchestrator
 
-Migration Guide:
-----------------
-OLD (deprecated):
-    from saaaaaa.processing.document_ingestion import DocumentLoader, PreprocessingEngine
-    
-NEW (canonical):
-    from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
-    from saaaaaa.utils.spc_adapter import SPCAdapter
-    
-    # Ingest document
-    pipeline = CPPIngestionPipeline()
+The SPC (Smart Policy Chunks) system provides:
+- 15-phase comprehensive analysis (causal, temporal, argumentative)
+- 8 ChunkTypes with policy-aware classification
+- 6 dimensions of Theory of Change analysis
+- Quality gates and validation
+- BGE-M3 embeddings and semantic chunking
+- Complete provenance and integrity tracking
+
+DO NOT import or use this module for any new code.
+==============================================================
     outcome = pipeline.ingest(input_path, output_dir)
     
     # Convert to PreprocessedDocument for orchestrator

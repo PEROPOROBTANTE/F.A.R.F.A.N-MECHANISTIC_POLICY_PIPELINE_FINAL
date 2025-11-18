@@ -63,6 +63,7 @@ install_requires = [
     "PyPDF2>=3.0.0",
     "PyMuPDF>=1.25.0",
     "typer>=0.15.0",
+    "ftfy>=6.0.0",  # Robust text encoding repair (mojibake fixing)
 ]
 
 setup(

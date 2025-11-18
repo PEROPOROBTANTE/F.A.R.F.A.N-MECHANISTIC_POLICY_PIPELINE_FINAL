@@ -1,17 +1,28 @@
 """
-State-of-the-Art Semantic Embedding System for Colombian Municipal Development Plans
-====================================================================================
-Specialized framework for P-D-Q canonical notation system with:
-- Advanced semantic chunking with hierarchical document structure preservation
-- Bayesian uncertainty quantification for numerical policy analysis
-- Graph-based multi-hop reasoning across document sections
-- Cross-encoder reranking optimized for Spanish policy documents
-- Causal inference framework for policy intervention assessment
-- Zero-shot classification aligned with Colombian policy taxonomy
+INTERNAL SPC COMPONENT
 
-Architecture: Modular, type-safe, production-ready
-Target: Municipal Development Plans (PDM) - Colombia
-Compliance: P#-D#-Q# canonical notation system
+⚠️  USAGE RESTRICTION ⚠️
+==============================================================================
+This module implements SOTA semantic embedding and policy analysis for Smart
+Policy Chunks. It MUST NOT be used as a standalone ingestion pipeline in the
+canonical FARFAN flow.
+
+Canonical entrypoint is scripts/run_policy_pipeline_verified.py.
+
+This module is an INTERNAL COMPONENT of:
+    scripts/smart_policy_chunks_canonic_phase_one.py (StrategicChunkingSystem)
+
+DO NOT use this module directly as an independent pipeline. It is consumed
+internally by the SPC core and should only be imported from within:
+    - smart_policy_chunks_canonic_phase_one.py
+    - Unit tests for SPC components
+
+State-of-the-Art Components:
+- BGE-M3 multilingual embeddings (2024 SOTA)
+- Cross-encoder reranking for Spanish policy documents
+- Bayesian uncertainty quantification for numerical analysis
+- Graph-based multi-hop reasoning
+==============================================================================
 """
 
 from __future__ import annotations

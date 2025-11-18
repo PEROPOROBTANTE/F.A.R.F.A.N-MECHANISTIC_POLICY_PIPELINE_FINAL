@@ -89,20 +89,60 @@ class SPCAdapter:
         """
         self.logger.info(f"Converting CanonPolicyPackage to PreprocessedDocument: {document_id}")
 
-        # Validate inputs
+        # === COMPREHENSIVE VALIDATION PHASE (H1.5) ===
+        # 6-layer validation for robust phase-one output processing
+
+        # V1: Validate canon_package exists
         if not canon_package:
-            raise SPCAdapterError("canon_package is None or empty")
+            raise SPCAdapterError(
+                "canon_package is None or empty. "
+                "Ensure SPC ingestion completed successfully."
+            )
 
-        if not document_id:
-            raise SPCAdapterError("document_id is required")
+        # V2: Validate document_id
+        if not document_id or not isinstance(document_id, str) or not document_id.strip():
+            raise SPCAdapterError(
+                f"document_id must be a non-empty string. "
+                f"Received: {repr(document_id)}"
+            )
 
+        # V3: Validate chunk_graph exists
         if not hasattr(canon_package, 'chunk_graph') or not canon_package.chunk_graph:
-            raise SPCAdapterError("canon_package must have a valid chunk_graph")
+            raise SPCAdapterError(
+                "canon_package must have a valid chunk_graph. "
+                "Check that SmartChunkConverter produced valid output."
+            )
 
         chunk_graph = canon_package.chunk_graph
 
+        # V4: Validate chunks dict is non-empty
         if not chunk_graph.chunks:
-            raise SPCAdapterError("chunk_graph.chunks is empty - no chunks to process")
+            raise SPCAdapterError(
+                "chunk_graph.chunks is empty - no chunks to process. "
+                "Minimum 1 chunk required from phase-one."
+            )
+
+        # V5: Validate individual chunks have required attributes
+        validation_failures = []
+        for chunk_id, chunk in chunk_graph.chunks.items():
+            if not hasattr(chunk, 'text'):
+                validation_failures.append(f"Chunk {chunk_id}: missing 'text' attribute")
+            elif not chunk.text or not chunk.text.strip():
+                validation_failures.append(f"Chunk {chunk_id}: text is empty or whitespace")
+
+            if not hasattr(chunk, 'text_span'):
+                validation_failures.append(f"Chunk {chunk_id}: missing 'text_span' attribute")
+            elif not hasattr(chunk.text_span, 'start') or not hasattr(chunk.text_span, 'end'):
+                validation_failures.append(f"Chunk {chunk_id}: invalid text_span (missing start/end)")
+
+        # V6: Report validation failures with context
+        if validation_failures:
+            failure_summary = "\n  - ".join(validation_failures)
+            raise SPCAdapterError(
+                f"Chunk validation failed ({len(validation_failures)} errors):\n  - {failure_summary}\n"
+                f"Total chunks: {len(chunk_graph.chunks)}\n"
+                f"This indicates SmartChunkConverter produced invalid output."
+            )
 
         # Sort chunks by document position for deterministic ordering
         sorted_chunks = sorted(
