@@ -325,7 +325,7 @@ class MethodCatalogueGenerator:
         for decorator in func_node.decorator_list:
             try:
                 decorators.append(ast.unparse(decorator))
-            except:
+            except Exception:
                 decorators.append("<unparseable>")
 
         # Build signature
