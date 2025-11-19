@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-PKG_PREFIXES: Sequence[str] = ("core.", "executors.", "orchestrator.")
+PKG_PREFIXES: Sequence[str] = ("saaaaaa.core.", "saaaaaa.core.orchestrator.executors.", "saaaaaa.core.orchestrator.")
 
 def _iter_modules(prefix: str, errors: list[tuple[str, BaseException, str]]) -> Iterator[str]:
     module_name = prefix[:-1]
@@ -47,7 +47,7 @@ def main() -> None:
             missing_name = getattr(exc, "name", str(exc).split("'")[1] if "'" in str(exc) else "")
             # If it's not one of our packages, it's a dependency error
             is_external = missing_name and not any(
-                missing_name.startswith(p) for p in ["core", "orchestrator", "executors"]
+                missing_name.startswith(p) for p in ["saaaaaa.core", "saaaaaa.orchestrator", "saaaaaa.executors"]
             )
             if is_external:
                 dependency_errors.append((module_name, exc, traceback.format_exc()))

@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from saaaaaa.validation.schema_validator import SchemaValidator
+from saaaaaa.utils.validation.schema_validator import MonolithSchemaValidator
 
 def _write_payload(path: Path, payload: dict) -> None:
-    payload["content_hash"] = SchemaValidator._canonical_hash(payload)
+    payload["content_hash"] = MonolithSchemaValidator._canonical_hash(payload)
     with path.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
         handle.write("\n")
@@ -27,7 +27,7 @@ def test_questionnaire_invalid_policy_area(tmp_path, questionnaire_payload):
     path = tmp_path / "questionnaire.json"
     _write_payload(path, questionnaire)
 
-    validator = SchemaValidator()
+    validator = MonolithSchemaValidator()
     report, _ = validator.validate_questionnaire(path)
 
     assert not report.is_valid
@@ -39,7 +39,7 @@ def test_rubric_weight_out_of_bounds(tmp_path, rubric_payload):
     path = tmp_path / "rubric.json"
     _write_payload(path, rubric)
 
-    validator = SchemaValidator()
+    validator = MonolithSchemaValidator()
     report = validator.validate_rubric(None, path)
 
     assert not report.is_valid
@@ -51,7 +51,7 @@ def test_rubric_macro_weights_not_one(tmp_path, rubric_payload):
     path = tmp_path / "rubric.json"
     _write_payload(path, rubric)
 
-    validator = SchemaValidator()
+    validator = MonolithSchemaValidator()
     report = validator.validate_rubric(None, path)
 
     assert not report.is_valid
@@ -63,7 +63,7 @@ def test_rubric_missing_allowed_modality(tmp_path, questionnaire_payload, rubric
     path = tmp_path / "rubric.json"
     _write_payload(path, rubric)
 
-    validator = SchemaValidator()
+    validator = MonolithSchemaValidator()
     report = validator.validate_rubric(questionnaire_payload, path)
 
     assert not report.is_valid
@@ -75,7 +75,7 @@ def test_rubric_missing_na_rule(tmp_path, rubric_payload):
     path = tmp_path / "rubric.json"
     _write_payload(path, rubric)
 
-    validator = SchemaValidator()
+    validator = MonolithSchemaValidator()
     report = validator.validate_rubric(None, path)
 
     assert not report.is_valid
@@ -87,7 +87,7 @@ def test_rubric_missing_determinism(tmp_path, rubric_payload):
     path = tmp_path / "rubric.json"
     _write_payload(path, rubric)
 
-    validator = SchemaValidator()
+    validator = MonolithSchemaValidator()
     report = validator.validate_rubric(None, path)
 
     assert not report.is_valid

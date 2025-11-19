@@ -28,7 +28,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -58,9 +58,9 @@ class SpanContext:
     """
     trace_id: str
     span_id: str
-    parent_span_id: Optional[str] = None
+    parent_span_id: str | None = None
     trace_flags: int = 1
-    trace_state: Dict[str, str] = None
+    trace_state: dict[str, str] = None
 
     def __post_init__(self):
         if self.trace_state is None:
@@ -79,10 +79,10 @@ class Span:
     kind: SpanKind = SpanKind.INTERNAL
     status: SpanStatus = SpanStatus.UNSET
     start_time: datetime = None
-    end_time: Optional[datetime] = None
-    attributes: Dict[str, Any] = None
-    events: List[Dict[str, Any]] = None
-    links: List[SpanContext] = None
+    end_time: datetime | None = None
+    attributes: dict[str, Any] = None
+    events: list[dict[str, Any]] = None
+    links: list[SpanContext] = None
 
     def __post_init__(self):
         if self.start_time is None:
@@ -100,7 +100,7 @@ class Span:
         return self.end_time is None
 
     @property
-    def duration_ms(self) -> Optional[float]:
+    def duration_ms(self) -> float | None:
         """Get span duration in milliseconds."""
         if self.end_time:
             delta = self.end_time - self.start_time
@@ -118,7 +118,7 @@ class Span:
         if self.is_recording:
             self.attributes[key] = value
 
-    def add_event(self, name: str, attributes: Optional[Dict[str, Any]] = None) -> None:
+    def add_event(self, name: str, attributes: dict[str, Any] | None = None) -> None:
         """
         Add an event to the span.
 
@@ -134,7 +134,7 @@ class Span:
             }
             self.events.append(event)
 
-    def set_status(self, status: SpanStatus, description: Optional[str] = None) -> None:
+    def set_status(self, status: SpanStatus, description: str | None = None) -> None:
         """
         Set span status.
 
@@ -169,7 +169,7 @@ class Span:
         if self.is_recording:
             self.end_time = datetime.utcnow()
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert span to dictionary."""
         return {
             "name": self.name,
@@ -197,7 +197,7 @@ class Tracer:
     ✅ AUDIT_VERIFIED: Tracer with automatic span management
     """
 
-    def __init__(self, name: str, version: str = "1.0.0"):
+    def __init__(self, name: str, version: str = "1.0.0") -> None:
         """
         Initialize tracer.
 
@@ -207,15 +207,15 @@ class Tracer:
         """
         self.name = name
         self.version = version
-        self.spans: List[Span] = []
-        self.current_span: Optional[Span] = None
+        self.spans: list[Span] = []
+        self.current_span: Span | None = None
 
     def start_span(
         self,
         name: str,
         kind: SpanKind = SpanKind.INTERNAL,
-        attributes: Optional[Dict[str, Any]] = None,
-        parent_context: Optional[SpanContext] = None
+        attributes: dict[str, Any] | None = None,
+        parent_context: SpanContext | None = None
     ) -> Span:
         """
         Start a new span.
@@ -276,7 +276,7 @@ class Tracer:
         self,
         name: str,
         kind: SpanKind = SpanKind.INTERNAL,
-        attributes: Optional[Dict[str, Any]] = None
+        attributes: dict[str, Any] | None = None
     ):
         """
         Context manager for creating a span as the current span.
@@ -316,7 +316,7 @@ class Tracer:
             # Restore previous current span
             self.current_span = previous_span
 
-    def get_spans(self, trace_id: Optional[str] = None) -> List[Span]:
+    def get_spans(self, trace_id: str | None = None) -> list[Span]:
         """
         Get spans, optionally filtered by trace ID.
 
@@ -330,7 +330,7 @@ class Tracer:
             return [s for s in self.spans if s.context.trace_id == trace_id]
         return self.spans
 
-    def export_spans(self) -> List[Dict[str, Any]]:
+    def export_spans(self) -> list[dict[str, Any]]:
         """
         Export spans to dictionary format.
 
@@ -353,7 +353,7 @@ class ExecutorSpanDecorator:
         ...     pass
     """
 
-    def __init__(self, tracer: Tracer):
+    def __init__(self, tracer: Tracer) -> None:
         """
         Initialize decorator.
 
@@ -362,7 +362,7 @@ class ExecutorSpanDecorator:
         """
         self.tracer = tracer
 
-    def __call__(self, span_name: Optional[str] = None):
+    def __call__(self, span_name: str | None = None):
         """
         Create decorator function.
 
@@ -437,7 +437,7 @@ class OpenTelemetryObservability:
         ...     pass
     """
 
-    def __init__(self, service_name: str = "farfan-pipeline", service_version: str = "1.0.0"):
+    def __init__(self, service_name: str = "farfan-pipeline", service_version: str = "1.0.0") -> None:
         """
         Initialize observability system.
 
@@ -447,7 +447,7 @@ class OpenTelemetryObservability:
         """
         self.service_name = service_name
         self.service_version = service_version
-        self.tracers: Dict[str, Tracer] = {}
+        self.tracers: dict[str, Tracer] = {}
 
     def get_tracer(self, name: str) -> Tracer:
         """
@@ -478,7 +478,7 @@ class OpenTelemetryObservability:
         tracer = self.get_tracer(tracer_name)
         return ExecutorSpanDecorator(tracer)
 
-    def export_all_spans(self) -> Dict[str, List[Dict[str, Any]]]:
+    def export_all_spans(self) -> dict[str, list[dict[str, Any]]]:
         """
         Export all spans from all tracers.
 
@@ -490,7 +490,7 @@ class OpenTelemetryObservability:
             for name, tracer in self.tracers.items()
         }
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """
         Get observability statistics.
 
@@ -523,7 +523,7 @@ class OpenTelemetryObservability:
         stats = self.get_statistics()
 
         print("\n" + "=" * 80)
-        print(f"🔍 OPENTELEMETRY OBSERVABILITY SUMMARY")
+        print("🔍 OPENTELEMETRY OBSERVABILITY SUMMARY")
         print("=" * 80)
         print(f"Service: {stats['service_name']} v{stats['service_version']}")
         print(f"Total Tracers: {stats['total_tracers']}")
@@ -545,7 +545,7 @@ class OpenTelemetryObservability:
 
 
 # Global observability instance
-_global_observability: Optional[OpenTelemetryObservability] = None
+_global_observability: OpenTelemetryObservability | None = None
 
 
 def get_global_observability() -> OpenTelemetryObservability:
@@ -561,7 +561,7 @@ def get_tracer(name: str) -> Tracer:
     return get_global_observability().get_tracer(name)
 
 
-def executor_span(span_name: Optional[str] = None):
+def executor_span(span_name: str | None = None):
     """
     Convenience decorator for executor methods.
 

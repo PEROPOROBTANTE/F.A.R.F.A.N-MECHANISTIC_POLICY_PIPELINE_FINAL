@@ -3,10 +3,17 @@ Tests for CPP table extraction None value handling.
 
 This test module validates the fixes for handling None values in table cells
 during KPI and budget extraction.
+
+OBSOLETE: cpp_ingestion.tables module no longer exists.
+Table extraction functionality has been refactored/removed in SPC migration.
 """
 
 import pytest
-from saaaaaa.processing.cpp_ingestion.tables import TableExtractor
+
+pytestmark = pytest.mark.skip(reason="obsolete - cpp_ingestion.tables module removed during SPC refactor")
+
+# Old import (no longer valid):
+# from saaaaaa.processing.cpp_ingestion.tables import TableExtractor
 
 
 class TestTableExtractionNoneHandling:

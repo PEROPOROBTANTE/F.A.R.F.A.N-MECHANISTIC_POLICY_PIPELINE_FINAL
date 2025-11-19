@@ -23,9 +23,13 @@ from saaaaaa.processing.cpp_ingestion.models import (
     TimeFacet,
     GeoFacet,
     IntegrityIndex,
-    BudgetInfo,
-    KPIInfo,
+    Budget,  # Fixed: was BudgetInfo, actual class name is Budget
+    KPI,     # Fixed: was KPIInfo, actual class name is KPI
 )
+
+# Compatibility aliases for test code
+BudgetInfo = Budget
+KPIInfo = KPI
 
 
 def create_test_chunk(

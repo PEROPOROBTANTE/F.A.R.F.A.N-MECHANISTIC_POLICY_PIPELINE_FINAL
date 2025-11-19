@@ -26,7 +26,7 @@ schemas/
 ├── contradiction_deteccion/
 │   ├── contradiction_evidence.schema.json
 │   └── policy_statement.schema.json
-├── dereck_beach/
+├── derek_beach/
 │   ├── audit_result.schema.json
 │   └── meta_node.schema.json
 ├── embedding_policy/
@@ -110,7 +110,7 @@ python3 scripts/validate_questionnaire_monolith_schema.py
 |------------------------------------|-------------------------------------------------------------------------------------------|----------------|
 | `financiero_viabilidad_tablas.py`  | `causal_node`, `causal_edge`, `causal_dag`, `causal_effect`, `financial_indicator`, `counterfactual_scenario`, `extracted_table`, `responsible_entity`, `quality_score` | Complete       |
 | `contradiction_deteccion.py`       | `policy_statement`, `contradiction_evidence`                                              | Complete       |
-| `dereck_beach.py`                  | `meta_node`, `audit_result`                                                               | Complete       |
+| `derek_beach.py`                  | `meta_node`, `audit_result`                                                               | Complete       |
 | `embedding_policy.py`              | `semantic_chunk`, `bayesian_evaluation`                                                   | Complete       |
 | `teoria_cambio.py`                 | `advanced_graph_node`, `validacion_resultado`, `monte_carlo_result`                       | Complete       |
 | `report_assembly.py`               | `micro_answer`, `meso_cluster`, `macro_convergence`                                        | Complete       |

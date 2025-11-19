@@ -5,7 +5,7 @@ Validates data flow integrity for method chains.
 Discrete scoring system: {1.0, 0.8, 0.6, 0.3, 0.0}
 """
 import logging
-from typing import List, Dict, Any
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class ChainLayerEvaluator:
         signatures: Dictionary mapping method IDs to their input/output signatures
     """
 
-    def __init__(self, method_signatures: Dict[str, Any]):
+    def __init__(self, method_signatures: dict[str, Any]) -> None:
         """
         Initialize evaluator with method signatures.
 
@@ -31,8 +31,8 @@ class ChainLayerEvaluator:
     def evaluate(
         self,
         method_id: str,
-        provided_inputs: List[str],
-        upstream_outputs: Dict[str, str] = None
+        provided_inputs: list[str],
+        upstream_outputs: dict[str, str] = None
     ) -> float:
         """
         Validate chain integrity for a method.
@@ -116,9 +116,9 @@ class ChainLayerEvaluator:
 
     def validate_chain_sequence(
         self,
-        method_sequence: List[str],
-        initial_inputs: List[str]
-    ) -> Dict[str, float]:
+        method_sequence: list[str],
+        initial_inputs: list[str]
+    ) -> dict[str, float]:
         """
         Validate entire chain of methods.
 
@@ -145,7 +145,7 @@ class ChainLayerEvaluator:
 
     def compute_chain_quality(
         self,
-        method_scores: Dict[str, float]
+        method_scores: dict[str, float]
     ) -> float:
         """
         Compute overall chain quality.

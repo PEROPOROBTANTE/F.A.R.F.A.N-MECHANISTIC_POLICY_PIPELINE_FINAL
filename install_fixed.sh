@@ -49,7 +49,7 @@ done
 
 # Print header
 echo -e "${BLUE}============================================================================${NC}"
-echo -e "${BLUE}SAAAAAA Installation Script - Python 3.12 Compatible${NC}"
+echo -e "${BLUE}SAAAAAA Installation Script - Python 3.12 Required${NC}"
 echo -e "${BLUE}============================================================================${NC}"
 echo ""
 
@@ -57,8 +57,8 @@ echo ""
 PYTHON_VERSION=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
 echo -e "${BLUE}Python version: ${PYTHON_VERSION}${NC}"
 
-if [[ "$PYTHON_VERSION" != "3.12" && "$PYTHON_VERSION" != "3.11" && "$PYTHON_VERSION" != "3.10" ]]; then
-    echo -e "${RED}ERROR: Python 3.10, 3.11, or 3.12 required${NC}"
+if [[ "$PYTHON_VERSION" != "3.12" ]]; then
+    echo -e "${RED}ERROR: Python 3.12 required${NC}"
     exit 1
 fi
 

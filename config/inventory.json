@@ -476,7 +476,7 @@
       ]
     },
     {
-      "file_path": "dereck_beach.py",
+      "file_path": "derek_beach.py",
       "lines_of_code": 5542,
       "role": "data_producer",
       "adapter": "CausalDeconstructionAdapter",

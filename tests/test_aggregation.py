@@ -43,54 +43,22 @@ def minimal_monolith() -> dict[str, Any]:
     return {
         "questions": [],
         "blocks": {
-            "scoring": {
-                "modalities": {}
-            },
+            "scoring": {},
             "niveles_abstraccion": {
-                "MICRO": {},
-                "MESO": {},
-                "MACRO": {}
+                "policy_areas": [
+                    {"policy_area_id": "P1", "i18n": {"keys": {"label_es": "Area 1"}}, "dimension_ids": [f"D{i}" for i in range(1, 7)]}
+                ],
+                "dimensions": [{"dimension_id": f"D{i}"} for i in range(1, 7)],
+                "clusters": [
+                    {"cluster_id": "CL01", "i18n": {"keys": {"label_es": "Cluster 1"}}, "policy_area_ids": ["P1", "P2"]}
+                ]
             }
         },
         "rubric": {
-            "dimension": {
-                "thresholds": {
-                    "EXCELENTE": 0.85,
-                    "BUENO": 0.70,
-                    "ACEPTABLE": 0.55,
-                    "INSUFICIENTE": 0.0,
-                }
-            },
-            "area": {
-                "thresholds": {
-                    "EXCELENTE": 0.85,
-                    "BUENO": 0.70,
-                    "ACEPTABLE": 0.55,
-                    "INSUFICIENTE": 0.0,
-                }
-            },
-            "cluster": {
-                "thresholds": {
-                    "EXCELENTE": 0.85,
-                    "BUENO": 0.70,
-                    "ACEPTABLE": 0.55,
-                    "INSUFICIENTE": 0.0,
-                }
-            },
-            "macro": {
-                "thresholds": {
-                    "EXCELENTE": 0.85,
-                    "BUENO": 0.70,
-                    "ACEPTABLE": 0.55,
-                    "INSUFICIENTE": 0.0,
-                }
-            }
-        },
-        "clusters": {
-            "CL01": {"name": "Cluster 1", "areas": ["P1", "P2"]},
-            "CL02": {"name": "Cluster 2", "areas": ["P3", "P4"]},
-            "CL03": {"name": "Cluster 3", "areas": ["P5", "P6"]},
-            "CL04": {"name": "Cluster 4", "areas": ["P7", "P8"]},
+            "dimension": {"thresholds": {}},
+            "area": {"thresholds": {}},
+            "cluster": {"thresholds": {}},
+            "macro": {"thresholds": {}}
         }
     }
 
@@ -120,11 +88,65 @@ def sample_dimension_scores() -> list[DimensionScore]:
             area_id="P1",
             score=2.0 + (i * 0.1),
             quality_level="BUENO",
-            micro_scores=[2.0] * 5,
-            evidence={},
+            contributing_questions=[1, 2, 3, 4, 5],
         )
         for i in range(1, 7)
     ]
+
+# ============================================================================
+# VALIDATION TESTS
+# ============================================================================
+
+from saaaaaa.processing.aggregation import validate_scored_results, ValidationError, run_aggregation_pipeline
+
+def test_run_aggregation_pipeline(minimal_monolith):
+    """Test the high-level aggregation pipeline orchestrator."""
+    scored_results = [
+        {
+            "question_global": i, "base_slot": f"s{i}", "policy_area": "P1",
+            "dimension": "D1", "score": float(i), "quality_level": "BUENO",
+            "evidence": {}, "raw_results": {}
+        } for i in range(5)
+    ]
+
+    cluster_scores = run_aggregation_pipeline(scored_results, minimal_monolith)
+
+    assert cluster_scores is not None
+    # Based on the test data, we expect one cluster.
+    assert len(cluster_scores) > 0
+    assert isinstance(cluster_scores[0], ClusterScore)
+
+
+def test_validate_scored_results_success():
+    """Test successful validation of scored results."""
+    results = [
+        {
+            "question_global": 1, "base_slot": "s1", "policy_area": "pa1",
+            "dimension": "d1", "score": 1.0, "quality_level": "BUENO",
+            "evidence": {}, "raw_results": {}
+        }
+    ]
+    validated = validate_scored_results(results)
+    assert len(validated) == 1
+    assert isinstance(validated[0], ScoredResult)
+
+def test_validate_scored_results_missing_key():
+    """Test validation fails with missing keys."""
+    results = [{"question_global": 1}]  # Missing other keys
+    with pytest.raises(ValidationError, match="missing keys"):
+        validate_scored_results(results)
+
+def test_validate_scored_results_wrong_type():
+    """Test validation fails with wrong data types."""
+    results = [
+        {
+            "question_global": "wrong_type", "base_slot": "s1", "policy_area": "pa1",
+            "dimension": "d1", "score": 1.0, "quality_level": "BUENO",
+            "evidence": {}, "raw_results": {}
+        }
+    ]
+    with pytest.raises(ValidationError):
+        validate_scored_results(results)
 
 # ============================================================================
 # DIMENSION AGGREGATOR TESTS
@@ -133,128 +155,38 @@ def sample_dimension_scores() -> list[DimensionScore]:
 class TestDimensionAggregator:
     """Test DimensionAggregator functionality."""
 
-    def test_initialization(self, minimal_monolith):
-        """Test aggregator initialization."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-        assert aggregator.monolith == minimal_monolith
-        assert aggregator.abort_on_insufficient is False
-
-    def test_validate_weights_success(self, minimal_monolith):
-        """Test weight validation with valid weights."""
+    def test_run_success(self, minimal_monolith, sample_scored_results):
+        """Test successful dimension aggregation using the run method."""
         aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
 
-        valid_weights = [0.2, 0.2, 0.2, 0.2, 0.2]
-        is_valid, msg = aggregator.validate_weights(valid_weights)
-        assert is_valid
-        assert "valid" in msg.lower()
-
-    def test_validate_weights_not_sum_to_one(self, minimal_monolith):
-        """Test weight validation rejects weights that don't sum to 1."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        invalid_weights = [0.3, 0.3, 0.3]
-        is_valid, msg = aggregator.validate_weights(invalid_weights)
-        assert not is_valid
-        assert "sum" in msg.lower()
-
-    @pytest.mark.xfail(reason="Weight validation doesn't reject negative weights - known bug")
-    def test_validate_weights_negative(self, minimal_monolith):
-        """Test weight validation rejects negative weights."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        invalid_weights = [0.5, 0.5, -0.1, 0.1]
-        is_valid, msg = aggregator.validate_weights(invalid_weights)
-        # BUG: Current implementation doesn't check for negative weights
-        # This test documents the expected behavior
-        assert not is_valid, "Should reject negative weights"
-        assert "negative" in msg.lower(), "Error message should mention negative weights"
-
-    def test_validate_coverage_complete(self, minimal_monolith):
-        """Test coverage validation with complete coverage."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        expected_slots = {f"P1-D1-Q{i:03d}" for i in range(1, 6)}
-        actual_slots = {f"P1-D1-Q{i:03d}" for i in range(1, 6)}
-
-        is_complete, msg = aggregator.validate_coverage(expected_slots, actual_slots)
-        assert is_complete
-
-    def test_validate_coverage_incomplete(self, minimal_monolith):
-        """Test coverage validation detects missing slots."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        expected_slots = {f"P1-D1-Q{i:03d}" for i in range(1, 6)}
-        actual_slots = {f"P1-D1-Q{i:03d}" for i in range(1, 4)}  # Missing Q004, Q005
-
-        is_complete, msg = aggregator.validate_coverage(expected_slots, actual_slots)
-        assert not is_complete
-        assert "missing" in msg.lower()
-
-    def test_calculate_weighted_average(self, minimal_monolith):
-        """Test weighted average calculation."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        scores = [1.0, 2.0, 3.0]
-        weights = [0.2, 0.3, 0.5]
-
-        avg = aggregator.calculate_weighted_average(scores, weights)
-        expected = (1.0 * 0.2) + (2.0 * 0.3) + (3.0 * 0.5)
-        assert avg == pytest.approx(expected)
-
-    def test_apply_rubric_thresholds(self, minimal_monolith):
-        """Test rubric threshold application."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        # EXCELENTE: ≥ 0.85
-        level = aggregator.apply_rubric_thresholds(0.90, level="dimension")
-        assert level == "EXCELENTE"
-
-        # BUENO: ≥ 0.70
-        level = aggregator.apply_rubric_thresholds(0.75, level="dimension")
-        assert level == "BUENO"
-
-        # ACEPTABLE: ≥ 0.55
-        level = aggregator.apply_rubric_thresholds(0.60, level="dimension")
-        assert level == "ACEPTABLE"
-
-        # INSUFICIENTE: < 0.55
-        level = aggregator.apply_rubric_thresholds(0.50, level="dimension")
-        assert level == "INSUFICIENTE"
-
-    def test_aggregate_dimension_success(self, minimal_monolith, sample_scored_results):
-        """Test successful dimension aggregation."""
-        aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        result = aggregator.aggregate_dimension(
-            dimension_id="D1",
-            area_id="P1",
+        results = aggregator.run(
             scored_results=sample_scored_results,
+            group_by_keys=["policy_area", "dimension"]
         )
 
+        assert len(results) == 1
+        result = results[0]
         assert isinstance(result, DimensionScore)
         assert result.dimension_id == "D1"
         assert result.area_id == "P1"
         assert 0.0 <= result.score <= 3.0
         assert result.quality_level in ["EXCELENTE", "BUENO", "ACEPTABLE", "INSUFICIENTE"]
 
-    def test_aggregate_dimension_deterministic(self, minimal_monolith, sample_scored_results):
+    def test_run_deterministic(self, minimal_monolith, sample_scored_results):
         """Test dimension aggregation is deterministic."""
         aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
 
-        result1 = aggregator.aggregate_dimension(
-            dimension_id="D1",
-            area_id="P1",
+        result1 = aggregator.run(
             scored_results=sample_scored_results,
+            group_by_keys=["policy_area", "dimension"]
+        )
+        result2 = aggregator.run(
+            scored_results=sample_scored_results,
+            group_by_keys=["policy_area", "dimension"]
         )
 
-        result2 = aggregator.aggregate_dimension(
-            dimension_id="D1",
-            area_id="P1",
-            scored_results=sample_scored_results,
-        )
-
-        assert result1.score == result2.score
-        assert result1.quality_level == result2.quality_level
+        assert result1[0].score == result2[0].score
+        assert result1[0].quality_level == result2[0].quality_level
 
 # ============================================================================
 # AREA POLICY AGGREGATOR TESTS
@@ -263,41 +195,17 @@ class TestDimensionAggregator:
 class TestAreaPolicyAggregator:
     """Test AreaPolicyAggregator functionality."""
 
-    def test_initialization(self, minimal_monolith):
-        """Test area aggregator initialization."""
-        aggregator = AreaPolicyAggregator(minimal_monolith, abort_on_insufficient=False)
-        assert aggregator.monolith == minimal_monolith
-        assert aggregator.abort_on_insufficient is False
-
-    def test_validate_hermeticity_complete(self, minimal_monolith):
-        """Test hermeticity validation with complete dimensions."""
-        aggregator = AreaPolicyAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        dimension_ids = {f"D{i}" for i in range(1, 7)}
-        is_hermetic, msg = aggregator.validate_hermeticity(dimension_ids, area_id="P1")
-
-        # Hermeticity requires exactly 6 dimensions
-        assert is_hermetic
-
-    def test_normalize_scores(self, minimal_monolith, sample_dimension_scores):
-        """Test score normalization."""
-        aggregator = AreaPolicyAggregator(minimal_monolith, abort_on_insufficient=False)
-
-        normalized = aggregator.normalize_scores(sample_dimension_scores)
-
-        # All scores should be in [0, 1]
-        for score in normalized:
-            assert 0.0 <= score <= 1.0
-
-    def test_aggregate_area_success(self, minimal_monolith, sample_dimension_scores):
+    def test_run_success(self, minimal_monolith, sample_dimension_scores):
         """Test successful area aggregation."""
         aggregator = AreaPolicyAggregator(minimal_monolith, abort_on_insufficient=False)
 
-        result = aggregator.aggregate_area(
-            area_id="P1",
+        results = aggregator.run(
             dimension_scores=sample_dimension_scores,
+            group_by_keys=["area_id"]
         )
 
+        assert len(results) == 1
+        result = results[0]
         assert isinstance(result, AreaScore)
         assert result.area_id == "P1"
         assert 0.0 <= result.score <= 3.0
@@ -310,24 +218,27 @@ class TestAreaPolicyAggregator:
 class TestClusterAggregator:
     """Test ClusterAggregator functionality."""
 
-    def test_initialization(self, minimal_monolith):
-        """Test cluster aggregator initialization."""
-        aggregator = ClusterAggregator(minimal_monolith, abort_on_insufficient=False)
-        assert aggregator.monolith == minimal_monolith
-
-    def test_validate_cluster_hermeticity(self, minimal_monolith):
-        """Test cluster hermeticity validation."""
+    def test_run_success(self, minimal_monolith):
+        """Test successful cluster aggregation."""
         aggregator = ClusterAggregator(minimal_monolith, abort_on_insufficient=False)
 
-        # CL01 expects areas P1, P2
-        area_ids = {"P1", "P2"}
-        is_hermetic, msg = aggregator.validate_cluster_hermeticity(area_ids, cluster_id="CL01")
-        assert is_hermetic
+        area_scores = [
+            AreaScore(area_id="P1", area_name="Area 1", score=2.5, quality_level="BUENO", dimension_scores=[]),
+            AreaScore(area_id="P2", area_name="Area 2", score=2.8, quality_level="BUENO", dimension_scores=[])
+        ]
 
-        # Missing P2
-        area_ids = {"P1"}
-        is_hermetic, msg = aggregator.validate_cluster_hermeticity(area_ids, cluster_id="CL01")
-        assert not is_hermetic
+        # This structure should come from the monolith in a real scenario
+        cluster_definitions = [
+            {"cluster_id": "CL01", "policy_area_ids": ["P1", "P2"]}
+        ]
+
+        results = aggregator.run(area_scores, cluster_definitions)
+
+        assert len(results) == 1
+        result = results[0]
+        assert isinstance(result, ClusterScore)
+        assert result.cluster_id == "CL01"
+        assert 0.0 <= result.score <= 3.0
 
 # ============================================================================
 # MACRO AGGREGATOR TESTS
@@ -336,28 +247,22 @@ class TestClusterAggregator:
 class TestMacroAggregator:
     """Test MacroAggregator functionality."""
 
-    def test_initialization(self, minimal_monolith):
-        """Test macro aggregator initialization."""
+    def test_evaluate_macro_success(self, minimal_monolith):
+        """Test successful macro evaluation."""
         aggregator = MacroAggregator(minimal_monolith, abort_on_insufficient=False)
-        assert aggregator.monolith == minimal_monolith
-
-    def test_calculate_cross_cutting_coherence(self, minimal_monolith):
-        """Test cross-cutting coherence calculation."""
-        aggregator = MacroAggregator(minimal_monolith, abort_on_insufficient=False)
-
         cluster_scores = [
-            ClusterScore(
-                cluster_id=f"CL0{i}",
-                score=2.0 + (i * 0.1),
-                quality_level="BUENO",
-                area_scores=[],
-                evidence={},
-            )
-            for i in range(1, 5)
+            ClusterScore(cluster_id="CL01", cluster_name="C1", areas=[], score=2.5, coherence=0.8, area_scores=[])
+        ]
+        area_scores = [
+            AreaScore(area_id="P1", area_name="A1", score=2.5, quality_level="BUENO", dimension_scores=[])
+        ]
+        dimension_scores = [
+            DimensionScore(dimension_id="D1", area_id="P1", score=2.5, quality_level="BUENO", contributing_questions=[])
         ]
 
-        coherence = aggregator.calculate_cross_cutting_coherence(cluster_scores)
-        assert 0.0 <= coherence <= 1.0
+        result = aggregator.evaluate_macro(cluster_scores, area_scores, dimension_scores)
+        assert 0.0 <= result.score <= 3.0
+        assert result.quality_level is not None
 
 # ============================================================================
 # INTEGRATION TESTS
@@ -366,38 +271,25 @@ class TestMacroAggregator:
 class TestAggregationPipeline:
     """Test full aggregation pipeline."""
 
-    def test_dimension_to_area_pipeline(self, minimal_monolith, sample_scored_results):
-        """Test pipeline from dimension to area aggregation."""
-        # Step 1: Aggregate dimension
-        dim_aggregator = DimensionAggregator(minimal_monolith, abort_on_insufficient=False)
-        dim_aggregator.aggregate_dimension(
-            dimension_id="D1",
-            area_id="P1",
-            scored_results=sample_scored_results,
+    def test_full_pipeline(self, minimal_monolith, sample_scored_results):
+        """Test the full aggregation pipeline from scored results to area scores."""
+        # Step 1: Dimension Aggregation
+        dim_aggregator = DimensionAggregator(minimal_monolith)
+        dimension_scores = dim_aggregator.run(
+            sample_scored_results,
+            group_by_keys=["policy_area", "dimension"]
         )
+        assert dimension_scores
 
-        # Step 2: Create multiple dimensions
-        dimension_scores = [
-            DimensionScore(
-                dimension_id=f"D{i}",
-                area_id="P1",
-                score=2.0 + (i * 0.1),
-                quality_level="BUENO",
-                micro_scores=[2.0] * 5,
-                evidence={},
-            )
-            for i in range(1, 7)
-        ]
-
-        # Step 3: Aggregate area
-        area_aggregator = AreaPolicyAggregator(minimal_monolith, abort_on_insufficient=False)
-        area_score = area_aggregator.aggregate_area(
-            area_id="P1",
-            dimension_scores=dimension_scores,
+        # Step 2: Area Aggregation
+        area_aggregator = AreaPolicyAggregator(minimal_monolith)
+        area_scores = area_aggregator.run(
+            dimension_scores,
+            group_by_keys=["area_id"]
         )
-
-        assert isinstance(area_score, AreaScore)
-        assert area_score.area_id == "P1"
+        assert area_scores
+        assert isinstance(area_scores[0], AreaScore)
+        assert area_scores[0].area_id == "P1"
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

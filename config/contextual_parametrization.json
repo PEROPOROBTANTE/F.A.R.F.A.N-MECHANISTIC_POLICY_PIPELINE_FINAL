@@ -1,10 +1,15 @@
 {
   "_metadata": {
-    "version": "1.0.0",
-    "generated_at": "2025-11-10T08:23:00Z",
-    "description": "Contextual parametrization - rules and mappings for context-sensitive layers",
+    "version": "1.1.0",
+    "generated_at": "2025-11-14T00:00:00Z",
+    "description": "Contextual parametrization - SPECIFICATION ONLY (not operational)",
     "spec_compliance": "SUPERPROMPT Three-Pillar Calibration System",
-    "purpose": "Defines computation rules for @chain, @u, @q, @d, @p, @C, @m layers"
+    "purpose": "Defines computation rules for @chain, @u, @q, @d, @p, @C, @m layers",
+    "role": "SPECIFICATION",
+    "note": "This file documents the INTENDED parameter values. Operational values are defined in src/saaaaaa/core/calibration/config.py",
+    "authority": "config.py is SINGLE SOURCE OF TRUTH for runtime values",
+    "validation": "Run scripts/validate_config_consistency.py to verify consistency",
+    "last_harmonized": "2025-11-14"
   },
   
   "layer_chain": {
@@ -31,8 +36,9 @@
       "description": "How to compute U from PDT/PDM evidence",
       "components": {
         "structural_compliance": {
-          "weight": 0.30,
-          "function": "structural_compliance(pdt, legal_patterns)"
+          "weight": 0.25,
+          "function": "structural_compliance(pdt, legal_patterns)",
+          "_note": "Updated 2025-11-14 to match config.py (was 0.30)"
         },
         "mandatory_sections_ratio": {
           "weight": 0.25,
@@ -43,11 +49,13 @@
           "function": "indicator_quality_score(pdt)"
         },
         "ppi_completeness": {
-          "weight": 0.20,
-          "function": "ppi_completeness(pdt)"
+          "weight": 0.25,
+          "function": "ppi_completeness(pdt)",
+          "_note": "Updated 2025-11-14 to match config.py (was 0.20)"
         }
       },
-      "_constraint": "sum(weights) = 1.0"
+      "_constraint": "sum(weights) = 1.0",
+      "_harmonization_note": "Weights harmonized with config.py on 2025-11-14. Equal weighting (0.25 each) reflects balanced importance of all components."
     },
     "g_functions": {
       "description": "Sensitivity functions g_M(U) by role/family",

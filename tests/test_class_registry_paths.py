@@ -82,14 +82,14 @@ def test_class_registry_paths_match_expected_modules():
 
     paths = get_class_paths()
 
-    # Derek Beach classes should be in saaaaaa.analysis.dereck_beach
+    # Derek Beach classes should be in saaaaaa.analysis.derek_beach
     derek_beach_classes = [
         "CDAFFramework", "CausalExtractor", "OperationalizationAuditor",
         "FinancialAuditor", "BayesianMechanismInference"
     ]
     for class_name in derek_beach_classes:
-        assert paths[class_name].startswith("saaaaaa.analysis.dereck_beach."), \
-            f"{class_name} should be in saaaaaa.analysis.dereck_beach"
+        assert paths[class_name].startswith("saaaaaa.analysis.derek_beach."), \
+            f"{class_name} should be in saaaaaa.analysis.derek_beach"
 
     # Contradiction detection classes should be in saaaaaa.analysis.contradiction_deteccion
     contradiction_classes = [

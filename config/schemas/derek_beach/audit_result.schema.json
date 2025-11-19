@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://policy.analysis/schemas/derek_beach/audit_result.schema.json",
+  "title": "AuditResult",
+  "description": "Resultado de auditoría de operacionalización CDAF con warnings, errores y recomendaciones",
+  "type": "object",
+  "required": ["passed", "warnings", "errors", "recommendations"],
+  "properties": {
+    "passed": {
+      "type": "boolean",
+      "description": "Indica si la auditoría fue exitosa (true) o falló (false)"
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Lista de advertencias generadas durante la auditoría",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "errors": {
+      "type": "array",
+      "description": "Lista de errores críticos encontrados durante la auditoría",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Lista de recomendaciones para mejorar la calidad del plan",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000
+      }
+    }
+  },
+  "additionalProperties": false
+}

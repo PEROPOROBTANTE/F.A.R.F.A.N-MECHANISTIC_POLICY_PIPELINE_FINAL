@@ -17,6 +17,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 def count_methods_in_class(filepath: Path, class_name: str) -> tuple[list[str], dict[str, int]]:
     """Count public and private methods in a class and return method names"""
     if not filepath.exists():
@@ -85,7 +86,7 @@ def count_all_methods() -> dict[str, any]:
         "contradiction_deteccion.py",
         "embedding_policy.py",
         "teoria_cambio.py",
-        "dereck_beach.py",
+        "derek_beach.py",
         "policy_processor.py",
         "report_assembly.py",
         "semantic_chunking_policy.py"
@@ -95,7 +96,7 @@ def count_all_methods() -> dict[str, any]:
     producers = {
         "SemanticChunkingProducer": "semantic_chunking_policy.py",
         "EmbeddingPolicyProducer": "embedding_policy.py",
-        "DerekBeachProducer": "dereck_beach.py",
+        "DerekBeachProducer": "derek_beach.py",
         "ReportAssemblyProducer": "report_assembly.py"
     }
 
@@ -159,7 +160,7 @@ def count_all_methods() -> dict[str, any]:
     schema_modules = [
         "semantic_chunking_policy",
         "embedding_policy",
-        "dereck_beach",
+        "derek_beach",
         "report_assembly"
     ]
 

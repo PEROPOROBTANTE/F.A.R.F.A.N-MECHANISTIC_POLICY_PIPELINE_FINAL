@@ -27,28 +27,29 @@ REPO_ROOT = Path(__file__).parent.parent
 from saaaaaa.core.orchestrator.signals import SignalRegistry, SignalClient, InMemorySignalSource
 from saaaaaa.core.orchestrator.signal_loader import (
     build_signal_pack_from_monolith,
-    load_questionnaire_monolith,
     build_all_signal_packs,
 )
+from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
 
 
 def verify_monolith_loading():
-    """Verify questionnaire monolith can be loaded."""
+    """Verify questionnaire monolith can be loaded via canonical loader."""
     print("=" * 70)
-    print("TEST 1: Verify Questionnaire Monolith Loading")
+    print("TEST 1: Verify Questionnaire Monolith Loading (Canonical Loader)")
     print("=" * 70)
-    
+
     try:
-        monolith = load_questionnaire_monolith()
-        questions = monolith.get('blocks', {}).get('micro_questions', [])
-        
+        canonical = load_questionnaire()
+        questions = canonical.data.get('blocks', {}).get('micro_questions', [])
+
         if len(questions) != 300:
             print(f"❌ FAIL: Expected 300 questions, got {len(questions)}")
             return False
-        
+
         print(f"✓ Loaded questionnaire with {len(questions)} questions")
+        print(f"✓ Hash verified: {canonical.sha256[:16]}...")
         return True
-    
+
     except Exception as e:
         print(f"❌ FAIL: Could not load questionnaire: {e}")
         return False
@@ -59,13 +60,13 @@ def verify_signal_pack_building():
     print("\n" + "=" * 70)
     print("TEST 2: Verify Signal Pack Building")
     print("=" * 70)
-    
+
     errors = []
-    monolith = load_questionnaire_monolith()
-    
-    # Test building all packs
+    canonical = load_questionnaire()
+
+    # Test building all packs using canonical questionnaire
     try:
-        all_packs = build_all_signal_packs(monolith)
+        all_packs = build_all_signal_packs(questionnaire=canonical)
         
         if len(all_packs) != 10:
             errors.append(f"Expected 10 policy areas, got {len(all_packs)}")

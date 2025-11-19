@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA05",
+  "patterns": [
+    "víctimas",
+    "construcción de paz",
+    "paz",
+    "reparación integral",
+    "justicia transicional",
+    "verdad",
+    "justicia",
+    "no repetición",
+    "memoria histórica",
+    "restitución",
+    "indemnización",
+    "rehabilitación",
+    "satisfacción",
+    "garantías de no repetición",
+    "reconciliación",
+    "acuerdo de paz",
+    "posconflicto",
+    "posacuerdo",
+    "JEP",
+    "Comisión de la Verdad"
+  ],
+  "regex": [
+    "\\bvíctimas?\\b",
+    "\\bpaz\\b",
+    "\\breparación.*integral\\b",
+    "\\bjusticia.*transicional\\b",
+    "\\bverdad\\b",
+    "\\bjusticia\\b",
+    "\\bno.*repetición\\b",
+    "\\bmemoria.*histórica\\b",
+    "\\brestitución\\b",
+    "\\bindemnización\\b",
+    "\\bJEP\\b",
+    "\\bComisión.*Verdad\\b"
+  ],
+  "verbs": [
+    "reparar",
+    "restituir",
+    "indemnizar",
+    "rehabilitar",
+    "garantizar",
+    "reconocer",
+    "dignificar",
+    "reconciliar",
+    "esclarecer",
+    "construir",
+    "fortalecer",
+    "acompañar"
+  ],
+  "entities": [
+    "Unidad para las Víctimas",
+    "JEP",
+    "Jurisdicción Especial para la Paz",
+    "Comisión de la Verdad",
+    "UBPD",
+    "Unidad de Búsqueda",
+    "Alto Comisionado para la Paz",
+    "Agencia de Renovación del Territorio",
+    "ART"
+  ],
+  "thresholds": {
+    "min_confidence": 0.78,
+    "min_evidence": 0.75
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa05_v1_victims_peace",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Derechos de las víctimas y construcción de paz",
+    "legacy_id": "P5",
+    "questions": ["Q151", "Q152", "Q153", "Q154", "Q155", "Q156", "Q157", "Q158", "Q159", "Q160", "Q161", "Q162", "Q163", "Q164", "Q165", "Q166", "Q167", "Q168", "Q169", "Q170", "Q171", "Q172", "Q173", "Q174", "Q175", "Q176", "Q177", "Q178", "Q179", "Q180"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

@@ -27,7 +27,7 @@ Identifies the source module/file:
 - `TEO` = teoria_cambio.py
 - `SEM` = semantic_chunking_policy.py
 - `POL` = policy_processor.py
-- `DER` = dereck_beach.py
+- `DER` = derek_beach.py
 - `AGG` = aggregation.py
 - `SCO` = scoring.py
 - `REC` = recommendation_engine.py

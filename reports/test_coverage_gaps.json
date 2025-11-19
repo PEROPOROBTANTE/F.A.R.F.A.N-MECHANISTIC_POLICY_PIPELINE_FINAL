@@ -1,0 +1,775 @@
+{
+  "summary": {
+    "total_gaps": 84,
+    "by_severity": {
+      "critical": 37,
+      "high": 20,
+      "medium": 27,
+      "low": 0
+    },
+    "by_category": {
+      "UNTESTED_MODULE": 70,
+      "INTEGRATION": 4,
+      "ERROR_HANDLING": 6,
+      "E2E_WORKFLOW": 4
+    }
+  },
+  "gaps": [
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.Analyzer_one",
+      "description": "Module 'analysis.Analyzer_one' has no associated tests",
+      "potential_impact": "Bugs in analysis.Analyzer_one may go undetected until production",
+      "proposed_test": "test_Analyzer_one",
+      "proposed_test_file": "tests/test_analysis_Analyzer_one.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.bayesian_multilevel_system",
+      "description": "Module 'analysis.bayesian_multilevel_system' has no associated tests",
+      "potential_impact": "Bugs in analysis.bayesian_multilevel_system may go undetected until production",
+      "proposed_test": "test_bayesian_multilevel_system",
+      "proposed_test_file": "tests/test_analysis_bayesian_multilevel_system.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.contradiction_deteccion",
+      "description": "Module 'analysis.contradiction_deteccion' has no associated tests",
+      "potential_impact": "Bugs in analysis.contradiction_deteccion may go undetected until production",
+      "proposed_test": "test_contradiction_deteccion",
+      "proposed_test_file": "tests/test_analysis_contradiction_deteccion.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.enhance_recommendation_rules",
+      "description": "Module 'analysis.enhance_recommendation_rules' has no associated tests",
+      "potential_impact": "Bugs in analysis.enhance_recommendation_rules may go undetected until production",
+      "proposed_test": "test_enhance_recommendation_rules",
+      "proposed_test_file": "tests/test_analysis_enhance_recommendation_rules.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.factory",
+      "description": "Module 'analysis.factory' has no associated tests",
+      "potential_impact": "Bugs in analysis.factory may go undetected until production",
+      "proposed_test": "test_factory",
+      "proposed_test_file": "tests/test_analysis_factory.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.macro_prompts",
+      "description": "Module 'analysis.macro_prompts' has no associated tests",
+      "potential_impact": "Bugs in analysis.macro_prompts may go undetected until production",
+      "proposed_test": "test_macro_prompts",
+      "proposed_test_file": "tests/test_analysis_macro_prompts.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.micro_prompts",
+      "description": "Module 'analysis.micro_prompts' has no associated tests",
+      "potential_impact": "Bugs in analysis.micro_prompts may go undetected until production",
+      "proposed_test": "test_micro_prompts",
+      "proposed_test_file": "tests/test_analysis_micro_prompts.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.report_assembly",
+      "description": "Module 'analysis.report_assembly' has no associated tests",
+      "potential_impact": "Bugs in analysis.report_assembly may go undetected until production",
+      "proposed_test": "test_report_assembly",
+      "proposed_test_file": "tests/test_analysis_report_assembly.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "analysis.teoria_cambio",
+      "description": "Module 'analysis.teoria_cambio' has no associated tests",
+      "potential_impact": "Bugs in analysis.teoria_cambio may go undetected until production",
+      "proposed_test": "test_teoria_cambio",
+      "proposed_test_file": "tests/test_analysis_teoria_cambio.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "api.api_server",
+      "description": "Module 'api.api_server' has no associated tests",
+      "potential_impact": "Bugs in api.api_server may go undetected until production",
+      "proposed_test": "test_api_server",
+      "proposed_test_file": "tests/test_api_api_server.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "api.signals_service",
+      "description": "Module 'api.signals_service' has no associated tests",
+      "potential_impact": "Bugs in api.signals_service may go undetected until production",
+      "proposed_test": "test_signals_service",
+      "proposed_test_file": "tests/test_api_signals_service.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "audit.audit_system",
+      "description": "Module 'audit.audit_system' has no associated tests",
+      "potential_impact": "Bugs in audit.audit_system may go undetected until production",
+      "proposed_test": "test_audit_system",
+      "proposed_test_file": "tests/test_audit_audit_system.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "compat.lazy_deps",
+      "description": "Module 'compat.lazy_deps' has no associated tests",
+      "potential_impact": "Bugs in compat.lazy_deps may go undetected until production",
+      "proposed_test": "test_lazy_deps",
+      "proposed_test_file": "tests/test_compat_lazy_deps.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "compat.native_check",
+      "description": "Module 'compat.native_check' has no associated tests",
+      "potential_impact": "Bugs in compat.native_check may go undetected until production",
+      "proposed_test": "test_native_check",
+      "proposed_test_file": "tests/test_compat_native_check.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.chain_layer",
+      "description": "Module 'core.calibration.chain_layer' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.chain_layer may go undetected until production",
+      "proposed_test": "test_chain_layer",
+      "proposed_test_file": "tests/test_core_calibration_chain_layer.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.choquet_aggregator",
+      "description": "Module 'core.calibration.choquet_aggregator' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.choquet_aggregator may go undetected until production",
+      "proposed_test": "test_choquet_aggregator",
+      "proposed_test_file": "tests/test_core_calibration_choquet_aggregator.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.compatibility",
+      "description": "Module 'core.calibration.compatibility' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.compatibility may go undetected until production",
+      "proposed_test": "test_compatibility",
+      "proposed_test_file": "tests/test_core_calibration_compatibility.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.congruence_layer",
+      "description": "Module 'core.calibration.congruence_layer' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.congruence_layer may go undetected until production",
+      "proposed_test": "test_congruence_layer",
+      "proposed_test_file": "tests/test_core_calibration_congruence_layer.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.intrinsic_loader",
+      "description": "Module 'core.calibration.intrinsic_loader' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.intrinsic_loader may go undetected until production",
+      "proposed_test": "test_intrinsic_loader",
+      "proposed_test_file": "tests/test_core_calibration_intrinsic_loader.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.layer_requirements",
+      "description": "Module 'core.calibration.layer_requirements' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.layer_requirements may go undetected until production",
+      "proposed_test": "test_layer_requirements",
+      "proposed_test_file": "tests/test_core_calibration_layer_requirements.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.meta_layer",
+      "description": "Module 'core.calibration.meta_layer' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.meta_layer may go undetected until production",
+      "proposed_test": "test_meta_layer",
+      "proposed_test_file": "tests/test_core_calibration_meta_layer.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.orchestrator",
+      "description": "Module 'core.calibration.orchestrator' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.orchestrator may go undetected until production",
+      "proposed_test": "test_orchestrator",
+      "proposed_test_file": "tests/test_core_calibration_orchestrator.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.calibration.unit_layer",
+      "description": "Module 'core.calibration.unit_layer' has no associated tests",
+      "potential_impact": "Bugs in core.calibration.unit_layer may go undetected until production",
+      "proposed_test": "test_unit_layer",
+      "proposed_test_file": "tests/test_core_calibration_unit_layer.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.canonical_notation",
+      "description": "Module 'core.canonical_notation' has no associated tests",
+      "potential_impact": "Bugs in core.canonical_notation may go undetected until production",
+      "proposed_test": "test_canonical_notation",
+      "proposed_test_file": "tests/test_core_canonical_notation.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.contracts",
+      "description": "Module 'core.contracts' has no associated tests",
+      "potential_impact": "Bugs in core.contracts may go undetected until production",
+      "proposed_test": "test_contracts",
+      "proposed_test_file": "tests/test_core_contracts.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.layer_coexistence",
+      "description": "Module 'core.layer_coexistence' has no associated tests",
+      "potential_impact": "Bugs in core.layer_coexistence may go undetected until production",
+      "proposed_test": "test_layer_coexistence",
+      "proposed_test_file": "tests/test_core_layer_coexistence.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.layer_influence_model",
+      "description": "Module 'core.layer_influence_model' has no associated tests",
+      "potential_impact": "Bugs in core.layer_influence_model may go undetected until production",
+      "proposed_test": "test_layer_influence_model",
+      "proposed_test_file": "tests/test_core_layer_influence_model.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.advanced_module_config",
+      "description": "Module 'core.orchestrator.advanced_module_config' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.advanced_module_config may go undetected until production",
+      "proposed_test": "test_advanced_module_config",
+      "proposed_test_file": "tests/test_core_orchestrator_advanced_module_config.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.catalogo_completo_canonico",
+      "description": "Module 'core.orchestrator.catalogo_completo_canonico' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.catalogo_completo_canonico may go undetected until production",
+      "proposed_test": "test_catalogo_completo_canonico",
+      "proposed_test_file": "tests/test_core_orchestrator_catalogo_completo_canonico.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.choreographer",
+      "description": "Module 'core.orchestrator.choreographer' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.choreographer may go undetected until production",
+      "proposed_test": "test_choreographer",
+      "proposed_test_file": "tests/test_core_orchestrator_choreographer.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.contract_loader",
+      "description": "Module 'core.orchestrator.contract_loader' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.contract_loader may go undetected until production",
+      "proposed_test": "test_contract_loader",
+      "proposed_test_file": "tests/test_core_orchestrator_contract_loader.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.core_module_factory",
+      "description": "Module 'core.orchestrator.core_module_factory' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.core_module_factory may go undetected until production",
+      "proposed_test": "test_core_module_factory",
+      "proposed_test_file": "tests/test_core_orchestrator_core_module_factory.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.evidence_registry",
+      "description": "Module 'core.orchestrator.evidence_registry' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.evidence_registry may go undetected until production",
+      "proposed_test": "test_evidence_registry",
+      "proposed_test_file": "tests/test_core_orchestrator_evidence_registry.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.questionnaire",
+      "description": "Module 'core.orchestrator.questionnaire' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.questionnaire may go undetected until production",
+      "proposed_test": "test_questionnaire",
+      "proposed_test_file": "tests/test_core_orchestrator_questionnaire.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.signal_consumption",
+      "description": "Module 'core.orchestrator.signal_consumption' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.signal_consumption may go undetected until production",
+      "proposed_test": "test_signal_consumption",
+      "proposed_test_file": "tests/test_core_orchestrator_signal_consumption.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.signal_loader",
+      "description": "Module 'core.orchestrator.signal_loader' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.signal_loader may go undetected until production",
+      "proposed_test": "test_signal_loader",
+      "proposed_test_file": "tests/test_core_orchestrator_signal_loader.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.verification_manifest",
+      "description": "Module 'core.orchestrator.verification_manifest' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.verification_manifest may go undetected until production",
+      "proposed_test": "test_verification_manifest",
+      "proposed_test_file": "tests/test_core_orchestrator_verification_manifest.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.versions",
+      "description": "Module 'core.orchestrator.versions' has no associated tests",
+      "potential_impact": "Bugs in core.orchestrator.versions may go undetected until production",
+      "proposed_test": "test_versions",
+      "proposed_test_file": "tests/test_core_orchestrator_versions.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "core.ports",
+      "description": "Module 'core.ports' has no associated tests",
+      "potential_impact": "Bugs in core.ports may go undetected until production",
+      "proposed_test": "test_ports",
+      "proposed_test_file": "tests/test_core_ports.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "observability.opentelemetry_integration",
+      "description": "Module 'observability.opentelemetry_integration' has no associated tests",
+      "potential_impact": "Bugs in observability.opentelemetry_integration may go undetected until production",
+      "proposed_test": "test_opentelemetry_integration",
+      "proposed_test_file": "tests/test_observability_opentelemetry_integration.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "optimization.rl_strategy",
+      "description": "Module 'optimization.rl_strategy' has no associated tests",
+      "potential_impact": "Bugs in optimization.rl_strategy may go undetected until production",
+      "proposed_test": "test_rl_strategy",
+      "proposed_test_file": "tests/test_optimization_rl_strategy.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "patterns.event_tracking",
+      "description": "Module 'patterns.event_tracking' has no associated tests",
+      "potential_impact": "Bugs in patterns.event_tracking may go undetected until production",
+      "proposed_test": "test_event_tracking",
+      "proposed_test_file": "tests/test_patterns_event_tracking.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "patterns.saga",
+      "description": "Module 'patterns.saga' has no associated tests",
+      "potential_impact": "Bugs in patterns.saga may go undetected until production",
+      "proposed_test": "test_saga",
+      "proposed_test_file": "tests/test_patterns_saga.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "processing.factory",
+      "description": "Module 'processing.factory' has no associated tests",
+      "potential_impact": "Bugs in processing.factory may go undetected until production",
+      "proposed_test": "test_factory",
+      "proposed_test_file": "tests/test_processing_factory.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "processing.semantic_chunking_policy",
+      "description": "Module 'processing.semantic_chunking_policy' has no associated tests",
+      "potential_impact": "Bugs in processing.semantic_chunking_policy may go undetected until production",
+      "proposed_test": "test_semantic_chunking_policy",
+      "proposed_test_file": "tests/test_processing_semantic_chunking_policy.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "processing.spc_ingestion.quality_gates",
+      "description": "Module 'processing.spc_ingestion.quality_gates' has no associated tests",
+      "potential_impact": "Bugs in processing.spc_ingestion.quality_gates may go undetected until production",
+      "proposed_test": "test_quality_gates",
+      "proposed_test_file": "tests/test_processing_spc_ingestion_quality_gates.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "processing.spc_ingestion.structural",
+      "description": "Module 'processing.spc_ingestion.structural' has no associated tests",
+      "potential_impact": "Bugs in processing.spc_ingestion.structural may go undetected until production",
+      "proposed_test": "test_structural",
+      "proposed_test_file": "tests/test_processing_spc_ingestion_structural.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.adapters",
+      "description": "Module 'utils.adapters' has no associated tests",
+      "potential_impact": "Bugs in utils.adapters may go undetected until production",
+      "proposed_test": "test_adapters",
+      "proposed_test_file": "tests/test_utils_adapters.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.contract_adapters",
+      "description": "Module 'utils.contract_adapters' has no associated tests",
+      "potential_impact": "Bugs in utils.contract_adapters may go undetected until production",
+      "proposed_test": "test_contract_adapters",
+      "proposed_test_file": "tests/test_utils_contract_adapters.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.contract_io",
+      "description": "Module 'utils.contract_io' has no associated tests",
+      "potential_impact": "Bugs in utils.contract_io may go undetected until production",
+      "proposed_test": "test_contract_io",
+      "proposed_test_file": "tests/test_utils_contract_io.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "CRITICAL",
+      "component": "utils.core_contracts",
+      "description": "Module 'utils.core_contracts' has no associated tests",
+      "potential_impact": "Bugs in utils.core_contracts may go undetected until production",
+      "proposed_test": "test_core_contracts",
+      "proposed_test_file": "tests/test_utils_core_contracts.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.coverage_gate",
+      "description": "Module 'utils.coverage_gate' has no associated tests",
+      "potential_impact": "Bugs in utils.coverage_gate may go undetected until production",
+      "proposed_test": "test_coverage_gate",
+      "proposed_test_file": "tests/test_utils_coverage_gate.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.determinism.seeds",
+      "description": "Module 'utils.determinism.seeds' has no associated tests",
+      "potential_impact": "Bugs in utils.determinism.seeds may go undetected until production",
+      "proposed_test": "test_seeds",
+      "proposed_test_file": "tests/test_utils_determinism_seeds.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.determinism_helpers",
+      "description": "Module 'utils.determinism_helpers' has no associated tests",
+      "potential_impact": "Bugs in utils.determinism_helpers may go undetected until production",
+      "proposed_test": "test_determinism_helpers",
+      "proposed_test_file": "tests/test_utils_determinism_helpers.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.deterministic_execution",
+      "description": "Module 'utils.deterministic_execution' has no associated tests",
+      "potential_impact": "Bugs in utils.deterministic_execution may go undetected until production",
+      "proposed_test": "test_deterministic_execution",
+      "proposed_test_file": "tests/test_utils_deterministic_execution.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.domain_errors",
+      "description": "Module 'utils.domain_errors' has no associated tests",
+      "potential_impact": "Bugs in utils.domain_errors may go undetected until production",
+      "proposed_test": "test_domain_errors",
+      "proposed_test_file": "tests/test_utils_domain_errors.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "utils.enhanced_contracts",
+      "description": "Module 'utils.enhanced_contracts' has no associated tests",
+      "potential_impact": "Bugs in utils.enhanced_contracts may go undetected until production",
+      "proposed_test": "test_enhanced_contracts",
+      "proposed_test_file": "tests/test_utils_enhanced_contracts.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.evidence_registry",
+      "description": "Module 'utils.evidence_registry' has no associated tests",
+      "potential_impact": "Bugs in utils.evidence_registry may go undetected until production",
+      "proposed_test": "test_evidence_registry",
+      "proposed_test_file": "tests/test_utils_evidence_registry.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.flow_adapters",
+      "description": "Module 'utils.flow_adapters' has no associated tests",
+      "potential_impact": "Bugs in utils.flow_adapters may go undetected until production",
+      "proposed_test": "test_flow_adapters",
+      "proposed_test_file": "tests/test_utils_flow_adapters.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.json_contract_loader",
+      "description": "Module 'utils.json_contract_loader' has no associated tests",
+      "potential_impact": "Bugs in utils.json_contract_loader may go undetected until production",
+      "proposed_test": "test_json_contract_loader",
+      "proposed_test_file": "tests/test_utils_json_contract_loader.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.json_logger",
+      "description": "Module 'utils.json_logger' has no associated tests",
+      "potential_impact": "Bugs in utils.json_logger may go undetected until production",
+      "proposed_test": "test_json_logger",
+      "proposed_test_file": "tests/test_utils_json_logger.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.metadata_loader",
+      "description": "Module 'utils.metadata_loader' has no associated tests",
+      "potential_impact": "Bugs in utils.metadata_loader may go undetected until production",
+      "proposed_test": "test_metadata_loader",
+      "proposed_test_file": "tests/test_utils_metadata_loader.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.method_config_loader",
+      "description": "Module 'utils.method_config_loader' has no associated tests",
+      "potential_impact": "Bugs in utils.method_config_loader may go undetected until production",
+      "proposed_test": "test_method_config_loader",
+      "proposed_test_file": "tests/test_utils_method_config_loader.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.qmcm_hooks",
+      "description": "Module 'utils.qmcm_hooks' has no associated tests",
+      "potential_impact": "Bugs in utils.qmcm_hooks may go undetected until production",
+      "proposed_test": "test_qmcm_hooks",
+      "proposed_test_file": "tests/test_utils_qmcm_hooks.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.schema_monitor",
+      "description": "Module 'utils.schema_monitor' has no associated tests",
+      "potential_impact": "Bugs in utils.schema_monitor may go undetected until production",
+      "proposed_test": "test_schema_monitor",
+      "proposed_test_file": "tests/test_utils_schema_monitor.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "MEDIUM",
+      "component": "utils.seed_factory",
+      "description": "Module 'utils.seed_factory' has no associated tests",
+      "potential_impact": "Bugs in utils.seed_factory may go undetected until production",
+      "proposed_test": "test_seed_factory",
+      "proposed_test_file": "tests/test_utils_seed_factory.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "utils.validation.architecture_validator",
+      "description": "Module 'utils.validation.architecture_validator' has no associated tests",
+      "potential_impact": "Bugs in utils.validation.architecture_validator may go undetected until production",
+      "proposed_test": "test_architecture_validator",
+      "proposed_test_file": "tests/test_utils_validation_architecture_validator.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "utils.validation.contract_logger",
+      "description": "Module 'utils.validation.contract_logger' has no associated tests",
+      "potential_impact": "Bugs in utils.validation.contract_logger may go undetected until production",
+      "proposed_test": "test_contract_logger",
+      "proposed_test_file": "tests/test_utils_validation_contract_logger.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "utils.validation.golden_rule",
+      "description": "Module 'utils.validation.golden_rule' has no associated tests",
+      "potential_impact": "Bugs in utils.validation.golden_rule may go undetected until production",
+      "proposed_test": "test_golden_rule",
+      "proposed_test_file": "tests/test_utils_validation_golden_rule.py"
+    },
+    {
+      "category": "UNTESTED_MODULE",
+      "severity": "HIGH",
+      "component": "utils.validation.predicates",
+      "description": "Module 'utils.validation.predicates' has no associated tests",
+      "potential_impact": "Bugs in utils.validation.predicates may go undetected until production",
+      "proposed_test": "test_predicates",
+      "proposed_test_file": "tests/test_utils_validation_predicates.py"
+    },
+    {
+      "category": "INTEGRATION",
+      "severity": "CRITICAL",
+      "component": "calibration",
+      "description": "Missing end-to-end calibration system integration test",
+      "potential_impact": "Calibration pipeline may fail when components are combined, causing incorrect policy analysis results",
+      "proposed_test": "test_calibration_e2e_integration",
+      "proposed_test_file": "tests/integration/test_calibration_e2e.py"
+    },
+    {
+      "category": "INTEGRATION",
+      "severity": "HIGH",
+      "component": "spc_causal_bridge",
+      "description": "Missing integration test for SPC to causal analysis workflow",
+      "potential_impact": "Data may be lost or corrupted when transitioning from SPC ingestion to causal analysis",
+      "proposed_test": "test_spc_to_analysis_integration",
+      "proposed_test_file": "tests/integration/test_spc_analysis_bridge.py"
+    },
+    {
+      "category": "INTEGRATION",
+      "severity": "CRITICAL",
+      "component": "orchestrator",
+      "description": "Missing stress test for concurrent multi-executor coordination",
+      "potential_impact": "Race conditions or deadlocks may occur when multiple executors run in parallel, causing pipeline failures",
+      "proposed_test": "test_concurrent_executor_coordination",
+      "proposed_test_file": "tests/integration/test_executor_concurrency.py"
+    },
+    {
+      "category": "INTEGRATION",
+      "severity": "CRITICAL",
+      "component": "processing.cpp_ingestion",
+      "description": "Missing end-to-end provenance chain validation",
+      "potential_impact": "Provenance data may be corrupted across pipeline stages, violating audit trail requirements",
+      "proposed_test": "test_provenance_chain_integrity_e2e",
+      "proposed_test_file": "tests/integration/test_provenance_integrity.py"
+    },
+    {
+      "category": "ERROR_HANDLING",
+      "severity": "HIGH",
+      "component": "processing.document_ingestion",
+      "description": "Missing tests for corrupted/malformed PDF handling",
+      "potential_impact": "System may crash or produce incorrect results when processing malformed PDFs from municipalities",
+      "proposed_test": "test_malformed_pdf_handling",
+      "proposed_test_file": "tests/test_document_ingestion_errors.py"
+    },
+    {
+      "category": "ERROR_HANDLING",
+      "severity": "HIGH",
+      "component": "core.orchestrator.signals",
+      "description": "Missing tests for network timeout and retry logic",
+      "potential_impact": "Signal client may fail silently or retry indefinitely, causing pipeline hangs",
+      "proposed_test": "test_signal_client_network_failures",
+      "proposed_test_file": "tests/test_signal_client_resilience.py"
+    },
+    {
+      "category": "ERROR_HANDLING",
+      "severity": "CRITICAL",
+      "component": "processing",
+      "description": "Missing tests for memory exhaustion with large documents",
+      "potential_impact": "Pipeline may crash when processing very large development plans (>500 pages), losing all progress",
+      "proposed_test": "test_large_document_memory_management",
+      "proposed_test_file": "tests/test_memory_limits.py"
+    },
+    {
+      "category": "ERROR_HANDLING",
+      "severity": "CRITICAL",
+      "component": "core.orchestrator.questionnaire",
+      "description": "Missing tests for malformed questionnaire JSON handling",
+      "potential_impact": "Corrupted questionnaire file may cause pipeline to fail with unclear error messages",
+      "proposed_test": "test_questionnaire_schema_validation",
+      "proposed_test_file": "tests/test_questionnaire_error_handling.py"
+    },
+    {
+      "category": "E2E_WORKFLOW",
+      "severity": "CRITICAL",
+      "component": "full_pipeline",
+      "description": "Missing end-to-end test with real municipal development plan",
+      "potential_impact": "Pipeline may fail on real data despite passing synthetic tests, causing production failures",
+      "proposed_test": "test_real_plan_e2e_execution",
+      "proposed_test_file": "tests/integration/test_real_plan_e2e.py"
+    },
+    {
+      "category": "E2E_WORKFLOW",
+      "severity": "HIGH",
+      "component": "orchestrator",
+      "description": "Missing test for batch processing multiple plans concurrently",
+      "potential_impact": "Batch processing may cause resource contention or data corruption when analyzing multiple plans",
+      "proposed_test": "test_batch_plan_processing",
+      "proposed_test_file": "tests/integration/test_batch_processing.py"
+    },
+    {
+      "category": "E2E_WORKFLOW",
+      "severity": "HIGH",
+      "component": "analysis.report_assembly",
+      "description": "Missing test for complete report generation from analysis results",
+      "potential_impact": "Reports may be incomplete or malformed, missing critical policy recommendations",
+      "proposed_test": "test_complete_report_assembly",
+      "proposed_test_file": "tests/test_report_assembly_complete.py"
+    },
+    {
+      "category": "E2E_WORKFLOW",
+      "severity": "CRITICAL",
+      "component": "full_pipeline",
+      "description": "Missing test for deterministic execution across different platforms",
+      "potential_impact": "Analysis results may differ between development and production, violating reproducibility requirements",
+      "proposed_test": "test_cross_platform_determinism",
+      "proposed_test_file": "tests/test_platform_determinism.py"
+    },
+    {
+      "category": "ERROR_HANDLING",
+      "severity": "HIGH",
+      "component": "analysis.bayesian_multilevel_system",
+      "description": "Missing tests for edge cases in Bayesian scoring (zero evidence, conflicting evidence)",
+      "potential_impact": "Bayesian scores may be NaN or Inf in edge cases, causing downstream failures",
+      "proposed_test": "test_bayesian_scoring_edge_cases",
+      "proposed_test_file": "tests/test_bayesian_edge_cases.py"
+    },
+    {
+      "category": "ERROR_HANDLING",
+      "severity": "MEDIUM",
+      "component": "infrastructure",
+      "description": "Missing tests for circuit breaker state transition edge cases",
+      "potential_impact": "Circuit breaker may get stuck in open state, preventing recovery from transient failures",
+      "proposed_test": "test_circuit_breaker_state_transitions",
+      "proposed_test_file": "tests/test_circuit_breaker_advanced.py"
+    }
+  ]
+}

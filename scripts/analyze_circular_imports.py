@@ -19,7 +19,7 @@ import importlib
 import importlib.util
 from pathlib import Path
 from typing import Set, Dict, List, Tuple, Optional
-from collections import defaultdict, deque
+from collections import defaultdict
 
 class ImportAnalyzer:
     """Analyze Python imports and detect circular dependencies."""
@@ -250,10 +250,10 @@ def assess_severity(cycle: List[str]) -> Tuple[str, str]:
                 reason = f"Circular dependency chain: {cycle_str}"
 
     # Check length - longer chains are usually worse
+    # Escalate to CRITICAL for long chains regardless of prior severity
     if len(cycle) > 3:
-        if severity == "WARNING":
-            severity = "CRITICAL"
-            reason = f"Long circular dependency chain ({len(cycle)} modules): {cycle_str}"
+        severity = "CRITICAL"
+        reason = f"Long circular dependency chain ({len(cycle)} modules): {cycle_str}"
 
     return severity, reason
 

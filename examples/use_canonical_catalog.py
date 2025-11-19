@@ -9,8 +9,10 @@ para orquestación inteligente, análisis de cobertura y optimización.
 
 import json
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from collections import Counter, defaultdict
+
+from saaaaaa.core.canonical_notation import CanonicalDimension
 
 
 class CanonicalCatalogManager:
@@ -119,7 +121,7 @@ class CanonicalCatalogManager:
             "total_unique_methods": len(method_usage),
             "total_method_calls": sum(method_usage.values()),
             "top_10_methods": [
-                {"method": method, "uses": count, "percentage": f"{(count/30)*100:.1f}%"}
+                {"method": method, "uses": count, "percentage": f"{(count/self.catalog['metadata']['total_executors'])*100:.1f}%"}
                 for method, count in top_methods
             ],
             "usage_by_file": {
@@ -273,7 +275,7 @@ class CanonicalCatalogManager:
     # MÉTODOS AUXILIARES
     # ========================================================================
 
-    def _find_question(self, question_id: str) -> Dict[str, Any] | None:
+    def _find_question(self, question_id: str) -> Optional[Dict[str, Any]]:
         """Busca una pregunta por su ID en el catálogo."""
         for executor in self.catalog['executors']:
             if executor['q'] == question_id:
@@ -369,7 +371,8 @@ def ejemplo_3_optimizacion_ejecucion():
     # Obtener solo métodos críticos e importantes de D6-Q1
     prioritized = manager.obtener_metodos_priorizados("D6-Q1", min_priority=2)
 
-    print(f"\n🎯 Métodos priorizados para D6-Q1 (Integridad de Teoría de Cambio)")
+    d6_label = CanonicalDimension.D6.label
+    print(f"\n🎯 Métodos priorizados para D6-Q1 ({d6_label})")
     print(f"Total: {len(prioritized)} métodos")
 
     critical = [m for m in prioritized if m['priority'] == 3]

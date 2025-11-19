@@ -23,12 +23,16 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
+try:
+    from saaaaaa.config.paths import PROJECT_ROOT
+except Exception:  # pragma: no cover - setup bootstrap
+    PROJECT_ROOT = Path(__file__).resolve().parent
+
 # Read long description from README
-readme_file = Path(__file__).parent / "README.md"
+readme_file = PROJECT_ROOT / "README.md"
 long_description = ""
 if readme_file.exists():
-    with open(readme_file, encoding="utf-8") as f:
-        long_description = f.read()
+    long_description = readme_file.read_text(encoding="utf-8")
 
 # Use flexible dependency ranges instead of strict pins from requirements.txt
 # requirements.txt is for development/production pinning, not for package metadata
@@ -36,11 +40,14 @@ install_requires = [
     "numpy>=1.26.0,<2.0",
     "pandas>=2.2.0",
     "scipy>=1.14.0",
-    "scikit-learn>=1.6.0",
+    "scikit-learn>=1.5.0", # Lowered from 1.6.0 to be compatible with econml<1.6
+    "pyarrow>=19.0.0",
+    "polars>=1.19.0",
     "networkx>=3.4.0",
     "pydantic>=2.10.0",
     "flask>=3.0.0",
     "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
     "httpx>=0.28.0",
     "pyyaml>=6.0.2",
     "jsonschema>=4.23.0",
@@ -51,14 +58,16 @@ install_requires = [
     "structlog>=24.4.0",
     "opentelemetry-api>=1.29.0",
     "opentelemetry-sdk>=1.29.0",
-    "huggingface-hub>=0.27.1",
-    "transformers>=4.48.0",
-    "sentence-transformers>=3.0.0",
+    "huggingface-hub>=0.20.0,<1.0.0",
+    "transformers>=4.41.0,<4.54.0",
+    "sentence-transformers>=3.1.0,<3.2.0",
     "spacy>=3.8.0",
     "nltk>=3.9.0",
     "pdfplumber>=0.11.0",
     "PyPDF2>=3.0.0",
     "PyMuPDF>=1.25.0",
+    "typer>=0.15.0",
+    "ftfy>=6.0.0",  # Robust text encoding repair (mojibake fixing)
 ]
 
 setup(
@@ -76,7 +85,7 @@ setup(
     },
     package_dir={"": "src"},
     packages=find_packages(where="src"),
-    python_requires=">=3.10,<3.14",
+    python_requires="~=3.12.0",
     install_requires=install_requires,
     extras_require={
         "dev": [
@@ -98,16 +107,16 @@ setup(
             "tf-keras>=2.16.0",  # Required for transformers compatibility with TensorFlow 2.16+
         ],
         "bayesian": [
-            "pytensor>=2.34.0,<2.35",
-            "pymc>=5.16.0",
+            "pytensor>=2.25.1,<2.26",
+            "pymc==5.16.2",
             "arviz>=0.20.0",
         ],
         "all": [
             "torch>=2.0.0",
             "tensorflow>=2.16.0",
             "tf-keras>=2.16.0",  # Required for transformers compatibility with TensorFlow 2.16+
-            "pytensor>=2.34.0,<2.35",
-            "pymc>=5.16.2",
+            "pytensor>=2.25.1,<2.26",
+            "pymc==5.16.2",
             "arviz>=0.20.0",
         ],
     },
@@ -124,8 +133,6 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
         "License :: OSI Approved :: MIT License",

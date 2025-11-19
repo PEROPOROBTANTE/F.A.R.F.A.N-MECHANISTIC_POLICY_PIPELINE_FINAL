@@ -1,6 +1,7 @@
 """Test workspace boundary enforcement and path traversal protection."""
 
 from pathlib import Path
+import tempfile
 import pytest
 
 from saaaaaa.utils.paths import (
@@ -91,16 +92,20 @@ class TestWorkspaceBoundaries:
         
         assert is_within(root, tmp)
     
+    def _external_tmp(self, name: str) -> Path:
+        """Helper producing a path outside the workspace (system temp)."""
+        return Path(tempfile.gettempdir()) / name
+
     def test_absolute_outside_rejected(self):
         """Absolute paths outside workspace should be rejected."""
-        outside = Path("/tmp/outside")
+        outside = self._external_tmp("outside")
         
         # Should not be considered within workspace
         assert not is_within(proj_root(), outside)
     
     def test_write_outside_workspace_blocked(self):
         """Writing outside workspace should be blocked."""
-        outside = Path("/tmp/malicious.txt")
+        outside = self._external_tmp("malicious.txt")
         
         with pytest.raises(PathOutsideWorkspaceError):
             validate_write_path(outside)

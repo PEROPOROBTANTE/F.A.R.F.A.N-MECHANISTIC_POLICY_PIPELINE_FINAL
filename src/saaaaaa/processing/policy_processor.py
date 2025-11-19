@@ -661,14 +661,18 @@ class IndustrialPolicyProcessor:
     State-of-the-art policy plan processor implementing rigorous causal
     framework analysis with Bayesian evidence scoring and graph-theoretic
     validation for Colombian local development plans.
-    """
 
-    QUESTIONNAIRE_PATH: ClassVar[Path] = Path("decalogo-industrial.latest.clean.json")
+    This processor provides core analysis capabilities for policy documents.
+
+    DEPRECATION NOTE: The questionnaire_path parameter is deprecated.
+    Modern pipelines use SPC (Smart Policy Chunks) ingestion which handles
+    questionnaire integration separately.
+    """
 
     def __init__(
         self,
         config: ProcessorConfig | None = None,
-        questionnaire_path: Path | None = None,
+        questionnaire_path: Path | None = None,  # DEPRECATED: Kept for API compatibility only
         *,
         ontology: MunicipalOntology | None = None,
         semantic_analyzer: SemanticAnalyzer | None = None,
@@ -678,6 +682,17 @@ class IndustrialPolicyProcessor:
         confidence_calculator: BayesianConfidenceCalculator | None = None,
         municipal_analyzer: MunicipalAnalyzer | None = None,
     ) -> None:
+        # DEPRECATION WARNING: questionnaire_path parameter is deprecated
+        if questionnaire_path is not None:
+            import warnings
+            warnings.warn(
+                "The 'questionnaire_path' parameter is deprecated and will be ignored. "
+                "Modern SPC pipelines handle questionnaire integration separately. "
+                "Use CPPIngestionPipeline instead.",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
         self.config = config or ProcessorConfig()
         self.config.validate()
 
@@ -695,9 +710,10 @@ class IndustrialPolicyProcessor:
         self.confidence_calculator = confidence_calculator or BayesianConfidenceCalculator()
         self.municipal_analyzer = municipal_analyzer or MunicipalAnalyzer()
 
-        # Load canonical questionnaire structure
-        self.questionnaire_file_path = questionnaire_path or self.QUESTIONNAIRE_PATH
-        self.questionnaire_data = self._load_questionnaire()
+        # LEGACY: Questionnaire loading removed - this component is deprecated
+        # Modern SPC pipeline handles questionnaire injection separately
+        self.questionnaire_file_path = None
+        self.questionnaire_data = {"questions": []}  # Empty stub for backward compatibility
 
         # Compile pattern taxonomy
         self._pattern_registry = self._compile_pattern_registry()
@@ -710,20 +726,17 @@ class IndustrialPolicyProcessor:
         self.statistics: dict[str, Any] = defaultdict(int)
 
     def _load_questionnaire(self) -> dict[str, Any]:
-        """Load and validate DECALOGO questionnaire structure."""
-        # Delegate to factory for I/O operation
-        from .factory import load_json
+        """
+        LEGACY: Questionnaire loading disabled.
 
-        try:
-            data = load_json(self.questionnaire_file_path)
-
-            logger.info(
-                f"Loaded questionnaire: {len(data.get('questions', []))} questions"
-            )
-            return data
-        except Exception as e:
-            logger.error(f"Failed to load questionnaire: {e}")
-            raise OSError(f"Questionnaire unavailable: {self.questionnaire_file_path}") from e
+        This method is kept for backward compatibility but returns empty data.
+        Modern SPC pipeline handles questionnaire injection separately.
+        """
+        logger.warning(
+            "IndustrialPolicyProcessor._load_questionnaire called but questionnaire "
+            "loading is disabled. This is a legacy component. Use SPC ingestion instead."
+        )
+        return {"questions": []}
 
     def _compile_pattern_registry(self) -> dict[CausalDimension, dict[str, list[re.Pattern]]]:
         """Compile all causal patterns into efficient regex objects."""
@@ -737,10 +750,26 @@ class IndustrialPolicyProcessor:
         return registry
 
     def _build_point_patterns(self) -> None:
-        """Extract and compile patterns for each policy point from questionnaire."""
+        """
+        LEGACY: Pattern building from questionnaire disabled.
+
+        This method is kept for backward compatibility but does nothing.
+        Modern SPC pipeline handles question-aware chunking separately.
+        """
+        questions = self.questionnaire_data.get("questions", [])
+
+        if not questions:
+            logger.info(
+                "No questionnaire questions available. "
+                "This is expected for legacy IndustrialPolicyProcessor. "
+                "Use SPC ingestion for question-aware analysis."
+            )
+            return
+
+        # Legacy path (should not be reached in modern pipeline)
         point_keywords: dict[str, set[str]] = defaultdict(set)
 
-        for question in self.questionnaire_data.get("questions", []):
+        for question in questions:
             point_code = question.get("point_code")
             if not point_code:
                 continue
@@ -1427,13 +1456,28 @@ class PolicyAnalysisPipeline:
     """
     End-to-end orchestrator for Colombian local development plan analysis
     implementing the complete DECALOGO causal framework evaluation workflow.
+
+    DEPRECATION NOTE: The questionnaire_path parameter is deprecated.
+    Modern pipelines use SPC (Smart Policy Chunks) ingestion which handles
+    questionnaire integration separately.
     """
 
     def __init__(
         self,
         config: ProcessorConfig | None = None,
-        questionnaire_path: Path | None = None,
+        questionnaire_path: Path | None = None,  # DEPRECATED: Kept for API compatibility only
     ) -> None:
+        # DEPRECATION WARNING: questionnaire_path parameter is deprecated
+        if questionnaire_path is not None:
+            import warnings
+            warnings.warn(
+                "The 'questionnaire_path' parameter is deprecated and will be ignored. "
+                "Modern SPC pipelines handle questionnaire integration separately. "
+                "Use CPPIngestionPipeline instead.",
+                DeprecationWarning,
+                stacklevel=2
+            )
+
         self.config = config or ProcessorConfig()
         self.sanitizer = AdvancedTextSanitizer(self.config)
 

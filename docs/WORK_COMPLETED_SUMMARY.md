@@ -25,7 +25,7 @@
   - `financia_callibrator.yaml`
   - `config/derek_beach_cdaf_config.yaml`
   - `config/execution_mapping.yaml`
-  - `config/schemas/dereck_beach/config.yaml`
+  - `config/schemas/derek_beach/config.yaml`
 - **Integration needed**: calibration_registry.py must load from YAML
 
 #### ⏳ Request 2: Canonical Method Notation Development

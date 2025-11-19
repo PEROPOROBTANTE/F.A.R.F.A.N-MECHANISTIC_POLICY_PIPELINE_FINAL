@@ -1,11 +1,24 @@
 """Test that no absolute paths exist in the codebase."""
 
+import os
 import re
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import pytest
 
 
 REPO_ROOT = Path(__file__).parent.parent.parent
+PATH_SEPARATOR = Path(os.sep).as_posix()
+ABSOLUTE_SEGMENTS = ("home", "Users", "tmp", "var", "usr")
+ABSOLUTE_PREFIXES = [
+    f"{PATH_SEPARATOR}{segment}" for segment in ABSOLUTE_SEGMENTS
+]
+UNIX_ABSOLUTE_PATTERN = re.compile(
+    r'["\'](' + "|".join(re.escape(prefix) for prefix in ABSOLUTE_PREFIXES) + r')/[^"\']*["\']'
+)
+TMP_MARKER = f"{PATH_SEPARATOR}tmp{PATH_SEPARATOR}"
+USR_LIB = str(Path(os.sep) / "usr" / "lib")
+USR_LOCAL_LIB = str(Path(os.sep) / "usr" / "local" / "lib")
+WINDOWS_TEMP = str(PureWindowsPath("C:/temp"))
 
 
 def get_python_files():
@@ -26,8 +39,7 @@ def get_python_files():
 
 def test_no_absolute_unix_paths():
     """No absolute Unix-style paths should exist in code."""
-    # Pattern for absolute Unix paths (but exclude docstring examples and comments)
-    pattern = re.compile(r'["\'](/home|/Users|/tmp|/var|/usr)/[^"\']*["\']')
+    pattern = UNIX_ABSOLUTE_PATTERN
     
     violations = []
     
@@ -52,14 +64,14 @@ def test_no_absolute_unix_paths():
                     if 'paths.py' in str(py_file):
                         # Allow examples in paths.py docstrings
                         continue
-                    if 'native_check.py' in str(py_file) and ('/usr/lib' in line or '/usr/local/lib' in line):
+                    if 'native_check.py' in str(py_file) and (USR_LIB in line or USR_LOCAL_LIB in line):
                         # System library paths for native checks
                         continue
                     if 'test_paths_no_absolutes.py' in str(py_file):
                         # This test file checks for these patterns - meta!
                         continue
-                    if 'test_' in str(py_file) and '/tmp/' in line:
-                        # Test files may use /tmp for testing purposes - should be fixed but not critical
+                    if 'test_' in str(py_file) and TMP_MARKER in line:
+                        # Test files may exercise temp directories - should be fixed but not critical
                         continue
                     
                     rel_path = py_file.relative_to(REPO_ROOT)
@@ -165,8 +177,12 @@ def test_prefer_pathlib_over_os_path():
 
 
 def test_hardcoded_temp_dirs():
-    """No hardcoded /tmp or C:\\temp should exist."""
-    pattern = re.compile(r'["\'](?:/tmp|C:\\\\temp)["\']')
+    """No hardcoded OS-specific temp directories should exist."""
+    temp_patterns = [
+        TMP_MARKER.rstrip(PATH_SEPARATOR),
+        WINDOWS_TEMP,
+    ]
+    pattern = re.compile(r'["\'](' + "|".join(re.escape(p) for p in temp_patterns) + r')["\']')
     
     violations = []
     

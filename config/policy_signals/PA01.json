@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA01",
+  "patterns": [
+    "género",
+    "mujeres",
+    "equidad",
+    "igualdad",
+    "violencia de género",
+    "violencia basada en género",
+    "brecha salarial",
+    "participación política",
+    "cuidado",
+    "trabajo doméstico",
+    "acoso laboral",
+    "acoso sexual",
+    "derechos reproductivos",
+    "empoderamiento",
+    "autonomía económica",
+    "liderazgo femenino",
+    "discriminación por género",
+    "paridad",
+    "cuota de género",
+    "feminicidio"
+  ],
+  "regex": [
+    "\\bmujeres?\\b",
+    "\\bfeminin[oa]s?\\b",
+    "\\bgénero\\b",
+    "\\bbrecha.*salarial\\b",
+    "\\bviolencia.*género\\b",
+    "\\bparticipación.*política\\b",
+    "\\bequidad.*género\\b",
+    "\\bigualdad.*género\\b",
+    "\\bempoderamiento\\b",
+    "\\bfeminicidio\\b",
+    "\\bdiscriminación.*género\\b",
+    "\\bparidad\\b",
+    "\\bcuota.*género\\b"
+  ],
+  "verbs": [
+    "garantizar",
+    "promover",
+    "prevenir",
+    "proteger",
+    "fortalecer",
+    "erradicar",
+    "visibilizar",
+    "empoderar",
+    "eliminar",
+    "fomentar",
+    "impulsar",
+    "sensibilizar"
+  ],
+  "entities": [
+    "Ministerio de la Mujer",
+    "Consejería de Género",
+    "ONU Mujeres",
+    "Mesa de Género",
+    "Comisión de Equidad",
+    "Secretaría de la Mujer",
+    "Instituto de la Mujer",
+    "Observatorio de Género"
+  ],
+  "thresholds": {
+    "min_confidence": 0.75,
+    "min_evidence": 0.70
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa01_v1_gender_rights",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": null,
+  "metadata": {
+    "policy_area_name": "Derechos de las mujeres e igualdad de género",
+    "legacy_id": "P1",
+    "questions": ["Q001", "Q002", "Q003", "Q004", "Q005", "Q006", "Q007", "Q008", "Q009", "Q010", "Q011", "Q012", "Q013", "Q014", "Q015", "Q016", "Q017", "Q018", "Q019", "Q020", "Q021", "Q022", "Q023", "Q024", "Q025", "Q026", "Q027", "Q028", "Q029", "Q030"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

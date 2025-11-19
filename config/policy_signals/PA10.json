@@ -1,0 +1,83 @@
+{
+  "version": "1.0.0",
+  "policy_area": "PA10",
+  "patterns": [
+    "migración",
+    "migración transfronteriza",
+    "migrantes",
+    "refugiados",
+    "solicitantes de asilo",
+    "venezolanos",
+    "flujo migratorio",
+    "frontera",
+    "integración",
+    "regularización",
+    "PEP",
+    "PPT",
+    "permiso especial de permanencia",
+    "estatuto temporal",
+    "atención migrantes",
+    "xenofobia",
+    "discriminación migratoria",
+    "tráfico de personas",
+    "trata de personas",
+    "movilidad humana"
+  ],
+  "regex": [
+    "\\bmigración\\b",
+    "\\bmigrantes?\\b",
+    "\\brefugiados?\\b",
+    "\\basilo\\b",
+    "\\bvenezolanxs?\\b",
+    "\\bflujo.*migratorio\\b",
+    "\\bfrontera\\b",
+    "\\bintegración\\b",
+    "\\bregularización\\b",
+    "\\bPEP\\b",
+    "\\bPPT\\b",
+    "\\bestatuto.*temporal\\b",
+    "\\bxenofobia\\b",
+    "\\btráfico.*personas\\b",
+    "\\btrata.*personas\\b"
+  ],
+  "verbs": [
+    "regularizar",
+    "integrar",
+    "acoger",
+    "atender",
+    "proteger",
+    "garantizar",
+    "documentar",
+    "formalizar",
+    "gestionar",
+    "facilitar",
+    "asistir",
+    "incluir"
+  ],
+  "entities": [
+    "Migración Colombia",
+    "Cancillería",
+    "Ministerio de Relaciones Exteriores",
+    "ACNUR",
+    "OIM",
+    "Organización Internacional para las Migraciones",
+    "RAMV",
+    "Registro Administrativo de Migrantes Venezolanos",
+    "Gerencia de Fronteras"
+  ],
+  "thresholds": {
+    "min_confidence": 0.75,
+    "min_evidence": 0.70
+  },
+  "ttl_s": 3600,
+  "source_fingerprint": "pa10_v1_migration",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "",
+  "metadata": {
+    "policy_area_name": "Migración transfronteriza",
+    "legacy_id": "P10",
+    "questions": ["Q031", "Q032", "Q033", "Q034", "Q035", "Q036", "Q037", "Q038", "Q039", "Q040", "Q041", "Q042", "Q043", "Q044", "Q045", "Q046", "Q047", "Q048", "Q049", "Q050", "Q051", "Q052", "Q053", "Q054", "Q055", "Q056", "Q057", "Q058", "Q059", "Q060"],
+    "created_by": "policy_orchestration_system",
+    "version_date": "2025-01-16"
+  }
+}

@@ -13,6 +13,7 @@ import copy
 from dataclasses import dataclass, asdict, field
 from typing import Dict, List, Any, Optional, Tuple, Set, Union
 from enum import Enum
+from pathlib import Path
 from scipy.spatial.distance import cosine
 from scipy.stats import entropy
 from scipy.signal import find_peaks
@@ -26,6 +27,7 @@ from sklearn.cluster import DBSCAN, AgglomerativeClustering
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import TfidfVectorizer
 import spacy
+from nltk.tokenize import sent_tokenize
 # Note: SentenceTransformer import removed - embedding handled by canonical producers
 import warnings
 warnings.filterwarnings('ignore')
@@ -261,20 +263,19 @@ class SmartPolicyChunk:
     chunk_id: str
     document_id: str
     content_hash: str
-    
     text: str
     normalized_text: str
     semantic_density: float
-    
     section_hierarchy: List[str]
     document_position: Tuple[int, int]
     chunk_type: ChunkType
-    
     causal_chain: List[CausalEvidence]
     policy_entities: List[PolicyEntity]
     implicit_assumptions: List[Tuple[str, float]]
     contextual_presuppositions: List[Tuple[str, float]]
     
+    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
+    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
     argument_structure: Optional[ArgumentStructure] = None
     temporal_dynamics: Optional[TemporalDynamics] = None
     discourse_markers: List[Tuple[str, str]] = field(default_factory=list)
@@ -1227,27 +1228,412 @@ class StrategicIntegrator:
 
 
 # =============================================================================
+# POLICY AREA CHUNK CALIBRATION - Garantiza 10 chunks por policy area
+# =============================================================================
+
+class PolicyAreaChunkCalibrator:
+    """
+    Calibrates chunking to guarantee exactly 10 strategic chunks per policy area.
+
+    Uses the existing SemanticChunkingProducer with dynamically adjusted parameters
+    to ensure consistent chunk count across different policy documents.
+
+    Strategy:
+        1. Estimate optimal chunk_size based on document length
+        2. Generate initial chunks with SemanticChunkingProducer
+        3. Adjust parameters iteratively if chunk count != 10
+        4. Merge or split chunks as needed to reach target
+
+    Attributes:
+        TARGET_CHUNKS_PER_PA: Target number of chunks (10)
+        TOLERANCE: Acceptable deviation (±1 chunk)
+        MAX_ITERATIONS: Maximum calibration iterations (3)
+    """
+
+    TARGET_CHUNKS_PER_PA = 10
+    TOLERANCE = 1
+    MAX_ITERATIONS = 3
+
+    # Canonical policy areas from questionnaire_monolith.json
+    POLICY_AREAS = [
+        "PA01", "PA02", "PA03", "PA04", "PA05",
+        "PA06", "PA07", "PA08", "PA09", "PA10"
+    ]
+
+    def __init__(self, semantic_chunking_producer: SemanticChunkingProducer):
+        """
+        Initialize calibrator.
+
+        Args:
+            semantic_chunking_producer: Canonical SemanticChunkingProducer instance
+        """
+        self.chunking_producer = semantic_chunking_producer
+        self.logger = logging.getLogger("SPC.Calibrator")
+
+    def calibrate_for_policy_area(
+        self,
+        text: str,
+        policy_area: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate exactly 10 chunks for a policy area.
+
+        Args:
+            text: Policy document text
+            policy_area: Policy area ID (PA01-PA10)
+            metadata: Optional metadata to attach to chunks
+
+        Returns:
+            List of exactly 10 chunks
+
+        Raises:
+            ValueError: If policy_area is invalid or text is empty
+        """
+        if policy_area not in self.POLICY_AREAS:
+            raise ValueError(
+                f"Invalid policy_area: {policy_area}. "
+                f"Must be one of {self.POLICY_AREAS}"
+            )
+
+        if not text or len(text.strip()) == 0:
+            raise ValueError("Text cannot be empty")
+
+        self.logger.info(
+            f"Calibrating chunks for {policy_area} "
+            f"(target: {self.TARGET_CHUNKS_PER_PA} chunks)"
+        )
+
+        # Estimate initial parameters based on document length
+        initial_params = self._estimate_initial_params(text)
+
+        # Attempt to generate chunks with calibration
+        chunks = self._generate_with_calibration(
+            text,
+            policy_area,
+            initial_params,
+            metadata
+        )
+
+        # Final validation
+        if len(chunks) != self.TARGET_CHUNKS_PER_PA:
+            self.logger.warning(
+                f"{policy_area}: Could not reach exact target. "
+                f"Got {len(chunks)} chunks, forcing adjustment to {self.TARGET_CHUNKS_PER_PA}"
+            )
+            chunks = self._force_chunk_count(chunks, self.TARGET_CHUNKS_PER_PA)
+
+        self.logger.info(
+            f"{policy_area}: Calibration complete - {len(chunks)} chunks generated"
+        )
+
+        return chunks
+
+    def _estimate_initial_params(self, text: str) -> Dict[str, Any]:
+        """
+        Estimate optimal chunking parameters based on text length.
+
+        Args:
+            text: Document text
+
+        Returns:
+            Dictionary with chunk_size, overlap, and other parameters
+        """
+        text_length = len(text)
+        sentence_count = text.count('.') + text.count('!') + text.count('?')
+
+        # Estimate chunk size to yield ~10 chunks
+        estimated_chunk_size = max(
+            500,  # Minimum chunk size
+            min(
+                2000,  # Maximum chunk size
+                text_length // (self.TARGET_CHUNKS_PER_PA + 2)  # Add buffer
+            )
+        )
+
+        return {
+            'chunk_size': estimated_chunk_size,
+            'overlap': int(estimated_chunk_size * 0.15),  # 15% overlap
+            'min_chunk_size': 300,
+            'adaptive': True,
+        }
+
+    def _generate_with_calibration(
+        self,
+        text: str,
+        policy_area: str,
+        initial_params: Dict[str, Any],
+        metadata: Optional[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate chunks with iterative calibration to reach target count.
+
+        Args:
+            text: Document text
+            policy_area: Policy area ID
+            initial_params: Initial chunking parameters
+            metadata: Optional metadata
+
+        Returns:
+            List of chunks (may not be exactly 10, needs final adjustment)
+        """
+        params = initial_params.copy()
+
+        for iteration in range(self.MAX_ITERATIONS):
+            # Use SemanticChunkingProducer to generate chunks
+            try:
+                # FIXED: Actually use the SemanticChunkingProducer
+                chunks = self._generate_chunks_with_producer(text, params, policy_area, metadata)
+            except Exception as e:
+                # Fallback to simple chunking if producer fails
+                self.logger.warning(f"SemanticChunkingProducer failed: {e}, using fallback")
+                chunks = self._generate_chunks_simple(text, params, policy_area, metadata)
+
+            chunk_count = len(chunks)
+            delta = chunk_count - self.TARGET_CHUNKS_PER_PA
+
+            self.logger.debug(
+                f"{policy_area}: Iteration {iteration+1} - "
+                f"{chunk_count} chunks (delta: {delta:+d})"
+            )
+
+            # Check if within tolerance
+            if abs(delta) <= self.TOLERANCE:
+                return chunks
+
+            # Adjust parameters for next iteration
+            if delta > 0:
+                # Too many chunks - increase chunk size
+                params['chunk_size'] = int(params['chunk_size'] * 1.2)
+            else:
+                # Too few chunks - decrease chunk size
+                params['chunk_size'] = int(params['chunk_size'] * 0.8)
+
+            # Ensure bounds
+            params['chunk_size'] = max(400, min(2500, params['chunk_size']))
+
+        # Return best attempt after max iterations
+        return chunks
+
+    def _generate_chunks_with_producer(
+        self,
+        text: str,
+        params: Dict[str, Any],
+        policy_area: str,
+        metadata: Optional[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate chunks using the SemanticChunkingProducer.
+
+        Args:
+            text: Document text
+            params: Chunking parameters (chunk_size, overlap, etc.)
+            policy_area: Policy area ID
+            metadata: Optional metadata
+
+        Returns:
+            List of chunk dictionaries
+        """
+        # Use the actual SemanticChunkingProducer (instance method, not standalone function)
+        # Use the producer instance injected via __init__
+        producer = self.chunking_producer
+
+        # chunk_document signature: (text: str, preserve_structure: bool = True) -> list[dict[str, Any]]
+        result_chunks = producer.chunk_document(text=text, preserve_structure=True)
+
+        # Convert to our format
+        chunks = []
+        for i, chunk_result in enumerate(result_chunks):
+            # chunk_result is a dict with keys like 'text', 'embedding', 'section_type', etc.
+            chunks.append({
+                'id': f"{policy_area}_chunk_{i+1}",
+                'text': chunk_result.get('text', ''),
+                'policy_area': policy_area,
+                'chunk_index': i,
+                'length': len(chunk_result.get('text', '')),
+                'metadata': metadata or {},
+                'semantic_metadata': {
+                    'section_type': chunk_result.get('section_type'),
+                    'section_id': chunk_result.get('section_id'),
+                    'has_embedding': 'embedding' in chunk_result
+                }
+            })
+
+        return chunks
+
+    def _generate_chunks_simple(
+        self,
+        text: str,
+        params: Dict[str, Any],
+        policy_area: str,
+        metadata: Optional[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Simple chunk generation using sentence splitting.
+
+        This is a fallback implementation. In production, this would use
+        the full SemanticChunkingProducer with BGE-M3 embeddings.
+
+        Args:
+            text: Document text
+            params: Chunking parameters
+            policy_area: Policy area ID
+            metadata: Optional metadata
+
+        Returns:
+            List of chunk dictionaries
+        """
+        # Simple sentence-based chunking
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+
+        chunk_size = params.get('chunk_size', 1000)
+        chunks = []
+        current_chunk = []
+        current_length = 0
+
+        for sentence in sentences:
+            sentence_length = len(sentence)
+
+            if current_length + sentence_length > chunk_size and current_chunk:
+                # Create chunk
+                chunk_text = '. '.join(current_chunk) + '.'
+                chunks.append({
+                    'id': f"{policy_area}_chunk_{len(chunks)+1}",
+                    'text': chunk_text,
+                    'policy_area': policy_area,
+                    'chunk_index': len(chunks),
+                    'length': len(chunk_text),
+                    'metadata': metadata or {}
+                })
+                current_chunk = [sentence]
+                current_length = sentence_length
+            else:
+                current_chunk.append(sentence)
+                current_length += sentence_length
+
+        # Add final chunk
+        if current_chunk:
+            chunk_text = '. '.join(current_chunk) + '.'
+            chunks.append({
+                'id': f"{policy_area}_chunk_{len(chunks)+1}",
+                'text': chunk_text,
+                'policy_area': policy_area,
+                'chunk_index': len(chunks),
+                'length': len(chunk_text),
+                'metadata': metadata or {}
+            })
+
+        return chunks
+
+    def _force_chunk_count(
+        self,
+        chunks: List[Dict[str, Any]],
+        target: int
+    ) -> List[Dict[str, Any]]:
+        """
+        Force chunk count to exactly match target by merging or splitting.
+
+        Args:
+            chunks: List of chunks
+            target: Target chunk count
+
+        Returns:
+            List with exactly target chunks
+        """
+        current_count = len(chunks)
+
+        if current_count == target:
+            return chunks
+
+        if current_count > target:
+            # Too many chunks - merge smallest adjacent pairs
+            while len(chunks) > target:
+                # Find smallest chunk
+                min_idx = min(range(len(chunks)), key=lambda i: chunks[i]['length'])
+
+                # Merge with adjacent chunk
+                if min_idx > 0:
+                    # Merge with previous
+                    chunks[min_idx-1]['text'] += ' ' + chunks[min_idx]['text']
+                    chunks[min_idx-1]['length'] = len(chunks[min_idx-1]['text'])
+                    chunks.pop(min_idx)
+                else:
+                    # Merge with next
+                    chunks[min_idx]['text'] += ' ' + chunks[min_idx+1]['text']
+                    chunks[min_idx]['length'] = len(chunks[min_idx]['text'])
+                    chunks.pop(min_idx+1)
+        else:
+            # Too few chunks - split largest chunks
+            while len(chunks) < target:
+                # Find largest chunk
+                max_idx = max(range(len(chunks)), key=lambda i: chunks[i]['length'])
+
+                # Split it in half
+                chunk_to_split = chunks[max_idx]
+                text = chunk_to_split['text']
+                mid_point = len(text) // 2
+
+                # Find sentence boundary near midpoint
+                split_point = text.rfind('.', 0, mid_point) + 1
+                if split_point <= 0:
+                    split_point = mid_point
+
+                # Create two chunks
+                chunk1_text = text[:split_point].strip()
+                chunk2_text = text[split_point:].strip()
+
+                chunks[max_idx] = {
+                    **chunk_to_split,
+                    'text': chunk1_text,
+                    'length': len(chunk1_text),
+                }
+
+                chunks.insert(max_idx + 1, {
+                    **chunk_to_split,
+                    'id': f"{chunk_to_split['id']}_split",
+                    'text': chunk2_text,
+                    'length': len(chunk2_text),
+                })
+
+        # Re-index chunks
+        for i, chunk in enumerate(chunks):
+            chunk['chunk_index'] = i
+
+        return chunks
+
+
+# =============================================================================
 # SISTEMA PRINCIPAL DE CHUNKING ESTRATÉGICO (COMPLETO)
 # =============================================================================
 
 class StrategicChunkingSystem:
-    def __init__(self):
+    def __init__(self, random_seed: int = 42):
         """
         Initialize the Strategic Chunking System with canonical components.
-        
+
         Integrates production-grade canonical modules:
         - PolicyAnalysisEmbedder for semantic embeddings
         - SemanticProcessor for chunking with PDM structure awareness
         - IndustrialPolicyProcessor for causal evidence extraction
         - BayesianEvidenceScorer for probabilistic confidence scoring
-        
+
+        Args:
+            random_seed: Seed for deterministic RNG (default: 42)
+
         Inputs:
             None
         Outputs:
             None - initializes system state
         """
-        self.config = SmartChunkConfig()
+        # Fix seeds for deterministic execution (HOSTILE AUDIT REQUIREMENT)
+        import random
+        np.random.seed(random_seed)
+        random.seed(random_seed)
         self.logger = logging.getLogger("SPC")  # Unified logger name
+        self.logger.info(f"Initialized with deterministic seed: {random_seed}")
+
+        self.config = SmartChunkConfig()
         
         # =====================================================================
         # CANONICAL SOTA PRODUCERS - Frontier approach components
@@ -1260,7 +1646,38 @@ class StrategicChunkingSystem:
         self._spc_policy = create_policy_processor()         # canonical PDQ/dimension evidence
         
         self.logger.info("SOTA canonical producers initialized: EmbeddingPolicyProducer, SemanticChunkingProducer, PolicyProcessor")
-        
+
+        # =====================================================================
+        # POLICY AREA × DIMENSION KEYWORD MAPS - Structured extraction
+        # =====================================================================
+
+        # PA01-PA10 keyword maps for content extraction
+        self._pa_keywords = {
+            "PA01": ["mujeres", "género", "igualdad", "feminismo", "violencia género", "empoderamiento", "equidad"],
+            "PA02": ["violencia", "conflicto armado", "protección", "prevención", "grupos delincuenciales", "economías ilegales", "seguridad"],
+            "PA03": ["ambiente", "cambio climático", "desastres", "medio ambiente", "ecología", "sostenibilidad", "recursos naturales"],
+            "PA04": ["derechos económicos", "derechos sociales", "derechos culturales", "educación", "salud", "vivienda", "trabajo"],
+            "PA05": ["víctimas", "construcción de paz", "reconciliación", "reparación", "memoria", "justicia transicional"],
+            "PA06": ["niñez", "adolescencia", "juventud", "entornos protectores", "desarrollo infantil", "educación inicial"],
+            "PA07": ["tierras", "territorios", "tenencia", "reforma agraria", "ordenamiento territorial", "catastro"],
+            "PA08": ["líderes", "lideresas", "defensores", "defensoras", "derechos humanos", "protección líderes", "amenazas"],
+            "PA09": ["privadas libertad", "cárceles", "sistema penitenciario", "hacinamiento", "reinserción", "reclusos"],
+            "PA10": ["migración", "transfronteriza", "migrantes", "refugiados", "movilidad humana", "frontera"]
+        }
+
+        # DIM01-DIM06 keyword maps for dimension alignment
+        self._dim_keywords = {
+            "DIM01": ["diagnóstico", "recursos", "presupuesto", "financiación", "insumos", "inversión", "dotación"],
+            "DIM02": ["actividades", "intervención", "diseño", "estrategias", "acciones", "programas", "proyectos"],
+            "DIM03": ["productos", "outputs", "entregables", "resultados intermedios", "metas", "indicadores producto"],
+            "DIM04": ["resultados", "outcomes", "efectos", "logros", "cambios", "impacto directo", "beneficiarios"],
+            "DIM05": ["impactos", "largo plazo", "transformación", "cambio estructural", "sostenibilidad", "legado"],
+            "DIM06": ["causalidad", "teoría de cambio", "cadena causal", "lógica intervención", "marco lógico", "supuestos"]
+        }
+
+        self.logger.info(f"PA keyword maps: {len(self._pa_keywords)} policy areas")
+        self.logger.info(f"DIM keyword maps: {len(self._dim_keywords)} dimensions")
+
         # =====================================================================
         # SPECIALIZED COMPONENTS - Keep (no canonical equivalent)
         # =====================================================================
@@ -1566,7 +1983,9 @@ class StrategicChunkingSystem:
             chunk_id=chunk_id,
             document_id=document_id,
             content_hash=content_hash,
-            
+            policy_area_id=strategic_unit.get("policy_area_id"),  # PA01-PA10
+            dimension_id=strategic_unit.get("dimension_id"),      # DIM01-DIM06
+
             text=text,
             normalized_text=normalized_text,
             semantic_density=self._calculate_semantic_density(text),
@@ -2532,6 +2951,163 @@ class StrategicChunkingSystem:
                 })
         return frameworks
 
+    def _extract_content_for_pa_dimension(
+        self,
+        document_text: str,
+        policy_area: str,
+        dimension: str,
+        sentences: List[str],
+        sentence_positions: List[Tuple[int, int]],
+        sentence_embeddings: Optional[np.ndarray] = None
+    ) -> Dict[str, Any]:
+        """
+        Extract most relevant content for a specific (PA, DIM) combination.
+
+        Uses embedding-based similarity to find sentences most aligned with
+        the policy area and dimension keywords.
+
+        Args:
+            document_text: Full document text
+            policy_area: Policy area code (PA01-PA10)
+            dimension: Dimension code (DIM01-DIM06)
+            sentences: List of document sentences
+            sentence_positions: List of (start, end) byte positions for each sentence
+            sentence_embeddings: Pre-computed embeddings (optional, computed if None)
+
+        Returns:
+            Dictionary with segment metadata and text
+        """
+        # Generate query embedding from PA + DIM keywords
+        pa_keywords = self._pa_keywords.get(policy_area, [])
+        dim_keywords = self._dim_keywords.get(dimension, [])
+        query_text = " ".join(pa_keywords + dim_keywords)
+
+        # Get query embedding
+        query_embedding = self._spc_sem.embed_text(query_text)
+
+        # Compute sentence embeddings if not provided
+        if sentence_embeddings is None:
+            sentence_embeddings = self._spc_sem.embed_batch(sentences)
+
+        # Compute cosine similarity between query and all sentences
+        from sklearn.metrics.pairwise import cosine_similarity
+        similarities = cosine_similarity(
+            query_embedding.reshape(1, -1),
+            sentence_embeddings
+        )[0]
+
+        # Find top-K most similar sentences (K=10)
+        top_k = min(10, len(sentences))
+        top_indices = np.argsort(similarities)[-top_k:][::-1]
+
+        # Extract contiguous region around top sentences
+        if len(top_indices) == 0:
+            # Fallback: return first 800 chars
+            segment_text = document_text[:800]
+            segment_start = 0
+            segment_end = len(segment_text)
+        else:
+            # Find min/max positions to create contiguous chunk
+            min_idx = min(top_indices)
+            max_idx = max(top_indices)
+
+            # Expand window by ±2 sentences for context
+            start_idx = max(0, min_idx - 2)
+            end_idx = min(len(sentences) - 1, max_idx + 2)
+
+            # Get byte positions
+            segment_start = sentence_positions[start_idx][0]
+            segment_end = sentence_positions[end_idx][1]
+            segment_text = document_text[segment_start:segment_end]
+
+        # Compute relevance score (mean of top-K similarities)
+        relevance_score = float(np.mean(similarities[top_indices])) if len(top_indices) > 0 else 0.0
+
+        return {
+            "text": segment_text,
+            "position": (segment_start, segment_end),
+            "policy_area": policy_area,
+            "dimension": dimension,
+            "relevance_score": relevance_score,
+            "top_sentence_indices": top_indices.tolist(),
+            "query_keywords": pa_keywords + dim_keywords
+        }
+
+    def _generate_60_structured_segments(
+        self,
+        document_text: str,
+        structural_analysis: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate EXACTLY 60 structured segments aligned by (PA × DIM) matrix.
+
+        This replaces FASE 4 semantic segmentation with structured extraction.
+        Each segment is explicitly aligned to one Policy Area and one Dimension.
+
+        Args:
+            document_text: Full document text
+            structural_analysis: Output from FASE 3 (document structure analysis)
+
+        Returns:
+            List of 60 segment dictionaries, one per (PA, DIM) combination
+        """
+        from saaaaaa.core.canonical_notation import get_all_policy_areas, get_all_dimensions
+
+        self.logger.info("FASE 4: Generating 60 structured segments (PA × DIM matrix)")
+
+        # Split document into sentences for embedding-based extraction
+        sentences = sent_tokenize(document_text, language='spanish')
+
+        # Compute sentence positions
+        sentence_positions = []
+        current_pos = 0
+        for sent in sentences:
+            start = document_text.find(sent, current_pos)
+            end = start + len(sent)
+            sentence_positions.append((start, end))
+            current_pos = end
+
+        # Pre-compute sentence embeddings (once for all 60 extractions)
+        self.logger.info(f"Computing embeddings for {len(sentences)} sentences...")
+        sentence_embeddings = self._spc_sem.embed_batch(sentences)
+
+        # Generate 60 segments
+        policy_areas = get_all_policy_areas()  # PA01..PA10
+        dimensions = get_all_dimensions()      # D1..D6
+
+        structured_segments = []
+
+        for pa_code, pa_info in policy_areas.items():
+            for dim_key, dim_info in dimensions.items():
+                segment = self._extract_content_for_pa_dimension(
+                    document_text=document_text,
+                    policy_area=pa_code,
+                    dimension=dim_info.code,
+                    sentences=sentences,
+                    sentence_positions=sentence_positions,
+                    sentence_embeddings=sentence_embeddings
+                )
+
+                # Add PA and DIM metadata
+                segment['policy_area_id'] = pa_code
+                segment['dimension_id'] = dim_info.code
+                segment['pa_name'] = pa_info.name
+                segment['dim_label'] = dim_info.label
+
+                structured_segments.append(segment)
+
+                self.logger.debug(
+                    f"  Extracted segment for {pa_code} × {dim_info.code}: "
+                    f"{len(segment['text'])} chars, relevance={segment['relevance_score']:.3f}"
+                )
+
+        assert len(structured_segments) == 60, \
+            f"Expected 60 segments, got {len(structured_segments)}"
+
+        self.logger.info(f"✅ Generated exactly {len(structured_segments)} structured segments")
+
+        return structured_segments
+
     def generate_smart_chunks(self, document_text: str, document_metadata: Dict) -> List[SmartPolicyChunk]:
         """
         Main pipeline phase: Generate Smart Policy Chunks with full analysis.
@@ -2561,13 +3137,14 @@ class StrategicChunkingSystem:
         global_topics = self.topic_modeler.extract_global_topics(document_parts)
         global_kg = self.kg_builder.build_policy_knowledge_graph(normalized_text)
         
-        # FASE 4: Preservación de contexto y segmentación
-        context_preserved_segments = self.context_preserver.preserve_strategic_context(
-            document_text, 
-            structural_analysis, 
-            global_topics
+        # FASE 4: Structured (PA × DIM) segmentation - EXACTLY 60 chunks
+        # REPLACED: Old semantic segmentation with structured extraction
+        # OLD: context_preserved_segments = self.context_preserver.preserve_strategic_context(...)
+        context_preserved_segments = self._generate_60_structured_segments(
+            document_text=document_text,
+            structural_analysis=structural_analysis
         )
-        self.logger.info(f"Segmentos generados con contexto: {len(context_preserved_segments)}")
+        self.logger.info(f"✅ Generated {len(context_preserved_segments)} structured segments (PA × DIM)")
         
         # FASE 5: Extracción de cadenas causales completas
         causal_chains = self.causal_analyzer.extract_complete_causal_chains(
@@ -2869,33 +3446,28 @@ def validate_cli_arguments(args):
     """
     Validate CLI arguments before processing.
     
-    Inputs:
-        args: Parsed command-line arguments
-    Outputs:
-        None
-    Raises:
-        ValidationError: If validation fails
+    Returns:
+        Tuple[Path, Path]: Normalized input and output paths
     """
-    # Validate input path exists
-    if not os.path.exists(args.input):
-        raise ValidationError(f"Input file not found: {args.input}")
+    input_path = Path(args.input).expanduser()
+    if not input_path.exists():
+        raise ValidationError(f"Input file not found: {input_path}")
     
-    # Validate output path is writable
-    output_dir = os.path.dirname(args.output) or '.'
-    if not os.path.exists(output_dir):
+    output_path = Path(args.output).expanduser()
+    output_dir = output_path.parent if output_path.name else output_path
+    if not output_dir.exists():
         raise ValidationError(f"Output directory does not exist: {output_dir}")
     if not os.access(output_dir, os.W_OK):
         raise ValidationError(f"Output directory is not writable: {output_dir}")
     
-    # Validate IDs are not empty
     if not args.doc_id or not args.doc_id.strip():
         raise ValidationError("Document ID cannot be empty")
     
-    # Validate max_chunks is positive
     if args.max_chunks < 0:
         raise ValidationError(f"max_chunks must be non-negative, got: {args.max_chunks}")
     
     logger.info("CLI arguments validated successfully")
+    return input_path, output_path
 
 def main(args):
     """
@@ -2908,13 +3480,12 @@ def main(args):
     """
     try:
         # 0. Validate CLI arguments
-        validate_cli_arguments(args)
+        input_path, output_path = validate_cli_arguments(args)
         
         # 1. Cargar el documento
-        logger.info(f"Loading input document: {args.input}")
+        logger.info(f"Loading input document: {input_path}")
         try:
-            with open(args.input, 'r', encoding='utf-8') as f:
-                document_text = f.read()
+            document_text = input_path.read_text(encoding='utf-8')
         except IOError as e:
             raise ProcessingError(f"Failed to read input file: {e}")
         
@@ -2961,16 +3532,16 @@ def main(args):
             if len(original_text.encode('utf-8')) > 200:
                 chunk_data['text'] += '...'
             
+        summary_payload = json.dumps(output_data, indent=2, ensure_ascii=False, default=np_to_list)
         try:
-            with open(args.output, 'w', encoding='utf-8') as f:
-                json.dump(output_data, f, indent=2, ensure_ascii=False, default=np_to_list)
-            logger.info(f"Summary output saved to: {args.output}")
+            output_path.write_text(summary_payload, encoding='utf-8')
+            logger.info(f"Summary output saved to: {output_path}")
         except (IOError, TypeError) as e:
             raise SerializationError(f"Failed to write summary output: {e}")
         
         # 6. Guardar versión completa sin truncar texto (full.json)
         if args.save_full:
-            full_output = args.output.replace('.json', '_full.json')
+            full_output = output_path.with_name(f"{output_path.stem}_full.json")
             try:
                 # Crear una estructura completa con texto íntegro
                 full_data = {
@@ -2984,8 +3555,8 @@ def main(args):
                     # Mantener texto completo
                     full_data['chunks'].append(chunk_dict)
                 
-                with open(full_output, 'w', encoding='utf-8') as f:
-                    json.dump(full_data, f, indent=2, ensure_ascii=False, default=np_to_list)
+                full_payload = json.dumps(full_data, indent=2, ensure_ascii=False, default=np_to_list)
+                full_output.write_text(full_payload, encoding='utf-8')
                 logger.info(f"Full output saved to: {full_output}")
             except (IOError, TypeError) as e:
                 raise SerializationError(f"Failed to write full output: {e}")
@@ -2996,7 +3567,7 @@ def main(args):
             'execution_timestamp': canonical_timestamp(),
             'input_file': args.input,
             'input_hash': hashlib.sha256(document_text.encode('utf-8')).hexdigest(),
-            'output_hash': hashlib.sha256(json.dumps(output_data, default=np_to_list).encode('utf-8')).hexdigest(),
+            'output_hash': hashlib.sha256(summary_payload.encode('utf-8')).hexdigest(),
             'chunks_generated': len(chunks),
             'validation_passed': all(
                 c.coherence_score >= chunking_system.config.MIN_COHERENCE_SCORE 
@@ -3005,10 +3576,10 @@ def main(args):
             'success': len(chunks) > 0 and all(c.coherence_score >= chunking_system.config.MIN_COHERENCE_SCORE for c in chunks)
         }
         
-        verification_file = args.output.replace('.json', '_verification.json')
+        verification_file = output_path.with_name(f"{output_path.stem}_verification.json")
+        verification_payload = json.dumps(verification, indent=2, default=np_to_list)
         try:
-            with open(verification_file, 'w', encoding='utf-8') as f:
-                json.dump(verification, f, indent=2, default=np_to_list)
+            verification_file.write_text(verification_payload, encoding='utf-8')
             logger.info(f"Verification report saved to: {verification_file}")
         except IOError as e:
             logger.warning(f"Failed to write verification file: {e}")

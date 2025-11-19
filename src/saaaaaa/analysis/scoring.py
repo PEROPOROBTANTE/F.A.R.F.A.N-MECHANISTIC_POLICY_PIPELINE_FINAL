@@ -575,12 +575,11 @@ class MicroQuestionScorer:
         # Obtener similarity
         if evidence.semantic_similarity is not None:
             similarity = evidence.semantic_similarity
+        # Fallback: calcular promedio de confidence_scores
+        elif evidence.confidence_scores:
+            similarity = float(np.mean(evidence.confidence_scores))
         else:
-            # Fallback: calcular promedio de confidence_scores
-            if evidence.confidence_scores:
-                similarity = float(np.mean(evidence.confidence_scores))
-            else:
-                similarity = 0.0
+            similarity = 0.0
 
         # Normalización minmax (ya está en rango 0-1)
         normalized_similarity = max(0.0, min(1.0, similarity))

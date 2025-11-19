@@ -60,7 +60,7 @@ This rulebook is the zero-to-one orientation for newcomers who need to understan
 - **Purpose:** Deep audit referencing totals, integration targets, and per-class method counts. 【F:COMPLETE_METHOD_CLASS_MAP.json†L1-L120】
 - **Integration targets:** Maintain `integration_target` (currently `95% minimum`) and `integration_target_methods`. Update both when scope expands to avoid false positives in OKR dashboards.
 - **Class detail:** For each file, ensure `method_count` matches the length of the enumerated list. Automated diff scripts verify these counts.
-- **Key file callouts:** The `summary.key_file` flag highlights the highest leverage file (currently `dereck_beach.py` with 99 methods); adjust if ownership shifts.
+- **Key file callouts:** The `summary.key_file` flag highlights the highest leverage file (currently `derek_beach.py` with 99 methods); adjust if ownership shifts.
 
 ### 3.7 `cuestionario_FIXED.json`
 - **Status:** Marked `"deprecated": true` with `replacement` pointing to `questionnaire.json`. 【F:cuestionario_FIXED.json†L1-L90】

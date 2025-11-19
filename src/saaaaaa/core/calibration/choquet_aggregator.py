@@ -9,10 +9,15 @@ Where:
 - Second sum: interaction terms (synergies via weakest link)
 """
 import logging
-from typing import Dict
 
-from .data_structures import LayerID, LayerScore, InteractionTerm, CalibrationResult, CalibrationSubject
 from .config import ChoquetAggregationConfig
+from .data_structures import (
+    CalibrationResult,
+    CalibrationSubject,
+    InteractionTerm,
+    LayerID,
+    LayerScore,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -20,13 +25,13 @@ logger = logging.getLogger(__name__)
 class ChoquetAggregator:
     """
     Choquet 2-Additive integral aggregator.
-    
+
     This is the FINAL step in the calibration pipeline.
     """
-    
-    def __init__(self, config: ChoquetAggregationConfig):
+
+    def __init__(self, config: ChoquetAggregationConfig) -> None:
         self.config = config
-        
+
         # Pre-build interaction terms for efficiency
         self.interaction_terms = [
             InteractionTerm(
@@ -37,7 +42,7 @@ class ChoquetAggregator:
             )
             for (l1, l2), weight in self.config.interaction_weights.items()
         ]
-        
+
         logger.info(
             "choquet_aggregator_initialized",
             extra={
@@ -46,38 +51,38 @@ class ChoquetAggregator:
                 "config_hash": self.config.compute_hash()
             }
         )
-    
+
     def aggregate(
         self,
         subject: CalibrationSubject,
-        layer_scores: Dict[LayerID, LayerScore],
+        layer_scores: dict[LayerID, LayerScore],
         metadata: dict = None
     ) -> CalibrationResult:
         """
         Compute final calibration score using Choquet aggregation.
-        
+
         Args:
             subject: The calibration subject I = (M, v, Γ, G, ctx)
             layer_scores: Dict mapping LayerID to LayerScore
             metadata: Additional computation metadata
-        
+
         Returns:
             CalibrationResult with final score and full breakdown
-        
+
         Raises:
             ValueError: If layer scores are incomplete or invalid
         """
         if metadata is None:
             metadata = {}
-        
+
         # Extract numeric scores for computation
         scores = {
             layer_id: layer_score.score
             for layer_id, layer_score in layer_scores.items()
         }
-        
+
         # Verify all expected layers present
-        expected_layers = set(LayerID(k) for k in self.config.linear_weights.keys())
+        expected_layers = {LayerID(k) for k in self.config.linear_weights}
         missing_layers = expected_layers - set(scores.keys())
         if missing_layers:
             logger.warning(
@@ -90,19 +95,19 @@ class ChoquetAggregator:
             # For missing layers, use score = 0.0
             for layer in missing_layers:
                 scores[layer] = 0.0
-        
+
         # STEP 1: Compute linear contribution
         # Formula: Σ a_ℓ · x_ℓ
         linear_contribution = 0.0
         linear_breakdown = {}
-        
+
         for layer_key, weight in self.config.linear_weights.items():
             layer_id = LayerID(layer_key)
             score = scores.get(layer_id, 0.0)
             contribution = weight * score
             linear_contribution += contribution
             linear_breakdown[layer_key] = contribution
-            
+
             logger.debug(
                 "linear_term",
                 extra={
@@ -112,7 +117,7 @@ class ChoquetAggregator:
                     "contribution": contribution
                 }
             )
-        
+
         logger.info(
             "linear_contribution_computed",
             extra={
@@ -120,16 +125,16 @@ class ChoquetAggregator:
                 "breakdown": linear_breakdown
             }
         )
-        
+
         # STEP 2: Compute interaction contribution
         # Formula: Σ a_ℓk · min(x_ℓ, x_k)
         interaction_contribution = 0.0
         interaction_breakdown = {}
-        
+
         for term in self.interaction_terms:
             contribution = term.compute(scores)
             interaction_contribution += contribution
-            
+
             key = f"{term.layer_1.value}_{term.layer_2.value}"
             interaction_breakdown[key] = {
                 "contribution": contribution,
@@ -142,7 +147,7 @@ class ChoquetAggregator:
                 ),
                 "rationale": term.rationale,
             }
-            
+
             logger.debug(
                 "interaction_term",
                 extra={
@@ -153,7 +158,7 @@ class ChoquetAggregator:
                     "rationale": term.rationale
                 }
             )
-        
+
         logger.info(
             "interaction_contribution_computed",
             extra={
@@ -161,11 +166,11 @@ class ChoquetAggregator:
                 "num_terms": len(interaction_breakdown)
             }
         )
-        
+
         # STEP 3: Compute final score
         # Cal(I) = linear + interaction
         final_score = linear_contribution + interaction_contribution
-        
+
         # Verify final_score is in [0.0, 1.0] (should already be in range due to normalization)
         if not (0.0 <= final_score <= 1.0):
             logger.error(
@@ -181,7 +186,7 @@ class ChoquetAggregator:
                 f"Final score {final_score:.6f} out of bounds [0.0, 1.0]. "
                 f"This indicates a bug in weight normalization or layer score validation."
             )
-        
+
         logger.info(
             "final_calibration_computed",
             extra={
@@ -192,7 +197,7 @@ class ChoquetAggregator:
                 "interaction": interaction_contribution
             }
         )
-        
+
         # Build metadata
         full_metadata = {
             **metadata,
@@ -201,11 +206,11 @@ class ChoquetAggregator:
             "interaction_breakdown": interaction_breakdown,
             "normalization_check": {
                 "expected_sum": 1.0,
-                "actual_sum": sum(self.config.linear_weights.values()) + 
+                "actual_sum": sum(self.config.linear_weights.values()) +
                              sum(self.config.interaction_weights.values()),
             }
         }
-        
+
         # Create result
         result = CalibrationResult(
             subject=subject,
@@ -215,5 +220,5 @@ class ChoquetAggregator:
             final_score=final_score,
             computation_metadata=full_metadata,
         )
-        
+
         return result

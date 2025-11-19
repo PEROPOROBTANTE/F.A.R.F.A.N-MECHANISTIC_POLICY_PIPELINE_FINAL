@@ -47,9 +47,28 @@ class SPCAdapter:
     SmartPolicyChunk data into the format expected by the orchestrator.
     """
 
-    def __init__(self):
-        """Initialize the SPC adapter."""
+    def __init__(self, enable_runtime_validation: bool = True) -> None:
+        """Initialize the SPC adapter.
+
+        Args:
+            enable_runtime_validation: Enable WiringValidator for runtime contract checking
+        """
         self.logger = logging.getLogger(self.__class__.__name__)
+
+        # Initialize WiringValidator for runtime contract validation
+        self.enable_runtime_validation = enable_runtime_validation
+        if enable_runtime_validation:
+            try:
+                from saaaaaa.core.wiring.validation import WiringValidator
+                self.wiring_validator = WiringValidator()
+                self.logger.info("WiringValidator enabled for runtime contract checking")
+            except ImportError:
+                self.logger.warning(
+                    "WiringValidator not available. Runtime validation disabled."
+                )
+                self.wiring_validator = None
+        else:
+            self.wiring_validator = None
 
     def to_preprocessed_document(
         self,
@@ -89,20 +108,60 @@ class SPCAdapter:
         """
         self.logger.info(f"Converting CanonPolicyPackage to PreprocessedDocument: {document_id}")
 
-        # Validate inputs
+        # === COMPREHENSIVE VALIDATION PHASE (H1.5) ===
+        # 6-layer validation for robust phase-one output processing
+
+        # V1: Validate canon_package exists
         if not canon_package:
-            raise SPCAdapterError("canon_package is None or empty")
+            raise SPCAdapterError(
+                "canon_package is None or empty. "
+                "Ensure SPC ingestion completed successfully."
+            )
 
-        if not document_id:
-            raise SPCAdapterError("document_id is required")
+        # V2: Validate document_id
+        if not document_id or not isinstance(document_id, str) or not document_id.strip():
+            raise SPCAdapterError(
+                f"document_id must be a non-empty string. "
+                f"Received: {repr(document_id)}"
+            )
 
+        # V3: Validate chunk_graph exists
         if not hasattr(canon_package, 'chunk_graph') or not canon_package.chunk_graph:
-            raise SPCAdapterError("canon_package must have a valid chunk_graph")
+            raise SPCAdapterError(
+                "canon_package must have a valid chunk_graph. "
+                "Check that SmartChunkConverter produced valid output."
+            )
 
         chunk_graph = canon_package.chunk_graph
 
+        # V4: Validate chunks dict is non-empty
         if not chunk_graph.chunks:
-            raise SPCAdapterError("chunk_graph.chunks is empty - no chunks to process")
+            raise SPCAdapterError(
+                "chunk_graph.chunks is empty - no chunks to process. "
+                "Minimum 1 chunk required from phase-one."
+            )
+
+        # V5: Validate individual chunks have required attributes
+        validation_failures = []
+        for chunk_id, chunk in chunk_graph.chunks.items():
+            if not hasattr(chunk, 'text'):
+                validation_failures.append(f"Chunk {chunk_id}: missing 'text' attribute")
+            elif not chunk.text or not chunk.text.strip():
+                validation_failures.append(f"Chunk {chunk_id}: text is empty or whitespace")
+
+            if not hasattr(chunk, 'text_span'):
+                validation_failures.append(f"Chunk {chunk_id}: missing 'text_span' attribute")
+            elif not hasattr(chunk.text_span, 'start') or not hasattr(chunk.text_span, 'end'):
+                validation_failures.append(f"Chunk {chunk_id}: invalid text_span (missing start/end)")
+
+        # V6: Report validation failures with context
+        if validation_failures:
+            failure_summary = "\n  - ".join(validation_failures)
+            raise SPCAdapterError(
+                f"Chunk validation failed ({len(validation_failures)} errors):\n  - {failure_summary}\n"
+                f"Total chunks: {len(chunk_graph.chunks)}\n"
+                f"This indicates SmartChunkConverter produced invalid output."
+            )
 
         # Sort chunks by document position for deterministic ordering
         sorted_chunks = sorted(
@@ -124,10 +183,12 @@ class SPCAdapter:
         temporal_index = {}
         entity_index = {}
 
+        # Track running offset that matches how full_text is built
+        current_offset = 0
+
         for idx, chunk in enumerate(sorted_chunks):
             chunk_text = chunk.text
-            # Calculate chunk start position accounting for spaces between chunks
-            chunk_start = sum(len(text) for text in full_text_parts) + len(full_text_parts)
+            chunk_start = current_offset
 
             # Add to full text
             full_text_parts.append(chunk_text)
@@ -145,6 +206,9 @@ class SPCAdapter:
                 extra=_EMPTY_MAPPING
             )
             sentence_metadata.append(chunk_meta)
+
+            # Advance offset by chunk length + 1 space separator
+            current_offset = chunk_end + 1
 
             # Extract entities for entity_index
             if hasattr(chunk, 'entities') and chunk.entities:
@@ -187,8 +251,8 @@ class SPCAdapter:
         # Build structured text (no sections available from SPC)
         structured_text = StructuredTextV1(
             full_text=full_text,
-            sections=tuple(),
-            page_boundaries=tuple()
+            sections=(),
+            page_boundaries=()
         )
 
         # Build document indexes
@@ -259,6 +323,28 @@ class SPCAdapter:
             f"Conversion complete: {len(sentences)} sentences, "
             f"{len(tables)} tables, {len(entity_index)} entities indexed"
         )
+
+        # RUNTIME VALIDATION: Validate Adapter → Orchestrator contract
+        if self.wiring_validator is not None:
+            self.logger.info("Validating Adapter → Orchestrator contract (runtime)")
+            try:
+                # Convert PreprocessedDocument to dict for validation
+                preprocessed_dict = {
+                    "document_id": preprocessed_doc.document_id,
+                    "full_text": preprocessed_doc.full_text,
+                    "sentences": list(preprocessed_doc.sentences),
+                    "language": preprocessed_doc.language,
+                    "sentence_count": len(preprocessed_doc.sentences),
+                    "has_structured_text": preprocessed_doc.structured_text is not None,
+                    "has_indexes": preprocessed_doc.indexes is not None,
+                }
+                self.wiring_validator.validate_adapter_to_orchestrator(preprocessed_dict)
+                self.logger.info("✓ Adapter → Orchestrator contract validation passed")
+            except Exception as e:
+                self.logger.error(f"Adapter → Orchestrator contract validation failed: {e}")
+                raise ValueError(
+                    f"Runtime contract violation at Adapter → Orchestrator boundary: {e}"
+                ) from e
 
         return preprocessed_doc
 

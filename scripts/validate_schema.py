@@ -24,41 +24,45 @@ from saaaaaa.utils.validation.schema_validator import MonolithSchemaValidator, S
 
 # Try to import orchestrator, but make it optional
 try:
-    from saaaaaa.core.orchestrator.factory import load_questionnaire_monolith
+    from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
     from saaaaaa.core.orchestrator import get_questionnaire_provider
     HAS_ORCHESTRATOR = True
 except ImportError:
     HAS_ORCHESTRATOR = False
-    load_questionnaire_monolith = None
+    load_questionnaire = None
 
 def load_monolith(monolith_path: str = None):
     """
-    Load monolith via factory (architecture-compliant).
+    Load monolith via canonical loader (architecture-compliant).
 
-    This function now uses factory.load_questionnaire_monolith() instead of
-    direct file I/O, ensuring compliance with the questionnaire access architecture.
+    This function uses questionnaire.load_questionnaire() which enforces hash
+    verification and immutability, ensuring questionnaire integrity.
 
     Args:
-        monolith_path: Optional path to monolith file
+        monolith_path: Optional path to monolith file (IGNORED - always uses canonical path)
 
     Returns:
         dict: Monolith configuration
+
+    Note:
+        The monolith_path parameter is ignored to enforce single source of truth.
+        All questionnaire loading goes through the canonical path.
     """
-    if monolith_path:
-        # Use factory for I/O-based loading (architecture-compliant)
-        if not HAS_ORCHESTRATOR or load_questionnaire_monolith is None:
-            raise ImportError(
-                "Orchestrator module not available. Cannot load questionnaire monolith."
-            )
-        return load_questionnaire_monolith(Path(monolith_path))
-    else:
-        # Use orchestrator provider if available
-        if not HAS_ORCHESTRATOR:
-            raise ImportError(
-                "Orchestrator module not available. Please provide a monolith file path."
-            )
-        provider = get_questionnaire_provider()
-        return provider.load()
+    if not HAS_ORCHESTRATOR or load_questionnaire is None:
+        raise ImportError(
+            "Orchestrator module not available. Cannot load questionnaire monolith."
+        )
+
+    if monolith_path is not None:
+        import logging
+        logging.warning(
+            "load_monolith: monolith_path parameter is IGNORED. "
+            "Questionnaire always loads from canonical path for integrity."
+        )
+
+    # Always use canonical loader for integrity verification
+    canonical = load_questionnaire()
+    return dict(canonical.data)
 
 def main():
     """Main entry point."""

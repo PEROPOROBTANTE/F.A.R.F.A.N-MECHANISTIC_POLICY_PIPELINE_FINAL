@@ -262,3 +262,93 @@ class TestNoLimitedMode:
         # Empty catalog should raise RuntimeError
         with pytest.raises(RuntimeError, match="Method catalog is empty"):
             Orchestrator(monolith=valid_monolith, catalog={})
+
+
+class TestCanonicalQuestionnaireIntegration:
+    """Test modern CanonicalQuestionnaire pattern (preferred over monolith dict).
+
+    These tests demonstrate the recommended initialization pattern introduced
+    in the factory pattern refactoring (commit 3cff800).
+    """
+
+    def test_orchestrator_with_canonical_questionnaire(self):
+        """Orchestrator should accept CanonicalQuestionnaire instances."""
+        from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
+        from saaaaaa.core.orchestrator.factory import build_processor
+
+        # Load canonical questionnaire (type-safe, immutable, hash-verified)
+        canonical = load_questionnaire()
+
+        # Build processor for catalog
+        processor = build_processor()
+
+        # Initialize with canonical questionnaire (preferred pattern)
+        orchestrator = Orchestrator(
+            questionnaire=canonical,
+            catalog=processor.factory.catalog
+        )
+
+        # Verify initialization succeeded
+        assert orchestrator is not None
+        assert hasattr(orchestrator, 'executor')
+        assert hasattr(orchestrator, 'micro_questions')
+
+    def test_canonical_questionnaire_is_immutable(self):
+        """CanonicalQuestionnaire data should be immutable (MappingProxyType)."""
+        from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
+        from types import MappingProxyType
+
+        canonical = load_questionnaire()
+
+        # Data should be wrapped in MappingProxyType for immutability
+        assert isinstance(canonical.data, MappingProxyType)
+
+        # Verify cannot modify the data
+        with pytest.raises(TypeError):
+            canonical.data['version'] = 'hacked'
+
+    def test_canonical_questionnaire_has_verification_data(self):
+        """CanonicalQuestionnaire should include hash and verification metadata."""
+        from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
+
+        canonical = load_questionnaire()
+
+        # Should have hash verification
+        assert hasattr(canonical, 'sha256')
+        assert isinstance(canonical.sha256, str)
+        assert len(canonical.sha256) == 64  # SHA256 hex length
+
+        # Should have question counts
+        assert hasattr(canonical, 'total_question_count')
+        assert canonical.total_question_count > 0
+
+        # Should have file size
+        assert hasattr(canonical, 'file_size_bytes')
+        assert canonical.file_size_bytes > 0
+
+    def test_factory_pattern_produces_valid_processor(self):
+        """build_processor() should produce valid processor bundle."""
+        from saaaaaa.core.orchestrator.factory import build_processor
+
+        processor = build_processor()
+
+        # Verify processor structure
+        assert hasattr(processor, 'factory')
+        assert hasattr(processor.factory, 'catalog')
+        assert processor.factory.catalog is not None
+        assert 'methods' in processor.factory.catalog
+        assert len(processor.factory.catalog['methods']) > 0
+
+    def test_orchestrator_rejects_both_monolith_and_questionnaire(self):
+        """Orchestrator should reject if both monolith and questionnaire provided."""
+        from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
+
+        canonical = load_questionnaire()
+        dict_monolith = dict(canonical.data)
+
+        # Cannot provide both - should raise ValueError
+        with pytest.raises(ValueError, match="Cannot specify both 'questionnaire' and 'monolith'"):
+            Orchestrator(
+                monolith=dict_monolith,
+                questionnaire=canonical
+            )

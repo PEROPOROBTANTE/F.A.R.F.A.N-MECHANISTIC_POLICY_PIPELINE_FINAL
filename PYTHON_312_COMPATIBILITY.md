@@ -219,17 +219,14 @@ python -c "import transformers; print(f'Transformers: {transformers.__version__}
 python scripts/verify_importability.py
 ```
 
-## Why Not Use Python 3.11?
+## Why Not Downgrade to Python 3.11?
 
-**Python 3.11 would solve these problems** because:
-- PyMC has pre-built wheels for 3.11
-- Wider package compatibility
-- Less bleeding-edge issues
+Python 3.11 previously solved some of these headaches (pre-built PyMC wheels, broader package matrix, fewer bleeding-edge issues). **Despite that, the platform now mandates Python 3.12.x** for determinism audits and feature parity with upstream dependencies. Downgrading is prohibited because it fragments the environment and breaks cryptographic proof guarantees.
 
-**However, if Python 3.12 is required:**
-- Must use NumPy 1.26.4 (compatibility requirement)
-- Must build PyMC from source
-- Must have system dependencies installed
+Therefore, staying on Python 3.12 requires:
+- Pinning NumPy 1.26.4 for PyTensor/PyMC compatibility
+- Building PyMC from source (or using pre-built artifacts produced internally)
+- Installing the system dependencies described above
 
 ## Troubleshooting
 

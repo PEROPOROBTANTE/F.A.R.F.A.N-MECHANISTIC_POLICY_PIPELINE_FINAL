@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 def check_python_version_pin() -> bool:
-    """Check that Python version is pinned to 3.11.x."""
+    """Check that Python version is pinned to 3.12.x."""
     print("✓ Checking Python version pin...")
 
     # Check .python-version
@@ -19,21 +19,21 @@ def check_python_version_pin() -> bool:
         return False
 
     version = python_version_file.read_text().strip()
-    if not version.startswith("3.11"):
-        print(f"  ✗ .python-version should be 3.11.x, got {version}")
+    if not version.startswith("3.12"):
+        print(f"  ✗ .python-version should be 3.12.x, got {version}")
         return False
 
     # Check pyproject.toml
     pyproject = Path("pyproject.toml").read_text()
-    if 'requires-python = "~=3.11.0"' not in pyproject:
-        print("  ✗ pyproject.toml should have requires-python = \"~=3.11.0\"")
+    if 'requires-python = "~=3.12.0"' not in pyproject:
+        print("  ✗ pyproject.toml should have requires-python = \"~=3.12.0\"")
         return False
 
-    if 'pythonVersion = "3.11"' not in pyproject:
-        print("  ✗ pyproject.toml should have pythonVersion = \"3.11\"")
+    if 'pythonVersion = "3.12"' not in pyproject:
+        print("  ✗ pyproject.toml should have pythonVersion = \"3.12\"")
         return False
 
-    print("  ✓ Python version properly pinned to 3.11.x")
+    print("  ✓ Python version properly pinned to 3.12.x")
     return True
 
 def check_pinned_dependencies() -> bool:

@@ -1,197 +1,65 @@
 # F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives
 
-## A Mechanistic Policy Pipeline for Colombian Development Plan Analysis
+**A Mechanistic Policy Pipeline for Colombian Development Plan Analysis**
 
-**F.A.R.F.A.N** (Framework for Advanced Retrieval of Administrativa Narratives) is the official and canonical name for this digital-nodal-substantive policy tool. F.A.R.F.A.N is a *parte aguas* in the way Colombian municipal development plans are analyzed, interpreted, and discussed by policy communities and citizenship.
-
-**Sistema de Análisis Estratégico de Políticas Públicas con Arquitectura de Alta Fidelidad**
+**F.A.R.F.A.N** is a sophisticated, evidence-based analysis tool for Colombian municipal development plans. It leverages a deterministic pipeline, cryptographic proofs, and a comprehensive questionnaire to deliver rigorous, reproducible results.
 
 ---
 
-## ⚠️ PYTHON 3.12 COMPATIBILITY NOTICE
+## ⚡ Quick Start
 
-This repository is configured for **Python 3.12** with **NumPy 1.26.4** (NOT a downgrade - this is a binary compatibility requirement).
+```bash
+# 1. Install dependencies (one-time setup)
+bash install.sh
 
-**Critical Information:**
-- **NumPy 2.0 breaks PyMC/PyTensor** - we use NumPy 1.26.4 (latest 1.x)
-- **PyMC must build from source** on Python 3.12 (no pre-built wheels)
-- **All dependencies are exactly pinned** in `constraints-complete.txt`
+# 2. Activate environment
+source farfan-env/bin/activate
 
-**📖 See [PYTHON_312_COMPATIBILITY.md](PYTHON_312_COMPATIBILITY.md) for complete details**
+# 3. Run health check
+bash comprehensive_health_check.sh
+
+# 4. Execute pipeline on test plan
+python scripts/run_policy_pipeline_verified.py \
+    --plan data/plans/Plan_1.pdf \
+    --artifacts-dir artifacts/plan1
+```
+
+**Expected time**: 2-3 minutes for complete analysis
 
 ---
 
-## 📦 Package Installation & Dependency Management
+## 📚 Documentation
 
-### ⚠️ MANDATORY: Editable Install Required
-
-**This project enforces SIN_CARRETA compliance. You MUST install the package before using it.**
-
-```bash
-# Step 1: Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Step 2: Install package (REQUIRED - choose one)
-pip install -e .                    # Basic installation (core features)
-pip install -e ".[dev]"            # With development tools
-pip install -e ".[bayesian]"       # With Bayesian analysis (PyMC, PyTensor, arviz)
-pip install -e ".[ml]"             # With ML/DL support (torch, tensorflow)
-pip install -e ".[all]"            # Complete installation (all features)
-```
-
-**Why is this mandatory?**
-- ✅ Deterministic, reproducible imports
-- ✅ No `sys.path` manipulation (banned)
-- ✅ Standard Python packaging practices
-- ✅ CI/CD enforcement
-
-**See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for complete SIN_CARRETA doctrine.**
-
-### Alternative: Pinned Requirements (Advanced)
-
-**Option 2: Pinned Requirements (Development/Production)**
-```bash
-# Install with exact version pins from requirements.txt
-pip install -c constraints-complete.txt -r requirements.txt
-
-# Or use the automated script
-./install_fixed.sh
-```
-
-**Why two installation methods?**
-- `pip install -e .` uses flexible version ranges - **recommended for most users**
-- `requirements.txt` has exact pins - for reproducible development/production environments
-- Heavy packages (PyMC, torch, tensorflow) are optional extras to avoid conflicts
-
-**Complete documentation:** 
-- [INSTALLATION_SOLVED.md](INSTALLATION_SOLVED.md) - Installation guide and troubleshooting
-- [PYTHON_312_COMPATIBILITY.md](PYTHON_312_COMPATIBILITY.md) - Python 3.12 specific info
-- [DEPENDENCIES_AUDIT.md](DEPENDENCIES_AUDIT.md) - Complete dependency documentation
-
-### Dependency Management System
-
-This project uses a comprehensive dependency management system with:
-
-- **Exact version pins** for reproducible builds
-- **Classified dependencies** (core, optional, dev, docs)
-- **Automated verification** and security scanning
-- **CI/CD gates** to prevent dependency drift
-
-**Key files:**
-- `requirements-core.txt` - Core runtime dependencies (37 packages)
-- `requirements-optional.txt` - Optional features (30 packages)
-- `requirements-dev.txt` - Development tools (includes core)
-- `DEPENDENCIES_AUDIT.md` - Complete dependency documentation
-
-**Setup and verification commands:**
-```bash
-# Install all dependencies (runtime + dev tools)
-make setup
-
-# Run all verification checks
-make verify
-
-# Run import audit
-make audit-imports
-
-# Check importability
-python3 scripts/verify_importability.py
-
-# See all available commands
-make help
-```
-
-**For detailed dependency information:** See [DEPENDENCIES_AUDIT.md](DEPENDENCIES_AUDIT.md)
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| **[INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)** | Complete installation instructions with troubleshooting | All users |
+| **[RUNBOOK.md](RUNBOOK.md)** | Operational runbook with launch, health checks, and commands | Operators, DevOps |
+| **[TEST_PLAN.md](TEST_PLAN.md)** | Comprehensive test plan (plan prueba) with 10 test cases | QA, Testers |
+| **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)** | User operational guide for analysis workflows | Analysts, Users |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System architecture and technical design | Developers, Architects |
+| **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)** | Quick reference for developers | Developers |
 
 ---
 
-## 🔐 Cryptographic Proof of Execution
+## 🚀 Getting Started
 
-Every successful pipeline execution now generates cryptographic proof files that allow anyone (even non-engineers) to verify that the execution was genuine and complete.
+For a complete guide to installation, system activation, and your first analysis, please refer to the **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)**. This is the recommended starting point for all users.
 
-### Generated Files
+## 🏛️ Architecture
 
-When the pipeline completes successfully, two files are created:
-- **`proof.json`** - Execution metadata and cryptographic hashes
-- **`proof.hash`** - SHA-256 hash for tamper detection
+For a deep dive into the system's architecture, including the 9-phase pipeline, cross-cut signals, and deterministic protocols, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
-### Quick Verification
+## 🔧 Quick Reference
 
-```bash
-# View the proof
-cat data/output/cpp_plan_1/proof.json
+For a quick reference of the project, see **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)**.
 
-# Verify proof integrity (no dependencies required)
-python verify_proof.py data/output/cpp_plan_1
-```
+## 📦 Installation
 
-### What's Verified?
+This project requires **Python 3.12** and enforces a strict dependency management system to ensure reproducibility.
 
-- ✅ All phases completed successfully
-- ✅ No execution aborts
-- ✅ Complete question coverage
-- ✅ Code signatures (core.py, executors.py, factory.py)
-- ✅ Input PDF hash
-- ✅ All artifacts present and hashed
+### **MANDATORY**: Editable Install
 
-**Proof is ONLY generated when ALL success conditions are met.**
-
-For detailed information, see [PROOF_VERIFICATION.md](PROOF_VERIFICATION.md)
-
----
-
-## 📋 Questionnaire Integrity Protocol
-
-**STATUS: ENFORCED** 🔒
-
-This system implements the **QUESTIONNAIRE DETERMINISM ENFORCEMENT PROTOCOL** to ensure that the questionnaire monolith (containing 305 questions across 6 dimensions and 10 policy areas) is loaded, validated, and used in a completely deterministic and tamper-proof manner.
-
-### The Law
-
-1. **Single Load Point**: `questionnaire.load_questionnaire()` is the ONLY way to load questionnaire data
-2. **Immutable Data**: All questionnaire data uses `MappingProxyType` or `tuple` (no mutable dicts/lists)
-3. **Hash Verification**: Every load verifies SHA256 matches `EXPECTED_HASH` in questionnaire.py
-4. **Structure Validation**: 300 micro + 4 meso + 1 macro = 305 questions or FAIL
-5. **No Direct Access**: `questionnaire_monolith.json` is NEVER read directly except by questionnaire.py
-
-### Usage (Correct)
-
-```python
-# ✅ ALWAYS DO THIS:
-from saaaaaa.core.orchestrator.questionnaire import load_questionnaire
-
-questionnaire = load_questionnaire()  # Returns CanonicalQuestionnaire
-
-# Access data (immutable)
-micro_questions = questionnaire.micro_questions  # tuple of MappingProxyType
-question_count = questionnaire.micro_question_count  # 300
-total_count = questionnaire.total_question_count  # 305
-hash_verified = questionnaire.sha256  # Matches EXPECTED_HASH
-```
-
-### Violations = Build Failure
-
-```python
-# ❌ NEVER DO THIS:
-import json
-with open("data/questionnaire_monolith.json") as f:
-    data = json.load(f)  # VIOLATION! Bypasses validation
-
-# ❌ NEVER DO THIS:
-questionnaire_dict = {"blocks": {"micro_questions": []}}  # VIOLATION! Wrong structure
-```
-
-### CI Enforcement
-
-The CI workflow `.github/workflows/questionnaire-integrity.yml` runs on every push and verifies:
-
-- ✅ Questionnaire file hash matches `EXPECTED_HASH`
-- ✅ Question counts: 300 micro, 4 meso, 1 macro
-- ✅ No direct `questionnaire_monolith.json` access outside questionnaire.py
-- ✅ No `json.load()` patterns that bypass the canonical loader
-
-### Manual Operations
+You **MUST** install the package in editable mode before using it:
 
 ```bash
 # ❌ NEVER DO THIS:
@@ -352,7 +220,7 @@ Sistemas previos en evaluación de políticas (e.g., análisis ToC con DAG valid
 
 F.A.R.F.A.N integra:
 
-1. **Determinismo de Pipeline**: 9 fases con postcondiciones verificables; fallo en cualquier fase → ABORT (no degradación gradual).
+1. **Determinismo de Pipeline**: Pipeline canónico con postcondiciones verificables; fallo en cualquier fase → ABORT (no degradación gradual).
 2. **Señales Transversales**: Registro centralizado de patrones, indicadores, umbrales desde cuestionario monolito hacia todos los ejecutores, con transporte memory:// (in-process) o HTTP (con circuit breaker).
 3. **Proveniencia Completa**: Cada token → `{page_id, bbox, byte_range, parser_id}` mediante Arrow IPC, permitiendo auditoría forense.
 4. **ArgRouter Extendido**: 30+ rutas especiales eliminan caídas silenciosas de parámetros (argrouter_coverage = 1.0).
@@ -366,77 +234,57 @@ F.A.R.F.A.N integra:
 
 ### 2.1. Pipeline de Procesamiento
 
-El sistema implementa un pipeline de 9 fases con dependencias secuenciales estrictas:
+El sistema implementa un pipeline canónico con punto de entrada único:
 
+#### **Phase-One: SPC Ingestion (Smart Policy Chunks)**
+
+**Punto de entrada canónico**: `CPPIngestionPipeline` en `src/saaaaaa/processing/spc_ingestion/__init__.py`
+
+SPC es el ÚNICO sistema de ingestión autorizado. Implementa 15 subprocesos internos que procesan documentos de política a través de análisis estructural, semántico, presupuestario y temporal:
+
+```python
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+
+# ÚNICO punto de entrada autorizado
+pipeline = CPPIngestionPipeline()
+result = await pipeline.process(
+    document_path=Path("policy.pdf"),
+    document_id="POL-2024-001",
+    title="Plan Nacional 2024"
+)
+
+# Resultado: CanonPolicyPackage con:
+# - chunks[] (SmartPolicyChunks con embeddings BGE-M3)
+# - chunk_graph (relaciones causales/jerárquicas)
+# - quality_metrics (provenance_completeness, structural_consistency, etc.)
+# - provenance_map (trazabilidad token→source)
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 1: Acquisition & Integrity                                 │
-│   Input:  file_path (Path)                                      │
-│   Output: manifest.initial {blake3_hash, mime_type, byte_size}  │
-│   Gate:   blake3_hash must be 64 hex chars                      │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 2: Format Decomposition                                    │
-│   Input:  manifest.initial                                      │
-│   Output: raw_object_tree {pages[], fonts[], images[]}          │
-│   Gate:   len(pages) > 0                                        │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 3: Structural Normalization (Policy-Aware)                 │
-│   Input:  raw_object_tree                                       │
-│   Output: policy_graph.prelim {Ejes, Programas, Proyectos}      │
-│   Gate:   structural_consistency_score ≥ 1.0                    │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 4: Text Extraction & Normalization                         │
-│   Input:  policy_graph.prelim                                   │
-│   Output: content_stream.v1 (Unicode NFC, stable offsets)       │
-│   Gate:   All text normalized to NFC                            │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 5: OCR (Conditional)                                       │
-│   Input:  content_stream.v1, image_pages[]                      │
-│   Output: ocr_layer {text, confidence_scores}                   │
-│   Gate:   avg(confidence) ≥ ocr_confidence_threshold (0.85)     │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 6: Tables & Budget Handling                                │
-│   Input:  content_stream.v1                                     │
-│   Output: tables_figures.subgraph {KPIs[], Budgets[]}           │
-│   Gate:   budget_consistency_score ≥ 0.95                       │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 7: Provenance Binding                                      │
-│   Input:  content_stream.v1, raw_object_tree                    │
-│   Output: provenance_map.arrow (token→page/bbox/byte_range)     │
-│   Gate:   provenance_completeness = 1.0 (NO partial coverage)   │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 8: Advanced Chunking                                       │
-│   Input:  content_stream.v1, policy_graph.prelim                │
-│   Output: chunk_graph {chunks[], edges[]}                       │
-│   Gate:   boundary_f1 ≥ 0.85, chunk_overlap ≤ 0.15              │
-└──────────────────────┬──────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 9: Canonical Packing                                       │
-│   Input:  All outputs from phases 1-8                           │
-│   Output: CanonPolicyPackage (CPP) {content, provenance,        │
-│           chunk_graph, integrity_index}                         │
-│   Gate:   Merkle root recomputation matches stored hash         │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+**Garantías de SPC Phase-One**:
+
+1. **Provenance Completeness = 1.0**: Cada token trazable a fuente (CRITICAL gate)
+2. **Structural Consistency = 1.0**: Estructura de política perfectamente parseada (CRITICAL gate)
+3. **Boundary F1 ≥ 0.85**: Precisión de límites de chunks (HIGH gate)
+4. **Budget Consistency ≥ 0.95**: Coherencia de datos presupuestarios (MEDIUM gate)
+5. **Temporal Robustness ≥ 0.80**: Calidad de datos temporales (MEDIUM gate)
+
+**Subprocesos Internos de SPC** (NO expuestos como API externa):
+- Validación de integridad (BLAKE3)
+- Extracción y normalización de texto (Unicode NFC)
+- Análisis estructural (Ejes/Programas/Proyectos)
+- Chunking estratégico con BGE-M3 embeddings
+- Extracción de presupuestos y KPIs
+- Análisis temporal y geográfico
+- Generación de grafo de chunks
+- Empaquetado en CanonPolicyPackage
+
+**Output**: `CanonPolicyPackage` - formato canónico para downstream phases.
+
+---
 
 **Postcondiciones por Fase**: Cada fase declara invariantes verificables. Violación → ABORT con diagnóstico detallado (no "best effort").
 
-**Ejemplo de Fallo**: Si FASE 7 produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
+**Ejemplo de Fallo**: Si SPC produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
 
 ### 2.2. Sistema de Contratos
 
@@ -719,7 +567,7 @@ Configuraciones externas (JSON, TOML) solo en orchestrator layer, nunca en core.
 
 **Comando**:
 ```bash
-PYTHONPATH=src pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
+python -m pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
 ```
 
 ---
@@ -805,19 +653,22 @@ pip install -r requirements.txt
 
 # 3. Instalar paquete en modo editable
 pip install -e .
+
+# 4. Verificar instalación editable
+python -m saaaaaa.devtools.ensure_install
 ```
 
 #### 5.1.2. Ejecución
 
 ```bash
 # Ejecutar golden tests
-PYTHONPATH=src pytest tests/test_regression_*.py -v
+python -m pytest tests/test_regression_*.py -v
 
 # Golden test específico (CPP ingestion)
-PYTHONPATH=src pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
+python -m pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
 
 # Golden test de determinismo
-PYTHONPATH=src pytest tests/test_determinism.py::test_phase_hash_stability -v
+python -m pytest tests/test_determinism.py::test_phase_hash_stability -v
 ```
 
 #### 5.1.3. Verificación de Output
@@ -868,14 +719,19 @@ python -m saaaaaa.core.orchestrator \
 Cada fase del pipeline produce un hash BLAKE3 acumulativo:
 
 ```python
-from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
 
 pipeline = CPPIngestionPipeline()
-outcome = pipeline.ingest(Path("plan.pdf"), Path("output/"))
+cpp = await pipeline.process(
+    document_path=Path("plan.pdf"),
+    document_id="plan",
+    max_chunks=50
+)
 
-# Hashes por fase
-for phase_num, phase_hash in enumerate(outcome.phase_hashes, start=1):
-    print(f"Phase {phase_num}: {phase_hash}")
+# Access quality metrics
+if cpp.quality_metrics:
+    print(f"Provenance: {cpp.quality_metrics.provenance_completeness:.2%}")
+    print(f"Coherence: {cpp.quality_metrics.structural_consistency:.2%}")
 ```
 
 **Reference Hashes** (plan_golden.pdf):
@@ -1017,9 +873,9 @@ d2b5f4e  Add bandit security scan to CI
 | Versión Python | Soporte | Notas |
 |----------------|---------|-------|
 | 3.9.x | ❌ No | Requiere TypedDict features de 3.10+ |
-| 3.10.x | ✅ Completo | Versión mínima requerida |
-| 3.11.x | ✅ Completo | **Recomendado** (mejor performance) |
-| 3.12.x | ✅ Completo | Testeado, compatible |
+| 3.10.x | ⚠️ Legacy | Ya no soportado; migrar a 3.12.x |
+| 3.11.x | ⚠️ Legacy | Ya no soportado; migrar a 3.12.x |
+| 3.12.x | ✅ Completo | **Requerido** y recomendado |
 | 3.13.x | ⚠️ No testeado | Puede funcionar, sin garantías |
 
 #### Librerías Core
@@ -1063,101 +919,28 @@ d2b5f4e  Add bandit security scan to CI
 
 ### Formato BibTeX
 
-```bibtex
-@software{farfan2025,
-  author       = {{F.A.R.F.A.N JUAN CAMILO RAVE RESTREPO}},
-  title        = {{F.A.R.F.A.N: Framework for Advanced Retrieval of 
-                   Administrativa Narratives - A Mechanistic Policy Pipeline 
-                   for Colombian Development Plan Analysis}},
-  year         = {2025},
-  version      = {0.1.0},
-  publisher    = {GitHub},
-  url          = {https://github.com/kkkkknhh/SAAAAAA},
-  doi          = {10.5281/zenodo.XXXXXXX},  % Pending DOI registration
-  note         = {Digital-nodal-substantive policy tool for evidence-based 
-                  analysis of municipal development plans using value chain 
-                  heuristics and causal mechanisms}
-}
+# 2. Install the package
+pip install -e ".[all]"
 ```
 
-### Formato APA (7th Edition)
-
-F.A.R.F.A.N RAVE RESTREPO, JUAN CAMILO. (2025). *F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives - A Mechanistic Policy Pipeline for Colombian Development Plan Analysis* (Version 0.1.0) [Computer software]. GitHub. https://github.com/kkkkknhh/SAAAAAA
-
-### Formato Chicago (17th Edition)
-
-F.A.R.F.A.N RAVE RESTREPO, JUAN CAMILO. 2025. "F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives - A Mechanistic Policy Pipeline for Colombian Development Plan Analysis." Version 0.1.0. Computer software. GitHub. https://github.com/kkkkknhh/SAAAAAA.
-
-### Formato MLA (9th Edition)
-
-F.A.R.F.A.N. RAVE RESTREPO, JUAN CAMILO *F.A.R.F.A.N: Framework for Advanced Retrieval of Administrativa Narratives - A Mechanistic Policy Pipeline for Colombian Development Plan Analysis*. Version 0.1.0, GitHub, 2025, github.com/kkkkknhh/SAAAAAA.
-
-### DOI Registro (Pendiente)
-
-Solicitamos DOI en Zenodo para persistencia de citación. Una vez asignado, actualizar campo `doi` en BibTeX.
+For detailed installation instructions and troubleshooting, see the **[Installation & Setup](OPERATIONAL_GUIDE.md#installation--setup)** section of the operational guide.
 
 ---
 
-## 9. Licencia
+## 🔐 Cryptographic Proof & Integrity
 
-**Tipo de Licencia**: MIT License (Pendiente de confirmación)
+F.A.R.F.A.N enforces data and execution integrity through two key protocols:
 
-**Copyright**: © 2025 F.A.R.F.A.N Development Team
+1.  **Cryptographic Proof of Execution**: Every successful pipeline run generates a verifiable cryptographic proof, ensuring that the results are genuine and complete.
+2.  **Questionnaire Integrity Protocol**: The 305-question monolith is loaded and validated in a deterministic, tamper-proof manner, guaranteeing the scientific integrity of the analysis.
 
-**Permisos**:
-- ✅ Uso comercial
-- ✅ Modificación
-- ✅ Distribución
-- ✅ Uso privado
-
-**Condiciones**:
-- Incluir aviso de copyright y licencia en redistribuciones
-- Uso "AS IS" (sin garantías)
-
-**Limitaciones**:
-- No responsabilidad por daños derivados del uso
-- No garantía de fitness para propósito específico
-
-**Archivo de Licencia**: Ver [LICENSE](LICENSE) (pendiente de creación).
-
-**Licencias de Dependencias**: Ver `requirements.txt` para licencias de bibliotecas de terceros. Todas las dependencias son compatibles con uso académico y comercial (Apache 2.0, MIT, BSD).
+For more details, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
 ---
 
-## 10. Referencias Internas
-
-### Documentos de Auditoría
-
-- [AUDIT_SUMMARY.md](AUDIT_SUMMARY.md) - Resumen de auditoría de código
-- [AUDIT_FIX_REPORT.md](AUDIT_FIX_REPORT.md) - Reporte de correcciones post-auditoría
-- [CPP_IMPLEMENTATION_SUMMARY.md](CPP_IMPLEMENTATION_SUMMARY.md) - Resumen técnico de CPP
-- [ORCHESTRATOR_EXCELLENCE_SUMMARY.md](ORCHESTRATOR_EXCELLENCE_SUMMARY.md) - Verificación arquitectónica
-
-### Documentos Técnicos
-
-- [OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md) - Guía operativa completa (comandos CLI)
-- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - Estructura del repositorio
-- [TEST_IMPORT_MATRIX.md](TEST_IMPORT_MATRIX.md) - Estrategia de imports
-- [BUILD_HYGIENE.md](BUILD_HYGIENE.md) - Estándares de construcción
-
-### Tests Clave
-
-- `tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility` - Golden test de determinismo
-- `tests/test_signal_integration_e2e.py::test_full_signal_flow` - End-to-end signals
-- `tests/test_arg_router_extended.py::test_all_routes_covered` - Validación de rutas ArgRouter
-- `tests/test_boundaries.py::test_no_core_to_orchestrator_imports` - Architectural boundary
-
-### Herramientas de Verificación
-
-- `scripts/verify_phase_hashes.py` - Verificación de hashes por fase
-- `scripts/compare_arrow_files.py` - Comparación de archivos Arrow
-- `tools/scan_core_purity.py` - Scanner de pureza arquitectónica
-- `tools/grep_boundary_checks.py` - Verificación de límites de dependencias
-
----
+## License
 
 **Documento Generado**: 2025-11-06  
 **Versión**: 1.0.0 (Academic Style)  
 **Estado**: Complete - Under Review  
 **Próxima Revisión**: 2026-01-06
-

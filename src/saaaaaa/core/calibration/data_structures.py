@@ -11,20 +11,57 @@ Design Principles:
 4. Serializability: Support to_dict() for JSON export
 """
 from dataclasses import dataclass, field
-from typing import Any
 from enum import Enum
+from typing import Any
+
+
+# ============================================================================
+# EXCEPTIONS
+# ============================================================================
+
+
+class CalibrationConfigError(Exception):
+    """
+    Raised when calibration configuration is invalid.
+
+    This indicates a config file error that must be fixed before calibration
+    can proceed (e.g., invalid fusion weights, missing method declarations).
+    """
+    pass
+
+
+# ============================================================================
+# ENUMS
+# ============================================================================
+
+
+class MethodRole(str, Enum):
+    """
+    Method role in the pipeline.
+
+    These roles determine which fusion weights apply during calibration.
+    Per canonic_calibration_methods.md specification.
+    """
+    INGEST_PDM = "ingest_pdm"      # Ingestion and PDM construction
+    STRUCTURE = "structure"         # Text structuring / parsing
+    EXTRACT = "extract"             # Pattern extraction
+    SCORE_Q = "score_q"            # Question scoring
+    AGGREGATE = "aggregate"         # Score aggregation
+    REPORT = "report"              # Report formatting
+    TRANSFORM = "transform"         # Data transformation / normalization
+    META_TOOL = "meta_tool"        # Orchestration / utility methods
 
 
 class LayerID(str, Enum):
     """
     Exact identifier for each calibration layer.
-    
+
     These correspond to the 7 layers in the theoretical model.
     """
     BASE = "b"          # @b - Intrinsic quality (COMPLETE)
     UNIT = "u"          # @u - PDT quality
     QUESTION = "q"      # @q - Question compatibility
-    DIMENSION = "d"     # @d - Dimension compatibility  
+    DIMENSION = "d"     # @d - Dimension compatibility
     POLICY = "p"        # @p - Policy area compatibility
     CONGRUENCE = "C"    # @C - Ensemble validity
     CHAIN = "chain"     # @chain - Data flow integrity
@@ -35,16 +72,16 @@ class LayerID(str, Enum):
 class LayerScore:
     """
     Single layer evaluation result.
-    
+
     This represents the output of evaluating ONE layer for ONE subject.
-    
+
     Attributes:
         layer: Which layer this score belongs to
         score: Numerical score in [0.0, 1.0]
         components: Breakdown of sub-scores (e.g., for @u: {S, M, I, P})
         rationale: Human-readable explanation of the score
         metadata: Additional debug/audit information
-    
+
     Example:
         LayerScore(
             layer=LayerID.UNIT,
@@ -59,14 +96,14 @@ class LayerScore:
     components: dict[str, float] = field(default_factory=dict)
     rationale: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
-    
+
     def __post_init__(self):
         """Validate score is in valid range."""
         if not 0.0 <= self.score <= 1.0:
             raise ValueError(
                 f"Layer {self.layer.value} score {self.score} out of range [0.0, 1.0]"
             )
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary for JSON serialization."""
         return {
@@ -82,16 +119,16 @@ class LayerScore:
 class ContextTuple:
     """
     Execution context for a micro-question: ctx = (Q, D, P, U).
-    
+
     This is the (Q, D, P, U) tuple that defines WHERE a method is being used.
     The context determines which compatibility scores apply.
-    
+
     Attributes:
         question_id: e.g., "Q001", "Q031" (from questionnaire monolith)
         dimension: e.g., "DIM01" (canonical code, not "D1")
         policy_area: e.g., "PA01" (canonical code, not "P1")
         unit_quality: Pre-computed U score from PDT analysis, range [0.0, 1.0]
-    
+
     Example:
         ContextTuple(
             question_id="Q001",
@@ -104,7 +141,7 @@ class ContextTuple:
     dimension: str
     policy_area: str
     unit_quality: float
-    
+
     def __post_init__(self):
         """Validate canonical notation and ranges."""
         # Validate dimension uses canonical notation
@@ -112,25 +149,25 @@ class ContextTuple:
             raise ValueError(
                 f"Dimension must use canonical code (DIM01-DIM06), got {self.dimension}"
             )
-        
+
         # Validate policy area uses canonical notation
         if not self.policy_area.startswith("PA"):
             raise ValueError(
                 f"Policy must use canonical code (PA01-PA10), got {self.policy_area}"
             )
-        
+
         # Validate question ID format
         if not self.question_id.startswith("Q"):
             raise ValueError(
                 f"Question ID must start with 'Q', got {self.question_id}"
             )
-        
+
         # Validate unit quality range
         if not 0.0 <= self.unit_quality <= 1.0:
             raise ValueError(
                 f"Unit quality must be in [0.0, 1.0], got {self.unit_quality}"
             )
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -145,23 +182,23 @@ class ContextTuple:
 class CalibrationSubject:
     """
     Subject of calibration I = (M, v, Γ, G, ctx).
-    
+
     This represents ONE method being evaluated in ONE context.
-    
+
     From theoretical model:
     - M: Method artifact (code)
     - v: Version
     - Γ: Computational graph (how methods connect)
     - G: Interplay subgraph (methods working together)
     - ctx: Context tuple (Q, D, P, U)
-    
+
     Attributes:
         method_id: e.g., "pattern_extractor_v2"
         method_version: e.g., "v2.1.0"
         graph_config: Hash of the computational graph Γ
         subgraph_id: Identifier for the interplay subgraph G
         context: The (Q, D, P, U) context
-    
+
     Example:
         CalibrationSubject(
             method_id="pattern_extractor_v2",
@@ -176,7 +213,7 @@ class CalibrationSubject:
     graph_config: str
     subgraph_id: str
     context: ContextTuple
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -192,15 +229,15 @@ class CalibrationSubject:
 class CompatibilityMapping:
     """
     Defines how compatible a method is with questions/dimensions/policies.
-    
+
     This implements the Q_f, D_f, P_f functions from the theoretical model.
-    
+
     Compatibility Scores (from theoretical model):
         1.0 = Primary (designed specifically for this context)
         0.7 = Secondary (works well, but not optimal)
         0.3 = Compatible (can work, limited effectiveness)
         0.1 = Undeclared (penalty, not validated for this context)
-    
+
     Example:
         CompatibilityMapping(
             method_id="pattern_extractor_v2",
@@ -213,55 +250,55 @@ class CompatibilityMapping:
     questions: dict[str, float]   # question_id -> score ∈ {1.0, 0.7, 0.3, 0.1}
     dimensions: dict[str, float]  # dimension_code -> score
     policies: dict[str, float]    # policy_code -> score
-    
+
     def get_question_score(self, question_id: str) -> float:
         """
         Get compatibility score for a question.
-        
+
         Returns 0.1 (penalty) if question not declared.
         """
         return self.questions.get(question_id, 0.1)
-    
+
     def get_dimension_score(self, dimension: str) -> float:
         """
         Get compatibility score for a dimension.
-        
+
         Returns 0.1 (penalty) if dimension not declared.
         """
         return self.dimensions.get(dimension, 0.1)
-    
+
     def get_policy_score(self, policy: str) -> float:
         """
         Get compatibility score for a policy area.
-        
+
         Returns 0.1 (penalty) if policy not declared.
         """
         return self.policies.get(policy, 0.1)
-    
+
     def check_anti_universality(self, threshold: float = 0.9) -> bool:
         """
         Check Anti-Universality Theorem compliance.
-        
+
         The theorem states: NO method can have average compatibility ≥ 0.9
         across ALL questions, dimensions, AND policies simultaneously.
-        
+
         Returns:
             True if compliant (method is NOT universal)
             False if violation detected
         """
         if not self.questions or not self.dimensions or not self.policies:
             return True  # Incomplete mapping, cannot be universal
-        
+
         avg_q = sum(self.questions.values()) / len(self.questions)
         avg_d = sum(self.dimensions.values()) / len(self.dimensions)
         avg_p = sum(self.policies.values()) / len(self.policies)
-        
-        is_universal = (avg_q >= threshold and 
-                       avg_d >= threshold and 
+
+        is_universal = (avg_q >= threshold and
+                       avg_d >= threshold and
                        avg_p >= threshold)
-        
+
         return not is_universal
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -276,18 +313,18 @@ class CompatibilityMapping:
 class InteractionTerm:
     """
     Represents a synergy between two layers in Choquet aggregation.
-    
+
     Formula: a_ℓk · min(x_ℓ, x_k)
-    
+
     This captures the "weakest link" principle: the contribution of the
     interaction is limited by whichever layer scored lower.
-    
+
     Standard Interactions (from theoretical model):
         (@u, @chain): weight=0.15, "Plan quality only matters with sound wiring"
         (@chain, @C): weight=0.12, "Ensemble validity requires chain integrity"
         (@q, @d): weight=0.08, "Question-dimension alignment synergy"
         (@d, @p): weight=0.05, "Dimension-policy coherence synergy"
-    
+
     Example:
         InteractionTerm(
             layer_1=LayerID.UNIT,
@@ -300,23 +337,23 @@ class InteractionTerm:
     layer_2: LayerID
     weight: float  # a_ℓk coefficient
     rationale: str  # Why this interaction exists
-    
+
     def compute(self, scores: dict[LayerID, float]) -> float:
         """
         Compute interaction contribution.
-        
+
         Formula: a_ℓk · min(x_ℓ, x_k)
-        
+
         Args:
             scores: Dictionary mapping LayerID to score
-        
+
         Returns:
             Interaction contribution (can be 0 if layer missing)
         """
         score_1 = scores.get(self.layer_1, 0.0)
         score_2 = scores.get(self.layer_2, 0.0)
         return self.weight * min(score_1, score_2)
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return {
@@ -331,11 +368,11 @@ class InteractionTerm:
 class CalibrationResult:
     """
     Complete calibration output for a subject I.
-    
+
     This is the FINAL result of the calibration pipeline.
-    
+
     Formula: Cal(I) = Σ a_ℓ·x_ℓ + Σ a_ℓk·min(x_ℓ, x_k)
-    
+
     Attributes:
         subject: The calibration subject I = (M, v, Γ, G, ctx)
         layer_scores: Individual scores for each layer
@@ -343,7 +380,7 @@ class CalibrationResult:
         interaction_contribution: Σ a_ℓk · min(x_ℓ, x_k)
         final_score: Cal(I) = linear + interaction ∈ [0.0, 1.0]
         computation_metadata: Timestamps, hashes, config_hash, etc.
-    
+
     Example:
         CalibrationResult(
             subject=CalibrationSubject(...),
@@ -367,7 +404,7 @@ class CalibrationResult:
     interaction_contribution: float
     final_score: float
     computation_metadata: dict[str, Any] = field(default_factory=dict)
-    
+
     def __post_init__(self):
         """Validate calibration result integrity."""
         # Validate final score range
@@ -375,7 +412,7 @@ class CalibrationResult:
             raise ValueError(
                 f"Final calibration score {self.final_score} out of range [0.0, 1.0]"
             )
-        
+
         # Verify linear + interaction = final (within numerical tolerance)
         computed = self.linear_contribution + self.interaction_contribution
         if abs(computed - self.final_score) > 1e-6:
@@ -384,18 +421,18 @@ class CalibrationResult:
                 f"linear {self.linear_contribution} + "
                 f"interaction {self.interaction_contribution} = {computed}"
             )
-        
+
         # Verify all layer scores are in valid range
         for layer_id, layer_score in self.layer_scores.items():
             if not 0.0 <= layer_score.score <= 1.0:
                 raise ValueError(
                     f"Layer {layer_id.value} score {layer_score.score} out of range"
                 )
-    
+
     def to_certificate_dict(self) -> dict:
         """
         Export as a calibration certificate for auditing.
-        
+
         This is the format that gets saved to audit logs and can be
         used to reproduce the calibration result.
         """
@@ -420,7 +457,183 @@ class CalibrationResult:
             },
             "metadata": self.computation_metadata,
         }
-    
+
     def to_dict(self) -> dict:
         """Export as dictionary."""
         return self.to_certificate_dict()
+
+
+# ============================================================================
+# AUXILIARY DATA STRUCTURES
+# ============================================================================
+
+
+@dataclass
+class ComputationGraph:
+    """
+    Represents a computational graph for method execution.
+
+    This is a simplified representation of how methods connect in a pipeline.
+
+    Attributes:
+        nodes: List of node identifiers
+        edges: List of (source, target) edges
+        node_signatures: Dict mapping node_id to signature info
+    """
+    nodes: list[str]
+    edges: list[tuple[str, str]]
+    node_signatures: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+    def validate_dag(self) -> bool:
+        """
+        Validate that the graph is a Directed Acyclic Graph (DAG).
+
+        Returns:
+            True if graph is a valid DAG, False if cycles detected
+        """
+        # Simple cycle detection using DFS
+        visited = set()
+        rec_stack = set()
+
+        def has_cycle(node: str) -> bool:
+            visited.add(node)
+            rec_stack.add(node)
+
+            # Get neighbors
+            neighbors = [target for source, target in self.edges if source == node]
+
+            for neighbor in neighbors:
+                if neighbor not in visited:
+                    if has_cycle(neighbor):
+                        return True
+                elif neighbor in rec_stack:
+                    return True
+
+            rec_stack.remove(node)
+            return False
+
+        # Check each node
+        for node in self.nodes:
+            if node not in visited:
+                if has_cycle(node):
+                    return False
+
+        return True
+
+
+@dataclass
+class EvidenceStore:
+    """
+    Evidence collected during method execution for calibration.
+
+    Attributes:
+        pdt_structure: PDT (Policy Document Tree) metrics
+        runtime_metrics: Execution time and resource usage
+        validation_results: Any validation checks performed
+    """
+    pdt_structure: dict[str, Any] = field(default_factory=dict)
+    runtime_metrics: dict[str, Any] = field(default_factory=dict)
+    validation_results: dict[str, Any] = field(default_factory=dict)
+
+
+# Type alias for interplay subgraph (simplified representation)
+InterplaySubgraph = dict[str, Any]
+
+
+@dataclass(frozen=True)
+class CalibrationCertificate:
+    """
+    Complete calibration certificate with audit trail.
+
+    This is the output of the calibration engine, containing all information
+    needed to verify and reproduce the calibration.
+
+    Attributes:
+        instance_id: Unique identifier for this calibration instance
+        method_id: Canonical method identifier
+        node_id: Node identifier in computation graph
+        context: Execution context (Q, D, P, U)
+        intrinsic_score: Base layer (@b) score
+        layer_scores: All layer scores
+        calibrated_score: Final calibrated score
+        fusion_formula: Fusion computation details
+        parameter_provenance: Where parameters came from
+        evidence_trail: Evidence used for calibration
+        config_hash: Hash of configuration files
+        graph_hash: Hash of computation graph
+        timestamp: When calibration was performed
+        validator_version: Version of calibration system
+    """
+    instance_id: str
+    method_id: str
+    node_id: str
+    context: ContextTuple
+    intrinsic_score: float
+    layer_scores: dict[str, float]
+    calibrated_score: float
+    fusion_formula: dict[str, Any]
+    parameter_provenance: dict[str, Any]
+    evidence_trail: dict[str, Any]
+    config_hash: str
+    graph_hash: str
+    timestamp: str
+    validator_version: str
+
+
+# ============================================================================
+# CONSTANTS
+# ============================================================================
+
+
+# Required layers for each method role
+# Per canonic_calibration_methods.md specification
+REQUIRED_LAYERS: dict[MethodRole, set[LayerID]] = {
+    MethodRole.INGEST_PDM: {
+        LayerID.BASE,
+        LayerID.UNIT,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.STRUCTURE: {
+        LayerID.BASE,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.EXTRACT: {
+        LayerID.BASE,
+        LayerID.QUESTION,
+        LayerID.DIMENSION,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.SCORE_Q: {
+        LayerID.BASE,
+        LayerID.QUESTION,
+        LayerID.DIMENSION,
+        LayerID.POLICY,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.AGGREGATE: {
+        LayerID.BASE,
+        LayerID.DIMENSION,
+        LayerID.POLICY,
+        LayerID.CONGRUENCE,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.REPORT: {
+        LayerID.BASE,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.TRANSFORM: {
+        LayerID.BASE,
+        LayerID.CHAIN,
+        LayerID.META,
+    },
+    MethodRole.META_TOOL: {
+        LayerID.BASE,
+        LayerID.META,
+    },
+}

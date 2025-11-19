@@ -31,8 +31,8 @@ bash scripts/setup.sh
 ### Manual Setup
 
 ```bash
-# 1. Ensure you have Python 3.11.x
-python --version  # Should show 3.11.x
+# 1. Ensure you have Python 3.12.x
+python --version  # Should show 3.12.x
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -58,7 +58,7 @@ python scripts/verify_dependencies.py
 ## Key Rules
 
 ### ✓ Python Version
-- **Use Python 3.11.x only** (specified in `.python-version`)
+- **Use Python 3.12.x only** (specified in `.python-version`)
 - Don't change the version without team discussion
 
 ### ✓ Dependencies
@@ -175,8 +175,8 @@ Before committing:
 
 ## Questions?
 
-**Q: Why Python 3.11 specifically?**
-A: For consistency and to use specific language features. All type checkers are configured for 3.11.
+**Q: Why Python 3.12 specifically?**
+A: For consistency and to use specific language features. All type checkers are configured for 3.12.
 
 **Q: Why pin exact versions?**
 A: Reproducibility. Everyone gets the same dependencies, no surprises.

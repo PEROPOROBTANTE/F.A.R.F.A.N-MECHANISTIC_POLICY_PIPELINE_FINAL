@@ -122,7 +122,7 @@ class MethodSpec:
 
 class ArgRouter:
     """Resolve method call payloads based on inspected signatures.
-    
+
     .. note::
         ExtendedArgRouter is the recommended router to use directly.
         This base class is provided for backward compatibility.
@@ -426,7 +426,7 @@ class PayloadDriftMonitor:
         if isinstance(expected, tuple):
             return ", ".join(getattr(t, "__name__", str(t)) for t in expected)
         if hasattr(expected, "__name__"):
-            return getattr(expected, "__name__")  # type: ignore[arg-type]
+            return expected.__name__  # type: ignore[arg-type]
         return str(expected)
 
 
@@ -438,7 +438,7 @@ class PayloadDriftMonitor:
 @dataclass
 class RoutingMetrics:
     """Metrics for monitoring routing behavior."""
-    
+
     total_routes: int = 0
     special_routes_hit: int = 0
     default_routes_hit: int = 0
@@ -449,13 +449,13 @@ class RoutingMetrics:
 class ExtendedArgRouter(ArgRouter):
     """
     Extended argument router with special route handling.
-    
+
     Extends base ArgRouter with:
     - 25+ special route definitions
     - Strict validation (no silent drops)
     - **kwargs awareness for forward compatibility
     - Comprehensive metrics
-    
+
     Special Routes (≥25):
     1. _extract_quantitative_claims
     2. _parse_number
@@ -488,34 +488,34 @@ class ExtendedArgRouter(ArgRouter):
     29. _extract_constraint_declarations
     30. _parse_implementation_timeline
     """
-    
+
     def __init__(self, class_registry: Mapping[str, type]) -> None:
         """
         Initialize extended router.
-        
+
         Args:
             class_registry: Mapping of class names to class types
         """
         super().__init__(class_registry)
         self._special_routes = self._build_special_routes()
         self._metrics = RoutingMetrics()
-        
+
         logger.info(
             "extended_arg_router_initialized",
             special_routes=len(self._special_routes),
             classes=len(class_registry),
         )
-    
+
     def _build_special_routes(self) -> dict[str, dict[str, Any]]:
         """
         Build special route definitions for commonly-called methods.
-        
+
         Each route specifies:
         - required_args: List of required parameter names
         - optional_args: List of optional parameter names
         - accepts_kwargs: Whether method accepts **kwargs
         - description: Human-readable description
-        
+
         Returns:
             Dict mapping method names to route specs
         """
@@ -701,9 +701,9 @@ class ExtendedArgRouter(ArgRouter):
                 "description": "Parse implementation timeline from text",
             },
         }
-        
+
         return routes
-    
+
     def route(
         self,
         class_name: str,
@@ -712,33 +712,33 @@ class ExtendedArgRouter(ArgRouter):
     ) -> tuple[tuple[Any, ...], dict[str, Any]]:
         """
         Route method call with special handling and strict validation.
-        
+
         This override:
         1. Checks for special route definitions
         2. Applies strict validation
         3. Prevents silent parameter drops
         4. Tracks metrics
-        
+
         Args:
             class_name: Target class name
             method_name: Target method name
             payload: Method parameters
-            
+
         Returns:
             Tuple of (args, kwargs) for method invocation
-            
+
         Raises:
             ArgumentValidationError: On validation failure
         """
         self._metrics.total_routes += 1
-        
+
         # Check for special route
         if method_name in self._special_routes:
             return self._route_special(class_name, method_name, payload)
-        
+
         # Use default routing with enhanced validation
         return self._route_default_strict(class_name, method_name, payload)
-    
+
     def _route_special(
         self,
         class_name: str,
@@ -747,24 +747,24 @@ class ExtendedArgRouter(ArgRouter):
     ) -> tuple[tuple[Any, ...], dict[str, Any]]:
         """
         Route using special route definition.
-        
+
         Args:
             class_name: Target class name
             method_name: Target method name
             payload: Method parameters
-            
+
         Returns:
             Tuple of (args, kwargs)
         """
         self._metrics.special_routes_hit += 1
-        
+
         route_spec = self._special_routes[method_name]
         required_args = set(route_spec["required_args"])
         optional_args = set(route_spec["optional_args"])
         accepts_kwargs = route_spec["accepts_kwargs"]
-        
+
         provided_keys = set(payload.keys())
-        
+
         # Check required arguments
         missing = required_args - provided_keys
         if missing:
@@ -780,16 +780,16 @@ class ExtendedArgRouter(ArgRouter):
                 method_name,
                 missing=missing,
             )
-        
+
         # Check unexpected arguments
         expected = required_args | optional_args
         unexpected = provided_keys - expected
-        
+
         if unexpected and not accepts_kwargs:
             # Method doesn't accept **kwargs, so unexpected args are an error
             self._metrics.validation_errors += 1
             self._metrics.silent_drops_prevented += 1
-            
+
             logger.error(
                 "special_route_unexpected_args",
                 class_name=class_name,
@@ -802,19 +802,19 @@ class ExtendedArgRouter(ArgRouter):
                 method_name,
                 unexpected=unexpected,
             )
-        
+
         # Build kwargs (all parameters go to kwargs for special routes)
         kwargs = dict(payload)
-        
+
         logger.debug(
             "special_route_applied",
             class_name=class_name,
             method=method_name,
             params_count=len(kwargs),
         )
-        
+
         return (), kwargs
-    
+
     def _route_default_strict(
         self,
         class_name: str,
@@ -823,34 +823,34 @@ class ExtendedArgRouter(ArgRouter):
     ) -> tuple[tuple[Any, ...], dict[str, Any]]:
         """
         Route using default strategy with strict validation.
-        
+
         This prevents silent parameter drops by failing when:
         - Required arguments are missing
         - Unexpected arguments are provided AND method lacks **kwargs
-        
+
         Args:
             class_name: Target class name
             method_name: Target method name
             payload: Method parameters
-            
+
         Returns:
             Tuple of (args, kwargs)
         """
         self._metrics.default_routes_hit += 1
-        
+
         # Use base implementation for inspection
         spec = self.describe(class_name, method_name)
-        
+
         # Strict validation: if unexpected args and no **kwargs, fail
         provided_keys = set(payload.keys())
         accepted = set(spec.accepted_arguments)
         unexpected = provided_keys - accepted
-        
+
         if unexpected and not spec.has_var_keyword:
             # Method doesn't accept **kwargs - unexpected args are errors
             self._metrics.validation_errors += 1
             self._metrics.silent_drops_prevented += 1
-            
+
             logger.error(
                 "default_route_unexpected_args_strict",
                 class_name=class_name,
@@ -863,7 +863,7 @@ class ExtendedArgRouter(ArgRouter):
                 method_name,
                 unexpected=unexpected,
             )
-        
+
         # Delegate to base implementation
         try:
             result = super().route(class_name, method_name, payload)
@@ -876,25 +876,25 @@ class ExtendedArgRouter(ArgRouter):
         except ArgumentValidationError:
             self._metrics.validation_errors += 1
             raise
-    
+
     def get_special_route_coverage(self) -> int:
         """
         Get count of special routes defined.
-        
+
         Returns:
             Number of special routes (target: ≥25)
         """
         return len(self._special_routes)
-    
+
     def get_metrics(self) -> dict[str, Any]:
         """
         Get routing metrics.
-        
+
         Returns:
             Dict with routing statistics
         """
         total = self._metrics.total_routes or 1  # Avoid division by zero
-        
+
         return {
             "total_routes": self._metrics.total_routes,
             "special_routes_hit": self._metrics.special_routes_hit,
@@ -905,11 +905,11 @@ class ExtendedArgRouter(ArgRouter):
             "special_route_hit_rate": self._metrics.special_routes_hit / total,
             "error_rate": self._metrics.validation_errors / total,
         }
-    
+
     def list_special_routes(self) -> list[dict[str, Any]]:
         """
         List all special routes with their specifications.
-        
+
         Returns:
             List of route specifications
         """

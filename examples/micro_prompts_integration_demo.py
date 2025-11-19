@@ -21,8 +21,8 @@ except ImportError as e:
     print(f"   {e}")
     print("\n📦 Please install the package first:")
     print("   pip install -e .")
-    print("\nOr set PYTHONPATH:")
-    print("   export PYTHONPATH=/path/to/SAAAAAA/src")
+    print("\nNeed to debug your environment?")
+    print("   python -m saaaaaa.devtools.ensure_install")
     exit(1)
 
 from saaaaaa.processing.micro_prompts import (
@@ -89,7 +89,7 @@ def example_1_provenance_audit():
         ),
         'qmcm_003': QMCMRecord(
             question_id='P1-D1-Q1',
-            method_fqn='dereck_beach.BeachEvidentialTest.apply_test_logic',
+            method_fqn='derek_beach.BeachEvidentialTest.apply_test_logic',
             contribution_weight=0.3,
             timestamp=time.time(),
             output_schema={
@@ -157,7 +157,7 @@ def example_1_provenance_audit():
             'posterior': 'float',
             'confidence': 'float'
         },
-        'dereck_beach.BeachEvidentialTest.apply_test_logic': {
+        'derek_beach.BeachEvidentialTest.apply_test_logic': {
             'test_result': 'bool',
             'strength': 'float'
         }

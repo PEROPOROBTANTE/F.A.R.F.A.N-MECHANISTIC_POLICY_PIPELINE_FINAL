@@ -25,6 +25,11 @@ from saaaaaa.utils.paths import (
 )
 
 
+def system_tmp_path(name: str) -> Path:
+    """Return a path in the system temporary directory (outside workspace)."""
+    return Path(tempfile.gettempdir()) / name
+
+
 class TestProjectRoots:
     """Test project root detection."""
     
@@ -124,7 +129,7 @@ class TestIsWithin:
     def test_outside_not_within(self):
         """Completely outside path should not be within."""
         base = proj_root()
-        outside = Path("/tmp/other")
+        outside = system_tmp_path("other")
         assert not is_within(base, outside)
 
 
@@ -163,7 +168,7 @@ class TestSafeJoin:
         # This depends on how resolve() handles absolute components
         # Most implementations will resolve to absolute path which may fail is_within
         try:
-            result = safe_join(base, "/tmp/other")
+            result = safe_join(base, str(system_tmp_path("other")))
             # If it doesn't raise, verify it's still within base
             assert is_within(base, result)
         except PathTraversalError:
@@ -230,7 +235,7 @@ class TestValidateWritePath:
     
     def test_blocks_outside_workspace(self):
         """Should block writing outside workspace."""
-        outside = Path("/tmp/outside_workspace.txt")
+        outside = system_tmp_path("outside_workspace.txt")
         with pytest.raises(PathOutsideWorkspaceError):
             validate_write_path(outside)
 

@@ -350,7 +350,7 @@ cat config/inventory.json | jq '.statistics'
 3. `src/saaaaaa/analysis/contradiction_deteccion.py` (62 methods) - Contradictions + Coherence
 4. `src/saaaaaa/processing/embedding_policy.py` (36 methods) - Semantic Search + Bayesian
 5. `src/saaaaaa/analysis/teoria_cambio.py` (30 methods) - DAG Validation + Monte Carlo
-6. `src/saaaaaa/analysis/dereck_beach.py` (99 methods) - Beach Tests + Mechanisms
+6. `src/saaaaaa/analysis/derek_beach.py` (99 methods) - Beach Tests + Mechanisms
 7. `src/saaaaaa/processing/policy_processor.py` (32 methods) - Pattern Matching + Evidence
 
 **Output:** 7 independent JSON artifacts with typed evidence

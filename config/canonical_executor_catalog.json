@@ -36,8 +36,8 @@
         ]
       },
       "DB": {
-        "name": "dereck_beach.py",
-        "path": "src/saaaaaa/analysis/dereck_beach.py",
+        "name": "derek_beach.py",
+        "path": "src/saaaaaa/analysis/derek_beach.py",
         "classes": [
           "BeachEvidentialTest",
           "BayesianMechanismInference",
@@ -265,7 +265,7 @@
         "TeoriaCambio._validar_orden_causal"
       ]
     },
-    "dereck_beach_tests": {
+    "derek_beach_tests": {
       "description": "Tests de evidencia causal según Derek Beach Process Tracing",
       "hoop_test": {
         "description": "Necesario pero NO suficiente",

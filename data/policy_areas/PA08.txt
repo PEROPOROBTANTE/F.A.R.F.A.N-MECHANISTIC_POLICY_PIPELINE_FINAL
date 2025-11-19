@@ -1,0 +1,1 @@
+This is the input document for Policy Area 08: Agricultural Innovation. It contains the raw text that will be processed by the StrategicChunkingSystem to generate 10 smart policy chunks.

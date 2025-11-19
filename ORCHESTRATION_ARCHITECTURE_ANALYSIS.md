@@ -107,11 +107,10 @@ Orchestrator internals only
    - Phase 2 uses executors
    - **THIS IS THE ONLY PRODUCTION PATH**
 
-2. **Secondary Path: Choreographer** (`choreographer.py`)
-   - Legacy compatibility facade
-   - Used for single-question testing
-   - NOT used in production orchestration
-   - Marked as compatibility layer in docstrings
+2. **Secondary Path: Choreographer** (removed Q4 2025)
+   - Legacy single-question facade has been fully decommissioned
+   - `choreographer.py` and the shim dispatcher have been removed to eliminate dead imports
+   - Operators must call the main Orchestrator entry points or the executor-specific harnesses instead
 
 3. **Internal Orchestrator: FrontierExecutorOrchestrator** (`executors.py`)
    - Lives INSIDE executor instances
@@ -203,7 +202,7 @@ instance.method(**kwargs)
 **Distinction:**
 
 **Scripts (Top-Level Orchestrators):**
-- `dereck_beach.py` - Evidential test framework
+- `derek_beach.py` - Evidential test framework
 - `teoria_de_cambio.py` - Causal theory validation
 - `semantic_chunking.py` - Text segmentation
 - These are HIGH-LEVEL orchestrators that USE the core orchestrator

@@ -6,10 +6,10 @@ Tests all 7 enhanced features across MICRO, MESO, and MACRO levels.
 
 import json
 import sys
-from pathlib import Path
 
 # Add parent directory to path
 from saaaaaa.analysis.recommendation_engine import load_recommendation_engine
+from saaaaaa.utils.paths import tmp_dir
 
 def test_enhanced_recommendation_engine():
     """Test all 7 enhanced features"""
@@ -146,13 +146,15 @@ def test_enhanced_recommendation_engine():
 
     # Export test
     print("\n6. Testing export functionality...")
-    output_json = "/tmp/test_recommendations.json"
-    output_md = "/tmp/test_recommendations.md"
+    export_root = tmp_dir() / "recommendation_exports"
+    export_root.mkdir(parents=True, exist_ok=True)
+    output_json = export_root / "test_recommendations.json"
+    output_md = export_root / "test_recommendations.md"
 
-    engine.export_recommendations(all_recs, output_json, format='json')
+    engine.export_recommendations(all_recs, str(output_json), format='json')
     print(f"   ✓ Exported to JSON: {output_json}")
 
-    engine.export_recommendations(all_recs, output_md, format='markdown')
+    engine.export_recommendations(all_recs, str(output_md), format='markdown')
     print(f"   ✓ Exported to Markdown: {output_md}")
 
     # Verify JSON export has enhanced fields

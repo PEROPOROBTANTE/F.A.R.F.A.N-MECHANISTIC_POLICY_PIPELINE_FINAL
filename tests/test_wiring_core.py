@@ -9,6 +9,11 @@ from pathlib import Path
 
 import pytest
 
+from saaaaaa.core.orchestrator.signals import SignalClient, SignalRegistry
+from saaaaaa.core.wiring.bootstrap import (
+    CANONICAL_POLICY_AREA_DEFINITIONS,
+    WiringBootstrap,
+)
 from saaaaaa.core.wiring.contracts import (
     CPPDeliverable,
     PreprocessedDocumentDeliverable,
@@ -351,6 +356,36 @@ class TestWiringObservability:
         
         assert isinstance(attrs, dict)
         assert "status" in attrs
+
+
+class TestSignalSeeding:
+    """Test signal seeding wiring."""
+
+    class _StubProvider:
+        def get_patterns_for_area(self, policy_area_id: str, limit: int | None = None) -> list[str]:
+            count = limit or 4
+            return [f"{policy_area_id.lower()}_pattern_{i}" for i in range(count)]
+
+    def test_seed_signals_public_seeds_all_canonical_areas(self):
+        """seed_signals_public should seed all canonical policy areas and aliases."""
+        bootstrap = WiringBootstrap(flags=WiringFeatureFlags())
+        client = SignalClient(base_url="memory://")
+        registry = SignalRegistry()
+        provider = self._StubProvider()
+
+        metrics = bootstrap.seed_signals_public(client, registry, provider)
+
+        assert metrics["canonical_areas"] == len(CANONICAL_POLICY_AREA_DEFINITIONS)
+        assert metrics["hit_rate"] == pytest.approx(1.0)
+
+        for area_id in CANONICAL_POLICY_AREA_DEFINITIONS:
+            pack = registry.get(area_id)
+            assert pack is not None, f"Missing signal pack for {area_id}"
+            assert pack.metadata.get("canonical_id") == area_id
+            assert pack.patterns, "Expected patterns for canonical signal pack"
+
+        # Legacy aliases remain available for backward compatibility
+        assert registry.get("fiscal") is not None
 
 
 if __name__ == "__main__":

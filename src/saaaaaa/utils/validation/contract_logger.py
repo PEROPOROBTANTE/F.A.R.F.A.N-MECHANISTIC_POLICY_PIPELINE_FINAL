@@ -6,7 +6,7 @@ Provides a unified interface for logging contract violations in a machine-readab
 format conforming to schemas/contract_error_log.schema.json.
 
 Usage:
-    from validation.contract_logger import ContractErrorLogger
+    from saaaaaa.utils.validation.contract_logger import ContractErrorLogger
 
     logger = ContractErrorLogger(module_name="scoring")
     logger.log_contract_mismatch(
@@ -26,6 +26,7 @@ import traceback
 import uuid
 from datetime import datetime, timezone
 from typing import Any
+
 
 class ContractErrorLogger:
     """Structured logger for contract validation errors."""

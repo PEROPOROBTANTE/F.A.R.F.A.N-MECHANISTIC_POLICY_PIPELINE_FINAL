@@ -107,7 +107,7 @@ pip install -c constraints-new.txt -r requirements-core.txt
 pip install tensorflow>=2.16.0
 ```
 
-Or use Python 3.10-3.11 for tensorflow 2.15.0
+⚠️ Downgrading Python is no longer supported. Stay on 3.12.x and upgrade TensorFlow to 2.16+.
 
 ### Issue: torch installation fails
 
@@ -124,9 +124,9 @@ pip install torch --index-url https://download.pytorch.org/whl/cu121
 
 | Python Version | Status | Notes |
 |----------------|--------|-------|
-| 3.10 | ✅ Fully Supported | Recommended |
-| 3.11 | ✅ Fully Supported | Recommended |
-| 3.12 | ⚠️ Mostly Supported | Some packages need newer versions (tensorflow) |
+| 3.10 | ❌ Not Supported | Legacy configuration |
+| 3.11 | ❌ Not Supported | Legacy configuration |
+| 3.12 | ✅ Required | Upgrade TensorFlow to 2.16+ |
 
 ## File Reference
 

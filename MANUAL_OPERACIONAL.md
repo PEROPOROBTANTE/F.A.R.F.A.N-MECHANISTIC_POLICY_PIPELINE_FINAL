@@ -20,12 +20,12 @@
 
 ### 1.1 Versión de Python
 
-**REQUERIDO:** Python >= 3.10 (recomendado: 3.11 o 3.12)
+**REQUERIDO:** Python = 3.12.x (versiones anteriores no soportadas)
 
 ```bash
 # Verificar versión
 python3 --version
-# Debe mostrar: Python 3.10.x, 3.11.x, o 3.12.x
+# Debe mostrar: Python 3.12.x
 ```
 
 ### 1.2 Herramientas del Sistema
@@ -49,7 +49,7 @@ sudo apt-get install -y \
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Instalar dependencias
-brew install python@3.11 icu4c pkg-config
+brew install python@3.12 icu4c pkg-config
 ```
 
 ### 1.3 Gestores de Paquetes Python
@@ -194,7 +194,7 @@ python3 scripts/verify_system_equipment.py --check-all
 
 **Salida esperada:**
 ```
-✓ Python version: 3.11.x
+✓ Python version: 3.12.x
 ✓ Open files limit: 1024 (soft) / 1048576 (hard)
 ✓ Locale: UTF-8 enabled
 ✓ ICU version: 73.2

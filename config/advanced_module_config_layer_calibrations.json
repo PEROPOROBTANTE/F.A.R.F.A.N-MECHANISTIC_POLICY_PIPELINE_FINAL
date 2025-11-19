@@ -1,0 +1,124 @@
+{
+  "_metadata": {
+    "file": "advanced_module_config.py",
+    "total_methods_analyzed": 4,
+    "methods_requiring_calibration": 1,
+    "methods_excluded": 3,
+    "calibration_system": "8-layer with Choquet fusion",
+    "specification": "canonic_calibration_methods.md"
+  },
+  "methods": {
+    "calibrated": [
+      {
+        "method_id": "src.saaaaaa.core.orchestrator.advanced_module_config.AdvancedModuleConfig.model_post_init",
+        "canonical_name": "src.saaaaaa.core.orchestrator.advanced_module_config.AdvancedModuleConfig.model_post_init",
+        "role": "META_TOOL",
+        "calibration_status": "centralized",
+        "calibration_date": "2025-11-18",
+        "required_layers": [
+          "@b",
+          "@chain",
+          "@m"
+        ],
+        "layer_scores": {
+          "@b": {
+            "value": 0.5148,
+            "components": {
+              "b_theory": 0.56,
+              "b_impl": 0.468,
+              "b_deploy": 0.508
+            },
+            "component_weights": {
+              "w_th": 0.4,
+              "w_imp": 0.35,
+              "w_dep": 0.25
+            }
+          },
+          "@chain": {
+            "value": 1.0,
+            "rationale": "Pydantic hook, no external edges, all contracts pass"
+          },
+          "@m": {
+            "value": 0.582,
+            "components": {
+              "m_transp": 0.7,
+              "m_gov": 0.33,
+              "m_cost": 1.0
+            },
+            "component_weights": {
+              "w_transp": 0.5,
+              "w_gov": 0.4,
+              "w_cost": 0.1
+            }
+          }
+        },
+        "fusion_parameters": {
+          "role": "META_TOOL",
+          "linear_weights": {
+            "@b": 0.4,
+            "@chain": 0.3,
+            "@m": 0.2
+          },
+          "interaction_weights": {
+            "(@b, @chain)": 0.1
+          },
+          "fusion_formula": "Cal = \u03a3(a_\u2113 \u00b7 x_\u2113) + \u03a3(a_\u2113k \u00b7 min(x_\u2113, x_k))"
+        },
+        "choquet_fusion_result": {
+          "linear_term": 0.6223,
+          "interaction_term": 0.0515,
+          "final_score": 0.6738
+        },
+        "calibration_metadata": {
+          "computed_by": "layer_based_calibration_system",
+          "spec_reference": "canonic_calibration_methods.md",
+          "fusion_spec": "config/fusion_specification.json",
+          "rubric": "config/intrinsic_calibration_rubric.json",
+          "triage_result": {
+            "q1_analytically_active": true,
+            "q2_parametric": false,
+            "q3_safety_critical": true,
+            "requires_calibration": true
+          }
+        }
+      }
+    ],
+    "excluded": [
+      {
+        "method_id": "src.saaaaaa.core.orchestrator.advanced_module_config.AcademicReference.cite_apa",
+        "exclusion_reason": "Citation formatting - non-semantic utility",
+        "triage_result": {
+          "q1": false,
+          "q2": false,
+          "q3": false
+        }
+      },
+      {
+        "method_id": "src.saaaaaa.core.orchestrator.advanced_module_config.AdvancedModuleConfig.get_academic_references",
+        "exclusion_reason": "Metadata accessor - non-analytical",
+        "triage_result": {
+          "q1": false,
+          "q2": true,
+          "q3": false
+        }
+      },
+      {
+        "method_id": "src.saaaaaa.core.orchestrator.advanced_module_config.AdvancedModuleConfig.describe_academic_basis",
+        "exclusion_reason": "Documentation generation - non-analytical",
+        "triage_result": {
+          "q1": false,
+          "q2": false,
+          "q3": false
+        }
+      }
+    ]
+  },
+  "summary": {
+    "calibrated_methods": 1,
+    "excluded_methods": 3,
+    "total_methods": 4,
+    "calibration_scores": {
+      "model_post_init": 0.6738
+    }
+  }
+}

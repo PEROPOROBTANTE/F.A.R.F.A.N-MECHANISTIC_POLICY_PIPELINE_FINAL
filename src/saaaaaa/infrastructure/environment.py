@@ -7,6 +7,7 @@ For testing, use InMemoryEnvAdapter instead.
 
 import os
 
+
 class SystemEnvAdapter:
     """Real environment adapter using os.environ.
 

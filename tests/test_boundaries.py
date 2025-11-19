@@ -21,12 +21,14 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from saaaaaa.config.paths import PROJECT_ROOT, SRC_DIR
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
 # Define the package root directory
-REPO_ROOT = Path(__file__).parent.parent
-PACKAGE_ROOT = Path(__file__).parent.parent / "src" / "saaaaaa"
+REPO_ROOT = PROJECT_ROOT
+PACKAGE_ROOT = SRC_DIR
 
 # Modules that must stay pure (no __main__ and no direct I/O).
 PURE_MODULE_PATHS: dict[str, Path] = {
@@ -37,7 +39,7 @@ PURE_MODULE_PATHS: dict[str, Path] = {
 # detector can surface the locations without failing the build yet.
 LEGACY_IO_MODULES: dict[str, Path] = {
     "saaaaaa.analysis.Analyzer_one": PACKAGE_ROOT / "analysis" / "Analyzer_one.py",
-    "saaaaaa.analysis.dereck_beach": PACKAGE_ROOT / "analysis" / "dereck_beach.py",
+    "saaaaaa.analysis.derek_beach": PACKAGE_ROOT / "analysis" / "derek_beach.py",
     "saaaaaa.analysis.financiero_viabilidad_tablas": PACKAGE_ROOT / "analysis" / "financiero_viabilidad_tablas.py",
     "saaaaaa.analysis.teoria_cambio": PACKAGE_ROOT / "analysis" / "teoria_cambio.py",
     "saaaaaa.analysis.contradiction_deteccion": PACKAGE_ROOT / "analysis" / "contradiction_deteccion.py",

@@ -1,0 +1,1074 @@
+================================================================================
+F.A.R.F.A.N TEST HYGIENIST REPORT
+================================================================================
+Generated: 2025-11-15 00:01:03
+Total tests analyzed: 105
+
+SUMMARY
+--------------------------------------------------------------------------------
+KEEP:        67 tests
+REFACTOR:    38 tests
+DEPRECATE:    0 tests
+
+
+================================================================================
+REFACTOR: 38 tests
+================================================================================
+
+Test: test_canonical_method_catalog
+  File: tests/test_canonical_method_catalog.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 55.0/100
+  Lines of Code: 285
+  Test Functions: 31
+  Cyclomatic Complexity: 25
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_executor_config_properties
+  File: tests/test_executor_config_properties.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 44.0/100
+  Lines of Code: 213
+  Test Functions: 17
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_enhanced_argument_resolution
+  File: tests/test_enhanced_argument_resolution.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 48.0/100
+  Lines of Code: 278
+  Test Functions: 13
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve.
+
+Test: test_gold_canario_integration
+  File: tests/test_gold_canario_integration.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 42.0/100
+  Lines of Code: 392
+  Test Functions: 11
+  Cyclomatic Complexity: 6
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_gold_canario_micro_bayesian
+  File: tests/test_gold_canario_micro_bayesian.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 54.0/100
+  Lines of Code: 623
+  Test Functions: 27
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (54.0/100). Important test to preserve.
+
+Test: test_dependency_management
+  File: tests/test_dependency_management.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 55.0/100
+  Lines of Code: 231
+  Test Functions: 13
+  Cyclomatic Complexity: 22
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve.
+
+Test: test_wiring_e2e
+  File: tests/test_wiring_e2e.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 44.0/100
+  Lines of Code: 319
+  Test Functions: 25
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve.
+
+Test: test_gold_canario_meso_reporting
+  File: tests/test_gold_canario_meso_reporting.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 56.0/100
+  Lines of Code: 572
+  Test Functions: 37
+  Cyclomatic Complexity: 8
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (56.0/100). Important test to preserve.
+
+Test: test_signals
+  File: tests/test_signals.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 65.0/100
+  Lines of Code: 521
+  Test Functions: 33
+  Cyclomatic Complexity: 15
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (65.0/100). Important test to preserve.
+
+Test: test_recommendation_coverage
+  File: tests/test_recommendation_coverage.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 62.0/100
+  Lines of Code: 534
+  Test Functions: 10
+  Cyclomatic Complexity: 11
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (62.0/100). Important test to preserve.
+
+Test: test_problem_statement_verification
+  File: tests/test_problem_statement_verification.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 45.0/100
+  Lines of Code: 170
+  Test Functions: 12
+  Cyclomatic Complexity: 14
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve.
+
+Test: test_chunk_execution
+  File: tests/test_chunk_execution.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 48.0/100
+  Lines of Code: 207
+  Test Functions: 12
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve.
+
+Test: test_gold_canario_micro_provenance
+  File: tests/test_gold_canario_micro_provenance.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 54.0/100
+  Lines of Code: 529
+  Test Functions: 26
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (54.0/100). Important test to preserve.
+
+Test: test_boundaries
+  File: tests/test_boundaries.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 45.0/100
+  Lines of Code: 176
+  Test Functions: 5
+  Cyclomatic Complexity: 29
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve.
+
+Test: test_concurrency
+  File: tests/test_concurrency.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 55.0/100
+  Lines of Code: 295
+  Test Functions: 15
+  Cyclomatic Complexity: 21
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_arg_router_extended
+  File: tests/test_arg_router_extended.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 46.0/100
+  Lines of Code: 235
+  Test Functions: 15
+  Cyclomatic Complexity: 8
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (46.0/100). Important test to preserve.
+
+Test: test_contract_runtime
+  File: tests/test_contract_runtime.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 42.0/100
+  Lines of Code: 317
+  Test Functions: 27
+  Cyclomatic Complexity: 6
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve.
+
+Test: test_circuit_breaker_stress
+  File: tests/test_circuit_breaker_stress.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 50.0/100
+  Lines of Code: 223
+  Test Functions: 7
+  Cyclomatic Complexity: 10
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (50.0/100). Important test to preserve.
+
+Test: test_executor_monitoring
+  File: tests/test_executor_monitoring.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 48.0/100
+  Lines of Code: 208
+  Test Functions: 15
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_score_normalization_fix
+  File: tests/test_score_normalization_fix.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 42.0/100
+  Lines of Code: 130
+  Test Functions: 5
+  Cyclomatic Complexity: 11
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve.
+
+Test: test_calibration_system
+  File: tests/test_calibration_system.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 44.0/100
+  Lines of Code: 282
+  Test Functions: 17
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_spc_integration_complete
+  File: tests/test_spc_integration_complete.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 48.0/100
+  Lines of Code: 320
+  Test Functions: 11
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_system_audit
+  File: tests/test_system_audit.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 45.0/100
+  Lines of Code: 195
+  Test Functions: 10
+  Cyclomatic Complexity: 39
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_executor_validation
+  File: tests/test_executor_validation.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 44.0/100
+  Lines of Code: 225
+  Test Functions: 15
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_scoring
+  File: tests/test_scoring.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 48.0/100
+  Lines of Code: 423
+  Test Functions: 22
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (48.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_paths_no_absolutes
+  File: tests/paths/test_paths_no_absolutes.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 45.0/100
+  Lines of Code: 144
+  Test Functions: 5
+  Cyclomatic Complexity: 43
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (45.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_30_executors
+  File: tests/integration/test_30_executors.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 55.0/100
+  Lines of Code: 414
+  Test Functions: 20
+  Cyclomatic Complexity: 17
+  Days Since Modified: 1
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_layer_requirements
+  File: tests/calibration/test_layer_requirements.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 42.0/100
+  Lines of Code: 248
+  Test Functions: 19
+  Cyclomatic Complexity: 6
+  Days Since Modified: 0
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve. Issues: related source code modified.
+
+Test: test_gap0_complete
+  File: tests/calibration/test_gap0_complete.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 55.0/100
+  Lines of Code: 241
+  Test Functions: 15
+  Cyclomatic Complexity: 25
+  Days Since Modified: 0
+  Justification: High value (85.0/100) justifies refactoring despite high complexity (55.0/100). Important test to preserve.
+
+Test: test_signature_validation
+  File: tests/test_signature_validation.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 42.0/100
+  Lines of Code: 109
+  Test Functions: 5
+  Cyclomatic Complexity: 6
+  Days Since Modified: 1
+  Missing Imports: saaaaaa.validation.signature_validator, saaaaaa.validation.signature_validator
+  Justification: High value (75.0/100) justifies refactoring despite high complexity (42.0/100). Important test to preserve. Issues: 2 missing imports.
+
+Test: test_imports
+  File: tests/test_imports.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 47.0/100
+  Lines of Code: 117
+  Test Functions: 6
+  Cyclomatic Complexity: 11
+  Days Since Modified: 1
+  Missing Imports: saaaaaa.validation.signature_validator
+  Justification: High value (75.0/100) justifies refactoring despite high complexity (47.0/100). Important test to preserve. Issues: 1 missing imports.
+
+Test: test_strategic_wiring
+  File: tests/test_strategic_wiring.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 70.0/100
+  Lines of Code: 284
+  Test Functions: 18
+  Cyclomatic Complexity: 14
+  Days Since Modified: 1
+  Missing Imports: saaaaaa.validation.validation_engine, saaaaaa.validation.validation_engine, saaaaaa.validation.validation_engine
+  Justification: High value (65.0/100) justifies refactoring despite high complexity (70.0/100). Important test to preserve. Issues: 3 missing imports.
+
+Test: test_gold_canario_macro_reporting
+  File: tests/test_gold_canario_macro_reporting.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 44.0/100
+  Lines of Code: 602
+  Test Functions: 44
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) justifies refactoring despite high complexity (44.0/100). Important test to preserve.
+
+Test: test_executor_logging
+  File: tests/test_executor_logging.py
+  Value Score: 58.0/100
+  Refactoring Complexity: 13.0/100
+  Lines of Code: 54
+  Test Functions: 2
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: Moderate value (58.0/100) with reasonable complexity (13.0/100). Worth updating. Issues: related source code modified.
+
+Test: test_async_timeout
+  File: tests/test_async_timeout.py
+  Value Score: 55.0/100
+  Refactoring Complexity: 12.0/100
+  Lines of Code: 147
+  Test Functions: 0
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: Moderate value (55.0/100) with reasonable complexity (12.0/100). Worth updating.
+
+Test: test_phase_timeout
+  File: tests/test_phase_timeout.py
+  Value Score: 55.0/100
+  Refactoring Complexity: 7.0/100
+  Lines of Code: 97
+  Test Functions: 0
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: Moderate value (55.0/100) with reasonable complexity (7.0/100). Worth updating.
+
+Test: test_circuit_breaker_async
+  File: tests/test_circuit_breaker_async.py
+  Value Score: 55.0/100
+  Refactoring Complexity: 9.0/100
+  Lines of Code: 52
+  Test Functions: 0
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: Moderate value (55.0/100) with reasonable complexity (9.0/100). Worth updating.
+
+Test: test_questionnaire_and_rubric
+  File: tests/data/test_questionnaire_and_rubric.py
+  Value Score: 55.0/100
+  Refactoring Complexity: 22.0/100
+  Lines of Code: 71
+  Test Functions: 6
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Missing Imports: saaaaaa.validation.schema_validator
+  Justification: Moderate value (55.0/100) with reasonable complexity (22.0/100). Worth updating. Issues: 1 missing imports.
+
+================================================================================
+KEEP: 67 tests
+================================================================================
+
+Test: test_import_consistency
+  File: tests/test_import_consistency.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 123
+  Test Functions: 6
+  Cyclomatic Complexity: 10
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage.
+
+Test: test_smoke_imports
+  File: tests/test_smoke_imports.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 106
+  Test Functions: 11
+  Cyclomatic Complexity: 10
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage.
+
+Test: test_cpp_table_extraction_none_handling
+  File: tests/test_cpp_table_extraction_none_handling.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 170
+  Test Functions: 8
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_safe_imports
+  File: tests/test_safe_imports.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 32.0/100
+  Lines of Code: 176
+  Test Functions: 27
+  Cyclomatic Complexity: 6
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (32.0/100). Test provides good coverage.
+
+Test: test_defensive_signatures
+  File: tests/test_defensive_signatures.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 99
+  Test Functions: 8
+  Cyclomatic Complexity: 16
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage.
+
+Test: test_dependency_lockdown
+  File: tests/test_dependency_lockdown.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 32.0/100
+  Lines of Code: 184
+  Test Functions: 16
+  Cyclomatic Complexity: 6
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (32.0/100). Test provides good coverage.
+
+Test: test_class_registry_paths
+  File: tests/test_class_registry_paths.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 113
+  Test Functions: 5
+  Cyclomatic Complexity: 10
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (40.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_intrinsic_loader
+  File: tests/calibration/test_intrinsic_loader.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 32.0/100
+  Lines of Code: 192
+  Test Functions: 16
+  Cyclomatic Complexity: 6
+  Days Since Modified: 0
+  Justification: High value (85.0/100) with manageable complexity (32.0/100). Test provides good coverage.
+
+Test: test_synthetic_traffic
+  File: tests/operational/test_synthetic_traffic.py
+  Value Score: 85.0/100
+  Refactoring Complexity: 33.0/100
+  Lines of Code: 97
+  Test Functions: 7
+  Cyclomatic Complexity: 9
+  Days Since Modified: 1
+  Justification: High value (85.0/100) with manageable complexity (33.0/100). Test provides good coverage.
+
+Test: test_metrics_thread_safety
+  File: tests/test_metrics_thread_safety.py
+  Value Score: 82.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 69
+  Test Functions: 4
+  Cyclomatic Complexity: 13
+  Days Since Modified: 1
+  Justification: High value (82.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_regression_semantic_chunking
+  File: tests/test_regression_semantic_chunking.py
+  Value Score: 82.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 94
+  Test Functions: 4
+  Cyclomatic Complexity: 17
+  Days Since Modified: 1
+  Justification: High value (82.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_embedding_policy_contracts
+  File: tests/test_embedding_policy_contracts.py
+  Value Score: 82.0/100
+  Refactoring Complexity: 28.0/100
+  Lines of Code: 123
+  Test Functions: 3
+  Cyclomatic Complexity: 6
+  Days Since Modified: 1
+  Justification: High value (82.0/100) with manageable complexity (28.0/100). Test provides good coverage.
+
+Test: test_enhanced_recommendations
+  File: tests/test_enhanced_recommendations.py
+  Value Score: 78.0/100
+  Refactoring Complexity: 26.0/100
+  Lines of Code: 140
+  Test Functions: 1
+  Cyclomatic Complexity: 7
+  Days Since Modified: 1
+  Justification: High value (78.0/100) with manageable complexity (26.0/100). Test provides good coverage.
+
+Test: test_property_based
+  File: tests/test_property_based.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 297
+  Test Functions: 16
+  Cyclomatic Complexity: 5
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (40.0/100). Test provides good coverage.
+
+Test: test_proof_generator
+  File: tests/test_proof_generator.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 294
+  Test Functions: 15
+  Cyclomatic Complexity: 5
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (40.0/100). Test provides good coverage.
+
+Test: test_structure_verification
+  File: tests/test_structure_verification.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 35.0/100
+  Lines of Code: 179
+  Test Functions: 0
+  Cyclomatic Complexity: 23
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (35.0/100). Test provides good coverage.
+
+Test: test_wiring_core
+  File: tests/test_wiring_core.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 36.0/100
+  Lines of Code: 261
+  Test Functions: 23
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_calibration_stability
+  File: tests/test_calibration_stability.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 30.0/100
+  Lines of Code: 177
+  Test Functions: 14
+  Cyclomatic Complexity: 5
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (30.0/100). Test provides good coverage.
+
+Test: test_cpp_ingestion
+  File: tests/test_cpp_ingestion.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 40.0/100
+  Lines of Code: 305
+  Test Functions: 16
+  Cyclomatic Complexity: 5
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (40.0/100). Test provides good coverage.
+
+Test: test_flux_contracts
+  File: tests/test_flux_contracts.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 36.0/100
+  Lines of Code: 326
+  Test Functions: 25
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage.
+
+Test: test_aggregation
+  File: tests/test_aggregation.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 36.0/100
+  Lines of Code: 302
+  Test Functions: 19
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage.
+
+Test: test_gold_canario_micro_stress
+  File: tests/test_gold_canario_micro_stress.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 430
+  Test Functions: 33
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_calibration_completeness
+  File: tests/test_calibration_completeness.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 30.0/100
+  Lines of Code: 143
+  Test Functions: 14
+  Cyclomatic Complexity: 5
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (30.0/100). Test provides good coverage.
+
+Test: test_runtime_error_fixes
+  File: tests/test_runtime_error_fixes.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 26.0/100
+  Lines of Code: 167
+  Test Functions: 25
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (26.0/100). Test provides good coverage.
+
+Test: test_infrastructure
+  File: tests/test_infrastructure.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 244
+  Test Functions: 29
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_calibration_context
+  File: tests/test_calibration_context.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 286
+  Test Functions: 20
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_routing_metrics_integration
+  File: tests/test_routing_metrics_integration.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 26.0/100
+  Lines of Code: 106
+  Test Functions: 8
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (26.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_method_sequence_validation
+  File: tests/test_method_sequence_validation.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 28.0/100
+  Lines of Code: 190
+  Test Functions: 11
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (28.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_contracts_comprehensive
+  File: tests/test_contracts_comprehensive.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 265
+  Test Functions: 15
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_integration_failures
+  File: tests/test_integration_failures.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 242
+  Test Functions: 5
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_schema_validation
+  File: tests/test_schema_validation.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 36.0/100
+  Lines of Code: 307
+  Test Functions: 13
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage.
+
+Test: test_questionnaire_resource_provider
+  File: tests/test_questionnaire_resource_provider.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 30.0/100
+  Lines of Code: 122
+  Test Functions: 15
+  Cyclomatic Complexity: 5
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (30.0/100). Test provides good coverage.
+
+Test: test_flux_integration
+  File: tests/test_flux_integration.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 36.0/100
+  Lines of Code: 307
+  Test Functions: 21
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_aggregation_validation
+  File: tests/test_aggregation_validation.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 38.0/100
+  Lines of Code: 254
+  Test Functions: 35
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (38.0/100). Test provides good coverage.
+
+Test: test_determinism
+  File: tests/test_determinism.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 26.0/100
+  Lines of Code: 163
+  Test Functions: 16
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (26.0/100). Test provides good coverage.
+
+Test: test_contracts
+  File: tests/test_contracts.py
+  Value Score: 75.0/100
+  Refactoring Complexity: 36.0/100
+  Lines of Code: 257
+  Test Functions: 26
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (75.0/100) with manageable complexity (36.0/100). Test provides good coverage.
+
+Test: test_argrouter_optional_backends
+  File: tests/test_argrouter_optional_backends.py
+  Value Score: 72.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 28
+  Test Functions: 3
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (72.0/100) with manageable complexity (17.0/100). Test provides good coverage.
+
+Test: test_signal_integration_e2e
+  File: tests/test_signal_integration_e2e.py
+  Value Score: 72.0/100
+  Refactoring Complexity: 26.0/100
+  Lines of Code: 134
+  Test Functions: 4
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (72.0/100) with manageable complexity (26.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_graph_resolution
+  File: tests/test_graph_resolution.py
+  Value Score: 72.0/100
+  Refactoring Complexity: 19.0/100
+  Lines of Code: 72
+  Test Functions: 4
+  Cyclomatic Complexity: 3
+  Days Since Modified: 1
+  Justification: High value (72.0/100) with manageable complexity (19.0/100). Test provides good coverage.
+
+Test: test_contract_snapshots
+  File: tests/test_contract_snapshots.py
+  Value Score: 68.0/100
+  Refactoring Complexity: 15.0/100
+  Lines of Code: 36
+  Test Functions: 1
+  Cyclomatic Complexity: 4
+  Days Since Modified: 1
+  Justification: High value (68.0/100) with manageable complexity (15.0/100). Test provides good coverage.
+
+Test: test_executor_sequences
+  File: tests/test_executor_sequences.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 72
+  Test Functions: 6
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_spc_validation
+  File: tests/test_spc_validation.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 22.0/100
+  Lines of Code: 153
+  Test Functions: 9
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage.
+
+Test: test_method_config_loader
+  File: tests/test_method_config_loader.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 22.0/100
+  Lines of Code: 168
+  Test Functions: 16
+  Cyclomatic Complexity: 1
+  Days Since Modified: 0
+  Justification: High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_questionnaire_validation_edge_cases
+  File: tests/test_questionnaire_validation_edge_cases.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 32.0/100
+  Lines of Code: 250
+  Test Functions: 19
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (32.0/100). Test provides good coverage.
+
+Test: test_spc_adapter
+  File: tests/test_spc_adapter.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 34.0/100
+  Lines of Code: 336
+  Test Functions: 18
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_signal_client
+  File: tests/test_signal_client.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 81
+  Test Functions: 7
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_hash_determinism
+  File: tests/test_hash_determinism.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 34.0/100
+  Lines of Code: 284
+  Test Functions: 24
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage.
+
+Test: test_executor_config_cli
+  File: tests/test_executor_config_cli.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 39
+  Test Functions: 5
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_monitoring
+  File: tests/test_monitoring.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 19.0/100
+  Lines of Code: 97
+  Test Functions: 10
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (19.0/100). Test provides good coverage.
+
+Test: test_aggregators_optional_monolith
+  File: tests/test_aggregators_optional_monolith.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 41
+  Test Functions: 5
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage.
+
+Test: test_cpp_adapter
+  File: tests/test_cpp_adapter.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 34.0/100
+  Lines of Code: 238
+  Test Functions: 14
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_arg_router
+  File: tests/test_arg_router.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 39
+  Test Functions: 5
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage.
+
+Test: test_questionnaire_validation
+  File: tests/test_questionnaire_validation.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 74
+  Test Functions: 6
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage.
+
+Test: test_statistics_guards
+  File: tests/test_statistics_guards.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 56
+  Test Functions: 7
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (17.0/100). Test provides good coverage.
+
+Test: test_schema_gates
+  File: tests/test_schema_gates.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 32.0/100
+  Lines of Code: 206
+  Test Functions: 18
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (32.0/100). Test provides good coverage.
+
+Test: test_paths_workspace_bounds
+  File: tests/paths/test_paths_workspace_bounds.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 22.0/100
+  Lines of Code: 130
+  Test Functions: 20
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_paths_utils
+  File: tests/paths/test_paths_utils.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 34.0/100
+  Lines of Code: 204
+  Test Functions: 30
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_data_structures
+  File: tests/calibration/test_data_structures.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 34.0/100
+  Lines of Code: 201
+  Test Functions: 15
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (34.0/100). Test provides good coverage.
+
+Test: test_regression
+  File: tests/calibration/test_regression.py
+  Value Score: 65.0/100
+  Refactoring Complexity: 22.0/100
+  Lines of Code: 199
+  Test Functions: 9
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (65.0/100) with manageable complexity (22.0/100). Test provides good coverage.
+
+Test: test_macro_score_dict
+  File: tests/test_macro_score_dict.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 13.0/100
+  Lines of Code: 77
+  Test Functions: 3
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_arg_router_expected_type_name
+  File: tests/test_arg_router_expected_type_name.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 15.0/100
+  Lines of Code: 29
+  Test Functions: 4
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (15.0/100). Test provides good coverage.
+
+Test: test_cpp_adapter_no_arrow
+  File: tests/test_cpp_adapter_no_arrow.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 13.0/100
+  Lines of Code: 23
+  Test Functions: 3
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_spc_adapter_integration
+  File: tests/test_spc_adapter_integration.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 22.0/100
+  Lines of Code: 127
+  Test Functions: 4
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (22.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_core_monolith_hash
+  File: tests/test_core_monolith_hash.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 13.0/100
+  Lines of Code: 68
+  Test Functions: 3
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_core_expected_counts
+  File: tests/test_core_expected_counts.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 15.0/100
+  Lines of Code: 38
+  Test Functions: 4
+  Cyclomatic Complexity: 1
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (15.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_method_config_loader_integration
+  File: tests/test_method_config_loader_integration.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 13.0/100
+  Lines of Code: 36
+  Test Functions: 3
+  Cyclomatic Complexity: 1
+  Days Since Modified: 0
+  Justification: High value (62.0/100) with manageable complexity (13.0/100). Test provides good coverage. Issues: related source code modified.
+
+Test: test_boot_checks
+  File: tests/operational/test_boot_checks.py
+  Value Score: 62.0/100
+  Refactoring Complexity: 17.0/100
+  Lines of Code: 36
+  Test Functions: 4
+  Cyclomatic Complexity: 2
+  Days Since Modified: 1
+  Justification: High value (62.0/100) with manageable complexity (17.0/100). Test provides good coverage.

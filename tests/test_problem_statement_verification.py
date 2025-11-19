@@ -13,6 +13,7 @@ from pathlib import Path
 from types import MappingProxyType
 
 import pytest
+from saaaaaa.config.paths import PROJECT_ROOT
 
 
 def test_execute_phase_with_timeout_exists():
@@ -202,7 +203,7 @@ def test_no_by_hash_usage_in_codebase():
     import os
     from pathlib import Path
     
-    src_dir = Path(__file__).parent.parent / "src"
+    src_dir = PROJECT_ROOT / "src"
     py_files = list(src_dir.rglob("*.py"))
     
     for py_file in py_files:

@@ -24,7 +24,7 @@ NC='\033[0m' # No Color
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_PATH="${SCRIPT_DIR}/venv"
-PYTHON_REQUIRED="3.11"
+PYTHON_REQUIRED="3.12"
 API_PORT=5000
 WORKSPACE_DIR="${SCRIPT_DIR}/workspace"
 OUTPUT_DIR="${SCRIPT_DIR}/output"
@@ -339,16 +339,14 @@ echo ""
 # If api_server.py exists, use it; otherwise provide instructions
 if [ -f "${SCRIPT_DIR}/src/saaaaaa/api/api_server.py" ]; then
     cd "$SCRIPT_DIR"
-    export FLASK_APP=src.saaaaaa.api.api_server
+    export FLASK_APP=saaaaaa.api.api_server
     export FLASK_ENV=development
-    export PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH}"
-
     python3 -m flask run --host=0.0.0.0 --port=${API_PORT}
 else
     print_status "WARN" "api_server.py not found"
     echo ""
     echo -e "${YELLOW}To start the server manually:${NC}"
-    echo -e "  ${CYAN}export FLASK_APP=src.saaaaaa.api.api_server${NC}"
+    echo -e "  ${CYAN}export FLASK_APP=saaaaaa.api.api_server${NC}"
     echo -e "  ${CYAN}export FLASK_ENV=development${NC}"
     echo -e "  ${CYAN}python3 -m flask run --host=0.0.0.0 --port=${API_PORT}${NC}"
     echo ""

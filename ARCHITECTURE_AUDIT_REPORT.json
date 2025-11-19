@@ -202,7 +202,7 @@
       "reason": "Class name suggests questionnaire/pattern logic. Such logic should only exist in QuestionnaireResourceProvider."
     },
     {
-      "file": "src/saaaaaa/analysis/dereck_beach.py",
+      "file": "src/saaaaaa/analysis/derek_beach.py",
       "line": 228,
       "class": "CDAFValidationError",
       "reason": "Class name suggests questionnaire/pattern logic. Such logic should only exist in QuestionnaireResourceProvider."

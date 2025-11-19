@@ -4,19 +4,19 @@ Structural normalization with policy-awareness.
 Segments documents into policy-aware units.
 """
 
-from typing import Any, Dict, List
+from typing import Any
 
 
 class StructuralNormalizer:
     """Policy-aware structural normalizer."""
-    
-    def normalize(self, raw_objects: Dict[str, Any]) -> Dict[str, Any]:
+
+    def normalize(self, raw_objects: dict[str, Any]) -> dict[str, Any]:
         """
         Normalize document structure with policy awareness.
-        
+
         Args:
             raw_objects: Raw parsed objects
-            
+
         Returns:
             Policy graph with structured sections
         """
@@ -29,15 +29,15 @@ class StructuralNormalizer:
             "years": [],
             "territories": [],
         }
-        
+
         # Extract sections from pages
         for page in raw_objects.get("pages", []):
             text = page.get("text", "")
-            
+
             # Detect policy units
             policy_units = self._detect_policy_units(text)
             policy_graph["policy_units"].extend(policy_units)
-            
+
             # Create section
             section = {
                 "text": text,
@@ -47,7 +47,7 @@ class StructuralNormalizer:
                 "eje": None,
             }
             policy_graph["sections"].append(section)
-        
+
         # Extract axes, programs, projects
         for unit in policy_graph["policy_units"]:
             if unit["type"] == "eje":
@@ -56,13 +56,13 @@ class StructuralNormalizer:
                 policy_graph["programs"].append(unit["name"])
             elif unit["type"] == "proyecto":
                 policy_graph["projects"].append(unit["name"])
-        
+
         return policy_graph
-    
-    def _detect_policy_units(self, text: str) -> List[Dict[str, Any]]:
+
+    def _detect_policy_units(self, text: str) -> list[dict[str, Any]]:
         """Detect policy units in text."""
         units = []
-        
+
         # Simple keyword-based detection
         keywords = {
             "eje": ["eje", "pilar"],
@@ -71,7 +71,7 @@ class StructuralNormalizer:
             "meta": ["meta"],
             "indicador": ["indicador"],
         }
-        
+
         for unit_type, keywords_list in keywords.items():
             for keyword in keywords_list:
                 if keyword.lower() in text.lower():
@@ -79,9 +79,9 @@ class StructuralNormalizer:
                         "type": unit_type,
                         "name": f"{keyword.capitalize()} detected",
                     })
-        
+
         return units
-    
+
     def _extract_title(self, text: str) -> str:
         """Extract title from text."""
         # Simple: first line or first N characters

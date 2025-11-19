@@ -1,10 +1,10 @@
 [package]
-name = "cpp_ingestion"
+name = "spc_ingestion"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "cpp_ingestion"
+name = "spc_ingestion"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]

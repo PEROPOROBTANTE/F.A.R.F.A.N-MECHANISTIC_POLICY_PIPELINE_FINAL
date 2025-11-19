@@ -65,7 +65,7 @@ class TestDefensiveSignatures:
         try:
             import inspect
 
-            from saaaaaa.analysis.dereck_beach import BayesianMechanismInference
+            from saaaaaa.analysis.derek_beach import BayesianMechanismInference
 
             # Get the signature
             sig = inspect.signature(BayesianMechanismInference.__init__)
@@ -76,7 +76,7 @@ class TestDefensiveSignatures:
             assert params['kwargs'].kind == inspect.Parameter.VAR_KEYWORD, \
                 "kwargs should be VAR_KEYWORD type"
         except ImportError:
-            pytest.skip("dereck_beach module not available")
+            pytest.skip("derek_beach module not available")
 
     def test_defensive_warning_logging(self, caplog):
         """Test that unexpected arguments trigger warning logs."""
@@ -123,7 +123,7 @@ class TestSignatureDocumentation:
     def test_bayesian_init_docstring_mentions_kwargs(self):
         """Verify BayesianMechanismInference.__init__ docstring explains **kwargs."""
         try:
-            from saaaaaa.analysis.dereck_beach import BayesianMechanismInference
+            from saaaaaa.analysis.derek_beach import BayesianMechanismInference
 
             docstring = BayesianMechanismInference.__init__.__doc__
             assert docstring is not None, "Method should have a docstring"
@@ -132,7 +132,7 @@ class TestSignatureDocumentation:
             assert 'backward compatibility' in docstring.lower() or 'ignored' in docstring.lower(), \
                 "Docstring should explain that extra kwargs are ignored"
         except ImportError:
-            pytest.skip("dereck_beach module not available")
+            pytest.skip("derek_beach module not available")
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])

@@ -25,9 +25,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import (
+    TYPE_CHECKING,
     Any,
-    Optional,
 )
+
+if TYPE_CHECKING:
+    from ..utils.method_config_loader import MethodConfigLoader
 
 warnings.filterwarnings('ignore')
 
@@ -136,16 +139,16 @@ class SemanticAnalyzer:
     """Advanced semantic analysis for municipal documents."""
 
     def __init__(
-        self, 
+        self,
         ontology: MunicipalOntology,
-        config_loader: Optional['MethodConfigLoader'] = None,
-        max_features: Optional[int] = None,
-        ngram_range: Optional[tuple[int, int]] = None,
-        similarity_threshold: Optional[float] = None
+        config_loader: MethodConfigLoader | None = None,
+        max_features: int | None = None,
+        ngram_range: tuple[int, int] | None = None,
+        similarity_threshold: float | None = None
     ) -> None:
         """
         Initialize SemanticAnalyzer.
-        
+
         Args:
             ontology: Municipal ontology for semantic classification
             config_loader: Optional MethodConfigLoader for canonical parameter access
@@ -154,7 +157,7 @@ class SemanticAnalyzer:
             similarity_threshold: Similarity threshold for concept detection (overrides config_loader)
         """
         self.ontology = ontology
-        
+
         # Load parameters from canonical JSON if config_loader provided
         if config_loader is not None:
             try:
@@ -172,12 +175,12 @@ class SemanticAnalyzer:
                     )
             except (KeyError, AttributeError) as e:
                 logger.warning(f"Failed to load parameters from config_loader: {e}. Using defaults.")
-        
+
         # Use defaults if not provided
         self.max_features = max_features if max_features is not None else 1000
         self.ngram_range = ngram_range if ngram_range is not None else (1, 3)
         self.similarity_threshold = similarity_threshold if similarity_threshold is not None else 0.3
-        
+
         if TfidfVectorizer is not None:
             self.vectorizer = TfidfVectorizer(
                 max_features=self.max_features,

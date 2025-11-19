@@ -128,7 +128,7 @@ Files requiring human review due to ambiguity:
 Python files at repository root that might be compatibility shims:
 - `aggregation.py` - Might be compatibility shim
 - `contracts.py` - Might be standalone utility
-- `dereck_beach.py` - Unclear if runtime dependency
+- `derek_beach.py` - Unclear if runtime dependency
 - `embedding_policy.py` - Unclear if compatibility shim
 - `policy_processor.py` - Unclear purpose
 

@@ -21,7 +21,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 # Import runtime error fixes for defensive programming
-from runtime_error_fixes import ensure_list_return
+from saaaaaa.utils.runtime_error_fixes import ensure_list_return
 
 logger = logging.getLogger(__name__)
 

@@ -11,6 +11,8 @@ from pathlib import Path
 
 import pytest
 
+from saaaaaa.config.paths import PROJECT_ROOT
+
 
 class TestDependencyManagement:
     """Test suite for dependency management system."""
@@ -18,7 +20,7 @@ class TestDependencyManagement:
     @pytest.fixture
     def project_root(self):
         """Get project root directory."""
-        return Path(__file__).parent.parent
+        return PROJECT_ROOT
     
     def test_requirements_files_exist(self, project_root):
         """Verify all required dependency files exist."""

@@ -24,7 +24,7 @@ from datetime import datetime
 from pathlib import Path
 
 from saaaaaa.utils.paths import data_dir
-from saaaaaa.processing.cpp_ingestion import CPPIngestionPipeline
+from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline  # Updated to SPC ingestion
 from saaaaaa.utils.spc_adapter import SPCAdapter
 from saaaaaa.core.orchestrator import Orchestrator
 from saaaaaa.core.orchestrator.factory import build_processor
@@ -189,37 +189,35 @@ async def main():
     print(f'  Size: {input_path.stat().st_size / 1024:.1f} KB')
     print()
     
-    print('  🔄 Initializing CPP ingestion pipeline...')
-    cpp_pipeline = CPPIngestionPipeline(
-        enable_ocr=True,
-        ocr_confidence_threshold=0.85,
-        chunk_overlap_threshold=0.15
-    )
-    
+    print('  🔄 Initializing SPC ingestion pipeline (canonical phase-one)...')
+    # Updated to use SPC API (Smart Policy Chunks)
+    cpp_pipeline = CPPIngestionPipeline(questionnaire_path=None)  # Uses canonical path
+
     print('  🔄 Processing document (this may take 30-60 seconds)...')
-    cpp_outcome = cpp_pipeline.ingest(input_path, cpp_output)
-    
-    if cpp_outcome.status != 'OK' or not cpp_outcome.cpp_uri:
-        print(f'  ❌ CPP Ingestion FAILED: {cpp_outcome.status}')
+    # Note: .process() is async and returns CanonPolicyPackage directly
+    cpp = await cpp_pipeline.process(
+        document_path=input_path,
+        document_id='Plan_1',
+        title='Plan_1',
+        max_chunks=50
+    )
+
+    if not cpp:
+        print(f'  ❌ SPC Ingestion FAILED: No package returned')
         return 1
-    
-    print(f'  ✅ CPP Status: {cpp_outcome.status}')
-    print(f'  ✅ CPP URI: {cpp_outcome.cpp_uri}')
-    print(f'  ✅ Schema Version: {cpp_pipeline.SCHEMA_VERSION}')
+
+    print(f'  ✅ SPC Ingestion completed successfully')
+    print(f'  ✅ Chunks generated: {len(cpp.chunk_graph.chunks) if cpp.chunk_graph else 0}')
+    print(f'  ✅ Schema Version: v3.0 (SPC)')
     print()
-    
+
     # ========================================================================
-    # PHASE 2: CPP LOADING & ADAPTATION
+    # PHASE 2: SPC ADAPTATION
     # ========================================================================
-    print("🔄 PHASE 2: CPP LOADING & ADAPTATION")
+    print("🔄 PHASE 2: SPC ADAPTATION")
     print("-" * 80)
-    
-    print('  🔄 Loading CPP from directory...')
-    cpp = load_cpp_from_directory(Path(cpp_outcome.cpp_uri))
-    print(f'  ✅ CPP loaded successfully')
-    print(f'  ✅ Schema: {cpp.schema_version}')
-    
-    print('  🔄 Converting CPP to PreprocessedDocument...')
+
+    print('  🔄 Converting CanonPolicyPackage to PreprocessedDocument...')
     adapter = SPCAdapter()
     preprocessed_doc = adapter.to_preprocessed_document(
         cpp,

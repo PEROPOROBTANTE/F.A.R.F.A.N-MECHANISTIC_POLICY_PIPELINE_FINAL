@@ -5,11 +5,10 @@ import hashlib
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+
 import pytest
 
-# Add src to path for imports
-import sys
-
+from saaaaaa.config.paths import SRC_DIR
 from saaaaaa.utils.proof_generator import (
     ProofData,
     compute_file_hash,
@@ -69,7 +68,7 @@ def test_compute_dict_hash_key_order_invariant():
 def test_compute_code_signatures():
     """Test code signature computation."""
     # Use actual src directory
-    src_root = Path(__file__).parent.parent / "src" / "saaaaaa"
+    src_root = SRC_DIR
     
     if not src_root.exists():
         pytest.skip("Source directory not found")

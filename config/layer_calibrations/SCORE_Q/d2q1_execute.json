@@ -1,0 +1,116 @@
+{
+  "_metadata": {
+    "executor_id": "D2Q1",
+    "dimension": "D2",
+    "question": "Q1",
+    "generated": "2025-11-19",
+    "status": "PLACEHOLDER",
+    "warning": "These are placeholder scores. Must be replaced with actual computed values via CalibrationOrchestrator."
+  },
+  "role": "SCORE_Q",
+  "canonical_name": "src.saaaaaa.core.orchestrator.executors.D2Q1_Executor.execute",
+  "required_layers": [
+    "@b",
+    "@u",
+    "@q",
+    "@d",
+    "@p",
+    "@C",
+    "@chain",
+    "@m"
+  ],
+  "layer_scores": {
+    "@b": {
+      "value": 0.75,
+      "components": {
+        "b_theory": 0.8,
+        "b_impl": 0.7,
+        "b_deploy": 0.75
+      },
+      "note": "Placeholder - compute via BaseLayerEvaluator"
+    },
+    "@u": {
+      "value": 0.85,
+      "components": {
+        "pdt_coverage": 0.9,
+        "pdt_quality": 0.8
+      },
+      "note": "Placeholder - compute via UnitLayerEvaluator"
+    },
+    "@q": {
+      "value": 0.9,
+      "note": "Placeholder - compute via ContextualLayerEvaluator"
+    },
+    "@d": {
+      "value": 0.85,
+      "note": "Placeholder - compute via ContextualLayerEvaluator"
+    },
+    "@p": {
+      "value": 0.8,
+      "note": "Placeholder - compute via ContextualLayerEvaluator"
+    },
+    "@C": {
+      "value": 0.75,
+      "note": "Placeholder - compute via CongruenceLayerEvaluator"
+    },
+    "@chain": {
+      "value": 1.0,
+      "note": "Placeholder - compute via ChainLayerEvaluator"
+    },
+    "@m": {
+      "value": 0.7,
+      "components": {
+        "m_transp": 0.75,
+        "m_gov": 0.65,
+        "m_cost": 0.7
+      },
+      "note": "Placeholder - compute via MetaLayerEvaluator"
+    }
+  },
+  "fusion_parameters": {
+    "required_layers": [
+      "@b",
+      "@chain",
+      "@q",
+      "@d",
+      "@p",
+      "@C",
+      "@u",
+      "@m"
+    ],
+    "linear_weights": {
+      "@b": 0.18,
+      "@chain": 0.14,
+      "@q": 0.09,
+      "@d": 0.07,
+      "@p": 0.06,
+      "@C": 0.09,
+      "@u": 0.04,
+      "@m": 0.03
+    },
+    "interaction_weights": {
+      "(@u, @chain)": 0.15,
+      "(@chain, @C)": 0.1,
+      "(@q, @d)": 0.05
+    },
+    "_validation": {
+      "linear_sum": 0.7,
+      "interaction_sum": 0.3,
+      "total": 1.0
+    }
+  },
+  "fusion_computation": {
+    "linear_term": 0.586,
+    "interaction_term": 0.24500000000000002
+  },
+  "final_calibration": {
+    "final_score": 0.831,
+    "interpretation": "Executor D2Q1 calibration score (8-layer Choquet fusion)"
+  },
+  "notes": [
+    "All 8 layers present per Definition 4.2 (SCORE_Q role)",
+    "Choquet 2-additive fusion per Definition 5.1",
+    "PLACEHOLDER scores - must be computed via proper calibration process",
+    "In production: use CalibrationOrchestrator.calibrate()"
+  ]
+}

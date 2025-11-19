@@ -28,7 +28,8 @@ import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Final, Optional
+from types import MappingProxyType
+from typing import Any, Optional
 
 from ..contracts import (
     CDAFFrameworkInputContract,
@@ -43,14 +44,15 @@ from ..contracts import (
 )
 from . import get_questionnaire_provider
 from .core import MethodExecutor
+from .executor_config import ExecutorConfig
 from .questionnaire import (
-    CanonicalQuestionnaire,
     EXPECTED_HASH,
     EXPECTED_MACRO_QUESTION_COUNT,
-    EXPECTED_MICRO_QUESTION_COUNT,
     EXPECTED_MESO_QUESTION_COUNT,
+    EXPECTED_MICRO_QUESTION_COUNT,
     EXPECTED_TOTAL_QUESTION_COUNT,
     QUESTIONNAIRE_PATH,
+    CanonicalQuestionnaire,
     load_questionnaire,
 )
 
@@ -75,11 +77,16 @@ class ProcessorBundle:
             Consumers must treat this mapping as immutable.
         factory: The :class:`CoreModuleFactory` used to construct ancillary
             input contracts for downstream processors.
+        signal_registry: Optional signal registry populated during factory wiring.
+        executor_config: Canonical :class:`ExecutorConfig` used for all question
+            executors (fully parameterized, no fallbacks).
     """
 
     method_executor: MethodExecutor
     questionnaire: Mapping[str, Any]
     factory: "CoreModuleFactory"
+    signal_registry: Any | None
+    executor_config: ExecutorConfig
 
 # ============================================================================
 # FILE I/O OPERATIONS
@@ -153,7 +160,7 @@ def load_catalog(path: Path | None = None) -> dict[str, Any]:
 
     Returns:
         Loaded catalog data
-    
+
     Raises:
         FileNotFoundError: If catalog file doesn't exist
         json.JSONDecodeError: If file is not valid JSON
@@ -175,7 +182,7 @@ def load_method_map(path: Path | None = None) -> dict[str, Any]:
 
     Returns:
         Loaded method map data
-    
+
     Raises:
         FileNotFoundError: If method map file doesn't exist
         json.JSONDecodeError: If file is not valid JSON
@@ -191,58 +198,84 @@ def load_method_map(path: Path | None = None) -> dict[str, Any]:
 def get_canonical_dimensions(questionnaire_path: Path | None = None) -> dict[str, dict[str, str]]:
     """
     Get canonical dimension definitions from questionnaire monolith.
-    
+
     This function loads the canonical notation from questionnaire_monolith.json
-    and returns the dimension definitions.
-    
+    via the canonical loader and returns the dimension definitions.
+
     Args:
-        questionnaire_path: Optional path to questionnaire file
-        
+        questionnaire_path: Optional path to questionnaire file (IGNORED for integrity)
+
     Returns:
         Dictionary mapping dimension keys (D1-D6) to dimension info with code, name, label
-        
+
     Example:
         >>> dims = get_canonical_dimensions()
         >>> dims['D1']
         {'code': 'DIM01', 'name': 'INSUMOS', 'label': 'Diagnóstico y Recursos'}
+
+    Note:
+        Uses canonical questionnaire loader for integrity verification.
+        The questionnaire_path parameter is ignored to enforce single source of truth.
     """
-    monolith = load_questionnaire_monolith(questionnaire_path)
-    
-    if 'canonical_notation' not in monolith:
+    if questionnaire_path is not None:
+        logger.warning(
+            "get_canonical_dimensions: questionnaire_path parameter is IGNORED. "
+            "Dimensions always load from canonical questionnaire path for integrity."
+        )
+
+    # Use canonical loader for hash verification and immutability
+    canonical = load_questionnaire()
+
+    if 'canonical_notation' not in canonical.data:
         raise KeyError("canonical_notation section missing from questionnaire")
-    
-    if 'dimensions' not in monolith['canonical_notation']:
+
+    if 'dimensions' not in canonical.data['canonical_notation']:
         raise KeyError("dimensions section missing from canonical_notation")
-    
-    return monolith['canonical_notation']['dimensions']
+
+    # Return deep copy to prevent side-effects on nested dictionaries
+    import copy
+    return copy.deepcopy(canonical.data['canonical_notation']['dimensions'])
 
 def get_canonical_policy_areas(questionnaire_path: Path | None = None) -> dict[str, dict[str, str]]:
     """
     Get canonical policy area definitions from questionnaire monolith.
-    
+
     This function loads the canonical notation from questionnaire_monolith.json
-    and returns the policy area definitions.
-    
+    via the canonical loader and returns the policy area definitions.
+
     Args:
-        questionnaire_path: Optional path to questionnaire file
-        
+        questionnaire_path: Optional path to questionnaire file (IGNORED for integrity)
+
     Returns:
         Dictionary mapping policy area codes (PA01-PA10) to policy area info with name, legacy_id
-        
+
     Example:
         >>> areas = get_canonical_policy_areas()
         >>> areas['PA01']
         {'name': 'Derechos de las mujeres e igualdad de género', 'legacy_id': 'P1'}
+
+    Note:
+        Uses canonical questionnaire loader for integrity verification.
+        The questionnaire_path parameter is ignored to enforce single source of truth.
     """
-    monolith = load_questionnaire_monolith(questionnaire_path)
-    
-    if 'canonical_notation' not in monolith:
+    if questionnaire_path is not None:
+        logger.warning(
+            "get_canonical_policy_areas: questionnaire_path parameter is IGNORED. "
+            "Policy areas always load from canonical questionnaire path for integrity."
+        )
+
+    # Use canonical loader for hash verification and immutability
+    canonical = load_questionnaire()
+
+    if 'canonical_notation' not in canonical.data:
         raise KeyError("canonical_notation section missing from questionnaire")
-    
-    if 'policy_areas' not in monolith['canonical_notation']:
+
+    if 'policy_areas' not in canonical.data['canonical_notation']:
         raise KeyError("policy_areas section missing from canonical_notation")
-    
-    return monolith['canonical_notation']['policy_areas']
+
+    # Return deep copy to prevent side-effects on nested dictionaries
+    import copy
+    return copy.deepcopy(canonical.data['canonical_notation']['policy_areas'])
 
 def load_schema(path: Path | None = None) -> dict[str, Any]:
     """Load questionnaire schema JSON file.
@@ -253,7 +286,7 @@ def load_schema(path: Path | None = None) -> dict[str, Any]:
 
     Returns:
         Loaded schema data
-    
+
     Raises:
         FileNotFoundError: If schema file doesn't exist
         json.JSONDecodeError: If file is not valid JSON
@@ -596,6 +629,7 @@ def build_processor(
     data_dir: Path | None = None,
     factory: Optional["CoreModuleFactory"] = None,
     enable_signals: bool = True,
+    executor_config: ExecutorConfig | None = None,
 ) -> ProcessorBundle:
     """Create a processor bundle with orchestrator dependencies wired together.
 
@@ -608,6 +642,7 @@ def build_processor(
         factory: Pre-existing :class:`CoreModuleFactory` instance. When omitted
             the function creates a new factory configured with ``data_dir``.
         enable_signals: Enable signal infrastructure (default: True)
+        executor_config: Optional ExecutorConfig to inject (default: deterministic conservative config)
 
     Returns:
         A :class:`ProcessorBundle` containing a ready-to-use method executor,
@@ -615,9 +650,40 @@ def build_processor(
 
     Note:
         Uses load_questionnaire() for hash verification and immutability.
+
+    Raises:
+        TypeError: If parameters have incorrect types
     """
 
+    # Runtime type checks (defensive programming)
+    if questionnaire_path is not None and not isinstance(questionnaire_path, Path):
+        raise TypeError(
+            f"questionnaire_path must be Path or None, got {type(questionnaire_path).__name__}. "
+            f"build_processor() requires keyword arguments only."
+        )
+
+    if data_dir is not None and not isinstance(data_dir, Path):
+        raise TypeError(
+            f"data_dir must be Path or None, got {type(data_dir).__name__}"
+        )
+
+    if factory is not None and not isinstance(factory, CoreModuleFactory):
+        raise TypeError(
+            f"factory must be CoreModuleFactory or None, got {type(factory).__name__}"
+        )
+
+    if not isinstance(enable_signals, bool):
+        raise TypeError(
+            f"enable_signals must be bool, got {type(enable_signals).__name__}"
+        )
+
+    if executor_config is not None and not isinstance(executor_config, ExecutorConfig):
+        raise TypeError(
+            f"executor_config must be ExecutorConfig or None, got {type(executor_config).__name__}"
+        )
+
     core_factory = factory or CoreModuleFactory(data_dir=data_dir)
+    effective_config = executor_config or ExecutorConfig()
 
     if questionnaire_path is not None:
         # Use canonical loader for hash verification
@@ -641,15 +707,15 @@ def build_processor(
     signal_registry = None
     if enable_signals:
         try:
-            from .core_module_factory import CoreModuleFactory as SignalFactory
-            
+            from .bayesian_module_factory import BayesianModuleFactory as SignalFactory
+
             # Create signal-enabled factory
             signal_factory = SignalFactory(
                 questionnaire_data=questionnaire_data,
                 enable_signals=True,
             )
             signal_registry = signal_factory._signal_registry
-            
+
             logger.info(
                 "signals_enabled_in_processor",
                 enabled=True,
@@ -669,6 +735,8 @@ def build_processor(
         method_executor=executor,
         questionnaire=questionnaire_snapshot,
         factory=core_factory,
+        signal_registry=signal_registry,
+        executor_config=effective_config,
     )
 
 # ============================================================================
@@ -678,20 +746,20 @@ def build_processor(
 def compute_monolith_hash(monolith: dict[str, Any]) -> str:
     """
     Compute deterministic SHA-256 hash of questionnaire monolith.
-    
+
     This function ensures:
     - Key order independence via sort_keys=True
     - Consistent unicode handling via ensure_ascii=True
     - No whitespace variation via separators
-    
+
     Args:
         monolith: Questionnaire monolith dictionary
-        
+
     Returns:
         Hexadecimal SHA-256 hash string
     """
     import hashlib
-    
+
     serialized = json.dumps(
         monolith,
         sort_keys=True,
@@ -705,13 +773,13 @@ def compute_monolith_hash(monolith: dict[str, Any]) -> str:
 # For backward compatibility, keep this stub that delegates to questionnaire module
 def validate_questionnaire_structure(data: dict[str, Any]) -> None:
     """DEPRECATED: Import from questionnaire module instead.
-    
+
     This stub is maintained for backward compatibility only.
     Use: from .questionnaire import _validate_questionnaire_structure
-    
+
     Args:
         data: Questionnaire data to validate
-        
+
     Raises:
         ValueError: If validation fails
         TypeError: If top-level structure is invalid
@@ -741,7 +809,7 @@ def migrate_io_from_module(module_name: str, line_numbers: list[int]) -> None:
 # TODO: Migrate I/O operations from core modules
 # Track progress:
 # - Analyzer_one.py: 72 I/O operations to migrate
-# - dereck_beach.py: 40 I/O operations to migrate
+# - derek_beach.py: 40 I/O operations to migrate
 # - financiero_viabilidad_tablas.py: Multiple operations to migrate
 # - teoria_cambio.py: Some operations to migrate
 # Others are clean
