@@ -17,10 +17,10 @@ python -m saaaaaa.audit.audit_system --repo-root . --output audit_report.json --
 
 ```python
 from saaaaaa.audit import AuditSystem
-from pathlib import Path
+from saaaaaa.config.paths import PROJECT_ROOT
 
-# Create audit system
-audit_system = AuditSystem(Path.cwd())
+# Create audit system using canonical project root
+audit_system = AuditSystem(PROJECT_ROOT)
 
 # Run specific audits
 executor_results = audit_system.audit_executor_architecture()

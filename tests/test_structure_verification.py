@@ -12,8 +12,9 @@ This script checks:
 import sys
 from pathlib import Path
 
-# Add repo root to path
-repo_root = Path(__file__).parent.parent
+from saaaaaa.config.paths import PROJECT_ROOT
+
+repo_root = PROJECT_ROOT
 
 def check_init_files():
     """Verify all Python packages have __init__.py files."""

@@ -156,14 +156,19 @@ def validate_signals_hit_rate() -> bool:
         
         metrics = components.signal_registry.get_metrics()
         hit_rate = metrics["hit_rate"]
-        
-        # In memory mode with seeded signals, hit rate should be high
-        # Note: First fetch may miss, so lower threshold slightly
-        if hit_rate >= 0.0:  # Relaxed for initial implementation
-            print_success(f"Signal hit rate: {hit_rate:.2%} (≥0% for now)")
-            print_warning("Note: Hit rate threshold will be increased to 95% in production")
+
+        # PRODUCTION STANDARD: 95% hit rate requirement
+        # Signals must be reliably available for method execution
+        required_hit_rate = 0.95
+
+        if hit_rate >= required_hit_rate:
+            print_success(f"Signal hit rate: {hit_rate:.2%} (≥{required_hit_rate:.0%} required)")
         else:
-            print_error(f"Signal hit rate: {hit_rate:.2%}")
+            print_error(
+                f"Signal hit rate: {hit_rate:.2%} (below {required_hit_rate:.0%} threshold)\n"
+                f"   This indicates signal seeding or registry issues.\n"
+                f"   Check WiringBootstrap.seed_signals_public() implementation."
+            )
             return False
         
         print_success(f"Registry size: {metrics['size']} signals")

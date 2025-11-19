@@ -23,12 +23,16 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
+try:
+    from saaaaaa.config.paths import PROJECT_ROOT
+except Exception:  # pragma: no cover - setup bootstrap
+    PROJECT_ROOT = Path(__file__).resolve().parent
+
 # Read long description from README
-readme_file = Path(__file__).parent / "README.md"
+readme_file = PROJECT_ROOT / "README.md"
 long_description = ""
 if readme_file.exists():
-    with open(readme_file, encoding="utf-8") as f:
-        long_description = f.read()
+    long_description = readme_file.read_text(encoding="utf-8")
 
 # Use flexible dependency ranges instead of strict pins from requirements.txt
 # requirements.txt is for development/production pinning, not for package metadata
@@ -54,9 +58,9 @@ install_requires = [
     "structlog>=24.4.0",
     "opentelemetry-api>=1.29.0",
     "opentelemetry-sdk>=1.29.0",
-    "huggingface-hub>=0.27.1",
-    "transformers>=4.48.0",
-    "sentence-transformers>=3.0.0",
+    "huggingface-hub>=0.20.0,<1.0.0",
+    "transformers>=4.41.0,<4.54.0",
+    "sentence-transformers>=3.1.0,<3.2.0",
     "spacy>=3.8.0",
     "nltk>=3.9.0",
     "pdfplumber>=0.11.0",

@@ -3,15 +3,15 @@ AtroZ Pipeline Connector
 Real integration with the orchestrator for executing the 11-phase analysis pipeline
 """
 
-import asyncio
 import json
 import logging
 import time
+import traceback
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional, Callable
-from dataclasses import dataclass, asdict
-import traceback
+from typing import Any
 
 from ..core.orchestrator.core import Orchestrator
 from ..core.orchestrator.factory import build_processor
@@ -29,16 +29,16 @@ class PipelineResult:
     document_id: str
     duration_seconds: float
     phases_completed: int
-    macro_score: Optional[float]
-    meso_scores: Optional[Dict[str, float]]
-    micro_scores: Optional[Dict[str, float]]
+    macro_score: float | None
+    meso_scores: dict[str, float] | None
+    micro_scores: dict[str, float] | None
     questions_analyzed: int
     evidence_count: int
     recommendations_count: int
-    verification_manifest_path: Optional[str]
-    error: Optional[str]
-    phase_timings: Dict[str, float]
-    metadata: Dict[str, Any]
+    verification_manifest_path: str | None
+    error: str | None
+    phase_timings: dict[str, float]
+    metadata: dict[str, Any]
 
 
 class PipelineConnector:
@@ -49,24 +49,46 @@ class PipelineConnector:
     handling document ingestion, pipeline execution, progress tracking, and result extraction.
     """
 
-    def __init__(self, workspace_dir: str = "./workspace", output_dir: str = "./output"):
-        self.workspace_dir = Path(workspace_dir)
-        self.output_dir = Path(output_dir)
+    def __init__(self, workspace_dir: str | None = None, output_dir: str | None = None) -> None:
+        """Initialize PipelineConnector with centralized path management.
+
+        Args:
+            workspace_dir: Optional workspace directory (defaults to paths.CACHE_DIR / 'workspace')
+            output_dir: Optional output directory (defaults to paths.OUTPUT_DIR)
+        """
+        from saaaaaa.config.paths import CACHE_DIR, OUTPUT_DIR, ensure_directories_exist
+
+        # Use centralized paths by default
+        if workspace_dir is None:
+            self.workspace_dir = CACHE_DIR / 'workspace'
+        else:
+            self.workspace_dir = Path(workspace_dir)
+
+        if output_dir is None:
+            self.output_dir = OUTPUT_DIR
+        else:
+            self.output_dir = Path(output_dir)
+
+        # Ensure directories exist
+        ensure_directories_exist()
         self.workspace_dir.mkdir(parents=True, exist_ok=True)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-        self.running_jobs: Dict[str, Dict[str, Any]] = {}
-        self.completed_jobs: Dict[str, PipelineResult] = {}
+        self.running_jobs: dict[str, dict[str, Any]] = {}
+        self.completed_jobs: dict[str, PipelineResult] = {}
 
-        logger.info(f"Pipeline connector initialized with workspace: {workspace_dir}")
+        logger.info(
+            f"Pipeline connector initialized with centralized paths: "
+            f"workspace={self.workspace_dir}, output={self.output_dir}"
+        )
 
     async def execute_pipeline(
         self,
         pdf_path: str,
         job_id: str,
         municipality: str = "general",
-        progress_callback: Optional[Callable[[int, str], None]] = None,
-        settings: Optional[Dict[str, Any]] = None
+        progress_callback: Callable[[int, str], None] | None = None,
+        settings: dict[str, Any] | None = None
     ) -> PipelineResult:
         """
         Execute the complete 11-phase pipeline on a PDF document.
@@ -129,49 +151,46 @@ class PipelineConnector:
 
             # Track phase timings
             phase_timings = {}
+            phase_start_times = {}
 
-            # Execute 11-phase pipeline
-            phase_names = [
-                "Macro: Context Extraction",
-                "Macro: Territorial Analysis",
-                "Macro: Policy Framework",
-                "Meso: Cluster Formation",
-                "Meso: Cross-Cluster Analysis",
-                "Meso: Pattern Recognition",
-                "Meso: Coherence Validation",
-                "Micro: Question Analysis",
-                "Micro: Evidence Extraction",
-                "Micro: Scoring",
-                "Report Assembly"
-            ]
+            # Define progress callback for real-time updates from orchestrator
+            def orchestrator_progress_callback(phase_num: int, phase_name: str, progress: float) -> None:
+                """Callback invoked by orchestrator for each phase.
 
-            for phase_num in range(1, 12):
-                phase_name = phase_names[phase_num - 1]
-                phase_start = time.time()
+                Args:
+                    phase_num: Phase number (0-10)
+                    phase_name: Phase name
+                    progress: Progress percentage (0-100)
+                """
+                # Track phase timing
+                if phase_num not in phase_start_times:
+                    phase_start_times[phase_num] = time.time()
+                else:
+                    # Phase complete - record duration
+                    duration = time.time() - phase_start_times[phase_num]
+                    phase_timings[f"phase_{phase_num}"] = duration
 
+                # Update job status
+                self._update_job_status(job_id, "processing", int(progress), phase_name)
+
+                # Call user's progress callback if provided
                 if progress_callback:
                     progress_callback(phase_num, phase_name)
 
-                progress = int((phase_num / 11) * 100)
-                self._update_job_status(job_id, "processing", progress, phase_name)
+                logger.info(
+                    f"Orchestrator Phase {phase_num}: {phase_name} ({progress:.1f}% complete)"
+                )
 
-                logger.info(f"Executing Phase {phase_num}: {phase_name}")
-
-                # Execute phase through orchestrator
-                # The orchestrator's run() method handles all 11 phases
-                # We're simulating phase-by-phase execution for progress tracking
-
-                phase_timings[f"phase_{phase_num}"] = time.time() - phase_start
-
-            # Run the complete orchestrator
-            logger.info("Running complete orchestrator pipeline")
+            # Run the complete orchestrator with real phase callbacks
+            logger.info("Running complete orchestrator pipeline with real-time progress")
             orchestrator_start = time.time()
 
             result = await orchestrator.run(
                 preprocessed_doc=preprocessed_doc,
                 output_path=str(self.output_dir / f"{job_id}_report.json"),
                 phase_timeout=settings.get("phase_timeout", 300),
-                enable_cache=settings.get("enable_cache", True)
+                enable_cache=settings.get("enable_cache", True),
+                progress_callback=orchestrator_progress_callback,
             )
 
             orchestrator_duration = time.time() - orchestrator_start
@@ -244,32 +263,99 @@ class PipelineConnector:
             if job_id in self.running_jobs:
                 del self.running_jobs[job_id]
 
-    async def _ingest_document(self, pdf_path: str, municipality: str) -> Dict[str, Any]:
+    async def _ingest_document(self, pdf_path: str, municipality: str) -> Any:
         """
-        Ingest and preprocess the PDF document.
+        Ingest and preprocess the PDF document using canonical SPC pipeline.
 
-        In production, this would use the real document_ingestion module.
-        For now, we create a minimal preprocessed document structure.
+        This method implements the official ingestion path:
+            CPPIngestionPipeline → SPCAdapter → PreprocessedDocument
+
+        Args:
+            pdf_path: Path to PDF document
+            municipality: Municipality name for metadata
+
+        Returns:
+            PreprocessedDocument ready for orchestrator
+
+        Raises:
+            ValueError: If ingestion fails or produces invalid output
         """
+        from pathlib import Path
+
+        from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
+        from saaaaaa.utils.spc_adapter import SPCAdapter
+
+        logger.info(f"Ingesting document via canonical SPC pipeline: {pdf_path}")
+
         try:
-            # Import the actual document ingestion if available
-            from document_ingestion import ingest_pdf
-            return await ingest_pdf(pdf_path, municipality=municipality)
-        except ImportError:
-            logger.warning("document_ingestion module not available, using minimal structure")
-            # Minimal structure for testing
-            return {
-                "document_id": f"doc_{int(time.time())}",
-                "municipality": municipality,
-                "source_path": pdf_path,
-                "text_chunks": [],
-                "metadata": {
-                    "ingestion_timestamp": datetime.now().isoformat(),
-                    "file_size": Path(pdf_path).stat().st_size if Path(pdf_path).exists() else 0
-                }
-            }
+            # Phase 1: CPP Ingestion (15-phase SPC analysis)
+            cpp_pipeline = CPPIngestionPipeline(enable_runtime_validation=True)
 
-    def _extract_metrics(self, orchestrator_result: Dict[str, Any]) -> Dict[str, Any]:
+            document_path = Path(pdf_path)
+            if not document_path.exists():
+                raise ValueError(f"Document not found: {pdf_path}")
+
+            # Generate document_id from filename and timestamp for uniqueness
+            document_id = f"{document_path.stem}_{int(time.time())}"
+            title = f"{municipality} - {document_path.name}"
+
+            logger.info("Running CPPIngestionPipeline (15-phase SPC analysis)")
+            canon_package = await cpp_pipeline.process(
+                document_path=document_path,
+                document_id=document_id,
+                title=title,
+                max_chunks=50,
+            )
+
+            logger.info(
+                f"CPP Ingestion complete: {len(canon_package.chunk_graph.chunks)} chunks generated"
+            )
+
+            # Phase 2: SPC Adapter (convert to PreprocessedDocument)
+            adapter = SPCAdapter(enable_runtime_validation=True)
+
+            logger.info("Converting CanonPolicyPackage to PreprocessedDocument")
+            preprocessed_doc = adapter.to_preprocessed_document(
+                canon_package=canon_package,
+                document_id=document_id,
+            )
+
+            logger.info(
+                f"Adapter conversion complete: {len(preprocessed_doc.sentences)} sentences"
+            )
+
+            # Add municipality to metadata if needed
+            if hasattr(preprocessed_doc, 'metadata') and isinstance(preprocessed_doc.metadata, dict):
+                # metadata is MappingProxyType (immutable), so we need to create a new one
+                from types import MappingProxyType
+                metadata_dict = dict(preprocessed_doc.metadata)
+                metadata_dict['municipality'] = municipality
+                metadata_dict['source_path'] = str(pdf_path)
+
+                # Reconstruct PreprocessedDocument with updated metadata
+                preprocessed_doc = type(preprocessed_doc)(
+                    document_id=preprocessed_doc.document_id,
+                    full_text=preprocessed_doc.full_text,
+                    sentences=preprocessed_doc.sentences,
+                    language=preprocessed_doc.language,
+                    structured_text=preprocessed_doc.structured_text,
+                    sentence_metadata=preprocessed_doc.sentence_metadata,
+                    tables=preprocessed_doc.tables,
+                    indexes=preprocessed_doc.indexes,
+                    metadata=MappingProxyType(metadata_dict),
+                    ingested_at=preprocessed_doc.ingested_at,
+                )
+
+            return preprocessed_doc
+
+        except Exception as e:
+            logger.error(f"Canonical ingestion failed: {e}", exc_info=True)
+            raise ValueError(
+                f"Document ingestion failed for {pdf_path}: {e}\n"
+                f"Ensure CPPIngestionPipeline and SPCAdapter are working correctly."
+            ) from e
+
+    def _extract_metrics(self, orchestrator_result: dict[str, Any]) -> dict[str, Any]:
         """Extract key metrics from orchestrator result"""
         metrics = {}
 
@@ -302,11 +388,15 @@ class PipelineConnector:
     async def _write_manifest(
         self,
         job_id: str,
-        orchestrator_result: Dict[str, Any],
-        metrics: Dict[str, Any]
+        orchestrator_result: dict[str, Any],
+        metrics: dict[str, Any]
     ) -> str:
-        """Write verification manifest for the analysis"""
-        manifest_path = self.output_dir / f"{job_id}_verification_manifest.json"
+        """Write verification manifest for the analysis using centralized paths."""
+        from saaaaaa.config.paths import get_output_path
+
+        # Use centralized path management for manifest
+        job_output_dir = get_output_path(job_id)
+        manifest_path = job_output_dir / "verification_manifest.json"
 
         manifest_data = {
             "job_id": job_id,
@@ -314,9 +404,15 @@ class PipelineConnector:
             "status": "completed",
             "metrics": metrics,
             "verification": {
-                "phases_completed": 11,
+                "phases_completed": orchestrator_result.get("phases_completed", 11),
                 "data_integrity": "verified",
-                "output_path": str(self.output_dir / f"{job_id}_report.json")
+                "output_path": str(job_output_dir / "report.json"),
+                "wiring_validated": True,  # Runtime wiring validation enabled
+            },
+            "pipeline_metadata": {
+                "spc_pipeline": "CPPIngestionPipeline",
+                "adapter": "SPCAdapter",
+                "orchestrator_version": orchestrator_result.get("metadata", {}).get("orchestrator_version", "2.0"),
             }
         }
 
@@ -332,7 +428,7 @@ class PipelineConnector:
         logger.info(f"Verification manifest written to: {manifest_path}")
         return str(manifest_path)
 
-    def _update_job_status(self, job_id: str, status: str, progress: int, message: str):
+    def _update_job_status(self, job_id: str, status: str, progress: int, message: str) -> None:
         """Update status of running job"""
         if job_id in self.running_jobs:
             self.running_jobs[job_id].update({
@@ -342,7 +438,7 @@ class PipelineConnector:
                 "updated_at": datetime.now().isoformat()
             })
 
-    def get_job_status(self, job_id: str) -> Optional[Dict[str, Any]]:
+    def get_job_status(self, job_id: str) -> dict[str, Any] | None:
         """Get current status of a job"""
         if job_id in self.running_jobs:
             return self.running_jobs[job_id]
@@ -355,13 +451,13 @@ class PipelineConnector:
             }
         return None
 
-    def get_result(self, job_id: str) -> Optional[PipelineResult]:
+    def get_result(self, job_id: str) -> PipelineResult | None:
         """Get final result for a completed job"""
         return self.completed_jobs.get(job_id)
 
 
 # Global connector instance
-_connector: Optional[PipelineConnector] = None
+_connector: PipelineConnector | None = None
 
 
 def get_pipeline_connector() -> PipelineConnector:

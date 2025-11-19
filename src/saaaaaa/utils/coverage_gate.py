@@ -17,6 +17,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 def count_methods_in_class(filepath: Path, class_name: str) -> tuple[list[str], dict[str, int]]:
     """Count public and private methods in a class and return method names"""
     if not filepath.exists():

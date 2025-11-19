@@ -6,6 +6,41 @@
 
 ---
 
+## ⚡ Quick Start
+
+```bash
+# 1. Install dependencies (one-time setup)
+bash install.sh
+
+# 2. Activate environment
+source farfan-env/bin/activate
+
+# 3. Run health check
+bash comprehensive_health_check.sh
+
+# 4. Execute pipeline on test plan
+python scripts/run_policy_pipeline_verified.py \
+    --plan data/plans/Plan_1.pdf \
+    --artifacts-dir artifacts/plan1
+```
+
+**Expected time**: 2-3 minutes for complete analysis
+
+---
+
+## 📚 Documentation
+
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| **[INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)** | Complete installation instructions with troubleshooting | All users |
+| **[RUNBOOK.md](RUNBOOK.md)** | Operational runbook with launch, health checks, and commands | Operators, DevOps |
+| **[TEST_PLAN.md](TEST_PLAN.md)** | Comprehensive test plan (plan prueba) with 10 test cases | QA, Testers |
+| **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)** | User operational guide for analysis workflows | Analysts, Users |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System architecture and technical design | Developers, Architects |
+| **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)** | Quick reference for developers | Developers |
+
+---
+
 ## 🚀 Getting Started
 
 For a complete guide to installation, system activation, and your first analysis, please refer to the **[OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md)**. This is the recommended starting point for all users.
@@ -14,7 +49,7 @@ For a complete guide to installation, system activation, and your first analysis
 
 For a deep dive into the system's architecture, including the 9-phase pipeline, cross-cut signals, and deterministic protocols, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
-##  quick reference
+## 🔧 Quick Reference
 
 For a quick reference of the project, see **[DEVELOPER_QUICK_REFERENCE.md](DEVELOPER_QUICK_REFERENCE.md)**.
 
@@ -532,7 +567,7 @@ Configuraciones externas (JSON, TOML) solo en orchestrator layer, nunca en core.
 
 **Comando**:
 ```bash
-PYTHONPATH=src pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
+python -m pytest tests/ -v --cov=src/saaaaaa --cov-report=term-missing
 ```
 
 ---
@@ -618,19 +653,22 @@ pip install -r requirements.txt
 
 # 3. Instalar paquete en modo editable
 pip install -e .
+
+# 4. Verificar instalación editable
+python -m saaaaaa.devtools.ensure_install
 ```
 
 #### 5.1.2. Ejecución
 
 ```bash
 # Ejecutar golden tests
-PYTHONPATH=src pytest tests/test_regression_*.py -v
+python -m pytest tests/test_regression_*.py -v
 
 # Golden test específico (CPP ingestion)
-PYTHONPATH=src pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
+python -m pytest tests/test_cpp_ingestion.py::TestIntegration::test_golden_set_reproducibility -v
 
 # Golden test de determinismo
-PYTHONPATH=src pytest tests/test_determinism.py::test_phase_hash_stability -v
+python -m pytest tests/test_determinism.py::test_phase_hash_stability -v
 ```
 
 #### 5.1.3. Verificación de Output

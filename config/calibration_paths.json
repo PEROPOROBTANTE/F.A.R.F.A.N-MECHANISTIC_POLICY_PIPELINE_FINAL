@@ -1,0 +1,34 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "description": "CalibrationOrchestrator default paths configuration",
+    "generated": "2025-11-18",
+    "purpose": "Centralized path configuration for calibration system - NO MORE None PATHS"
+  },
+
+  "defaults": {
+    "intrinsic_calibration_path": "config/intrinsic_calibration.json",
+    "compatibility_path": "config/canonical_method_catalog.json",
+    "method_registry_path": "config/canonical_method_catalog.json",
+    "method_signatures_path": "config/canonical_method_catalog.json",
+    "fusion_spec_path": "config/fusion_specification.json",
+    "method_parameters_path": "config/method_parameters.json"
+  },
+
+  "layer_calibration_paths": {
+    "META_TOOL": "config/layer_calibrations/META_TOOL/",
+    "SCORE_Q": "config/layer_calibrations/SCORE_Q/",
+    "INGEST_PDM": "config/layer_calibrations/INGEST_PDM/",
+    "STRUCTURE": "config/layer_calibrations/STRUCTURE/",
+    "EXTRACT": "config/layer_calibrations/EXTRACT/",
+    "AGGREGATE": "config/layer_calibrations/AGGREGATE/",
+    "REPORT": "config/layer_calibrations/REPORT/",
+    "TRANSFORM": "config/layer_calibrations/TRANSFORM/"
+  },
+
+  "notes": [
+    "All paths are relative to repository root",
+    "CalibrationOrchestrator will load these paths when arguments are None",
+    "Prevents hardcoded paths that don't exist"
+  ]
+}

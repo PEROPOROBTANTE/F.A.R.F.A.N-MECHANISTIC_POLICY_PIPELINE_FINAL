@@ -21,6 +21,7 @@ import unicodedata
 from pathlib import Path
 from typing import Final
 
+
 # Custom exception types for path errors
 class PathError(Exception):
     """Base exception for path-related errors."""
@@ -104,7 +105,7 @@ TESTS_DIR: Final[Path] = PROJECT_ROOT / "tests"
 def proj_root() -> Path:
     """
     Get the project root directory.
-    
+
     Returns:
         Absolute path to the project root (where pyproject.toml lives)
     """
@@ -128,10 +129,10 @@ def data_dir() -> Path:
 def tmp_dir() -> Path:
     """
     Get a project-specific temporary directory.
-    
+
     Uses PROJECT_ROOT/tmp to keep temporary files within the workspace
     and avoid polluting system temp directories.
-    
+
     Returns:
         Path to tmp directory (created if needed)
     """
@@ -143,7 +144,7 @@ def tmp_dir() -> Path:
 def build_dir() -> Path:
     """
     Get the build directory for generated artifacts.
-    
+
     Returns:
         Path to build directory (created if needed)
     """
@@ -155,7 +156,7 @@ def build_dir() -> Path:
 def cache_dir() -> Path:
     """
     Get the cache directory.
-    
+
     Returns:
         Path to cache directory (created if needed)
     """
@@ -167,7 +168,7 @@ def cache_dir() -> Path:
 def reports_dir() -> Path:
     """
     Get the reports directory for generated reports.
-    
+
     Returns:
         Path to reports directory (created if needed)
     """
@@ -179,14 +180,14 @@ def reports_dir() -> Path:
 def is_within(base: Path, child: Path) -> bool:
     """
     Check if child path is within base directory (no traversal outside).
-    
+
     Args:
         base: Base directory that should contain child
         child: Path to check
-        
+
     Returns:
         True if child is within base, False otherwise
-        
+
     Example:
         >>> project_root = Path("project_root")
         >>> is_within(project_root, project_root / "src" / "file.py")
@@ -198,7 +199,7 @@ def is_within(base: Path, child: Path) -> bool:
     try:
         base_resolved = base.resolve()
         child_resolved = child.resolve()
-        
+
         # Check if child is relative to base
         child_resolved.relative_to(base_resolved)
         return True
@@ -209,19 +210,19 @@ def is_within(base: Path, child: Path) -> bool:
 def safe_join(base: Path, *parts: str) -> Path:
     """
     Safely join path components, preventing traversal outside base.
-    
+
     This prevents directory traversal attacks using ".." components.
-    
+
     Args:
         base: Base directory
         *parts: Path components to join
-        
+
     Returns:
         Resolved path within base
-        
+
     Raises:
         PathTraversalError: If the resulting path would be outside base
-        
+
     Example:
         >>> project_root = Path("project_root")
         >>> safe_join(project_root, "src", "file.py")
@@ -230,30 +231,30 @@ def safe_join(base: Path, *parts: str) -> Path:
         PathTraversalError
     """
     result = base.joinpath(*parts).resolve()
-    
+
     if not is_within(base, result):
         raise PathTraversalError(
             f"Path traversal detected: '{result}' is outside base '{base}'. "
             f"Use paths within the workspace."
         )
-    
+
     return result
 
 
 def normalize_unicode(path: Path, form: str = "NFC") -> Path:
     """
     Normalize Unicode in path for cross-platform consistency.
-    
+
     Different filesystems handle Unicode differently:
     - macOS (HFS+) uses NFD normalization
     - Linux typically uses NFC
     - Windows uses UTF-16
-    
+
     Args:
         path: Path to normalize
         form: Unicode normalization form ("NFC", "NFD", "NFKC", "NFKD")
               Default "NFC" for maximum compatibility
-        
+
     Returns:
         Path with normalized Unicode
     """
@@ -264,13 +265,13 @@ def normalize_unicode(path: Path, form: str = "NFC") -> Path:
 def normalize_case(path: Path) -> Path:
     """
     Normalize path case for case-insensitive filesystems.
-    
+
     On case-insensitive filesystems (Windows, macOS default), this ensures
     consistent casing. On case-sensitive systems (Linux), returns unchanged.
-    
+
     Args:
         path: Path to normalize
-        
+
     Returns:
         Path with normalized case
     """
@@ -283,27 +284,27 @@ def normalize_case(path: Path) -> Path:
             return path.resolve()
         except Exception:
             pass
-    
+
     return path
 
 
 def resources(package: str, *path_parts: str) -> Path:
     """
     Access packaged resource files in a portable way.
-    
+
     This uses importlib.resources (Python 3.9+) to access resources that
     are included in the installed package, whether from source or wheel.
-    
+
     Args:
         package: Package name (e.g., "saaaaaa.core")
         *path_parts: Path components within the package
-        
+
     Returns:
         Path to the resource
-        
+
     Raises:
         PathNotFoundError: If resource doesn't exist
-        
+
     Example:
         >>> resources("saaaaaa.core", "config", "default.yaml")
         Path('/path/to/saaaaaa/core/config/default.yaml')
@@ -311,11 +312,11 @@ def resources(package: str, *path_parts: str) -> Path:
     try:
         # Python 3.9+ way
         from importlib.resources import files
-        
+
         pkg_path = files(package)
         for part in path_parts:
             pkg_path = pkg_path.joinpath(part)
-        
+
         # Convert to Path - files() returns Traversable
         if hasattr(pkg_path, '__fspath__'):
             return Path(pkg_path)
@@ -338,17 +339,17 @@ def resources(package: str, *path_parts: str) -> Path:
 def validate_read_path(path: Path) -> None:
     """
     Validate a path before reading from it.
-    
+
     Args:
         path: Path to validate
-        
+
     Raises:
         PathNotFoundError: If path doesn't exist
         PermissionError: If path is not readable
     """
     if not path.exists():
         raise PathNotFoundError(f"Path does not exist: '{path}'")
-    
+
     if not os.access(path, os.R_OK):
         raise PermissionError(f"Path is not readable: '{path}'")
 
@@ -356,15 +357,15 @@ def validate_read_path(path: Path) -> None:
 def validate_write_path(path: Path, allow_source_tree: bool = False) -> None:
     """
     Validate a path before writing to it.
-    
+
     By default, prohibits writing to the source tree to prevent
     accidental modification of versioned code.
-    
+
     Args:
         path: Path to validate
         allow_source_tree: If True, allow writing to source tree
                           (for special cases like code generation)
-        
+
     Raises:
         PathOutsideWorkspaceError: If path is outside workspace
         PermissionError: If parent directory is not writable
@@ -375,17 +376,16 @@ def validate_write_path(path: Path, allow_source_tree: bool = False) -> None:
         raise PathOutsideWorkspaceError(
             f"Cannot write to '{path}' - outside workspace '{PROJECT_ROOT}'"
         )
-    
+
     # Prohibit writing to source tree unless explicitly allowed
-    if not allow_source_tree:
-        if is_within(SRC_DIR, path):
-            raise ValueError(
-                f"Cannot write to source tree: '{path}'. "
-                f"Write to build/, cache/, or reports/ instead. "
-                f"If you need to write to source (e.g., code generation), "
-                f"set allow_source_tree=True."
-            )
-    
+    if not allow_source_tree and is_within(SRC_DIR, path):
+        raise ValueError(
+            f"Cannot write to source tree: '{path}'. "
+            f"Write to build/, cache/, or reports/ instead. "
+            f"If you need to write to source (e.g., code generation), "
+            f"set allow_source_tree=True."
+        )
+
     # Ensure parent directory exists and is writable
     parent = path.parent
     if parent.exists() and not os.access(parent, os.W_OK):
@@ -397,11 +397,11 @@ def validate_write_path(path: Path, allow_source_tree: bool = False) -> None:
 def get_env_path(key: str, default: Path | None = None) -> Path | None:
     """
     Get a path from environment variable.
-    
+
     Args:
         key: Environment variable name
         default: Default value if not set
-        
+
     Returns:
         Path from environment or default
     """
@@ -439,7 +439,7 @@ def get_reports_dir() -> Path:
 __all__ = [
     # Exceptions
     "PathError",
-    "PathTraversalError", 
+    "PathTraversalError",
     "PathNotFoundError",
     "PathOutsideWorkspaceError",
     "UnnormalizedPathError",

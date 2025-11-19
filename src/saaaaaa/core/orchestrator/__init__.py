@@ -3,10 +3,39 @@ from __future__ import annotations
 
 import inspect
 from threading import RLock
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 if TYPE_CHECKING:
     from .questionnaire import CanonicalQuestionnaire
+
+# Import utilities from submodules
+from .contract_loader import (
+    JSONContractLoader,
+    LoadError,
+    LoadResult,
+)
+
+# Import core classes from the refactored package
+from .core import (
+    AbortRequested,
+    AbortSignal,
+    Evidence,
+    MethodExecutor,
+    MicroQuestionRun,
+    Orchestrator,
+    PhaseInstrumentation,
+    PhaseResult,
+    PreprocessedDocument,
+    ResourceLimits,
+    ScoredMicroQuestion,
+)
+from .evidence_registry import (
+    EvidenceRecord,
+    EvidenceRegistry,
+    ProvenanceDAG,
+    ProvenanceNode,
+    get_global_registry,
+)
 
 class _QuestionnaireProvider:
     """Centralized access to the questionnaire monolith payload.
@@ -26,10 +55,10 @@ class _QuestionnaireProvider:
                          set via set_data() before calling get_data().
         """
         self._cache: dict[str, Any] | None = initial_data
-        self._canonical: "CanonicalQuestionnaire | None" = None
+        self._canonical: CanonicalQuestionnaire | None = None
         self._lock = RLock()
 
-    def set_data(self, data: dict[str, Any] | "CanonicalQuestionnaire") -> None:
+    def set_data(self, data: dict[str, Any] | CanonicalQuestionnaire) -> None:
         """Set questionnaire data (typically called by factory).
 
         Args:
@@ -74,7 +103,7 @@ class _QuestionnaireProvider:
                 )
             return self._cache
 
-    def get_canonical(self) -> "CanonicalQuestionnaire | None":
+    def get_canonical(self) -> CanonicalQuestionnaire | None:
         """Get canonical questionnaire if available.
 
         Returns:
@@ -129,35 +158,6 @@ def get_questionnaire_payload() -> dict[str, Any]:
     if not caller_module.startswith('saaaaaa.core.orchestrator'):
         raise RuntimeError("Questionnaire provider access restricted to orchestrator package")
     return _questionnaire_provider.get_data()
-
-# Import utilities from submodules
-from .contract_loader import (
-    JSONContractLoader,
-    LoadError,
-    LoadResult,
-)
-
-# Import core classes from the refactored package
-from .core import (
-    AbortRequested,
-    AbortSignal,
-    Evidence,
-    MethodExecutor,
-    MicroQuestionRun,
-    Orchestrator,
-    PhaseInstrumentation,
-    PhaseResult,
-    PreprocessedDocument,
-    ResourceLimits,
-    ScoredMicroQuestion,
-)
-from .evidence_registry import (
-    EvidenceRecord,
-    EvidenceRegistry,
-    ProvenanceDAG,
-    ProvenanceNode,
-    get_global_registry,
-)
 
 __all__ = [
     "EvidenceRecord",

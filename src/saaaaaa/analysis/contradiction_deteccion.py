@@ -28,18 +28,18 @@ import torch
 from scipy import stats
 from scipy.spatial.distance import cosine
 from scipy.stats import beta
+from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-# Check dependency lockdown before importing transformers
-from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
-_lockdown = get_dependency_lockdown()
-
-from sentence_transformers import SentenceTransformer
 from transformers import pipeline
+
+# Check dependency lockdown
+from saaaaaa.core.dependency_lockdown import get_dependency_lockdown
 
 # Import runtime error fixes for defensive programming
 from saaaaaa.utils.runtime_error_fixes import ensure_list_return, safe_text_extract
+
+_lockdown = get_dependency_lockdown()
 
 # Configure logging with structured format
 logging.basicConfig(

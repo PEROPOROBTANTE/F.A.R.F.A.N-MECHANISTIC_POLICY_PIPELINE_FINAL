@@ -25,7 +25,7 @@ The SPC (Smart Policy Chunks) system provides:
 DO NOT import or use this module for any new code.
 ==============================================================
     outcome = pipeline.ingest(input_path, output_dir)
-    
+
     # Convert to PreprocessedDocument for orchestrator
     adapter = SPCAdapter()
     doc = adapter.to_preprocessed_document(outcome.cpp)
@@ -63,14 +63,6 @@ DEPENDENCIAS:
 
 import logging
 import warnings
-
-# Issue deprecation warning when module is imported
-warnings.warn(
-    "document_ingestion module is deprecated. Use cpp_ingestion instead. "
-    "See docs/CPP_ARCHITECTURE.md for migration guide.",
-    DeprecationWarning,
-    stacklevel=2
-)
 from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
@@ -85,6 +77,14 @@ from schemas.preprocessed_document import (
     StructuredSection,
     StructuredTextV1,
     TableAnnotation,
+)
+
+# Issue deprecation warning when module is imported
+warnings.warn(
+    "document_ingestion module is deprecated. Use cpp_ingestion instead. "
+    "See docs/CPP_ARCHITECTURE.md for migration guide.",
+    DeprecationWarning,
+    stacklevel=2
 )
 
 _EMPTY_MAPPING: Mapping[str, Any] = MappingProxyType({})

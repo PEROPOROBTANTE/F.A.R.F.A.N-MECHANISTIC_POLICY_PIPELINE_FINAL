@@ -9,8 +9,10 @@ import random
 from pathlib import Path
 from typing import Any
 
+from saaaaaa.config.paths import PROJECT_ROOT
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+
+REPO_ROOT = PROJECT_ROOT
 CATALOG_PATH = REPO_ROOT / "canonical_method_catalogue_v2.json"
 
 

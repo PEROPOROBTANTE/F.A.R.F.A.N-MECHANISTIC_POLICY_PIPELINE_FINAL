@@ -200,3 +200,10 @@ def test_pattern_regex_compilation(provider: QuestionnaireResourceProvider) -> N
         compiled = p.compile_regex()
         if compiled is not None:
             assert hasattr(compiled, "search")
+
+
+def test_get_patterns_for_area(provider: QuestionnaireResourceProvider) -> None:
+    """Ensure provider returns deterministic patterns per policy area."""
+    patterns = provider.get_patterns_for_area("PA01", limit=5)
+    assert 0 < len(patterns) <= 5
+    assert all(isinstance(p, str) for p in patterns)

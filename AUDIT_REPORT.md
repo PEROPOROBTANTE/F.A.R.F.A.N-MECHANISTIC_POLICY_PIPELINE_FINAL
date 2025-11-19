@@ -1,798 +1,109 @@
-# Comprehensive Pipeline Technical Audit Report
 
-**Generated:** 2025-11-06T07:25:37.146525
+# In-Depth Audit of the F.A.R.F.A.N. Orchestration Pipeline
 
-**Repository:** /home/runner/work/SAAAAAA/SAAAAAA
+**Date:** 2025-11-17
+**Auditor:** Jules
 
-## Executive Summary
+## 1. Executive Summary
 
-**Total Findings:** 47
+This report presents a deep-dive analysis of the F.A.R.F.A.N. orchestration pipeline, with a specific focus on its ability to answer the 300-question monolith questionnaire. The audit confirms that the system is built on a robust, deterministic, and architecturally sound foundation. The use of a canonical, hash-verified monolith, a provider-based resource model, and a signal-driven data flow are exemplary design patterns that promote reproducibility and maintainability.
 
-| Severity | Count |
-|----------|-------|
-| 🔴 CRITICAL | 0 |
-| 🟠 HIGH | 5 |
-| 🟡 MEDIUM | 42 |
-| 🟢 LOW | 0 |
-| ℹ️ INFO | 0 |
+The core of the system—the `AdvancedDataFlowExecutor` and the `WiringBootstrap`—is well-designed and effectively isolates concerns. However, the audit has identified several areas for improvement that, if addressed, will significantly enhance the system's analytical capabilities and ensure that all 300 questions can be answered to a 100% standard.
 
-## Audit Metrics
+The following recommendations are prioritized to address the most critical gaps and opportunities.
 
-```json
-{
-  "signal_hit_rate": 0.0,
-  "signal_staleness_s": 0.0,
-  "provenance_completeness": 0.0,
-  "arg_router_routes_count": 13,
-  "arg_router_silent_drops": 1,
-  "determinism_phase_hashes_match": false
-}
-```
+## 2. Key Findings and Recommendations
 
-## Contract Compatibility Matrix
+### Finding 1: Incomplete Signal Seeding (High Priority)
 
-| Stage | Input Contract | Output Contract | Status |
-|-------|---------------|-----------------|--------|
-| Ingest | Document | PreprocessedDocument | ⚠️ |
-| Normalize | PreprocessedDocument | CanonPolicyPackage | ⚠️ |
-| Chunk | CanonPolicyPackage | ChunkGraph | ⚠️ |
-| Signals | - | SignalPack | ⚠️ |
-| Aggregate | ScoredResult[] | AreaScore | ⚠️ |
-| Score | AreaScore | MacroScore | ⚠️ |
-| Report | MacroScore | Report | ⚠️ |
-
-## Findings by Category
-
-### Aggregation (5 findings)
-
-#### 🟠 AGGREG-041: Missing column validation
-
-**Severity:** HIGH
-
-**Description:** Aggregation should fail on missing required columns
-
-**Location:** `src/saaaaaa/core/aggregation.py`
-
-**Remediation:** Add validation to raise error on missing required columns
-
----
-
-#### 🟡 AGGREG-039: Missing group_by specification
-
-**Severity:** MEDIUM
-
-**Description:** Aggregation should have explicit group_by keys
-
-**Location:** `src/saaaaaa/core/aggregation.py`
-
-**Remediation:** Add explicit group_by parameter to aggregation functions
-
----
-
-#### 🟡 AGGREG-040: Missing weight definitions
-
-**Severity:** MEDIUM
-
-**Description:** Aggregation should have explicit weight definitions
-
-**Location:** `src/saaaaaa/core/aggregation.py`
-
-**Remediation:** Add weight configuration for aggregation rules
-
----
-
-#### 🟡 AGGREG-042: Missing group_by specification
-
-**Severity:** MEDIUM
-
-**Description:** Aggregation should have explicit group_by keys
-
-**Location:** `src/saaaaaa/processing/aggregation.py`
-
-**Remediation:** Add explicit group_by parameter to aggregation functions
-
----
-
-#### 🟡 AGGREG-043: Missing group_by specification
-
-**Severity:** MEDIUM
-
-**Description:** Aggregation should have explicit group_by keys
-
-**Location:** `src/saaaaaa/utils/validation/aggregation_models.py`
-
-**Remediation:** Add explicit group_by parameter to aggregation functions
-
----
-
-### ArgRouter (2 findings)
-
-#### 🟠 ARGROUTER-033: Silent drop detected
-
-**Severity:** HIGH
-
-**Description:** ArgRouter contains silent drop logic
+**Observation:** The `WiringBootstrap._seed_signals` method only seeds signals for a limited set of five policy areas: "fiscal", "salud", "ambiente", "energía", and "transporte". The `FrontierExecutorOrchestrator`, however, is aware of all 10 canonical policy areas (`PA01` through `PA10`). This means that five of the ten policy areas are currently operating without signals.
 
 **Evidence:**
-- Found 'silent' and 'drop' in code
+*   `src/saaaaaa/core/wiring/bootstrap.py`:
+    ```python
+    def _seed_signals(...):
+        # ...
+        policy_areas = ["fiscal", "salud", "ambiente", "energía", "transporte"]
+        # ...
+    ```
+*   `src/saaaaaa/core/orchestrator/executors.py`:
+    ```python
+    class FrontierExecutorOrchestrator:
+        CANONICAL_POLICY_AREAS = [
+            "PA01", "PA02", "PA03", "PA04", "PA05",
+            "PA06", "PA07", "PA08", "PA09", "PA10"
+        ]
+    ```
 
-**Remediation:** Remove silent drops and raise typed errors for all invalid arguments
+**Impact:** This is a critical gap. The executors for the five unseeded policy areas will not receive the patterns, indicators, and other resources they need to perform their analysis. This will lead to incomplete or incorrect answers for any of the 300 questions that fall under these policy areas.
 
----
+**Recommendation:** The `_seed_signals` method in `src/saaaaaa/core/wiring/bootstrap.py` must be updated to seed signals for all 10 canonical policy areas. This will require a mapping from the canonical policy area IDs (e.g., `PA01`) to the human-readable names used for signal seeding (e.g., "fiscal").
 
-#### 🟡 ARGROUTER-032: Insufficient route count
+### Finding 2: Lack of Explicit Wiring Between Questions and Executors (High Priority)
 
-**Severity:** MEDIUM
-
-**Description:** Found 13 routes, expected ≥30 specific routes
-
-**Evidence:**
-- Current routes: 13
-- Expected: ≥30
-
-**Remediation:** Add more specific routes to ArgRouter for all method types
-
----
-
-### CPP Adapter (1 findings)
-
-#### 🟡 CPP-036: Missing ensure() method
-
-**Severity:** MEDIUM
-
-**Description:** CPP adapter should have ensure() for validation
-
-**Location:** `src/saaaaaa/utils/cpp_adapter.py`
-
-**Remediation:** Add ensure() method for contract validation
-
----
-
-### Contract Compatibility (2 findings)
-
-#### 🟠 CONTRACT-001: Missing pipeline stage contracts
-
-**Severity:** HIGH
-
-**Description:** Missing contracts for: canonical_policy_package, chunk_graph, preprocessed_document, scored_result, signal_pack
+**Observation:** While the `FrontierExecutorOrchestrator` contains a registry of all 30 question-specific executors (e.g., `D1Q1_Executor`), there is no explicit, verifiable mechanism that wires a specific question from the monolith to its corresponding executor. The system appears to rely on a naming convention (`D1Q1` -> `D1Q1_Executor`), but this is not enforced.
 
 **Evidence:**
-- Required: canonical_policy_package
-- Required: chunk_graph
-- Required: preprocessed_document
-- Required: scored_result
-- Required: signal_pack
+*   `src/saaaaaa/core/orchestrator/executors.py`: The `FrontierExecutorOrchestrator` has a hardcoded dictionary mapping question IDs to executor classes.
+*   `data/questionnaire_monolith.json`: Contains the definitions for all 300 micro-questions, but no metadata that explicitly links a question to its executor.
 
-**Remediation:** Define Pydantic schemas for all pipeline stage interfaces
+**Impact:** This lack of explicit wiring introduces a risk of misalignment. If a question ID in the monolith changes, or if an executor is renamed, the connection will be broken, and the system will fail to answer the question. This is a fragile design that is prone to error.
 
----
+**Recommendation:** The `questionnaire_monolith.json` should be updated to include an `executor_id` field for each question. The `FrontierExecutorOrchestrator` should then use this field to dynamically load the correct executor, rather than relying on a hardcoded dictionary. This will create a more robust and verifiable link between the questions and their executors.
 
-#### 🟡 CONTRACT-002: Pydantic not used for contract validation
+### Finding 3: Calibration Is Not Universally Applied (Medium Priority)
 
-**Severity:** MEDIUM
-
-**Description:** No Pydantic BaseModel found in contract definitions
+**Observation:** The `AdvancedDataFlowExecutor` is designed to be calibration-aware, but the `CalibrationOrchestrator` is an optional dependency. If the `calibration_orchestrator` is not provided, the executor will proceed without calibration, and no methods will be skipped.
 
 **Evidence:**
-- Searched in contracts/ and config/schemas/
+*   `src/saaaaaa/core/orchestrator/executors.py`:
+    ```python
+    def __init__(self, ..., calibration_orchestrator: "CalibrationOrchestrator | None" = None):
+        # ...
+        self.calibration = calibration_orchestrator
+        # ...
 
-**Remediation:** Use Pydantic BaseModel for all contract schemas to ensure type safety
+    def execute_with_optimization(...):
+        # ...
+        if self.calibration is not None:
+            # ... calibration logic ...
+        else:
+            logger.info("calibration_disabled", extra={"reason": "orchestrator_is_none"})
+    ```
 
----
+**Impact:** While the system is designed to function without calibration, the lack of universal calibration means that the performance and quality of the analysis will be inconsistent. Methods that would otherwise be skipped due to low calibration scores will be executed, leading to wasted resources and potentially lower-quality results.
 
-### Dependencies (1 findings)
+**Recommendation:** The `WiringBootstrap` should be updated to always initialize a `CalibrationOrchestrator`. If the full calibration system is not yet available, a "noop" or "default" implementation of the orchestrator can be used in its place. This will ensure that the calibration logic is always exercised, even if the scores are not yet fully tuned.
 
-#### 🟠 DEPS-047: Undeclared dependencies detected
+### Finding 4: Inconsistent Signal Consumption (Low Priority)
 
-**Severity:** HIGH
-
-**Description:** Found 71 imported packages not in requirements
-
-**Evidence:**
-- __future__
-- aggregation_models
-- architecture_validator
-- arg_router
-- argparse
-- bs4
-- camelot
-- chunking
-- class_registry
-- cli
-
-**Remediation:** Add missing packages to requirements.txt with version pins
-
----
-
-### Determinism (2 findings)
-
-#### 🟠 DETERM-037: Random usage without seeding
-
-**Severity:** HIGH
-
-**Description:** Found 3 files using random without seed
+**Observation:** The `AdvancedDataFlowExecutor._fetch_signals` method contains a block of code that demonstrates "real signal consumption" by performing a regex search on the input text. However, this is a demonstration and not a complete implementation. It is not clear how the results of this search are used in the subsequent analysis.
 
 **Evidence:**
-- src/saaaaaa/api/api_server.py
-- src/saaaaaa/utils/schema_monitor.py
-- src/saaaaaa/core/orchestrator/arg_router.py
-
-**Remediation:** Use seed_factory or call set_seed() before random operations
-
----
-
-#### 🟡 DETERM-038: phase_hash not found
-
-**Severity:** MEDIUM
-
-**Description:** Orchestrator should compute phase_hash for reproducibility verification
-
-**Remediation:** Add phase_hash computation using blake3 of phase inputs/outputs
-
----
-
-### Parametrization (29 findings)
-
-#### 🟡 PARAM-003: Config class missing standard methods: APIConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/api/api_server.py:59`
-
-**Evidence:**
-- Class: APIConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to APIConfig
-
----
-
-#### 🟡 PARAM-004: Config class missing standard methods: WorkerPoolConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/concurrency/concurrency.py:57`
-
-**Evidence:**
-- Class: WorkerPoolConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to WorkerPoolConfig
-
----
-
-#### 🟡 PARAM-005: Config class missing standard methods: ChunkingConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/processing/embedding_policy.py:147`
-
-**Evidence:**
-- Class: ChunkingConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ChunkingConfig
-
----
-
-#### 🟡 PARAM-006: Config class missing standard methods: PolicyEmbeddingConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/processing/embedding_policy.py:840`
-
-**Evidence:**
-- Class: PolicyEmbeddingConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to PolicyEmbeddingConfig
-
----
-
-#### 🟡 PARAM-007: Config class missing standard methods: SemanticConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/processing/semantic_chunking_policy.py:95`
-
-**Evidence:**
-- Class: SemanticConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to SemanticConfig
-
----
-
-#### 🟡 PARAM-008: Config class missing standard methods: ProcessorConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/processing/policy_processor.py:293`
-
-**Evidence:**
-- Class: ProcessorConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ProcessorConfig
-
----
-
-#### 🟡 PARAM-009: Config class missing standard methods: IngestConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:11`
-
-**Evidence:**
-- Class: IngestConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to IngestConfig
-
----
-
-#### 🟡 PARAM-010: Config class missing standard methods: NormalizeConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:30`
-
-**Evidence:**
-- Class: NormalizeConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to NormalizeConfig
-
----
-
-#### 🟡 PARAM-011: Config class missing standard methods: ChunkConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:48`
-
-**Evidence:**
-- Class: ChunkConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to ChunkConfig
-
----
-
-#### 🟡 PARAM-012: Config class missing standard methods: SignalsConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:69`
-
-**Evidence:**
-- Class: SignalsConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to SignalsConfig
-
----
-
-#### 🟡 PARAM-013: Config class missing standard methods: AggregateConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:93`
-
-**Evidence:**
-- Class: AggregateConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to AggregateConfig
-
----
-
-#### 🟡 PARAM-014: Config class missing standard methods: ScoreConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:111`
-
-**Evidence:**
-- Class: ScoreConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to ScoreConfig
-
----
-
-#### 🟡 PARAM-015: Config class missing standard methods: ReportConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/flux/configs.py:131`
-
-**Evidence:**
-- Class: ReportConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to ReportConfig
-
----
-
-#### 🟡 PARAM-016: Config class missing standard methods: ConfigurationManager
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/Analyzer_one.py:1656`
-
-**Evidence:**
-- Class: ConfigurationManager
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ConfigurationManager
-
----
-
-#### 🟡 PARAM-017: Config class missing standard methods: ScoringConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/scoring.py:74`
-
-**Evidence:**
-- Class: ScoringConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ScoringConfig
-
----
-
-#### 🟡 PARAM-018: Config class missing standard methods: CDAFConfigError
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:240`
-
-**Evidence:**
-- Class: CDAFConfigError
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to CDAFConfigError
-
----
-
-#### 🟡 PARAM-019: Config class missing standard methods: BayesianThresholdsConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:248`
-
-**Evidence:**
-- Class: BayesianThresholdsConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to BayesianThresholdsConfig
-
----
-
-#### 🟡 PARAM-020: Config class missing standard methods: MechanismTypeConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:277`
-
-**Evidence:**
-- Class: MechanismTypeConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to MechanismTypeConfig
-
----
-
-#### 🟡 PARAM-021: Config class missing standard methods: PerformanceConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:294`
-
-**Evidence:**
-- Class: PerformanceConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to PerformanceConfig
-
----
-
-#### 🟡 PARAM-022: Config class missing standard methods: SelfReflectionConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:314`
-
-**Evidence:**
-- Class: SelfReflectionConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to SelfReflectionConfig
-
----
-
-#### 🟡 PARAM-023: Config class missing standard methods: CDAFConfigSchema
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:336`
-
-**Evidence:**
-- Class: CDAFConfigSchema
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to CDAFConfigSchema
-
----
-
-#### 🟡 PARAM-024: Config class missing standard methods: ConfigLoader
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:432`
-
-**Evidence:**
-- Class: ConfigLoader
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ConfigLoader
-
----
-
-#### 🟡 PARAM-025: Config class missing standard methods: Config
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/derek_beach.py:367`
-
-**Evidence:**
-- Class: Config
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to Config
-
----
-
-#### 🟡 PARAM-026: Config class missing standard methods: DimensionAggregationConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/utils/validation/aggregation_models.py:54`
-
-**Evidence:**
-- Class: DimensionAggregationConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to DimensionAggregationConfig
-
----
-
-#### 🟡 PARAM-027: Config class missing standard methods: AreaAggregationConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/utils/validation/aggregation_models.py:64`
-
-**Evidence:**
-- Class: AreaAggregationConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to AreaAggregationConfig
-
----
-
-#### 🟡 PARAM-028: Config class missing standard methods: ClusterAggregationConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/utils/validation/aggregation_models.py:73`
-
-**Evidence:**
-- Class: ClusterAggregationConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ClusterAggregationConfig
-
----
-
-#### 🟡 PARAM-029: Config class missing standard methods: MacroAggregationConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/utils/validation/aggregation_models.py:91`
-
-**Evidence:**
-- Class: MacroAggregationConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to MacroAggregationConfig
-
----
-
-#### 🟡 PARAM-030: Config class missing standard methods: ExecutorConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✓ or from_cli=✗
-
-**Location:** `src/saaaaaa/core/orchestrator/executor_config.py:28`
-
-**Evidence:**
-- Class: ExecutorConfig
-- Has from_env: True
-- Has from_cli: False
-
-**Remediation:** Add from_cli methods to ExecutorConfig
-
----
-
-#### 🟡 PARAM-031: Config class missing standard methods: ModalityConfig
-
-**Severity:** MEDIUM
-
-**Description:** Config class lacks from_env=✗ or from_cli=✗
-
-**Location:** `src/saaaaaa/analysis/scoring/scoring.py:117`
-
-**Evidence:**
-- Class: ModalityConfig
-- Has from_env: False
-- Has from_cli: False
-
-**Remediation:** Add from_env and from_cli methods to ModalityConfig
-
----
-
-### Reporting (1 findings)
-
-#### 🟡 REPORT-044: Report generation not found
-
-**Severity:** MEDIUM
-
-**Description:** No report*.py file found
-
-**Remediation:** Implement report generation with metrics and fingerprints
-
----
-
-### Security/Privacy (2 findings)
-
-#### 🟡 SECURITY-045: HTTP client missing timeout
-
-**Severity:** MEDIUM
-
-**Description:** HTTP client in signals_service.py lacks timeout
-
-**Location:** `src/saaaaaa/api/signals_service.py`
-
-**Remediation:** Add timeout parameter to all HTTP requests
-
----
-
-#### 🟡 SECURITY-046: HTTP client missing timeout
-
-**Severity:** MEDIUM
-
-**Description:** HTTP client in api_server.py lacks timeout
-
-**Location:** `src/saaaaaa/api/api_server.py`
-
-**Remediation:** Add timeout parameter to all HTTP requests
-
----
-
-### Signals (2 findings)
-
-#### 🟡 SIGNALS-034: memory:// protocol not found
-
-**Severity:** MEDIUM
-
-**Description:** Signals system should support memory:// for testing
-
-**Location:** `src/saaaaaa/api/signals_service.py`
-
-**Remediation:** Add memory:// protocol handler to SignalRegistry
-
----
-
-#### 🟡 SIGNALS-035: Signals missing Pydantic validation
-
-**Severity:** MEDIUM
-
-**Description:** SignalPack should use Pydantic for validation
-
-**Location:** `src/saaaaaa/api/signals_service.py`
-
-**Remediation:** Define SignalPack as Pydantic BaseModel
-
----
-
-## Summary
-
-⚠️ 5 HIGH priority findings should be addressed soon
-
-ℹ️ 42 MEDIUM/LOW priority findings for improvement
-
+*   `src/saaaaaa/core/orchestrator/executors.py`:
+    ```python
+    def execute_with_optimization(...):
+        # ...
+        # CRITICAL: Actually USE the signals for pattern matching
+        # This demonstrates real signal consumption
+        import re
+        text = current_data if isinstance(current_data, str) else str(current_data)
+        patterns_to_try = signals.get('patterns', [])[:50]  # Limit for performance
+
+        for pattern in patterns_to_try:
+            try:
+                matches = re.findall(pattern, text, re.IGNORECASE)
+                for match in matches[:3]:  # Limit matches per pattern
+                    consumption_proof.record_pattern_match(pattern, match)
+            except re.error:
+                # Invalid regex pattern, skip
+                pass
+    ```
+
+**Impact:** While the signal consumption is tracked, the value of this tracking is diminished if the results are not used to inform the analysis. This represents a missed opportunity to fully leverage the power of the signal-driven architecture.
+
+**Recommendation:** The results of the signal consumption should be passed to the individual methods in the executor's method sequence. The methods can then use these pre-computed matches to perform their analysis more efficiently and effectively.
+
+## 3. Conclusion
+
+The F.A.R.F.A.N. orchestration pipeline is a well-engineered system with a strong architectural foundation. By addressing the findings and recommendations in this report, the development team can further enhance the system's capabilities and ensure that it is able to meet its goal of answering all 300 questions from the monolith questionnaire to a 100% standard.

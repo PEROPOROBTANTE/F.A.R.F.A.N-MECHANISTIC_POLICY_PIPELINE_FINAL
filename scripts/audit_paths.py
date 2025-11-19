@@ -16,8 +16,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-# Repository root
-REPO_ROOT = Path(__file__).parent.parent.resolve()
+try:
+    from saaaaaa.config.paths import PROJECT_ROOT as REPO_ROOT
+except Exception:  # pragma: no cover - fallback when package not installed
+    REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 @dataclass
@@ -202,6 +204,11 @@ class PathAuditor:
         
         # hardcoded path separators
         if self.patterns["hardcoded_separator"].search(line):
+            stripped = line.strip().lower()
+            if "http://" in stripped or "https://" in stripped or ":// " in stripped:
+                return
+            if stripped.startswith("#"):
+                return
             self.report.add_finding(PathFinding(
                 file=rel_path,
                 line_number=line_num,
@@ -212,7 +219,7 @@ class PathAuditor:
                 fix_suggestion="Use Path.joinpath() or / operator"
             ))
         
-        # os.getcwd() or Path.cwd()
+        # os.getcwd / current path usage
         if self.patterns["cwd_usage"].search(line):
             self.report.add_finding(PathFinding(
                 file=rel_path,

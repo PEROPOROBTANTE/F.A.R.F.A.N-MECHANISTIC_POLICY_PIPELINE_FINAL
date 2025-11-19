@@ -14,7 +14,7 @@ Heavy dependencies include:
 
 Usage:
     from saaaaaa.compat.lazy_deps import get_polars, get_pyarrow
-    
+
     def process_dataframe(data):
         pl = get_polars()  # Lazy-loaded on first call
         return pl.DataFrame(data)
@@ -30,17 +30,17 @@ from .safe_imports import lazy_import
 def get_polars() -> Any:
     """
     Lazy-load polars library.
-    
+
     Returns
     -------
     module
         The polars module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If polars is not installed
-    
+
     Examples
     --------
     >>> pl = get_polars()
@@ -56,17 +56,17 @@ def get_polars() -> Any:
 def get_pyarrow() -> Any:
     """
     Lazy-load pyarrow library.
-    
+
     Returns
     -------
     module
         The pyarrow module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If pyarrow is not installed
-    
+
     Examples
     --------
     >>> pa = get_pyarrow()
@@ -82,17 +82,17 @@ def get_pyarrow() -> Any:
 def get_torch() -> Any:
     """
     Lazy-load torch library.
-    
+
     Returns
     -------
     module
         The torch module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If torch is not installed
-    
+
     Examples
     --------
     >>> torch = get_torch()
@@ -108,17 +108,17 @@ def get_torch() -> Any:
 def get_tensorflow() -> Any:
     """
     Lazy-load tensorflow library.
-    
+
     Returns
     -------
     module
         The tensorflow module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If tensorflow is not installed
-    
+
     Examples
     --------
     >>> tf = get_tensorflow()
@@ -134,17 +134,17 @@ def get_tensorflow() -> Any:
 def get_transformers() -> Any:
     """
     Lazy-load transformers library.
-    
+
     Returns
     -------
     module
         The transformers module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If transformers is not installed
-    
+
     Examples
     --------
     >>> transformers = get_transformers()
@@ -160,17 +160,17 @@ def get_transformers() -> Any:
 def get_spacy() -> Any:
     """
     Lazy-load spacy library.
-    
+
     Returns
     -------
     module
         The spacy module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If spacy is not installed
-    
+
     Examples
     --------
     >>> spacy = get_spacy()
@@ -187,20 +187,20 @@ def get_spacy() -> Any:
 def get_pandas() -> Any:
     """
     Lazy-load pandas library.
-    
+
     This is typically a required dependency but we lazy-load it
     to reduce import-time overhead.
-    
+
     Returns
     -------
     module
         The pandas module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If pandas is not installed
-    
+
     Examples
     --------
     >>> pd = get_pandas()
@@ -216,20 +216,20 @@ def get_pandas() -> Any:
 def get_numpy() -> Any:
     """
     Lazy-load numpy library.
-    
+
     This is typically a required dependency but we lazy-load it
     to reduce import-time overhead in modules that don't always need it.
-    
+
     Returns
     -------
     module
         The numpy module
-    
+
     Raises
     ------
     ImportErrorDetailed
         If numpy is not installed
-    
+
     Examples
     --------
     >>> np = get_numpy()
@@ -258,24 +258,24 @@ LAZY_DEPS = {
 def get_lazy_dep(name: str) -> Any:
     """
     Get a lazy-loaded dependency by name.
-    
+
     Parameters
     ----------
     name : str
         Name of the dependency (e.g., "polars", "torch")
-    
+
     Returns
     -------
     module
         The requested module
-    
+
     Raises
     ------
     KeyError
         If the dependency name is not recognized
     ImportErrorDetailed
         If the dependency is not installed
-    
+
     Examples
     --------
     >>> polars = get_lazy_dep("polars")
@@ -286,7 +286,7 @@ def get_lazy_dep(name: str) -> Any:
             f"Unknown lazy dependency: {name}. "
             f"Available: {', '.join(LAZY_DEPS.keys())}"
         )
-    
+
     return LAZY_DEPS[name]()
 
 

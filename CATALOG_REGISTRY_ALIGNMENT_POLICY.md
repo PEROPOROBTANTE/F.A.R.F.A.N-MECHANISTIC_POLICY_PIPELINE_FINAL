@@ -155,7 +155,7 @@ These 43 methods have calibration entries but are not in the catalog. This is **
 
 Run alignment audit regularly:
 ```bash
-PYTHONPATH=src python scripts/audit_catalog_registry_alignment.py
+python scripts/audit_catalog_registry_alignment.py
 ```
 
 **Red flags** (require action):
@@ -197,7 +197,7 @@ PYTHONPATH=src python scripts/audit_catalog_registry_alignment.py
 
 ```bash
 # Run audit
-PYTHONPATH=src python scripts/audit_catalog_registry_alignment.py
+python scripts/audit_catalog_registry_alignment.py
 
 # Expected output:
 # ❌ In registry but NOT in catalog (DEFECT): 43

@@ -13,6 +13,7 @@ import copy
 from dataclasses import dataclass, asdict, field
 from typing import Dict, List, Any, Optional, Tuple, Set, Union
 from enum import Enum
+from pathlib import Path
 from scipy.spatial.distance import cosine
 from scipy.stats import entropy
 from scipy.signal import find_peaks
@@ -3445,33 +3446,28 @@ def validate_cli_arguments(args):
     """
     Validate CLI arguments before processing.
     
-    Inputs:
-        args: Parsed command-line arguments
-    Outputs:
-        None
-    Raises:
-        ValidationError: If validation fails
+    Returns:
+        Tuple[Path, Path]: Normalized input and output paths
     """
-    # Validate input path exists
-    if not os.path.exists(args.input):
-        raise ValidationError(f"Input file not found: {args.input}")
+    input_path = Path(args.input).expanduser()
+    if not input_path.exists():
+        raise ValidationError(f"Input file not found: {input_path}")
     
-    # Validate output path is writable
-    output_dir = os.path.dirname(args.output) or '.'
-    if not os.path.exists(output_dir):
+    output_path = Path(args.output).expanduser()
+    output_dir = output_path.parent if output_path.name else output_path
+    if not output_dir.exists():
         raise ValidationError(f"Output directory does not exist: {output_dir}")
     if not os.access(output_dir, os.W_OK):
         raise ValidationError(f"Output directory is not writable: {output_dir}")
     
-    # Validate IDs are not empty
     if not args.doc_id or not args.doc_id.strip():
         raise ValidationError("Document ID cannot be empty")
     
-    # Validate max_chunks is positive
     if args.max_chunks < 0:
         raise ValidationError(f"max_chunks must be non-negative, got: {args.max_chunks}")
     
     logger.info("CLI arguments validated successfully")
+    return input_path, output_path
 
 def main(args):
     """
@@ -3484,13 +3480,12 @@ def main(args):
     """
     try:
         # 0. Validate CLI arguments
-        validate_cli_arguments(args)
+        input_path, output_path = validate_cli_arguments(args)
         
         # 1. Cargar el documento
-        logger.info(f"Loading input document: {args.input}")
+        logger.info(f"Loading input document: {input_path}")
         try:
-            with open(args.input, 'r', encoding='utf-8') as f:
-                document_text = f.read()
+            document_text = input_path.read_text(encoding='utf-8')
         except IOError as e:
             raise ProcessingError(f"Failed to read input file: {e}")
         
@@ -3537,16 +3532,16 @@ def main(args):
             if len(original_text.encode('utf-8')) > 200:
                 chunk_data['text'] += '...'
             
+        summary_payload = json.dumps(output_data, indent=2, ensure_ascii=False, default=np_to_list)
         try:
-            with open(args.output, 'w', encoding='utf-8') as f:
-                json.dump(output_data, f, indent=2, ensure_ascii=False, default=np_to_list)
-            logger.info(f"Summary output saved to: {args.output}")
+            output_path.write_text(summary_payload, encoding='utf-8')
+            logger.info(f"Summary output saved to: {output_path}")
         except (IOError, TypeError) as e:
             raise SerializationError(f"Failed to write summary output: {e}")
         
         # 6. Guardar versión completa sin truncar texto (full.json)
         if args.save_full:
-            full_output = args.output.replace('.json', '_full.json')
+            full_output = output_path.with_name(f"{output_path.stem}_full.json")
             try:
                 # Crear una estructura completa con texto íntegro
                 full_data = {
@@ -3560,8 +3555,8 @@ def main(args):
                     # Mantener texto completo
                     full_data['chunks'].append(chunk_dict)
                 
-                with open(full_output, 'w', encoding='utf-8') as f:
-                    json.dump(full_data, f, indent=2, ensure_ascii=False, default=np_to_list)
+                full_payload = json.dumps(full_data, indent=2, ensure_ascii=False, default=np_to_list)
+                full_output.write_text(full_payload, encoding='utf-8')
                 logger.info(f"Full output saved to: {full_output}")
             except (IOError, TypeError) as e:
                 raise SerializationError(f"Failed to write full output: {e}")
@@ -3572,7 +3567,7 @@ def main(args):
             'execution_timestamp': canonical_timestamp(),
             'input_file': args.input,
             'input_hash': hashlib.sha256(document_text.encode('utf-8')).hexdigest(),
-            'output_hash': hashlib.sha256(json.dumps(output_data, default=np_to_list).encode('utf-8')).hexdigest(),
+            'output_hash': hashlib.sha256(summary_payload.encode('utf-8')).hexdigest(),
             'chunks_generated': len(chunks),
             'validation_passed': all(
                 c.coherence_score >= chunking_system.config.MIN_COHERENCE_SCORE 
@@ -3581,10 +3576,10 @@ def main(args):
             'success': len(chunks) > 0 and all(c.coherence_score >= chunking_system.config.MIN_COHERENCE_SCORE for c in chunks)
         }
         
-        verification_file = args.output.replace('.json', '_verification.json')
+        verification_file = output_path.with_name(f"{output_path.stem}_verification.json")
+        verification_payload = json.dumps(verification, indent=2, default=np_to_list)
         try:
-            with open(verification_file, 'w', encoding='utf-8') as f:
-                json.dump(verification, f, indent=2, default=np_to_list)
+            verification_file.write_text(verification_payload, encoding='utf-8')
             logger.info(f"Verification report saved to: {verification_file}")
         except IOError as e:
             logger.warning(f"Failed to write verification file: {e}")

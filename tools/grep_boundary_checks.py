@@ -7,10 +7,15 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+try:
+    from saaaaaa.config.paths import PROJECT_ROOT
+except Exception:  # pragma: no cover - bootstrap fallback
+    PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = PROJECT_ROOT
 
 class BoundaryViolation(Exception):
     """Raised when a boundary violation is detected."""

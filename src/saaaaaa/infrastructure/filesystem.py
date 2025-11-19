@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+
 class LocalFileAdapter:
     """Real file system adapter using pathlib.
 

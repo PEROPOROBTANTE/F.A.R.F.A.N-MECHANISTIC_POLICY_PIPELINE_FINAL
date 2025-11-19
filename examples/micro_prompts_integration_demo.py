@@ -21,8 +21,8 @@ except ImportError as e:
     print(f"   {e}")
     print("\n📦 Please install the package first:")
     print("   pip install -e .")
-    print("\nOr set PYTHONPATH:")
-    print("   export PYTHONPATH=/path/to/SAAAAAA/src")
+    print("\nNeed to debug your environment?")
+    print("   python -m saaaaaa.devtools.ensure_install")
     exit(1)
 
 from saaaaaa.processing.micro_prompts import (

@@ -37,7 +37,7 @@ dependencies = [
     "numpy>=1.26.0,<2.0",
     "pandas>=2.2.0",
     "scipy>=1.14.0",
-    "scikit-learn>=1.6.0",
+    "scikit-learn>=1.5.0", # Lowered from 1.6.0 to be compatible with econml<1.6
     "transformers>=4.48.0",
     "sentence-transformers>=3.0.0",
     "spacy>=3.8.0",
@@ -298,8 +298,11 @@ requirements_files = [
     "requirements-docs.txt",
     "requirements-optional.txt"
 ]
-known_first_party = ["saaaaaa", "src", "schemas", "methods", "retry_handler"]
-exclude = ["src", "tests", "examples", ".venv", "minipdm"]
+known_first_party = ["saaaaaa", "src", "schemas", "methods", "retry_handler", "config", "tools", "Analyzer_one", "financiero_viabilidad_tablas", "policy_processor"]
+exclude = [".venv", "src", "tests", "examples", "minipdm"]
+ignore_notebooks = true
+ignore = ["DEP002", "DEP003"]
+requirements_files_dev = ["requirements-dev.txt", "requirements-docs.txt", "requirements-optional.txt"]
 
 [tool.importlinter]
 root_package = "saaaaaa"

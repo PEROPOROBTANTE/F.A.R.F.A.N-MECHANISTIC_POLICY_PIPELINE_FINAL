@@ -47,9 +47,28 @@ class SPCAdapter:
     SmartPolicyChunk data into the format expected by the orchestrator.
     """
 
-    def __init__(self):
-        """Initialize the SPC adapter."""
+    def __init__(self, enable_runtime_validation: bool = True) -> None:
+        """Initialize the SPC adapter.
+
+        Args:
+            enable_runtime_validation: Enable WiringValidator for runtime contract checking
+        """
         self.logger = logging.getLogger(self.__class__.__name__)
+
+        # Initialize WiringValidator for runtime contract validation
+        self.enable_runtime_validation = enable_runtime_validation
+        if enable_runtime_validation:
+            try:
+                from saaaaaa.core.wiring.validation import WiringValidator
+                self.wiring_validator = WiringValidator()
+                self.logger.info("WiringValidator enabled for runtime contract checking")
+            except ImportError:
+                self.logger.warning(
+                    "WiringValidator not available. Runtime validation disabled."
+                )
+                self.wiring_validator = None
+        else:
+            self.wiring_validator = None
 
     def to_preprocessed_document(
         self,
@@ -232,8 +251,8 @@ class SPCAdapter:
         # Build structured text (no sections available from SPC)
         structured_text = StructuredTextV1(
             full_text=full_text,
-            sections=tuple(),
-            page_boundaries=tuple()
+            sections=(),
+            page_boundaries=()
         )
 
         # Build document indexes
@@ -304,6 +323,28 @@ class SPCAdapter:
             f"Conversion complete: {len(sentences)} sentences, "
             f"{len(tables)} tables, {len(entity_index)} entities indexed"
         )
+
+        # RUNTIME VALIDATION: Validate Adapter → Orchestrator contract
+        if self.wiring_validator is not None:
+            self.logger.info("Validating Adapter → Orchestrator contract (runtime)")
+            try:
+                # Convert PreprocessedDocument to dict for validation
+                preprocessed_dict = {
+                    "document_id": preprocessed_doc.document_id,
+                    "full_text": preprocessed_doc.full_text,
+                    "sentences": list(preprocessed_doc.sentences),
+                    "language": preprocessed_doc.language,
+                    "sentence_count": len(preprocessed_doc.sentences),
+                    "has_structured_text": preprocessed_doc.structured_text is not None,
+                    "has_indexes": preprocessed_doc.indexes is not None,
+                }
+                self.wiring_validator.validate_adapter_to_orchestrator(preprocessed_dict)
+                self.logger.info("✓ Adapter → Orchestrator contract validation passed")
+            except Exception as e:
+                self.logger.error(f"Adapter → Orchestrator contract validation failed: {e}")
+                raise ValueError(
+                    f"Runtime contract violation at Adapter → Orchestrator boundary: {e}"
+                ) from e
 
         return preprocessed_doc
 

@@ -21,12 +21,14 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from saaaaaa.config.paths import PROJECT_ROOT, SRC_DIR
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
 # Define the package root directory
-REPO_ROOT = Path(__file__).parent.parent
-PACKAGE_ROOT = Path(__file__).parent.parent / "src" / "saaaaaa"
+REPO_ROOT = PROJECT_ROOT
+PACKAGE_ROOT = SRC_DIR
 
 # Modules that must stay pure (no __main__ and no direct I/O).
 PURE_MODULE_PATHS: dict[str, Path] = {

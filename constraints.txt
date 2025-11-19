@@ -87,7 +87,7 @@ jinja2==3.1.4
 markupsafe==3.0.2
 werkzeug==3.0.6
 blinker==1.9.0
-starlette==0.41.3
+starlette==0.49.1
 
 # Type checking and validation
 typing-extensions==4.12.2

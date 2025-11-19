@@ -18,11 +18,15 @@ import threading
 from pathlib import Path
 from typing import Any
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
+try:
+    from saaaaaa.config.paths import PROJECT_ROOT
+except ImportError as exc:  # pragma: no cover - configuration error
+    raise SystemExit(
+        "Unable to import 'saaaaaa'. Install the package with 'pip install -e .' before running this audit."
+    ) from exc
 
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
+REPO_ROOT = PROJECT_ROOT
+SRC_ROOT = PROJECT_ROOT / "src"
 
 
 def _record(name: str, passed: bool, severity: str, details: dict[str, Any]) -> dict[str, Any]:

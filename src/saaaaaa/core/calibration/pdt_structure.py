@@ -20,9 +20,9 @@ from typing import Any
 class PDTStructure:
     """
     Extracted structure of a PDT.
-    
+
     This is populated by the PDT parser and consumed by UnitLayerEvaluator.
-    
+
     Attributes:
         full_text: Complete text of the PDT
         total_tokens: Total word/token count
@@ -38,23 +38,23 @@ class PDTStructure:
     # Raw content
     full_text: str
     total_tokens: int
-    
+
     # Block detection (for S - Structural compliance)
     blocks_found: dict[str, dict[str, Any]] = field(default_factory=dict)
     # Example: {
     #     "Diagnóstico": {"text": "...", "tokens": 1500, "numbers_count": 25},
     #     "Parte Estratégica": {"text": "...", "tokens": 1200, "numbers_count": 15},
     # }
-    
+
     headers: list[dict[str, Any]] = field(default_factory=list)
     # Example: [
     #     {"level": 1, "text": "1. DIAGNÓSTICO", "valid_numbering": True},
     #     {"level": 2, "text": "1.1 Contexto", "valid_numbering": True},
     # ]
-    
+
     block_sequence: list[str] = field(default_factory=list)
     # Example: ["Diagnóstico", "Parte Estratégica", "PPI", "Seguimiento"]
-    
+
     # Section analysis (for M - Mandatory sections)
     sections_found: dict[str, dict[str, Any]] = field(default_factory=dict)
     # Example: {
@@ -66,7 +66,7 @@ class PDTStructure:
     #         "sources_found": 3,  # e.g., "DANE", "Medicina Legal"
     #     }
     # }
-    
+
     # Indicator matrix (for I - Indicator quality)
     indicator_matrix_present: bool = False
     indicator_rows: list[dict[str, Any]] = field(default_factory=list)
@@ -83,7 +83,7 @@ class PDTStructure:
     #         "Código MGA": "1234567"
     #     }
     # ]
-    
+
     # PPI matrix (for P - PPI completeness)
     ppi_matrix_present: bool = False
     ppi_rows: list[dict[str, Any]] = field(default_factory=list)

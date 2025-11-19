@@ -7,6 +7,14 @@ Successful Checks: 116
 Warnings: 2
 Critical Issues: 0
 
+Addendum – Continuous Enforcement (Section 12):
+  • Verified pipeline runner now consumes SeedRegistry + VerificationManifest
+    (see `src/saaaaaa/scripts/run_policy_pipeline_verified.py`) so executor
+    wiring manifests include determinism + calibration metadata.
+  • GitHub Actions workflows `contract-enforcement.yml` and
+    `determinism-test.yml` enforce METHOD_SEQUENCE coverage, calibration version
+    tracking, and reproducibility gates on every push and on a daily schedule.
+
 Warnings:
   - Global metrics singleton exists - requires careful threading consideration
   - FrontierExecutorOrchestrator has shared global_causal_graph

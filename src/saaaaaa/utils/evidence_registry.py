@@ -87,24 +87,24 @@ class EvidenceRegistry:
         monolith_hash: str | None = None,
     ) -> EvidenceRecord:
         """Append a new evidence record to the registry.
-        
+
         Args:
             method_name: Name of the method producing evidence
             evidence: Evidence strings
             metadata: Additional metadata dictionary
             monolith_hash: SHA-256 hash of questionnaire_monolith.json (recommended)
-        
+
         ARCHITECTURAL NOTE: Including monolith_hash ensures evidence is
         traceable to the specific questionnaire version that generated it.
         Use factory.compute_monolith_hash() to generate this value.
         """
         previous_hash = self._records[-1].entry_hash if self._records else "GENESIS"
-        
+
         # Merge monolith_hash into metadata if provided
         enriched_metadata = dict(metadata or {})
         if monolith_hash is not None:
             enriched_metadata['monolith_hash'] = monolith_hash
-        
+
         record = EvidenceRecord.create(
             index=len(self._records),
             method_name=method_name,

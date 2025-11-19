@@ -8,6 +8,23 @@ Date: 2025-11-08
 Agent: GitHub Copilot Coding Agent
 
 ================================================================================
+        ADDENDUM – VERIFIED PIPELINE & CONTRACT ENFORCEMENT (SECTION 12)
+================================================================================
+
+This certificate now records the completion of Section 12 of the contract
+enforcement program:
+
+- SeedRegistry + VerificationManifest integrated into
+  `src/saaaaaa/scripts/run_policy_pipeline_verified.py`, ensuring deterministic
+  execution and cryptographic manifests for every verified run.
+- CI coverage extended with `.github/workflows/contract-enforcement.yml` and
+  `.github/workflows/determinism-test.yml`, providing continuous wiring,
+  calibration, and determinism validation on push/PR and a scheduled run.
+
+These additions lock the verified pipeline to the same architectural bar as the
+questionnaire subsystems documented below.
+
+================================================================================
                            CERTIFICATION STATEMENT
 ================================================================================
 
