@@ -49,8 +49,10 @@ from ...processing.aggregation import (
     ScoredResult,
 )
 from ..dependency_lockdown import get_dependency_lockdown
+from . import executors
 from .arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
 from .class_registry import ClassRegistryError, build_class_registry
+from .executor_config import ExecutorConfig
 from .versions import CALIBRATION_VERSION
 from ...utils.paths import safe_join
 
@@ -1169,8 +1171,6 @@ class Orchestrator:
                 "MethodExecutor.instances is empty - no executable methods registered."
             )
 
-from . import executors
-from .executor_config import ExecutorConfig
         self.executors = {
             "D1-Q1": executors.D1Q1_Executor, "D1-Q2": executors.D1Q2_Executor,
             "D1-Q3": executors.D1Q3_Executor, "D1-Q4": executors.D1Q4_Executor,
