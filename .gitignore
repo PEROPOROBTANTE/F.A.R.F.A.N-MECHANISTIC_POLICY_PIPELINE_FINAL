@@ -57,3 +57,4 @@ htmlcov/
 .dmypy.json
 dmypy.json
 farfan-env/
+.aider*
