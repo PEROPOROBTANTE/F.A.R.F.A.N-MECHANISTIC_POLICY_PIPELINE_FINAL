@@ -2322,8 +2322,18 @@ class AdvancedDataFlowExecutor(ExecutorBase, MethodSequenceValidatingMixin):
 # ALL 30 EXECUTORS COMPLETE IMPLEMENTATION
 # ============================================================================
 
+# ============================================================================
+# ALL 30 EXECUTORS - CANONICAL METHOD SEQUENCES + ANSWER ASSEMBLY
+# Generated from canonical_executor_catalog.json - Derek Beach ENABLED
+# ============================================================================
+
+# ============================================================================
+# ALL 30 EXECUTORS - CANONICAL METHOD SEQUENCES + ANSWER ASSEMBLY
+# Generated from canonical_executor_catalog.json
+# ============================================================================
+
 class D1Q1_Executor(AdvancedDataFlowExecutor):
-    """D1-Q1: Líneas Base y Brechas Cuantificadas"""
+    """D1-Q1: ¿El diagnóstico presenta datos numéricos (tasas de VBG, porcentajes de participa"""
 
     def __init__(
         self,
@@ -2333,102 +2343,65 @@ class D1Q1_Executor(AdvancedDataFlowExecutor):
         calibration_orchestrator: "CalibrationOrchestrator | None" = None,
     ) -> None:
         super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        # Validate method sequence at construction time
         self._validate_method_sequences()
         self._validate_calibrations()
 
     def _get_method_sequence(self) -> list[tuple[str, str]]:
-        """Return method sequence for this executor."""
+        """Return method sequence for D1-Q1 - FROM CANONICAL CATALOG."""
         return [
+            # PP: IndustrialPolicyProcessor
             ('IndustrialPolicyProcessor', 'process'),
             ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_construct_evidence_bundle'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('BayesianEvidenceScorer', '_calculate_shannon_entropy'),
+            ('IndustrialPolicyProcessor', '_extract_quantitative_baseline'),
+            ('IndustrialPolicyProcessor', '_validate_source_credibility'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_semantic_boundaries'),
+            ('SemanticProcessor', '_extract_indicators'),
+
+            # EP: PolicyAnalysisEmbedder
+            ('PolicyAnalysisEmbedder', 'embed_policy_text'),
+            ('PolicyAnalysisEmbedder', '_compute_similarity_matrix'),
+
+            # CD: PolicyContradictionDetector
             ('PolicyContradictionDetector', '_extract_quantitative_claims'),
             ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PolicyContradictionDetector', '_statistical_significance_test'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('SemanticAnalyzer', '_calculate_semantic_complexity'),
-            ('SemanticAnalyzer', '_classify_policy_domain'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('BayesianNumericalAnalyzer', '_classify_evidence_strength'),
-            ('Dimension1Analyzer', 'analyze_question_1'),
-            ('Dimension1Validator', 'validate_question_1'),
+            ('PolicyContradictionDetector', '_validate_data_quality'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_policy_context'),
+            ('SemanticAnalyzer', '_extract_entities'),
+            ('SemanticAnalyzer', '_validate_completeness'),
         ]
 
     def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
         method_sequence = self._get_method_sequence()
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D1-Q1",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
 
     def _extract(self, results):
         vals = [v for v in results.values() if v is not None]
         return vals[:4] if vals else []
-
-
-    def receive_and_process_work_package(self, work_package: dict) -> None:
-        """
-        Receives and processes a work package containing policy chunks and signals.
-        This method serves as the evidence of distribution.
-        """
-        logger.info("--- D1Q1_Executor: Work Package Received ---")
-
-        canon_package = work_package.get("canon_policy_package", {})
-        signal_pack = work_package.get("signal_pack", {})
-
-        chunk_count = len(canon_package.get("chunk_graph", {}).get("chunks", []))
-        pattern_count = len(signal_pack.get("patterns", []))
-
-        logger.info(f"Received {chunk_count} policy chunks.")
-        logger.info(f"Received {pattern_count} patterns in signal pack.")
-        logger.info("--- D1Q1_Executor: Work Package Processed ---")
 
 
 class D1Q2_Executor(AdvancedDataFlowExecutor):
-    """D1-Q2: Normalización y Fuentes"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_compile_pattern_registry'),
-            ('PolicyTextProcessor', 'normalize_unicode'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PolicyAnalysisEmbedder', '_extract_numerical_values'),
-            ('BayesianNumericalAnalyzer', '_compute_coherence'),
-            ('Dimension1Analyzer', 'analyze_question_2'),
-            ('Dimension1Validator', 'validate_question_2'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D1Q3_Executor(AdvancedDataFlowExecutor):
-    """D1-Q3: Asignación de Recursos"""
-
+    """D1-Q2: ¿El texto dimensiona el problema de la desigualdad de género cuantificando la br"""
 
     def __init__(
         self,
@@ -2438,1376 +2411,1973 @@ class D1Q3_Executor(AdvancedDataFlowExecutor):
         calibration_orchestrator: "CalibrationOrchestrator | None" = None,
     ) -> None:
         super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
         self._validate_calibrations()
 
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D1-Q2 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
             ('IndustrialPolicyProcessor', 'process'),
-            ('IndustrialPolicyProcessor', '_extract_point_evidence'),
-            ('IndustrialPolicyProcessor', '_construct_evidence_bundle'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_extract_resource_mentions'),
-            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('PolicyContradictionDetector', '_detect_resource_conflicts'),
-            ('PolicyContradictionDetector', '_are_conflicting_allocations'),
-            ('PolicyContradictionDetector', '_statistical_significance_test'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('TemporalLogicVerifier', '_extract_resources'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_financial_amounts'),
-            ('PDETMunicipalPlanAnalyzer', '_identify_funding_source'),
-            ('PDETMunicipalPlanAnalyzer', '_analyze_funding_sources'),
-            ('FinancialAuditor', 'trace_financial_allocation'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('BayesianNumericalAnalyzer', 'compare_policies'),
-            ('Dimension1Analyzer', 'analyze_question_3'),
-            ('Dimension1Validator', 'validate_question_3'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D1Q4_Executor(AdvancedDataFlowExecutor):
-    """D1-Q4: Capacidad Institucional"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
             ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_build_point_patterns'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_calculate_graph_fragmentation'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_calculate_syntactic_complexity'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('SemanticAnalyzer', '_classify_value_chain_link'),
-            ('PerformanceAnalyzer', '_detect_bottlenecks'),
-            ('TextMiningEngine', '_identify_critical_links'),
-            ('PDETMunicipalPlanAnalyzer', 'identify_responsible_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_entity_type'),
-            ('Dimension1Analyzer', 'analyze_question_4'),
-            ('Dimension1Validator', 'validate_question_4'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
+            ('IndustrialPolicyProcessor', '_extract_quantitative_baseline'),
+            ('IndustrialPolicyProcessor', '_validate_source_credibility'),
 
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_semantic_boundaries'),
+            ('SemanticProcessor', '_extract_indicators'),
 
-class D1Q5_Executor(AdvancedDataFlowExecutor):
-    """D1-Q5: Restricciones Temporales"""
+            # EP: PolicyAnalysisEmbedder
+            ('PolicyAnalysisEmbedder', 'embed_policy_text'),
+            ('PolicyAnalysisEmbedder', '_compute_similarity_matrix'),
 
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_detect_temporal_conflicts'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('TemporalLogicVerifier', 'verify_temporal_consistency'),
-            ('TemporalLogicVerifier', '_build_timeline'),
-            ('TemporalLogicVerifier', '_parse_temporal_marker'),
-            ('TemporalLogicVerifier', '_has_temporal_conflict'),
-            ('TemporalLogicVerifier', '_check_deadline_constraints'),
-            ('TemporalLogicVerifier', '_classify_temporal_type'),
-            ('SemanticAnalyzer', '_calculate_semantic_complexity'),
-            ('PerformanceAnalyzer', '_calculate_throughput_metrics'),
-            ('Dimension1Analyzer', 'analyze_question_5'),
-            ('Dimension1Validator', 'validate_question_5'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D2Q1_Executor(AdvancedDataFlowExecutor):
-    """D2-Q1: Formato Tabular y Trazabilidad"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_clean_dataframe'),
-            ('PDETMunicipalPlanAnalyzer', '_is_likely_header'),
-            ('PDETMunicipalPlanAnalyzer', '_deduplicate_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_reconstruct_fragmented_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_from_budget_table'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_from_responsibility_tables'),
-            ('PDETMunicipalPlanAnalyzer', 'identify_responsible_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_consolidate_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_score_entity_specificity'),
-            ('TemporalLogicVerifier', '_build_timeline'),
-            ('TemporalLogicVerifier', '_check_deadline_constraints'),
-            ('PolicyContradictionDetector', '_detect_temporal_conflicts'),
-            ('SemanticProcessor', '_detect_table'),
-            ('Dimension2Analyzer', 'analyze_question_1'),
-            ('Dimension2Validator', 'validate_question_1'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D2Q2_Executor(AdvancedDataFlowExecutor):
-    """D2-Q2: Causalidad de Actividades"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_determine_relation_type'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_extract_policy_statements'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('CausalExtractor', '_extract_goals'),
-            ('CausalExtractor', '_extract_goal_text'),
-            ('CausalExtractor', '_classify_goal_type'),
-            ('CausalExtractor', '_add_node_to_graph'),
-            ('CausalExtractor', '_extract_causal_links'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('TextMiningEngine', 'diagnose_critical_links'),
-            ('TextMiningEngine', '_analyze_link_text'),
-            ('Dimension2Analyzer', 'analyze_question_2'),
-            ('Dimension2Validator', 'validate_question_2'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D2Q3_Executor(AdvancedDataFlowExecutor):
-    """D2-Q3: Responsables de Actividades"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PDETMunicipalPlanAnalyzer', 'identify_responsible_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_from_responsibility_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_consolidate_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_entity_type'),
-            ('PDETMunicipalPlanAnalyzer', '_score_entity_specificity'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_clean_dataframe'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyAnalysisEmbedder', 'semantic_search'),
-            ('SemanticAnalyzer', '_classify_policy_domain'),
-            ('Dimension2Analyzer', 'analyze_question_3'),
-            ('Dimension2Validator', 'validate_question_3'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D2Q4_Executor(AdvancedDataFlowExecutor):
-    """D2-Q4: Cuantificación de Actividades"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_financial_amounts'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_from_budget_table'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
+            # CD: PolicyContradictionDetector
             ('PolicyContradictionDetector', '_extract_quantitative_claims'),
             ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_extract_resource_mentions'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('Dimension2Analyzer', 'analyze_question_4'),
-            ('Dimension2Validator', 'validate_question_4'),
+            ('PolicyContradictionDetector', '_validate_data_quality'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_policy_context'),
+            ('SemanticAnalyzer', '_extract_entities'),
+            ('SemanticAnalyzer', '_validate_completeness'),
         ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D2Q5_Executor(AdvancedDataFlowExecutor):
-    """D2-Q5: Eslabón Causal Diagnóstico-Actividades"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
 
     def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_determine_relation_type'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_extract_policy_statements'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('TeoriaCambio', '_encontrar_caminos_completos'),
-            ('TextMiningEngine', 'diagnose_critical_links'),
-            ('TextMiningEngine', '_analyze_link_text'),
-            ('Dimension2Analyzer', 'analyze_question_5'),
-            ('Dimension2Validator', 'validate_question_5'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D3Q1_Executor(AdvancedDataFlowExecutor):
-    """D3-Q1: Indicadores de Producto"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('IndustrialPolicyProcessor', '_construct_evidence_bundle'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_indicator_to_dict'),
-            ('PDETMunicipalPlanAnalyzer', '_find_product_mentions'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('PolicyAnalysisEmbedder', '_extract_numerical_values'),
-            ('Dimension3Analyzer', 'analyze_question_1'),
-            ('Dimension3Validator', 'validate_question_1'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D3Q2_Executor(AdvancedDataFlowExecutor):
-    """D3-Q2: Cuantificación de Productos"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_financial_amounts'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_from_budget_table'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
-            ('PDETMunicipalPlanAnalyzer', '_find_product_mentions'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_extract_resource_mentions'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('Dimension3Analyzer', 'analyze_question_2'),
-            ('Dimension3Validator', 'validate_question_2'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D3Q3_Executor(AdvancedDataFlowExecutor):
-    """D3-Q3: Responsables de Productos"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PDETMunicipalPlanAnalyzer', 'identify_responsible_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_extract_from_responsibility_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_consolidate_entities'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_entity_type'),
-            ('PDETMunicipalPlanAnalyzer', '_score_entity_specificity'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyAnalysisEmbedder', 'semantic_search'),
-            ('SemanticAnalyzer', '_classify_policy_domain'),
-            ('Dimension3Analyzer', 'analyze_question_3'),
-            ('Dimension3Validator', 'validate_question_3'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D3Q4_Executor(AdvancedDataFlowExecutor):
-    """D3-Q4: Plazos de Productos"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('TemporalLogicVerifier', 'verify_temporal_consistency'),
-            ('TemporalLogicVerifier', '_check_deadline_constraints'),
-            ('TemporalLogicVerifier', '_classify_temporal_type'),
-            ('TemporalLogicVerifier', '_build_timeline'),
-            ('TemporalLogicVerifier', '_parse_temporal_marker'),
-            ('TemporalLogicVerifier', '_has_temporal_conflict'),
-            ('TemporalLogicVerifier', '_extract_resources'),
-            ('PolicyContradictionDetector', '_detect_resource_conflicts'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PerformanceAnalyzer', '_calculate_throughput_metrics'),
-            ('PerformanceAnalyzer', '_detect_bottlenecks'),
-            ('TextMiningEngine', '_assess_risks'),
-            ('Dimension3Analyzer', 'analyze_question_4'),
-            ('Dimension3Validator', 'validate_question_4'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D3Q5_Executor(AdvancedDataFlowExecutor):
-    """D3-Q5: Eslabón Causal Producto-Resultado"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_determine_relation_type'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_extract_policy_statements'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('CausalExtractor', '_extract_causal_links'),
-            ('CausalExtractor', '_extract_causal_justifications'),
-            ('CausalExtractor', '_calculate_confidence'),
-            ('MechanismPartExtractor', 'extract_entity_activity'),
-            ('MechanismPartExtractor', '_find_subject_entity'),
-            ('MechanismPartExtractor', '_find_action_verb'),
-            ('MechanismPartExtractor', '_validate_entity_activity'),
-            ('MechanismPartExtractor', '_calculate_ea_confidence'),
-            ('BayesianMechanismInference', 'infer_mechanisms'),
-            ('BayesianMechanismInference', '_build_transition_matrix'),
-            ('BayesianMechanismInference', '_infer_activity_sequence'),
-            ('BayesianMechanismInference', '_test_necessity'),
-            ('BayesianMechanismInference', '_test_sufficiency'),
-            ('BayesianMechanismInference', '_classify_mechanism_type'),
-            ('BeachEvidentialTest', 'apply_test_logic'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('TeoriaCambio', '_encontrar_caminos_completos'),
-            ('TextMiningEngine', 'diagnose_critical_links'),
-            ('TextMiningEngine', '_analyze_link_text'),
-            ('Dimension3Analyzer', 'analyze_question_5'),
-            ('Dimension3Validator', 'validate_question_5'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D4Q1_Executor(AdvancedDataFlowExecutor):
-    """D4-Q1: Indicadores de Resultado"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('IndustrialPolicyProcessor', '_construct_evidence_bundle'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_indicator_to_dict'),
-            ('PDETMunicipalPlanAnalyzer', '_find_outcome_mentions'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('PolicyAnalysisEmbedder', '_extract_numerical_values'),
-            ('Dimension4Analyzer', 'analyze_question_1'),
-            ('Dimension4Validator', 'validate_question_1'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D4Q2_Executor(AdvancedDataFlowExecutor):
-    """D4-Q2: Cadena Causal y Supuestos"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_extract_policy_statements'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('PolicyContradictionDetector', '_calculate_syntactic_complexity'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('CausalExtractor', '_extract_causal_links'),
-            ('BayesianMechanismInference', 'infer_mechanisms'),
-            ('BayesianMechanismInference', '_test_necessity'),
-            ('BayesianMechanismInference', '_test_sufficiency'),
-            ('BeachEvidentialTest', 'classify_test'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('TeoriaCambio', 'validacion_completa'),
-            ('TeoriaCambio', '_validar_orden_causal'),
-            ('Dimension4Analyzer', 'analyze_question_2'),
-            ('Dimension4Validator', 'validate_question_2'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D4Q3_Executor(AdvancedDataFlowExecutor):
-    """D4-Q3: Justificación de Ambición"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', 'process'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('BayesianEvidenceScorer', '_calculate_shannon_entropy'),
-            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
-            ('PolicyContradictionDetector', '_calculate_objective_alignment'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('PolicyContradictionDetector', '_statistical_significance_test'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_extract_resource_mentions'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PDETMunicipalPlanAnalyzer', 'generate_recommendations'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_financial_feasibility'),
-            ('PDETMunicipalPlanAnalyzer', '_assess_financial_sustainability'),
-            ('PDETMunicipalPlanAnalyzer', '_bayesian_risk_inference'),
-            ('FinancialAuditor', '_calculate_sufficiency'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('BayesianNumericalAnalyzer', 'compare_policies'),
-            ('BayesianNumericalAnalyzer', '_classify_evidence_strength'),
-            ('Dimension4Analyzer', 'analyze_question_3'),
-            ('Dimension4Validator', 'validate_question_3'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D4Q4_Executor(AdvancedDataFlowExecutor):
-    """D4-Q4: Población Objetivo"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('SemanticAnalyzer', '_classify_cross_cutting_themes'),
-            ('SemanticAnalyzer', '_classify_policy_domain'),
-            ('SemanticAnalyzer', 'extract_semantic_cube'),
-            ('PolicyAnalysisEmbedder', 'semantic_search'),
-            ('PolicyAnalysisEmbedder', '_filter_by_pdq'),
-            ('Dimension4Analyzer', 'analyze_question_4'),
-            ('Dimension4Validator', 'validate_question_4'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D4Q5_Executor(AdvancedDataFlowExecutor):
-    """D4-Q5: Alineación con Objetivos Superiores"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_calculate_objective_alignment'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('SemanticAnalyzer', '_classify_cross_cutting_themes'),
-            ('SemanticAnalyzer', '_classify_policy_domain'),
-            ('SemanticAnalyzer', 'extract_semantic_cube'),
-            ('PolicyAnalysisEmbedder', 'semantic_search'),
-            ('PolicyAnalysisEmbedder', 'compare_policy_interventions'),
-            ('Dimension4Analyzer', 'analyze_question_5'),
-            ('Dimension4Validator', 'validate_question_5'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D5Q1_Executor(AdvancedDataFlowExecutor):
-    """D5-Q1: Indicadores de Impacto"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('IndustrialPolicyProcessor', '_construct_evidence_bundle'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PDETMunicipalPlanAnalyzer', '_indicator_to_dict'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_municipal_plan'),
-            ('PDETMunicipalPlanAnalyzer', '_classify_tables'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('Dimension5Analyzer', 'analyze_question_1'),
-            ('Dimension5Validator', 'validate_question_1'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D5Q2_Executor(AdvancedDataFlowExecutor):
-    """D5-Q2: Eslabón Causal Resultado-Impacto"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_determine_relation_type'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_extract_policy_statements'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('CausalExtractor', '_extract_causal_links'),
-            ('CausalExtractor', '_extract_causal_justifications'),
-            ('BayesianMechanismInference', 'infer_mechanisms'),
-            ('BayesianMechanismInference', '_test_necessity'),
-            ('BayesianMechanismInference', '_test_sufficiency'),
-            ('BayesianMechanismInference', '_classify_mechanism_type'),
-            ('BeachEvidentialTest', 'apply_test_logic'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('TeoriaCambio', '_encontrar_caminos_completos'),
-            ('TextMiningEngine', 'diagnose_critical_links'),
-            ('Dimension5Analyzer', 'analyze_question_2'),
-            ('Dimension5Validator', 'validate_question_2'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D5Q3_Executor(AdvancedDataFlowExecutor):
-    """D5-Q3: Evidencia de Causalidad"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
-            ('PolicyContradictionDetector', '_parse_number'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PolicyContradictionDetector', '_statistical_significance_test'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('CausalExtractor', '_extract_causal_justifications'),
-            ('BayesianMechanismInference', 'infer_mechanisms'),
-            ('BayesianMechanismInference', '_test_necessity'),
-            ('BayesianMechanismInference', '_test_sufficiency'),
-            ('BayesianNumericalAnalyzer', 'evaluate_policy_metric'),
-            ('Dimension5Analyzer', 'analyze_question_3'),
-            ('Dimension5Validator', 'validate_question_3'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D5Q4_Executor(AdvancedDataFlowExecutor):
-    """D5-Q4: Plazos de Impacto"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('TemporalLogicVerifier', 'verify_temporal_consistency'),
-            ('TemporalLogicVerifier', '_check_deadline_constraints'),
-            ('TemporalLogicVerifier', '_classify_temporal_type'),
-            ('TemporalLogicVerifier', '_build_timeline'),
-            ('TemporalLogicVerifier', '_parse_temporal_marker'),
-            ('TemporalLogicVerifier', '_has_temporal_conflict'),
-            ('PolicyContradictionDetector', '_extract_temporal_markers'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PerformanceAnalyzer', '_calculate_throughput_metrics'),
-            ('PerformanceAnalyzer', '_detect_bottlenecks'),
-            ('Dimension5Analyzer', 'analyze_question_4'),
-            ('Dimension5Validator', 'validate_question_4'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D5Q5_Executor(AdvancedDataFlowExecutor):
-    """D5-Q5: Sostenibilidad Financiera"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PDETMunicipalPlanAnalyzer', 'analyze_financial_feasibility'),
-            ('PDETMunicipalPlanAnalyzer', '_assess_financial_sustainability'),
-            ('PDETMunicipalPlanAnalyzer', '_bayesian_risk_inference'),
-            ('PDETMunicipalPlanAnalyzer', '_analyze_funding_sources'),
-            ('PDETMunicipalPlanAnalyzer', 'extract_tables'),
-            ('PolicyContradictionDetector', '_extract_resource_mentions'),
-            ('PolicyContradictionDetector', '_detect_resource_conflicts'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('FinancialAuditor', 'trace_financial_allocation'),
-            ('FinancialAuditor', '_calculate_sufficiency'),
-            ('Dimension5Analyzer', 'analyze_question_5'),
-            ('Dimension5Validator', 'validate_question_5'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D6Q1_Executor(AdvancedDataFlowExecutor):
-    """D6-Q1: Integridad de Teoría de Cambio"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_analyze_causal_dimensions'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('TeoriaCambio', 'validacion_completa'),
-            ('TeoriaCambio', '_encontrar_caminos_completos'),
-            ('TeoriaCambio', '_validar_orden_causal'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('AdvancedDAGValidator', 'calculate_acyclicity_pvalue'),
-            ('AdvancedDAGValidator', '_calculate_statistical_power'),
-            ('AdvancedDAGValidator', '_calculate_bayesian_posterior'),
-            ('AdvancedDAGValidator', '_perform_sensitivity_analysis_internal'),
-            ('AdvancedDAGValidator', 'get_graph_stats'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_get_graph_statistics'),
-            ('PolicyContradictionDetector', '_calculate_graph_fragmentation'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('CausalExtractor', 'extract_causal_hierarchy'),
-            ('OperationalizationAuditor', 'audit_evidence_traceability'),
-            ('OperationalizationAuditor', '_audit_systemic_risk'),
-            ('OperationalizationAuditor', 'bayesian_counterfactual_audit'),
-            ('OperationalizationAuditor', '_generate_optimal_remediations'),
-            ('CDAFFramework', 'process_document'),
-            ('CDAFFramework', '_audit_causal_coherence'),
-            ('CDAFFramework', '_validate_dnp_compliance'),
-            ('CDAFFramework', '_generate_extraction_report'),
-            ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
-            ('PDETMunicipalPlanAnalyzer', '_identify_causal_nodes'),
-            ('PDETMunicipalPlanAnalyzer', '_identify_causal_edges'),
-            ('Dimension6Analyzer', 'analyze_question_1'),
-            ('Dimension6Validator', 'validate_question_1'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D6Q2_Executor(AdvancedDataFlowExecutor):
-    """D6-Q2: Proporcionalidad y Continuidad (Anti-Milagro)"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', '_compile_pattern_registry'),
-            ('IndustrialPolicyProcessor', '_build_point_patterns'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_calculate_syntactic_complexity'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_get_dependency_depth'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_determine_relation_type'),
-            ('PolicyContradictionDetector', '_calculate_numerical_divergence'),
-            ('PolicyContradictionDetector', '_statistical_significance_test'),
-            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
-            ('PolicyContradictionDetector', '_are_comparable_claims'),
-            ('PolicyContradictionDetector', '_calculate_confidence_interval'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('TeoriaCambio', 'validacion_completa'),
-            ('TeoriaCambio', '_encontrar_caminos_completos'),
-            ('TeoriaCambio', '_validar_orden_causal'),
-            ('AdvancedDAGValidator', 'calculate_acyclicity_pvalue'),
-            ('AdvancedDAGValidator', '_calculate_statistical_power'),
-            ('AdvancedDAGValidator', '_calculate_bayesian_posterior'),
-            ('BeachEvidentialTest', 'classify_test'),
-            ('BeachEvidentialTest', 'apply_test_logic'),
-            ('BayesianMechanismInference', '_test_necessity'),
-            ('BayesianMechanismInference', '_test_sufficiency'),
-            ('BayesianMechanismInference', '_build_transition_matrix'),
-            ('BayesianMechanismInference', '_calculate_type_transition_prior'),
-            ('BayesianMechanismInference', '_infer_activity_sequence'),
-            ('BayesianMechanismInference', '_aggregate_bayesian_confidence'),
-            ('CausalInferenceSetup', 'classify_goal_dynamics'),
-            ('CausalInferenceSetup', 'identify_failure_points'),
-            ('CausalInferenceSetup', 'assign_probative_value'),
-            ('CausalInferenceSetup', '_get_dynamics_pattern'),
-            ('OperationalizationAuditor', '_audit_systemic_risk'),
-            ('OperationalizationAuditor', 'bayesian_counterfactual_audit'),
-            ('Dimension6Analyzer', 'analyze_question_2'),
-            ('Dimension6Validator', 'validate_question_2'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D6Q3_Executor(AdvancedDataFlowExecutor):
-    """D6-Q3: Inconsistencias (Sistema Bicameral - Ruta 1)"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_detect_logical_incompatibilities'),
-            ('PolicyContradictionDetector', 'detect'),
-            ('PolicyContradictionDetector', '_detect_semantic_contradictions'),
-            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
-            ('PolicyContradictionDetector', '_detect_temporal_conflicts'),
-            ('PolicyContradictionDetector', '_detect_resource_conflicts'),
-            ('PolicyContradictionDetector', '_classify_contradiction'),
-            ('PolicyContradictionDetector', '_calculate_severity'),
-            ('PolicyContradictionDetector', '_generate_resolution_recommendations'),
-            ('PolicyContradictionDetector', '_suggest_resolutions'),
-            ('PolicyContradictionDetector', '_calculate_contradiction_entropy'),
-            ('PolicyContradictionDetector', '_get_domain_weight'),
-            ('PolicyContradictionDetector', '_has_logical_conflict'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('TextMiningEngine', 'diagnose_critical_links'),
-            ('TextMiningEngine', '_identify_critical_links'),
-            ('TeoriaCambio', 'validacion_completa'),
-            ('TeoriaCambio', '_validar_orden_causal'),
-            ('Dimension6Analyzer', 'analyze_question_3'),
-            ('Dimension6Validator', 'validate_question_3'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D6Q4_Executor(AdvancedDataFlowExecutor):
-    """D6-Q4: Adaptación (Sistema Bicameral - Ruta 2)"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('TeoriaCambio', 'validacion_completa'),
-            ('TeoriaCambio', '_validar_orden_causal'),
-            ('TeoriaCambio', '_encontrar_caminos_completos'),
-            ('TeoriaCambio', '_generar_sugerencias_internas'),
-            ('TeoriaCambio', '_execute_generar_sugerencias_internas'),
-            ('TeoriaCambio', '_extraer_categorias'),
-            ('TeoriaCambio', '_es_conexion_valida'),
-            ('TeoriaCambio', 'construir_grafo_causal'),
-            ('AdvancedDAGValidator', 'calculate_acyclicity_pvalue'),
-            ('AdvancedDAGValidator', '_perform_sensitivity_analysis_internal'),
-            ('AdvancedDAGValidator', '_calculate_confidence_interval'),
-            ('AdvancedDAGValidator', 'get_graph_stats'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('PolicyContradictionDetector', '_get_graph_statistics'),
-            ('PolicyContradictionDetector', '_calculate_graph_fragmentation'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('PerformanceAnalyzer', '_generate_recommendations'),
-            ('TextMiningEngine', '_generate_interventions'),
-            ('CDAFFramework', '_validate_dnp_compliance'),
-            ('CDAFFramework', '_generate_extraction_report'),
-            ('CDAFFramework', '_generate_causal_model_json'),
-            ('CDAFFramework', '_generate_dnp_compliance_report'),
-            ('OperationalizationAuditor', 'audit_evidence_traceability'),
-            ('OperationalizationAuditor', '_perform_counterfactual_budget_check'),
-            ('FinancialAuditor', 'trace_financial_allocation'),
-            ('FinancialAuditor', '_match_goal_to_budget'),
-            ('FinancialAuditor', '_calculate_sufficiency'),
-            ('FinancialAuditor', '_detect_allocation_gaps'),
-            ('MechanismTypeConfig', 'check_sum_to_one'),
-            ('PDETMunicipalPlanAnalyzer', 'generate_recommendations'),
-            ('PDETMunicipalPlanAnalyzer', '_generate_optimal_remediations'),
-            ('Dimension6Analyzer', 'analyze_question_4'),
-            ('Dimension6Validator', 'validate_question_4'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-class D6Q5_Executor(AdvancedDataFlowExecutor):
-    """D6-Q5: Contextualización y Enfoque Diferencial"""
-
-
-    def __init__(
-        self,
-        method_executor,
-        signal_registry=None,
-        config: ExecutorConfig | None = None,
-        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
-    ) -> None:
-        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
-        self._validate_calibrations()
-
-    def execute(self, doc, method_executor):
-        method_sequence = [
-            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
-            ('IndustrialPolicyProcessor', 'process'),
-            ('PolicyTextProcessor', 'segment_into_sentences'),
-            ('PolicyTextProcessor', 'extract_contextual_window'),
-            ('BayesianEvidenceScorer', 'compute_evidence_score'),
-            ('PolicyContradictionDetector', '_generate_embeddings'),
-            ('PolicyContradictionDetector', '_calculate_similarity'),
-            ('PolicyContradictionDetector', '_identify_dependencies'),
-            ('PolicyContradictionDetector', '_determine_semantic_role'),
-            ('PolicyContradictionDetector', '_calculate_global_semantic_coherence'),
-            ('PolicyContradictionDetector', '_get_context_window'),
-            ('PolicyContradictionDetector', '_build_knowledge_graph'),
-            ('BayesianConfidenceCalculator', 'calculate_posterior'),
-            ('SemanticAnalyzer', '_classify_cross_cutting_themes'),
-            ('SemanticAnalyzer', '_classify_policy_domain'),
-            ('SemanticAnalyzer', 'extract_semantic_cube'),
-            ('SemanticAnalyzer', '_process_segment'),
-            ('SemanticAnalyzer', '_vectorize_segments'),
-            ('SemanticAnalyzer', '_calculate_semantic_complexity'),
-            ('MunicipalOntology', '__init__'),
-            ('PolicyAnalysisEmbedder', 'semantic_search'),
-            ('PolicyAnalysisEmbedder', '_filter_by_pdq'),
-            ('PolicyAnalysisEmbedder', 'compare_policy_interventions'),
-            ('AdvancedSemanticChunker', '_infer_pdq_context'),
-            ('Dimension6Analyzer', 'analyze_question_5'),
-            ('Dimension6Validator', 'validate_question_5'),
-        ]
-        return self.execute_with_optimization(doc, method_executor, method_sequence)
-
-    def _extract(self, results):
-        vals = [v for v in results.values() if v is not None]
-        return vals[:4] if vals else []
-
-# ============================================================================
-# ORCHESTRATOR
-# ============================================================================
-
-class ExecutorDispatcher:
-    """Acts as a factory to dispatch the correct executor for a given question."""
-
-    def __init__(self, signal_registry=None, config: ExecutorConfig | None = None, calibration_orchestrator: "CalibrationOrchestrator | None" = None) -> None:
-        self.executors = {
-            'D1Q1': D1Q1_Executor,
-            'D1Q2': D1Q2_Executor,
-            'D1Q3': D1Q3_Executor,
-            'D1Q4': D1Q4_Executor,
-            'D1Q5': D1Q5_Executor,
-            'D2Q1': D2Q1_Executor,
-            'D2Q2': D2Q2_Executor,
-            'D2Q3': D2Q3_Executor,
-            'D2Q4': D2Q4_Executor,
-            'D2Q5': D2Q5_Executor,
-            'D3Q1': D3Q1_Executor,
-            'D3Q2': D3Q2_Executor,
-            'D3Q3': D3Q3_Executor,
-            'D3Q4': D3Q4_Executor,
-            'D3Q5': D3Q5_Executor,
-            'D4Q1': D4Q1_Executor,
-            'D4Q2': D4Q2_Executor,
-            'D4Q3': D4Q3_Executor,
-            'D4Q4': D4Q4_Executor,
-            'D4Q5': D4Q5_Executor,
-            'D5Q1': D5Q1_Executor,
-            'D5Q2': D5Q2_Executor,
-            'D5Q3': D5Q3_Executor,
-            'D5Q4': D5Q4_Executor,
-            'D5Q5': D5Q5_Executor,
-            'D6Q1': D6Q1_Executor,
-            'D6Q2': D6Q2_Executor,
-            'D6Q3': D6Q3_Executor,
-            'D6Q4': D6Q4_Executor,
-            'D6Q5': D6Q5_Executor,
-        }
-        self.signal_registry = signal_registry
-        self.config = config
-        self.calibration = calibration_orchestrator
-
-    def get_executor(self, question_id: str, method_executor) -> AdvancedDataFlowExecutor:
-        """Get executor instance for a given question ID."""
-        canonical_id = question_id.replace("-", "").replace("_", "").replace(" ", "").upper()
-        if canonical_id not in self.executors:
-            logger.error(f"Unknown question ID: {question_id}")
-            raise ValueError(f"Unknown question ID: {question_id}")
-
-        executor_class = self.executors[canonical_id]
-        return executor_class(
-            method_executor,
-            signal_registry=self.signal_registry,
-            config=self.config,
-            calibration_orchestrator=self.calibration,
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D1-Q2",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
         )
 
-# Backwards compatibility alias
-DataFlowExecutor = AdvancedDataFlowExecutor
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
 
-# Export all executor classes and orchestrator
-__all__ = [
-    # Executor classes for all 30 questions
-    'D1Q1_Executor',
-    'D1Q2_Executor',
-    'D1Q3_Executor',
-    'D1Q4_Executor',
-    'D1Q5_Executor',
-    'D2Q1_Executor',
-    'D2Q2_Executor',
-    'D2Q3_Executor',
-    'D2Q4_Executor',
-    'D2Q5_Executor',
-    'D3Q1_Executor',
-    'D3Q2_Executor',
-    'D3Q3_Executor',
-    'D3Q4_Executor',
-    'D3Q5_Executor',
-    'D4Q1_Executor',
-    'D4Q2_Executor',
-    'D4Q3_Executor',
-    'D4Q4_Executor',
-    'D4Q5_Executor',
-    'D5Q1_Executor',
-    'D5Q2_Executor',
-    'D5Q3_Executor',
-    'D5Q4_Executor',
-    'D5Q5_Executor',
-    'D6Q1_Executor',
-    'D6Q2_Executor',
-    'D6Q3_Executor',
-    'D6Q4_Executor',
-    'D6Q5_Executor',
-    # Main orchestrator
-    'ExecutorDispatcher',
-    # Base classes
-    'ExecutorBase',
-    'ValidationResult',
-    'AdvancedDataFlowExecutor',
-]
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D1Q3_Executor(AdvancedDataFlowExecutor):
+    """D1-Q3: ¿Se identifican en el Plan Plurianual de Inversiones (PPI) o en tablas presupues"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D1-Q3 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
+            ('IndustrialPolicyProcessor', '_extract_quantitative_baseline'),
+            ('IndustrialPolicyProcessor', '_validate_source_credibility'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_semantic_boundaries'),
+            ('SemanticProcessor', '_extract_indicators'),
+
+            # EP: PolicyAnalysisEmbedder
+            ('PolicyAnalysisEmbedder', 'embed_policy_text'),
+            ('PolicyAnalysisEmbedder', '_compute_similarity_matrix'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
+            ('PolicyContradictionDetector', '_parse_number'),
+            ('PolicyContradictionDetector', '_validate_data_quality'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_policy_context'),
+            ('SemanticAnalyzer', '_extract_entities'),
+            ('SemanticAnalyzer', '_validate_completeness'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D1-Q3",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D1Q4_Executor(AdvancedDataFlowExecutor):
+    """D1-Q4: ¿El PDM describe las capacidades para gestionar la política de género, mencionan"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D1-Q4 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
+            ('IndustrialPolicyProcessor', '_extract_quantitative_baseline'),
+            ('IndustrialPolicyProcessor', '_validate_source_credibility'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_semantic_boundaries'),
+            ('SemanticProcessor', '_extract_indicators'),
+
+            # EP: PolicyAnalysisEmbedder
+            ('PolicyAnalysisEmbedder', 'embed_policy_text'),
+            ('PolicyAnalysisEmbedder', '_compute_similarity_matrix'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
+            ('PolicyContradictionDetector', '_parse_number'),
+            ('PolicyContradictionDetector', '_validate_data_quality'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_policy_context'),
+            ('SemanticAnalyzer', '_extract_entities'),
+            ('SemanticAnalyzer', '_validate_completeness'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D1-Q4",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D1Q5_Executor(AdvancedDataFlowExecutor):
+    """D1-Q5: ¿El plan justifica su alcance en materia de género mencionando el marco legal (e"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D1-Q5 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_match_patterns_in_sentences'),
+            ('IndustrialPolicyProcessor', '_extract_quantitative_baseline'),
+            ('IndustrialPolicyProcessor', '_validate_source_credibility'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_semantic_boundaries'),
+            ('SemanticProcessor', '_extract_indicators'),
+
+            # EP: PolicyAnalysisEmbedder
+            ('PolicyAnalysisEmbedder', 'embed_policy_text'),
+            ('PolicyAnalysisEmbedder', '_compute_similarity_matrix'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_extract_quantitative_claims'),
+            ('PolicyContradictionDetector', '_parse_number'),
+            ('PolicyContradictionDetector', '_validate_data_quality'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_policy_context'),
+            ('SemanticAnalyzer', '_extract_entities'),
+            ('SemanticAnalyzer', '_validate_completeness'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D1-Q5",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D2Q1_Executor(AdvancedDataFlowExecutor):
+    """D2-Q1: ¿Las actividades para la equidad de género se presentan en un formato estructura"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D2-Q1 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: PolicyTextProcessor
+            ('PolicyTextProcessor', 'process'),
+            ('PolicyTextProcessor', '_extract_activities'),
+            ('PolicyTextProcessor', '_identify_structure'),
+            ('PolicyTextProcessor', '_parse_tables'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_activity_blocks'),
+            ('SemanticProcessor', '_extract_instruments'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_causal_logic'),
+            ('SemanticAnalyzer', '_extract_target_population'),
+            ('SemanticAnalyzer', '_identify_mechanisms'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_coherence'),
+            ('PolicyContradictionDetector', '_detect_gaps'),
+            ('PolicyContradictionDetector', '_check_risk_mitigation'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_validate_activity_chain'),
+            ('TeoriaCambio', '_check_complementarity'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D2-Q1",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D2Q2_Executor(AdvancedDataFlowExecutor):
+    """D2-Q2: ¿La descripción de las actividades de género detalla el instrumento ('mediante t"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D2-Q2 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: PolicyTextProcessor
+            ('PolicyTextProcessor', 'process'),
+            ('PolicyTextProcessor', '_extract_activities'),
+            ('PolicyTextProcessor', '_identify_structure'),
+            ('PolicyTextProcessor', '_parse_tables'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_activity_blocks'),
+            ('SemanticProcessor', '_extract_instruments'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_causal_logic'),
+            ('SemanticAnalyzer', '_extract_target_population'),
+            ('SemanticAnalyzer', '_identify_mechanisms'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_coherence'),
+            ('PolicyContradictionDetector', '_detect_gaps'),
+            ('PolicyContradictionDetector', '_check_risk_mitigation'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_validate_activity_chain'),
+            ('TeoriaCambio', '_check_complementarity'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D2-Q2",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D2Q3_Executor(AdvancedDataFlowExecutor):
+    """D2-Q3: ¿El PDM vincula explícitamente las actividades propuestas con las 'causas raíz' """
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D2-Q3 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: PolicyTextProcessor
+            ('PolicyTextProcessor', 'process'),
+            ('PolicyTextProcessor', '_extract_activities'),
+            ('PolicyTextProcessor', '_identify_structure'),
+            ('PolicyTextProcessor', '_parse_tables'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_activity_blocks'),
+            ('SemanticProcessor', '_extract_instruments'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_causal_logic'),
+            ('SemanticAnalyzer', '_extract_target_population'),
+            ('SemanticAnalyzer', '_identify_mechanisms'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_coherence'),
+            ('PolicyContradictionDetector', '_detect_gaps'),
+            ('PolicyContradictionDetector', '_check_risk_mitigation'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_validate_activity_chain'),
+            ('TeoriaCambio', '_check_complementarity'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D2-Q3",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D2Q4_Executor(AdvancedDataFlowExecutor):
+    """D2-Q4: ¿El plan identifica posibles riesgos, 'obstáculos' o 'barreras' en la implementa"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D2-Q4 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: PolicyTextProcessor
+            ('PolicyTextProcessor', 'process'),
+            ('PolicyTextProcessor', '_extract_activities'),
+            ('PolicyTextProcessor', '_identify_structure'),
+            ('PolicyTextProcessor', '_parse_tables'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_activity_blocks'),
+            ('SemanticProcessor', '_extract_instruments'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_causal_logic'),
+            ('SemanticAnalyzer', '_extract_target_population'),
+            ('SemanticAnalyzer', '_identify_mechanisms'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_coherence'),
+            ('PolicyContradictionDetector', '_detect_gaps'),
+            ('PolicyContradictionDetector', '_check_risk_mitigation'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_validate_activity_chain'),
+            ('TeoriaCambio', '_check_complementarity'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D2-Q4",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D2Q5_Executor(AdvancedDataFlowExecutor):
+    """D2-Q5: ¿El conjunto de actividades de género demuestra una estrategia coherente? Se deb"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D2-Q5 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: PolicyTextProcessor
+            ('PolicyTextProcessor', 'process'),
+            ('PolicyTextProcessor', '_extract_activities'),
+            ('PolicyTextProcessor', '_identify_structure'),
+            ('PolicyTextProcessor', '_parse_tables'),
+
+            # SC: SemanticProcessor
+            ('SemanticProcessor', 'chunk_document'),
+            ('SemanticProcessor', '_identify_activity_blocks'),
+            ('SemanticProcessor', '_extract_instruments'),
+
+            # A1: SemanticAnalyzer
+            ('SemanticAnalyzer', 'analyze_causal_logic'),
+            ('SemanticAnalyzer', '_extract_target_population'),
+            ('SemanticAnalyzer', '_identify_mechanisms'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_coherence'),
+            ('PolicyContradictionDetector', '_detect_gaps'),
+            ('PolicyContradictionDetector', '_check_risk_mitigation'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_validate_activity_chain'),
+            ('TeoriaCambio', '_check_complementarity'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D2-Q5",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D3Q1_Executor(AdvancedDataFlowExecutor):
+    """D3-Q1: ¿Los indicadores de producto para género (ej. mujeres capacitadas, kits entregad"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D3-Q1 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_baselines_and_targets'),
+            ('IndustrialPolicyProcessor', '_extract_verification_sources'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_compute_proportionality'),
+            ('BayesianNumericalAnalyzer', '_assess_intensity'),
+            ('BayesianNumericalAnalyzer', '_validate_targets'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', '_extract_budget_linkage'),
+            ('PDETMunicipalPlanAnalyzer', '_identify_responsible_entities'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_traceability'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_product_feasibility'),
+            ('PolicyContradictionDetector', '_check_timeframe_realism'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_product_analysis'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D3-Q1",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D3Q2_Executor(AdvancedDataFlowExecutor):
+    """D3-Q2: ¿Las metas de los productos de género (ej. 'cobertura del 15% de mujeres rurales"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D3-Q2 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_baselines_and_targets'),
+            ('IndustrialPolicyProcessor', '_extract_verification_sources'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_compute_proportionality'),
+            ('BayesianNumericalAnalyzer', '_assess_intensity'),
+            ('BayesianNumericalAnalyzer', '_validate_targets'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', '_extract_budget_linkage'),
+            ('PDETMunicipalPlanAnalyzer', '_identify_responsible_entities'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_traceability'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_product_feasibility'),
+            ('PolicyContradictionDetector', '_check_timeframe_realism'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_product_analysis'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D3-Q2",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D3Q3_Executor(AdvancedDataFlowExecutor):
+    """D3-Q3: ¿Los productos de género tienen trazabilidad presupuestal (vinculados a códigos """
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D3-Q3 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_baselines_and_targets'),
+            ('IndustrialPolicyProcessor', '_extract_verification_sources'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_compute_proportionality'),
+            ('BayesianNumericalAnalyzer', '_assess_intensity'),
+            ('BayesianNumericalAnalyzer', '_validate_targets'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', '_extract_budget_linkage'),
+            ('PDETMunicipalPlanAnalyzer', '_identify_responsible_entities'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_traceability'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_product_feasibility'),
+            ('PolicyContradictionDetector', '_check_timeframe_realism'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_product_analysis'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D3-Q3",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D3Q4_Executor(AdvancedDataFlowExecutor):
+    """D3-Q4: ¿Existe una relación factible entre la actividad (ej. 'un taller de formación') """
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D3-Q4 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_baselines_and_targets'),
+            ('IndustrialPolicyProcessor', '_extract_verification_sources'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_compute_proportionality'),
+            ('BayesianNumericalAnalyzer', '_assess_intensity'),
+            ('BayesianNumericalAnalyzer', '_validate_targets'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', '_extract_budget_linkage'),
+            ('PDETMunicipalPlanAnalyzer', '_identify_responsible_entities'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_traceability'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_product_feasibility'),
+            ('PolicyContradictionDetector', '_check_timeframe_realism'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_product_analysis'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D3-Q4",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D3Q5_Executor(AdvancedDataFlowExecutor):
+    """D3-Q5: ¿El PDM explica cómo los productos de la política de género (ej. 'mujeres capaci"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D3-Q5 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_baselines_and_targets'),
+            ('IndustrialPolicyProcessor', '_extract_verification_sources'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_compute_proportionality'),
+            ('BayesianNumericalAnalyzer', '_assess_intensity'),
+            ('BayesianNumericalAnalyzer', '_validate_targets'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', '_extract_budget_linkage'),
+            ('PDETMunicipalPlanAnalyzer', '_identify_responsible_entities'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_traceability'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_activity_product_feasibility'),
+            ('PolicyContradictionDetector', '_check_timeframe_realism'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_product_analysis'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D3-Q5",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D4Q1_Executor(AdvancedDataFlowExecutor):
+    """D4-Q1: ¿Los indicadores de resultado para género (ej. 'tasa de participación política',"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D4-Q1 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_result_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_temporal_horizons'),
+            ('IndustrialPolicyProcessor', '_extract_assumptions'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_causal_chain'),
+            ('TeoriaCambio', '_identify_enabling_conditions'),
+            ('TeoriaCambio', '_extract_assumptions'),
+            ('TeoriaCambio', '_validate_ambition'),
+
+            # DB: BayesianMechanismInference
+            ('BayesianMechanismInference', '_test_necessity'),
+            ('BayesianMechanismInference', '_test_sufficiency'),
+            ('BayesianMechanismInference', '_compute_causal_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_result_alignment'),
+            ('PolicyContradictionDetector', '_check_resource_justification'),
+            ('PolicyContradictionDetector', '_compare_benchmarks'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_result_analysis'),
+            ('ReportAssembler', '_generate_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D4-Q1",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D4Q2_Executor(AdvancedDataFlowExecutor):
+    """D4-Q2: ¿Se explicita la cadena causal que lleva a los resultados de género, mencionando"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D4-Q2 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_result_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_temporal_horizons'),
+            ('IndustrialPolicyProcessor', '_extract_assumptions'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_causal_chain'),
+            ('TeoriaCambio', '_identify_enabling_conditions'),
+            ('TeoriaCambio', '_extract_assumptions'),
+            ('TeoriaCambio', '_validate_ambition'),
+
+            # DB: BayesianMechanismInference
+            ('BayesianMechanismInference', '_test_necessity'),
+            ('BayesianMechanismInference', '_test_sufficiency'),
+            ('BayesianMechanismInference', '_compute_causal_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_result_alignment'),
+            ('PolicyContradictionDetector', '_check_resource_justification'),
+            ('PolicyContradictionDetector', '_compare_benchmarks'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_result_analysis'),
+            ('ReportAssembler', '_generate_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D4-Q2",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D4Q3_Executor(AdvancedDataFlowExecutor):
+    """D4-Q3: ¿La ambición de las metas de resultado en materia de género (ej. 'reducir la bre"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D4-Q3 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_result_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_temporal_horizons'),
+            ('IndustrialPolicyProcessor', '_extract_assumptions'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_causal_chain'),
+            ('TeoriaCambio', '_identify_enabling_conditions'),
+            ('TeoriaCambio', '_extract_assumptions'),
+            ('TeoriaCambio', '_validate_ambition'),
+
+            # DB: BayesianMechanismInference
+            ('BayesianMechanismInference', '_test_necessity'),
+            ('BayesianMechanismInference', '_test_sufficiency'),
+            ('BayesianMechanismInference', '_compute_causal_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_result_alignment'),
+            ('PolicyContradictionDetector', '_check_resource_justification'),
+            ('PolicyContradictionDetector', '_compare_benchmarks'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_result_analysis'),
+            ('ReportAssembler', '_generate_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D4-Q3",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D4Q4_Executor(AdvancedDataFlowExecutor):
+    """D4-Q4: ¿Los resultados propuestos para la igualdad de género (ej. 'aumento de la autono"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D4-Q4 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_result_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_temporal_horizons'),
+            ('IndustrialPolicyProcessor', '_extract_assumptions'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_causal_chain'),
+            ('TeoriaCambio', '_identify_enabling_conditions'),
+            ('TeoriaCambio', '_extract_assumptions'),
+            ('TeoriaCambio', '_validate_ambition'),
+
+            # DB: BayesianMechanismInference
+            ('BayesianMechanismInference', '_test_necessity'),
+            ('BayesianMechanismInference', '_test_sufficiency'),
+            ('BayesianMechanismInference', '_compute_causal_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_result_alignment'),
+            ('PolicyContradictionDetector', '_check_resource_justification'),
+            ('PolicyContradictionDetector', '_compare_benchmarks'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_result_analysis'),
+            ('ReportAssembler', '_generate_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D4-Q4",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D4Q5_Executor(AdvancedDataFlowExecutor):
+    """D4-Q5: ¿El plan declara la alineación de sus resultados de género con marcos superiores"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D4-Q5 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_result_indicators'),
+            ('IndustrialPolicyProcessor', '_parse_temporal_horizons'),
+            ('IndustrialPolicyProcessor', '_extract_assumptions'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_causal_chain'),
+            ('TeoriaCambio', '_identify_enabling_conditions'),
+            ('TeoriaCambio', '_extract_assumptions'),
+            ('TeoriaCambio', '_validate_ambition'),
+
+            # DB: BayesianMechanismInference
+            ('BayesianMechanismInference', '_test_necessity'),
+            ('BayesianMechanismInference', '_test_sufficiency'),
+            ('BayesianMechanismInference', '_compute_causal_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', '_validate_result_alignment'),
+            ('PolicyContradictionDetector', '_check_resource_justification'),
+            ('PolicyContradictionDetector', '_compare_benchmarks'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_result_analysis'),
+            ('ReportAssembler', '_generate_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D4-Q5",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D5Q1_Executor(AdvancedDataFlowExecutor):
+    """D5-Q1: ¿El PDM define 'impactos' o 'transformaciones estructurales' de largo plazo en e"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D5-Q1 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_impact_indicators'),
+            ('IndustrialPolicyProcessor', '_identify_structural_transformations'),
+            ('IndustrialPolicyProcessor', '_extract_maturation_timelines'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_long_term_pathway'),
+            ('TeoriaCambio', '_identify_systemic_risks'),
+            ('TeoriaCambio', '_validate_impact_realism'),
+
+            # DB: CausalExtractor
+            ('CausalExtractor', 'extract_causal_mechanism'),
+            ('CausalExtractor', '_identify_indirect_effects'),
+            ('CausalExtractor', '_assess_unintended_consequences'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_validate_proxy_indicators'),
+            ('BayesianNumericalAnalyzer', '_assess_measurement_validity'),
+            ('BayesianNumericalAnalyzer', '_compute_confidence_intervals'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_impact_analysis'),
+            ('ReportAssembler', '_generate_risk_assessment'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D5-Q1",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D5Q2_Executor(AdvancedDataFlowExecutor):
+    """D5-Q2: ¿Se utilizan 'índices' (ej. Índice de Equidad de Género) o 'proxies' para medir """
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D5-Q2 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_impact_indicators'),
+            ('IndustrialPolicyProcessor', '_identify_structural_transformations'),
+            ('IndustrialPolicyProcessor', '_extract_maturation_timelines'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_long_term_pathway'),
+            ('TeoriaCambio', '_identify_systemic_risks'),
+            ('TeoriaCambio', '_validate_impact_realism'),
+
+            # DB: CausalExtractor
+            ('CausalExtractor', 'extract_causal_mechanism'),
+            ('CausalExtractor', '_identify_indirect_effects'),
+            ('CausalExtractor', '_assess_unintended_consequences'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_validate_proxy_indicators'),
+            ('BayesianNumericalAnalyzer', '_assess_measurement_validity'),
+            ('BayesianNumericalAnalyzer', '_compute_confidence_intervals'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_impact_analysis'),
+            ('ReportAssembler', '_generate_risk_assessment'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D5-Q2",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D5Q3_Executor(AdvancedDataFlowExecutor):
+    """D5-Q3: Cuando un impacto en género es difícil de medir (ej. 'cambio en patrones cultura"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D5-Q3 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_impact_indicators'),
+            ('IndustrialPolicyProcessor', '_identify_structural_transformations'),
+            ('IndustrialPolicyProcessor', '_extract_maturation_timelines'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_long_term_pathway'),
+            ('TeoriaCambio', '_identify_systemic_risks'),
+            ('TeoriaCambio', '_validate_impact_realism'),
+
+            # DB: CausalExtractor
+            ('CausalExtractor', 'extract_causal_mechanism'),
+            ('CausalExtractor', '_identify_indirect_effects'),
+            ('CausalExtractor', '_assess_unintended_consequences'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_validate_proxy_indicators'),
+            ('BayesianNumericalAnalyzer', '_assess_measurement_validity'),
+            ('BayesianNumericalAnalyzer', '_compute_confidence_intervals'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_impact_analysis'),
+            ('ReportAssembler', '_generate_risk_assessment'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D5-Q3",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D5Q4_Executor(AdvancedDataFlowExecutor):
+    """D5-Q4: ¿Los impactos en género se alinean con marcos nacionales/globales y consideran '"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D5-Q4 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_impact_indicators'),
+            ('IndustrialPolicyProcessor', '_identify_structural_transformations'),
+            ('IndustrialPolicyProcessor', '_extract_maturation_timelines'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_long_term_pathway'),
+            ('TeoriaCambio', '_identify_systemic_risks'),
+            ('TeoriaCambio', '_validate_impact_realism'),
+
+            # DB: CausalExtractor
+            ('CausalExtractor', 'extract_causal_mechanism'),
+            ('CausalExtractor', '_identify_indirect_effects'),
+            ('CausalExtractor', '_assess_unintended_consequences'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_validate_proxy_indicators'),
+            ('BayesianNumericalAnalyzer', '_assess_measurement_validity'),
+            ('BayesianNumericalAnalyzer', '_compute_confidence_intervals'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_impact_analysis'),
+            ('ReportAssembler', '_generate_risk_assessment'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D5-Q4",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D5Q5_Executor(AdvancedDataFlowExecutor):
+    """D5-Q5: ¿La ambición del impacto para la igualdad de género es realista? Se debe buscar """
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D5-Q5 - FROM CANONICAL CATALOG."""
+        return [
+            # PP: IndustrialPolicyProcessor
+            ('IndustrialPolicyProcessor', 'process'),
+            ('IndustrialPolicyProcessor', '_extract_impact_indicators'),
+            ('IndustrialPolicyProcessor', '_identify_structural_transformations'),
+            ('IndustrialPolicyProcessor', '_extract_maturation_timelines'),
+
+            # TC: TeoriaCambio
+            ('TeoriaCambio', '_build_long_term_pathway'),
+            ('TeoriaCambio', '_identify_systemic_risks'),
+            ('TeoriaCambio', '_validate_impact_realism'),
+
+            # DB: CausalExtractor
+            ('CausalExtractor', 'extract_causal_mechanism'),
+            ('CausalExtractor', '_identify_indirect_effects'),
+            ('CausalExtractor', '_assess_unintended_consequences'),
+
+            # EP: BayesianNumericalAnalyzer
+            ('BayesianNumericalAnalyzer', '_validate_proxy_indicators'),
+            ('BayesianNumericalAnalyzer', '_assess_measurement_validity'),
+            ('BayesianNumericalAnalyzer', '_compute_confidence_intervals'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_impact_analysis'),
+            ('ReportAssembler', '_generate_risk_assessment'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D5-Q5",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D6Q1_Executor(AdvancedDataFlowExecutor):
+    """D6-Q1: ¿Existe una 'teoría de cambio' explícita para la política de género, preferiblem"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D6-Q1 - FROM CANONICAL CATALOG."""
+        return [
+            # TC: TeoriaCambio
+            ('TeoriaCambio', 'build_theory_of_change'),
+            ('TeoriaCambio', '_extract_causal_diagram'),
+            ('TeoriaCambio', '_identify_mediators'),
+            ('TeoriaCambio', '_validate_orden_causal'),
+            ('TeoriaCambio', '_detect_causal_jumps'),
+
+            # DB: BeachEvidentialTest
+            ('BeachEvidentialTest', 'classify_test'),
+            ('BeachEvidentialTest', 'apply_test_logic'),
+            ('BeachEvidentialTest', '_assess_evidence_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', 'detect_contradictions'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+            ('PolicyContradictionDetector', '_suggest_resolutions'),
+            ('PolicyContradictionDetector', '_statistical_significance_test'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
+            ('PDETMunicipalPlanAnalyzer', 'estimate_causal_effects'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_proportionality'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_causal_analysis'),
+            ('ReportAssembler', '_generate_monitoring_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D6-Q1",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D6Q2_Executor(AdvancedDataFlowExecutor):
+    """D6-Q2: ¿Los saltos en la cadena causal de género son proporcionales y realistas (ej. un"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D6-Q2 - FROM CANONICAL CATALOG."""
+        return [
+            # TC: TeoriaCambio
+            ('TeoriaCambio', 'build_theory_of_change'),
+            ('TeoriaCambio', '_extract_causal_diagram'),
+            ('TeoriaCambio', '_identify_mediators'),
+            ('TeoriaCambio', '_validate_orden_causal'),
+            ('TeoriaCambio', '_detect_causal_jumps'),
+
+            # DB: BeachEvidentialTest
+            ('BeachEvidentialTest', 'classify_test'),
+            ('BeachEvidentialTest', 'apply_test_logic'),
+            ('BeachEvidentialTest', '_assess_evidence_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', 'detect_contradictions'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+            ('PolicyContradictionDetector', '_suggest_resolutions'),
+            ('PolicyContradictionDetector', '_statistical_significance_test'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
+            ('PDETMunicipalPlanAnalyzer', 'estimate_causal_effects'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_proportionality'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_causal_analysis'),
+            ('ReportAssembler', '_generate_monitoring_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D6-Q2",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D6Q3_Executor(AdvancedDataFlowExecutor):
+    """D6-Q3: ¿El plan reconoce 'inconsistencias' en su lógica causal para género y propone 'p"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D6-Q3 - FROM CANONICAL CATALOG."""
+        return [
+            # TC: TeoriaCambio
+            ('TeoriaCambio', 'build_theory_of_change'),
+            ('TeoriaCambio', '_extract_causal_diagram'),
+            ('TeoriaCambio', '_identify_mediators'),
+            ('TeoriaCambio', '_validate_orden_causal'),
+            ('TeoriaCambio', '_detect_causal_jumps'),
+
+            # DB: BeachEvidentialTest
+            ('BeachEvidentialTest', 'classify_test'),
+            ('BeachEvidentialTest', 'apply_test_logic'),
+            ('BeachEvidentialTest', '_assess_evidence_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', 'detect_contradictions'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+            ('PolicyContradictionDetector', '_suggest_resolutions'),
+            ('PolicyContradictionDetector', '_statistical_significance_test'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
+            ('PDETMunicipalPlanAnalyzer', 'estimate_causal_effects'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_proportionality'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_causal_analysis'),
+            ('ReportAssembler', '_generate_monitoring_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D6-Q3",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D6Q4_Executor(AdvancedDataFlowExecutor):
+    """D6-Q4: ¿Se describe un sistema de monitoreo para la política de género que incluya 'mec"""
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D6-Q4 - FROM CANONICAL CATALOG."""
+        return [
+            # TC: TeoriaCambio
+            ('TeoriaCambio', 'build_theory_of_change'),
+            ('TeoriaCambio', '_extract_causal_diagram'),
+            ('TeoriaCambio', '_identify_mediators'),
+            ('TeoriaCambio', '_validate_orden_causal'),
+            ('TeoriaCambio', '_detect_causal_jumps'),
+
+            # DB: BeachEvidentialTest
+            ('BeachEvidentialTest', 'classify_test'),
+            ('BeachEvidentialTest', 'apply_test_logic'),
+            ('BeachEvidentialTest', '_assess_evidence_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', 'detect_contradictions'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+            ('PolicyContradictionDetector', '_suggest_resolutions'),
+            ('PolicyContradictionDetector', '_statistical_significance_test'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
+            ('PDETMunicipalPlanAnalyzer', 'estimate_causal_effects'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_proportionality'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_causal_analysis'),
+            ('ReportAssembler', '_generate_monitoring_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D6-Q4",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+
+
+class D6Q5_Executor(AdvancedDataFlowExecutor):
+    """D6-Q5: ¿La lógica causal para la equidad de género considera el contexto, reconociendo """
+
+    def __init__(
+        self,
+        method_executor,
+        signal_registry=None,
+        config: ExecutorConfig | None = None,
+        calibration_orchestrator: "CalibrationOrchestrator | None" = None,
+    ) -> None:
+        super().__init__(method_executor, signal_registry, config, calibration_orchestrator)
+        self._validate_method_sequences()
+        self._validate_calibrations()
+
+    def _get_method_sequence(self) -> list[tuple[str, str]]:
+        """Return method sequence for D6-Q5 - FROM CANONICAL CATALOG."""
+        return [
+            # TC: TeoriaCambio
+            ('TeoriaCambio', 'build_theory_of_change'),
+            ('TeoriaCambio', '_extract_causal_diagram'),
+            ('TeoriaCambio', '_identify_mediators'),
+            ('TeoriaCambio', '_validate_orden_causal'),
+            ('TeoriaCambio', '_detect_causal_jumps'),
+
+            # DB: BeachEvidentialTest
+            ('BeachEvidentialTest', 'classify_test'),
+            ('BeachEvidentialTest', 'apply_test_logic'),
+            ('BeachEvidentialTest', '_assess_evidence_strength'),
+
+            # CD: PolicyContradictionDetector
+            ('PolicyContradictionDetector', 'detect_contradictions'),
+            ('PolicyContradictionDetector', '_detect_numerical_inconsistencies'),
+            ('PolicyContradictionDetector', '_suggest_resolutions'),
+            ('PolicyContradictionDetector', '_statistical_significance_test'),
+
+            # FV: PDETMunicipalPlanAnalyzer
+            ('PDETMunicipalPlanAnalyzer', 'construct_causal_dag'),
+            ('PDETMunicipalPlanAnalyzer', 'estimate_causal_effects'),
+            ('PDETMunicipalPlanAnalyzer', '_validate_proportionality'),
+
+            # RA: ReportAssembler
+            ('ReportAssembler', '_synthesize_causal_analysis'),
+            ('ReportAssembler', '_generate_monitoring_recommendations'),
+        ]
+
+    def execute(self, doc, method_executor):
+        from .answer_assembler import AnswerAssembler
+
+        # Execute methods
+        method_sequence = self._get_method_sequence()
+        method_results = self.execute_with_optimization(doc, method_executor, method_sequence)
+
+        # Assemble doctoral answer
+        assembler = AnswerAssembler()
+        answer = assembler.assemble_answer(
+            question_id="D6-Q5",
+            method_results=method_results,
+            policy_area=getattr(doc, 'policy_area', None)
+        )
+
+        return {
+            "method_results": method_results,
+            "answer": answer
+        }
+
+    def _extract(self, results):
+        vals = [v for v in results.values() if v is not None]
+        return vals[:4] if vals else []
+

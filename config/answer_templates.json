@@ -1,0 +1,1362 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-11-20",
+  "description": "Answer templates for doctoral-level synthesis - COMPLETE with evidence mapping",
+  "templates": {
+    "D1-Q1": {
+      "question_id": "Q001",
+      "question_text": "¿El diagnóstico presenta datos numéricos (tasas de VBG, porcentajes de participación, cifras de brechas salariales) para el área de Derechos de las mujeres e igualdad de género que sirvan como línea base? Se debe verificar la presencia de un año de referencia y la mención de fuentes (ej. DANE, Medicina Legal, Observatorio de Género).",
+      "dimension": "D1",
+      "required_evidence": [
+        "quantitative_data",
+        "sources_found",
+        "baseline_year",
+        "data_quality"
+      ],
+      "evidence_mapping": {
+        "quantitative_data": [
+          "IndustrialPolicyProcessor.quantitative_baseline",
+          "PolicyContradictionDetector.quantitative_claims"
+        ],
+        "sources_found": [
+          "IndustrialPolicyProcessor.source_credibility"
+        ],
+        "baseline_year": [
+          "PolicyContradictionDetector.quantitative_claims.year"
+        ],
+        "data_quality": [
+          "PolicyContradictionDetector.data_quality_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (quantitative_data_count > 0 AND sources_found > 0 AND baseline_year exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D1-Q2": {
+      "question_id": "Q002",
+      "question_text": "¿El texto dimensiona el problema de la desigualdad de género cuantificando la brecha o déficit? Se debe buscar si se mencionan explícitamente limitaciones en los datos, como 'subregistro', 'información insuficiente' o 'vacíos de información'.",
+      "dimension": "D1",
+      "required_evidence": [
+        "quantitative_data",
+        "sources_found",
+        "baseline_year",
+        "data_quality"
+      ],
+      "evidence_mapping": {
+        "quantitative_data": [
+          "IndustrialPolicyProcessor.quantitative_baseline",
+          "PolicyContradictionDetector.quantitative_claims"
+        ],
+        "sources_found": [
+          "IndustrialPolicyProcessor.source_credibility"
+        ],
+        "baseline_year": [
+          "PolicyContradictionDetector.quantitative_claims.year"
+        ],
+        "data_quality": [
+          "PolicyContradictionDetector.data_quality_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (quantitative_data_count > 0 AND sources_found > 0 AND baseline_year exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D1-Q3": {
+      "question_id": "Q003",
+      "question_text": "¿Se identifican en el Plan Plurianual de Inversiones (PPI) o en tablas presupuestales, recursos monetarios (con cifras en $, COP o millones) explícitamente asignados a programas para la equidad de género, la Casa de la Mujer o la atención a VBG?",
+      "dimension": "D1",
+      "required_evidence": [
+        "quantitative_data",
+        "sources_found",
+        "baseline_year",
+        "data_quality"
+      ],
+      "evidence_mapping": {
+        "quantitative_data": [
+          "IndustrialPolicyProcessor.quantitative_baseline",
+          "PolicyContradictionDetector.quantitative_claims"
+        ],
+        "sources_found": [
+          "IndustrialPolicyProcessor.source_credibility"
+        ],
+        "baseline_year": [
+          "PolicyContradictionDetector.quantitative_claims.year"
+        ],
+        "data_quality": [
+          "PolicyContradictionDetector.data_quality_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (quantitative_data_count > 0 AND sources_found > 0 AND baseline_year exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D1-Q4": {
+      "question_id": "Q004",
+      "question_text": "¿El PDM describe las capacidades para gestionar la política de género, mencionando entidades (ej. Secretaría de la Mujer, Comisaría) y sus necesidades? Se debe buscar términos como 'equipo psicosocial', 'protocolo de atención' y si se identifican 'limitaciones' o 'barreras' institucionales.",
+      "dimension": "D1",
+      "required_evidence": [
+        "quantitative_data",
+        "sources_found",
+        "baseline_year",
+        "data_quality"
+      ],
+      "evidence_mapping": {
+        "quantitative_data": [
+          "IndustrialPolicyProcessor.quantitative_baseline",
+          "PolicyContradictionDetector.quantitative_claims"
+        ],
+        "sources_found": [
+          "IndustrialPolicyProcessor.source_credibility"
+        ],
+        "baseline_year": [
+          "PolicyContradictionDetector.quantitative_claims.year"
+        ],
+        "data_quality": [
+          "PolicyContradictionDetector.data_quality_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (quantitative_data_count > 0 AND sources_found > 0 AND baseline_year exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D1-Q5": {
+      "question_id": "Q005",
+      "question_text": "¿El plan justifica su alcance en materia de género mencionando el marco legal (ej. Ley 1257) o reconociendo restricciones explícitas de tipo presupuestal, temporal o de competencias?",
+      "dimension": "D1",
+      "required_evidence": [
+        "quantitative_data",
+        "sources_found",
+        "baseline_year",
+        "data_quality"
+      ],
+      "evidence_mapping": {
+        "quantitative_data": [
+          "IndustrialPolicyProcessor.quantitative_baseline",
+          "PolicyContradictionDetector.quantitative_claims"
+        ],
+        "sources_found": [
+          "IndustrialPolicyProcessor.source_credibility"
+        ],
+        "baseline_year": [
+          "PolicyContradictionDetector.quantitative_claims.year"
+        ],
+        "data_quality": [
+          "PolicyContradictionDetector.data_quality_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (quantitative_data_count > 0 AND sources_found > 0 AND baseline_year exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D2-Q1": {
+      "question_id": "Q006",
+      "question_text": "¿Las actividades para la equidad de género se presentan en un formato estructurado (tabla, cuadro) que incluya columnas para 'responsable', 'producto' o 'entregable', 'cronograma' y 'costo' o 'presupuesto'?",
+      "dimension": "D2",
+      "required_evidence": [
+        "activity_structure",
+        "causal_logic",
+        "target_population",
+        "activity_coherence"
+      ],
+      "evidence_mapping": {
+        "activity_structure": [
+          "PolicyTextProcessor.activities_extracted",
+          "SemanticProcessor.activity_blocks"
+        ],
+        "causal_logic": [
+          "SemanticAnalyzer.causal_logic_analysis"
+        ],
+        "target_population": [
+          "SemanticAnalyzer.target_population"
+        ],
+        "activity_coherence": [
+          "PolicyContradictionDetector.activity_coherence_validation",
+          "TeoriaCambio.activity_chain_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (activity_structure exists AND causal_logic > 0 AND target_population exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D2-Q2": {
+      "question_id": "Q007",
+      "question_text": "¿La descripción de las actividades de género detalla el instrumento ('mediante talleres', 'a través de capital semilla'), la población objetivo ('mujeres rurales', 'madres cabeza de familia') y la lógica causal ('para generar autonomía', 'porque reduce la dependencia')?",
+      "dimension": "D2",
+      "required_evidence": [
+        "activity_structure",
+        "causal_logic",
+        "target_population",
+        "activity_coherence"
+      ],
+      "evidence_mapping": {
+        "activity_structure": [
+          "PolicyTextProcessor.activities_extracted",
+          "SemanticProcessor.activity_blocks"
+        ],
+        "causal_logic": [
+          "SemanticAnalyzer.causal_logic_analysis"
+        ],
+        "target_population": [
+          "SemanticAnalyzer.target_population"
+        ],
+        "activity_coherence": [
+          "PolicyContradictionDetector.activity_coherence_validation",
+          "TeoriaCambio.activity_chain_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (activity_structure exists AND causal_logic > 0 AND target_population exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D2-Q3": {
+      "question_id": "Q008",
+      "question_text": "¿El PDM vincula explícitamente las actividades propuestas con las 'causas raíz' de la desigualdad de género (ej. dependencia económica, patrones culturales) identificadas en el diagnóstico?",
+      "dimension": "D2",
+      "required_evidence": [
+        "activity_structure",
+        "causal_logic",
+        "target_population",
+        "activity_coherence"
+      ],
+      "evidence_mapping": {
+        "activity_structure": [
+          "PolicyTextProcessor.activities_extracted",
+          "SemanticProcessor.activity_blocks"
+        ],
+        "causal_logic": [
+          "SemanticAnalyzer.causal_logic_analysis"
+        ],
+        "target_population": [
+          "SemanticAnalyzer.target_population"
+        ],
+        "activity_coherence": [
+          "PolicyContradictionDetector.activity_coherence_validation",
+          "TeoriaCambio.activity_chain_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (activity_structure exists AND causal_logic > 0 AND target_population exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D2-Q4": {
+      "question_id": "Q009",
+      "question_text": "¿El plan identifica posibles riesgos, 'obstáculos' o 'barreras' en la implementación de las actividades de género (ej. revictimización, baja participación) y propone 'medidas de mitigación'?",
+      "dimension": "D2",
+      "required_evidence": [
+        "activity_structure",
+        "causal_logic",
+        "target_population",
+        "activity_coherence"
+      ],
+      "evidence_mapping": {
+        "activity_structure": [
+          "PolicyTextProcessor.activities_extracted",
+          "SemanticProcessor.activity_blocks"
+        ],
+        "causal_logic": [
+          "SemanticAnalyzer.causal_logic_analysis"
+        ],
+        "target_population": [
+          "SemanticAnalyzer.target_population"
+        ],
+        "activity_coherence": [
+          "PolicyContradictionDetector.activity_coherence_validation",
+          "TeoriaCambio.activity_chain_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (activity_structure exists AND causal_logic > 0 AND target_population exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D2-Q5": {
+      "question_id": "Q010",
+      "question_text": "¿El conjunto de actividades de género demuestra una estrategia coherente? Se debe buscar evidencia de 'complementariedad', 'sinergia', o una 'secuencia' lógica entre ellas.",
+      "dimension": "D2",
+      "required_evidence": [
+        "activity_structure",
+        "causal_logic",
+        "target_population",
+        "activity_coherence"
+      ],
+      "evidence_mapping": {
+        "activity_structure": [
+          "PolicyTextProcessor.activities_extracted",
+          "SemanticProcessor.activity_blocks"
+        ],
+        "causal_logic": [
+          "SemanticAnalyzer.causal_logic_analysis"
+        ],
+        "target_population": [
+          "SemanticAnalyzer.target_population"
+        ],
+        "activity_coherence": [
+          "PolicyContradictionDetector.activity_coherence_validation",
+          "TeoriaCambio.activity_chain_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (activity_structure exists AND causal_logic > 0 AND target_population exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D3-Q1": {
+      "question_id": "Q011",
+      "question_text": "¿Los indicadores de producto para género (ej. mujeres capacitadas, kits entregados) incluyen 'línea base', 'meta' cuantitativa, y 'fuente de verificación'?",
+      "dimension": "D3",
+      "required_evidence": [
+        "product_indicators",
+        "quantifiable_outputs",
+        "financial_allocation",
+        "deliverables"
+      ],
+      "evidence_mapping": {
+        "product_indicators": [
+          "IndustrialPolicyProcessor.product_indicators"
+        ],
+        "quantifiable_outputs": [
+          "PolicyAnalysisEmbedder.embeddings_analysis"
+        ],
+        "financial_allocation": [
+          "PDETMunicipalPlanAnalyzer.financial_tables"
+        ],
+        "deliverables": [
+          "ReportAssembler.product_synthesis"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (product_indicators_count > 0 AND quantifiable_outputs > 0)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D3-Q2": {
+      "question_id": "Q012",
+      "question_text": "¿Las metas de los productos de género (ej. 'cobertura del 15% de mujeres rurales') son proporcionales a la magnitud de la brecha diagnosticada? Se debe buscar si se define la 'intensidad' o 'frecuencia' de la intervención.",
+      "dimension": "D3",
+      "required_evidence": [
+        "product_indicators",
+        "quantifiable_outputs",
+        "financial_allocation",
+        "deliverables"
+      ],
+      "evidence_mapping": {
+        "product_indicators": [
+          "IndustrialPolicyProcessor.product_indicators"
+        ],
+        "quantifiable_outputs": [
+          "PolicyAnalysisEmbedder.embeddings_analysis"
+        ],
+        "financial_allocation": [
+          "PDETMunicipalPlanAnalyzer.financial_tables"
+        ],
+        "deliverables": [
+          "ReportAssembler.product_synthesis"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (product_indicators_count > 0 AND quantifiable_outputs > 0)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D3-Q3": {
+      "question_id": "Q013",
+      "question_text": "¿Los productos de género tienen trazabilidad presupuestal (vinculados a códigos BPIN, PPI) y organizacional (asociados a una 'Secretaría de la Mujer' o dependencia responsable)?",
+      "dimension": "D3",
+      "required_evidence": [
+        "product_indicators",
+        "quantifiable_outputs",
+        "financial_allocation",
+        "deliverables"
+      ],
+      "evidence_mapping": {
+        "product_indicators": [
+          "IndustrialPolicyProcessor.product_indicators"
+        ],
+        "quantifiable_outputs": [
+          "PolicyAnalysisEmbedder.embeddings_analysis"
+        ],
+        "financial_allocation": [
+          "PDETMunicipalPlanAnalyzer.financial_tables"
+        ],
+        "deliverables": [
+          "ReportAssembler.product_synthesis"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (product_indicators_count > 0 AND quantifiable_outputs > 0)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D3-Q4": {
+      "question_id": "Q014",
+      "question_text": "¿Existe una relación factible entre la actividad (ej. 'un taller de formación') y la meta del producto asociado (ej. '5.000 mujeres emprendedoras') para el área de Derechos de las mujeres e igualdad de género? Se debe evaluar si los 'plazos' y recursos son realistas.",
+      "dimension": "D3",
+      "required_evidence": [
+        "product_indicators",
+        "quantifiable_outputs",
+        "financial_allocation",
+        "deliverables"
+      ],
+      "evidence_mapping": {
+        "product_indicators": [
+          "IndustrialPolicyProcessor.product_indicators"
+        ],
+        "quantifiable_outputs": [
+          "PolicyAnalysisEmbedder.embeddings_analysis"
+        ],
+        "financial_allocation": [
+          "PDETMunicipalPlanAnalyzer.financial_tables"
+        ],
+        "deliverables": [
+          "ReportAssembler.product_synthesis"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (product_indicators_count > 0 AND quantifiable_outputs > 0)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D3-Q5": {
+      "question_id": "Q015",
+      "question_text": "¿El PDM explica cómo los productos de la política de género (ej. 'mujeres capacitadas') contribuyen a generar resultados (ej. 'aumento de ingresos')? Se debe buscar la descripción de este 'mecanismo' o 'eslabón' causal.",
+      "dimension": "D3",
+      "required_evidence": [
+        "product_indicators",
+        "quantifiable_outputs",
+        "financial_allocation",
+        "deliverables"
+      ],
+      "evidence_mapping": {
+        "product_indicators": [
+          "IndustrialPolicyProcessor.product_indicators"
+        ],
+        "quantifiable_outputs": [
+          "PolicyAnalysisEmbedder.embeddings_analysis"
+        ],
+        "financial_allocation": [
+          "PDETMunicipalPlanAnalyzer.financial_tables"
+        ],
+        "deliverables": [
+          "ReportAssembler.product_synthesis"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (product_indicators_count > 0 AND quantifiable_outputs > 0)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D4-Q1": {
+      "question_id": "Q016",
+      "question_text": "¿Los indicadores de resultado para género (ej. 'tasa de participación política', 'reducción de la VBG') están definidos con línea base, meta y un horizonte temporal ('cuatrienio', 'para 2027')?",
+      "dimension": "D4",
+      "required_evidence": [
+        "result_indicators",
+        "causal_chain",
+        "mechanism_strength",
+        "benchmarks"
+      ],
+      "evidence_mapping": {
+        "result_indicators": [
+          "IndustrialPolicyProcessor.result_indicators"
+        ],
+        "causal_chain": [
+          "TeoriaCambio.causal_chain"
+        ],
+        "mechanism_strength": [
+          "BayesianMechanismInference.causal_strength",
+          "BayesianMechanismInference.necessity_test",
+          "BayesianMechanismInference.sufficiency_test"
+        ],
+        "benchmarks": [
+          "PolicyContradictionDetector.benchmark_comparison"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (result_indicators_count > 0 AND causal_chain exists AND mechanism_strength > 0.5)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D4-Q2": {
+      "question_id": "Q017",
+      "question_text": "¿Se explicita la cadena causal que lleva a los resultados de género, mencionando los 'supuestos' clave (ej. 'si las mujeres denuncian') o las 'condiciones habilitantes' para que funcione?",
+      "dimension": "D4",
+      "required_evidence": [
+        "result_indicators",
+        "causal_chain",
+        "mechanism_strength",
+        "benchmarks"
+      ],
+      "evidence_mapping": {
+        "result_indicators": [
+          "IndustrialPolicyProcessor.result_indicators"
+        ],
+        "causal_chain": [
+          "TeoriaCambio.causal_chain"
+        ],
+        "mechanism_strength": [
+          "BayesianMechanismInference.causal_strength",
+          "BayesianMechanismInference.necessity_test",
+          "BayesianMechanismInference.sufficiency_test"
+        ],
+        "benchmarks": [
+          "PolicyContradictionDetector.benchmark_comparison"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (result_indicators_count > 0 AND causal_chain exists AND mechanism_strength > 0.5)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D4-Q3": {
+      "question_id": "Q018",
+      "question_text": "¿La ambición de las metas de resultado en materia de género (ej. 'reducir la brecha salarial en 10%') se justifica en función de los recursos asignados, la capacidad institucional o se compara con 'casos' similares?",
+      "dimension": "D4",
+      "required_evidence": [
+        "result_indicators",
+        "causal_chain",
+        "mechanism_strength",
+        "benchmarks"
+      ],
+      "evidence_mapping": {
+        "result_indicators": [
+          "IndustrialPolicyProcessor.result_indicators"
+        ],
+        "causal_chain": [
+          "TeoriaCambio.causal_chain"
+        ],
+        "mechanism_strength": [
+          "BayesianMechanismInference.causal_strength",
+          "BayesianMechanismInference.necessity_test",
+          "BayesianMechanismInference.sufficiency_test"
+        ],
+        "benchmarks": [
+          "PolicyContradictionDetector.benchmark_comparison"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (result_indicators_count > 0 AND causal_chain exists AND mechanism_strength > 0.5)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D4-Q4": {
+      "question_id": "Q019",
+      "question_text": "¿Los resultados propuestos para la igualdad de género (ej. 'aumento de la autonomía económica') 'atienden' o 'abordan' directamente los problemas priorizados en el diagnóstico?",
+      "dimension": "D4",
+      "required_evidence": [
+        "result_indicators",
+        "causal_chain",
+        "mechanism_strength",
+        "benchmarks"
+      ],
+      "evidence_mapping": {
+        "result_indicators": [
+          "IndustrialPolicyProcessor.result_indicators"
+        ],
+        "causal_chain": [
+          "TeoriaCambio.causal_chain"
+        ],
+        "mechanism_strength": [
+          "BayesianMechanismInference.causal_strength",
+          "BayesianMechanismInference.necessity_test",
+          "BayesianMechanismInference.sufficiency_test"
+        ],
+        "benchmarks": [
+          "PolicyContradictionDetector.benchmark_comparison"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (result_indicators_count > 0 AND causal_chain exists AND mechanism_strength > 0.5)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D4-Q5": {
+      "question_id": "Q020",
+      "question_text": "¿El plan declara la alineación de sus resultados de género con marcos superiores como el PND o los ODS (especialmente el ODS 5)?",
+      "dimension": "D4",
+      "required_evidence": [
+        "result_indicators",
+        "causal_chain",
+        "mechanism_strength",
+        "benchmarks"
+      ],
+      "evidence_mapping": {
+        "result_indicators": [
+          "IndustrialPolicyProcessor.result_indicators"
+        ],
+        "causal_chain": [
+          "TeoriaCambio.causal_chain"
+        ],
+        "mechanism_strength": [
+          "BayesianMechanismInference.causal_strength",
+          "BayesianMechanismInference.necessity_test",
+          "BayesianMechanismInference.sufficiency_test"
+        ],
+        "benchmarks": [
+          "PolicyContradictionDetector.benchmark_comparison"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (result_indicators_count > 0 AND causal_chain exists AND mechanism_strength > 0.5)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D5-Q1": {
+      "question_id": "Q021",
+      "question_text": "¿El PDM define 'impactos' o 'transformaciones estructurales' de largo plazo en equidad de género? Se debe verificar si se menciona la ruta desde los resultados y el 'tiempo de maduración' esperado.",
+      "dimension": "D5",
+      "required_evidence": [
+        "impact_pathways",
+        "evidence_strength",
+        "causal_claims",
+        "long_term_effects"
+      ],
+      "evidence_mapping": {
+        "impact_pathways": [
+          "TeoriaCambio.impact_pathways"
+        ],
+        "evidence_strength": [
+          "BeachEvidentialTest.evidence_assessment",
+          "BeachEvidentialTest.test_classification"
+        ],
+        "causal_claims": [
+          "CausalExtractor.causal_claims"
+        ],
+        "long_term_effects": [
+          "PolicyAnalysisEmbedder.impact_embeddings"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (impact_pathways exists AND evidence_strength > 0.6)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D5-Q2": {
+      "question_id": "Q022",
+      "question_text": "¿Se utilizan 'índices' (ej. Índice de Equidad de Género) o 'proxies' para medir los impactos en la política de género, justificando por qué son válidos para 'capturar el mecanismo' de cambio?",
+      "dimension": "D5",
+      "required_evidence": [
+        "impact_pathways",
+        "evidence_strength",
+        "causal_claims",
+        "long_term_effects"
+      ],
+      "evidence_mapping": {
+        "impact_pathways": [
+          "TeoriaCambio.impact_pathways"
+        ],
+        "evidence_strength": [
+          "BeachEvidentialTest.evidence_assessment",
+          "BeachEvidentialTest.test_classification"
+        ],
+        "causal_claims": [
+          "CausalExtractor.causal_claims"
+        ],
+        "long_term_effects": [
+          "PolicyAnalysisEmbedder.impact_embeddings"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (impact_pathways exists AND evidence_strength > 0.6)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D5-Q3": {
+      "question_id": "Q023",
+      "question_text": "Cuando un impacto en género es difícil de medir (ej. 'cambio en patrones culturales'), ¿se recurre a un 'proxy'? Se valora si el texto documenta su 'validez' y reconoce sus 'limitaciones'.",
+      "dimension": "D5",
+      "required_evidence": [
+        "impact_pathways",
+        "evidence_strength",
+        "causal_claims",
+        "long_term_effects"
+      ],
+      "evidence_mapping": {
+        "impact_pathways": [
+          "TeoriaCambio.impact_pathways"
+        ],
+        "evidence_strength": [
+          "BeachEvidentialTest.evidence_assessment",
+          "BeachEvidentialTest.test_classification"
+        ],
+        "causal_claims": [
+          "CausalExtractor.causal_claims"
+        ],
+        "long_term_effects": [
+          "PolicyAnalysisEmbedder.impact_embeddings"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (impact_pathways exists AND evidence_strength > 0.6)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D5-Q4": {
+      "question_id": "Q024",
+      "question_text": "¿Los impactos en género se alinean con marcos nacionales/globales y consideran 'riesgos sistémicos' (ej. crisis económica) que podrían romper el mecanismo causal?",
+      "dimension": "D5",
+      "required_evidence": [
+        "impact_pathways",
+        "evidence_strength",
+        "causal_claims",
+        "long_term_effects"
+      ],
+      "evidence_mapping": {
+        "impact_pathways": [
+          "TeoriaCambio.impact_pathways"
+        ],
+        "evidence_strength": [
+          "BeachEvidentialTest.evidence_assessment",
+          "BeachEvidentialTest.test_classification"
+        ],
+        "causal_claims": [
+          "CausalExtractor.causal_claims"
+        ],
+        "long_term_effects": [
+          "PolicyAnalysisEmbedder.impact_embeddings"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (impact_pathways exists AND evidence_strength > 0.6)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D5-Q5": {
+      "question_id": "Q025",
+      "question_text": "¿La ambición del impacto para la igualdad de género es realista? Se debe buscar si se analizan posibles 'efectos no deseados' (ej. sobrecarga en mujeres) o se declaran 'hipótesis límite'.",
+      "dimension": "D5",
+      "required_evidence": [
+        "impact_pathways",
+        "evidence_strength",
+        "causal_claims",
+        "long_term_effects"
+      ],
+      "evidence_mapping": {
+        "impact_pathways": [
+          "TeoriaCambio.impact_pathways"
+        ],
+        "evidence_strength": [
+          "BeachEvidentialTest.evidence_assessment",
+          "BeachEvidentialTest.test_classification"
+        ],
+        "causal_claims": [
+          "CausalExtractor.causal_claims"
+        ],
+        "long_term_effects": [
+          "PolicyAnalysisEmbedder.impact_embeddings"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (impact_pathways exists AND evidence_strength > 0.6)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D6-Q1": {
+      "question_id": "Q026",
+      "question_text": "¿Existe una 'teoría de cambio' explícita para la política de género, preferiblemente en un 'diagrama', que identifique causas, mediadores y 'supuestos verificables'?",
+      "dimension": "D6",
+      "required_evidence": [
+        "theory_of_change",
+        "causal_diagram",
+        "mechanism_parts",
+        "assumptions"
+      ],
+      "evidence_mapping": {
+        "theory_of_change": [
+          "TeoriaCambio.theory_of_change"
+        ],
+        "causal_diagram": [
+          "TeoriaCambio.causal_diagram"
+        ],
+        "mechanism_parts": [
+          "BeachEvidentialTest.mechanism_assessment",
+          "CausalExtractor.mechanism_parts"
+        ],
+        "assumptions": [
+          "PolicyContradictionDetector.assumptions_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (theory_of_change exists AND causal_diagram exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D6-Q2": {
+      "question_id": "Q027",
+      "question_text": "¿Los saltos en la cadena causal de género son proporcionales y realistas (ej. un taller de 2 horas no genera 'empoderamiento económico total')?",
+      "dimension": "D6",
+      "required_evidence": [
+        "theory_of_change",
+        "causal_diagram",
+        "mechanism_parts",
+        "assumptions"
+      ],
+      "evidence_mapping": {
+        "theory_of_change": [
+          "TeoriaCambio.theory_of_change"
+        ],
+        "causal_diagram": [
+          "TeoriaCambio.causal_diagram"
+        ],
+        "mechanism_parts": [
+          "BeachEvidentialTest.mechanism_assessment",
+          "CausalExtractor.mechanism_parts"
+        ],
+        "assumptions": [
+          "PolicyContradictionDetector.assumptions_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (theory_of_change exists AND causal_diagram exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D6-Q3": {
+      "question_id": "Q028",
+      "question_text": "¿El plan reconoce 'inconsistencias' en su lógica causal para género y propone 'pilotos' o 'pruebas' para 'testear los supuestos' de sus intervenciones?",
+      "dimension": "D6",
+      "required_evidence": [
+        "theory_of_change",
+        "causal_diagram",
+        "mechanism_parts",
+        "assumptions"
+      ],
+      "evidence_mapping": {
+        "theory_of_change": [
+          "TeoriaCambio.theory_of_change"
+        ],
+        "causal_diagram": [
+          "TeoriaCambio.causal_diagram"
+        ],
+        "mechanism_parts": [
+          "BeachEvidentialTest.mechanism_assessment",
+          "CausalExtractor.mechanism_parts"
+        ],
+        "assumptions": [
+          "PolicyContradictionDetector.assumptions_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (theory_of_change exists AND causal_diagram exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D6-Q4": {
+      "question_id": "Q029",
+      "question_text": "¿Se describe un sistema de monitoreo para la política de género que incluya 'mecanismos de corrección', 'retroalimentación' o 'aprendizaje' para adaptar la estrategia en caso de desviaciones?",
+      "dimension": "D6",
+      "required_evidence": [
+        "theory_of_change",
+        "causal_diagram",
+        "mechanism_parts",
+        "assumptions"
+      ],
+      "evidence_mapping": {
+        "theory_of_change": [
+          "TeoriaCambio.theory_of_change"
+        ],
+        "causal_diagram": [
+          "TeoriaCambio.causal_diagram"
+        ],
+        "mechanism_parts": [
+          "BeachEvidentialTest.mechanism_assessment",
+          "CausalExtractor.mechanism_parts"
+        ],
+        "assumptions": [
+          "PolicyContradictionDetector.assumptions_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (theory_of_change exists AND causal_diagram exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    },
+    "D6-Q5": {
+      "question_id": "Q030",
+      "question_text": "¿La lógica causal para la equidad de género considera el contexto, reconociendo 'grupos afectados' (ej. mujeres rurales, víctimas, étnicas) y 'restricciones' territoriales, culturales o normativas?",
+      "dimension": "D6",
+      "required_evidence": [
+        "theory_of_change",
+        "causal_diagram",
+        "mechanism_parts",
+        "assumptions"
+      ],
+      "evidence_mapping": {
+        "theory_of_change": [
+          "TeoriaCambio.theory_of_change"
+        ],
+        "causal_diagram": [
+          "TeoriaCambio.causal_diagram"
+        ],
+        "mechanism_parts": [
+          "BeachEvidentialTest.mechanism_assessment",
+          "CausalExtractor.mechanism_parts"
+        ],
+        "assumptions": [
+          "PolicyContradictionDetector.assumptions_validation"
+        ]
+      },
+      "synthesis_rules": {
+        "verdict": "SI si (theory_of_change exists AND causal_diagram exists)"
+      },
+      "confidence_weights": {
+        "bayesian_posterior": 0.4,
+        "evidence_count": 0.3,
+        "source_credibility": 0.3
+      },
+      "output_format": {
+        "verdict_options": [
+          "SI",
+          "NO",
+          "PARCIAL",
+          "NO_DETERMINABLE"
+        ],
+        "include_citations": true,
+        "include_confidence": true,
+        "include_limitations": true
+      }
+    }
+  }
+}

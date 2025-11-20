@@ -1481,8 +1481,8 @@ class Orchestrator:
         signal_pack = build_signal_pack_from_monolith(policy_area_id, questionnaire=questionnaire)
         logger.info(f"Loaded signal pack for {policy_area_id} with {len(signal_pack.patterns)} patterns.")
 
-        # 3. Instantiate an executor
-        from . import executors
+        # 3. Instantiate an executor (dynamic generation)
+        from . import dynamic_executors as executors
 
         # Simple mock for the signal registry, as the executor expects an object with a 'get' method.
         class MockSignalRegistry:
