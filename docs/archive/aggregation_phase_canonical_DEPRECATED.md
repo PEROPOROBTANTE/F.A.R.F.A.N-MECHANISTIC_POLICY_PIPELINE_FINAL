@@ -56,6 +56,7 @@ The orchestrator supplies the questionnaire monolith once per run; all aggregato
   - `coherence`: inverse standard deviation of member area scores.
   - `variance`: population variance of area scores.
   - `weakest_area`: ID of the lowest-scoring policy area.
+- **Imbalance penalty:** after computing the weighted average, the score is multiplied by `1 - 0.3 * min(std_dev / 3.0, 1)`; this reduces up to 30 % of the score when dispersion reaches the maximum possible standard deviation (3.0). The raw score, penalty factor, and adjusted score are logged inside `validation_details["imbalance_penalty"]`.
 
 ### MacroAggregator
 - Requires the four `ClusterScore` entries plus deduplicated `AreaScore` and `DimensionScore` inputs.

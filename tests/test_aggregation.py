@@ -443,7 +443,8 @@ def test_cluster_aggregation_uses_config_weights():
         ),
     ]
     cluster_score = aggregator.aggregate_cluster(area_scores, {"cluster_id": "CL01"})
-    assert cluster_score.score == pytest.approx(2.6)
+    # Weighted score = 2.6; std dev = 1.0 → penalty factor 0.9 → 2.34
+    assert cluster_score.score == pytest.approx(2.34, rel=1e-3)
 
 
 def test_macro_aggregation_uses_macro_cluster_weights():

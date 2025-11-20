@@ -13,7 +13,7 @@ FAILED_TESTS=0
 
 # TC-001: Dependencies
 echo "Running TC-001: Dependency Verification..."
-if python verify_dependencies.py > /tmp/tc001.log 2>&1; then
+if python3 verify_dependencies.py > /tmp/tc001.log 2>&1; then
     PASSED=$(grep -oP 'Passed: \K\d+(?=/6)' /tmp/tc001.log || echo "0")
     if [ "$PASSED" -ge "5" ]; then
         echo "✓ TC-001 PASSED"

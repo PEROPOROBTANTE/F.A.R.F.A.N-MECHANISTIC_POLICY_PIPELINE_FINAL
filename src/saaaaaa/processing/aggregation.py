@@ -1368,6 +1368,9 @@ class ClusterAggregator:
     - Validate cluster hermeticity
     """
 
+    PENALTY_WEIGHT = 0.3  # Max 30% penalty for extreme imbalance
+    MAX_SCORE = 3.0
+
     def __init__(
         self,
         monolith: dict[str, Any] | None = None,
@@ -1675,6 +1678,11 @@ class ClusterAggregator:
             variance = 0.0
         weakest_area = min(cluster_area_scores, key=lambda a: a.score, default=None)
 
+        std_dev = variance ** 0.5
+        normalized_std = min(std_dev / self.MAX_SCORE, 1.0) if std_dev > 0 else 0.0
+        penalty_factor = 1.0 - (normalized_std * self.PENALTY_WEIGHT)
+        adjusted_score = weighted_score * penalty_factor
+
         validation_details["coherence"] = {
             "value": coherence,
             "interpretation": "high" if coherence > 0.8 else "medium" if coherence > 0.6 else "low"
@@ -1682,17 +1690,23 @@ class ClusterAggregator:
         validation_details["variance"] = variance
         if weakest_area:
             validation_details["weakest_area"] = weakest_area.area_id
+        validation_details["imbalance_penalty"] = {
+            "std_dev": std_dev,
+            "penalty_factor": penalty_factor,
+            "raw_score": weighted_score,
+            "adjusted_score": adjusted_score,
+        }
 
         logger.info(
             f"✓ Cluster {cluster_id} ({cluster_name}): "
-            f"score={weighted_score:.4f}, coherence={coherence:.4f}"
+            f"score={adjusted_score:.4f}, coherence={coherence:.4f}"
         )
 
         return ClusterScore(
             cluster_id=cluster_id,
             cluster_name=cluster_name,
             areas=expected_areas,
-            score=weighted_score,
+            score=adjusted_score,
             coherence=coherence,
             variance=variance,
             weakest_area=weakest_area.area_id if weakest_area else None,

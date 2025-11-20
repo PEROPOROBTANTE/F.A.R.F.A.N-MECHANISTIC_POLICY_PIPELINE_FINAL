@@ -35,7 +35,7 @@ FASE 9:  Ensamblado de Reporte        (_assemble_report)
 FASE 10: Formateo y Exportación       (_format_and_export)             # Dashboard feed
 ```
 
-> **Nota:** Los contratos y algoritmos de las FASES 4‑7 se documentan exclusivamente en `docs/aggregation_phase_canonical.md`. Cualquier ajuste en esas fases debe actualizar ese documento para evitar divergencias.
+> **Nota:** Los contratos y algoritmos de las FASES 4‑7 se documentan exclusivamente en los dossiers bilingües `docs/phases/phase_4/P04-*.md`, `phase_5/P05-*.md`, `phase_6/P06-*.md` y `phase_7/P07-*.md`. Cualquier ajuste debe reflejarse allí antes de tocar código.
 
 **Context Flow**:
 - Phase 0 → `config`
