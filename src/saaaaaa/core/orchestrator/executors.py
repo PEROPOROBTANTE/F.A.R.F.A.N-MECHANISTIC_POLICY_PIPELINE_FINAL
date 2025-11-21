@@ -19,6 +19,9 @@ Usage:
 from typing import Dict, List, Any, Optional
 from abc import ABC, abstractmethod
 
+from saaaaaa.core.orchestrator.core import MethodExecutor
+from saaaaaa.core.orchestrator.factory import build_processor
+
 
 class BaseExecutor(ABC):
     """
@@ -26,9 +29,12 @@ class BaseExecutor(ABC):
     All executors must implement execute() and return structured evidence.
     """
     
-    def __init__(self, executor_id: str, config: Dict[str, Any]):
+    def __init__(self, executor_id: str, config: Dict[str, Any], method_executor: MethodExecutor):
         self.executor_id = executor_id
         self.config = config
+        if not isinstance(method_executor, MethodExecutor):
+            raise RuntimeError("A valid MethodExecutor instance is required for executor injection.")
+        self.method_executor = method_executor
         self.execution_log = []
         
     @abstractmethod
@@ -79,9 +85,23 @@ class BaseExecutor(ABC):
             )
     
     def _get_method(self, class_name: str, method_name: str):
-        """Retrieve method from factory registry - implemented by factory."""
-        # This is a placeholder - actual implementation in factory module
-        raise NotImplementedError("Method injection handled by factory")
+        """Retrieve method using MethodExecutor to enforce routed execution."""
+        if not isinstance(self.method_executor, MethodExecutor):
+            raise RuntimeError(f"Invalid method executor provided: {type(self.method_executor).__name__}")
+
+        def _wrapped(context: Dict[str, Any], **kwargs: Any) -> Any:
+            payload: Dict[str, Any] = {}
+            if context:
+                payload.update(context)
+            if kwargs:
+                payload.update(kwargs)
+            return self.method_executor.execute(
+                class_name=class_name,
+                method_name=method_name,
+                **payload,
+            )
+
+        return _wrapped
 
 
 class ExecutorFailure(Exception):
@@ -2872,6 +2892,16 @@ EXECUTOR_REGISTRY = {
 # PHASE 2 ORCHESTRATION
 # =============================================================================
 
+
+def _build_method_executor() -> MethodExecutor:
+    """Construct a canonical MethodExecutor via the factory wiring."""
+    bundle = build_processor()
+    method_executor = getattr(bundle, "method_executor", None)
+    if not isinstance(method_executor, MethodExecutor):
+        raise RuntimeError("ProcessorBundle did not provide a valid MethodExecutor instance.")
+    return method_executor
+
+
 def run_phase2_executors(context_package: Dict[str, Any], 
                          policy_areas: List[str]) -> Dict[str, Any]:
     """
@@ -2885,6 +2915,7 @@ def run_phase2_executors(context_package: Dict[str, Any],
         Dict mapping policy_area -> executor_id -> raw_evidence
     """
     results = {}
+    method_executor = _build_method_executor()
     
     for policy_area in policy_areas:
         print(f"\n{'='*80}")
@@ -2905,7 +2936,7 @@ def run_phase2_executors(context_package: Dict[str, Any],
             try:
                 # Instantiate executor with config
                 config = load_executor_config(executor_id)
-                executor = executor_class(executor_id, config)
+                executor = executor_class(executor_id, config, method_executor=method_executor)
                 
                 # Execute and collect results
                 result = executor.execute(area_context)
