@@ -25,6 +25,11 @@ jobs:
           pip install -r requirements-dev.txt
           pip install -e .
 
+      - name: Orchestrator import sanity
+        run: |
+          python -c "import saaaaaa.core.orchestrator; print('✓ orchestrator package imports cleanly')"
+          pytest tests/test_orchestrator_imports.py -q
+
       - name: Validate wiring system
         run: python scripts/validate_wiring_system.py
 

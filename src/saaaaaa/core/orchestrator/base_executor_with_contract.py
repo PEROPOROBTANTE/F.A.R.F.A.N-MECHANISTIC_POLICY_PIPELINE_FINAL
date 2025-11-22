@@ -2,14 +2,19 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jsonschema import Draft7Validator
 
 from saaaaaa.config.paths import PROJECT_ROOT
-from saaaaaa.core.orchestrator.core import MethodExecutor, PreprocessedDocument
 from saaaaaa.core.orchestrator.evidence_assembler import EvidenceAssembler
 from saaaaaa.core.orchestrator.evidence_validator import EvidenceValidator
+
+if TYPE_CHECKING:
+    from saaaaaa.core.orchestrator.core import MethodExecutor, PreprocessedDocument
+else:  # pragma: no cover - runtime avoids import to break cycles
+    MethodExecutor = Any
+    PreprocessedDocument = Any
 
 
 class BaseExecutorWithContract(ABC):
@@ -26,7 +31,14 @@ class BaseExecutorWithContract(ABC):
         questionnaire_provider: Any,
         calibration_orchestrator: Any | None = None,
     ) -> None:
-        if not isinstance(method_executor, MethodExecutor):
+        try:
+            from saaaaaa.core.orchestrator.core import MethodExecutor as _MethodExecutor
+        except Exception as exc:  # pragma: no cover - defensive guard
+            raise RuntimeError(
+                "Failed to import MethodExecutor for BaseExecutorWithContract invariants. "
+                "Ensure saaaaaa.core.orchestrator.core is importable before constructing contract executors."
+            ) from exc
+        if not isinstance(method_executor, _MethodExecutor):
             raise RuntimeError("A valid MethodExecutor instance is required for contract executors.")
         self.method_executor = method_executor
         self.signal_registry = signal_registry

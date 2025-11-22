@@ -6,13 +6,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .questionnaire import CanonicalQuestionnaire
 
-# Import utilities from submodules
-from .contract_loader import (
-    JSONContractLoader,
-    LoadError,
-    LoadResult,
-)
-
 # Import core classes from the refactored package
 from .core import (
     AbortRequested,
@@ -41,9 +34,6 @@ __all__ = [
     "ProvenanceDAG",
     "ProvenanceNode",
     "get_global_registry",
-    "JSONContractLoader",
-    "LoadError",
-    "LoadResult",
     "Orchestrator",
     "MethodExecutor",
     "PreprocessedDocument",
