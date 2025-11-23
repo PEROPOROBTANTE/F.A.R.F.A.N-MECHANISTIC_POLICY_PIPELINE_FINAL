@@ -51,6 +51,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from saaaaaa.core.orchestrator.factory import build_processor
 from saaaaaa.core.phases.phase_protocol import (
     ContractValidationResult,
     PhaseManifestBuilder,
@@ -64,6 +65,7 @@ from saaaaaa.core.phases.phase0_input_validation import (
 from saaaaaa.core.phases.phase1_spc_ingestion import (
     Phase1SPCIngestionContract,
 )
+from saaaaaa.core.phases.phase2_types import validate_phase2_result
 
 logger = logging.getLogger(__name__)
 
@@ -286,9 +288,6 @@ class PhaseOrchestrator:
             # --- Imports for Phase 2 Integration ---
             from datetime import datetime, timedelta, timezone
 
-            from saaaaaa.core.orchestrator.factory import build_processor
-            from saaaaaa.core.phases.phase2_types import Phase2Result
-
             # --- Execute Core Orchestrator ---
             processor = build_processor()
             p2_block_started_at = datetime.now(timezone.utc)
@@ -300,27 +299,31 @@ class PhaseOrchestrator:
 
             # --- Process and Record Phase 2 ---
             phase2_success = False
-            phase2_present_in_results = False
+            phase2_errors: list[str] = []
+            phase2_questions: list[dict[str, Any]] | None = None
+
             if len(core_results) >= 3:
-                phase2_present_in_results = True
                 phase2_core = core_results[2]  # FASE 2 - Micro Preguntas
-                result.phase2_result = phase2_data = (
-                    phase2_core.data if phase2_core.success else None
-                )
+                result.phase2_result = phase2_core.data if phase2_core.success else None
 
-                # INVARIANT: Phase 2 must produce a non-empty list of questions
-                phase2_questions_ok = (
-                    isinstance(phase2_data, dict)
-                    and isinstance(phase2_data.get("questions"), list)
-                    and len(phase2_data["questions"]) > 0
-                )
-
-                phase2_success = bool(phase2_core.success and phase2_questions_ok)
+                if phase2_core.success:
+                    is_valid, validation_errors, normalized_questions = validate_phase2_result(
+                        phase2_core.data
+                    )
+                    phase2_questions = normalized_questions
+                    if not is_valid:
+                        phase2_errors.extend(validation_errors)
+                        phase2_errors.append(
+                            "Phase 2 failed structural invariant: questions list is empty or missing."
+                        )
+                    phase2_success = phase2_core.success and is_valid
+                else:
+                    phase2_errors.append(
+                        f"Core phase 2 returned error: {phase2_core.error}"
+                    )
 
                 # --- Create Manifest Entry for Phase 2 ---
-                p2_error_msg = str(phase2_core.error) if phase2_core.error else None
-                if phase2_core.success and not phase2_questions_ok:
-                    p2_error_msg = "Phase 2 failed structural invariant: questions list is empty or missing."
+                p2_error_msg = "; ".join(phase2_errors) if phase2_errors else None
 
                 # Approximate start/end times for the manifest metadata
                 p2_duration = timedelta(milliseconds=phase2_core.duration_ms)
@@ -335,7 +338,7 @@ class PhaseOrchestrator:
                     finished_at=p2_block_finished_at.isoformat(),
                 )
 
-                # Create dummy validation results to satisfy the manifest builder
+                # Create validation results to satisfy the manifest builder
                 dummy_input_validation = ContractValidationResult(
                     passed=True,
                     contract_type="input",
@@ -345,7 +348,7 @@ class PhaseOrchestrator:
                     passed=phase2_success,
                     contract_type="output",
                     phase_name="phase2_microquestions",
-                    errors=[p2_error_msg] if p2_error_msg else [],
+                    errors=phase2_errors,
                 )
 
                 self.manifest_builder.record_phase(
@@ -356,6 +359,9 @@ class PhaseOrchestrator:
                     invariants_checked=["questions_are_present_and_non_empty"],
                     artifacts=[],
                 )
+                self.manifest_builder.phases["phase2_microquestions"]["question_count"] = len(phase2_questions or [])
+                if phase2_errors:
+                    self.manifest_builder.phases["phase2_microquestions"]["errors"] = list(phase2_errors)
 
                 if not phase2_success:
                     error_msg = f"Core Orchestrator Phase 2 failed: {p2_error_msg}"
@@ -364,6 +370,7 @@ class PhaseOrchestrator:
                     result.phases_failed += 1
                 else:
                     # Only add core result count if Phase 2 was successful
+                    result.phase2_result = {"questions": phase2_questions or []}
                     result.phases_completed += len(core_results)
                     logger.info(
                         f"Core Orchestrator completed {len(core_results)} phases successfully"
@@ -392,6 +399,8 @@ class PhaseOrchestrator:
                     invariants_checked=[],
                     artifacts=[],
                 )
+                self.manifest_builder.phases["phase2_microquestions"]["question_count"] = 0
+                self.manifest_builder.phases["phase2_microquestions"]["errors"] = [missing_p2_error]
 
 
             # ================================================================
@@ -429,6 +438,9 @@ class PhaseOrchestrator:
         finally:
             # Always generate manifest
             result.manifest = self.manifest_builder.to_dict()
+            phase2_entry = result.manifest.get("phases", {}).get("phase2_microquestions")
+            if phase2_entry is not None:
+                result.manifest["phases"]["phase2"] = phase2_entry
 
             # Save manifest if artifacts_dir provided
             if artifacts_dir:

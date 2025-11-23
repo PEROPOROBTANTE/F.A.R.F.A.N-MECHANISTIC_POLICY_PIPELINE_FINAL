@@ -1690,6 +1690,7 @@ class StrategicChunkingSystem:
         self._temporal_analyzer = None  # Temporal dynamics
         self._discourse_analyzer = None  # Discourse markers
         self._strategic_integrator = None  # Cross-reference integration
+        self._causal_analyzer = None  # Causal chain analyzer (lazy-loaded)
         
         # Modelo para clasificación de tipo de chunk
         self.chunk_classifier = None
@@ -1730,12 +1731,10 @@ class StrategicChunkingSystem:
     
     @property
     def causal_analyzer(self):
-        """
-        CANONICAL REPLACEMENT: Use policy_processor for causal extraction.
-        Kept for backward compatibility but delegates to canonical component.
-        """
-        # Return canonical policy processor which has causal extraction
-        return self.policy_processor
+        """Lazy-load causal chain analyzer"""
+        if self._causal_analyzer is None:
+            self._causal_analyzer = CausalChainAnalyzer(self)
+        return self._causal_analyzer
     
     @property
     def kg_builder(self):

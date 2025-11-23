@@ -11,7 +11,7 @@ Validates that the `PhaseOrchestrator` correctly:
 """
 
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 from pathlib import Path
 
 # Types to be tested
@@ -37,6 +37,7 @@ def mock_build_processor():
         mock_processor = MagicMock()
         mock_core_orchestrator = MagicMock()
         mock_processor.orchestrator = mock_core_orchestrator
+        mock_core_orchestrator.process_development_plan_async = AsyncMock()
         mock_build.return_value = mock_processor
         yield mock_core_orchestrator
 
@@ -68,12 +69,12 @@ async def test_phase2_manifest_success(mock_build_processor):
     # Assert
     assert result.success is True
     manifest = result.manifest
-    
     assert "phase2_microquestions" in manifest["phases"]
     phase2_manifest_entry = manifest["phases"]["phase2_microquestions"]
-    
+
     assert phase2_manifest_entry["status"] == "success"
     assert phase2_manifest_entry["error"] is None
+    assert phase2_manifest_entry.get("question_count", 0) >= 1
     assert "questions_are_present_and_non_empty" in phase2_manifest_entry["invariants_checked"]
     assert phase2_manifest_entry["invariants_satisfied"] is True
 
@@ -107,9 +108,10 @@ async def test_phase2_manifest_failure_structural_invariant(mock_build_processor
     
     assert "phase2_microquestions" in manifest["phases"]
     phase2_manifest_entry = manifest["phases"]["phase2_microquestions"]
-    
+
     assert phase2_manifest_entry["status"] == "failed"
     assert "questions list is empty or missing" in phase2_manifest_entry["error"]
+    assert phase2_manifest_entry.get("question_count", 0) == 0
     assert phase2_manifest_entry["invariants_satisfied"] is False
 
 @pytest.mark.asyncio
@@ -142,7 +144,8 @@ async def test_phase2_manifest_failure_internal_error(mock_build_processor):
     
     assert "phase2_microquestions" in manifest["phases"]
     phase2_manifest_entry = manifest["phases"]["phase2_microquestions"]
-    
+
     assert phase2_manifest_entry["status"] == "failed"
     assert "Internal timeout" in phase2_manifest_entry["error"]
+    assert phase2_manifest_entry.get("question_count", 0) == 0
     assert phase2_manifest_entry["invariants_satisfied"] is False

@@ -9,7 +9,7 @@ Validates that `scripts/run_policy_pipeline_verified.py`:
 4.  Propagates Phase 2 structural invariant failures as a pipeline failure.
 """
 import pytest
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock, AsyncMock, ANY
 from pathlib import Path
 import json
 
@@ -42,6 +42,7 @@ def mock_core_orchestrator():
         mock_processor = MagicMock()
         mock_core_orchestrator = MagicMock()
         mock_processor.orchestrator = mock_core_orchestrator
+        mock_core_orchestrator.process_development_plan_async = AsyncMock()
         mock_build.return_value = mock_processor
         yield mock_core_orchestrator
 
@@ -52,12 +53,21 @@ def runner_instance(tmp_path):
     pdf_path.touch()
     questionnaire_path = tmp_path / "questionnaire.json"
     questionnaire_path.touch()
+    artifact_path = tmp_path / "artifacts" / "dummy.json"
+    artifact_path.parent.mkdir(parents=True, exist_ok=True)
+    artifact_path.write_text("{}", encoding="utf-8")
     
+    preprocessed_mock = MagicMock()
+    preprocessed_mock.chunks = [1, 2, 3, 4, 5]
+    preprocessed_mock.processing_mode = "chunked"
+    preprocessed_mock.sentences = ["one"]
+    preprocessed_mock.raw_text = "text"
+
     # Mock away the parts of the runner we don't want to execute
     with patch.object(VerifiedPipelineRunner, 'verify_input', return_value=True), \
          patch.object(VerifiedPipelineRunner, 'run_spc_ingestion', return_value=MagicMock()), \
-         patch.object(VerifiedPipelineRunner, 'run_cpp_adapter', return_value=MagicMock()), \
-         patch.object(VerifiedPipelineRunner, 'save_artifacts', return_value=([], {{}})):
+         patch.object(VerifiedPipelineRunner, 'run_cpp_adapter', return_value=preprocessed_mock), \
+         patch.object(VerifiedPipelineRunner, 'save_artifacts', return_value=([str(artifact_path)], {str(artifact_path): "fakehash"})):
 
         runner = VerifiedPipelineRunner(
             plan_pdf_path=pdf_path,
@@ -93,6 +103,7 @@ async def test_runner_success_with_valid_phase2(runner_instance, mock_core_orche
     with open(manifest_path) as f:
         manifest = json.load(f)
     assert manifest["success"] is True
+    assert manifest["phases"]["phase2"]["success"] is True
 
 @pytest.mark.asyncio
 async def test_runner_fails_on_phase2_structural_invariant(runner_instance, mock_core_orchestrator):
@@ -122,6 +133,7 @@ async def test_runner_fails_on_phase2_structural_invariant(runner_instance, mock
     with open(manifest_path) as f:
         manifest = json.load(f)
     assert manifest["success"] is False
+    assert manifest["phases"]["phase2"]["success"] is False
     assert "questions list is empty or missing" in manifest["errors"][0]
 
 @pytest.mark.asyncio
@@ -152,6 +164,7 @@ async def test_runner_fails_on_phase2_internal_error(runner_instance, mock_core_
     with open(manifest_path) as f:
         manifest = json.load(f)
     assert manifest["success"] is False
+    assert manifest["phases"]["phase2"]["success"] is False
     assert "Phase 2 failed internally" in manifest["errors"][0]
 
 @pytest.mark.asyncio
@@ -180,4 +193,5 @@ async def test_runner_fails_if_phase2_missing_from_results(runner_instance, mock
     with open(manifest_path) as f:
         manifest = json.load(f)
     assert manifest["success"] is False
+    assert manifest["phases"]["phase2"]["success"] is False
     assert "did not produce a result for Phase 2" in manifest["errors"][0]

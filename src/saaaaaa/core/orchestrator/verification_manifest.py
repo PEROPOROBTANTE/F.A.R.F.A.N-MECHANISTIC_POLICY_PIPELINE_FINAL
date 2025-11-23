@@ -260,7 +260,12 @@ class VerificationManifest:
         if error:
             phase_data["error"] = error
 
-        self.manifest_data["phases"].append(phase_data)
+        container = self.manifest_data.get("phases")
+        if isinstance(container, dict):
+            entries = container.setdefault("entries", [])
+            entries.append(phase_data)
+        else:
+            container.append(phase_data)
         return self
 
     def add_artifact(

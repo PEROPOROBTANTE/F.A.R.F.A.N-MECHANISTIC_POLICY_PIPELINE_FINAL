@@ -63,6 +63,7 @@ from saaaaaa.core.orchestrator.verification_manifest import (
     VerificationManifest as VerificationManifestBuilder,
     verify_manifest_integrity
 )
+from saaaaaa.core.phases.phase2_types import validate_phase2_result
 from saaaaaa.core.orchestrator.versions import get_all_versions
 
 
@@ -125,6 +126,8 @@ class VerifiedPipelineRunner:
         self.policy_unit_id = f"policy_unit::{self.plan_pdf_path.stem}"
         self.correlation_id = self.execution_id
         self.versions = get_all_versions()
+        self.phase2_report: dict[str, Any] | None = None
+        self._last_manifest_success: bool = False
 
         # Set questionnaire path (explicit input, SIN_CARRETA compliance)
         if questionnaire_path is None:
@@ -380,27 +383,35 @@ class VerifiedPipelineRunner:
 
             # JOBFRONT 3: Verify Phase 2 (Microquestions) success
             phase2_ok = False
+            phase2_report = {"success": False, "question_count": 0, "errors": []}
             if len(results) >= 3:
                 phase2_result = results[2]  # This is a PhaseResult dataclass
                 if phase2_result.success:
-                    phase2_data = phase2_result.data
-                    # Structural invariant check
-                    if (isinstance(phase2_data, dict) and
-                        isinstance(phase2_data.get("questions"), list) and
-                        len(phase2_data["questions"]) > 0):
+                    is_valid, validation_errors, normalized_questions = validate_phase2_result(
+                        phase2_result.data
+                    )
+                    if is_valid:
                         phase2_ok = True
+                        phase2_report["success"] = True
+                        phase2_report["question_count"] = len(normalized_questions or [])
                     else:
                         error_msg = "Orchestrator Phase 2 failed structural invariant: questions list is empty or missing."
+                        phase2_report["errors"].extend(validation_errors or [])
+                        phase2_report["errors"].append(error_msg)
                         self.log_claim("error", "orchestrator", error_msg, {"phase_id": phase2_result.phase_id})
                         self.errors.append(error_msg)
                 else:
                     error_msg = f"Orchestrator Phase 2 failed internally: {phase2_result.error}"
+                    phase2_report["errors"].append(error_msg)
                     self.log_claim("error", "orchestrator", error_msg, {"phase_id": phase2_result.phase_id})
                     self.errors.append(error_msg)
             else:
                 error_msg = "Orchestrator did not produce a result for Phase 2."
+                phase2_report["errors"].append(error_msg)
                 self.log_claim("error", "orchestrator", error_msg)
                 self.errors.append(error_msg)
+
+            self.phase2_report = phase2_report
 
             if not phase2_ok:
                 # Signal failure as per this script's convention
@@ -423,6 +434,8 @@ class VerifiedPipelineRunner:
             self.log_claim("error", "orchestrator", error_msg,
                           {"traceback": traceback.format_exc()})
             self.errors.append(error_msg)
+            if self.phase2_report is None:
+                self.phase2_report = {"success": False, "question_count": 0, "errors": [error_msg]}
             return None
     
     def save_artifacts(self, cpp: Any, preprocessed_doc: Any, 
@@ -762,6 +775,15 @@ class VerifiedPipelineRunner:
             if chunk_count < 5:
                 hostile_failures.append(f"chunk_graph too small: {chunk_count} < 5")
 
+        phase2_entry = {
+            "name": "Phase 2 – Micro Questions",
+            "success": bool(self.phase2_report and self.phase2_report.get("success")),
+            "question_count": (self.phase2_report or {}).get("question_count", 0),
+            "errors": list((self.phase2_report or {}).get("errors", [])),
+        }
+        if not phase2_entry["success"] and not phase2_entry["errors"]:
+            phase2_entry["errors"].append("Phase 2 not executed")
+
         # Determine success based on strict criteria + hostile invariants
         success = all(
             [
@@ -770,6 +792,7 @@ class VerifiedPipelineRunner:
                 len(self.errors) == 0,
                 len(artifacts) > 0,
                 len(hostile_failures) == 0,
+                phase2_entry["success"],
             ]
         )
 
@@ -783,6 +806,7 @@ class VerifiedPipelineRunner:
 
         builder = self.manifest_builder
         builder.manifest_data["versions"] = dict(self.versions)
+        self._last_manifest_success = success
         builder.set_success(success)
         builder.set_pipeline_hash(getattr(self, "input_pdf_sha256", ""))
         builder.set_environment()
@@ -822,6 +846,9 @@ class VerifiedPipelineRunner:
                 chunk_strategy="semantic",
                 chunk_overlap=50,
             )
+
+        builder.manifest_data.setdefault("phases", {})
+        builder.manifest_data["phases"]["phase2"] = phase2_entry
 
         # Phase metadata
         duration_seconds = (
@@ -973,13 +1000,13 @@ class VerifiedPipelineRunner:
         self.log_claim("complete", "pipeline", 
                       "Pipeline execution completed",
                       {
-                          "success": self.phases_failed == 0,
+                          "success": self._last_manifest_success,
                           "phases_completed": self.phases_completed,
                           "phases_failed": self.phases_failed,
                           "manifest_path": str(manifest_path)
                       })
         
-        return self.phases_failed == 0
+        return bool(self._last_manifest_success)
 
 
 async def main():
