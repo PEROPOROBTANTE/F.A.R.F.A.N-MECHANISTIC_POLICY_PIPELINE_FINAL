@@ -366,9 +366,22 @@ class TestSignalSeeding:
             count = limit or 4
             return [f"{policy_area_id.lower()}_pattern_{i}" for i in range(count)]
 
-    def test_seed_signals_public_seeds_all_canonical_areas(self):
+    def test_seed_signals_public_seeds_all_canonical_areas(self, tmp_path):
         """seed_signals_public should seed all canonical policy areas and aliases."""
-        bootstrap = WiringBootstrap(flags=WiringFeatureFlags())
+        monolith_path = tmp_path / "monolith.json"
+        monolith_path.touch()
+        executor_path = tmp_path / "executor.json"
+        executor_path.touch()
+
+        bootstrap = WiringBootstrap(
+            questionnaire_path=monolith_path,
+            questionnaire_hash="dummy_hash",
+            executor_config_path=executor_path,
+            calibration_profile="default",
+            abort_on_insufficient=False,
+            resource_limits={},
+            flags=WiringFeatureFlags()
+        )
         client = SignalClient(base_url="memory://")
         registry = SignalRegistry()
         provider = self._StubProvider()

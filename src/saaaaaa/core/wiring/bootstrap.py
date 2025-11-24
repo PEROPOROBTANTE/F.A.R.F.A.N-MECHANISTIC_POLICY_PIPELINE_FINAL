@@ -47,6 +47,7 @@ except Exception:  # pragma: no cover - only during stripped installs
 
 from .errors import MissingDependencyError, WiringInitializationError
 from .feature_flags import WiringFeatureFlags
+from .phase_0_validator import Phase0Validator
 from .validation import WiringValidator
 
 logger = structlog.get_logger(__name__)
@@ -77,8 +78,8 @@ class WiringComponents:
     arg_router: ExtendedArgRouter
     class_registry: dict[str, type]
     validator: WiringValidator
-    calibration_orchestrator: "_CalibrationOrchestrator | None" = None
     flags: WiringFeatureFlags
+    calibration_orchestrator: "_CalibrationOrchestrator | None" = None
     init_hashes: dict[str, str] = field(default_factory=dict)
 
 
@@ -183,16 +184,31 @@ class WiringBootstrap:
 
     def __init__(
         self,
-        questionnaire_path: str | Path | None = None,
+        questionnaire_path: str | Path,
+        questionnaire_hash: str,
+        executor_config_path: str | Path,
+        calibration_profile: str,
+        abort_on_insufficient: bool,
+        resource_limits: dict[str, int],
         flags: WiringFeatureFlags | None = None,
     ) -> None:
         """Initialize bootstrap engine.
 
         Args:
-            questionnaire_path: Path to questionnaire monolith JSON
-            flags: Feature flags (defaults to environment)
+            questionnaire_path: Path to questionnaire monolith JSON.
+            questionnaire_hash: Expected SHA-256 hash of the monolith.
+            executor_config_path: Path to the executor configuration.
+            calibration_profile: The calibration profile to use.
+            abort_on_insufficient: Flag to abort on insufficient data.
+            resource_limits: Resource limit settings.
+            flags: Feature flags (defaults to environment).
         """
         self.questionnaire_path = questionnaire_path
+        self.questionnaire_hash = questionnaire_hash
+        self.executor_config_path = executor_config_path
+        self.calibration_profile = calibration_profile
+        self.abort_on_insufficient = abort_on_insufficient
+        self.resource_limits = resource_limits
         self.flags = flags or WiringFeatureFlags.from_env()
         self._start_time = time.time()
 
@@ -219,6 +235,20 @@ class WiringBootstrap:
         logger.info("wiring_bootstrap_start")
 
         try:
+            # Phase 0: Validate configuration contract
+            logger.info("wiring_init_phase", phase="phase_0_validation")
+            phase_0_validator = Phase0Validator()
+            raw_config = {
+                "monolith_path": self.questionnaire_path,
+                "questionnaire_hash": self.questionnaire_hash,
+                "executor_config_path": self.executor_config_path,
+                "calibration_profile": self.calibration_profile,
+                "abort_on_insufficient": self.abort_on_insufficient,
+                "resource_limits": self.resource_limits,
+            }
+            phase_0_validator.validate(raw_config)
+            logger.info("phase_0_validation_passed")
+
             # Phase 1: Load resources
             provider = self._load_resources()
 
@@ -640,7 +670,7 @@ class WiringBootstrap:
         canonical_count = 0
         alias_count = 0
 
-        for area_id, meta in CANONICAL_POLICY_AREA_DEFINITIONS.items():
+        for area_id, meta in sorted(CANONICAL_POLICY_AREA_DEFINITIONS.items()):
             pack = self._build_signal_pack(provider, area_id, meta)
             self._register_signal_pack(memory_source, registry, pack)
             canonical_count += 1

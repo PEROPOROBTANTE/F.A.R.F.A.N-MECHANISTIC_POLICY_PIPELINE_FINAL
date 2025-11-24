@@ -1965,6 +1965,7 @@ class Orchestrator:
         duration = time.perf_counter() - start
         instrumentation.increment(latency=duration)
 
+        aggregation_settings = AggregationSettings.from_monolith(monolith)
         config = {
             "catalog": self.catalog,
             "monolith": monolith,
@@ -1975,6 +1976,7 @@ class Orchestrator:
             "structure_report": structure_report,
             "method_summary": method_summary,
             "schema_report": schema_report,
+            "_aggregation_settings": aggregation_settings,
         }
 
         return config
