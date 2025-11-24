@@ -3109,119 +3109,64 @@ class StrategicChunkingSystem:
 
     def generate_smart_chunks(self, document_text: str, document_metadata: Dict) -> List[SmartPolicyChunk]:
         """
-        Main pipeline phase: Generate Smart Policy Chunks with full analysis.
-        
-        Inputs:
-            document_text (str): Raw policy document text
-            document_metadata (Dict): Document metadata (ID, title, etc.)
-        Outputs:
-            List[SmartPolicyChunk]: Validated, deduplicated, and ranked chunks
+        Main pipeline phase: Generate 60 Smart Policy Chunks aligned with the P01-ES v1.0 spec.
+
+        This streamlined pipeline executes the structured (Policy Area x Dimension)
+        segmentation and bypasses the subsequent complex analysis to ensure the
+        output is exactly the 60 thematically isolated chunks required by the orchestrator.
         """
-        self.logger.info("Starting Smart Chunks v3.0 pipeline")
-        
-        # FASE 0: Language detection and model selection
-        detected_lang = self.detect_language(document_text)
-        self.select_embedding_model_for_language(detected_lang)
-        document_metadata['detected_language'] = detected_lang
-        
+        self.logger.info("Starting Smart Chunks v3.0 pipeline (P01-ES v1.0 Compliant Mode)")
+
         # FASE 1: Preprocesamiento avanzado
         normalized_text = self._advanced_preprocessing(document_text)
-        
-        # FASE 2: Análisis estructural y de jerarquía
+
+        # FASE 2: Análisis estructural y de jerarquía (needed for segmentation context)
         structural_analysis = self._extract_document_structure(normalized_text)
         structural_analysis['raw_text'] = document_text
-        
-        # FASE 3: Modelado de tópicos y KG global
-        document_parts = re.split(r'\n\n', normalized_text)
-        global_topics = self.topic_modeler.extract_global_topics(document_parts)
-        global_kg = self.kg_builder.build_policy_knowledge_graph(normalized_text)
-        
+
         # FASE 4: Structured (PA × DIM) segmentation - EXACTLY 60 chunks
-        # REPLACED: Old semantic segmentation with structured extraction
-        # OLD: context_preserved_segments = self.context_preserver.preserve_strategic_context(...)
-        context_preserved_segments = self._generate_60_structured_segments(
+        structured_segments = self._generate_60_structured_segments(
             document_text=document_text,
             structural_analysis=structural_analysis
         )
-        self.logger.info(f"✅ Generated {len(context_preserved_segments)} structured segments (PA × DIM)")
-        
-        # FASE 5: Extracción de cadenas causales completas
-        causal_chains = self.causal_analyzer.extract_complete_causal_chains(
-            context_preserved_segments, 
-            global_kg
-        )
-        self.logger.info(f"Cadenas causales extraídas: {len(causal_chains)}")
-        
-        # FASE 6: Integración causal en unidades base (Hecho dentro del Integrador)
-        
-        # FASE 7: Análisis argumentativo profundo
-        argument_structures = self.argument_analyzer.analyze_arguments(
-            causal_chains
-        )
-        
-        # FASE 8: Análisis temporal y secuencial
-        temporal_structures = self.temporal_analyzer.analyze_temporal_dynamics(
-            causal_chains
-        )
-        
-        # FASE 9: Análisis de discurso y retórica
-        discourse_structures = self.discourse_analyzer.analyze_discourse(
-            causal_chains
-        )
-        
-        # FASE 10: Integración estratégica multi-escala
-        strategic_units = self.strategic_integrator.integrate_strategic_units(
-            causal_chains, 
-            structural_analysis, 
-            argument_structures, 
-            temporal_structures, 
-            discourse_structures, 
-            global_topics, 
-            global_kg
-        )
-        self.logger.info(f"Unidades estratégicas integradas: {len(strategic_units)}")
-        
-        # FASE 11: Generación de Smart Policy Chunks
-        smart_chunks = []
-        # Pre-llenar para TF-IDF
-        self.chunks_for_tfidf = [unit['text'] for unit in strategic_units]
-        if self.chunks_for_tfidf:
-            self.tfidf_vectorizer.fit(self.chunks_for_tfidf)
-        
-        for idx, unit in enumerate(strategic_units):
-            # Obtener el índice de la unidad para estructuras específicas
-            arg_key = next((k for k, v in argument_structures.items() if v.claims and any(unit['text'].strip() in c[0] for c in v.claims)), None)
-            temp_key = next((k for k, v in temporal_structures.items() if v.temporal_markers), None)
-            disc_key = next((k for k, v in discourse_structures.items()), None)
+        self.logger.info(f"✅ Generated {len(structured_segments)} structured segments (PA × DIM)")
 
-            chunk = self._create_smart_policy_chunk(
-                unit,
-                document_metadata,
-                argument_structures.get(arg_key),
-                temporal_structures.get(temp_key),
-                discourse_structures.get(disc_key),
-                global_topics,
-                global_kg
+        # Convert the 60 segments to SmartPolicyChunk objects
+        smart_chunks = []
+        document_id = document_metadata.get("document_id", "doc_001")
+
+        for segment in structured_segments:
+            text = segment.get("text", "")
+            content_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
+            pa_id = segment.get("policy_area_id")
+            dim_id = segment.get("dimension_id")
+            chunk_id = f"{document_id}_{pa_id}_{dim_id}_{content_hash[:8]}"
+
+            chunk = SmartPolicyChunk(
+                chunk_id=chunk_id,
+                document_id=document_id,
+                content_hash=content_hash,
+                text=text,
+                normalized_text=self._advanced_preprocessing(text),
+                policy_area_id=pa_id,
+                dimension_id=dim_id,
+                document_position=segment.get("position", (0, 0)),
+                # --- Default empty values for bypassed analysis ---
+                semantic_density=0.0,
+                section_hierarchy=[],
+                chunk_type=ChunkType.MIXTO,
+                causal_chain=[],
+                policy_entities=[],
+                implicit_assumptions=[],
+                contextual_presuppositions=[],
+                confidence_metrics={'overall_confidence': segment.get('relevance_score', 0.0)},
+                coherence_score=segment.get('relevance_score', 0.0),
+                strategic_importance=segment.get('relevance_score', 0.0),
             )
             smart_chunks.append(chunk)
 
-        # --- FASES 12-15 (Continuación de smart_policy_chunks_industrial_v3_complete_final_Version1.py) ---
-
-        # FASE 12: Enriquecimiento con relaciones inter-chunk
-        enriched_chunks = self._enrich_with_inter_chunk_relationships(smart_chunks)
-        
-        # FASE 13: Validación de integridad y completitud
-        validated_chunks = self._validate_strategic_integrity(enriched_chunks)
-        
-        # FASE 14: Deduplicación inteligente
-        deduplicated_chunks = self._intelligent_deduplication(validated_chunks)
-        
-        # FASE 15: Ranking por importancia estratégica
-        ranked_chunks = self._rank_by_strategic_importance(deduplicated_chunks)
-        
-        self.logger.info(f"Generación completada: {len(ranked_chunks)} chunks finales")
-        
-        return ranked_chunks
+        self.logger.info(f"Pipeline completed: {len(smart_chunks)} chunks generated.")
+        return smart_chunks
 
     def _advanced_preprocessing(self, text: str) -> str:
         """

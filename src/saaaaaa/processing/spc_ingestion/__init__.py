@@ -176,8 +176,7 @@ class CPPIngestionPipeline:
         self,
         document_path: Path,
         document_id: str = None,
-        title: str = None,
-        max_chunks: int = 50
+        title: str = None
     ) -> CanonPolicyPackage:
         """
         Process a document through the complete SPC pipeline.
@@ -254,10 +253,6 @@ class CPPIngestionPipeline:
             logger.warning(f"Chunk validation warnings: {validation_chunks['warnings'][:3]}")
         logger.info(f"Chunk validation passed ({validation_chunks['chunk_count']} chunks)")
 
-        # Limit chunks if requested
-        if max_chunks > 0 and len(smart_chunks) > max_chunks:
-            logger.info(f"Limiting to {max_chunks} chunks (from {len(smart_chunks)})")
-            smart_chunks = smart_chunks[:max_chunks]
 
         # Convert to CanonPolicyPackage
         logger.info("Converting SmartPolicyChunks to CanonPolicyPackage")

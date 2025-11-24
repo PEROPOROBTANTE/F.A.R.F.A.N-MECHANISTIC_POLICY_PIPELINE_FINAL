@@ -78,6 +78,23 @@
         "additionalProperties": false
       }
     },
+    "error_handling": {
+      "type": "object",
+      "properties": {
+        "failure_contract": {
+          "type": "object",
+          "properties": {
+            "abort_if": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "emit_code": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "final_payload_shape": { "type": "object", "additionalProperties": true },
     "human_answer_template": { "type": "string" }
   },

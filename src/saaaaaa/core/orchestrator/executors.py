@@ -1548,20 +1548,30 @@ class D3_Q3_TraceabilityValidator(BaseExecutor):
     """
     DIM03_Q03_TRACEABILITY_BUDGET_ORG — Validates budgetary and organizational traceability of products under canonical D3 notation.
     Epistemic mix: structural budget tracing, organizational semantics, and accountability synthesis.
-    
-    Methods (from D3-Q3):
-    - PolicyAnalysisEmbedder.process_document
-    - PolicyAnalysisEmbedder.semantic_search
-    - PolicyAnalysisEmbedder._apply_mmr
-    - PolicyAnalysisEmbedder._generate_query_from_pdq
-    - SemanticAnalyzer._empty_semantic_cube
-    - FinancialAuditor._match_program_to_node
-    - FinancialAuditor._match_goal_to_budget
-    - PDETMunicipalPlanAnalyzer._extract_from_responsibility_tables
-    - PDETMunicipalPlanAnalyzer._consolidate_entities
-    - AdaptivePriorCalculator.generate_traceability_record
-    - PolicyAnalysisEmbedder.generate_pdq_report
-    - ReportingEngine.generate_accountability_matrix
+
+    Methods executed (in order):
+    Step 1: Budget matching - FinancialAuditor._match_program_to_node
+    Step 2: Goal-budget matching - FinancialAuditor._match_goal_to_budget
+    Step 3: Responsibility extraction - PDETMunicipalPlanAnalyzer._extract_from_responsibility_tables
+    Step 4: Entity consolidation - PDETMunicipalPlanAnalyzer._consolidate_entities
+    Step 5: Entity identification - PDETMunicipalPlanAnalyzer.identify_responsible_entities
+    Step 6: Clarity scoring - PDETMunicipalPlanAnalyzer._score_responsibility_clarity
+    Step 7: Document processing - PolicyAnalysisEmbedder.process_document
+    Step 8: Query generation - PolicyAnalysisEmbedder._generate_query_from_pdq
+    Step 9: Semantic search - PolicyAnalysisEmbedder.semantic_search
+    Step 10: MMR diversification - PolicyAnalysisEmbedder._apply_mmr
+    Step 11: Semantic cube baseline - SemanticAnalyzer._empty_semantic_cube
+    Step 12: Policy domain classification - SemanticAnalyzer._classify_policy_domain
+    Step 13: Cross-cutting themes - SemanticAnalyzer._classify_cross_cutting_themes
+    Step 14: Value chain classification - SemanticAnalyzer._classify_value_chain_link
+    Step 15: Segment vectorization - SemanticAnalyzer._vectorize_segments
+    Step 16: Segment processing - SemanticAnalyzer._process_segment
+    Step 17: Semantic complexity - SemanticAnalyzer._calculate_semantic_complexity
+    Step 18: Evidence confidence - IndustrialPolicyProcessor._compute_evidence_confidence
+    Step 19: Entity serialization - PDETMunicipalPlanAnalyzer._entity_to_dict (loop)
+    Step 20: Traceability record - AdaptivePriorCalculator.generate_traceability_record
+    Step 21: PDQ report - PolicyAnalysisEmbedder.generate_pdq_report
+    Step 22: Accountability matrix - ReportingEngine.generate_accountability_matrix
     """
     
     def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -1709,8 +1719,16 @@ class D3_Q3_TraceabilityValidator(BaseExecutor):
             "raw_evidence": raw_evidence,
             "metadata": {
                 "methods_executed": [log["method"] for log in self.execution_log],
-                "products_with_bpin": len([m for m in program_matches if m.get("bpin")]),
-                "products_with_responsible": len(consolidated_entities),
+                "products_with_bpin": len([m for m in program_matches if isinstance(m, dict) and m.get("bpin")]),
+                "products_with_responsible": len(consolidated_entities) if consolidated_entities else 0,
+                "total_semantic_hits": len(semantic_hits) if semantic_hits else 0,
+                "has_semantic_hits": bool(semantic_hits),
+                "total_responsible_entities": len(responsible_entities) if responsible_entities else 0,
+                "has_responsible_entities": bool(responsible_entities),
+                "total_diversified_hits": len(diversified_hits) if diversified_hits else 0,
+                "total_entity_dicts": len(entity_dicts) if entity_dicts else 0,
+                "has_semantic_vectors": bool(semantic_vectors),
+                "total_semantic_vectors": len(semantic_vectors) if semantic_vectors else 0,
                 "canonical_question": "DIM03_Q03_TRACEABILITY_BUDGET_ORG",
                 "dimension_code": dim_info.code,
                 "dimension_label": dim_info.label
@@ -1726,29 +1744,34 @@ class D3_Q4_TechnicalFeasibilityEvaluator(BaseExecutor):
     """
     DIM03_Q04_TECHNICAL_FEASIBILITY — Evaluates activity-product feasibility vs resources/deadlines (canonical D3).
     Epistemic mix: structural DAG validity, causal necessity, performance/implementation readiness, and statistical robustness.
-    
-    Methods (from D3-Q4):
-    - AdvancedDAGValidator._calculate_statistical_power
-    - AdvancedDAGValidator._initialize_rng
-    - AdvancedDAGValidator.export_nodes
-    - AdvancedDAGValidator._generate_subgraph
-    - AdvancedDAGValidator._get_node_validator
-    - AdvancedDAGValidator._create_empty_result
-    - HierarchicalGenerativeModel._calculate_likelihood
-    - IndustrialGradeValidator.validate_causal_categories
-    - TeoriaCambio._extraer_categorias
-    - AdvancedDAGValidator.get_graph_stats
-    - AdvancedDAGValidator._calculate_node_importance
-    - AdvancedDAGValidator.calculate_acyclicity_pvalue
-    - AdvancedDAGValidator._is_acyclic
-    - BayesianMechanismInference._test_necessity
-    - IndustrialGradeValidator.execute_suite
-    - IndustrialGradeValidator.validate_connection_matrix
-    - IndustrialGradeValidator.run_performance_benchmarks
-    - IndustrialGradeValidator._benchmark_operation
-    - PerformanceAnalyzer.analyze_performance
-    - PerformanceAnalyzer._calculate_loss_functions
-    - HierarchicalGenerativeModel._calculate_ess
+
+    Methods executed (in order):
+    Step 1: Acyclicity p-value - AdvancedDAGValidator.calculate_acyclicity_pvalue
+    Step 2: Acyclicity check - AdvancedDAGValidator._is_acyclic
+    Step 3: Graph statistics - AdvancedDAGValidator.get_graph_stats
+    Step 4: Node importance - AdvancedDAGValidator._calculate_node_importance
+    Step 5: Subgraph generation - AdvancedDAGValidator._generate_subgraph
+    Step 6: Node addition - AdvancedDAGValidator.add_node
+    Step 7: Edge addition - AdvancedDAGValidator.add_edge
+    Step 8: Node export - AdvancedDAGValidator.export_nodes
+    Step 9: RNG initialization - AdvancedDAGValidator._initialize_rng
+    Step 10: Statistical power - AdvancedDAGValidator._calculate_statistical_power
+    Step 11: Node validator - AdvancedDAGValidator._get_node_validator
+    Step 12: Empty result creation - AdvancedDAGValidator._create_empty_result
+    Step 13: Necessity test - BayesianMechanismInference._test_necessity
+    Step 14: Validation suite - IndustrialGradeValidator.execute_suite
+    Step 15: Connection matrix - IndustrialGradeValidator.validate_connection_matrix
+    Step 16: Performance benchmarks - IndustrialGradeValidator.run_performance_benchmarks
+    Step 17: Benchmark operation - IndustrialGradeValidator._benchmark_operation
+    Step 18: Metric logging - IndustrialGradeValidator._log_metric
+    Step 19: Engine readiness - IndustrialGradeValidator.validate_engine_readiness
+    Step 20: Performance analysis - PerformanceAnalyzer.analyze_performance
+    Step 21: Loss functions - PerformanceAnalyzer._calculate_loss_functions
+    Step 22: Resource likelihood - HierarchicalGenerativeModel._calculate_likelihood
+    Step 23: ESS calculation - HierarchicalGenerativeModel._calculate_ess
+    Step 24: R-hat calculation - HierarchicalGenerativeModel._calculate_r_hat
+    Step 25: Causal categories validation - IndustrialGradeValidator.validate_causal_categories
+    Step 26: Category extraction - TeoriaCambio._extraer_categorias
     """
     
     def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -1846,7 +1869,7 @@ class D3_Q4_TechnicalFeasibilityEvaluator(BaseExecutor):
         resource_likelihood = self._execute_method(
             "HierarchicalGenerativeModel", "_calculate_likelihood", context,
             mechanism_type="tecnico",
-            observations={"coherence": performance_analysis.get("resource_fit", {}).get("score", 0.0)}
+            observations={"coherence": (performance_analysis or {}).get("resource_fit", {}).get("score", 0.0)}
         )
         
         # Step 5: Calculate effective sample size
@@ -1867,8 +1890,8 @@ class D3_Q4_TechnicalFeasibilityEvaluator(BaseExecutor):
         
         raw_evidence = {
             "activity_product_mapping": connection_validation,
-            "resource_adequacy": performance_analysis.get("resource_fit", {}),
-            "timeline_feasibility": performance_analysis.get("timeline_feasibility", {}),
+            "resource_adequacy": (performance_analysis or {}).get("resource_fit", {}),
+            "timeline_feasibility": (performance_analysis or {}).get("timeline_feasibility", {}),
             "technical_validation": {
                 "dag_valid": is_acyclic,
                 "acyclicity_p": acyclicity_pvalue,
@@ -1904,7 +1927,16 @@ class D3_Q4_TechnicalFeasibilityEvaluator(BaseExecutor):
             "metadata": {
                 "methods_executed": [log["method"] for log in self.execution_log],
                 "dag_is_valid": is_acyclic,
-                "feasibility_score": validation_suite.get("overall_score", 0),
+                "feasibility_score": (validation_suite or {}).get("overall_score", 0) if validation_suite else 0,
+                "total_graph_nodes": (graph_stats or {}).get("nodes", 0) if graph_stats else 0,
+                "total_graph_edges": (graph_stats or {}).get("edges", 0) if graph_stats else 0,
+                "has_node_export": bool(node_export),
+                "total_exported_nodes": len(node_export) if node_export else 0,
+                "has_subgraph": bool(subgraph),
+                "total_extracted_categories": len(extracted_categories) if extracted_categories else 0,
+                "has_extracted_categories": bool(extracted_categories),
+                "statistical_power": stat_power if isinstance(stat_power, (int, float)) else 0.0,
+                "has_engine_readiness": bool(engine_readiness),
                 "canonical_question": "DIM03_Q04_TECHNICAL_FEASIBILITY",
                 "dimension_code": dim_info.code,
                 "dimension_label": dim_info.label
@@ -2766,34 +2798,36 @@ class D5_Q2_CompositeMeasurementValidator(BaseExecutor):
     """
     DIM05_Q02_COMPOSITE_PROXY_VALIDITY — Validates composite indices/proxies for complex impacts (canonical D5).
     Epistemic mix: statistical robustness (E-value), Bayesian confidence, normative reporting quality, and semantic consistency.
-    
-    Methods (from D5-Q2):
-    - PDETMunicipalPlanAnalyzer._quality_to_dict
-    - PolicyAnalysisEmbedder.process_document
-    - PolicyAnalysisEmbedder._filter_by_pdq
-    - PolicyAnalysisEmbedder._extract_numerical_values
-    - PolicyAnalysisEmbedder._compute_overall_confidence
-    - PolicyAnalysisEmbedder._embed_texts
-    - PolicyTextProcessor.normalize_unicode
-    - PolicyTextProcessor.segment_into_sentences
-    - PolicyTextProcessor.compile_pattern
-    - PolicyTextProcessor.extract_contextual_window
-    - IndustrialPolicyProcessor._compute_evidence_confidence
-    - IndustrialPolicyProcessor._compute_avg_confidence
-    - IndustrialPolicyProcessor._construct_evidence_bundle
-    - PDETMunicipalPlanAnalyzer.generate_executive_report
-    - BayesianCounterfactualAuditor.aggregate_risk_and_prioritize
-    - PDETMunicipalPlanAnalyzer._interpret_sensitivity
-    - PDETMunicipalPlanAnalyzer._interpret_overall_quality
-    - PolicyAnalysisEmbedder.get_diagnostics
-    - PDETMunicipalPlanAnalyzer.calculate_quality_score
-    - PDETMunicipalPlanAnalyzer._estimate_score_confidence
-    - PDETMunicipalPlanAnalyzer._compute_e_value
-    - PDETMunicipalPlanAnalyzer._compute_robustness_value
-    - ReportingEngine._calculate_quality_score
-    - BayesianMechanismInference._aggregate_bayesian_confidence
-    - PolicyAnalysisEmbedder.evaluate_policy_numerical_consistency
-    - FinancialAuditor._calculate_sufficiency
+
+    Methods executed (in order):
+    Step 1: Quality score calculation - PDETMunicipalPlanAnalyzer.calculate_quality_score
+    Step 2: Score confidence estimation - PDETMunicipalPlanAnalyzer._estimate_score_confidence
+    Step 3: E-value computation - PDETMunicipalPlanAnalyzer._compute_e_value
+    Step 4: Robustness computation - PDETMunicipalPlanAnalyzer._compute_robustness_value
+    Step 5: Sensitivity interpretation - PDETMunicipalPlanAnalyzer._interpret_sensitivity
+    Step 6: Reporting quality - ReportingEngine._calculate_quality_score
+    Step 7: Bayesian confidence aggregation - BayesianMechanismInference._aggregate_bayesian_confidence
+    Step 8: Numerical consistency evaluation - PolicyAnalysisEmbedder.evaluate_policy_numerical_consistency
+    Step 9: Embedder diagnostics - PolicyAnalysisEmbedder.get_diagnostics
+    Step 10: Document processing - PolicyAnalysisEmbedder.process_document
+    Step 11: PDQ query generation - PolicyAnalysisEmbedder._generate_query_from_pdq
+    Step 12: PDQ filtering - PolicyAnalysisEmbedder._filter_by_pdq
+    Step 13: Numerical value extraction - PolicyAnalysisEmbedder._extract_numerical_values
+    Step 14: Text embedding - PolicyAnalysisEmbedder._embed_texts
+    Step 15: Overall confidence computation - PolicyAnalysisEmbedder._compute_overall_confidence
+    Step 16: Sufficiency calculation - FinancialAuditor._calculate_sufficiency
+    Step 17: Overall quality interpretation - PDETMunicipalPlanAnalyzer._interpret_overall_quality
+    Step 18: Risk prioritization - BayesianCounterfactualAuditor.aggregate_risk_and_prioritize
+    Step 19: Unicode normalization - PolicyTextProcessor.normalize_unicode
+    Step 20: Sentence segmentation - PolicyTextProcessor.segment_into_sentences
+    Step 21: Evidence confidence - IndustrialPolicyProcessor._compute_evidence_confidence
+    Step 22: Average confidence - IndustrialPolicyProcessor._compute_avg_confidence
+    Step 23: Quality serialization - PDETMunicipalPlanAnalyzer._quality_to_dict
+    Step 24: Evidence bundle - IndustrialPolicyProcessor._construct_evidence_bundle
+    Step 25: Pattern compilation - PolicyTextProcessor.compile_pattern
+    Step 26: Contextual window extraction - PolicyTextProcessor.extract_contextual_window
+    Step 27: Executive report generation - PDETMunicipalPlanAnalyzer.generate_executive_report
+    Step 28: Results export - IndustrialPolicyProcessor.export_results
     """
     
     def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -2981,6 +3015,16 @@ class D5_Q2_CompositeMeasurementValidator(BaseExecutor):
             "metadata": {
                 "methods_executed": [log["method"] for log in self.execution_log],
                 "composite_indices_count": len(context.get("composite_indicators", [])),
+                "total_proxy_indicators": len(context.get("proxy_indicators", [])),
+                "has_proxy_indicators": bool(context.get("proxy_indicators")),
+                "total_numerical_values": len(numerical_values) if numerical_values else 0,
+                "has_numerical_values": bool(numerical_values),
+                "total_filtered_chunks": len(filtered_chunks) if filtered_chunks else 0,
+                "has_filtered_chunks": bool(filtered_chunks),
+                "total_segmented_sentences": len(segmented_sentences) if segmented_sentences else 0,
+                "has_segmented_sentences": bool(segmented_sentences),
+                "total_embedded_texts": len(embedded_texts) if embedded_texts else 0,
+                "has_embedded_texts": bool(embedded_texts),
                 "validity_score": score_confidence,
                 "canonical_question": "DIM05_Q02_COMPOSITE_PROXY_VALIDITY",
                 "dimension_code": dim_info.code,
@@ -3393,7 +3437,7 @@ class D6_Q2_LogicalProportionalityValidator(BaseExecutor):
         )
         
         raw_evidence = {
-            "logical_leaps_detected": evidential_tests.get("leaps", []),
+            "logical_leaps_detected": (evidential_tests or {}).get("leaps", []),
             "intervention_scale": context.get("intervention_magnitude", 0),
             "result_scale": context.get("result_magnitude", 0),
             "proportionality_ratio": context.get("intervention_magnitude", 0) / max(context.get("result_magnitude", 1), 1),
@@ -3403,16 +3447,16 @@ class D6_Q2_LogicalProportionalityValidator(BaseExecutor):
             "effect_stability": effect_stability,
             "connection_validation": connection_validation,
             "overall_confidence": overall_confidence,
-            "implementation_miracles": [leap for leap in evidential_tests.get("leaps", []) 
-                                       if leap.get("type") == "miracle"]
+            "implementation_miracles": [leap for leap in (evidential_tests or {}).get("leaps", [])
+                                       if isinstance(leap, dict) and leap.get("type") == "miracle"]
         }
-        
+
         return {
             "executor_id": self.executor_id,
             "raw_evidence": raw_evidence,
             "metadata": {
                 "methods_executed": [log["method"] for log in self.execution_log],
-                "leaps_detected": len(evidential_tests.get("leaps", [])),
+                "leaps_detected": len((evidential_tests or {}).get("leaps", [])),
                 "proportionality_adequate": abs(raw_evidence["proportionality_ratio"] - 1.0) < 0.5
             },
             "execution_metrics": {
@@ -3595,17 +3639,17 @@ class D6_Q4_FeedbackLoopAnalyzer(BaseExecutor):
 class D6_Q5_ContextualAdaptabilityEvaluator(BaseExecutor):
     """
     Evaluates contextual adaptation: differential impacts and territorial constraints.
-    
-    Methods (from D6-Q5):
-    - CausalExtractor._calculate_language_specificity
-    - CausalExtractor._assess_temporal_coherence
-    - TextMiningEngine.diagnose_critical_links
-    - CausalInferenceSetup.identify_failure_points
-    - CausalInferenceSetup._get_dynamics_pattern
-    - SemanticProcessor.chunk_text
-    - SemanticProcessor._detect_pdm_structure
-    - SemanticProcessor._detect_table
-    - AdaptivePriorCalculator.generate_traceability_record
+
+    Methods executed (in order):
+    Step 1: Language specificity - CausalExtractor._calculate_language_specificity
+    Step 2: Temporal coherence - CausalExtractor._assess_temporal_coherence
+    Step 3: Critical links diagnosis - TextMiningEngine.diagnose_critical_links
+    Step 4: Failure points identification - CausalInferenceSetup.identify_failure_points
+    Step 5: Dynamics pattern - CausalInferenceSetup._get_dynamics_pattern
+    Step 6: Text chunking - SemanticProcessor.chunk_text
+    Step 7: PDM structure detection - SemanticProcessor._detect_pdm_structure
+    Step 8: Table detection - SemanticProcessor._detect_table
+    Step 9: Traceability record - AdaptivePriorCalculator.generate_traceability_record
     """
     
     def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -3673,8 +3717,15 @@ class D6_Q5_ContextualAdaptabilityEvaluator(BaseExecutor):
             "raw_evidence": raw_evidence,
             "metadata": {
                 "methods_executed": [log["method"] for log in self.execution_log],
-                "groups_identified": len(critical_links.get("target_groups", [])),
-                "territorial_constraints": len(failure_points.get("territorial", []))
+                "groups_identified": len((critical_links or {}).get("target_groups", [])) if critical_links else 0,
+                "territorial_constraints": len((failure_points or {}).get("territorial", [])) if failure_points else 0,
+                "total_text_chunks": len(text_chunks) if text_chunks else 0,
+                "has_text_chunks": bool(text_chunks),
+                "total_table_detections": len(table_detection) if isinstance(table_detection, list) else (1 if table_detection else 0),
+                "has_table_detection": bool(table_detection),
+                "has_pdm_structure": bool(pdm_structure),
+                "has_dynamics_pattern": bool(dynamics_pattern),
+                "has_traceability": bool(traceability)
             },
             "execution_metrics": {
                 "methods_count": len(self.execution_log),

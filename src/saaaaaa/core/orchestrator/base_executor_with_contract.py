@@ -81,6 +81,23 @@ class BaseExecutorWithContract(ABC):
         cls._contract_cache[base_slot] = contract
         return contract
 
+    def _check_failure_contract(self, evidence: dict[str, Any], error_handling: dict[str, Any]):
+        failure_contract = error_handling.get("failure_contract", {})
+        abort_conditions = failure_contract.get("abort_if", [])
+        if not abort_conditions:
+            return
+
+        emit_code = failure_contract.get("emit_code", "GENERIC_ABORT")
+
+        for condition in abort_conditions:
+            # Example condition check. This could be made more sophisticated.
+            if condition == "missing_required_element" and evidence.get("validation", {}).get("errors"):
+                # This logic assumes errors from the validator imply a missing required element,
+                # which is true with our new validator.
+                raise ValueError(f"Execution aborted by failure contract due to '{condition}'. Emit code: {emit_code}")
+            if condition == "incomplete_text" and not evidence.get("metadata", {}).get("text_complete", True):
+                raise ValueError(f"Execution aborted by failure contract due to '{condition}'. Emit code: {emit_code}")
+
     def execute(
         self,
         document: PreprocessedDocument,
@@ -100,8 +117,7 @@ class BaseExecutorWithContract(ABC):
         question_id = question_context.get("question_id")
         question_global = question_context.get("question_global")
         policy_area_id = question_context.get("policy_area_id")
-        dimension_id = question_context.get("dimension_id")
-        cluster_id = question_context.get("cluster_id")
+        identity = question_context.get("identity", {})
         patterns = question_context.get("patterns", [])
         expected_elements = question_context.get("expected_elements", [])
 
@@ -119,8 +135,8 @@ class BaseExecutorWithContract(ABC):
             "question_id": question_id,
             "question_global": question_global,
             "policy_area_id": policy_area_id,
-            "dimension_id": dimension_id,
-            "cluster_id": cluster_id,
+            "dimension_id": identity.get("dimension_id"),
+            "cluster_id": identity.get("cluster_id"),
             "signal_pack": signal_pack,
             "question_patterns": patterns,
             "expected_elements": expected_elements,
@@ -166,16 +182,38 @@ class BaseExecutorWithContract(ABC):
 
         validation_rules = contract.get("validation_rules", [])
         na_policy = contract.get("na_policy", "abort")
-        validation = EvidenceValidator.validate(evidence, validation_rules, na_policy=na_policy)
+        # Construct the rules_object as expected by EvidenceValidator.validate
+        validation_rules_object = {"rules": validation_rules, "na_policy": na_policy}
+        validation = EvidenceValidator.validate(evidence, validation_rules_object)
+
+        error_handling = contract.get("error_handling", {})
+        if error_handling:
+            # The failure contract needs access to validation results, so we stitch them in.
+            evidence_with_validation = {**evidence, "validation": validation}
+            self._check_failure_contract(evidence_with_validation, error_handling)
+
+        human_answer_template = contract.get("human_answer_template", "")
+        human_answer = ""
+        if human_answer_template:
+            try:
+                # Use evidence to format the human answer template
+                human_answer = human_answer_template.format(**evidence)
+            except KeyError as e:
+                # Handle cases where evidence might not contain all template keys
+                human_answer = f"Error formatting human answer: Missing key {e}. Template: '{human_answer_template}'"
+                # Optionally log this error
+                import logging
+                logging.warning(human_answer)
 
         return {
             "base_slot": base_slot,
             "question_id": question_id,
             "question_global": question_global,
             "policy_area_id": policy_area_id,
-            "dimension_id": dimension_id,
-            "cluster_id": cluster_id,
+            "dimension_id": identity.get("dimension_id"),
+            "cluster_id": identity.get("cluster_id"),
             "evidence": evidence,
             "validation": validation,
             "trace": trace,
+            "human_answer": human_answer,
         }
