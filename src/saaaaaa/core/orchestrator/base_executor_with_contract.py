@@ -182,13 +182,28 @@ class BaseExecutorWithContract(ABC):
 
         validation_rules = contract.get("validation_rules", [])
         na_policy = contract.get("na_policy", "abort")
-        validation = EvidenceValidator.validate(evidence, validation_rules, na_policy=na_policy)
+        # Construct the rules_object as expected by EvidenceValidator.validate
+        validation_rules_object = {"rules": validation_rules, "na_policy": na_policy}
+        validation = EvidenceValidator.validate(evidence, validation_rules_object)
 
         error_handling = contract.get("error_handling", {})
         if error_handling:
             # The failure contract needs access to validation results, so we stitch them in.
             evidence_with_validation = {**evidence, "validation": validation}
             self._check_failure_contract(evidence_with_validation, error_handling)
+
+        human_answer_template = contract.get("human_answer_template", "")
+        human_answer = ""
+        if human_answer_template:
+            try:
+                # Use evidence to format the human answer template
+                human_answer = human_answer_template.format(**evidence)
+            except KeyError as e:
+                # Handle cases where evidence might not contain all template keys
+                human_answer = f"Error formatting human answer: Missing key {e}. Template: '{human_answer_template}'"
+                # Optionally log this error
+                import logging
+                logging.warning(human_answer)
 
         return {
             "base_slot": base_slot,
@@ -200,4 +215,5 @@ class BaseExecutorWithContract(ABC):
             "evidence": evidence,
             "validation": validation,
             "trace": trace,
+            "human_answer": human_answer,
         }
