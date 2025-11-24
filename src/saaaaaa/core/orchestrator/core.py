@@ -862,11 +862,60 @@ class ScoredMicroQuestion:
     metadata: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
 
-class MethodExecutor:
-    """Execute catalog methods using ArgRouter and class registry.
 
-    This executor builds the class registry, instantiates all required classes,
-    and delegates signature/kwargs handling to ArgRouter. No hardcoded logic.
+class _LazyInstanceDict:
+    """Lazy instance dictionary for backward compatibility.
+
+    Provides dict-like interface but delegates to MethodRegistry
+    for lazy instantiation. This maintains compatibility with code
+    that accesses MethodExecutor.instances directly.
+    """
+
+    def __init__(self, method_registry: Any) -> None:
+        self._registry = method_registry
+
+    def get(self, class_name: str, default: Any = None) -> Any:
+        """Get instance lazily."""
+        try:
+            return self._registry._get_instance(class_name)
+        except Exception:
+            return default
+
+    def __getitem__(self, class_name: str) -> Any:
+        """Get instance lazily (dict access)."""
+        return self._registry._get_instance(class_name)
+
+    def __contains__(self, class_name: str) -> bool:
+        """Check if class is available."""
+        return class_name in self._registry._class_paths
+
+    def keys(self) -> list[str]:
+        """Get available class names."""
+        return list(self._registry._class_paths.keys())
+
+    def values(self) -> list[Any]:
+        """Get instantiated instances (triggers lazy loading)."""
+        return [self.get(name) for name in self.keys()]
+
+    def items(self) -> list[tuple[str, Any]]:
+        """Get (name, instance) pairs (triggers lazy loading)."""
+        return [(name, self.get(name)) for name in self.keys()]
+
+    def __len__(self) -> int:
+        """Get number of available classes."""
+        return len(self._registry._class_paths)
+
+
+class MethodExecutor:
+    """Execute catalog methods using lazy method injection.
+
+    This executor uses MethodRegistry for lazy instantiation:
+    - Classes are loaded only when their methods are first called
+    - Failed classes don't block other methods from working
+    - Methods can be directly injected without classes
+    - Instance caching for efficiency
+
+    No upfront class instantiation - lightweight and decoupled.
     """
 
     def __init__(
@@ -874,12 +923,29 @@ class MethodExecutor:
         dispatcher: Any | None = None,
         signal_registry: Any | None = None,
     ) -> None:
-        # Build the class registry
+        from .method_registry import MethodRegistry, setup_default_instantiation_rules
+
         self.degraded_mode = False
         self.degraded_reasons: list[str] = []
         self.signal_registry = signal_registry
 
+        # Initialize method registry with lazy loading
         try:
+            self._method_registry = MethodRegistry()
+            setup_default_instantiation_rules(self._method_registry)
+            logger.info("method_registry_initialized_lazy_mode")
+        except Exception as exc:
+            self.degraded_mode = True
+            reason = f"Method registry initialization failed: {exc}"
+            self.degraded_reasons.append(reason)
+            logger.error("DEGRADED MODE: %s", reason)
+            # Create empty registry for graceful degradation
+            self._method_registry = MethodRegistry(class_paths={})
+
+        # Build minimal class type registry for ArgRouter compatibility
+        # Note: This doesn't instantiate classes, just loads types
+        try:
+            from .class_registry import build_class_registry
             registry = build_class_registry()
         except (ClassRegistryError, ModuleNotFoundError, ImportError) as exc:
             self.degraded_mode = True
@@ -888,46 +954,12 @@ class MethodExecutor:
             logger.warning("DEGRADED MODE: %s", reason)
             registry = {}
 
-        # Instantiate all classes
-        self.instances: dict[str, Any] = {}
-        ontology_instance = None
-
-        for class_name, cls in registry.items():
-            try:
-                # Special handling for MunicipalOntology - shared instance
-                if class_name == "MunicipalOntology":
-                    ontology_instance = cls()
-                    self.instances[class_name] = ontology_instance
-                # Classes that need ontology
-                elif class_name in ("SemanticAnalyzer", "PerformanceAnalyzer", "TextMiningEngine"):
-                    if ontology_instance is not None:
-                        self.instances[class_name] = cls(ontology_instance)
-                    else:
-                        logger.warning(
-                            "Cannot instantiate %s: MunicipalOntology not available", class_name
-                        )
-                # PolicyTextProcessor needs ProcessorConfig
-                elif class_name == "PolicyTextProcessor":
-                    try:
-                        from policy_processor import ProcessorConfig
-                        self.instances[class_name] = cls(ProcessorConfig())
-                    except ImportError:
-                        logger.warning("Cannot instantiate PolicyTextProcessor: ProcessorConfig unavailable")
-                else:
-                    # Standard instantiation
-                    self.instances[class_name] = cls()
-            except Exception as exc:
-                logger.error("Failed to instantiate %s: %s", class_name, exc)
-
         # Create ExtendedArgRouter with the registry for enhanced validation and metrics
         self._router = ExtendedArgRouter(registry)
 
-        # Check for critical degradation
-        if len(self.instances) == 0 and len(registry) > 0:
-            self.degraded_mode = True
-            reason = "All class instantiations failed"
-            self.degraded_reasons.append(reason)
-            logger.error("CRITICAL DEGRADATION: %s", reason)
+        # Legacy compatibility - provide instances dict (now lazily populated)
+        # This maintains backward compatibility with code that checks self.instances
+        self.instances = _LazyInstanceDict(self._method_registry)
 
     @staticmethod
     def _supports_parameter(callable_obj: Any, parameter_name: str) -> bool:
@@ -938,7 +970,7 @@ class MethodExecutor:
         return parameter_name in signature.parameters
 
     def execute(self, class_name: str, method_name: str, **kwargs: Any) -> Any:
-        """Execute a method from the catalog.
+        """Execute a method using lazy instantiation.
 
         Args:
             class_name: Name of the class
@@ -952,18 +984,29 @@ class MethodExecutor:
             ArgRouterError: If routing fails
             AttributeError: If method doesn't exist
             RuntimeError: If calibration is missing or placeholder
+            MethodRegistryError: If method cannot be retrieved
         """
-        instance = self.instances.get(class_name)
-        if not instance:
-            logger.warning("No instance available for class %s", class_name)
-            return None
+        from .method_registry import MethodRegistryError
 
+        # Get method from registry (lazy instantiation)
         try:
-            method = getattr(instance, method_name)
-        except AttributeError:
-            logger.error("Class %s has no method %s", class_name, method_name)
-            raise
+            method = self._method_registry.get_method(class_name, method_name)
+        except MethodRegistryError as exc:
+            logger.error(
+                "method_retrieval_failed",
+                class_name=class_name,
+                method_name=method_name,
+                error=str(exc),
+            )
+            # Graceful degradation - return None for missing methods
+            if self.degraded_mode:
+                logger.warning("Returning None due to degraded mode")
+                return None
+            raise AttributeError(
+                f"Cannot retrieve {class_name}.{method_name}: {exc}"
+            ) from exc
 
+        # Route arguments and execute
         try:
             args, routed_kwargs = self._router.route(class_name, method_name, dict(kwargs))
             return method(*args, **routed_kwargs)
@@ -973,6 +1016,62 @@ class MethodExecutor:
         except Exception:
             logger.exception("Method execution failed for %s.%s", class_name, method_name)
             raise
+
+    def inject_method(
+        self,
+        class_name: str,
+        method_name: str,
+        method: Callable[..., Any],
+    ) -> None:
+        """Inject a method directly without requiring a class.
+
+        This allows you to provide custom implementations that bypass
+        class instantiation entirely. Useful for:
+        - Custom implementations
+        - Mocking/testing
+        - Hotfixes without modifying classes
+
+        Example:
+            def custom_analyzer(text: str, **kwargs) -> dict:
+                return {"result": "custom analysis"}
+
+            executor.inject_method("CustomClass", "analyze", custom_analyzer)
+
+        Args:
+            class_name: Virtual class name for routing
+            method_name: Method name
+            method: Callable to inject
+        """
+        self._method_registry.inject_method(class_name, method_name, method)
+        logger.info(
+            "method_injected_into_executor",
+            class_name=class_name,
+            method_name=method_name,
+        )
+
+    def has_method(self, class_name: str, method_name: str) -> bool:
+        """Check if a method is available.
+
+        Args:
+            class_name: Class name
+            method_name: Method name
+
+        Returns:
+            True if method exists or is injected
+        """
+        return self._method_registry.has_method(class_name, method_name)
+
+    def get_registry_stats(self) -> dict[str, Any]:
+        """Get statistics from the method registry.
+
+        Returns:
+            Dict with registry statistics including:
+            - total_classes_registered: Total classes in registry
+            - instantiated_classes: Classes that have been instantiated
+            - failed_classes: Classes that failed instantiation
+            - direct_methods_injected: Methods injected directly
+        """
+        return self._method_registry.get_stats()
 
     def get_routing_metrics(self) -> dict[str, Any]:
         """Get routing metrics from ExtendedArgRouter.
