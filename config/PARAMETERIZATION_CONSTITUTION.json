@@ -1,0 +1,349 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "created_at": "2025-11-25T00:00:00Z",
+    "description": "PARAMETERIZATION CONSTITUTION - The definitive source of truth for normative, transitional, and legacy artifacts in the F.A.R.F.A.N mechanistic policy pipeline",
+    "purpose": "Defines which artifacts are normative (source of truth), transitional (pending validation), or legacy (deprecated). Establishes numeric invariants that must hold. Controls repository mode (STRICT vs DESIGN).",
+    "authority": "This file is THE LAW. No artifact may be treated as normative unless listed in normative_artifacts. No invariant may be changed without regenerating the corresponding source report.",
+    "modification_policy": "This constitution may ONLY be modified as part of a dedicated 'constitution update' task with full audit trail."
+  },
+
+  "normative_artifacts": [
+    {
+      "path": "config/method_parameters.json",
+      "role": "runtime_parameters",
+      "description": "Centralized method parameters including thresholds, priors, and configuration values. Primary source for all method-specific parameter values.",
+      "sha256": "b6436fc5ad83d6289c043e22e74c7bd85ae69e5b535c44aaaabc1089ff688c6f",
+      "version": "1.0.0",
+      "last_updated": "2025-11-18",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Contains _global_thresholds, _executor_thresholds (30 executors), and method-specific parameters. Migration status: initial_creation."
+    },
+    {
+      "path": "src/saaaaaa/core/calibration/parameter_loader.py",
+      "role": "runtime_parameters",
+      "description": "Thread-safe, lazy-loaded access to method parameters from method_parameters.json. The canonical loader for all runtime parameterization.",
+      "sha256": "938850132628da8708f181867e5c60d1ba99b9e556c6e9d106c20f00ccb64c8c",
+      "version": "unknown",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Provides typed access via get_quality_thresholds(), get_executor_threshold(), get_validation_threshold_for_role(), get_method_parameter(), etc."
+    },
+    {
+      "path": "canonical_method_catalogue_v2.json",
+      "role": "structural_catalogue",
+      "description": "Complete method signature catalogue with 2,189 methods, 486 with defaults, 857 configurable parameters. Built by build_canonical_method_catalogue_v2.py.",
+      "sha256": "73975d1f5efcefc9bc9147a51e038c65ef77ee257d77ed8ddb7ab0a5a1a8f94a",
+      "version": "2.0.0",
+      "generation_date": "2025-11-18T11:59:15.245947+00:00",
+      "validation_status": "PENDING_VALIDATION",
+      "authority_level": "PRIMARY",
+      "notes": "Total 2,189 methods, 486 with defaults, 5,094 total parameters, 857 configurable. Coverage: 100%. Files parsed: 167. Parse errors: 0."
+    },
+    {
+      "path": "parameter_identification_report.md",
+      "role": "structural_catalogue",
+      "description": "Phases 1-2 parameter identification report. Documents 283 methods identified with 462 total configurable parameters.",
+      "sha256": "e4e6cad652666f63d0d26c97ad4c41acbbf5d76d686f2abaa9122d4f5f08bfa7",
+      "version": "unknown",
+      "generated": "2025-11-18T12:26:55.687512+00:00",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Methods scanned: 2,189. Identified: 283. No configurable params: 1,703. Private methods: 42. Excluded by calibration: 161."
+    },
+    {
+      "path": "parameter_sources_comprehensive.md",
+      "role": "epistemic_audit",
+      "description": "Phase 3 parameter value determination report. Documents knowledge base recommendations (319, 69%) vs code defaults (143, 31%).",
+      "sha256": "81f06b10df150ba887e16227bc8558e055701bf420bef10df944b598b08d551b",
+      "version": "unknown",
+      "generated": "2025-11-18T17:02:06.740407+00:00",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Total parameters: 462. KB recommendations: 319 (69.0%). Code defaults: 143 (31.0%). Academic sources: 16. Library sources: 11. Standards: 10."
+    },
+    {
+      "path": "parameter_sources.md",
+      "role": "epistemic_audit",
+      "description": "Complete audit trail for every parameter value determination decision with source hierarchy and rationale.",
+      "sha256": "COMPUTED_SEPARATELY",
+      "version": "unknown",
+      "generated": "2025-11-18T17:02:06.740407+00:00",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "File too large for single hash computation (320.4KB). Total decisions: 462. KB recommendations: 4. Conservative defaults: 458."
+    },
+    {
+      "path": "PARAMETERIZATION_AUDIT_EXECUTIVE_SUMMARY.md",
+      "role": "epistemic_audit",
+      "description": "Executive summary of complete S/M/E ensemble parameterization audit. Documents 416 methods analyzed, 245 requiring parameterization.",
+      "sha256": "93d38e9324e59b3a3f7b8d2ae54b4300cfc3a381a7ff15c407cf5a4ca3e983c5",
+      "version": "1.0.0",
+      "date": "2025-11-13",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Methodology: S/M/E Rule-Based Ensemble with Epistemic Validation. 47 critical decision thresholds identified. YAML deprecation plan included."
+    },
+    {
+      "path": "CALIBRATION_IMPLEMENTATION_REPORT.md",
+      "role": "calibration_integration",
+      "description": "Phase 1 calibration system implementation report. Documents core integration of intrinsic calibration, parameter loading, and validation.",
+      "sha256": "aa9d988cfad513346ace5668536c64407111e90230b132f9672869c923d59385",
+      "version": "1.0.0",
+      "date": "2025-11-18",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Status: Phase 1 COMPLETE. All 30 executors configured. Integration tests: 17/17 passing (100%). Hardcoded scan: 100+ instances catalogued."
+    },
+    {
+      "path": "docs/archive/CALIBRATION_INTEGRATION_STATUS.md",
+      "role": "calibration_integration",
+      "description": "Status report for Phases 1-5.4 of calibration system integration. Documents weight bug fix and quality threshold migration.",
+      "sha256": "55923cd8afbc8c67697144f90d56b649c05d904b4e85ddffcc6176ce1e4bda04",
+      "version": "unknown",
+      "date": "2025-11-18",
+      "validation_status": "VALIDATED",
+      "authority_level": "SECONDARY",
+      "notes": "Branch: claude/calibration-system-integration-011dKHrEpz9cPcb4mi829oB4. Tests: 11/11 passing. Critical bug fixed: BaseLayerEvaluator weights."
+    },
+    {
+      "path": "docs/CALIBRATION_SYSTEM.md",
+      "role": "calibration_integration",
+      "description": "Calibration system documentation covering registry, context, empirical testing, dimension-specific modifiers, and integration patterns.",
+      "sha256": "a2949f66f41d7b36b17ec333970e7c5b8721bd49e6d34ce9287b0ebb73a962bb",
+      "version": "unknown",
+      "validation_status": "VALIDATED",
+      "authority_level": "SECONDARY",
+      "notes": "Documents MethodCalibration, CalibrationContext, CalibrationModifier, and empirical testing framework."
+    },
+    {
+      "path": "config/intrinsic_calibration.json",
+      "role": "calibration_integration",
+      "description": "Intrinsic calibration scores (b_theory, b_impl, b_deploy) for 1,995 methods. Context-independent base layer (@b) scores.",
+      "sha256": "453799256e1a898a1230db06e25ea78cb919d8bb99b9d0f8cc638fba6e16099a",
+      "version": "1.0.0",
+      "generated_at": "2025-11-10T08:23:00Z",
+      "last_triaged": "2025-11-10T18:36:07.566234+00:00",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Total methods: 1,995. Calibrated: 1,470. Excluded: 525. Rubric version: 1.0.0. Base weights: w_th=0.4, w_imp=0.35, w_dep=0.25."
+    },
+    {
+      "path": "src/saaaaaa/core/calibration/base_layer.py",
+      "role": "runtime_parameters",
+      "description": "Base Layer (@b) evaluator. Loads intrinsic quality scores and applies configurable quality thresholds from method_parameters.json.",
+      "sha256": "44ef9578bec9654a56bff5775b396078dcac26a5198dbdd010f4855e0e1bd1c7",
+      "version": "unknown",
+      "validation_status": "VALIDATED",
+      "authority_level": "PRIMARY",
+      "notes": "Reads config/intrinsic_calibration.json. Uses MethodParameterLoader.get_base_layer_quality_thresholds() for threshold configuration."
+    }
+  ],
+
+  "transitional_artifacts": [
+    {
+      "path": "canonical_method_catalogue_v2.json",
+      "role": "structural_catalogue",
+      "reason": "PENDING_VALIDATION",
+      "description": "While structurally normative, this catalogue has validation_passed: false in its metadata, indicating it requires validation before being fully trusted.",
+      "sha256": "73975d1f5efcefc9bc9147a51e038c65ef77ee257d77ed8ddb7ab0a5a1a8f94a",
+      "version": "2.0.0",
+      "validation_required": true,
+      "validation_criteria": [
+        "Manual review of complex defaults (36 instances)",
+        "Verification of parameter type inference",
+        "Confirmation of method signature accuracy",
+        "Validation of default value extraction"
+      ],
+      "target_validation_date": "TBD",
+      "notes": "This file appears in both normative_artifacts (for structure) and transitional_artifacts (for validation status). Once validated, remove from transitional_artifacts."
+    }
+  ],
+
+  "legacy_artifacts": [
+    {
+      "path": "config/catalogo_principal.yaml",
+      "status": "DELETED",
+      "reason": "Empty file (34-line header only), orphaned configuration",
+      "deletion_date": "before 2025-11-25",
+      "notes": "Mentioned in PARAMETERIZATION_AUDIT_EXECUTIVE_SUMMARY.md as marked for deletion. No longer exists in repository."
+    },
+    {
+      "path": "config/causal_exctractor_2.yaml",
+      "status": "DELETED",
+      "reason": "Duplicate backup file",
+      "deletion_date": "before 2025-11-25",
+      "notes": "Mentioned in PARAMETERIZATION_AUDIT_EXECUTIVE_SUMMARY.md as marked for deletion. No longer exists in repository."
+    },
+    {
+      "path": "config/trazabilidad_cohrencia.yaml",
+      "status": "DELETED_OR_MIGRATED",
+      "reason": "Method parameters migrated to canonical JSON, audit rules extracted, unimplemented sections deleted",
+      "deletion_date": "before 2025-11-25",
+      "notes": "Mentioned in audit summary. Severity weights, bayesian_coupling, sector_weights migrated to JSON. Audit rules retained in data/audit_rules/."
+    },
+    {
+      "path": "config/causalextractor.yaml",
+      "status": "DELETED_OR_MIGRATED",
+      "reason": "Scoring thresholds migrated to JSON, patterns retained in data/patterns/",
+      "deletion_date": "before 2025-11-25",
+      "notes": "Scoring thresholds, discourse_controls, preprocessing migrated to JSON. Eslabones patterns and verb sequences retained."
+    },
+    {
+      "path": "config/causal_exctractor.yaml",
+      "status": "DELETED_OR_MIGRATED",
+      "reason": "Scoring modalities migrated to JSON, unimplemented sections deleted",
+      "deletion_date": "before 2025-11-25",
+      "notes": "Scoring modalities migrated. Micro assessment validation retained. Macro/meso assessment not implemented and deleted."
+    }
+  ],
+
+  "retained_configuration_files": [
+    {
+      "path": "config/execution_mapping.yaml",
+      "role": "workflow_metadata",
+      "reason": "RETAINED",
+      "description": "Workflow definitions, module mappings, and dimension execution flow. Not method parameters.",
+      "notes": "Quality thresholds from this file should be migrated to method_parameters.json, but workflow structure remains in YAML."
+    },
+    {
+      "path": "config/schemas/derek_beach/config.yaml",
+      "role": "pattern_library",
+      "reason": "RETAINED",
+      "description": "System patterns, lexicons, entity aliases, and domain-specific pattern libraries. Not method parameters.",
+      "notes": "Bayesian thresholds and mechanism_type_priors from this file should be migrated to method_parameters.json, but pattern libraries remain in YAML."
+    },
+    {
+      "path": "data/calibration/vfarfan_d1q1_calibration_dataset.yaml",
+      "role": "calibration_dataset",
+      "reason": "RETAINED",
+      "description": "Calibration dataset (300 examples) for VFARFAN D1Q1. This is data, not configuration.",
+      "notes": "Originally named VFARFAN_D1Q1_COMPLETE_10_AREAS.yaml. Renamed to clarify purpose. Path may need verification."
+    }
+  ],
+
+  "invariants": {
+    "description": "Numeric invariants derived from normative source reports. These MUST hold unless their source reports are regenerated under a dedicated jobfront.",
+    "parameterization_invariants": {
+      "methods_identified": {
+        "value": 283,
+        "source": "parameter_identification_report.md",
+        "description": "Total number of methods identified as requiring parameterization in Phases 1-2",
+        "last_verified": "2025-11-18T12:26:55.687512+00:00"
+      },
+      "total_configurable_parameters": {
+        "value": 462,
+        "source": "parameter_identification_report.md",
+        "description": "Total number of configurable parameters across all identified methods",
+        "last_verified": "2025-11-18T12:26:55.687512+00:00"
+      },
+      "total_parameters": {
+        "value": 462,
+        "source": "parameter_sources_comprehensive.md",
+        "description": "Total parameters analyzed in Phase 3 value determination",
+        "last_verified": "2025-11-18T17:02:06.740407+00:00"
+      },
+      "kb_recommendations": {
+        "value": 319,
+        "percentage": 69.0,
+        "source": "parameter_sources_comprehensive.md",
+        "description": "Number of parameters with knowledge base recommendations (academic sources, library references, standards)",
+        "last_verified": "2025-11-18T17:02:06.740407+00:00"
+      },
+      "code_defaults": {
+        "value": 143,
+        "percentage": 31.0,
+        "source": "parameter_sources_comprehensive.md",
+        "description": "Number of parameters using code defaults (conservative defaults requiring validation)",
+        "last_verified": "2025-11-18T17:02:06.740407+00:00"
+      }
+    },
+    "calibration_invariants": {
+      "intrinsic_methods": {
+        "value": 1995,
+        "source": "config/intrinsic_calibration.json",
+        "description": "Total methods in intrinsic calibration registry",
+        "breakdown": {
+          "calibrated": 1470,
+          "excluded": 525
+        },
+        "last_verified": "2025-11-10T18:36:07.566234+00:00"
+      },
+      "executors_calibrated": {
+        "value": 30,
+        "source": "config/method_parameters.json",
+        "description": "Number of D1Q1-D6Q5 executor methods with configured calibration thresholds",
+        "executor_list": [
+          "D1Q1_Executor", "D1Q2_Executor", "D1Q3_Executor", "D1Q4_Executor", "D1Q5_Executor",
+          "D2Q1_Executor", "D2Q2_Executor", "D2Q3_Executor", "D2Q4_Executor", "D2Q5_Executor",
+          "D3Q1_Executor", "D3Q2_Executor", "D3Q3_Executor", "D3Q4_Executor", "D3Q5_Executor",
+          "D4Q1_Executor", "D4Q2_Executor", "D4Q3_Executor", "D4Q4_Executor", "D4Q5_Executor",
+          "D5Q1_Executor", "D5Q2_Executor", "D5Q3_Executor", "D5Q4_Executor", "D5Q5_Executor",
+          "D6Q1_Executor", "D6Q2_Executor", "D6Q3_Executor", "D6Q4_Executor", "D6Q5_Executor"
+        ],
+        "last_verified": "2025-11-18"
+      },
+      "base_layer_weights": {
+        "w_th": 0.4,
+        "w_imp": 0.35,
+        "w_dep": 0.25,
+        "source": "config/intrinsic_calibration.json",
+        "description": "Weights for computing intrinsic score from b_theory, b_impl, b_deploy",
+        "constraint": "w_th + w_imp + w_dep = 1.0",
+        "last_verified": "2025-11-10T08:23:00Z"
+      }
+    },
+    "structural_invariants": {
+      "total_methods_in_catalogue": {
+        "value": 2189,
+        "source": "canonical_method_catalogue_v2.json",
+        "description": "Total methods catalogued in method signature analysis",
+        "last_verified": "2025-11-18T11:59:15.245947+00:00"
+      },
+      "methods_with_defaults": {
+        "value": 486,
+        "percentage": 22.2,
+        "source": "canonical_method_catalogue_v2.json",
+        "description": "Methods with default parameter values",
+        "last_verified": "2025-11-18T11:59:15.245947+00:00"
+      },
+      "files_parsed": {
+        "value": 167,
+        "source": "canonical_method_catalogue_v2.json",
+        "description": "Number of Python source files parsed",
+        "parse_errors": 0,
+        "last_verified": "2025-11-18T11:59:15.245947+00:00"
+      }
+    }
+  },
+
+  "mode": "STRICT",
+  "mode_description": {
+    "STRICT": "All artifacts must be in normative_artifacts to be treated as source of truth. Invariants are immutable. Changes require regeneration of source reports.",
+    "DESIGN": "Allows exploratory changes to parameters and thresholds for experimentation. Invariants may drift. Use only during active development phases."
+  },
+  "current_mode_rationale": "System is in production. Parameterization and calibration are complete. All changes must follow constitutional process.",
+
+  "constitutional_rules": {
+    "rule_1_normative_authority": "You may not treat any artifact as normative unless it appears in normative_artifacts.",
+    "rule_2_no_direct_edits": "You may not edit PARAMETERIZATION_CONSTITUTION.json directly in normal work. It may only be changed as part of a dedicated 'constitution update' task, with a full audit.",
+    "rule_3_invariant_immutability": "You may not change any invariant without regenerating the corresponding source report under a dedicated jobfront.",
+    "rule_4_reinterpretation_forbidden": "You are not allowed to 'reinterpret' facts stated in source reports. You must obey them.",
+    "rule_5_validation_gate": "Transitional artifacts may not be treated as fully normative until their validation criteria are satisfied.",
+    "rule_6_legacy_prohibition": "Legacy artifacts must never be used as sources of truth, even if they still exist in the repository."
+  },
+
+  "audit_trail": {
+    "creation": {
+      "date": "2025-11-25T00:00:00Z",
+      "jobfront": "JOBFRONT 3A - PARAMETERIZATION CONSTITUTION (HARD GATE)",
+      "created_by": "Claude (AI Agent)",
+      "authority": "User directive in F.A.R.F.A.N mechanistic policy pipeline",
+      "method": "Automated constitution generation from normative source reports"
+    },
+    "modifications": []
+  },
+
+  "next_constitutional_review": "TBD - To be scheduled after canonical_method_catalogue_v2.json validation is complete"
+}
