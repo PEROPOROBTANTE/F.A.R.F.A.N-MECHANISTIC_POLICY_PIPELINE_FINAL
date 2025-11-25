@@ -2116,33 +2116,53 @@
                 return;
             }
 
-            grid.innerHTML = '';
-            tags.innerHTML = '';
-
-            tribunalVoices.forEach((voice) => {
-                const card = document.createElement('div');
-                card.className = 'tribunal-card performance-optimized';
-                card.innerHTML = `
+            // Efficiently update grid (tribunalVoices)
+            const existingCards = Array.from(grid.children);
+            tribunalVoices.forEach((voice, i) => {
+                let card = existingCards[i];
+                if (!card) {
+                    card = document.createElement('div');
+                    card.className = 'tribunal-card performance-optimized';
+                    grid.appendChild(card);
+                }
+                // Only update if content changed
+                const newInner = `
                     <div class="tribunal-voice">${voice.name}</div>
                     <div style="font-size:11px; opacity:0.7;">${voice.lens}</div>
                     <div class="tribunal-verdict">${voice.verdict}</div>
                     <div class="tribunal-pillar">${voice.pillar}</div>
                 `;
-                grid.appendChild(card);
+                if (card.innerHTML !== newInner.trim()) {
+                    card.innerHTML = newInner;
+                }
             });
+            // Remove extra cards
+            while (grid.children.length > tribunalVoices.length) {
+                grid.removeChild(grid.lastChild);
+            }
 
             chip.textContent = `Concepto integral: ${tribunalThesis.headline}`;
             narrative.querySelector('strong').textContent = tribunalThesis.title;
             conceptText.textContent = tribunalThesis.detail;
 
-            const tagSet = new Set([...tribunalThesis.tags, ...tribunalVoices.map(v => v.pillar)]);
-            tagSet.forEach(tag => {
-                const pill = document.createElement('div');
-                pill.className = 'tribunal-tag performance-optimized';
-                pill.textContent = tag;
-                tags.appendChild(pill);
+            // Efficiently update tags
+            const tagSet = Array.from(new Set([...tribunalThesis.tags, ...tribunalVoices.map(v => v.pillar)]));
+            const existingTags = Array.from(tags.children);
+            tagSet.forEach((tag, i) => {
+                let pill = existingTags[i];
+                if (!pill) {
+                    pill = document.createElement('div');
+                    pill.className = 'tribunal-tag performance-optimized';
+                    tags.appendChild(pill);
+                }
+                if (pill.textContent !== tag) {
+                    pill.textContent = tag;
+                }
             });
-        }
+            // Remove extra tags
+            while (tags.children.length > tagSet.length) {
+                tags.removeChild(tags.lastChild);
+            }
 
         function buildMicroBars(values) {
             const max = Math.max(...values, 1);
