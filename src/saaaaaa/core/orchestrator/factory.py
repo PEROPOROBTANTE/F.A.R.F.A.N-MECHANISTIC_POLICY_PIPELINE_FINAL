@@ -25,6 +25,7 @@ Status: Refactored to be fully aligned with questionnaire.py
 import copy
 import json
 import logging
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -306,26 +307,29 @@ class CoreModuleFactory:
         self.data_dir = data_dir or _DEFAULT_DATA_DIR
         self.questionnaire_cache: CanonicalQuestionnaire | None = None
         self.catalog_cache: dict[str, Any] | None = None
+        self._lock = threading.Lock()
 
     def get_questionnaire(self) -> CanonicalQuestionnaire:
         """Get the canonical questionnaire object (cached)."""
-        if self.questionnaire_cache is None:
-            questionnaire_path = self.data_dir / "questionnaire_monolith.json"
-            canonical_q = load_questionnaire(questionnaire_path)
-            self.questionnaire_cache = canonical_q
-            logger.info(
-                "factory_loaded_questionnaire",
-                sha256=canonical_q.sha256[:16] + "...",
-                question_count=canonical_q.total_question_count,
-            )
-        return self.questionnaire_cache
+        with self._lock:
+            if self.questionnaire_cache is None:
+                questionnaire_path = self.data_dir / "questionnaire_monolith.json"
+                canonical_q = load_questionnaire(questionnaire_path)
+                self.questionnaire_cache = canonical_q
+                logger.info(
+                    "factory_loaded_questionnaire",
+                    sha256=canonical_q.sha256[:16] + "...",
+                    question_count=canonical_q.total_question_count,
+                )
+            return self.questionnaire_cache
 
     @property
     def catalog(self) -> dict[str, Any]:
         """Get method catalog data (cached)."""
-        if self.catalog_cache is None:
-            self.catalog_cache = load_catalog()
-        return self.catalog_cache
+        with self._lock:
+            if self.catalog_cache is None:
+                self.catalog_cache = load_catalog()
+            return self.catalog_cache
 
     def load_document(self, file_path: Path) -> DocumentData:
         """Load document and return structured data."""

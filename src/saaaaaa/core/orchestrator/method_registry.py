@@ -23,6 +23,7 @@ Benefits:
 from __future__ import annotations
 
 import logging
+import threading
 from importlib import import_module
 from typing import Any, Callable
 
@@ -52,6 +53,7 @@ class MethodRegistry:
         self._instance_cache: dict[str, Any] = {}
         self._direct_methods: dict[tuple[str, str], Callable[..., Any]] = {}
         self._failed_classes: set[str] = set()
+        self._lock = threading.Lock()
 
         # Special instantiation rules (from original MethodExecutor)
         self._special_instantiation: dict[str, Callable[[type], Any]] = {}
@@ -200,25 +202,27 @@ class MethodRegistry:
                 f"Class '{class_name}' previously failed to instantiate"
             )
 
-        # Return cached instance if available
-        if class_name in self._instance_cache:
-            return self._instance_cache[class_name]
+        # Use a lock to ensure thread-safe instantiation
+        with self._lock:
+            # Double-check if another thread instantiated it while waiting for the lock
+            if class_name in self._instance_cache:
+                return self._instance_cache[class_name]
 
-        # Load and instantiate class
-        try:
-            cls = self._load_class(class_name)
-            instance = self._instantiate_class(class_name, cls)
-            self._instance_cache[class_name] = instance
-            logger.info(
-                "class_instantiated_lazy",
-                class_name=class_name,
-            )
-            return instance
+            # Load and instantiate class
+            try:
+                cls = self._load_class(class_name)
+                instance = self._instantiate_class(class_name, cls)
+                self._instance_cache[class_name] = instance
+                logger.info(
+                    "class_instantiated_lazy",
+                    class_name=class_name,
+                )
+                return instance
 
-        except MethodRegistryError:
-            # Mark as failed to avoid repeated attempts
-            self._failed_classes.add(class_name)
-            raise
+            except MethodRegistryError:
+                # Mark as failed to avoid repeated attempts
+                self._failed_classes.add(class_name)
+                raise
 
     def get_method(
         self,

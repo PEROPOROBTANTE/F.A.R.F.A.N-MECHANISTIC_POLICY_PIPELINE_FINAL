@@ -499,6 +499,7 @@ class ExtendedArgRouter(ArgRouter):
         super().__init__(class_registry)
         self._special_routes = self._build_special_routes()
         self._metrics = RoutingMetrics()
+        self._metrics_lock = threading.Lock()
 
         logger.info(
             "extended_arg_router_initialized",
@@ -730,7 +731,8 @@ class ExtendedArgRouter(ArgRouter):
         Raises:
             ArgumentValidationError: On validation failure
         """
-        self._metrics.total_routes += 1
+        with self._metrics_lock:
+            self._metrics.total_routes += 1
 
         # Check for special route
         if method_name in self._special_routes:
@@ -756,7 +758,8 @@ class ExtendedArgRouter(ArgRouter):
         Returns:
             Tuple of (args, kwargs)
         """
-        self._metrics.special_routes_hit += 1
+        with self._metrics_lock:
+            self._metrics.special_routes_hit += 1
 
         route_spec = self._special_routes[method_name]
         required_args = set(route_spec["required_args"])
@@ -768,7 +771,8 @@ class ExtendedArgRouter(ArgRouter):
         # Check required arguments
         missing = required_args - provided_keys
         if missing:
-            self._metrics.validation_errors += 1
+            with self._metrics_lock:
+                self._metrics.validation_errors += 1
             logger.error(
                 "special_route_missing_args",
                 class_name=class_name,
@@ -787,8 +791,9 @@ class ExtendedArgRouter(ArgRouter):
 
         if unexpected and not accepts_kwargs:
             # Method doesn't accept **kwargs, so unexpected args are an error
-            self._metrics.validation_errors += 1
-            self._metrics.silent_drops_prevented += 1
+            with self._metrics_lock:
+                self._metrics.validation_errors += 1
+                self._metrics.silent_drops_prevented += 1
 
             logger.error(
                 "special_route_unexpected_args",
@@ -836,7 +841,8 @@ class ExtendedArgRouter(ArgRouter):
         Returns:
             Tuple of (args, kwargs)
         """
-        self._metrics.default_routes_hit += 1
+        with self._metrics_lock:
+            self._metrics.default_routes_hit += 1
 
         # Use base implementation for inspection
         spec = self.describe(class_name, method_name)
@@ -848,8 +854,9 @@ class ExtendedArgRouter(ArgRouter):
 
         if unexpected and not spec.has_var_keyword:
             # Method doesn't accept **kwargs - unexpected args are errors
-            self._metrics.validation_errors += 1
-            self._metrics.silent_drops_prevented += 1
+            with self._metrics_lock:
+                self._metrics.validation_errors += 1
+                self._metrics.silent_drops_prevented += 1
 
             logger.error(
                 "default_route_unexpected_args_strict",
@@ -874,7 +881,8 @@ class ExtendedArgRouter(ArgRouter):
             )
             return result
         except ArgumentValidationError:
-            self._metrics.validation_errors += 1
+            with self._metrics_lock:
+                self._metrics.validation_errors += 1
             raise
 
     def get_special_route_coverage(self) -> int:
