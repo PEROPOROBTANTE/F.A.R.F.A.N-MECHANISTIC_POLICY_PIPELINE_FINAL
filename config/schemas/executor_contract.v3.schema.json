@@ -1,0 +1,693 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Executor Contract v3 - Canonical Specification",
+  "description": "Schema for Phase 2 executor contracts following the canonical v3 specification. This version introduces comprehensive structure for identity, method binding, evidence assembly, output contract, and human-readable output generation.",
+  "type": "object",
+  "required": [
+    "identity",
+    "executor_binding",
+    "method_binding",
+    "question_context",
+    "evidence_assembly",
+    "output_contract",
+    "validation_rules",
+    "traceability",
+    "error_handling",
+    "calibration"
+  ],
+  "properties": {
+    "identity": {
+      "type": "object",
+      "description": "Identity and metadata of the contract",
+      "required": [
+        "base_slot",
+        "question_id",
+        "dimension_id",
+        "policy_area_id",
+        "contract_version"
+      ],
+      "properties": {
+        "base_slot": {
+          "type": "string",
+          "pattern": "^D[1-6]-Q[1-5]$",
+          "description": "Base slot identifier (e.g., D1-Q1)"
+        },
+        "question_id": {
+          "type": "string",
+          "pattern": "^Q\\d{3}$",
+          "description": "Question identifier (e.g., Q001)"
+        },
+        "dimension_id": {
+          "type": "string",
+          "pattern": "^DIM\\d{2}$",
+          "description": "Dimension identifier from canonical ontology"
+        },
+        "policy_area_id": {
+          "type": "string",
+          "pattern": "^PA\\d{2}$",
+          "description": "Policy area identifier from canonical ontology"
+        },
+        "contract_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version of this contract"
+        },
+        "contract_hash": {
+          "type": "string",
+          "description": "SHA256 hash of this contract file"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of contract creation"
+        },
+        "validated_against_schema": {
+          "type": "string",
+          "description": "Schema version used for validation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "executor_binding": {
+      "type": "object",
+      "description": "Binding to the executor class that processes this contract",
+      "required": [
+        "executor_class",
+        "executor_module"
+      ],
+      "properties": {
+        "executor_class": {
+          "type": "string",
+          "description": "Name of the executor class (e.g., D1Q1_Executor_Contract)"
+        },
+        "executor_module": {
+          "type": "string",
+          "description": "Python module path (e.g., saaaaaa.core.orchestrator.executors_contract)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "method_binding": {
+      "type": "object",
+      "description": "Binding to the analysis method(s) that implement this question's logic",
+      "required": [
+        "class_name",
+        "method_name",
+        "method_signature"
+      ],
+      "properties": {
+        "method_id": {
+          "type": "string",
+          "description": "Unique identifier in the method catalog (optional)"
+        },
+        "class_name": {
+          "type": "string",
+          "description": "Name of the analyzer class (e.g., Dimension1Analyzer)"
+        },
+        "method_name": {
+          "type": "string",
+          "description": "Name of the analysis method (e.g., analyze_question_1)"
+        },
+        "method_signature": {
+          "type": "object",
+          "required": [
+            "params",
+            "returns"
+          ],
+          "properties": {
+            "params": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of parameter names"
+            },
+            "returns": {
+              "type": "string",
+              "description": "Return type name"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "question_context": {
+      "type": "object",
+      "description": "Complete context for the question from the questionnaire monolith",
+      "required": [
+        "question_text",
+        "question_type",
+        "scoring_modality",
+        "expected_output_type"
+      ],
+      "properties": {
+        "question_text": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Full text of the question"
+        },
+        "question_type": {
+          "type": "string",
+          "enum": [
+            "micro",
+            "macro",
+            "meta"
+          ],
+          "description": "Type of question"
+        },
+        "scoring_modality": {
+          "type": "string",
+          "enum": [
+            "TYPE_A",
+            "TYPE_B",
+            "TYPE_C",
+            "TYPE_D",
+            "TYPE_E",
+            "TYPE_F"
+          ],
+          "description": "Scoring modality from the questionnaire monolith"
+        },
+        "modality": {
+          "type": "string",
+          "description": "Semantic modality name (e.g., count_and_scale, binary)"
+        },
+        "expected_output_type": {
+          "type": "string",
+          "enum": [
+            "score",
+            "boolean",
+            "category",
+            "number",
+            "evidence_list"
+          ],
+          "description": "Expected type of output"
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "pattern"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "pattern": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "match_type": {
+                "type": "string",
+                "enum": [
+                  "REGEX",
+                  "LITERAL",
+                  "SEMANTIC"
+                ]
+              },
+              "confidence_weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "flags": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "List of patterns for text matching"
+        },
+        "expected_elements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "minimum": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "description": "Expected evidence elements"
+        },
+        "validations": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Validation rules from the monolith"
+        }
+      },
+      "additionalProperties": false
+    },
+    "signal_requirements": {
+      "type": "object",
+      "description": "Requirements for signals from the signal registry",
+      "properties": {
+        "mandatory_signals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of mandatory signal IDs"
+        },
+        "optional_signals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of optional signal IDs"
+        },
+        "signal_aggregation": {
+          "type": "string",
+          "enum": [
+            "weighted_mean",
+            "max",
+            "consensus",
+            "bayesian"
+          ],
+          "description": "Aggregation strategy for multiple signals"
+        },
+        "minimum_signal_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Minimum signal strength threshold"
+        },
+        "note": {
+          "type": "string",
+          "description": "Notes about signal requirements"
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence_assembly": {
+      "type": "object",
+      "description": "Configuration for evidence assembly",
+      "required": [
+        "module",
+        "class_name",
+        "method_name",
+        "assembly_rules"
+      ],
+      "properties": {
+        "module": {
+          "type": "string",
+          "description": "Python module path for the assembler"
+        },
+        "class_name": {
+          "type": "string",
+          "description": "Assembler class name"
+        },
+        "method_name": {
+          "type": "string",
+          "description": "Assembly method name"
+        },
+        "output_schema": {
+          "type": "object",
+          "description": "JSON Schema for assembler output"
+        },
+        "assembly_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "target",
+              "sources",
+              "merge_strategy"
+            ],
+            "properties": {
+              "target": {
+                "type": "string"
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "merge_strategy": {
+                "type": "string",
+                "enum": [
+                  "concat",
+                  "first",
+                  "last",
+                  "mean",
+                  "max",
+                  "min",
+                  "weighted_mean",
+                  "majority"
+                ]
+              },
+              "weights": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "default": {},
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Rules for assembling evidence from method outputs"
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_contract": {
+      "type": "object",
+      "description": "Contract for the output structure",
+      "required": [
+        "result_type",
+        "schema"
+      ],
+      "properties": {
+        "result_type": {
+          "type": "string",
+          "description": "Type name of the result (e.g., Phase2QuestionResult)"
+        },
+        "schema": {
+          "type": "object",
+          "description": "JSON Schema for the output"
+        },
+        "consumer_modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of modules that consume this output"
+        },
+        "human_readable_output": {
+          "type": "object",
+          "description": "Configuration for human-readable output generation",
+          "required": [
+            "format",
+            "template"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": [
+                "markdown",
+                "html",
+                "plain_text"
+              ],
+              "description": "Output format"
+            },
+            "template": {
+              "type": "object",
+              "description": "Template structure for output"
+            },
+            "methodological_depth": {
+              "type": "object",
+              "description": "Detailed methodological explanation for each method used",
+              "properties": {
+                "methods": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "method_name",
+                      "epistemological_foundation",
+                      "technical_approach",
+                      "output_interpretation"
+                    ],
+                    "properties": {
+                      "method_name": {
+                        "type": "string"
+                      },
+                      "class_name": {
+                        "type": "string"
+                      },
+                      "epistemological_foundation": {
+                        "type": "object",
+                        "description": "Epistemological basis of the method"
+                      },
+                      "technical_approach": {
+                        "type": "object",
+                        "description": "Technical implementation details"
+                      },
+                      "output_interpretation": {
+                        "type": "object",
+                        "description": "How to interpret the method's output"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_rules": {
+      "type": "object",
+      "description": "Validation rules for evidence",
+      "required": [
+        "rules"
+      ],
+      "properties": {
+        "na_policy": {
+          "type": "string",
+          "enum": [
+            "abort_on_critical",
+            "score_zero",
+            "propagate"
+          ],
+          "description": "Policy for handling validation failures"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "field",
+              "type"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "array",
+                  "object",
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "must_contain": {
+                "type": "object"
+              },
+              "should_contain": {
+                "type": "array"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "traceability": {
+      "type": "object",
+      "description": "Traceability information",
+      "required": [
+        "source_file"
+      ],
+      "properties": {
+        "source_file": {
+          "type": "string"
+        },
+        "json_path": {
+          "type": "string"
+        },
+        "ontology_source": {
+          "type": "string"
+        },
+        "source_hash": {
+          "type": "string"
+        },
+        "contract_generation_method": {
+          "type": "string"
+        },
+        "contract_author": {
+          "type": "string"
+        },
+        "provenance_note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "error_handling": {
+      "type": "object",
+      "description": "Error handling configuration",
+      "required": [
+        "on_method_not_found",
+        "on_method_failure",
+        "on_assembly_failure"
+      ],
+      "properties": {
+        "on_method_not_found": {
+          "type": "string",
+          "enum": [
+            "raise",
+            "fallback",
+            "skip"
+          ]
+        },
+        "on_method_failure": {
+          "type": "string",
+          "enum": [
+            "raise",
+            "propagate_with_trace",
+            "fallback"
+          ]
+        },
+        "on_assembly_failure": {
+          "type": "string",
+          "enum": [
+            "raise",
+            "propagate_with_trace",
+            "return_partial"
+          ]
+        },
+        "failure_contract": {
+          "type": "object",
+          "properties": {
+            "abort_if": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "emit_code": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "fallback_strategy": {
+      "type": "object",
+      "description": "Fallback strategies",
+      "properties": {
+        "use_llm_direct": {
+          "type": "boolean"
+        },
+        "use_heuristics": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "test_configuration": {
+      "type": "object",
+      "description": "Test configuration",
+      "properties": {
+        "test_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "test_document_fixtures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expected_test_coverage": {
+          "type": "string"
+        },
+        "integration_test_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "compatibility": {
+      "type": "object",
+      "description": "Compatibility information",
+      "properties": {
+        "orchestrator_min_version": {
+          "type": "string"
+        },
+        "signal_registry_min_version": {
+          "type": "string"
+        },
+        "method_executor_min_version": {
+          "type": "string"
+        },
+        "questionnaire_monolith_version": {
+          "type": "string"
+        },
+        "phase2_types_version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "calibration": {
+      "type": "object",
+      "description": "Calibration configuration",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "placeholder",
+            "configured",
+            "calibrated"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "intrinsic_calibration": {
+              "type": "string"
+            },
+            "fusion_specification": {
+              "type": "string"
+            },
+            "layer_calibrations_dir": {
+              "type": "string"
+            },
+            "canonical_spec": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
