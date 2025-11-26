@@ -1,0 +1,284 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "description": "Machine-readable rubric for computing intrinsic calibration scores",
+    "spec_reference": "canonic_calibration_methods.md",
+    "last_updated": "2025-11-10T18:31:00Z"
+  },
+  "b_theory": {
+    "description": "Theoretical foundation quality score",
+    "weights": {
+      "grounded_in_valid_statistics": 0.4,
+      "logical_consistency": 0.3,
+      "appropriate_assumptions": 0.3
+    },
+    "rules": {
+      "grounded_in_valid_statistics": {
+        "description": "Statistical grounding based on keywords and method semantics",
+        "scoring": {
+          "has_bayesian_or_statistical_model": {
+            "keywords": ["bayesian", "statistical", "probability", "distribution", "regression", "coefficient"],
+            "threshold": 3,
+            "score": 1.0
+          },
+          "has_some_statistical_grounding": {
+            "keywords": ["bayesian", "statistical", "probability", "distribution", "regression", "coefficient"],
+            "threshold": 1,
+            "score": 0.5
+          },
+          "no_statistical_grounding": {
+            "score": 0.0
+          }
+        }
+      },
+      "logical_consistency": {
+        "description": "Documentation quality and logical structure",
+        "scoring": {
+          "complete_documentation": {
+            "conditions": ["has_docstring_gt_50_chars", "has_returns_doc", "has_params_doc"],
+            "score": 1.0
+          },
+          "partial_documentation": {
+            "conditions": ["has_docstring_gt_20_chars"],
+            "score": 0.5
+          },
+          "minimal_documentation": {
+            "score": 0.2
+          }
+        }
+      },
+      "appropriate_assumptions": {
+        "description": "Explicit assumption documentation",
+        "scoring": {
+          "assumptions_documented": {
+            "keywords": ["assum", "constraint", "precondition", "requires"],
+            "score": 0.7
+          },
+          "implicit_assumptions": {
+            "score": 0.4
+          }
+        }
+      }
+    }
+  },
+  "b_impl": {
+    "description": "Implementation quality score - Type hints are documentation only, NOT enforcement",
+    "weights": {
+      "impl_tests": 0.40,
+      "impl_robust": 0.25,
+      "impl_enforce": 0.20,
+      "impl_docs": 0.15
+    },
+    "rules": {
+      "impl_tests": {
+        "description": "Evidence of actual tests running (not just presence of test files)",
+        "scoring": {
+          "has_test_evidence": {
+            "description": "Test runs verified or high-quality test suite present",
+            "score": 0.8
+          },
+          "has_test_files": {
+            "description": "Test files exist but execution not verified",
+            "score": 0.5
+          },
+          "no_test_evidence": {
+            "description": "No test evidence found",
+            "default": true,
+            "score": 0.2
+          }
+        },
+        "note": "Conservative scoring until CI/test metrics available"
+      },
+      "impl_robust": {
+        "description": "Error handling and robustness patterns",
+        "scoring": {
+          "comprehensive_handling": {
+            "description": "Try/except blocks, input validation, defensive checks",
+            "score": 0.8
+          },
+          "basic_handling": {
+            "description": "Some error handling present",
+            "score": 0.5
+          },
+          "minimal_handling": {
+            "description": "Limited or no explicit error handling",
+            "default": true,
+            "score": 0.3
+          }
+        }
+      },
+      "impl_enforce": {
+        "description": "REAL runtime enforcement tools (mypy strict, pydantic, contracts, assertions)",
+        "scoring": {
+          "strict_enforcement": {
+            "description": "Runtime validation tools present (pydantic, contracts, assertions)",
+            "score": 0.9
+          },
+          "static_checking": {
+            "description": "mypy/pyright configured but no runtime enforcement",
+            "score": 0.4
+          },
+          "no_enforcement": {
+            "description": "No enforcement tools detected",
+            "default": true,
+            "score": 0.0
+          }
+        },
+        "note": "Type hints alone score 0.0 here - they are documentation, not enforcement"
+      },
+      "impl_docs": {
+        "description": "Documentation quality including type hints AS DOCUMENTATION",
+        "scoring": {
+          "formula": "(0.3 if doc_length > 50 else 0.1) + (0.2 if has_params_doc else 0) + (0.2 if has_returns_doc else 0) + (0.15 * type_hint_coverage) + (0.15 if has_examples else 0)",
+          "type_hint_coverage_formula": "(typed_params / total_params) * 0.7 + (0.3 if has_return_type else 0)"
+        },
+        "note": "Type hints contribute to documentation score only (15% of impl_docs weight)"
+      }
+    }
+  },
+  "b_deploy": {
+    "description": "Deployment maturity score",
+    "weights": {
+      "validation_runs": 0.4,
+      "stability_coefficient": 0.35,
+      "failure_rate": 0.25
+    },
+    "rules": {
+      "layer_maturity_baseline": {
+        "description": "Base maturity by layer classification",
+        "scoring": {
+          "orchestrator": 0.7,
+          "processor": 0.6,
+          "analyzer": 0.5,
+          "ingestion": 0.6,
+          "executor": 0.5,
+          "utility": 0.6,
+          "unknown": 0.3
+        }
+      },
+      "validation_runs": {
+        "description": "Validation run estimates scaled from layer maturity",
+        "scoring": {
+          "formula": "layer_maturity_baseline * 0.8"
+        }
+      },
+      "stability_coefficient": {
+        "description": "Stability estimates scaled from layer maturity",
+        "scoring": {
+          "formula": "layer_maturity_baseline * 0.9"
+        }
+      },
+      "failure_rate": {
+        "description": "Failure rate estimates scaled from layer maturity",
+        "scoring": {
+          "formula": "layer_maturity_baseline * 0.85"
+        }
+      }
+    }
+  },
+  "exclusion_criteria": {
+    "description": "Rules for excluding methods from calibration",
+    "patterns": [
+      {
+        "pattern": "__init__",
+        "reason": "Constructor - non-analytical"
+      },
+      {
+        "pattern": "__str__",
+        "reason": "String representation - non-analytical"
+      },
+      {
+        "pattern": "__repr__",
+        "reason": "String representation - non-analytical"
+      },
+      {
+        "pattern": "__eq__",
+        "reason": "Equality comparison - non-analytical"
+      },
+      {
+        "pattern": "__hash__",
+        "reason": "Hash function - non-analytical"
+      },
+      {
+        "pattern": "__len__",
+        "reason": "Length accessor - non-analytical"
+      },
+      {
+        "pattern": "_format_",
+        "reason": "Formatting utility - non-semantic"
+      },
+      {
+        "pattern": "_log_",
+        "reason": "Logging utility - non-semantic"
+      },
+      {
+        "pattern": "_print_",
+        "reason": "Print utility - non-semantic"
+      },
+      {
+        "pattern": "to_string",
+        "reason": "Serialization - non-semantic"
+      },
+      {
+        "pattern": "to_json",
+        "reason": "Serialization - non-semantic"
+      },
+      {
+        "pattern": "to_dict",
+        "reason": "Serialization - non-semantic"
+      },
+      {
+        "pattern": "visit_",
+        "reason": "AST visitor - non-analytical"
+      }
+    ],
+    "additional_rules": {
+      "private_utility_in_utility_layer": {
+        "condition": "method_name.startswith('_') and layer == 'utility' and not analytically_active",
+        "reason": "Private utility function - non-analytical"
+      },
+      "pure_getter": {
+        "condition": "method_name.startswith('get_') and return_type in ['str', 'Path', 'bool'] and not analytically_active",
+        "reason": "Simple getter with no analytical logic"
+      }
+    }
+  },
+  "calibration_triggers": {
+    "description": "3-question decision automaton for determining calibration requirement",
+    "questions": {
+      "q1_analytically_active": {
+        "question": "Can this method change what is true in the pipeline?",
+        "indicators": {
+          "analytical_verbs": [
+            "score", "compute", "calculate", "evaluate", "assess", "validate",
+            "filter", "select", "transform", "aggregate", "detect", "extract",
+            "classify", "rank", "weight", "normalize", "calibrate", "adjust",
+            "infer", "predict", "estimate", "measure", "analyze", "process"
+          ],
+          "check_method_name": true,
+          "check_docstring": true
+        }
+      },
+      "q2_parametric": {
+        "question": "Does it encode assumptions or knobs that matter?",
+        "indicators": {
+          "parametric_keywords": [
+            "threshold", "prior", "weight", "parameter", "coefficient",
+            "model", "rule", "heuristic", "assumption", "criterion"
+          ],
+          "check_docstring": true,
+          "check_layer": ["analyzer", "processor", "executor"]
+        }
+      },
+      "q3_safety_critical": {
+        "question": "Would a bug/misuse materially mislead an evaluation?",
+        "indicators": {
+          "critical_layers": ["analyzer", "processor", "orchestrator"],
+          "evaluative_return_types": ["float", "int", "dict", "list"],
+          "exclude_simple_getters": true
+        }
+      }
+    },
+    "decision": "If ANY question returns YES and method is NOT explicitly excluded, then calibration is REQUIRED"
+  }
+}

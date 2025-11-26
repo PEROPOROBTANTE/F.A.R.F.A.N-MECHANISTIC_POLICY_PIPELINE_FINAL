@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "question_id": "D1-Q2",
+  "base_slot": "D1-Q2",
+  "dimension": "D1",
+  "policy_area": "generic",
+  "modality": "diagnostico",
+  "na_policy": "abort",
+  "method_inputs": [
+    {
+      "class": "PolicyTextProcessor",
+      "method": "segment_into_sentences",
+      "provides": [
+        "sentences"
+      ],
+      "priority": 0,
+      "args": {}
+    },
+    {
+      "class": "IndustrialPolicyProcessor",
+      "method": "process",
+      "provides": [
+        "ip_result"
+      ],
+      "priority": 1,
+      "args": {}
+    }
+  ],
+  "assembly_rules": [
+    {
+      "target": "sentences",
+      "sources": [
+        "sentences"
+      ],
+      "merge_strategy": "first"
+    },
+    {
+      "target": "analysis",
+      "sources": [
+        "ip_result"
+      ],
+      "merge_strategy": "first"
+    }
+  ],
+  "validation_rules": [
+    {
+      "field": "sentences",
+      "type": "array",
+      "required": true,
+      "min_length": 1
+    },
+    {
+      "field": "analysis",
+      "type": "object",
+      "required": true
+    }
+  ],
+  "final_payload_shape": {},
+  "human_answer_template": ""
+}

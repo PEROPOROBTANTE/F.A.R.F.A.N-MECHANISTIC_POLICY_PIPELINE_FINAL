@@ -18,6 +18,7 @@ from .contracts import (
     ArgRouterExpectation,
     ArgRouterPayloadDeliverable,
     CPPDeliverable,
+    SPCDeliverable,
     EnrichedChunkDeliverable,
     ExecutorInputDeliverable,
     FeatureTableDeliverable,
@@ -164,6 +165,7 @@ class WiringValidator:
         """Initialize wiring validator."""
         self._validators = {
             "cpp->adapter": LinkValidator("cpp->adapter"),
+            "spc->adapter": LinkValidator("spc->adapter"),
             "adapter->orchestrator": LinkValidator("adapter->orchestrator"),
             "orchestrator->argrouter": LinkValidator("orchestrator->argrouter"),
             "argrouter->executors": LinkValidator("argrouter->executors"),
@@ -175,8 +177,28 @@ class WiringValidator:
 
         logger.info("wiring_validator_initialized", links=len(self._validators))
 
+    def validate_spc_to_adapter(self, spc_data: dict[str, Any]) -> None:
+        """Validate SPC → Adapter link.
+
+        Args:
+            spc_data: SPC deliverable data
+
+        Raises:
+            WiringContractError: If validation fails
+        """
+        from .contracts import SPCDeliverable
+
+        validator = self._validators["spc->adapter"]
+        validator.validate(
+            deliverable_data=spc_data,
+            deliverable_model=SPCDeliverable,
+            expectation_model=AdapterExpectation,
+        )
+
     def validate_cpp_to_adapter(self, cpp_data: dict[str, Any]) -> None:
         """Validate CPP → Adapter link.
+
+        DEPRECATED: Use validate_spc_to_adapter instead.
 
         Args:
             cpp_data: CPP deliverable data
@@ -184,6 +206,16 @@ class WiringValidator:
         Raises:
             WiringContractError: If validation fails
         """
+        # Forward to new validator if possible, but keep legacy link name for now
+        # to avoid breaking existing hashes if they depend on link name.
+        # However, we should warn.
+        import warnings
+        warnings.warn(
+            "validate_cpp_to_adapter is deprecated. Use validate_spc_to_adapter instead.",
+            DeprecationWarning,
+            stacklevel=2
+        )
+
         validator = self._validators["cpp->adapter"]
         validator.validate(
             deliverable_data=cpp_data,

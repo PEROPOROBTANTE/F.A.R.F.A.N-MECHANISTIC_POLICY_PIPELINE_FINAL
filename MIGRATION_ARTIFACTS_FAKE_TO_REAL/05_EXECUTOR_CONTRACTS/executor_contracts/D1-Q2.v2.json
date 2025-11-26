@@ -1,0 +1,118 @@
+{
+  "contract_version": "2.0.0",
+  "identity": {
+    "base_slot": "D1-Q2",
+    "question_id": "Q002",
+    "question_global": 2,
+    "dimension_id": "DIM01",
+    "policy_area_id": "PA01",
+    "cluster_id": "CL02"
+  },
+  "traceability": {
+    "source_file": "data/questionnaire_monolith.json",
+    "json_path": "blocks.micro_questions[1]",
+    "source_hash_TODO": "Hash of the questionnaire file should be inserted here."
+  },
+  "scoring": {
+    "scoring_modality": "TYPE_B",
+    "scoring_definition_ref": "scoring_modalities.TYPE_B",
+    "expected_output_type": "score"
+  },
+  "signal_requirements": {
+    "description": "This executor requires a SignalPack for the policy area defined in identity.policy_area_id. The pack is automatically retrieved by the orchestrator based on the policy area and passed to the executed methods.",
+    "policy_area_source": "identity.policy_area_id",
+    "expected_signal_pack_keys": [
+      "patterns",
+      "indicators",
+      "regex",
+      "entities",
+      "thresholds"
+    ],
+    "aggregation": "Signals are pre-aggregated by policy area into a SignalPack by the `signal_loader` module. This executor does not perform signal aggregation itself."
+  },
+  "method_inputs": [
+    {
+      "class": "Dimension1Analyzer",
+      "method": "analyze_question_2",
+      "description": "Primary analysis for D1-Q2. Extracts elements based on patterns.",
+      "provides": "primary_analysis",
+      "priority": 1,
+      "args": {}
+    },
+    {
+      "class": "Dimension1Validator",
+      "method": "validate_question_2",
+      "description": "Validation for D1-Q2. Checks for presence of required elements.",
+      "provides": "validation_analysis",
+      "priority": 2,
+      "args": {}
+    }
+  ],
+  "assembly_rules": [
+    {
+      "target": "elements_found",
+      "sources": [
+        "primary_analysis.elements",
+        "validation_analysis.validated_elements"
+      ],
+      "merge_strategy": "concat",
+      "description": "Combine all unique elements found from both analysis and validation stages."
+    },
+    {
+      "target": "confidence_scores",
+      "sources": [
+        "primary_analysis.confidences"
+      ],
+      "merge_strategy": "first",
+      "default": [],
+      "description": "Use the confidence scores from the primary analysis."
+    },
+    {
+      "target": "pattern_matches",
+      "sources": [
+        "primary_analysis.patterns"
+      ],
+      "merge_strategy": "first",
+      "default": {},
+      "description": "Use the pattern match details from the primary analysis."
+    },
+    {
+      "target": "metadata",
+      "sources": [
+        "primary_analysis.metadata",
+        "validation_analysis.metadata"
+      ],
+      "merge_strategy": "concat",
+      "description": "Combine metadata from all method steps for full traceability."
+    }
+  ],
+  "validation_rules": {
+    "na_policy": "abort_on_critical",
+    "rules": [
+      {
+        "field": "elements_found",
+        "type": "array",
+        "must_contain": {
+          "count": 3,
+          "elements": [
+            "cuantificacion_brecha",
+            "sesgos_reconocidos",
+            "vacios_explicitos"
+          ]
+        },
+        "description": "Derived from monolith `expected_elements` where `required` is true. All 3 elements are mandatory."
+      }
+    ]
+  },
+  "error_handling": {
+    "failure_contract": {
+      "abort_if": [
+        "missing_required_element",
+        "incomplete_text"
+      ],
+      "emit_code": "ABORT-Q002-REQ"
+    },
+    "on_method_failure": "propagate_with_trace",
+    "on_assembly_failure": "propagate_with_trace"
+  }
+}

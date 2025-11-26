@@ -38,99 +38,25 @@ except ImportError:
     logger = logging.getLogger(__name__)
 
 
-# Legacy fingerprint aliases for backward compatibility
-LEGACY_FINGERPRINT_ALIASES = {
-    "pa07_v1_land_territory": "PA07",
-    "pa08_v1_leaders_defenders": "PA08",
-    "pa09_v1_prison_rights": "PA09",
-    "pa10_v1_migration": "PA10",
-}
-
-
-def compute_content_hash(content: str | bytes) -> str:
+def resolve_fingerprint_alias(fingerprint: str, legacy_aliases: dict[str, str]) -> str:
     """
-    Compute content-based hash using blake3 or sha256 fallback.
+    Resolve legacy fingerprint to canonical policy area using a provided alias map.
 
     Args:
-        content: String or bytes to hash
+        fingerprint: Fingerprint to resolve (may be legacy or canonical).
+        legacy_aliases: A dictionary mapping legacy fingerprints to canonical IDs.
 
     Returns:
-        Hex string of hash (truncated to 32 chars for readability)
-    """
-    if isinstance(content, str):
-        content = content.encode('utf-8')
-
-    if BLAKE3_AVAILABLE:
-        return blake3.blake3(content).hexdigest()[:32]
-    else:
-        return hashlib.sha256(content).hexdigest()[:32]
-
-
-def canonicalize_signal_fingerprint(signal_pack: SignalPack) -> str:
-    """
-    Compute canonical fingerprint from SignalPack content.
-
-    This implements the soft-alias pattern by:
-    1. Extracting deterministic content (patterns, indicators, entities, thresholds)
-    2. Computing content-based hash (not static string)
-    3. Mapping legacy aliases to canonical fingerprints
-
-    Args:
-        signal_pack: SignalPack object to fingerprint
-
-    Returns:
-        Canonical fingerprint string (32 chars)
+        Canonical policy area ID (PA01-PA10) or original fingerprint.
 
     Example:
-        >>> pack = SignalPack(version="1.0.0", policy_area="fiscal", ...)
-        >>> fingerprint = canonicalize_signal_fingerprint(pack)
-        >>> print(f"Fingerprint: {fingerprint}")
-    """
-    # Extract deterministic content (order-independent)
-    content_dict = {
-        "version": signal_pack.version,
-        "policy_area": signal_pack.policy_area,
-        "patterns": sorted(signal_pack.patterns),
-        "indicators": sorted(signal_pack.indicators),
-        "entities": sorted(signal_pack.entities),
-        "thresholds": dict(sorted(signal_pack.thresholds.items())),
-        # Include metadata policy_area_id for PA07-PA10 uniqueness
-        "original_policy_area": signal_pack.metadata.get("original_policy_area", ""),
-    }
-
-    # Serialize to JSON (sorted keys for determinism)
-    content_json = json.dumps(content_dict, sort_keys=True)
-
-    # Compute content hash
-    canonical_fingerprint = compute_content_hash(content_json)
-
-    logger.debug(
-        "canonical_fingerprint_computed",
-        policy_area=signal_pack.metadata.get("original_policy_area", "unknown"),
-        fingerprint=canonical_fingerprint,
-        legacy_fingerprint=signal_pack.source_fingerprint,
-    )
-
-    return canonical_fingerprint
-
-
-def resolve_fingerprint_alias(fingerprint: str) -> str:
-    """
-    Resolve legacy fingerprint to canonical policy area.
-
-    Args:
-        fingerprint: Fingerprint to resolve (may be legacy or canonical)
-
-    Returns:
-        Canonical policy area ID (PA01-PA10) or original fingerprint
-
-    Example:
-        >>> resolve_fingerprint_alias("pa07_v1_land_territory")
+        >>> aliases = {"pa07_v1_land_territory": "PA07"}
+        >>> resolve_fingerprint_alias("pa07_v1_land_territory", aliases)
         'PA07'
-        >>> resolve_fingerprint_alias("abc123...")
+        >>> resolve_fingerprint_alias("abc123...", aliases)
         'abc123...'
     """
-    return LEGACY_FINGERPRINT_ALIASES.get(fingerprint, fingerprint)
+    return legacy_aliases.get(fingerprint, fingerprint)
 
 
 def build_fingerprint_index(

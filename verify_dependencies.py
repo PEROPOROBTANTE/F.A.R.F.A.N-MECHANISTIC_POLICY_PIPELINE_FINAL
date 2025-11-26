@@ -123,7 +123,7 @@ def check_critical_packages() -> List[bool]:
 
         # Bayesian Analysis
         ('pymc', 'pymc==5.16.2'),
-        ('pytensor', 'pytensor==2.34.0'),
+        ('pytensor', 'pytensor==2.25.1'),
         ('arviz', 'arviz==0.20.0'),
 
         # Deep Learning
@@ -184,7 +184,7 @@ def verify_versions() -> bool:
             versions_ok = False
 
         # PyTensor version check
-        if pytensor.__version__.startswith("2.34"):
+        if pytensor.__version__.startswith("2.25"):
             print(f"✓ PyTensor version:            {pytensor.__version__} (correct)")
         else:
             print(f"✗ PyTensor version:            {pytensor.__version__} (expected 2.34.x)")

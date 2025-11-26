@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "question_id": "D1-Q1",
+  "base_slot": "D1-Q1",
+  "dimension": "D1",
+  "policy_area": "generic",
+  "modality": "diagnostico",
+  "na_policy": "abort",
+  "method_inputs": [
+    {
+      "class": "IndustrialPolicyProcessor",
+      "method": "process",
+      "provides": [
+        "ip_result"
+      ],
+      "priority": 0,
+      "args": {}
+    }
+  ],
+  "assembly_rules": [
+    {
+      "target": "analysis",
+      "sources": [
+        "ip_result"
+      ],
+      "merge_strategy": "first"
+    }
+  ],
+  "validation_rules": [
+    {
+      "field": "analysis",
+      "type": "object",
+      "required": true
+    }
+  ],
+  "final_payload_shape": {},
+  "human_answer_template": ""
+}

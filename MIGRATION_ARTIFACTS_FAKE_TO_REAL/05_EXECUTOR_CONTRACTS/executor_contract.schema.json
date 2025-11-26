@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Executor Contract",
+  "type": "object",
+  "required": ["base_slot", "method_inputs", "assembly_rules", "validation_rules"],
+  "properties": {
+    "version": { "type": "string" },
+    "base_slot": { "type": "string", "pattern": "^D[1-6]-Q[1-5]$" },
+    "question_id": { "type": "string" },
+    "question_global": { "type": "integer" },
+    "dimension": { "type": "string" },
+    "policy_area": { "type": "string" },
+    "modality": { "type": "string" },
+    "na_policy": { "type": "string", "enum": ["abort", "score_zero"], "default": "abort" },
+    "method_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["class", "method"],
+        "properties": {
+          "class": { "type": "string" },
+          "method": { "type": "string" },
+          "provides": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" } }
+            ]
+          },
+          "priority": { "type": "integer", "default": 0 },
+          "args": { "type": "object", "additionalProperties": true },
+          "weights": { "type": "array", "items": { "type": "number" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "assembly_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "sources", "merge_strategy"],
+        "properties": {
+          "target": { "type": "string" },
+          "sources": { "type": "array", "items": { "type": "string" } },
+          "merge_strategy": {
+            "type": "string",
+            "enum": ["concat", "first", "last", "mean", "max", "min", "weighted_mean", "majority"]
+          },
+          "weights": { "type": "array", "items": { "type": "number" } },
+          "default": {}
+        },
+        "additionalProperties": false
+      }
+    },
+    "validation_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field"],
+        "properties": {
+          "field": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["array", "integer", "float", "string", "boolean", "object", "any"]
+          },
+          "required": { "type": "boolean", "default": false },
+          "min_length": { "type": "integer" },
+          "max_length": { "type": "integer" },
+          "range": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": ["number", "null"] }
+          },
+          "allowed_values": { "type": "array" },
+          "pattern": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "error_handling": {
+      "type": "object",
+      "properties": {
+        "failure_contract": {
+          "type": "object",
+          "properties": {
+            "abort_if": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "emit_code": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "final_payload_shape": { "type": "object", "additionalProperties": true },
+    "human_answer_template": { "type": "string" }
+  },
+  "additionalProperties": true
+}
