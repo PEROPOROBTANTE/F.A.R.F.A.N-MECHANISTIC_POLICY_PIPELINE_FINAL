@@ -1,0 +1,238 @@
+{
+  "_metadata": {
+    "description": "Unit Layer (@u) Configuration - PDT Quality Assessment",
+    "version": "1.0.0",
+    "last_updated": "2025-11-26",
+    "formula": "U(pdt) = aggregator(w_S·S, w_M·M, w_I·I, w_P·P)",
+    "formal_spec_reference": "canonic_calibration_methods.md section 3.3"
+  },
+
+  "component_weights": {
+    "w_S": {
+      "value": 0.25,
+      "description": "Structural compliance weight",
+      "rationale": "PDT structural organization and hierarchy quality"
+    },
+    "w_M": {
+      "value": 0.25,
+      "description": "Mandatory sections weight",
+      "rationale": "Required content presence and completeness"
+    },
+    "w_I": {
+      "value": 0.25,
+      "description": "Indicator quality weight",
+      "rationale": "Indicator matrix structure, linkage, and logical coherence"
+    },
+    "w_P": {
+      "value": 0.25,
+      "description": "PPI completeness weight",
+      "rationale": "Budget matrix presence, structure, and accounting closure"
+    }
+  },
+
+  "aggregation": {
+    "type": "geometric_mean",
+    "alternatives": ["harmonic_mean", "weighted_average"],
+    "rationale": "Geometric mean penalizes weak components more than arithmetic mean"
+  },
+
+  "hard_gates": {
+    "require_ppi_presence": {
+      "value": true,
+      "rationale": "PPI matrix is legally mandatory for territorial development plans"
+    },
+    "require_indicator_matrix": {
+      "value": true,
+      "rationale": "Indicator tracking is essential for plan monitoring"
+    },
+    "min_structural_compliance": {
+      "value": 0.5,
+      "rationale": "Below 50% structural compliance → plan is fundamentally malformed"
+    }
+  },
+
+  "anti_gaming": {
+    "max_placeholder_ratio": {
+      "value": 0.10,
+      "description": "Maximum allowed 'S/D' placeholder percentage",
+      "rationale": "More than 10% placeholders indicates gaming attempt"
+    },
+    "min_unique_values_ratio": {
+      "value": 0.5,
+      "description": "Minimum percentage of unique budget values",
+      "rationale": "Repeated copy-paste values indicate low-effort submission"
+    },
+    "min_number_density": {
+      "value": 0.02,
+      "description": "Minimum numeric token density in critical sections",
+      "rationale": "Text-heavy sections without numbers lack quantitative rigor"
+    },
+    "gaming_penalty_cap": {
+      "value": 0.3,
+      "description": "Maximum penalty deduction from score",
+      "rationale": "Cap prevents over-penalization from multiple minor issues"
+    }
+  },
+
+  "structural_compliance_S": {
+    "sub_weights": {
+      "w_block_coverage": {
+        "value": 0.5,
+        "description": "Block presence/quality weight"
+      },
+      "w_hierarchy": {
+        "value": 0.25,
+        "description": "Header numbering validity weight"
+      },
+      "w_order": {
+        "value": 0.25,
+        "description": "Sequential order correctness weight"
+      }
+    },
+    "block_requirements": {
+      "min_block_tokens": {
+        "value": 50,
+        "description": "Minimum tokens for block to count as present"
+      },
+      "min_block_numbers": {
+        "value": 1,
+        "description": "Minimum numeric values for block validity"
+      }
+    },
+    "hierarchy_thresholds": {
+      "excellent": {
+        "value": 0.8,
+        "description": "≥80% valid headers → score 1.0"
+      },
+      "acceptable": {
+        "value": 0.5,
+        "description": "≥50% valid headers → score 0.5"
+      }
+    }
+  },
+
+  "mandatory_sections_M": {
+    "diagnostico": {
+      "min_tokens": 500,
+      "min_keywords": 3,
+      "min_numbers": 5,
+      "min_sources": 2,
+      "criticality": "high"
+    },
+    "estrategica": {
+      "min_tokens": 400,
+      "min_keywords": 3,
+      "min_numbers": 3,
+      "criticality": "high"
+    },
+    "ppi_section": {
+      "min_tokens": 300,
+      "min_keywords": 2,
+      "min_numbers": 10,
+      "criticality": "critical"
+    },
+    "seguimiento": {
+      "min_tokens": 200,
+      "min_keywords": 2,
+      "min_numbers": 2,
+      "criticality": "medium"
+    },
+    "marco_normativo": {
+      "min_tokens": 150,
+      "min_keywords": 1,
+      "criticality": "medium"
+    },
+    "critical_sections_weight": {
+      "value": 2.0,
+      "description": "Weight multiplier for critical sections"
+    }
+  },
+
+  "indicator_quality_I": {
+    "sub_weights": {
+      "w_i_struct": {
+        "value": 0.4,
+        "description": "Structure/completeness importance"
+      },
+      "w_i_link": {
+        "value": 0.3,
+        "description": "Traceability importance"
+      },
+      "w_i_logic": {
+        "value": 0.3,
+        "description": "Chain coherence importance"
+      }
+    },
+    "hard_gate": {
+      "i_struct_hard_gate": {
+        "value": 0.7,
+        "rationale": "If I_struct < 0.7, indicator system is fundamentally broken → I = 0"
+      }
+    },
+    "structure_params": {
+      "critical_fields_weight": {
+        "value": 2.0,
+        "description": "Importance factor for critical fields"
+      },
+      "placeholder_penalty_multiplier": {
+        "value": 3.0,
+        "description": "Penalty factor for 'S/D' placeholders"
+      }
+    },
+    "linkage_params": {
+      "fuzzy_match_threshold": {
+        "value": 0.85,
+        "description": "Levenshtein similarity threshold for traceability"
+      },
+      "mga_code_pattern": {
+        "value": "^\\d{7}$",
+        "description": "Valid MGA code format (7 digits)"
+      }
+    },
+    "logic_params": {
+      "valid_lb_year_min": 2019,
+      "valid_lb_year_max": 2024,
+      "valid_meta_year_min": 2024,
+      "valid_meta_year_max": 2027
+    }
+  },
+
+  "ppi_completeness_P": {
+    "sub_weights": {
+      "w_p_presence": {
+        "value": 0.2,
+        "description": "Matrix existence importance"
+      },
+      "w_p_structure": {
+        "value": 0.4,
+        "description": "Field completeness importance"
+      },
+      "w_p_consistency": {
+        "value": 0.4,
+        "description": "Accounting closure importance"
+      }
+    },
+    "hard_gate": {
+      "p_struct_hard_gate": {
+        "value": 0.7,
+        "rationale": "If P_struct < 0.7, PPI matrix is fundamentally incomplete → P = 0"
+      }
+    },
+    "structure_requirements": {
+      "min_nonzero_rows": {
+        "value": 0.8,
+        "description": "Minimum 80% of rows must have non-zero costs"
+      }
+    },
+    "consistency_tolerances": {
+      "accounting_tolerance": {
+        "value": 0.01,
+        "description": "±1% tolerance for sum checks"
+      },
+      "traceability_threshold": {
+        "value": 0.80,
+        "description": "Minimum 80% fuzzy match for strategic link"
+      }
+    }
+  }
+}

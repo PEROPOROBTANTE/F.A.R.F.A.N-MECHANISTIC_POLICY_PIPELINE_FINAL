@@ -1,0 +1,159 @@
+{
+  "_metadata": {
+    "description": "Calibration System Penalty Values",
+    "version": "1.0.0",
+    "last_updated": "2025-11-26",
+    "rationale": "Centralized penalty configuration for all calibration failure scenarios"
+  },
+
+  "base_layer_penalties": {
+    "uncalibrated_method": {
+      "value": 0.1,
+      "description": "Penalty when method not found in intrinsic_calibration.json",
+      "rationale": "Low score signals missing calibration without complete rejection",
+      "applies_to": "base_layer.py:BaseLayerEvaluator.evaluate()"
+    },
+    "calibration_file_missing": {
+      "value": 0.1,
+      "description": "Penalty when intrinsic_calibration.json cannot be loaded",
+      "rationale": "System-level failure should not completely block execution",
+      "applies_to": "orchestrator.py:CalibrationOrchestrator.calibrate()"
+    }
+  },
+
+  "contextual_layer_penalties": {
+    "no_compatibility_data_question": {
+      "value": 0.1,
+      "description": "Penalty when question compatibility data unavailable",
+      "rationale": "Cannot determine Q_f(M|Q) without compatibility registry",
+      "applies_to": "orchestrator.py layer @q evaluation"
+    },
+    "no_compatibility_data_dimension": {
+      "value": 0.1,
+      "description": "Penalty when dimension compatibility data unavailable",
+      "rationale": "Cannot determine D_f(M|D) without compatibility registry",
+      "applies_to": "orchestrator.py layer @d evaluation"
+    },
+    "no_compatibility_data_policy": {
+      "value": 0.1,
+      "description": "Penalty when policy compatibility data unavailable",
+      "rationale": "Cannot determine P_f(M|P) without compatibility registry",
+      "applies_to": "orchestrator.py layer @p evaluation"
+    },
+    "method_not_declared_for_context": {
+      "value": 0.1,
+      "description": "Penalty when method not explicitly declared for Q/D/P",
+      "rationale": "From formal spec: 'if M not declared for Q (penalty)' - see Q_f definition",
+      "formal_spec_reference": "canonic_calibration_methods.md section 3.4.1"
+    }
+  },
+
+  "chain_layer_penalties": {
+    "hard_mismatch": {
+      "value": 0.0,
+      "description": "Score when hard schema mismatch detected",
+      "rationale": "Complete incompatibility → execution would fail",
+      "applies_to": "chain_layer.py hard_mismatch() check"
+    },
+    "missing_critical_optional": {
+      "value": 0.3,
+      "description": "Score when critical optional input missing",
+      "rationale": "Method can execute but with degraded quality",
+      "applies_to": "chain_layer.py missing_critical_optional() check"
+    },
+    "soft_schema_violation": {
+      "value": 0.6,
+      "description": "Score when soft schema incompatibility detected",
+      "rationale": "Weakly incompatible → results may be suboptimal",
+      "applies_to": "chain_layer.py soft_schema_violation() check"
+    },
+    "warnings_exist": {
+      "value": 0.8,
+      "description": "Score when contracts pass but warnings present",
+      "rationale": "Fully functional but with minor issues",
+      "applies_to": "chain_layer.py all_contracts_pass() with warnings"
+    }
+  },
+
+  "congruence_layer_penalties": {
+    "no_fusion_rule": {
+      "value": 0.0,
+      "description": "Score when fusion rule not defined in config",
+      "rationale": "Cannot aggregate ensemble without fusion specification",
+      "applies_to": "congruence_layer.py c_fusion evaluation"
+    },
+    "some_inputs_missing": {
+      "value": 0.5,
+      "description": "Score when fusion rule exists but some inputs missing",
+      "rationale": "Degraded ensemble operation",
+      "applies_to": "congruence_layer.py c_fusion with partial inputs"
+    },
+    "convertible_ranges": {
+      "value": 0.8,
+      "description": "Score for scale congruence with declared transform",
+      "rationale": "Ranges convertible → valid but not ideal",
+      "applies_to": "congruence_layer.py c_scale evaluation"
+    }
+  },
+
+  "meta_layer_penalties": {
+    "transparency_2_of_3": {
+      "value": 0.7,
+      "description": "Score when 2/3 transparency conditions met",
+      "rationale": "Partial transparency → degraded auditability",
+      "applies_to": "meta_layer.py m_transp() evaluation"
+    },
+    "transparency_1_of_3": {
+      "value": 0.4,
+      "description": "Score when 1/3 transparency conditions met",
+      "rationale": "Minimal transparency → poor auditability",
+      "applies_to": "meta_layer.py m_transp() evaluation"
+    },
+    "governance_2_of_3": {
+      "value": 0.66,
+      "description": "Score when 2/3 governance conditions met",
+      "rationale": "Partial governance → incomplete provenance",
+      "applies_to": "meta_layer.py m_gov() evaluation"
+    },
+    "governance_1_of_3": {
+      "value": 0.33,
+      "description": "Score when 1/3 governance conditions met",
+      "rationale": "Minimal governance → weak provenance",
+      "applies_to": "meta_layer.py m_gov() evaluation"
+    },
+    "runtime_acceptable": {
+      "value": 0.8,
+      "description": "Score for runtime in acceptable range",
+      "rationale": "Slower than ideal but still usable",
+      "applies_to": "meta_layer.py m_cost() evaluation"
+    },
+    "runtime_excessive": {
+      "value": 0.5,
+      "description": "Score for runtime exceeding acceptable threshold",
+      "rationale": "Performance issues → operational concerns",
+      "applies_to": "meta_layer.py m_cost() evaluation"
+    },
+    "timeout_or_oom": {
+      "value": 0.0,
+      "description": "Score for timeout or out-of-memory failure",
+      "rationale": "Complete execution failure",
+      "applies_to": "meta_layer.py m_cost() evaluation"
+    }
+  },
+
+  "unit_layer_penalties": {
+    "gate_failure": {
+      "value": 0.0,
+      "description": "Score when any hard gate fails (PPI, indicators, min structural)",
+      "rationale": "Hard gate failure → PDT fundamentally invalid",
+      "applies_to": "unit_layer.py hard gate checks"
+    }
+  },
+
+  "validation": {
+    "all_penalties_in_range": true,
+    "min_value": 0.0,
+    "max_value": 1.0,
+    "description": "All penalty values must be valid scores in [0.0, 1.0]"
+  }
+}

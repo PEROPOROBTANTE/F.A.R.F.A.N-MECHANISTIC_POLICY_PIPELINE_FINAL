@@ -1,0 +1,104 @@
+{
+  "_metadata": {
+    "description": "Choquet 2-Additive Aggregation Weights Configuration",
+    "version": "1.0.0",
+    "last_updated": "2025-11-26",
+    "calibration_method": "Historical policy evaluation data optimization",
+    "formal_spec_reference": "MIGRATION_ARTIFACTS_FAKE_TO_REAL/08_FORMAL_SPEC/canonic_calibration_methods.md",
+    "normalization_constraint": "Σ linear_weights + Σ interaction_weights = 1.0"
+  },
+
+  "linear_weights": {
+    "b": {
+      "value": 0.122951,
+      "description": "Base layer (intrinsic quality)",
+      "rationale": "Foundation layer - theoretical, implementation, and deployment quality"
+    },
+    "u": {
+      "value": 0.098361,
+      "description": "Unit layer (PDT quality)",
+      "rationale": "Plan structure and content quality gates analysis"
+    },
+    "q": {
+      "value": 0.081967,
+      "description": "Question compatibility",
+      "rationale": "Method appropriateness for specific D{n}-Q{m} questions"
+    },
+    "d": {
+      "value": 0.065574,
+      "description": "Dimension compatibility",
+      "rationale": "Analytical dimension relevance"
+    },
+    "p": {
+      "value": 0.049180,
+      "description": "Policy compatibility",
+      "rationale": "Policy area domain fit"
+    },
+    "C": {
+      "value": 0.081967,
+      "description": "Congruence (ensemble validity)",
+      "rationale": "Cross-method consistency and ensemble coherence"
+    },
+    "chain": {
+      "value": 0.065574,
+      "description": "Chain integrity (data flow)",
+      "rationale": "Input-output contract satisfaction and schema compatibility"
+    },
+    "m": {
+      "value": 0.034426,
+      "description": "Meta (governance)",
+      "rationale": "Transparency, governance, and computational cost"
+    }
+  },
+
+  "interaction_weights": {
+    "u_chain": {
+      "value": 0.15,
+      "layer_pair": ["u", "chain"],
+      "description": "Plan quality × Chain integrity interaction",
+      "rationale": "Plan quality only matters with sound wiring",
+      "weakest_link_principle": "min(x_@u, x_@chain) captures 'plan quality gates what wiring can achieve'"
+    },
+    "chain_C": {
+      "value": 0.12,
+      "layer_pair": ["chain", "C"],
+      "description": "Chain integrity × Congruence interaction",
+      "rationale": "Ensemble validity requires chain integrity",
+      "weakest_link_principle": "min(x_@chain, x_@C) ensures ensemble coherence depends on data flow"
+    },
+    "q_d": {
+      "value": 0.08,
+      "layer_pair": ["q", "d"],
+      "description": "Question × Dimension interaction",
+      "rationale": "Question-dimension alignment synergy",
+      "weakest_link_principle": "min(x_@q, x_@d) captures contextual coherence"
+    },
+    "d_p": {
+      "value": 0.05,
+      "layer_pair": ["d", "p"],
+      "description": "Dimension × Policy interaction",
+      "rationale": "Dimension-policy coherence synergy",
+      "weakest_link_principle": "min(x_@d, x_@p) enforces domain consistency"
+    }
+  },
+
+  "validation": {
+    "linear_sum": 0.6,
+    "interaction_sum": 0.4,
+    "total_sum": 1.0,
+    "tolerance": 1e-6,
+    "all_weights_non_negative": true,
+    "monotonicity_preserved": true
+  },
+
+  "formula": {
+    "symbolic": "Cal(I) = Σ_ℓ a_ℓ·x_ℓ(I) + Σ_{(ℓ,k)} a_ℓk·min(x_ℓ(I), x_k(I))",
+    "expanded": "Cal(I) = a_b·x_b + a_u·x_u + a_q·x_q + a_d·x_d + a_p·x_p + a_C·x_C + a_chain·x_chain + a_m·x_m + a_(u,chain)·min(x_u, x_chain) + a_(chain,C)·min(x_chain, x_C) + a_(q,d)·min(x_q, x_d) + a_(d,p)·min(x_d, x_p)",
+    "properties": [
+      "P1: Boundedness - Cal(I) ∈ [0,1]",
+      "P2: Monotonicity - ∂Cal/∂x_ℓ ≥ 0 for all ℓ",
+      "P3: Normalization - Σa_ℓ + Σa_ℓk = 1.0",
+      "P4: Non-negativity - all a_ℓ ≥ 0, all a_ℓk ≥ 0"
+    ]
+  }
+}
