@@ -14,8 +14,9 @@ from pydantic import BaseModel, Field, field_validator
 class CPPDeliverable(BaseModel):
     """Contract for CPP ingestion output (Deliverable).
 
+    DEPRECATED: Use SPCDeliverable instead. This model is kept for backward compatibility.
+
     Note: CPP (Canon Policy Package) is the legacy name for SPC (Smart Policy Chunks).
-    Use SPCDeliverable for new code.
     """
 
     chunk_graph: dict[str, Any] = Field(
@@ -37,6 +38,15 @@ class CPPDeliverable(BaseModel):
         "frozen": True,
         "extra": "forbid",
     }
+
+    def __init__(self, **data: Any) -> None:
+        import warnings
+        warnings.warn(
+            "CPPDeliverable is deprecated. Use SPCDeliverable instead.",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        super().__init__(**data)
 
     @field_validator("provenance_completeness")
     @classmethod

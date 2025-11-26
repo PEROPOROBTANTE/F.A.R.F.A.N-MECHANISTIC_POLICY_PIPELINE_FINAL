@@ -1,0 +1,23 @@
+{}
+# executor_config.json
+
+This file is used to configure the executor component of the system.
+
+## Purpose
+
+`executor_config.json` allows you to specify settings that control the behavior of the executor. This may include resource limits, execution environment options, logging preferences, or other runtime parameters.
+
+## Valid Configuration Keys
+
+- `max_concurrent_jobs` (integer): Maximum number of jobs the executor can run in parallel.
+- `timeout_seconds` (integer): Default timeout for each job, in seconds.
+- `log_level` (string): Logging verbosity (e.g., "info", "debug", "warn", "error").
+- `resource_limits` (object): Resource constraints for jobs (e.g., CPU, memory).
+
+> **Note:** The actual keys and their meanings may vary depending on your system. Please refer to the main documentation for a full list.
+
+## Why is it empty by default?
+
+The file starts empty (`{}`) because the executor can run with default settings. You only need to add configuration options if you want to override the defaults.
+
+## Example Configuration

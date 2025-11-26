@@ -9,6 +9,7 @@ from jsonschema import Draft7Validator
 from saaaaaa.config.paths import PROJECT_ROOT
 from saaaaaa.core.orchestrator.evidence_assembler import EvidenceAssembler
 from saaaaaa.core.orchestrator.evidence_validator import EvidenceValidator
+from saaaaaa.core.orchestrator.evidence_registry import get_global_registry
 
 if TYPE_CHECKING:
     from saaaaaa.core.orchestrator.core import MethodExecutor, PreprocessedDocument
@@ -138,6 +139,14 @@ class BaseExecutorWithContract(ABC):
 
         # Tag contract with version for later use
         contract["_contract_version"] = detected_version
+
+        contract_version = contract.get("contract_version")
+        if contract_version and not str(contract_version).startswith("2"):
+            raise ValueError(f"Unsupported contract_version {contract_version} for {base_slot}; expected v2.x")
+
+        identity_base_slot = contract.get("identity", {}).get("base_slot")
+        if identity_base_slot and identity_base_slot != base_slot:
+            raise ValueError(f"Contract base_slot mismatch: expected {base_slot}, found {identity_base_slot}")
 
         cls._contract_cache[base_slot] = contract
         return contract
@@ -305,7 +314,7 @@ class BaseExecutorWithContract(ABC):
                 import logging
                 logging.warning(human_answer)
 
-        return {
+        result = {
             "base_slot": base_slot,
             "question_id": question_id,
             "question_global": question_global,
@@ -317,6 +326,8 @@ class BaseExecutorWithContract(ABC):
             "trace": trace,
             "human_answer": human_answer,
         }
+
+        return result
 
     def _execute_v3(
         self,

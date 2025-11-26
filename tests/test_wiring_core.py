@@ -16,6 +16,7 @@ from saaaaaa.core.wiring.bootstrap import (
 )
 from saaaaaa.core.wiring.contracts import (
     CPPDeliverable,
+    SPCDeliverable,
     PreprocessedDocumentDeliverable,
     SignalPackDeliverable,
 )
@@ -31,33 +32,45 @@ from saaaaaa.core.wiring.validation import WiringValidator
 class TestWiringContracts:
     """Test contract models."""
     
-    def test_cpp_deliverable_valid(self):
-        """Test valid CPP deliverable."""
+    def test_spc_deliverable_valid(self):
+        """Test valid SPC deliverable."""
         data = {
             "chunk_graph": {"chunks": {}},
             "policy_manifest": {"version": "1.0"},
             "provenance_completeness": 1.0,
             "schema_version": "2.0",
         }
-        
-        cpp = CPPDeliverable.model_validate(data)
-        
-        assert cpp.provenance_completeness == 1.0
-        assert cpp.schema_version == "2.0"
-    
-    def test_cpp_deliverable_invalid_provenance(self):
-        """Test CPP deliverable with invalid provenance."""
+
+        spc = SPCDeliverable.model_validate(data)
+
+        assert spc.provenance_completeness == 1.0
+        assert spc.schema_version == "2.0"
+
+    def test_spc_deliverable_invalid_provenance(self):
+        """Test SPC deliverable with invalid provenance."""
         data = {
             "chunk_graph": {"chunks": {}},
             "policy_manifest": {"version": "1.0"},
             "provenance_completeness": 0.5,  # Not 1.0!
             "schema_version": "2.0",
         }
-        
+
         with pytest.raises(ValueError) as exc_info:
-            CPPDeliverable.model_validate(data)
-        
+            SPCDeliverable.model_validate(data)
+
         assert "provenance_completeness" in str(exc_info.value)
+
+    def test_cpp_deliverable_deprecated(self):
+        """Test that CPPDeliverable raises deprecation warning."""
+        data = {
+            "chunk_graph": {"chunks": {}},
+            "policy_manifest": {"version": "1.0"},
+            "provenance_completeness": 1.0,
+            "schema_version": "2.0",
+        }
+
+        with pytest.warns(DeprecationWarning, match="CPPDeliverable is deprecated"):
+            CPPDeliverable.model_validate(data)
     
     def test_preprocessed_document_deliverable_valid(self):
         """Test valid PreprocessedDocument deliverable."""
@@ -233,43 +246,57 @@ class TestWiringValidation:
         for link in expected_links:
             assert link in metrics
     
-    def test_validate_cpp_to_adapter_success(self):
-        """Test successful CPP → Adapter validation."""
+    def test_validate_spc_to_adapter_success(self):
+        """Test successful SPC → Adapter validation."""
         validator = WiringValidator()
-        
+
+        spc_data = {
+            "chunk_graph": {"chunks": {"c1": {}}},
+            "policy_manifest": {"version": "1.0"},
+            "provenance_completeness": 1.0,
+            "schema_version": "2.0",
+        }
+
+        # Should not raise
+        validator.validate_spc_to_adapter(spc_data)
+
+        # Check metrics
+        metrics = validator.get_all_metrics()
+        assert metrics["spc->adapter"]["validation_count"] == 1
+        assert metrics["spc->adapter"]["failure_count"] == 0
+
+    def test_validate_spc_to_adapter_failure(self):
+        """Test failed SPC → Adapter validation."""
+        validator = WiringValidator()
+
+        bad_spc_data = {
+            "chunk_graph": {},
+            # Missing required fields
+        }
+
+        with pytest.raises(WiringContractError) as exc_info:
+            validator.validate_spc_to_adapter(bad_spc_data)
+
+        error = exc_info.value
+        assert error.details["link"] == "spc->adapter"
+
+        # Check metrics show failure
+        metrics = validator.get_all_metrics()
+        assert metrics["spc->adapter"]["failure_count"] == 1
+
+    def test_validate_cpp_to_adapter_deprecated(self):
+        """Test that validate_cpp_to_adapter raises deprecation warning."""
+        validator = WiringValidator()
+
         cpp_data = {
             "chunk_graph": {"chunks": {"c1": {}}},
             "policy_manifest": {"version": "1.0"},
             "provenance_completeness": 1.0,
             "schema_version": "2.0",
         }
-        
-        # Should not raise
-        validator.validate_cpp_to_adapter(cpp_data)
-        
-        # Check metrics
-        metrics = validator.get_all_metrics()
-        assert metrics["cpp->adapter"]["validation_count"] == 1
-        assert metrics["cpp->adapter"]["failure_count"] == 0
-    
-    def test_validate_cpp_to_adapter_failure(self):
-        """Test failed CPP → Adapter validation."""
-        validator = WiringValidator()
-        
-        bad_cpp_data = {
-            "chunk_graph": {},
-            # Missing required fields
-        }
-        
-        with pytest.raises(WiringContractError) as exc_info:
-            validator.validate_cpp_to_adapter(bad_cpp_data)
-        
-        error = exc_info.value
-        assert error.details["link"] == "cpp->adapter"
-        
-        # Check metrics show failure
-        metrics = validator.get_all_metrics()
-        assert metrics["cpp->adapter"]["failure_count"] == 1
+
+        with pytest.warns(DeprecationWarning, match="validate_cpp_to_adapter is deprecated"):
+            validator.validate_cpp_to_adapter(cpp_data)
     
     def test_link_hash_determinism(self):
         """Test link hashing is deterministic."""
@@ -366,9 +393,22 @@ class TestSignalSeeding:
             count = limit or 4
             return [f"{policy_area_id.lower()}_pattern_{i}" for i in range(count)]
 
-    def test_seed_signals_public_seeds_all_canonical_areas(self):
+    def test_seed_signals_public_seeds_all_canonical_areas(self, tmp_path):
         """seed_signals_public should seed all canonical policy areas and aliases."""
-        bootstrap = WiringBootstrap(flags=WiringFeatureFlags())
+        monolith_path = tmp_path / "monolith.json"
+        monolith_path.touch()
+        executor_path = tmp_path / "executor.json"
+        executor_path.touch()
+
+        bootstrap = WiringBootstrap(
+            questionnaire_path=monolith_path,
+            questionnaire_hash="dummy_hash",
+            executor_config_path=executor_path,
+            calibration_profile="default",
+            abort_on_insufficient=False,
+            resource_limits={},
+            flags=WiringFeatureFlags()
+        )
         client = SignalClient(base_url="memory://")
         registry = SignalRegistry()
         provider = self._StubProvider()

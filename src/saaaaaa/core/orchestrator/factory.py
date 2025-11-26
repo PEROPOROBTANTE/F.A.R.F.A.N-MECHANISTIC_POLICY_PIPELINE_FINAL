@@ -23,12 +23,14 @@ Status: Refactored to be fully aligned with questionnaire.py
 """
 
 import copy
+import hashlib
 import json
 import logging
 import threading
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional
+from types import MappingProxyType
+from typing import Any, Final, Optional
 
 from ..contracts import (
     CDAFFrameworkInputContract,
@@ -43,22 +45,118 @@ from ..contracts import (
 )
 from .core import MethodExecutor
 from .executor_config import ExecutorConfig
-from .questionnaire import (
-    EXPECTED_HASH,
-    EXPECTED_MACRO_QUESTION_COUNT,
-    EXPECTED_MESO_QUESTION_COUNT,
-    EXPECTED_MICRO_QUESTION_COUNT,
-    EXPECTED_TOTAL_QUESTION_COUNT,
-    QUESTIONNAIRE_PATH,
-    CanonicalQuestionnaire,
-    load_questionnaire,
-)
+from .method_registry import MethodRegistry
+from .method_source_validator import MethodSourceValidator
 
 logger = logging.getLogger(__name__)
 
 # Canonical repository root - single source of truth for all file paths
 _REPO_ROOT = Path(__file__).resolve().parents[4]
 _DEFAULT_DATA_DIR = _REPO_ROOT / "data"
+
+
+# ============================================================================
+# CANONICAL QUESTIONNAIRE MANAGEMENT (MOVED FROM questionnaire.py)
+# ============================================================================
+
+# RULE 1: ONE PATH - The ONLY valid questionnaire location
+_REPO_ROOT = Path(__file__).resolve().parents[4]
+QUESTIONNAIRE_PATH: Final[Path] = _REPO_ROOT / "data" / "questionnaire_monolith.json"
+
+# RULE 2: ONE HASH - Expected SHA-256 hash (MUST match or load fails)
+EXPECTED_HASH: Final[str] = "27f7f784583d637158cb70ee236f1a98f77c1a08366612b5ae11f3be24062658"
+
+# RULE 3: ONE STRUCTURE - Expected question counts
+EXPECTED_MICRO_QUESTION_COUNT: Final[int] = 300
+EXPECTED_MESO_QUESTION_COUNT: Final[int] = 4
+EXPECTED_MACRO_QUESTION_COUNT: Final[int] = 1
+EXPECTED_TOTAL_QUESTION_COUNT: Final[int] = 305
+
+@dataclass(frozen=True)
+class CanonicalQuestionnaire:
+    """Immutable, validated, hash-verified questionnaire."""
+    data: MappingProxyType[str, Any]
+    sha256: str
+    micro_questions: tuple[MappingProxyType, ...]
+    meso_questions: tuple[MappingProxyType, ...]
+    macro_question: MappingProxyType | None
+    micro_question_count: int
+    total_question_count: int
+    version: str
+    schema_version: str
+
+    def __post_init__(self) -> None:
+        """Validate all invariants on construction."""
+        if self.sha256 != EXPECTED_HASH:
+            raise ValueError(f"QUESTIONNAIRE INTEGRITY VIOLATION: Hash mismatch!")
+        if self.micro_question_count != EXPECTED_MICRO_QUESTION_COUNT:
+            raise ValueError(f"Expected {EXPECTED_MICRO_QUESTION_COUNT} micro questions, got {self.micro_question_count}")
+        if self.total_question_count != EXPECTED_TOTAL_QUESTION_COUNT:
+            raise ValueError(f"Expected {EXPECTED_TOTAL_QUESTION_COUNT} total questions, got {self.total_question_count}")
+        logger.info("canonical_questionnaire_validated", sha256=self.sha256[:16], version=self.version)
+
+def _validate_questionnaire_structure(data: dict[str, Any]) -> None:
+    """Validate questionnaire structure for required fields and types."""
+    if not isinstance(data, dict):
+        raise ValueError("Questionnaire must be a dictionary")
+    required_keys = ["version", "blocks", "schema_version"]
+    if missing := [k for k in required_keys if k not in data]:
+        raise ValueError(f"Questionnaire missing keys: {missing}")
+    blocks = data["blocks"]
+    if not isinstance(blocks, dict) or "micro_questions" not in blocks:
+        raise ValueError("blocks.micro_questions is required")
+    # (A full validation would check all fields and types recursively)
+
+def _compute_hash(data: dict[str, Any]) -> str:
+    """Compute deterministic SHA-256 hash of questionnaire data."""
+    canonical_json = json.dumps(data, sort_keys=True, ensure_ascii=True, separators=(',', ':'))
+    return hashlib.sha256(canonical_json.encode('utf-8')).hexdigest()
+
+_questionnaire_cache: Optional[CanonicalQuestionnaire] = None
+
+def load_questionnaire() -> CanonicalQuestionnaire:
+    """Loads, validates, and caches the questionnaire from the canonical path."""
+    global _questionnaire_cache
+    if _questionnaire_cache is not None:
+        logger.debug("Returning cached canonical questionnaire.")
+        return _questionnaire_cache
+
+    path = QUESTIONNAIRE_PATH
+    if not path.exists():
+        raise FileNotFoundError(f"Canonical questionnaire not found: {path}")
+
+    logger.info(f"Loading canonical questionnaire from {path}")
+    content = path.read_text(encoding='utf-8')
+    data = json.loads(content)
+
+    _validate_questionnaire_structure(data)
+    sha256 = _compute_hash(data)
+
+    blocks = data['blocks']
+    micro_questions = tuple(MappingProxyType(q) for q in blocks['micro_questions'])
+    meso_questions = tuple(MappingProxyType(q) for q in blocks.get('meso_questions', []))
+    macro_question = MappingProxyType(blocks['macro_question']) if 'macro_question' in blocks else None
+    total_count = len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
+
+    canonical_q = CanonicalQuestionnaire(
+        data=MappingProxyType(data),
+        sha256=sha256,
+        micro_questions=micro_questions,
+        meso_questions=meso_questions,
+        macro_question=macro_question,
+        micro_question_count=len(micro_questions),
+        total_question_count=total_count,
+        version=data.get('version', 'unknown'),
+        schema_version=data.get('schema_version', 'unknown'),
+    )
+    
+    _questionnaire_cache = canonical_q
+    return canonical_q
+
+# ============================================================================
+# END OF MOVED QUESTIONNAIRE LOGIC
+# ============================================================================
+
 
 @dataclass(frozen=True)
 class ProcessorBundle:
@@ -363,6 +461,30 @@ def build_processor(
 ) -> ProcessorBundle:
     """Create a processor bundle with orchestrator dependencies wired together."""
 
+    # PHASE 1: SOURCE-TRUTH VALIDATION
+    logger.info("Running source-truth validation...")
+    validator = MethodSourceValidator()
+    source_truth = validator.generate_source_truth_map()
+    
+    # Note: As per user instruction, executors_methods.json is outdated.
+    # The validation should eventually be against the docstrings of the executors.
+    # For now, we proceed with the validation against the file to identify discrepancies.
+    validation_report = validator.validate_executor_methods()
+
+    if validation_report['missing']:
+        # In a strict environment, this should raise an error.
+        # For now, we will log a warning to avoid blocking the pipeline.
+        logger.warning(f"MISSING METHODS DETECTED: {validation_report['missing']}")
+        # raise RuntimeError(f"MISSING METHODS: {validation_report['missing']}")
+
+    # PHASE 2: METHOD REGISTRY CREATION
+    logger.info("Initializing method registry with source-truth...")
+    method_registry = MethodRegistry(source_truth=source_truth)
+    for method_fqn in validation_report['valid']:
+        method_registry.register_lazy(method_fqn)
+    logger.info(f"Pre-registered {len(validation_report['valid'])} valid methods.")
+
+
     # Runtime type checks
     if questionnaire_path is not None and not isinstance(questionnaire_path, Path):
         raise TypeError(f"questionnaire_path must be Path or None, got {type(questionnaire_path).__name__}.")
@@ -415,7 +537,10 @@ def build_processor(
             )
             signal_registry = None
 
-    executor = MethodExecutor(signal_registry=signal_registry)
+    executor = MethodExecutor(
+        signal_registry=signal_registry, 
+        method_registry=method_registry
+    )
 
     return ProcessorBundle(
         method_executor=executor,

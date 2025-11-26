@@ -920,8 +920,9 @@ class MethodExecutor:
 
     def __init__(
         self,
-        dispatcher: Any | None = None,
+        dispatcher: Any | None = None, # dispatcher is deprecated
         signal_registry: Any | None = None,
+        method_registry: Any | None = None, # MethodRegistry instance
     ) -> None:
         from .method_registry import MethodRegistry, setup_default_instantiation_rules
 
@@ -930,17 +931,20 @@ class MethodExecutor:
         self.signal_registry = signal_registry
 
         # Initialize method registry with lazy loading
-        try:
-            self._method_registry = MethodRegistry()
-            setup_default_instantiation_rules(self._method_registry)
-            logger.info("method_registry_initialized_lazy_mode")
-        except Exception as exc:
-            self.degraded_mode = True
-            reason = f"Method registry initialization failed: {exc}"
-            self.degraded_reasons.append(reason)
-            logger.error("DEGRADED MODE: %s", reason)
-            # Create empty registry for graceful degradation
-            self._method_registry = MethodRegistry(class_paths={})
+        if method_registry is not None:
+            self._method_registry = method_registry
+        else:
+            try:
+                self._method_registry = MethodRegistry()
+                setup_default_instantiation_rules(self._method_registry)
+                logger.info("method_registry_initialized_lazy_mode")
+            except Exception as exc:
+                self.degraded_mode = True
+                reason = f"Method registry initialization failed: {exc}"
+                self.degraded_reasons.append(reason)
+                logger.error("DEGRADED MODE: %s", reason)
+                # Create empty registry for graceful degradation
+                self._method_registry = MethodRegistry(class_paths={})
 
         # Build minimal class type registry for ArgRouter compatibility
         # Note: This doesn't instantiate classes, just loads types
@@ -949,17 +953,13 @@ class MethodExecutor:
             registry = build_class_registry()
         except (ClassRegistryError, ModuleNotFoundError, ImportError) as exc:
             self.degraded_mode = True
-            reason = f"Class registry incomplete: {exc}"
+            reason = f"Could not build class registry: {exc}"
             self.degraded_reasons.append(reason)
             logger.warning("DEGRADED MODE: %s", reason)
             registry = {}
 
         # Create ExtendedArgRouter with the registry for enhanced validation and metrics
         self._router = ExtendedArgRouter(registry)
-
-        # Legacy compatibility - provide instances dict (now lazily populated)
-        # This maintains backward compatibility with code that checks self.instances
-        self.instances = _LazyInstanceDict(self._method_registry)
 
     @staticmethod
     def _supports_parameter(callable_obj: Any, parameter_name: str) -> bool:
@@ -973,17 +973,16 @@ class MethodExecutor:
         """Execute a method using lazy instantiation.
 
         Args:
-            class_name: Name of the class
-            method_name: Name of the method to execute
-            **kwargs: Keyword arguments to pass to the method
+            class_name: Name of the class.
+            method_name: Name of the method to execute.
+            **kwargs: Keyword arguments to pass to the method call.
 
         Returns:
-            The method's return value
+            The method's return value.
 
         Raises:
             ArgRouterError: If routing fails
             AttributeError: If method doesn't exist
-            RuntimeError: If calibration is missing or placeholder
             MethodRegistryError: If method cannot be retrieved
         """
         from .method_registry import MethodRegistryError
@@ -2065,6 +2064,7 @@ class Orchestrator:
         duration = time.perf_counter() - start
         instrumentation.increment(latency=duration)
 
+        aggregation_settings = AggregationSettings.from_monolith(monolith)
         config = {
             "catalog": self.catalog,
             "monolith": monolith,
@@ -2075,6 +2075,10 @@ class Orchestrator:
             "structure_report": structure_report,
             "method_summary": method_summary,
             "schema_report": schema_report,
+            # Internal aggregation settings (underscore denotes private use).
+            # Created during Phase 0 as required by the C0-CONFIG-V1.0 contract.
+            # Consumed by downstream aggregation logic in later phases.
+            "_aggregation_settings": aggregation_settings,
         }
 
         return config
