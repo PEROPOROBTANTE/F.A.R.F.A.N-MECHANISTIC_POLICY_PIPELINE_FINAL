@@ -5,7 +5,7 @@ This module provides thread-safe, lazy-loaded access to method-specific paramete
 including thresholds, priors, and configuration values from method_parameters.json.
 
 Design:
-- Singleton-like behavior with lazy initialization
+- SINGLETON PATTERN enforced (only ONE instance system-wide)
 - Thread-safe loading using locks
 - Caches all parameters in memory for O(1) access
 - Provides typed access to common parameter types (thresholds, quality levels, etc.)
@@ -23,10 +23,17 @@ class MethodParameterLoader:
     """
     Loads and caches method parameters from JSON.
 
+    **SINGLETON PATTERN**: Only ONE instance allowed system-wide.
+    Use MethodParameterLoader.get_instance() to access the singleton.
+
     Thread-safe and lazy-loaded for optimal performance.
 
     Usage:
-        loader = MethodParameterLoader("config/method_parameters.json")
+        # CORRECT: Use singleton instance
+        loader = MethodParameterLoader.get_instance("config/method_parameters.json")
+
+        # INCORRECT: Direct instantiation raises error
+        # loader = MethodParameterLoader()  # Raises RuntimeError!
 
         # Get executor threshold
         threshold = loader.get_executor_threshold("D1Q1_Executor")
@@ -44,9 +51,65 @@ class MethodParameterLoader:
         threshold = loader.get_validation_threshold_for_role("analyzer")
     """
 
-    def __init__(self, parameters_path: Path | str = "config/method_parameters.json"):
+    # Singleton instance storage
+    _instance: Optional['MethodParameterLoader'] = None
+    _instance_lock = threading.Lock()
+
+    def __new__(cls, *args, **kwargs):
         """
-        Initialize the loader.
+        Prevent direct instantiation.
+
+        Use MethodParameterLoader.get_instance() instead.
+        """
+        raise RuntimeError(
+            "MethodParameterLoader is a singleton. "
+            "Use MethodParameterLoader.get_instance() instead of direct instantiation."
+        )
+
+    @classmethod
+    def get_instance(
+        cls,
+        parameters_path: Path | str = "config/method_parameters.json"
+    ) -> 'MethodParameterLoader':
+        """
+        Get the singleton instance of MethodParameterLoader.
+
+        Thread-safe singleton access with double-checked locking.
+
+        Args:
+            parameters_path: Path to method_parameters.json
+                           (only used on first call, ignored afterwards)
+
+        Returns:
+            The singleton MethodParameterLoader instance
+
+        Example:
+            >>> loader = MethodParameterLoader.get_instance()
+            >>> threshold = loader.get_executor_threshold("D1Q1_Executor")
+        """
+        if cls._instance is not None:
+            return cls._instance
+
+        with cls._instance_lock:
+            # Double-check after acquiring lock
+            if cls._instance is not None:
+                return cls._instance
+
+            # Create instance bypassing __new__ check
+            instance = object.__new__(cls)
+            instance._init_singleton(parameters_path)
+            cls._instance = instance
+
+            logger.info(
+                "parameter_loader_singleton_created",
+                extra={"parameters_path": str(instance.parameters_path)}
+            )
+
+            return cls._instance
+
+    def _init_singleton(self, parameters_path: Path | str) -> None:
+        """
+        Initialize the singleton instance.
 
         Args:
             parameters_path: Path to method_parameters.json
