@@ -380,8 +380,8 @@ class TestSPCIntegrationComplete:
         integrity = canon_package.integrity_index
 
         # Assert
-        assert integrity.blake3_root is not None
-        assert len(integrity.blake3_root) > 0
+        assert integrity.blake2b_root is not None
+        assert len(integrity.blake2b_root) > 0
         assert len(integrity.chunk_hashes) == 3
         for chunk_id in ['strategic_axis_1', 'programa_educacion', 'proyecto_escuelas']:
             assert chunk_id in integrity.chunk_hashes

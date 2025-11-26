@@ -57,3 +57,4 @@ htmlcov/
 .dmypy.json
 dmypy.json
 farfan-env/
+data/questionnaire_monolith.json.backup

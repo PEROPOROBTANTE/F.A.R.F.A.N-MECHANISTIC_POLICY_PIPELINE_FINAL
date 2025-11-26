@@ -695,9 +695,8 @@ class EvidenceRegistry:
             datetime.now(timezone.utc).isoformat(),
         )
 
-        # Create evidence record
-        evidence = EvidenceRecord(
-            evidence_id="",  # Will be set by hash
+        # Create evidence record with deterministic hash-based ID
+        evidence = EvidenceRecord.create(
             evidence_type=evidence_type,
             payload=payload,
             source_method=source_method,

@@ -1,0 +1,96 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-11-24T07:37:38.565613Z",
+  "success": false,
+  "versions": {
+    "pipeline": "2.0.0",
+    "calibration": "2.0.0",
+    "signal": "1.0.0",
+    "advanced_module": "1.0.0",
+    "seed": "sha256_v1",
+    "manifest": "1.0.0"
+  },
+  "pipeline_hash": "8591ef9d59594d7897e611cd5533f274e5ef80a9a49a0b1e347028ec767aa3ba",
+  "environment": {
+    "python_version": "3.12.12 (main, Nov 20 2025, 09:34:37) [Clang 17.0.0 (clang-1700.0.13.5)]",
+    "platform": "macOS-15.4-arm64-arm-64bit",
+    "cpu_count": 8,
+    "timestamp_utc": "2025-11-24T07:37:45.889130Z"
+  },
+  "determinism": {
+    "seed_version": "sha256_v1",
+    "policy_unit_id": "policy_unit::Plan_1",
+    "correlation_id": "20251124_073738",
+    "seeds_by_component": {
+      "numpy": 3032150102,
+      "python": 2074822810,
+      "quantum": 4218586948,
+      "neuromorphic": 1416845336,
+      "meta_learner": 1769967955
+    }
+  },
+  "calibrations": {
+    "version": "2.0.0",
+    "hash": "8148abbcfb9c0487",
+    "methods_calibrated": 5,
+    "methods_missing": []
+  },
+  "phases": {
+    "phase2": {
+      "name": "Phase 2 \u2013 Micro Questions",
+      "success": false,
+      "question_count": 0,
+      "errors": [
+        "Phase 2 not executed"
+      ]
+    },
+    "entries": [
+      {
+        "phase_id": 0,
+        "phase_name": "complete_pipeline",
+        "success": false,
+        "duration_ms": 7368,
+        "items_processed": 0,
+        "error": "SPC ingestion failed: Your currently installed version of Keras is Keras 3, but this is not yet supported in Transformers. Please install the backwards-compatible tf-keras package with `pip install tf-keras`."
+      }
+    ]
+  },
+  "artifacts": {
+    "questionnaire_source": {
+      "path": "/Users/recovered/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_FINAL/data/questionnaire_monolith.json",
+      "hash": "f4a48932f6a3c408e65589680de334d54e69d4a43adb787bb91571788a91feb8",
+      "size_bytes": 1158260
+    }
+  },
+  "signals": {
+    "enabled": true,
+    "transport": "memory",
+    "policy_areas_loaded": 10,
+    "executors_using_signals": 0,
+    "total_executors": 0,
+    "note": "Signal infrastructure initialized, actual usage not tracked in results",
+    "signal_versions": {
+      "PA01": "1.0.0",
+      "PA02": "1.0.0",
+      "PA03": "1.0.0",
+      "PA04": "1.0.0",
+      "PA05": "1.0.0",
+      "PA06": "1.0.0",
+      "PA07": "1.0.0",
+      "PA08": "1.0.0",
+      "PA09": "1.0.0",
+      "PA10": "1.0.0"
+    }
+  },
+  "execution_id": "20251124_073738",
+  "start_time": "2025-11-24T07:37:38.496525",
+  "end_time": "2025-11-24T07:37:45.864563",
+  "input_pdf_path": "/Users/recovered/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_FINAL/data/plans/Plan_1.pdf",
+  "total_claims": 8,
+  "errors": [
+    "SPC ingestion failed: Your currently installed version of Keras is Keras 3, but this is not yet supported in Transformers. Please install the backwards-compatible tf-keras package with `pip install tf-keras`."
+  ],
+  "artifacts_generated": [],
+  "artifact_hashes": {},
+  "integrity_hmac": "0000000000000000000000000000000000000000000000000000000000000000"
+}

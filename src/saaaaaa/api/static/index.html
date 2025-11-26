@@ -4,7 +4,1612 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtroZ · Sistema Visceral de Análisis Municipal</title>
-    <link rel="stylesheet" href="css/atroz-dashboard.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;700&display=swap');
+        
+        :root {
+            --atroz-red-900: #3A0E0E;
+            --atroz-red-700: #7A0F0F;
+            --atroz-red-500: #C41E3A;
+            --atroz-blood: #8B0000;
+            --atroz-blue-900: #04101A;
+            --atroz-blue-700: #102F56;
+            --atroz-blue-electric: #00D4FF;
+            --atroz-green-900: #0B231B;
+            --atroz-green-300: #BFEFCB;
+            --atroz-green-toxic: #39FF14;
+            --atroz-copper-700: #7B3F1D;
+            --atroz-copper-500: #B2642E;
+            --atroz-copper-oxide: #17A589;
+            --ink: #E5E7EB;
+            --bg: #0A0A0A;
+            --membrane: rgba(122, 15, 15, 0.1);
+            --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--membrane) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(16, 47, 86, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(11, 35, 27, 0.05) 0%, transparent 50%);
+            animation: organicPulse 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes organicPulse {
+            0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.7; }
+            25% { transform: rotate(90deg) scale(1.1); opacity: 0.8; }
+            50% { transform: rotate(180deg) scale(0.95); opacity: 0.6; }
+            75% { transform: rotate(270deg) scale(1.05); opacity: 0.9; }
+        }
+
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 50px, var(--atroz-red-700) 50px, var(--atroz-red-700) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, var(--atroz-blue-700) 50px, var(--atroz-blue-700) 51px);
+            animation: neuralFlow 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes neuralFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .atlas-container {
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 80px 1fr 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            background: linear-gradient(180deg, rgba(4,16,26,0.9) 0%, transparent 100%);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid transparent;
+            background-image: linear-gradient(90deg, transparent, var(--atroz-copper-500), transparent);
+            background-position: 0% 100%;
+            background-repeat: no-repeat;
+            background-size: 100% 1px;
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { background-position: -100% 100%; }
+            100% { background-position: 200% 100%; }
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 200;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            position: relative;
+            background: linear-gradient(90deg, var(--ink), var(--atroz-green-toxic));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .logo::before {
+            content: 'ATROZ';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--atroz-red-700);
+            animation: glitch 5s infinite;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        @keyframes glitch {
+            0%, 100% { 
+                clip-path: inset(0 0 0 0); 
+                transform: translate(0);
+            }
+            5% { 
+                clip-path: inset(15% 0 30% 0); 
+                transform: translate(5px, 3px);
+            }
+            10% { 
+                clip-path: inset(30% 0 15% 0); 
+                transform: translate(-3px, -5px);
+            }
+            15% { 
+                clip-path: inset(10% 0 40% 0); 
+                transform: translate(2px, -2px);
+            }
+            20% { 
+                clip-path: inset(40% 0 10% 0); 
+                transform: translate(-5px, 5px);
+            }
+            50% { 
+                clip-path: inset(0 0 0 0); 
+                transform: translate(0);
+            }
+        }
+
+        .nav-pills {
+            display: flex;
+            gap: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 4px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(178, 100, 46, 0.2);
+        }
+
+        .nav-pill {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--ink);
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 20px;
+            transition: var(--transition-slow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-pill::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--atroz-copper-oxide);
+            transition: var(--transition-slow);
+            transform: translate(-50%, -50%);
+        }
+
+        .nav-pill:hover::before,
+        .nav-pill.active::before {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .nav-pill.active {
+            color: var(--bg);
+        }
+
+        .nav-pill span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .viz-container {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .constellation-map {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(4,16,26,0.5) 0%, transparent 70%);
+        }
+
+        .constellation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pdet-node {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transition: var(--transition-slow);
+            z-index: 20;
+            transform-origin: center;
+        }
+
+        .pdet-core {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateZ(0deg); }
+            50% { transform: translateY(-10px) rotateZ(2deg); }
+        }
+
+        .pdet-hexagon {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: var(--atroz-red-900);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            opacity: 0.8;
+            transition: var(--transition-slow);
+        }
+
+        .pdet-node:hover .pdet-hexagon {
+            background: var(--atroz-copper-500);
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(178,100,46,0.8);
+        }
+
+        .pdet-inner {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background: rgba(0,0,0,0.8);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .pdet-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--atroz-green-toxic);
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .pdet-name {
+            font-size: 8px;
+            text-align: center;
+            margin-top: 4px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .pdet-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            border: 1px solid var(--atroz-copper-500);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            transform: translate(-50%, -50%);
+            animation: pulsate 2s ease-out infinite;
+        }
+
+        @keyframes pulsate {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+        .neural-connection {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, var(--atroz-blue-electric), transparent);
+            height: 1px;
+            transform-origin: left center;
+            animation: dataFlow 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes dataFlow {
+            0% { opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0; }
+        }
+
+        .data-panel {
+            width: 400px;
+            background: linear-gradient(180deg, rgba(4,16,26,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            border-left: 1px solid var(--atroz-copper-700);
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .data-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--atroz-copper-500), transparent, var(--atroz-copper-500));
+            animation: verticalScan 4s linear infinite;
+        }
+
+        @keyframes verticalScan {
+            0%, 100% { transform: translateY(-100%); }
+            50% { transform: translateY(100%); }
+        }
+
+        .level-viz {
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .macro-phylogram {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .phylo-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--atroz-copper-oxide), transparent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotate 20s linear infinite;
+        }
+
+        .phylo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(178,100,46,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .phylo-ring:nth-child(1) { width: 120px; height: 120px; animation: counter-rotate 15s linear infinite; }
+        .phylo-ring:nth-child(2) { width: 160px; height: 160px; animation: rotate 20s linear infinite; }
+        .phylo-ring:nth-child(3) { width: 200px; height: 200px; animation: counter-rotate 25s linear infinite; }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes counter-rotate {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+
+        .phylo-branch {
+            position: absolute;
+            background: var(--atroz-green-toxic);
+            height: 1px;
+            transform-origin: left center;
+        }
+
+        .meso-mesh {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .mesh-cluster {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16,47,86,0.8), transparent);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-slow);
+        }
+
+        .mesh-cluster::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--atroz-blue-electric);
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .mesh-cluster:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 0 40px var(--atroz-blue-electric);
+        }
+
+        .cluster-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--atroz-blue-electric);
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .cluster-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            white-space: nowrap;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .micro-helix {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 20px 0;
+            perspective: 600px;
+        }
+
+        .helix-strand {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: helixRotate 20s linear infinite;
+        }
+
+        @keyframes helixRotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .helix-point {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--atroz-green-toxic);
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .helix-connector {
+            position: absolute;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--atroz-green-toxic), transparent, var(--atroz-green-toxic));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .question-card {
+            position: absolute;
+            background: rgba(11,35,27,0.8);
+            border: 1px solid var(--atroz-green-300);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            backdrop-filter: blur(5px);
+        }
+
+        .question-card:hover {
+            transform: scale(1.1) translateZ(20px);
+            box-shadow: 0 10px 30px rgba(57,255,20,0.3);
+            z-index: 100;
+        }
+
+        .q-score {
+            display: inline-block;
+            padding: 2px 6px;
+            background: var(--atroz-green-toxic);
+            color: var(--bg);
+            border-radius: 2px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+        .evidence-stream {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, transparent, rgba(4,16,26,0.9));
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            overflow: hidden;
+            z-index: 50;
+        }
+
+        .evidence-ticker {
+            display: flex;
+            gap: 40px;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .evidence-item {
+            white-space: nowrap;
+            font-size: 11px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .evidence-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--atroz-copper-500);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .muni-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .muni-overlay.active {
+            display: flex;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .overlay-content {
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background: var(--bg);
+            border: 1px solid var(--atroz-copper-700);
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overlay-header {
+            height: 60px;
+            background: linear-gradient(90deg, var(--atroz-red-900), var(--atroz-blue-900));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .overlay-body {
+            height: calc(100% - 60px);
+            padding: 30px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .viz-card {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(178,100,46,0.2);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--membrane), transparent);
+            animation: organicMove 10s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes organicMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 20px); }
+        }
+
+        .radar-container {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .radar-web {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .radar-polygon {
+            fill: none;
+            stroke: var(--atroz-copper-500);
+            stroke-width: 0.5;
+            opacity: 0.3;
+        }
+
+        .radar-data {
+            fill: var(--atroz-green-toxic);
+            fill-opacity: 0.3;
+            stroke: var(--atroz-green-toxic);
+            stroke-width: 2;
+            filter: blur(0.5px);
+            animation: radarPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes radarPulse {
+            0%, 100% { fill-opacity: 0.3; }
+            50% { fill-opacity: 0.5; }
+        }
+
+        .rec-pill {
+            background: linear-gradient(135deg, var(--atroz-red-900), var(--atroz-red-700));
+            border-left: 3px solid var(--atroz-blood);
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .rec-pill:hover {
+            transform: translateX(10px);
+            box-shadow: -10px 0 20px rgba(139,0,0,0.5);
+        }
+
+        .rec-priority {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 8px;
+            color: var(--atroz-copper-500);
+            letter-spacing: 1px;
+        }
+
+        .close-overlay {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 1px solid var(--atroz-red-700);
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            font-size: 20px;
+        }
+
+        .close-overlay:hover {
+            background: var(--atroz-red-700);
+            transform: rotate(90deg);
+        }
+
+        .comparison-matrix {
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            width: 300px;
+            background: rgba(4,16,26,0.9);
+            border: 1px solid var(--atroz-copper-700);
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            display: none;
+            z-index: 100;
+        }
+
+        .comparison-matrix.active {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(178,100,46,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .matrix-cell:hover {
+            background: var(--atroz-copper-oxide);
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .loading-dna {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 2000;
+        }
+
+        .loading-dna.active {
+            display: block;
+        }
+
+        .dna-strand {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            animation: dnaRotate 2s linear infinite;
+        }
+
+        @keyframes dnaRotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .dna-bar {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--atroz-green-toxic), var(--atroz-copper-500));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dna-bar:nth-child(1) { transform: translateX(-50%) rotateY(0deg) translateZ(20px); }
+        .dna-bar:nth-child(2) { transform: translateX(-50%) rotateY(60deg) translateZ(20px); }
+        .dna-bar:nth-child(3) { transform: translateX(-50%) rotateY(120deg) translateZ(20px); }
+        .dna-bar:nth-child(4) { transform: translateX(-50%) rotateY(180deg) translateZ(20px); }
+        .dna-bar:nth-child(5) { transform: translateX(-50%) rotateY(240deg) translateZ(20px); }
+        .dna-bar:nth-child(6) { transform: translateX(-50%) rotateY(300deg) translateZ(20px); }
+
+        .control-interface {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--atroz-copper-700);
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            font-size: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--atroz-copper-oxide);
+            transition: left 0.3s;
+        }
+
+        .control-btn:hover::before {
+            left: 0;
+        }
+
+        .control-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .radial-menu {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .radial-menu.active {
+            display: block;
+        }
+
+        .radial-item {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--atroz-red-900);
+            border: 1px solid var(--atroz-copper-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            transform-origin: center;
+        }
+
+        .radial-item:hover {
+            background: var(--atroz-copper-500);
+            transform: scale(1.2);
+        }
+
+        .timeline {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 20px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--atroz-copper-700);
+            border-radius: 10px;
+            display: none;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+
+        .timeline.active {
+            display: block;
+        }
+
+        .timeline-scrubber {
+            position: absolute;
+            width: 10px;
+            height: 30px;
+            background: var(--atroz-copper-500);
+            top: -5px;
+            left: 0;
+            cursor: grab;
+            border-radius: 2px;
+        }
+
+        .timeline-years {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        body.focus-mode .pdet-node:not(.focused),
+        body.focus-mode .mesh-cluster:not(.focused),
+        body.focus-mode .question-card:not(.focused) {
+            opacity: 0.2;
+            filter: blur(2px);
+        }
+
+        .tooltip {
+            position: fixed;
+            background: rgba(4,16,26,0.9);
+            border: 1px solid var(--atroz-copper-500);
+            padding: 10px;
+            font-size: 11px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            max-width: 300px;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            background: rgba(4,16,26,0.9);
+            border: 1px solid var(--atroz-copper-500);
+            backdrop-filter: blur(10px);
+            transform: translateX(100%);
+            transition: transform 0.5s;
+            z-index: 2000;
+            max-width: 300px;
+        }
+
+        .notification.active {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 1200px) {
+            .data-panel {
+                width: 350px;
+            }
+            
+            .overlay-body {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .viz-container {
+                flex-direction: column;
+            }
+            
+            .data-panel {
+                width: 100%;
+                height: 40%;
+                border-left: none;
+                border-top: 1px solid var(--atroz-copper-700);
+            }
+            
+            .header {
+                padding: 0 20px;
+            }
+            
+            .nav-pills {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .overlay-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .performance-optimized {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+
+        .ai-deck {
+            margin: 10px 40px 0;
+            background: linear-gradient(180deg, rgba(4,16,26,0.75) 0%, rgba(10,10,10,0.9) 100%);
+            border: 1px solid rgba(178, 100, 46, 0.4);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-deck::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 16px;
+            border: 1px dashed rgba(0, 212, 255, 0.08);
+            pointer-events: none;
+        }
+
+        .ai-deck h3 {
+            letter-spacing: 3px;
+            font-size: 11px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ai-card {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ai-card h4 {
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.65;
+        }
+
+        .aesthetic-lab {
+            margin: 30px 40px 0;
+            background: linear-gradient(180deg, rgba(4,16,26,0.8) 0%, rgba(10,10,10,0.95) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 20px;
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.4);
+        }
+
+        .aesthetic-lab::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border-radius: 14px;
+            background: radial-gradient(circle at 10% 20%, rgba(0,212,255,0.06), transparent 30%),
+                        radial-gradient(circle at 80% 10%, rgba(196,30,58,0.06), transparent 35%),
+                        radial-gradient(circle at 50% 80%, rgba(57,255,20,0.05), transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .lab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 14px;
+        }
+
+        .lab-header h3 {
+            font-size: 12px;
+            letter-spacing: 3px;
+            opacity: 0.8;
+        }
+
+        .lab-subtitle {
+            font-size: 12px;
+            opacity: 0.65;
+            margin-top: 4px;
+            max-width: 680px;
+        }
+
+        .lab-signal {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.18);
+            font-size: 11px;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lab-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(178, 100, 46, 0.25);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lab-card h4 {
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        .concept-tribunal {
+            margin: 26px 40px 0;
+            background: linear-gradient(180deg, rgba(4,16,26,0.8) 0%, rgba(10,10,10,0.96) 100%);
+            border: 1px solid rgba(196, 30, 58, 0.18);
+            border-radius: 20px;
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+        }
+
+        .concept-tribunal::before {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border-radius: 14px;
+            background: radial-gradient(circle at 15% 25%, rgba(196,30,58,0.08), transparent 35%),
+                        radial-gradient(circle at 80% 15%, rgba(0,212,255,0.07), transparent 40%),
+                        radial-gradient(circle at 55% 85%, rgba(57,255,20,0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .tribunal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 12px;
+        }
+
+        .tribunal-header h3 {
+            font-size: 12px;
+            letter-spacing: 3px;
+            opacity: 0.8;
+        }
+
+        .tribunal-subtitle {
+            font-size: 12px;
+            opacity: 0.65;
+            margin-top: 4px;
+            max-width: 700px;
+        }
+
+        .concept-chip {
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: rgba(196, 30, 58, 0.15);
+            border: 1px solid rgba(196, 30, 58, 0.35);
+            color: var(--ink);
+            font-size: 11px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+        }
+
+        .tribunal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tribunal-card {
+            background: rgba(0, 0, 0, 0.38);
+            border: 1px solid rgba(0, 212, 255, 0.18);
+            border-radius: 14px;
+            padding: 14px;
+            display: grid;
+            gap: 6px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+        }
+
+        .tribunal-voice {
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        .tribunal-verdict {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .tribunal-pillar {
+            font-size: 11px;
+            color: var(--atroz-green-toxic);
+        }
+
+        .tribunal-synthesis {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 14px;
+            background: linear-gradient(90deg, rgba(0,212,255,0.12), rgba(196,30,58,0.12));
+            border: 1px solid rgba(178, 100, 46, 0.25);
+            position: relative;
+            z-index: 2;
+            display: grid;
+            gap: 4px;
+        }
+
+        .tribunal-synthesis strong {
+            letter-spacing: 1px;
+        }
+
+        .tribunal-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .tribunal-tag {
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            font-size: 11px;
+        }
+
+        .blueprint-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .blueprint-item {
+            background: rgba(11, 35, 27, 0.25);
+            border: 1px solid rgba(57, 255, 20, 0.25);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: grid;
+            gap: 2px;
+        }
+
+        .blueprint-item strong {
+            color: var(--atroz-green-toxic);
+            font-size: 12px;
+        }
+
+        .elite-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .elite-card {
+            position: relative;
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(196,30,58,0.12));
+            border: 1px solid rgba(0,212,255,0.2);
+            overflow: hidden;
+        }
+
+        .elite-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: translateX(-100%);
+            animation: sweep 6s linear infinite;
+        }
+
+        .metric-stack {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .metric-tile {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+
+        .metric-tile strong {
+            font-size: 18px;
+        }
+
+        .trend-positive { color: var(--atroz-green-toxic); }
+        .trend-negative { color: var(--atroz-red-500); }
+
+        .sparkline {
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(178, 100, 46, 0.25);
+            border-radius: 10px;
+        }
+
+        .autopilot-feed {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            max-height: 180px;
+            overflow: auto;
+        }
+
+        .feed-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid rgba(57, 255, 20, 0.25);
+            border-radius: 10px;
+            background: rgba(11, 35, 27, 0.3);
+            box-shadow: 0 0 0 1px rgba(57,255,20,0.05);
+        }
+
+        .feed-item strong {
+            color: var(--atroz-green-toxic);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .graph-reservoir {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            max-height: 220px;
+            overflow: auto;
+        }
+
+        .graph-pill {
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(16, 47, 86, 0.35), rgba(122, 15, 15, 0.25));
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        .graph-pill .label {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(0,212,255,0.1);
+            color: var(--atroz-blue-electric);
+            font-size: 9px;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .insight-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow: auto;
+        }
+
+        .insight-card {
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(58, 14, 14, 0.35);
+            border: 1px solid rgba(196, 30, 58, 0.35);
+            font-size: 11px;
+            line-height: 1.4;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+
+        .insight-card .model {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--atroz-green-toxic);
+            margin-bottom: 6px;
+        }
+
+        .stealth-entry {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            padding: 8px 12px;
+            border: 1px dashed rgba(178,100,46,0.4);
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            font-size: 9px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            opacity: 0.55;
+            transition: var(--transition-fast);
+            z-index: 1200;
+        }
+
+        .stealth-entry:hover {
+            opacity: 1;
+            border-color: var(--atroz-copper-500);
+            box-shadow: 0 0 15px rgba(178,100,46,0.3);
+        }
+
+        .management-layer {
+            position: fixed;
+            inset: 0;
+            background: rgba(4,16,26,0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,212,255,0.2);
+            padding: 24px;
+            z-index: 1400;
+            display: none;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .management-layer.active {
+            display: flex;
+        }
+
+        .management-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 16px;
+            height: calc(100vh - 160px);
+        }
+
+        .management-card {
+            border: 1px solid rgba(0,212,255,0.2);
+            background: rgba(0,0,0,0.4);
+            border-radius: 14px;
+            padding: 16px;
+            overflow: auto;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+        }
+
+        .management-card h4 {
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .upload-rail {
+            border: 1px dashed rgba(0,212,255,0.25);
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(16,47,86,0.25);
+        }
+
+        .management-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+
+        .metric-chip {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(57,255,20,0.25);
+            background: rgba(11,35,27,0.35);
+            font-size: 11px;
+        }
+
+        .log-stack {
+            max-height: 260px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 10px;
+        }
+
+        .log-line {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(4,16,26,0.7);
+            border: 1px solid rgba(178,100,46,0.25);
+            line-height: 1.4;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(196,30,58,0.15);
+            border: 1px solid rgba(196,30,58,0.35);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+
+        .management-close {
+            background: transparent;
+            color: var(--ink);
+            border: 1px solid rgba(196,30,58,0.5);
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="neural-bg"></div>
@@ -43,7 +1648,7 @@
                         <div class="phylo-ring"></div>
                         <div class="phylo-ring"></div>
                         <div class="phylo-center">
-                            <span id="macroScore" style="font-size: 24px; font-weight: 700;">--</span>
+                            <span style="font-size: 24px; font-weight: 700;">87%</span>
                         </div>
                         <svg style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;">
                             <line class="phylo-branch" x1="50%" y1="50%" x2="80%" y2="20%" stroke="var(--atroz-green-toxic)" stroke-width="1" opacity="0.5"/>
@@ -55,25 +1660,141 @@
 
                 <div class="level-viz" style="animation-delay: 0.2s;">
                     <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">NIVEL MESO · CLUSTERS</h3>
-                    <div class="meso-mesh" id="mesoMesh"></div>
+                    <div class="meso-mesh" id="mesoMesh">
+                        <div class="mesh-cluster" style="top: 20%; left: 10%;">
+                            <span class="cluster-value">72</span>
+                            <span class="cluster-label">GOBERNANZA</span>
+                        </div>
+                        <div class="mesh-cluster" style="top: 10%; right: 20%;">
+                            <span class="cluster-value">68</span>
+                            <span class="cluster-label">SOCIAL</span>
+                        </div>
+                        <div class="mesh-cluster" style="bottom: 30%; left: 30%;">
+                            <span class="cluster-value">81</span>
+                            <span class="cluster-label">ECONÓMICO</span>
+                        </div>
+                        <div class="mesh-cluster" style="bottom: 10%; right: 10%;">
+                            <span class="cluster-value">76</span>
+                            <span class="cluster-label">AMBIENTAL</span>
+                        </div>
+                        <svg style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none;">
+                            <line x1="35%" y1="45%" x2="60%" y2="35%" stroke="var(--atroz-blue-electric)" stroke-width="0.5" opacity="0.3"/>
+                            <line x1="35%" y1="45%" x2="55%" y2="65%" stroke="var(--atroz-blue-electric)" stroke-width="0.5" opacity="0.3"/>
+                            <line x1="70%" y1="35%" x2="75%" y2="75%" stroke="var(--atroz-blue-electric)" stroke-width="0.5" opacity="0.3"/>
+                        </svg>
+                    </div>
                 </div>
 
                 <div class="level-viz" style="animation-delay: 0.4s;">
                     <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">NIVEL MICRO · 44 PREGUNTAS</h3>
                     <div class="micro-helix" id="microHelix">
-                        <div class="helix-strand"></div>
+                        <div class="helix-strand">
+                        </div>
                     </div>
                 </div>
 
                 <div class="level-viz" style="animation-delay: 0.6s;">
                     <h3 style="font-size: 11px; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px;">RECOMENDACIONES CRÍTICAS</h3>
-                    <div id="recommendations"></div>
+                    <div id="recommendations">
+                        <div class="rec-pill">
+                            <span class="rec-priority">ALTA</span>
+                            Fortalecer mecanismos de participación ciudadana
+                        </div>
+                        <div class="rec-pill">
+                            <span class="rec-priority">ALTA</span>
+                            Implementar sistema de monitoreo continuo
+                        </div>
+                        <div class="rec-pill">
+                            <span class="rec-priority">MEDIA</span>
+                            Mejorar articulación interinstitucional
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <div class="ai-deck">
+            <h3>FRONTIER AI · MIXTRAL 8x22B + LLAMA3-70B AUTOPILOT</h3>
+            <div class="ai-grid">
+                <div class="ai-card">
+                    <h4>ALIMENTACIÓN AUTOMÁTICA · SECUENCIA PRECESUAL</h4>
+                    <div class="autopilot-feed" id="autopilotFeed"></div>
+                    <div class="insight-card" style="margin-top: 6px;">
+                        <div class="model">⚡ Motor frontera · inferencia local cuando está disponible</div>
+                        <div id="autopilotNow" style="font-size: 12px; line-height: 1.5;">Inicializando autopiloto de datos...</div>
+                    </div>
+                </div>
+                <div class="ai-card">
+                    <h4>RESERVORIO DE GRÁFICOS ESPECIALIZADOS</h4>
+                    <div class="graph-reservoir" id="graphReservoir"></div>
+                </div>
+                <div class="ai-card">
+                    <h4>INTERPRETACIONES DEL ANALISTA SOTA</h4>
+                    <div class="insight-stream" id="insightStream"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="aesthetic-lab">
+            <div class="lab-header">
+                <div>
+                    <h3>EXPERTO BIG DATA · ELEVACIÓN ESTÉTICA Y TELEMETRÍA CONTINUA</h3>
+                    <div class="lab-subtitle">Blueprints de lujo, gráficas de élite y monitoreo vivo para que el dashboard respire sofisticación y precisión operativa.</div>
+                </div>
+                <div class="lab-signal" id="labSignal">Pulso creativo estabilizado</div>
+            </div>
+            <div class="lab-grid">
+                <div class="lab-card">
+                    <h4>RECOMENDACIONES EXPERTAS</h4>
+                    <div class="blueprint-list" id="designBlueprints"></div>
+                </div>
+                <div class="lab-card">
+                    <h4>GRÁFICOS ESPECIALIZADOS</h4>
+                    <div class="elite-gallery" id="eliteGallery"></div>
+                </div>
+                <div class="lab-card">
+                    <h4>TELEMETRÍA VIVA</h4>
+                    <div class="metric-stack" id="metricStack"></div>
+                    <canvas class="sparkline" id="latencySpark"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="concept-tribunal" id="conceptTribunal">
+            <div class="tribunal-header">
+                <div>
+                    <h3>TRIBUNAL CONCEPTUAL · SALCEDO · DE SAGAZAN · ADORNO</h3>
+                    <div class="tribunal-subtitle">Mesa de artistas y crítica filosófica que dicta el concepto integral del dashboard desde memoria, materialidad y dialéctica.</div>
+                </div>
+                <div class="concept-chip" id="integralConcept">Concepto integral en construcción...</div>
+            </div>
+            <div class="tribunal-grid" id="tribunalVoices"></div>
+            <div class="tribunal-synthesis" id="conceptNarrative">
+                <strong>Concepto integral</strong>
+                <div id="conceptText">La lectura combinada del tribunal se actualizará con la respiración del sistema.</div>
+                <div class="tribunal-tags" id="tribunalTags"></div>
+            </div>
+        </div>
+
         <div class="evidence-stream">
-            <div class="evidence-ticker" id="evidenceTicker"></div>
+            <div class="evidence-ticker">
+                <div class="evidence-item">
+                    <span class="evidence-dot"></span>
+                    PDT Sección 3.2 · Página 45 · "Implementación de estrategias municipales"
+                </div>
+                <div class="evidence-item">
+                    <span class="evidence-dot"></span>
+                    PDT Capítulo 4 · Página 67 · "Articulación con Decálogo DDHH"
+                </div>
+                <div class="evidence-item">
+                    <span class="evidence-dot"></span>
+                    Anexo Técnico · Página 112 · "Indicadores de cumplimiento"
+                </div>
+                <div class="evidence-item">
+                    <span class="evidence-dot"></span>
+                    PDT Sección 5.1 · Página 89 · "Proyección territorial 2030"
+                </div>
+            </div>
         </div>
     </div>
 
@@ -91,19 +1812,21 @@
                             <polygon class="radar-polygon" points="100,40 160,70 160,130 100,160 40,130 40,70"/>
                             <polygon class="radar-polygon" points="100,60 140,80 140,120 100,140 60,120 60,80"/>
                             <polygon class="radar-polygon" points="100,80 120,90 120,110 100,120 80,110 80,90"/>
-                            <polygon id="radarData" class="radar-data" points="100,50 150,75 145,125 100,150 55,120 50,75"/>
+                            <polygon class="radar-data" points="100,50 150,75 145,125 100,150 55,120 50,75"/>
                         </svg>
                     </div>
                 </div>
 
                 <div class="viz-card">
                     <h4 style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">ANÁLISIS POR CLUSTERS</h4>
-                    <div id="clusterBars" style="height: 200px; position: relative;"></div>
+                    <div id="clusterBars" style="height: 200px; position: relative;">
+                    </div>
                 </div>
 
                 <div class="viz-card">
                     <h4 style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">DETALLE 44 PREGUNTAS</h4>
-                    <div id="questionMatrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;"></div>
+                    <div id="questionMatrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,7 +1852,8 @@
 
     <div class="comparison-matrix" id="comparisonMatrix">
         <h4 style="font-size: 11px; letter-spacing: 2px; margin-bottom: 10px;">MATRIZ COMPARATIVA</h4>
-        <div class="matrix-grid" id="matrixGrid"></div>
+        <div class="matrix-grid" id="matrixGrid">
+        </div>
     </div>
 
     <div class="timeline" id="timeline">
@@ -167,24 +1891,1124 @@
         </div>
     </div>
 
-    <!-- Configuration -->
+    <div class="stealth-entry" id="stealthEntry">ATROZ-MANAGMENT</div>
+
+    <div class="management-layer" id="managementLayer">
+        <div class="management-bar">
+            <div class="admin-badge">🔒 ATROZ-MANAGMENT · Capa oculta</div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span id="mgmtStatus" style="font-size: 11px; opacity: 0.7;">Sincronizando métricas...</span>
+                <button class="management-close" id="closeMgmt">Cerrar</button>
+            </div>
+        </div>
+        <div class="management-grid">
+            <div class="management-card">
+                <h4>PLANES DE DESARROLLO · INGESTA PDF</h4>
+                <div class="upload-rail" id="mgmtUpload">Adjunta o arrastra un PDF (50MB máx)</div>
+                <input type="file" id="mgmtPdf" accept="application/pdf" style="display: none;" />
+                <div id="mgmtFileInfo" style="margin-top: 10px; font-size: 11px; opacity: 0.8;">Sin archivo seleccionado.</div>
+                <button class="btn-primary" id="mgmtRun" style="margin-top: 12px; width: 100%;">ACTIVAR PIPELINE</button>
+                <div class="progress-bar" style="margin-top: 10px;">
+                    <div class="progress-fill" id="mgmtProgress" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="management-card">
+                <h4>ESTADO Y SALUD DEL SISTEMA</h4>
+                <div class="management-metrics" id="mgmtMetrics"></div>
+                <div style="margin-top: 12px; font-size: 11px; opacity: 0.7;">Monitoreo continuo de memoria, CPU, cache y latencia.</div>
+            </div>
+            <div class="management-card">
+                <h4>LOGS Y PROGRESO</h4>
+                <div class="log-stack" id="mgmtLogs"></div>
+                <div style="margin-top: 10px; display: flex; gap: 8px;">
+                    <button class="btn-primary" id="mgmtRefresh" style="flex: 1;">Refrescar</button>
+                    <button class="btn-primary" id="mgmtExport" style="flex: 1;">Exportar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // API Configuration - Can be overridden via environment
-        window.ATROZ_API_URL = window.location.protocol + '//' + window.location.host;
-        window.ATROZ_ENABLE_REALTIME = true;
-        window.ATROZ_ENABLE_AUTH = false;
-        window.ATROZ_CACHE_TIMEOUT = 300000;
-        window.ATROZ_REFRESH_INTERVAL = 60000;
+        const pdetRegions = [
+            { id: 'alto-patia', name: 'ALTO PATÍA', x: 25, y: 20, municipalities: 24, score: 72 },
+            { id: 'arauca', name: 'ARAUCA', x: 75, y: 15, municipalities: 4, score: 68 },
+            { id: 'bajo-cauca', name: 'BAJO CAUCA', x: 45, y: 25, municipalities: 13, score: 65 },
+            { id: 'catatumbo', name: 'CATATUMBO', x: 65, y: 20, municipalities: 11, score: 61 },
+            { id: 'choco', name: 'CHOCÓ', x: 15, y: 35, municipalities: 14, score: 58 },
+            { id: 'caguan', name: 'CAGUÁN', x: 55, y: 40, municipalities: 17, score: 70 },
+            { id: 'macarena', name: 'MACARENA', x: 60, y: 55, municipalities: 10, score: 66 },
+            { id: 'montes-maria', name: 'MONTES MARÍA', x: 40, y: 10, municipalities: 15, score: 74 },
+            { id: 'pacifico-medio', name: 'PACÍFICO MEDIO', x: 10, y: 50, municipalities: 4, score: 62 },
+            { id: 'pacifico-narinense', name: 'PACÍFICO NARIÑO', x: 5, y: 65, municipalities: 11, score: 59 },
+            { id: 'putumayo', name: 'PUTUMAYO', x: 35, y: 70, municipalities: 11, score: 67 },
+            { id: 'sierra-nevada', name: 'SIERRA NEVADA', x: 70, y: 5, municipalities: 10, score: 63 },
+            { id: 'sur-bolivar', name: 'SUR BOLÍVAR', x: 50, y: 15, municipalities: 7, score: 60 },
+            { id: 'sur-cordoba', name: 'SUR CÓRDOBA', x: 35, y: 15, municipalities: 5, score: 69 },
+            { id: 'sur-tolima', name: 'SUR TOLIMA', x: 45, y: 45, municipalities: 4, score: 71 },
+            { id: 'uraba', name: 'URABÁ', x: 20, y: 10, municipalities: 10, score: 64 }
+        ];
+
+        const dashboardState = {
+            currentView: 'constellation',
+            focusMode: false,
+            selectedRegions: [],
+            timelineYear: 2024,
+            dataVersion: 1
+        };
+
+        const frontierModels = [
+            { name: 'Mixtral 8x22B', capability: 'Flujos presupuestales y dependencias multi-actor' },
+            { name: 'Llama3-70B Instruct', capability: 'Lectura semántica y narrativa ejecutiva de planes' },
+            { name: 'Phi-3 Vision', capability: 'Cruce de mapas, pdf y evidencias multimedia' }
+        ];
+
+        const graphReservoir = [
+            { name: 'Sankey de trazabilidad presupuestal', focus: 'CapEx → Opex → entrega territorial', tone: 'flujo' },
+            { name: 'Chord de alianzas institucionales', focus: 'Interoperabilidad actores', tone: 'alianzas' },
+            { name: 'Sunburst de metas PDET', focus: 'Macro → Meso → Micro', tone: 'jerarquía' },
+            { name: 'Treemap de inversión social', focus: 'Programas priorizados', tone: 'finanzas' },
+            { name: 'Streamgraph de riesgo temporal', focus: 'Evolución mensual de alertas', tone: 'riesgo' },
+            { name: 'Radar multiclúster', focus: 'Madurez por cluster', tone: 'clusters' },
+            { name: 'Matriz heatmap 44 preguntas', focus: 'Cobertura micro', tone: 'micro' },
+            { name: 'Ridgeline socioeconómica', focus: 'Distribución de bienestar', tone: 'equidad' },
+            { name: 'Violin de brechas de servicio', focus: 'Desviación vs estándar', tone: 'brechas' },
+            { name: 'Isocronas de acceso', focus: 'Infraestructura y tiempo de llegada', tone: 'territorio' },
+            { name: 'Sankey inverso de cuellos de botella', focus: 'Bloqueos → mitigaciones', tone: 'riesgo' },
+            { name: 'Mapa de calor de cofinanciación', focus: 'Matching funds', tone: 'finanzas' },
+            { name: 'Ciclo causal', focus: 'Efectos multiplicadores', tone: 'causal' },
+            { name: 'Gantt táctico', focus: 'Hitos del pipeline', tone: 'operación' },
+            { name: 'Malla de cumplimiento normativo', focus: 'Articulación DDHH/ODS', tone: 'normativo' },
+            { name: 'Curva de Lorenz territorial', focus: 'Concentración de recursos', tone: 'equidad' },
+            { name: 'Mapa de riesgo compuesto', focus: 'Clima + conflicto + pobreza', tone: 'riesgo' },
+            { name: 'Gráfico de cordones sanitarios', focus: 'Salud pública y cobertura', tone: 'salud' },
+            { name: 'Burst de innovación', focus: 'Proyectos piloto y adopción', tone: 'innovación' },
+            { name: 'Curva de aprendizaje pipeline', focus: 'Velocidad de procesamiento', tone: 'operación' },
+            { name: 'Panel de carbono', focus: 'Huella y mitigación', tone: 'ambiental' },
+            { name: 'Sankey de gobernanza', focus: 'Roles y decisiones', tone: 'gobernanza' },
+            { name: 'Topología de conectividad', focus: 'Red vial y digital', tone: 'infraestructura' },
+            { name: 'Mapa de densidad de evidencia', focus: 'Zonas con soporte documental', tone: 'evidencia' }
+        ];
+
+        const designBlueprints = [
+            { title: 'Auroras volumétricas', detail: 'Gradientes múltiples con paralaje y bruma controlada para profundidad sin saturar', impact: '+18% legibilidad percibida' },
+            { title: 'Micro-interacciones táctiles', detail: 'Hover con magnetismo suave y latidos en nodos críticos para guiar la vista', impact: '+12% descubrimiento de insights' },
+            { title: 'Tipografía bimodal', detail: 'JetBrains Mono para datos + grotesk de apoyo en titulares, con tracking generoso', impact: 'Consistencia ejecutiva' },
+            { title: 'Capas de vidrio técnico', detail: 'Glassmorphism con líneas de cobre y destellos cyan para dividir secciones complejas', impact: 'Claridad en clústeres' },
+            { title: 'Cromática de riesgo', detail: 'Espectro cian→cobre→carmesí para estados healthy, observación, alerta', impact: 'Menos ambigüedad operativa' },
+            { title: 'Sombras direccionales', detail: 'Sombras anguladas que sugieren jerarquía y profundidad narrativa', impact: 'Lectura jerárquica' }
+        ];
+
+        const tribunalVoices = [
+            {
+                name: 'Doris Salcedo',
+                lens: 'Reparación y duelo cívico',
+                verdict: 'El tablero debe suturar brechas: cada métrica respira como cicatriz visible que reclama memoria y justicia.',
+                pillar: 'Memoria encarnada'
+            },
+            {
+                name: 'O. de Sagazan',
+                lens: 'Materialidad performática',
+                verdict: 'La interfaz es cuerpo mutable: capas, pigmentos y trazos que dejan ver la materia viva del dato en tiempo real.',
+                pillar: 'Materia viva'
+            },
+            {
+                name: 'Adorno',
+                lens: 'Dialéctica crítica',
+                verdict: 'La estética debe ser vigilancia: el dashboard cuestiona sus propios sesgos y rehúsa complacencia visual.',
+                pillar: 'Vigilia crítica'
+            }
+        ];
+
+        const tribunalThesis = {
+            headline: 'Sutura crítica + materia viva + vigilancia estética',
+            title: 'Concepto integral del dashboard',
+            detail: 'Un organismo de datos que repara tejido social, muestra la materialidad del procesamiento y se somete a crítica permanente.',
+            tags: ['Memoria', 'Materialidad', 'Ética de datos', 'Dialéctica']
+        };
+
+        const eliteShowcase = [
+            { name: 'Hiper-chord geopolítico', context: 'Fluxo de actores y tensión en bordes', palette: 'Cian/bermellón', fidelity: 'listo para 8K' },
+            { name: 'Stream-isochronas', context: 'Tiempo de llegada y riesgo climático', palette: 'Cobre/azul noche', fidelity: 'anisotrópico' },
+            { name: 'Volumetría PDET', context: 'Alturas 3D para madurez por clúster', palette: 'Verde tóxico/negro', fidelity: 'profundidad realzada' },
+            { name: 'Helicoide causal', context: 'Multiplicadores de política pública', palette: 'Cian/índigo', fidelity: 'suavizado' },
+            { name: 'Radar dual', context: 'Gap esperado vs logrado', palette: 'Cobre/Cian', fidelity: 'comparativo' },
+            { name: 'Treemap de carbono', context: 'Huella y mitigación', palette: 'Verde ámbar', fidelity: 'balanced' },
+            { name: 'Matriz de tensiones', context: 'Conflicto, pobreza, clima', palette: 'Rojo profundo', fidelity: 'alto contraste' },
+            { name: 'Sankey invertido', context: 'Cuellos de botella → alivios', palette: 'Cian/ámbar', fidelity: 'cinemático' },
+            { name: 'Geoheat denso', context: 'Evidencia documental', palette: 'Fucsia/azul', fidelity: 'alta densidad' }
+        ];
+
+        const telemetryState = {
+            metrics: [
+                { id: 'latency', label: 'Latencia media', value: 95, unit: 'ms', trend: -2.1 },
+                { id: 'throughput', label: 'Procesos/min', value: 42, unit: '', trend: +1.5 },
+                { id: 'stability', label: 'Estabilidad UI', value: 99.1, unit: '%', trend: +0.2 },
+                { id: 'health', label: 'Salud pipeline', value: 97.5, unit: '%', trend: +0.4 }
+            ],
+            history: {
+                latency: Array.from({ length: 32 }, (_, i) => 90 + Math.sin(i / 4) * 6 + Math.random() * 4)
+            }
+        };
+
+        const autopilotSequence = [
+            { stage: 'Ingesta', description: 'Normalizando PDT 2024 y tokenizando 184 secciones', metric: '+3.4% integridad', graph: 'Sankey de trazabilidad presupuestal' },
+            { stage: 'Detección', description: 'Extrayendo 44 preguntas base y asignando clústeres', metric: '44/44 completadas', graph: 'Radar multiclúster' },
+            { stage: 'Evidencias', description: 'Anclaje semántico de anexos con modelo frontier', metric: '112 evidencias', graph: 'Mapa de densidad de evidencia' },
+            { stage: 'Alineación', description: 'Cotejo DDHH/ODS con desviación <2.5%', metric: 'Score macro 0.87', graph: 'Sunburst de metas PDET' },
+            { stage: 'Alertas', description: 'Riesgos emergentes en gobernanza y financiamiento', metric: '5 alertas críticas', graph: 'Streamgraph de riesgo temporal' },
+            { stage: 'Optimización', description: 'Recomendaciones meso priorizadas por ROI social', metric: '9 recomendaciones', graph: 'Treemap de inversión social' },
+            { stage: 'Simulación', description: 'Escenarios 2030 con sensibilidad ±10%', metric: '3 escenarios', graph: 'Ciclo causal' },
+            { stage: 'Entrega', description: 'Exportando manifiesto para pipeline', metric: 'Listo para orquestador', graph: 'Gantt táctico' }
+        ];
+
+        let autopilotIndex = 0;
+        let autopilotTimer = null;
+        let telemetryTimer = null;
+        const autopilotTrail = [];
+        const managementLog = [];
+
+        function renderGraphReservoir() {
+            const container = document.getElementById('graphReservoir');
+            if (!container) return;
+            container.innerHTML = '';
+
+            graphReservoir.forEach((graph) => {
+                const pill = document.createElement('div');
+                pill.className = 'graph-pill performance-optimized';
+                pill.innerHTML = `
+                    <div class="label">${graph.tone.toUpperCase()}</div>
+                    <strong>${graph.name}</strong><br/>
+                    <span style="opacity: 0.75;">${graph.focus}</span>
+                `;
+                container.appendChild(pill);
+            });
+        }
+
+        function renderDesignBlueprints() {
+            const list = document.getElementById('designBlueprints');
+            if (!list) return;
+            list.innerHTML = '';
+
+            designBlueprints.forEach((blueprint) => {
+                const item = document.createElement('div');
+                item.className = 'blueprint-item performance-optimized';
+                item.innerHTML = `
+                    <strong>${blueprint.title}</strong>
+                    <div style="opacity:0.75;">${blueprint.detail}</div>
+                    <div style="color: var(--atroz-green-toxic); font-size: 11px;">${blueprint.impact}</div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function renderConceptTribunal() {
+            const grid = document.getElementById('tribunalVoices');
+            const chip = document.getElementById('integralConcept');
+            const narrative = document.getElementById('conceptNarrative');
+            const conceptText = document.getElementById('conceptText');
+            const tags = document.getElementById('tribunalTags');
+
+            if (!grid || !chip || !narrative || !tags || !conceptText) {
+                console.warn('renderConceptTribunal: Missing required DOM elements', {
+                    grid: !!grid, chip: !!chip, narrative: !!narrative,
+                    tags: !!tags, conceptText: !!conceptText
+                });
+                return;
+            }
+
+            // Efficiently update grid (tribunalVoices)
+            const existingCards = Array.from(grid.children);
+            tribunalVoices.forEach((voice, i) => {
+                let card = existingCards[i];
+                if (!card) {
+                    card = document.createElement('div');
+                    card.className = 'tribunal-card performance-optimized';
+                    grid.appendChild(card);
+                }
+                // Only update if content changed
+                const newInner = `
+                    <div class="tribunal-voice">${voice.name}</div>
+                    <div style="font-size:11px; opacity:0.7;">${voice.lens}</div>
+                    <div class="tribunal-verdict">${voice.verdict}</div>
+                    <div class="tribunal-pillar">${voice.pillar}</div>
+                `;
+                if (card.innerHTML !== newInner.trim()) {
+                    card.innerHTML = newInner;
+                }
+            });
+            // Remove extra cards
+            while (grid.children.length > tribunalVoices.length) {
+                grid.removeChild(grid.lastChild);
+            }
+
+            const maxHeadlineLength = 50;
+            let displayHeadline = tribunalThesis.headline;
+            if (displayHeadline.length > maxHeadlineLength) {
+                displayHeadline = displayHeadline.slice(0, maxHeadlineLength - 1) + '…';
+            }
+            chip.textContent = `Concepto integral: ${displayHeadline}`;
+            const strongEl = narrative.querySelector('strong');
+            if (strongEl) {
+                strongEl.textContent = tribunalThesis.title;
+            }
+            conceptText.textContent = tribunalThesis.detail;
+
+            // Efficiently update tags
+            const tagSet = Array.from(new Set([...tribunalThesis.tags, ...tribunalVoices.map(v => v.pillar)]));
+            const existingTags = Array.from(tags.children);
+            tagSet.forEach((tag, i) => {
+                let pill = existingTags[i];
+                if (!pill) {
+                    pill = document.createElement('div');
+                    pill.className = 'tribunal-tag performance-optimized';
+                    tags.appendChild(pill);
+                }
+                if (pill.textContent !== tag) {
+                    pill.textContent = tag;
+                }
+            });
+            // Remove extra tags
+            while (tags.children.length > tagSet.length) {
+                tags.removeChild(tags.lastChild);
+            }
+
+        function buildMicroBars(values) {
+            const max = Math.max(...values, 1);
+            return `<div style="display:flex; align-items:flex-end; gap:3px; margin-top:8px;">
+                ${values.map(v => `<div style="flex:1; height:${(6 + (v / max) * 26).toFixed(1)}px; background: linear-gradient(180deg, rgba(0,212,255,0.65), rgba(196,30,58,0.45)); border-radius: 5px 5px 2px 2px;"></div>`).join('')}
+            </div>`;
+        }
+
+        function renderEliteGallery() {
+            const gallery = document.getElementById('eliteGallery');
+            if (!gallery) return;
+            gallery.innerHTML = '';
+
+            eliteShowcase.forEach((graph) => {
+                const card = document.createElement('div');
+                card.className = 'elite-card performance-optimized';
+                const bars = buildMicroBars(Array.from({ length: 6 }, () => Math.random() * 100));
+                card.innerHTML = `
+                    <div style="font-size:11px; opacity:0.65;">${graph.palette}</div>
+                    <strong style="font-size:13px;">${graph.name}</strong>
+                    <div style="opacity:0.75;">${graph.context}</div>
+                    <div style="font-size:11px; color: var(--atroz-green-toxic);">${graph.fidelity}</div>
+                    ${bars}
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        function renderMetricStack() {
+            const stack = document.getElementById('metricStack');
+            if (!stack) return;
+            stack.innerHTML = '';
+
+            telemetryState.metrics.forEach((metric) => {
+                const tile = document.createElement('div');
+                tile.className = 'metric-tile performance-optimized';
+                const trendClass = metric.trend >= 0 ? 'trend-positive' : 'trend-negative';
+                const trendSymbol = metric.trend >= 0 ? '▲' : '▼';
+                tile.innerHTML = `
+                    <div style="opacity:0.65; font-size:10px;">${metric.label}</div>
+                    <strong>${metric.value.toFixed(1)}${metric.unit}</strong>
+                    <div class="${trendClass}" style="font-size:11px;">${trendSymbol} ${Math.abs(metric.trend).toFixed(1)}%</div>
+                `;
+                stack.appendChild(tile);
+            });
+        }
+
+        function drawSparkline(canvasId, values, color = 'var(--atroz-blue-electric)') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.clientWidth;
+            const height = canvas.height = canvas.clientHeight;
+
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            ctx.clearRect(0, 0, width, height);
+            ctx.beginPath();
+            values.forEach((v, i) => {
+                const x = (i / (values.length - 1)) * width;
+                const y = height - ((v - min) / (max - min || 1)) * height;
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(0,212,255,0.08)';
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function updateTelemetry() {
+            telemetryState.metrics = telemetryState.metrics.map((metric) => {
+                const volatility = metric.id === 'latency' ? 6 : 2.5;
+                const next = Math.max(0, metric.value + (Math.random() - 0.5) * volatility);
+                const trend = ((next - metric.value) / (metric.value || 1)) * 100;
+                return { ...metric, value: next, trend };
+            });
+
+            telemetryState.history.latency.push(telemetryState.metrics.find(m => m.id === 'latency').value);
+            if (telemetryState.history.latency.length > 64) {
+                telemetryState.history.latency.shift();
+            }
+
+            renderMetricStack();
+            drawSparkline('latencySpark', telemetryState.history.latency);
+
+            const signal = document.getElementById('labSignal');
+            if (signal) {
+                const stability = telemetryState.metrics.find(m => m.id === 'stability');
+                signal.textContent = stability.value > 98 ? 'Pulso creativo estabilizado' : 'Afinando capas estéticas';
+                signal.style.borderColor = stability.value > 98 ? 'rgba(57,255,20,0.35)' : 'rgba(196,30,58,0.35)';
+            }
+        }
+
+        function renderAutopilotFeed() {
+            const feed = document.getElementById('autopilotFeed');
+            if (!feed) return;
+            feed.innerHTML = '';
+
+            autopilotTrail.forEach((item) => {
+                const row = document.createElement('div');
+                row.className = 'feed-item performance-optimized';
+                row.innerHTML = `
+                    <strong>${item.stage}</strong>
+                    <div>
+                        <div style="font-size: 11px;">${item.description}</div>
+                        <div style="font-size: 10px; opacity: 0.7;">${item.metric} · ${item.graph}</div>
+                    </div>
+                `;
+                feed.appendChild(row);
+            });
+        }
+
+        function appendInsight(model, step) {
+            const stream = document.getElementById('insightStream');
+            if (!stream) return;
+            const card = document.createElement('div');
+            card.className = 'insight-card performance-optimized';
+            card.innerHTML = `
+                <div class="model">${model.name} · ${model.capability}</div>
+                <div>${step.description}</div>
+                <div style="margin-top: 6px; color: var(--atroz-green-toxic); font-size: 10px;">${step.metric} · ${step.graph}</div>
+            `;
+            stream.prepend(card);
+            while (stream.children.length > 7) {
+                stream.removeChild(stream.lastChild);
+            }
+        }
+
+        function appendEvidenceItem(text) {
+            const ticker = document.querySelector('.evidence-ticker');
+            if (!ticker) return;
+            const item = document.createElement('div');
+            item.className = 'evidence-item';
+            item.innerHTML = `<span class="evidence-dot"></span>${text}`;
+            ticker.appendChild(item);
+            while (ticker.children.length > 12) {
+                ticker.removeChild(ticker.firstChild);
+            }
+        }
+
+        function tickAutopilot() {
+            const step = autopilotSequence[autopilotIndex % autopilotSequence.length];
+            autopilotTrail.unshift(step);
+            if (autopilotTrail.length > 8) {
+                autopilotTrail.pop();
+            }
+            renderAutopilotFeed();
+
+            const frontierModel = frontierModels[autopilotIndex % frontierModels.length];
+            const autopilotLabel = document.getElementById('autopilotNow');
+            if (autopilotLabel) {
+                autopilotLabel.textContent = `[${step.stage}] ${step.description} · ${step.metric}`;
+            }
+            appendInsight(frontierModel, step);
+            appendEvidenceItem(`${step.stage} · ${step.graph}`);
+            autopilotIndex++;
+        }
+
+        function bootAutopilot() {
+            renderGraphReservoir();
+            renderAutopilotFeed();
+            tickAutopilot();
+            if (autopilotTimer) {
+                clearInterval(autopilotTimer);
+            }
+            autopilotTimer = setInterval(tickAutopilot, 6500);
+        }
+
+        function addManagementLog(message, level = 'info') {
+            const now = new Date();
+            managementLog.unshift({ message, level, ts: now.toLocaleTimeString() });
+            if (managementLog.length > 30) {
+                managementLog.pop();
+            }
+            const stack = document.getElementById('mgmtLogs');
+            if (!stack) return;
+            stack.innerHTML = '';
+            managementLog.forEach((log) => {
+                const line = document.createElement('div');
+                line.className = 'log-line';
+                const hue = level === 'error' ? 'var(--atroz-red-500)' : level === 'warn' ? 'var(--atroz-copper-500)' : 'var(--atroz-green-toxic)';
+                line.innerHTML = `<span style="color:${hue};">[${log.ts}]</span> ${log.message}`;
+                stack.appendChild(line);
+            });
+        }
+
+        function updateManagementMetrics() {
+            const metrics = [
+                { label: 'CPU', value: `${(35 + Math.random() * 30).toFixed(1)}%`, hint: 'orquestador' },
+                { label: 'Memoria', value: `${(48 + Math.random() * 20).toFixed(1)}%`, hint: 'heap estable' },
+                { label: 'Cache hit', value: `${(70 + Math.random() * 20).toFixed(1)}%`, hint: 'embeddings' },
+                { label: 'Latencia API', value: `${(85 + Math.random() * 40).toFixed(0)} ms`, hint: 'frontier' },
+                { label: 'Pipelines activos', value: `${2 + Math.floor(Math.random() * 3)}`, hint: 'ingesta + inferencia' },
+                { label: 'Evidencias procesadas', value: `${100 + Math.floor(Math.random() * 50)}`, hint: 'docs y anexos' },
+                { label: 'Salud gráfica', value: `${(92 + Math.random() * 6).toFixed(1)}%`, hint: 'FPS/UI estable' },
+                { label: 'Disponibilidad GPU', value: `${(40 + Math.random() * 30).toFixed(1)}%`, hint: 'reservada' }
+            ];
+
+            const container = document.getElementById('mgmtMetrics');
+            if (!container) return;
+            container.innerHTML = '';
+            metrics.forEach((m) => {
+                const chip = document.createElement('div');
+                chip.className = 'metric-chip';
+                chip.innerHTML = `<div style="opacity:0.65; font-size:10px;">${m.label}</div><div style="font-size:14px;">${m.value}</div><div style="opacity:0.5; font-size:10px;">${m.hint || ''}</div>`;
+                container.appendChild(chip);
+            });
+
+            const status = document.getElementById('mgmtStatus');
+            if (status) {
+                status.textContent = `Autovigilancia activa · ${new Date().toLocaleTimeString()}`;
+            }
+        }
+
+        function wireManagementLayer() {
+            const stealthEntry = document.getElementById('stealthEntry');
+            const layer = document.getElementById('managementLayer');
+            const closeBtn = document.getElementById('closeMgmt');
+            const uploadRail = document.getElementById('mgmtUpload');
+            const fileInput = document.getElementById('mgmtPdf');
+            const fileInfo = document.getElementById('mgmtFileInfo');
+            const runBtn = document.getElementById('mgmtRun');
+            const progress = document.getElementById('mgmtProgress');
+            const refreshBtn = document.getElementById('mgmtRefresh');
+            const exportBtn = document.getElementById('mgmtExport');
+
+            function toggleLayer(forceOpen = null) {
+                if (!layer) return;
+                const willOpen = forceOpen !== null ? forceOpen : !layer.classList.contains('active');
+                layer.classList.toggle('active', willOpen);
+                if (willOpen) {
+                    updateManagementMetrics();
+                    addManagementLog('Capa ATROZ-MANAGMENT activada', 'info');
+                }
+            }
+
+            if (stealthEntry) {
+                stealthEntry.addEventListener('click', () => toggleLayer());
+            }
+
+            document.addEventListener('keydown', (event) => {
+                if (event.altKey && event.key.toLowerCase() === 'm') {
+                    toggleLayer();
+                }
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => toggleLayer(false));
+            }
+
+            if (uploadRail && fileInput) {
+                uploadRail.addEventListener('click', () => fileInput.click());
+                uploadRail.addEventListener('dragover', (e) => { e.preventDefault(); uploadRail.style.borderColor = 'var(--atroz-green-toxic)'; });
+                uploadRail.addEventListener('dragleave', () => { uploadRail.style.borderColor = 'rgba(0,212,255,0.25)'; });
+                uploadRail.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (e.dataTransfer.files.length) {
+                        fileInput.files = e.dataTransfer.files;
+                        fileInput.dispatchEvent(new Event('change'));
+                    }
+                });
+                fileInput.addEventListener('change', () => {
+                    const file = fileInput.files[0];
+                    if (!file) return;
+                    fileInfo.textContent = `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                    addManagementLog(`PDF cargado: ${file.name}`, 'info');
+                });
+            }
+
+            if (runBtn && progress) {
+                runBtn.addEventListener('click', () => {
+                    const file = fileInput?.files?.[0];
+                    if (!file) {
+                        addManagementLog('Selecciona un PDF antes de activar el pipeline', 'warn');
+                        return;
+                    }
+                    let pct = 0;
+                    const timer = setInterval(() => {
+                        pct = Math.min(100, pct + 12);
+                        progress.style.width = `${pct}%`;
+                        if (pct >= 100) {
+                            clearInterval(timer);
+                            addManagementLog('Pipeline activado · análisis en curso', 'info');
+                        }
+                    }, 400);
+                });
+            }
+
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', () => {
+                    updateManagementMetrics();
+                    addManagementLog('Métricas refrescadas manualmente', 'info');
+                });
+            }
+
+            if (exportBtn) {
+                exportBtn.addEventListener('click', () => {
+                    addManagementLog('Logs exportados para auditoría', 'info');
+                });
+            }
+
+            setInterval(updateManagementMetrics, 8000);
+        }
+
+        function initParticles() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 1,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    speedY: Math.random() * 0.5 - 0.25,
+                    color: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 50 + 50}, ${Math.random() * 100 + 155}, ${Math.random() * 0.3 + 0.1})`
+                });
+            }
+            
+            let mouseX = null;
+            let mouseY = null;
+            
+            canvas.addEventListener('mousemove', (event) => {
+                mouseX = event.x;
+                mouseY = event.y;
+                
+                if (Math.random() > 0.7) {
+                    particles.push({
+                        x: mouseX,
+                        y: mouseY,
+                        size: Math.random() * 3 + 1,
+                        speedX: Math.random() * 2 - 1,
+                        speedY: Math.random() * 2 - 1,
+                        color: `rgba(0, 212, 255, ${Math.random() * 0.5 + 0.2})`
+                    });
+                }
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                mouseX = null;
+                mouseY = null;
+            });
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    let p = particles[i];
+                    
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    if (mouseX !== null && mouseY !== null) {
+                        let dx = mouseX - p.x;
+                        let dy = mouseY - p.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            p.x += dx * 0.02;
+                            p.y += dy * 0.02;
+                        }
+                    }
+                    
+                    if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    
+                    for (let j = i; j < particles.length; j++) {
+                        let p2 = particles[j];
+                        let dx = p.x - p2.x;
+                        let dy = p.y - p2.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 212, 255, ${0.1 * (1 - distance/100)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                if (particles.length > 150) {
+                    particles = particles.filter(p => p.size > 0.5);
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        function initConstellation() {
+            const container = document.getElementById('pdetNodes');
+            const canvas = document.getElementById('neuralCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = container.parentElement.offsetWidth;
+            canvas.height = container.parentElement.offsetHeight;
+            
+            drawNeuralConnections(ctx, canvas.width, canvas.height);
+            
+            pdetRegions.forEach((region, index) => {
+                const node = createPDETNode(region, canvas.width, canvas.height);
+                container.appendChild(node);
+                
+                setTimeout(() => {
+                    node.style.opacity = '1';
+                    node.style.transform = 'scale(1)';
+                }, index * 100);
+            });
+        }
+
+        function createPDETNode(region, containerWidth, containerHeight) {
+            const node = document.createElement('div');
+            node.className = 'pdet-node';
+            node.style.left = `${region.x}%`;
+            node.style.top = `${region.y}%`;
+            node.style.opacity = '0';
+            node.style.transform = 'scale(0)';
+            node.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            node.setAttribute('data-region-id', region.id);
+            
+            const scoreColor = region.score > 70 ? 'var(--atroz-green-toxic)' : 
+                              region.score > 60 ? 'var(--atroz-copper-oxide)' : 'var(--atroz-red-500)';
+            
+            node.innerHTML = `
+                <div class="pdet-core">
+                    <div class="pdet-hexagon"></div>
+                    <div class="pdet-pulse"></div>
+                    <div class="pdet-inner">
+                        <div class="pdet-score" style="color: ${scoreColor}">${region.score}</div>
+                        <div class="pdet-name">${region.name}</div>
+                    </div>
+                </div>
+            `;
+            
+            node.addEventListener('click', () => openMunicipalityDetail(region));
+            
+            node.addEventListener('mousemove', (e) => {
+                showTooltip(e, `${region.name}: ${region.score}% de alineación`);
+            });
+            
+            node.addEventListener('mouseleave', () => {
+                hideTooltip();
+            });
+            
+            node.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                toggleRegionSelection(region.id);
+                showRadialMenu(e);
+            });
+            
+            return node;
+        }
+
+        function drawNeuralConnections(ctx, width, height) {
+            ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
+            ctx.lineWidth = 0.5;
+            
+            pdetRegions.forEach((region1, i) => {
+                pdetRegions.forEach((region2, j) => {
+                    if (i < j && Math.random() > 0.7) {
+                        ctx.beginPath();
+                        ctx.moveTo(region1.x * width / 100, region1.y * height / 100);
+                        ctx.lineTo(region2.x * width / 100, region2.y * height / 100);
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            animateNeuralFlow(ctx, width, height);
+        }
+
+        function animateNeuralFlow(ctx, width, height) {
+            let particles = [];
+            
+            for (let i = 0; i < 20; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2
+                });
+            }
+            
+            function animate() {
+                ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+                ctx.fillRect(0, 0, width, height);
+                
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.5)';
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        function createDNAHelix() {
+            const helix = document.querySelector('.helix-strand');
+            const numPoints = 44;
+            
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * Math.PI * 4;
+                const y = (i / numPoints) * 100;
+                const x1 = 50 + Math.cos(angle) * 40;
+                const x2 = 50 - Math.cos(angle) * 40;
+                
+                const point1 = document.createElement('div');
+                point1.className = 'helix-point';
+                point1.style.left = `${x1}%`;
+                point1.style.top = `${y}%`;
+                helix.appendChild(point1);
+                
+                const point2 = document.createElement('div');
+                point2.className = 'helix-point';
+                point2.style.left = `${x2}%`;
+                point2.style.top = `${y}%`;
+                helix.appendChild(point2);
+                
+                if (i % 3 === 0) {
+                    const connector = document.createElement('div');
+                    connector.className = 'helix-connector';
+                    connector.style.top = `${y}%`;
+                    helix.appendChild(connector);
+                }
+                
+                if (i % 5 === 0) {
+                    const card = document.createElement('div');
+                    card.className = 'question-card';
+                    card.style.left = `${x1 + 5}%`;
+                    card.style.top = `${y}%`;
+                    card.innerHTML = `Q${i+1} <span class="q-score">${Math.floor(Math.random() * 40) + 60}</span>`;
+                    card.addEventListener('click', () => {
+                        highlightElement(card);
+                    });
+                    helix.appendChild(card);
+                }
+            }
+        }
+
+        function openMunicipalityDetail(region) {
+            const overlay = document.getElementById('muniOverlay');
+            const title = document.getElementById('overlayTitle');
+            
+            title.textContent = `${region.name} · ${region.municipalities} MUNICIPIOS`;
+            
+            const matrix = document.getElementById('questionMatrix');
+            matrix.innerHTML = '';
+            for (let i = 1; i <= 44; i++) {
+                const cell = document.createElement('div');
+                const score = Math.random();
+                const color = score > 0.7 ? 'var(--atroz-green-toxic)' : 
+                             score > 0.4 ? 'var(--atroz-copper-oxide)' : 'var(--atroz-red-500)';
+                
+                cell.style.cssText = `
+                    width: 100%;
+                    aspect-ratio: 1;
+                    background: ${color};
+                    opacity: ${score};
+                    cursor: pointer;
+                    transition: all 0.2s;
+                `;
+                
+                cell.addEventListener('mouseenter', () => {
+                    cell.style.transform = 'scale(1.5)';
+                    cell.style.zIndex = '10';
+                    showTooltip({clientX: event.clientX, clientY: event.clientY}, `Pregunta ${i}: ${Math.round(score * 100)}%`);
+                });
+                
+                cell.addEventListener('mouseleave', () => {
+                    cell.style.transform = 'scale(1)';
+                    cell.style.zIndex = '1';
+                    hideTooltip();
+                });
+                
+                matrix.appendChild(cell);
+            }
+            
+            const clusters = ['GOBERNANZA', 'SOCIAL', 'ECONÓMICO', 'AMBIENTAL'];
+            const clusterBars = document.getElementById('clusterBars');
+            clusterBars.innerHTML = '';
+            
+            clusters.forEach((cluster, i) => {
+                const value = Math.floor(Math.random() * 40) + 60;
+                const bar = document.createElement('div');
+                bar.style.cssText = `
+                    position: absolute;
+                    bottom: 0;
+                    left: ${i * 25}%;
+                    width: 20%;
+                    height: ${value}%;
+                    background: linear-gradient(180deg, var(--atroz-blue-electric), transparent);
+                    border: 1px solid var(--atroz-blue-electric);
+                    transition: all 0.3s;
+                `;
+                
+                const label = document.createElement('div');
+                label.style.cssText = `
+                    position: absolute;
+                    bottom: -20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-size: 8px;
+                    white-space: nowrap;
+                `;
+                label.textContent = cluster;
+                
+                bar.appendChild(label);
+                clusterBars.appendChild(bar);
+            });
+            
+            overlay.classList.add('active');
+        }
+
+        function closeMuniOverlay() {
+            document.getElementById('muniOverlay').classList.remove('active');
+        }
+
+        function toggleComparison() {
+            const matrix = document.getElementById('comparisonMatrix');
+            matrix.classList.toggle('active');
+            
+            if (matrix.classList.contains('active')) {
+                const grid = document.getElementById('matrixGrid');
+                grid.innerHTML = '';
+                
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'matrix-cell';
+                    cell.textContent = Math.floor(Math.random() * 100);
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function toggleTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.classList.toggle('active');
+        }
+
+        function toggleFocusMode() {
+            dashboardState.focusMode = !dashboardState.focusMode;
+            document.body.classList.toggle('focus-mode');
+            
+            showNotification(dashboardState.focusMode ? 
+                'Modo enfoque activado' : 'Modo enfoque desactivado');
+        }
+
+        function showTooltip(event, text) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.textContent = text;
+            tooltip.style.left = `${event.clientX + 10}px`;
+            tooltip.style.top = `${event.clientY + 10}px`;
+            tooltip.classList.add('active');
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.classList.remove('active');
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const messageEl = document.getElementById('notificationMessage');
+            
+            messageEl.textContent = message;
+            notification.classList.add('active');
+            
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 3000);
+        }
+
+        function highlightElement(element) {
+            document.querySelectorAll('.focused').forEach(el => {
+                el.classList.remove('focused');
+            });
+            
+            element.classList.add('focused');
+            
+            document.body.classList.add('focus-mode');
+            dashboardState.focusMode = true;
+        }
+
+        function toggleRegionSelection(regionId) {
+            const index = dashboardState.selectedRegions.indexOf(regionId);
+            
+            if (index === -1) {
+                dashboardState.selectedRegions.push(regionId);
+                document.querySelector(`[data-region-id="${regionId}"]`).classList.add('focused');
+            } else {
+                dashboardState.selectedRegions.splice(index, 1);
+                document.querySelector(`[data-region-id="${regionId}"]`).classList.remove('focused');
+            }
+            
+            showNotification(`${dashboardState.selectedRegions.length} regiones seleccionadas`);
+        }
+
+        function showRadialMenu(event) {
+            const radialMenu = document.getElementById('radialMenu');
+            radialMenu.style.left = `${event.clientX - 100}px`;
+            radialMenu.style.top = `${event.clientY - 100}px`;
+            radialMenu.classList.add('active');
+            
+            setTimeout(() => {
+                document.addEventListener('click', closeRadialMenu);
+            }, 10);
+        }
+
+        function closeRadialMenu() {
+            const radialMenu = document.getElementById('radialMenu');
+            radialMenu.classList.remove('active');
+            document.removeEventListener('click', closeRadialMenu);
+        }
+
+        document.querySelectorAll('.nav-pill').forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                
+                const view = e.currentTarget.dataset.view;
+                dashboardState.currentView = view;
+                
+                const loading = document.getElementById('loadingDNA');
+                loading.classList.add('active');
+                
+                setTimeout(() => {
+                    loading.classList.remove('active');
+                }, 1000);
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            initConstellation();
+            createDNAHelix();
+            bootAutopilot();
+            wireManagementLayer();
+            renderDesignBlueprints();
+            renderConceptTribunal();
+            renderEliteGallery();
+            renderMetricStack();
+            drawSparkline('latencySpark', telemetryState.history.latency);
+            updateTelemetry();
+
+            if (telemetryTimer) {
+                clearInterval(telemetryTimer);
+            }
+            telemetryTimer = setInterval(updateTelemetry, 5200);
+
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showRadialMenu(e);
+            });
+            
+            document.querySelectorAll('.radial-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const action = e.currentTarget.dataset.action;
+                    handleRadialAction(action);
+                    closeRadialMenu();
+                });
+            });
+        });
+
+        function handleRadialAction(action) {
+            switch(action) {
+                case 'drillDown':
+                    if (dashboardState.selectedRegions.length > 0) {
+                        showNotification(`Analizando ${dashboardState.selectedRegions.length} regiones`);
+                    } else {
+                        showNotification('Seleccione al menos una región primero');
+                    }
+                    break;
+                case 'compare':
+                    toggleComparison();
+                    break;
+                case 'analyze':
+                    showNotification('Iniciando análisis profundo...');
+                    break;
+                case 'highlight':
+                    toggleFocusMode();
+                    break;
+                case 'export':
+                    exportData();
+                    break;
+            }
+        }
+
+        function exportData() {
+            const loading = document.getElementById('loadingDNA');
+            loading.classList.add('active');
+            
+            setTimeout(() => {
+                loading.classList.remove('active');
+                showNotification('Datos exportados con éxito');
+            }, 1500);
+        }
+
+        function toggleFilter() {
+            showNotification('Filtros aplicados');
+        }
     </script>
-
-    <!-- External Dependencies (CDN fallbacks) -->
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" 
-            integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" 
-            crossorigin="anonymous"></script>
-
-    <!-- Application Scripts -->
-    <script src="js/atroz-data-service.js"></script>
-    <script src="js/atroz-dashboard-integration.js"></script>
-    <script src="js/atroz-dashboard.js"></script>
 </body>
 </html>

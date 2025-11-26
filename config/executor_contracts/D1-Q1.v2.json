@@ -1,0 +1,131 @@
+{
+  "contract_version": "2.0.0",
+  "identity": {
+    "base_slot": "D1-Q1",
+    "question_id": "Q001",
+    "question_global": 1,
+    "dimension_id": "DIM01",
+    "policy_area_id": "PA01",
+    "cluster_id": "CL02"
+  },
+  "traceability": {
+    "source_file": "data/questionnaire_monolith.json",
+    "json_path": "blocks.micro_questions[0]",
+    "source_hash_TODO": "Hash of the questionnaire file should be inserted here."
+  },
+  "scoring": {
+    "scoring_modality": "TYPE_A",
+    "scoring_definition_ref": "scoring_modalities.TYPE_A",
+    "expected_output_type": "score"
+  },
+  "method_inputs": [
+    {
+      "class": "Dimension1Analyzer",
+      "method": "analyze_question_1",
+      "description": "Primary analysis for D1-Q1. Extracts elements based on patterns.",
+      "provides": "primary_analysis",
+      "priority": 1,
+      "args": {}
+    },
+    {
+      "class": "Dimension1Validator",
+      "method": "validate_question_1",
+      "description": "Validation for D1-Q1. Checks for presence of required elements.",
+      "provides": "validation_analysis",
+      "priority": 2,
+      "args": {
+        "analysis_input": "{primary_analysis}"
+      }
+    }
+  ],
+  "assembly_rules": [
+    {
+      "target": "elements_found",
+      "sources": [
+        "primary_analysis.elements",
+        "validation_analysis.validated_elements"
+      ],
+      "merge_strategy": "concat",
+      "description": "Combine all unique elements found from both analysis and validation stages."
+    },
+    {
+      "target": "confidence_scores",
+      "sources": [
+        "primary_analysis.confidences"
+      ],
+      "merge_strategy": "first",
+      "default": [],
+      "description": "Use the confidence scores from the primary analysis."
+    },
+    {
+      "target": "pattern_matches",
+      "sources": [
+        "primary_analysis.patterns"
+      ],
+      "merge_strategy": "first",
+      "default": {},
+      "description": "Use the pattern match details from the primary analysis."
+    },
+    {
+      "target": "metadata",
+      "sources": [
+        "primary_analysis.metadata",
+        "validation_analysis.metadata"
+      ],
+      "merge_strategy": "concat",
+      "description": "Combine metadata from all method steps for full traceability."
+    }
+  ],
+  "validation_rules": {
+    "na_policy": "abort_on_critical",
+    "rules": [
+      {
+        "field": "elements_found",
+        "type": "array",
+        "must_contain": {
+          "count": 1,
+          "elements": [
+            "cobertura_territorial_especificada"
+          ]
+        },
+        "description": "Derived from monolith `expected_elements` where `required` is true."
+      },
+      {
+        "field": "elements_found",
+        "type": "array",
+        "should_contain": [
+          {
+            "elements": [
+              "fuentes_oficiales"
+            ],
+            "minimum": 2
+          },
+          {
+            "elements": [
+              "indicadores_cuantitativos"
+            ],
+            "minimum": 3
+          },
+          {
+            "elements": [
+              "series_temporales_años"
+            ],
+            "minimum": 3
+          }
+        ],
+        "description": "Derived from monolith `expected_elements` with `minimum` counts."
+      }
+    ]
+  },
+  "error_handling": {
+    "failure_contract": {
+      "abort_if": [
+        "missing_required_element",
+        "incomplete_text"
+      ],
+      "emit_code": "ABORT-Q001-REQ"
+    },
+    "on_method_failure": "propagate_with_trace",
+    "on_assembly_failure": "propagate_with_trace"
+  }
+}

@@ -1,0 +1,1632 @@
+[
+  {
+    "executor_id": "D1-Q1",
+    "class_name": "D1_Q1_QuantitativeBaselineExtractor",
+    "docstring": "Extracts numeric data, reference years, and official sources as baseline.",
+    "methods": [
+      {
+        "class": "BayesianNumericalAnalyzer",
+        "method": "compare_policies"
+      },
+      {
+        "class": "BayesianNumericalAnalyzer",
+        "method": "evaluate_policy_metric"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_extract_goals"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_parse_goal_context"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_parse_amount"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_extract_point_evidence"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_match_patterns_in_sentences"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "process"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_financial_amounts"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_from_budget_table"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_extract_quantitative_claims"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_parse_number"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_statistical_significance_test"
+      },
+      {
+        "class": "SemanticProcessor",
+        "method": "chunk_text"
+      },
+      {
+        "class": "SemanticProcessor",
+        "method": "embed_single"
+      },
+      {
+        "class": "TextMiningEngine",
+        "method": "_analyze_link_text"
+      },
+      {
+        "class": "TextMiningEngine",
+        "method": "diagnose_critical_links"
+      }
+    ]
+  },
+  {
+    "executor_id": "D1-Q2",
+    "class_name": "D1_Q2_ProblemDimensioningAnalyzer",
+    "docstring": "Quantifies problem magnitude, gaps, and identifies data limitations.",
+    "methods": [
+      {
+        "class": "BayesianConfidenceCalculator",
+        "method": "calculate_posterior"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "_test_effect_stability"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "counterfactual_query"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_detect_gaps"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_detect_allocation_gaps"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "_audit_direct_evidence"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "_audit_systemic_risk"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_generate_optimal_remediations"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_simulate_intervention"
+      },
+      {
+        "class": "PerformanceAnalyzer",
+        "method": "analyze_performance"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_calculate_numerical_divergence"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_detect_numerical_inconsistencies"
+      }
+    ]
+  },
+  {
+    "executor_id": "D1-Q3",
+    "class_name": "D1_Q3_BudgetAllocationTracer",
+    "docstring": "Traces monetary resources assigned to programs in Investment Plan (PPI).",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "aggregate_risk_and_prioritize"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_calculate_sufficiency"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_match_goal_to_budget"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_match_program_to_node"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_perform_counterfactual_budget_check"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_process_financial_table"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "trace_financial_allocation"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_analyze_funding_sources"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_classify_tables"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_budget_for_pillar"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_identify_funding_source"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_financial_component"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "analyze_financial_feasibility"
+      }
+    ]
+  },
+  {
+    "executor_id": "D1-Q4",
+    "class_name": "D1_Q4_InstitutionalCapacityIdentifier",
+    "docstring": "Identifies installed capacity (entities, staff, equipment) and limitations.",
+    "methods": [
+      {
+        "class": "MechanismPartExtractor",
+        "method": "_calculate_ea_confidence"
+      },
+      {
+        "class": "MechanismPartExtractor",
+        "method": "_normalize_entity"
+      },
+      {
+        "class": "MechanismPartExtractor",
+        "method": "_validate_entity_activity"
+      },
+      {
+        "class": "MechanismPartExtractor",
+        "method": "extract_entity_activity"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "audit_evidence_traceability"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_classify_entity_type"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_consolidate_entities"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_entities_ner"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_entities_syntax"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_entity_specificity"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "identify_responsible_entities"
+      }
+    ]
+  },
+  {
+    "executor_id": "D1-Q5",
+    "class_name": "D1_Q5_ScopeJustificationValidator",
+    "docstring": "Validates scope justification via legal framework and constraint recognition.",
+    "methods": [
+      {
+        "class": "CausalExtractor",
+        "method": "_assess_temporal_coherence"
+      },
+      {
+        "class": "CausalInferenceSetup",
+        "method": "identify_failure_points"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_analyze_causal_dimensions"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_extract_metadata"
+      },
+      {
+        "class": "TemporalLogicVerifier",
+        "method": "_check_deadline_constraints"
+      },
+      {
+        "class": "TemporalLogicVerifier",
+        "method": "verify_temporal_consistency"
+      },
+      {
+        "class": "TextMiningEngine",
+        "method": "_analyze_link_text"
+      }
+    ]
+  },
+  {
+    "executor_id": "D2-Q1",
+    "class_name": "D2_Q1_StructuredPlanningValidator",
+    "docstring": "Validates structured format of activities (table/matrix with required columns).",
+    "methods": [
+      {
+        "class": "FinancialAuditor",
+        "method": "_process_financial_table"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_classify_tables"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_clean_dataframe"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_deduplicate_tables"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_is_likely_header"
+      },
+      {
+        "class": "PDFProcessor",
+        "method": "extract_tables"
+      },
+      {
+        "class": "ReportingEngine",
+        "method": "generate_accountability_matrix"
+      }
+    ]
+  },
+  {
+    "executor_id": "D2-Q2",
+    "class_name": "D2_Q2_InterventionLogicInferencer",
+    "docstring": "Infers intervention logic: instrument (how), target (who), causality (why).",
+    "methods": [
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_infer_mechanism_type"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_infer_single_mechanism"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_necessity"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_sufficiency"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "infer_mechanisms"
+      },
+      {
+        "class": "BeachEvidentialTest",
+        "method": "classify_test"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "extract_causal_hierarchy"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_analyze_causal_dimensions"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "construct_causal_dag"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "_es_conexion_valida"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "construir_grafo_causal"
+      }
+    ]
+  },
+  {
+    "executor_id": "D2-Q3",
+    "class_name": "D2_Q3_RootCauseLinkageAnalyzer",
+    "docstring": "Analyzes linkage between activities and root causes/structural determinants.",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "_create_default_equations"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "construct_scm"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_composite_likelihood"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_type_transition_prior"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_extract_causal_links"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_initialize_prior"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_identify_causal_edges"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_refine_edge_probabilities"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "extract_semantic_cube"
+      }
+    ]
+  },
+  {
+    "executor_id": "D2-Q4",
+    "class_name": "D2_Q4_RiskManagementAnalyzer",
+    "docstring": "Identifies implementation risks and mitigation measures.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "sensitivity_analysis"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "aggregate_risk_and_prioritize"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "refutation_and_sanity_checks"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "_audit_systemic_risk"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_bayesian_risk_inference"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_e_value"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_robustness_value"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_risk"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_sensitivity"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "sensitivity_analysis"
+      }
+    ]
+  },
+  {
+    "executor_id": "D2-Q5",
+    "class_name": "D2_Q5_StrategicCoherenceEvaluator",
+    "docstring": "Evaluates strategic coherence: complementarity and logical sequence.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "calculate_likelihood_adaptativo"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_calculate_coherence_factor"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "audit_sequence_logic"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_causal_coherence"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_calculate_coherence_metrics"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_calculate_graph_fragmentation"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_calculate_objective_alignment"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_detect_logical_incompatibilities"
+      }
+    ]
+  },
+  {
+    "executor_id": "D3-Q1",
+    "class_name": "D3_Q1_IndicatorQualityValidator",
+    "docstring": "Validates indicator quality: baseline, target, source of verification.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "generate_traceability_record"
+      },
+      {
+        "class": "BeachEvidentialTest",
+        "method": "apply_test_logic"
+      },
+      {
+        "class": "CausalInferenceSetup",
+        "method": "assign_probative_value"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_calculate_quality_score"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_extract_metadata"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "audit_evidence_traceability"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_indicators"
+      },
+      {
+        "class": "TextMiningEngine",
+        "method": "diagnose_critical_links"
+      }
+    ]
+  },
+  {
+    "executor_id": "D3-Q2",
+    "class_name": "D3_Q2_TargetProportionalityAnalyzer",
+    "docstring": "DIM03_Q02_PRODUCT_TARGET_PROPORTIONALITY — Analyzes proportionality of targets to the diagnosed universe using canonical D3 notation.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "_adjust_domain_weights"
+      },
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "calculate_likelihood_adaptativo"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_calculate_bayesian_posterior"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_calculate_confidence_interval"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_log_refactored_components"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_necessity"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_sufficiency"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_calculate_sufficiency"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_build_point_patterns"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_calculate_quality_score"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_compile_pattern_registry"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_compute_avg_confidence"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_empty_result"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_analyze_funding_sources"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_assess_financial_sustainability"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_deduplicate_tables"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_generate_recommendations"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_get_spanish_stopwords"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_indicator_to_dict"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_risk"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_financial_component"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_indicators"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "analyze_financial_feasibility"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "_generar_sugerencias_internas"
+      }
+    ]
+  },
+  {
+    "executor_id": "D3-Q3",
+    "class_name": "D3_Q3_TraceabilityValidator",
+    "docstring": "DIM03_Q03_TRACEABILITY_BUDGET_ORG — Validates budgetary and organizational traceability of products under canonical D3 notation.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "generate_traceability_record"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_match_goal_to_budget"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_match_program_to_node"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_compute_evidence_confidence"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_consolidate_entities"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_entity_to_dict"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_from_responsibility_tables"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_responsibility_clarity"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "identify_responsible_entities"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_apply_mmr"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_generate_query_from_pdq"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "generate_pdq_report"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "process_document"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "semantic_search"
+      },
+      {
+        "class": "ReportingEngine",
+        "method": "generate_accountability_matrix"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_calculate_semantic_complexity"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_classify_cross_cutting_themes"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_classify_policy_domain"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_classify_value_chain_link"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_empty_semantic_cube"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_process_segment"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "_vectorize_segments"
+      }
+    ]
+  },
+  {
+    "executor_id": "D3-Q4",
+    "class_name": "D3_Q4_TechnicalFeasibilityEvaluator",
+    "docstring": "DIM03_Q04_TECHNICAL_FEASIBILITY — Evaluates activity-product feasibility vs resources/deadlines (canonical D3).",
+    "methods": [
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_calculate_node_importance"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_calculate_statistical_power"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_create_empty_result"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_generate_subgraph"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_get_node_validator"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_initialize_rng"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_is_acyclic"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "add_edge"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "add_node"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "calculate_acyclicity_pvalue"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "export_nodes"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "get_graph_stats"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_necessity"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_ess"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_likelihood"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_r_hat"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "_benchmark_operation"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "_log_metric"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "execute_suite"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "run_performance_benchmarks"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "validate_causal_categories"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "validate_connection_matrix"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "validate_engine_readiness"
+      },
+      {
+        "class": "PerformanceAnalyzer",
+        "method": "_calculate_loss_functions"
+      },
+      {
+        "class": "PerformanceAnalyzer",
+        "method": "analyze_performance"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "_extraer_categorias"
+      }
+    ]
+  },
+  {
+    "executor_id": "D3-Q5",
+    "class_name": "D3_Q5_OutputOutcomeLinkageAnalyzer",
+    "docstring": "DIM03_Q05_OUTPUT_OUTCOME_LINKAGE — Analyzes mechanisms linking outputs to outcomes with canonical D3 labeling.",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "_evaluate_counterfactual"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "_evaluate_factual"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "refutation_and_sanity_checks"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_extract_observations"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_generate_necessity_remediation"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_infer_activity_sequence"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_quantify_uncertainty"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "infer_mechanisms"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_assess_financial_consistency"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_build_type_hierarchy"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_textual_proximity"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_type_transition_prior"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_check_structural_violation"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_load_questionnaire"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_effect_to_dict"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_generate_recommendations"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_identify_causal_nodes"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_identify_confounders"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_match_text_to_node"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_refine_edge_probabilities"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_scenario_to_dict"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_simulate_intervention"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "analyze_financial_feasibility"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "construct_causal_dag"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "estimate_causal_effects"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "generate_counterfactuals"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "compare_policy_interventions"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "_validar_orden_causal"
+      }
+    ]
+  },
+  {
+    "executor_id": "D4-Q1",
+    "class_name": "D4_Q1_OutcomeMetricsValidator",
+    "docstring": "DIM04_Q01_OUTCOME_INDICATOR_COMPLETENESS — Validates outcome indicators (baseline, target, horizon) with canonical D4 notation.",
+    "methods": [
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_composite_likelihood"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_language_specificity"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_semantic_distance"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_classify_goal_type"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_extract_goals"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_parse_goal_context"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_entities_ner"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_extract_entities_syntax"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_find_outcome_mentions"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_indicators"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_temporal_consistency"
+      },
+      {
+        "class": "PerformanceAnalyzer",
+        "method": "_generate_recommendations"
+      },
+      {
+        "class": "PerformanceAnalyzer",
+        "method": "analyze_performance"
+      },
+      {
+        "class": "TemporalLogicVerifier",
+        "method": "_classify_temporal_type"
+      },
+      {
+        "class": "TemporalLogicVerifier",
+        "method": "_extract_resources"
+      },
+      {
+        "class": "TemporalLogicVerifier",
+        "method": "_parse_temporal_marker"
+      },
+      {
+        "class": "TemporalLogicVerifier",
+        "method": "_should_precede"
+      }
+    ]
+  },
+  {
+    "executor_id": "D4-Q2",
+    "class_name": "D4_Q2_CausalChainValidator",
+    "docstring": "Validates explicit causal chain with assumptions and enabling conditions.",
+    "methods": [
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_perform_sensitivity_analysis_internal"
+      },
+      {
+        "class": "BayesFactorTable",
+        "method": "get_bayes_factor"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "construct_scm"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "extract_causal_hierarchy"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_generate_independence_tests"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "verify_conditional_independence"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "_encontrar_caminos_completos"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "validacion_completa"
+      }
+    ]
+  },
+  {
+    "executor_id": "D4-Q3",
+    "class_name": "D4_Q3_AmbitionJustificationAnalyzer",
+    "docstring": "Analyzes justification of result ambition based on investment/capacity/benchmarks.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "sensitivity_analysis"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_calculate_statistical_power"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_aggregate_bayesian_confidence"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_ess"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_r_hat"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_robustness_value"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_estimate_effect_bayesian"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_get_prior_effect"
+      }
+    ]
+  },
+  {
+    "executor_id": "D4-Q4",
+    "class_name": "D4_Q4_ProblemSolvencyEvaluator",
+    "docstring": "Evaluates whether results address/resolve prioritized problems from diagnosis.",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "aggregate_risk_and_prioritize"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_detect_allocation_gaps"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "_generate_optimal_remediations"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "_get_remediation_text"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_calculate_objective_alignment"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_generate_resolution_recommendations"
+      },
+      {
+        "class": "PolicyContradictionDetector",
+        "method": "_identify_affected_sections"
+      }
+    ]
+  },
+  {
+    "executor_id": "D4-Q5",
+    "class_name": "D4_Q5_VerticalAlignmentValidator",
+    "docstring": "Validates alignment with superior frameworks (PND, SDGs).",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "validate_quality_criteria"
+      },
+      {
+        "class": "CDAFFramework",
+        "method": "_generate_dnp_report"
+      },
+      {
+        "class": "CDAFFramework",
+        "method": "_validate_dnp_compliance"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_analyze_causal_dimensions"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_causal_coherence"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_score_pdet_alignment"
+      }
+    ]
+  },
+  {
+    "executor_id": "D5-Q1",
+    "class_name": "D5_Q1_LongTermVisionAnalyzer",
+    "docstring": "Analyzes long-term impacts, transmission routes, and time lags.",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "construct_scm"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_assess_temporal_coherence"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_find_mediator_mentions"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_generate_scenario_narrative"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_simulate_intervention"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "generate_counterfactuals"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "_validar_orden_causal"
+      },
+      {
+        "class": "TextMiningEngine",
+        "method": "_generate_interventions"
+      }
+    ]
+  },
+  {
+    "executor_id": "D5-Q2",
+    "class_name": "D5_Q2_CompositeMeasurementValidator",
+    "docstring": "DIM05_Q02_COMPOSITE_PROXY_VALIDITY — Validates composite indices/proxies for complex impacts (canonical D5).",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "aggregate_risk_and_prioritize"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_aggregate_bayesian_confidence"
+      },
+      {
+        "class": "FinancialAuditor",
+        "method": "_calculate_sufficiency"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_compute_avg_confidence"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_compute_evidence_confidence"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "_construct_evidence_bundle"
+      },
+      {
+        "class": "IndustrialPolicyProcessor",
+        "method": "export_results"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_e_value"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_robustness_value"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_estimate_score_confidence"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_overall_quality"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_sensitivity"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_quality_to_dict"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "calculate_quality_score"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "generate_executive_report"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_compute_overall_confidence"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_embed_texts"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_extract_numerical_values"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_filter_by_pdq"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_generate_query_from_pdq"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "evaluate_policy_numerical_consistency"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "get_diagnostics"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "process_document"
+      },
+      {
+        "class": "PolicyTextProcessor",
+        "method": "compile_pattern"
+      },
+      {
+        "class": "PolicyTextProcessor",
+        "method": "extract_contextual_window"
+      },
+      {
+        "class": "PolicyTextProcessor",
+        "method": "normalize_unicode"
+      },
+      {
+        "class": "PolicyTextProcessor",
+        "method": "segment_into_sentences"
+      },
+      {
+        "class": "ReportingEngine",
+        "method": "_calculate_quality_score"
+      }
+    ]
+  },
+  {
+    "executor_id": "D5-Q3",
+    "class_name": "D5_Q3_IntangibleMeasurementAnalyzer",
+    "docstring": "Analyzes proxy indicators for intangible impacts with validity documentation.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "_perturb_evidence"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_quantify_uncertainty"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_semantic_distance"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_find_mediator_mentions"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "get_diagnostics"
+      },
+      {
+        "class": "SemanticAnalyzer",
+        "method": "extract_semantic_cube"
+      }
+    ]
+  },
+  {
+    "executor_id": "D5-Q4",
+    "class_name": "D5_Q4_SystemicRiskEvaluator",
+    "docstring": "Evaluates systemic risks that could rupture causal mechanisms.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "sensitivity_analysis"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "_test_effect_stability"
+      },
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "refutation_and_sanity_checks"
+      },
+      {
+        "class": "OperationalizationAuditor",
+        "method": "_audit_systemic_risk"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_break_cycles"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_risk"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_interpret_sensitivity"
+      }
+    ]
+  },
+  {
+    "executor_id": "D5-Q5",
+    "class_name": "D5_Q5_RealismAndSideEffectsAnalyzer",
+    "docstring": "Analyzes realism of impact ambition and potential unintended effects.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "_add_ood_noise"
+      },
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "validate_quality_criteria"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_calculate_coherence_factor"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_ablation_analysis"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_waic_difference"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "posterior_predictive_check"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_e_value"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "_compute_robustness_value"
+      }
+    ]
+  },
+  {
+    "executor_id": "D6-Q1",
+    "class_name": "D6_Q1_ExplicitTheoryBuilder",
+    "docstring": "Builds/validates explicit Theory of Change with diagram and assumptions.",
+    "methods": [
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "export_nodes"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "extract_causal_hierarchy"
+      },
+      {
+        "class": "PDETMunicipalPlanAnalyzer",
+        "method": "export_causal_network"
+      },
+      {
+        "class": "ReportingEngine",
+        "method": "generate_causal_diagram"
+      },
+      {
+        "class": "ReportingEngine",
+        "method": "generate_causal_model_json"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "construir_grafo_causal"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "export_nodes"
+      },
+      {
+        "class": "TeoriaCambio",
+        "method": "validacion_completa"
+      }
+    ]
+  },
+  {
+    "executor_id": "D6-Q2",
+    "class_name": "D6_Q2_LogicalProportionalityValidator",
+    "docstring": "Validates logical proportionality: no leaps, intervention matches result scale.",
+    "methods": [
+      {
+        "class": "BayesianCounterfactualAuditor",
+        "method": "_test_effect_stability"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_calculate_coherence_factor"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_necessity"
+      },
+      {
+        "class": "BayesianMechanismInference",
+        "method": "_test_sufficiency"
+      },
+      {
+        "class": "BeachEvidentialTest",
+        "method": "apply_test_logic"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "validate_connection_matrix"
+      },
+      {
+        "class": "PolicyAnalysisEmbedder",
+        "method": "_compute_overall_confidence"
+      }
+    ]
+  },
+  {
+    "executor_id": "D6-Q3",
+    "class_name": "D6_Q3_ValidationTestingAnalyzer",
+    "docstring": "Analyzes validation/testing proposals for weak assumptions before scaling.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "validate_quality_criteria"
+      },
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "calculate_acyclicity_pvalue"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_ess"
+      },
+      {
+        "class": "HierarchicalGenerativeModel",
+        "method": "_calculate_r_hat"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "_benchmark_operation"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "execute_suite"
+      },
+      {
+        "class": "IndustrialGradeValidator",
+        "method": "validate_engine_readiness"
+      },
+      {
+        "class": "PerformanceAnalyzer",
+        "method": "analyze_performance"
+      }
+    ]
+  },
+  {
+    "executor_id": "D6-Q4",
+    "class_name": "D6_Q4_FeedbackLoopAnalyzer",
+    "docstring": "Analyzes monitoring system with correction mechanisms and learning processes.",
+    "methods": [
+      {
+        "class": "AdvancedDAGValidator",
+        "method": "_calculate_node_importance"
+      },
+      {
+        "class": "BayesFactorTable",
+        "method": "get_bayes_factor"
+      },
+      {
+        "class": "CDAFFramework",
+        "method": "_extract_feedback_from_audit"
+      },
+      {
+        "class": "ConfigLoader",
+        "method": "_load_uncertainty_history"
+      },
+      {
+        "class": "ConfigLoader",
+        "method": "_save_prior_history"
+      },
+      {
+        "class": "ConfigLoader",
+        "method": "check_uncertainty_reduction_criterion"
+      },
+      {
+        "class": "ConfigLoader",
+        "method": "update_priors_from_feedback"
+      }
+    ]
+  },
+  {
+    "executor_id": "D6-Q5",
+    "class_name": "D6_Q5_ContextualAdaptabilityEvaluator",
+    "docstring": "Evaluates contextual adaptation: differential impacts and territorial constraints.",
+    "methods": [
+      {
+        "class": "AdaptivePriorCalculator",
+        "method": "generate_traceability_record"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_assess_temporal_coherence"
+      },
+      {
+        "class": "CausalExtractor",
+        "method": "_calculate_language_specificity"
+      },
+      {
+        "class": "CausalInferenceSetup",
+        "method": "_get_dynamics_pattern"
+      },
+      {
+        "class": "CausalInferenceSetup",
+        "method": "identify_failure_points"
+      },
+      {
+        "class": "SemanticProcessor",
+        "method": "_detect_pdm_structure"
+      },
+      {
+        "class": "SemanticProcessor",
+        "method": "_detect_table"
+      },
+      {
+        "class": "SemanticProcessor",
+        "method": "chunk_text"
+      },
+      {
+        "class": "TextMiningEngine",
+        "method": "diagnose_critical_links"
+      }
+    ]
+  }
+]

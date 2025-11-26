@@ -1,0 +1,688 @@
+{
+  "identity": {
+    "base_slot": "D1-Q1",
+    "question_id": "Q001",
+    "dimension_id": "DIM01",
+    "policy_area_id": "PA01",
+    "contract_version": "1.0.0",
+    "contract_hash": "TODO_COMPUTE_SHA256_OF_THIS_FILE",
+    "created_at": "2025-11-25T00:00:00Z",
+    "validated_against_schema": "executor_contract.v3.schema.json"
+  },
+  "executor_binding": {
+    "executor_class": "D1Q1_Executor_Contract",
+    "executor_module": "saaaaaa.core.orchestrator.executors_contract"
+  },
+  "method_binding": {
+    "method_id": "TODO_METHOD_ID_FROM_METHOD_MAP",
+    "class_name": "Dimension1Analyzer",
+    "method_name": "analyze_question_1",
+    "method_signature": {
+      "params": [
+        "preprocessed_document",
+        "question_context",
+        "signal_pack"
+      ],
+      "returns": "Phase2QuestionResult"
+    }
+  },
+  "question_context": {
+    "question_text": "¿El diagnóstico presenta datos numéricos (tasas de VBG, porcentajes de participación, cifras de brechas salariales) para el área de Derechos de las mujeres e igualdad de género que sirvan como línea base? Se debe verificar la presencia de un año de referencia y la mención de fuentes (ej. DANE, Medicina Legal, Observatorio de Género).",
+    "question_type": "micro",
+    "scoring_modality": "TYPE_A",
+    "modality": "count_and_scale",
+    "expected_output_type": "score",
+    "patterns": [
+      {
+        "category": "TEMPORAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-000",
+        "match_type": "REGEX",
+        "pattern": "línea base|año base|situación inicial|diagnóstico de género"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-001",
+        "match_type": "REGEX",
+        "pattern": "fuente:|según|reportado por|con datos de"
+      },
+      {
+        "category": "FUENTE_OFICIAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-002",
+        "match_type": "REGEX",
+        "pattern": "DANE|Medicina Legal|Fiscalía|Policía Nacional|SIVIGILA|SISPRO"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-003",
+        "match_type": "REGEX",
+        "pattern": "Observatorio de Asuntos de Género|Secretaría de la Mujer|Comisaría de Familia"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-004",
+        "match_type": "REGEX",
+        "pattern": "Encuesta Nacional de Demografía y Salud|ENDS"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-005",
+        "match_type": "REGEX",
+        "pattern": "violencia intrafamiliar|VBG|violencia basada en género|delitos sexuales|feminicidio"
+      },
+      {
+        "category": "INDICADOR",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-006",
+        "match_type": "REGEX",
+        "pattern": "tasa de|porcentaje de|número de casos|brecha salarial de"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-007",
+        "match_type": "REGEX",
+        "pattern": "participación política de las mujeres|mujeres en cargos directivos"
+      },
+      {
+        "category": "INDICADOR",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-008",
+        "match_type": "REGEX",
+        "pattern": "autonomía económica|tasa de desempleo femenina"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-009",
+        "match_type": "REGEX",
+        "pattern": "madres adolescentes|embarazo en adolescentes"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-010",
+        "match_type": "LITERAL",
+        "pattern": "2021|2022|2023|vigencia anterior|cuatrienio anterior"
+      },
+      {
+        "category": "INDICADOR",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-011",
+        "match_type": "REGEX",
+        "pattern": "\\d+(\\.\\d+)?\\s*%"
+      },
+      {
+        "category": "UNIDAD_MEDIDA",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-012",
+        "match_type": "REGEX",
+        "pattern": "por cada 100\\.000 mujeres|por 100 mil habitantes"
+      },
+      {
+        "category": "TEMPORAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q001-013",
+        "match_type": "REGEX",
+        "pattern": "serie histórica|evolución 20\\d{2}-20\\d{2}|tendencia de los últimos"
+      }
+    ],
+    "expected_elements": [
+      {
+        "required": true,
+        "type": "cobertura_territorial_especificada"
+      },
+      {
+        "minimum": 2,
+        "type": "fuentes_oficiales"
+      },
+      {
+        "minimum": 3,
+        "type": "indicadores_cuantitativos"
+      },
+      {
+        "minimum": 3,
+        "type": "series_temporales_años"
+      }
+    ],
+    "validations": {
+      "buscar_indicadores_cuantitativos": {
+        "minimum_required": 3,
+        "patterns": [
+          "\\d+%",
+          "\\d+\\s*por\\s*\\d+",
+          "tasa de",
+          "índice de",
+          "cobertura de"
+        ],
+        "specificity": "HIGH"
+      },
+      "cobertura": {
+        "minimum_required": 1,
+        "patterns": [
+          "departamental",
+          "municipal",
+          "urbano",
+          "rural",
+          "territorial",
+          "poblacional"
+        ],
+        "specificity": "HIGH"
+      },
+      "series_temporales": {
+        "minimum_years": 3,
+        "patterns": [
+          "20\\d{2}",
+          "año",
+          "periodo",
+          "histórico",
+          "serie"
+        ],
+        "specificity": "HIGH"
+      }
+    }
+  },
+  "signal_requirements": {
+    "mandatory_signals": [],
+    "optional_signals": [],
+    "signal_aggregation": "weighted_mean",
+    "minimum_signal_threshold": 0.0,
+    "note": "Signal requirements are currently under development. Signal IDs will be populated once the signal_registry provides a canonical mapping for PA01/DIM01."
+  },
+  "evidence_assembly": {
+    "module": "saaaaaa.core.orchestrator.evidence_assembler",
+    "class_name": "EvidenceAssembler",
+    "method_name": "assemble",
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "elements",
+        "raw_results"
+      ],
+      "properties": {
+        "elements": {
+          "type": "array",
+          "description": "Lista de elementos de evidencia encontrados para esta micro-pregunta."
+        },
+        "raw_results": {
+          "type": "object",
+          "properties": {
+            "confidence_scores": {
+              "type": "array",
+              "description": "Scores de confianza usados por el scorer."
+            },
+            "semantic_similarity": {
+              "description": "Métrica de similitud semántica (si aplica)."
+            },
+            "pattern_matches": {
+              "type": "object",
+              "description": "Matches de patrones esperados vs texto."
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Metadatos arbitrarios pasados al scorer."
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "assembly_rules": [
+      {
+        "target": "elements_found",
+        "sources": [
+          "primary_analysis.elements",
+          "validation_analysis.validated_elements"
+        ],
+        "merge_strategy": "concat",
+        "description": "Combine all unique elements found from both analysis and validation stages."
+      },
+      {
+        "target": "confidence_scores",
+        "sources": [
+          "primary_analysis.confidences"
+        ],
+        "merge_strategy": "first",
+        "default": [],
+        "description": "Use the confidence scores from the primary analysis."
+      },
+      {
+        "target": "pattern_matches",
+        "sources": [
+          "primary_analysis.patterns"
+        ],
+        "merge_strategy": "first",
+        "default": {},
+        "description": "Use the pattern match details from the primary analysis."
+      },
+      {
+        "target": "metadata",
+        "sources": [
+          "primary_analysis.metadata",
+          "validation_analysis.metadata"
+        ],
+        "merge_strategy": "concat",
+        "description": "Combine metadata from all method steps for full traceability."
+      }
+    ]
+  },
+  "output_contract": {
+    "result_type": "Phase2QuestionResult",
+    "schema": {
+      "type": "object",
+      "required": [
+        "base_slot",
+        "question_id",
+        "question_global",
+        "evidence",
+        "validation"
+      ],
+      "properties": {
+        "base_slot": {
+          "type": "string",
+          "description": "Debe coincidir con identity.base_slot.",
+          "const": "D1-Q1"
+        },
+        "question_id": {
+          "type": "string",
+          "description": "Debe coincidir con identity.question_id.",
+          "const": "Q001"
+        },
+        "question_global": {
+          "type": "integer",
+          "description": "Índice global de la pregunta (de questionnaire_monolith).",
+          "const": 1
+        },
+        "policy_area_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "PA canónica, debe ser coherente con identity.policy_area_id.",
+          "const": "PA01"
+        },
+        "dimension_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Dimensión canónica, coherente con identity.dimension_id.",
+          "const": "DIM01"
+        },
+        "cluster_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cluster de análisis según el monolith, si aplica.",
+          "const": "CL02"
+        },
+        "evidence": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Objeto de evidencia ensamblado por el EvidenceAssembler; debe cumplir evidence_assembly.output_schema.",
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Resultado de validaciones lógicas de la respuesta (coherencia, integridad, etc.).",
+          "additionalProperties": true
+        },
+        "trace": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Información de trazabilidad (provenance, logs) específica de la ejecución.",
+          "additionalProperties": true
+        },
+        "metadata": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Metadatos adicionales de la pregunta para consumo posterior.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "consumer_modules": [
+      "src.saaaaaa.core.phases.phase2_types.validate_phase2_result",
+      "src.saaaaaa.core.orchestrator.core.Orchestrator._score_micro_results_async",
+      "src.saaaaaa.analysis.scoring.MicroQuestionScorer"
+    ],
+    "human_readable_output": {
+      "format": "markdown",
+      "template": {
+        "title": "## Análisis D1-Q1: Línea Base Cuantitativa en Derechos de las Mujeres",
+        "summary": "### Resumen Ejecutivo\n\nSe analizó la presencia de **{evidence.elements_found_count}** elementos de evidencia cuantitativa relacionados con la línea base diagnóstica en el área de Derechos de las Mujeres e Igualdad de Género.\n\n**Puntaje**: {score}/3.0 | **Calidad**: {quality_level}",
+        "score_section": "### Evaluación Cuantitativa\n\n- **Puntaje bruto**: {score}/3.0\n- **Nivel de calidad**: {quality_level}\n- **Confianza promedio**: {evidence.confidence_scores.mean}%\n- **Cobertura de patrones**: {evidence.pattern_matches_count}/14 patrones detectados",
+        "elements_section": "### Elementos de Evidencia Identificados\n\n{evidence.elements_found_list}\n\n**Elementos críticos faltantes**: {evidence.missing_required_elements}",
+        "details": [
+          "**Fuentes oficiales identificadas**: {evidence.official_sources_count}",
+          "**Indicadores cuantitativos**: {evidence.quantitative_indicators_count}",
+          "**Series temporales**: {evidence.temporal_series_count}",
+          "**Cobertura territorial**: {evidence.territorial_coverage}"
+        ],
+        "interpretation": "### Interpretación de Resultados\n\n{methodological_interpretation}",
+        "recommendations": "### Recomendaciones\n\n{evidence.recommendations}"
+      },
+      "methodological_depth": {
+        "methods": [
+          {
+            "method_name": "analyze_question_1",
+            "class_name": "Dimension1Analyzer",
+            "priority": 1,
+            "role": "primary_analysis",
+            "epistemological_foundation": {
+              "paradigm": "Positivismo crítico con enfoque de derechos",
+              "ontological_basis": "Realismo crítico: asume la existencia de realidades objetivas medibles (datos cuantitativos de VBG, brechas salariales) pero reconoce que su interpretación está mediada por marcos normativos (enfoque de género, derechos humanos).",
+              "epistemological_stance": "Empirismo evidencial: El conocimiento sobre la situación de las mujeres en el territorio se construye a partir de datos observables, medibles y verificables provenientes de fuentes oficiales reconocidas.",
+              "theoretical_framework": [
+                "**Teoría de la evidencia diagnóstica**: Un diagnóstico de política pública es válido si está fundamentado en datos cuantitativos verificables que establezcan una línea base medible (Weiss, 1998; Majone, 1989).",
+                "**Enfoque de género como categoría analítica**: Los datos cuantitativos sobre VBG, participación política, brechas salariales son indicadores proxy de estructuras de desigualdad de género (Scott, 1986; Kabeer, 1994).",
+                "**Accountability basada en evidencia**: La presencia de fuentes oficiales y series temporales es requisito para la rendición de cuentas y el monitoreo de políticas de género (CEPAL, 2016)."
+              ],
+              "normative_grounding": "Convención Belem do Pará, CEDAW, Objetivos de Desarrollo Sostenible (ODS 5), Ley 1257 de 2008 (Colombia).",
+              "justification": "Este método se fundamenta en la premisa de que las políticas públicas de género deben partir de un diagnóstico cuantitativo riguroso que permita: (1) identificar las brechas y problemáticas específicas del territorio, (2) establecer metas medibles, y (3) hacer seguimiento objetivo del impacto de las intervenciones."
+            },
+            "technical_approach": {
+              "method_type": "pattern_matching_with_semantic_validation",
+              "algorithm": "Multi-stage regex-based extraction with confidence weighting",
+              "steps": [
+                {
+                  "step": 1,
+                  "name": "text_preprocessing",
+                  "description": "Normalización Unicode, segmentación en oraciones, limpieza de ruido textual",
+                  "rationale": "Asegurar que los patrones regex funcionen correctamente independientemente de variaciones ortográficas o de encoding"
+                },
+                {
+                  "step": 2,
+                  "name": "pattern_matching",
+                  "description": "Aplicación de 14 patrones regex categorizados (TEMPORAL, FUENTE_OFICIAL, INDICADOR, UNIDAD_MEDIDA) con pesos de confianza de 0.85",
+                  "technical_detail": "Cada patrón tiene un confidence_weight que refleja su especificidad y confiabilidad. Los patrones de FUENTE_OFICIAL (e.g., 'DANE', 'Medicina Legal') tienen alta especificidad porque son entidades objetivas.",
+                  "rationale": "Los patrones capturan señales textuales de rigor cuantitativo: presencia de cifras numéricas (\\d+%), menciones de fuentes oficiales, indicadores de tasas/porcentajes, referencias temporales (años)."
+                },
+                {
+                  "step": 3,
+                  "name": "element_extraction",
+                  "description": "Extracción de 4 tipos de elementos esperados: cobertura_territorial_especificada (REQUERIDO), fuentes_oficiales (min 2), indicadores_cuantitativos (min 3), series_temporales_años (min 3)",
+                  "technical_detail": "Los elementos se extraen mediante la agregación de matches de patrones relacionados. Por ejemplo, 'indicadores_cuantitativos' se infiere de la presencia de patrones PAT-Q001-006, PAT-Q001-008, PAT-Q001-011.",
+                  "rationale": "La especificación de elementos con cantidades mínimas (e.g., min 3 indicadores) refleja un umbral de suficiencia diagnóstica: no basta con mencionar un dato aislado, se requiere densidad de evidencia cuantitativa."
+                },
+                {
+                  "step": 4,
+                  "name": "confidence_scoring",
+                  "description": "Cálculo de confidence score por elemento basado en: (a) número de matches, (b) peso promedio de patrones, (c) distancia semántica contextual",
+                  "formula": "confidence_score = (sum(pattern_weights) / expected_patterns) * context_coherence_factor",
+                  "rationale": "Un elemento con múltiples matches de patrones de alta confianza en contextos coherentes (e.g., cifras + fuente + año en la misma oración) tiene mayor confidence que un match aislado."
+                },
+                {
+                  "step": 5,
+                  "name": "validation_pass",
+                  "description": "Validación cruzada mediante Dimension1Validator.validate_question_1 que verifica coherencia lógica (e.g., si hay 'tasa de' debe haber cifra numérica cercana, si hay fuente oficial debe estar en contexto de datos)",
+                  "rationale": "Reduce falsos positivos: un match de patrón no implica automáticamente evidencia válida si el contexto semántico no es coherente."
+                }
+              ],
+              "assumptions": [
+                "Los documentos de diagnóstico municipal siguen convenciones retóricas estándar (e.g., citan fuentes con fórmulas como 'según DANE', 'con datos de Medicina Legal').",
+                "Los indicadores cuantitativos están expresados en formatos numéricos reconocibles (porcentajes, tasas, cifras absolutas).",
+                "La presencia textual de estos elementos es un proxy válido de que el diagnóstico efectivamente utilizó esos datos (no se verifica la validez estadística de los datos, solo su mención)."
+              ],
+              "limitations": [
+                "No valida la calidad o actualidad de los datos mencionados (un diagnóstico puede citar datos de 2010 y este método no penaliza obsolescencia).",
+                "No detecta datos cuantitativos presentados en tablas o gráficos si no hay descripción textual (limitación de análisis solo-texto).",
+                "Puede generar falsos negativos si el documento usa terminología no estándar (e.g., 'estadísticas' en lugar de 'datos', 'entidad departamental' en lugar de nombres específicos de fuentes)."
+              ],
+              "complexity": "O(n*p) donde n = número de oraciones, p = número de patrones. Complejidad lineal escalable."
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "elements": "Lista de elementos de evidencia identificados (e.g., ['fuentes_oficiales: DANE', 'indicadores_cuantitativos: tasa de VBG 12.3%', ...])",
+                "confidences": "Array de scores de confianza por elemento (rango 0.0-1.0)",
+                "patterns": "Diccionario de patrones matched con sus contextos textuales",
+                "metadata": "Información de trazabilidad (posiciones textuales, IDs de patrones, timestamps)"
+              },
+              "interpretation_guide": {
+                "high_confidence_threshold": "≥ 0.85: Elementos con múltiples matches de patrones específicos en contextos coherentes. Interpretación: Evidencia sólida de que el diagnóstico contiene ese tipo de dato cuantitativo.",
+                "medium_confidence_threshold": "0.60-0.84: Elementos con matches parciales o en contextos ambiguos. Interpretación: Probable presencia del elemento, requiere revisión manual para confirmar.",
+                "low_confidence_threshold": "< 0.60: Matches débiles o contextos incoherentes. Interpretación: Posible falso positivo, el elemento puede no estar realmente presente de manera sustantiva."
+              },
+              "contextual_factors": [
+                "**Densidad de evidencia**: Un diagnóstico con 15 indicadores cuantitativos es cualitativamente diferente de uno con 3 (ambos cumplen el mínimo de 3, pero el primero demuestra mayor rigor).",
+                "**Coherencia fuente-dato**: Idealmente, cada indicador cuantitativo debe estar asociado a una fuente oficial mencionada. La ausencia de esta asociación reduce la credibilidad diagnóstica.",
+                "**Cobertura temporal**: La presencia de series temporales (múltiples años) indica diagnóstico longitudinal vs. transversal. Series temporales permiten análisis de tendencias."
+              ],
+              "actionable_insights": [
+                "Si faltan fuentes oficiales: El diagnóstico carece de respaldo institucional, los datos pueden ser anecdóticos o no verificables.",
+                "Si faltan indicadores cuantitativos: El diagnóstico es predominantemente cualitativo/descriptivo, lo cual limita la capacidad de establecer metas medibles y hacer seguimiento cuantitativo.",
+                "Si falta cobertura territorial: No está claro a qué ámbito geográfico se refieren los datos (municipal, departamental, etc.), lo cual dificulta la focalización de políticas.",
+                "Si faltan series temporales: El diagnóstico no permite evaluar evolución del problema, solo ofrece fotografía estática."
+              ],
+              "use_cases": [
+                "**Auditoría de calidad diagnóstica**: Verificar si los diagnósticos municipales cumplen estándares mínimos de rigor cuantitativo antes de aprobar Planes de Desarrollo.",
+                "**Priorización territorial**: Identificar municipios con diagnósticos débiles que requieren asistencia técnica para fortalecimiento diagnóstico.",
+                "**Seguimiento a compromisos**: Monitorear si las entidades territoriales están mejorando la calidad de sus diagnósticos de género a lo largo del tiempo."
+              ]
+            }
+          },
+          {
+            "method_name": "validate_question_1",
+            "class_name": "Dimension1Validator",
+            "priority": 2,
+            "role": "validation_analysis",
+            "epistemological_foundation": {
+              "paradigm": "Validación lógica-formal con criterios de suficiencia",
+              "ontological_basis": "Coherentismo: La validez de la evidencia no solo depende de la presencia de elementos individuales, sino de la coherencia lógica entre ellos (e.g., un indicador cuantitativo sin fuente oficial es menos válido).",
+              "epistemological_stance": "Falibilismo crítico: Reconoce que los métodos de extracción pueden generar errores (falsos positivos/negativos), por lo que se requiere una capa de validación que verifique coherencia interna de la evidencia extraída.",
+              "theoretical_framework": [
+                "**Teoría de la validación cruzada**: La confiabilidad de un hallazgo aumenta cuando múltiples métodos independientes convergen en el mismo resultado (triangulación metodológica).",
+                "**Criterios de suficiencia diagnóstica**: Un diagnóstico no es válido solo por contener datos, sino por contener datos suficientes en cantidad y calidad para fundamentar decisiones de política (Nutley et al., 2007)."
+              ],
+              "justification": "Este método de validación se justifica porque el análisis primario (analyze_question_1) puede generar falsos positivos (e.g., match de patrón en contexto irrelevante). La validación reduce el riesgo de sobrestimar la calidad diagnóstica."
+            },
+            "technical_approach": {
+              "method_type": "rule_based_validation_with_cross_reference",
+              "algorithm": "Multi-criteria validation with logical constraints",
+              "steps": [
+                {
+                  "step": 1,
+                  "name": "required_element_check",
+                  "description": "Verificar que el elemento REQUERIDO 'cobertura_territorial_especificada' esté presente",
+                  "rationale": "Sin especificación de cobertura territorial, no se puede determinar el alcance geográfico del diagnóstico, lo cual es crítico para políticas territoriales."
+                },
+                {
+                  "step": 2,
+                  "name": "minimum_count_check",
+                  "description": "Verificar que se cumplan los mínimos: ≥2 fuentes oficiales, ≥3 indicadores cuantitativos, ≥3 series temporales",
+                  "rationale": "Los umbrales de cantidad reflejan criterios de suficiencia: 1-2 datos son insuficientes para caracterizar una problemática compleja como VBG o desigualdad de género."
+                },
+                {
+                  "step": 3,
+                  "name": "coherence_validation",
+                  "description": "Verificar coherencia lógica: (a) si hay indicador cuantitativo, debe haber cifra numérica en contexto cercano; (b) si hay fuente oficial, debe haber mención de dato en contexto; (c) si hay serie temporal, debe haber ≥2 años mencionados",
+                  "technical_detail": "Se usa ventana contextual de ±50 tokens alrededor del match para buscar elementos coherentes.",
+                  "rationale": "Reduce falsos positivos: un match aislado sin contexto coherente es probable error."
+                },
+                {
+                  "step": 4,
+                  "name": "cross_validation_with_patterns",
+                  "description": "Verificar que los elementos validados correspondan a matches de patrones de alta confianza (≥0.85)",
+                  "rationale": "Elementos basados en patrones débiles no deben ser validados como evidencia sólida."
+                },
+                {
+                  "step": 5,
+                  "name": "error_flagging",
+                  "description": "Marcar elementos con bajo confidence (<0.60) como 'requiere_revisión_manual'",
+                  "rationale": "Transparencia: el sistema no oculta incertidumbre, la hace explícita para que usuarios humanos puedan tomar decisión informada."
+                }
+              ],
+              "validation_rules": [
+                "**RULE-001**: Si un elemento es marcado como REQUERIDO y no está presente, el análisis debe emitir error crítico (abort_if: missing_required_element).",
+                "**RULE-002**: Si los mínimos de cantidad no se cumplen, el elemento se marca como 'insuficiente' pero no aborta (permite análisis parcial).",
+                "**RULE-003**: Si un elemento tiene coherence_score < 0.50, se descarta aunque haya match de patrón.",
+                "**RULE-004**: Si hay conflicto entre analyze_question_1 y validate_question_1 (e.g., el primero reporta 5 indicadores pero el segundo valida solo 2), prevalece el resultado de validación (principio de conservadurismo: mejor subestimar que sobrestimar)."
+              ],
+              "assumptions": [
+                "Los criterios de suficiencia (mínimos de 2, 3, 3) son universales y no dependen del tamaño del municipio o complejidad del diagnóstico (esto puede ser una simplificación; municipios grandes pueden requerir más datos).",
+                "La coherencia contextual se puede determinar con ventana de ±50 tokens (puede ser insuficiente si el documento tiene estructura no lineal, e.g., datos en anexos)."
+              ],
+              "limitations": [
+                "No valida la validez estadística o metodológica de los datos (e.g., puede validar un indicador mal calculado si está bien presentado textualmente).",
+                "No detecta contradicciones entre datos (e.g., si el texto dice 'tasa de VBG de 10%' en un párrafo y '15%' en otro, no identifica la inconsistencia)."
+              ],
+              "complexity": "O(m*v) donde m = número de elementos a validar, v = tamaño de ventana contextual."
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "validated_elements": "Lista de elementos que pasaron validación (subconjunto de elements de analyze_question_1)",
+                "validation_errors": "Lista de elementos descartados con razón (e.g., 'elemento X: coherencia insuficiente, context_score=0.45')",
+                "metadata": "Información de trazabilidad de validación (reglas aplicadas, scores de coherencia)"
+              },
+              "interpretation_guide": {
+                "validation_passed": "El elemento está presente con alta confianza y coherencia contextual. Interpretación: Evidencia confiable.",
+                "validation_failed": "El elemento fue detectado por analyze_question_1 pero descartado por incoherencia o bajo confidence. Interpretación: Probable falso positivo.",
+                "validation_partial": "El elemento tiene coherencia marginal (0.50-0.70). Interpretación: Evidencia débil, usar con cautela."
+              },
+              "actionable_insights": [
+                "Si muchos elementos fallan validación: El método de extracción (analyze_question_1) puede estar mal calibrado (patrones demasiado amplios), o el documento tiene estructura atípica.",
+                "Si todos los elementos pasan validación: Alta confianza en la calidad del diagnóstico, pero considerar revisión muestral manual para verificar que el sistema no esté sistemáticamente sobrestimando."
+              ]
+            }
+          }
+        ],
+        "method_combination_logic": {
+          "combination_strategy": "Sequential pipeline with validation override",
+          "rationale": "El análisis primario (analyze_question_1) es exhaustivo pero puede generar falsos positivos. La validación (validate_question_1) es conservadora y filtra elementos dudosos. Esta secuencia maximiza recall en la primera etapa y precision en la segunda.",
+          "evidence_fusion": "Los elementos finales son la intersección de analyze_question_1 ∩ validate_question_1. Si un elemento es reportado por analyze pero rechazado por validate, NO se incluye en el resultado final.",
+          "confidence_aggregation": "El confidence score final de un elemento es: min(confidence_analyze, coherence_score_validate). Se usa 'min' en lugar de 'mean' porque un elemento solo es tan confiable como su eslabón más débil.",
+          "trade_offs": [
+            "**Precisión vs. Recall**: Este enfoque prioriza precisión (evitar falsos positivos) a costa de recall (puede descartar evidencia débil pero real). Justificación: En auditoría de diagnósticos, es preferible ser conservador para no sobrestimar calidad.",
+            "**Automatización vs. Revisión manual**: El sistema marca elementos inciertos como 'requiere_revisión_manual' en lugar de tomar decisión definitiva, delegando casos ambiguos a expertos humanos."
+          ]
+        }
+      }
+    }
+  },
+  "validation_rules": {
+    "na_policy": "abort_on_critical",
+    "rules": [
+      {
+        "field": "elements_found",
+        "type": "array",
+        "must_contain": {
+          "count": 1,
+          "elements": [
+            "cobertura_territorial_especificada"
+          ]
+        },
+        "description": "Derived from monolith `expected_elements` where `required` is true."
+      },
+      {
+        "field": "elements_found",
+        "type": "array",
+        "should_contain": [
+          {
+            "elements": [
+              "fuentes_oficiales"
+            ],
+            "minimum": 2
+          },
+          {
+            "elements": [
+              "indicadores_cuantitativos"
+            ],
+            "minimum": 3
+          },
+          {
+            "elements": [
+              "series_temporales_años"
+            ],
+            "minimum": 3
+          }
+        ],
+        "description": "Derived from monolith `expected_elements` with `minimum` counts."
+      }
+    ]
+  },
+  "traceability": {
+    "source_file": "data/questionnaire_monolith.json",
+    "json_path": "blocks.micro_questions[0]",
+    "ontology_source": "config/canonical_ontologies/policy_areas_and_dimensions.json",
+    "source_hash": "TODO_SHA256_HASH_OF_QUESTIONNAIRE_MONOLITH",
+    "contract_generation_method": "canonical_prompt_v3",
+    "contract_author": "F.A.R.F.A.N Mechanistic Policy Pipeline",
+    "provenance_note": "This contract was generated from the canonical questionnaire monolith following the executor contract v3 specification. All fields are traceable to their sources of truth. The methodological_depth section was designed based on best practices in policy analysis epistemology and technical implementation patterns for evidence-based assessment."
+  },
+  "error_handling": {
+    "on_method_not_found": "raise",
+    "on_method_failure": "propagate_with_trace",
+    "on_assembly_failure": "propagate_with_trace",
+    "failure_contract": {
+      "abort_if": [
+        "missing_required_element",
+        "incomplete_text"
+      ],
+      "emit_code": "ABORT-Q001-REQ"
+    }
+  },
+  "fallback_strategy": {
+    "use_llm_direct": false,
+    "use_heuristics": false,
+    "note": "No fallback strategies are enabled. All failures will propagate according to error_handling configuration."
+  },
+  "test_configuration": {
+    "test_files": [
+      "tests/core/orchestrator/test_executors_contract.py",
+      "tests/core/phases/test_phase2.py"
+    ],
+    "test_document_fixtures": [
+      "tests/fixtures/preprocessed_documents/sample_pdet_plan.json"
+    ],
+    "expected_test_coverage": ">=90%",
+    "integration_test_required": true
+  },
+  "compatibility": {
+    "orchestrator_min_version": "TODO_VERSION",
+    "signal_registry_min_version": "TODO_VERSION",
+    "method_executor_min_version": "TODO_VERSION",
+    "questionnaire_monolith_version": "3.0.0",
+    "phase2_types_version": "TODO_VERSION"
+  },
+  "calibration": {
+    "status": "placeholder",
+    "note": "Este contrato no embebe scores de calibración. La calibración real se gestiona vía src/saaaaaa/core/calibration/ + config/intrinsic_calibration.json + config/fusion_specification.json.",
+    "source": {
+      "intrinsic_calibration": "config/intrinsic_calibration.json",
+      "fusion_specification": "config/fusion_specification.json",
+      "layer_calibrations_dir": "config/layer_calibrations/",
+      "canonical_spec": "canonic_calibration_methods.md"
+    }
+  }
+}

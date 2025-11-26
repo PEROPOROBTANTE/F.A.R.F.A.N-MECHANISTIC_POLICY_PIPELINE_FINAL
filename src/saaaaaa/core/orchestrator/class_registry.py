@@ -35,6 +35,10 @@ _CLASS_PATHS: Mapping[str, str] = {
     "MunicipalOntology": "saaaaaa.analysis.Analyzer_one.MunicipalOntology",
     "TeoriaCambio": "saaaaaa.analysis.teoria_cambio.TeoriaCambio",
     "AdvancedDAGValidator": "saaaaaa.analysis.teoria_cambio.AdvancedDAGValidator",
+    "D1_Q1_QuantitativeBaselineExtractor": "saaaaaa.core.orchestrator.executors.D1_Q1_QuantitativeBaselineExtractor",
+    "D1_Q2_ProblemDimensioningAnalyzer": "saaaaaa.core.orchestrator.executors.D1_Q2_ProblemDimensioningAnalyzer",
+    "SemanticProcessor": "saaaaaa.processing.semantic_chunking_policy.SemanticProcessor",
+    "BayesianCounterfactualAuditor": "saaaaaa.analysis.derek_beach.BayesianCounterfactualAuditor",
 }
 
 def build_class_registry() -> dict[str, type[object]]:

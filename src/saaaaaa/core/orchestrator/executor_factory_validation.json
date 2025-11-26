@@ -1,0 +1,76 @@
+{
+  "total_pairs": 243,
+  "validated_against_catalog": 229,
+  "failures": [
+    {
+      "class": "BayesianMechanismInference",
+      "method": "_aggregate_bayesian_confidence",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "CausalExtractor",
+      "method": "_classify_goal_type",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "CausalInferenceSetup",
+      "method": "_get_dynamics_pattern",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "FinancialAuditor",
+      "method": "_calculate_sufficiency",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "FinancialAuditor",
+      "method": "_detect_allocation_gaps",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "FinancialAuditor",
+      "method": "_match_goal_to_budget",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "MechanismPartExtractor",
+      "method": "_calculate_ea_confidence",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "MechanismPartExtractor",
+      "method": "_validate_entity_activity",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "PDETMunicipalPlanAnalyzer",
+      "method": "_generate_optimal_remediations",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "SemanticProcessor",
+      "method": "_detect_pdm_structure",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "SemanticProcessor",
+      "method": "_detect_table",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "SemanticProcessor",
+      "method": "chunk_text",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "SemanticProcessor",
+      "method": "embed_single",
+      "reason": "not in catalog"
+    },
+    {
+      "class": "TeoriaCambio",
+      "method": "export_nodes",
+      "reason": "not in catalog"
+    }
+  ]
+}
