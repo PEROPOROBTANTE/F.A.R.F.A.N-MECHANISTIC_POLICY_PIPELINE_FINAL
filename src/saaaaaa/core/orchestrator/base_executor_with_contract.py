@@ -190,6 +190,36 @@ class BaseExecutorWithContract(ABC):
                         "Signal quality is insufficient for execution."
                     )
 
+    @staticmethod
+    def _set_nested_value(target_dict: dict[str, Any], key_path: str, value: Any) -> None:
+        """Set a value in a nested dict using dot-notation key path.
+
+        Args:
+            target_dict: The dictionary to modify
+            key_path: Dot-separated path (e.g., "text_mining.critical_links")
+            value: The value to set
+
+        Example:
+            _set_nested_value(d, "a.b.c", 123) → d["a"]["b"]["c"] = 123
+        """
+        keys = key_path.split(".")
+        current = target_dict
+
+        # Navigate to the parent of the final key, creating dicts as needed
+        for key in keys[:-1]:
+            if key not in current:
+                current[key] = {}
+            elif not isinstance(current[key], dict):
+                # Key exists but is not a dict, cannot nest further
+                raise ValueError(
+                    f"Cannot set nested value at '{key_path}': "
+                    f"intermediate key '{key}' exists but is not a dict"
+                )
+            current = current[key]
+
+        # Set the final key
+        current[keys[-1]] = value
+
     def _check_failure_contract(self, evidence: dict[str, Any], error_handling: dict[str, Any]):
         failure_contract = error_handling.get("failure_contract", {})
         abort_conditions = failure_contract.get("abort_if", [])
@@ -386,8 +416,7 @@ class BaseExecutorWithContract(ABC):
 
         # Extract method binding
         method_binding = contract["method_binding"]
-        class_name = method_binding["class_name"]
-        method_name = method_binding["method_name"]
+        orchestration_mode = method_binding.get("orchestration_mode", "single_method")
 
         # Prepare common kwargs
         common_kwargs: dict[str, Any] = {
@@ -406,22 +435,98 @@ class BaseExecutorWithContract(ABC):
             "question_context": question_context,
         }
 
-        # Execute primary method
+        # Execute methods based on orchestration mode
         method_outputs: dict[str, Any] = {}
-        result = self.method_executor.execute(
-            class_name=class_name,
-            method_name=method_name,
-            **common_kwargs,
-        )
-        method_outputs["primary_analysis"] = result
+        signal_usage_list: list[dict[str, Any]] = []
 
-        # Track signal usage
-        if signal_pack is not None:
-            method_outputs["_signal_usage"] = [{
-                "method": f"{class_name}.{method_name}",
-                "policy_area": signal_pack.policy_area,
-                "version": signal_pack.version,
-            }]
+        if orchestration_mode == "multi_method_pipeline":
+            # Multi-method execution: process all methods in priority order
+            methods = method_binding.get("methods", [])
+            if not methods:
+                raise ValueError(
+                    f"orchestration_mode is 'multi_method_pipeline' but no methods array found in method_binding for {base_slot}"
+                )
+
+            # Sort by priority (lower priority number = execute first)
+            sorted_methods = sorted(methods, key=lambda m: m.get("priority", 99))
+
+            for method_spec in sorted_methods:
+                class_name = method_spec["class_name"]
+                method_name = method_spec["method_name"]
+                provides = method_spec.get("provides", f"{class_name}.{method_name}")
+                priority = method_spec.get("priority", 99)
+
+                try:
+                    result = self.method_executor.execute(
+                        class_name=class_name,
+                        method_name=method_name,
+                        **common_kwargs,
+                    )
+
+                    # Store result using nested key structure (e.g., "text_mining.critical_links")
+                    self._set_nested_value(method_outputs, provides, result)
+
+                    # Track signal usage for this method
+                    if signal_pack is not None:
+                        signal_usage_list.append({
+                            "method": f"{class_name}.{method_name}",
+                            "policy_area": signal_pack.policy_area,
+                            "version": signal_pack.version,
+                            "priority": priority,
+                        })
+
+                except Exception as exc:
+                    import logging
+                    logging.error(
+                        f"Method execution failed in multi-method pipeline: {class_name}.{method_name}",
+                        exc_info=True,
+                    )
+                    # Store error in trace for debugging
+                    # Store error in a flat structure under _errors[provides]
+                    if "_errors" not in method_outputs or not isinstance(method_outputs["_errors"], dict):
+                        method_outputs["_errors"] = {}
+                    method_outputs["_errors"][provides] = {"error": str(exc), "method": f"{class_name}.{method_name}"}
+                    # Re-raise if error_handling policy requires it
+                    error_handling = contract.get("error_handling", {})
+                    on_method_failure = error_handling.get("on_method_failure", "propagate_with_trace")
+                    if on_method_failure == "raise":
+                        raise
+                    # Otherwise continue with other methods
+
+        else:
+            # Single-method execution (backward compatible, default)
+            class_name = method_binding.get("class_name")
+            method_name = method_binding.get("method_name")
+
+            if not class_name or not method_name:
+                # Try primary_method if direct class_name/method_name not found
+                primary_method = method_binding.get("primary_method", {})
+                class_name = primary_method.get("class_name") or class_name
+                method_name = primary_method.get("method_name") or method_name
+
+            if not class_name or not method_name:
+                raise ValueError(
+                    f"Invalid method_binding for {base_slot}: missing class_name or method_name"
+                )
+
+            result = self.method_executor.execute(
+                class_name=class_name,
+                method_name=method_name,
+                **common_kwargs,
+            )
+            method_outputs["primary_analysis"] = result
+
+            # Track signal usage
+            if signal_pack is not None:
+                signal_usage_list.append({
+                    "method": f"{class_name}.{method_name}",
+                    "policy_area": signal_pack.policy_area,
+                    "version": signal_pack.version,
+                })
+
+        # Store signal usage in method_outputs for trace
+        if signal_usage_list:
+            method_outputs["_signal_usage"] = signal_usage_list
 
         # Evidence assembly
         evidence_assembly = contract["evidence_assembly"]

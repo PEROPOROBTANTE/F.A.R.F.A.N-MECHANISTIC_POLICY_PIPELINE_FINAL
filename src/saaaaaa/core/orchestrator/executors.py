@@ -16,13 +16,20 @@ Usage:
     result = run_executor("D1-Q1", context_package)
 """
 
+from __future__ import annotations
+
+import sys
+import logging
 from typing import Dict, List, Any, Optional
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from saaaaaa.core.canonical_notation import CanonicalDimension, get_dimension_info
 from saaaaaa.core.orchestrator.core import MethodExecutor
 from saaaaaa.core.orchestrator.factory import build_processor
 from saaaaaa.processing.policy_processor import CausalDimension
+
+logger = logging.getLogger(__name__)
 
 # Canonical question labels (only defined when verified in repo)
 CANONICAL_QUESTION_LABELS = {
@@ -175,13 +182,35 @@ class BaseExecutor(ABC):
             raise RuntimeError("A valid MethodExecutor instance is required for executor injection.")
         self.method_executor = method_executor
         self.execution_log = []
-        self.dimension_info = None
-        try:
-            dim_key = executor_id.split("-")[0].replace("D", "D")
-            self.dimension_info = get_dimension_info(dim_key)
-        except Exception:
-            self.dimension_info = None
-        
+        self._dimension_info = None  # Lazy load to avoid redundant fetches
+
+    @property
+    def dimension_info(self):
+        """Lazy-loaded dimension information to avoid redundant metadata fetches."""
+        if self._dimension_info is None:
+            try:
+                dim_key = self.executor_id.split("-")[0].replace("D", "D")
+                self._dimension_info = get_dimension_info(dim_key)
+            except (KeyError, ValueError, IndexError) as e:
+                logger.warning(f"Failed to load dimension info for {self.executor_id}: {e}")
+                self._dimension_info = None
+        return self._dimension_info
+
+    def _validate_context(self, context: Dict[str, Any]) -> None:
+        """
+        Fail fast on malformed contexts.
+
+        Raises:
+            ValueError: If required context keys are missing
+        """
+        if not isinstance(context, dict):
+            raise ValueError(f"Context must be a dict, got {type(context).__name__}")
+
+        required = ["document_text"]
+        missing = [k for k in required if k not in context]
+        if missing:
+            raise ValueError(f"Context missing required keys: {missing}")
+
     @abstractmethod
     def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -209,11 +238,11 @@ class BaseExecutor(ABC):
             "error": error
         })
     
-    def _execute_method(self, class_name: str, method_name: str, 
+    def _execute_method(self, class_name: str, method_name: str,
                        context: Dict[str, Any], **kwargs) -> Any:
         """
         Execute a single method with error handling.
-        
+
         Raises:
             ExecutorFailure: If method execution fails
         """
@@ -227,7 +256,7 @@ class BaseExecutor(ABC):
             self._log_method_execution(class_name, method_name, False, error=str(e))
             raise ExecutorFailure(
                 f"Executor {self.executor_id} failed: {class_name}.{method_name} - {str(e)}"
-            )
+            ) from e  # Preserve exception chain for debugging
     
     def _get_method(self, class_name: str, method_name: str):
         """Retrieve method using MethodExecutor to enforce routed execution."""
@@ -247,6 +276,20 @@ class BaseExecutor(ABC):
             )
 
         return _wrapped
+
+
+@dataclass
+class ExecutorResult:
+    """
+    Standardized result container for executor execution.
+    Ensures type safety and verifiable structure.
+    """
+    executor_id: str
+    success: bool
+    data: Optional[Dict[str, Any]]
+    error: Optional[str]
+    execution_time_ms: int
+    memory_usage_mb: float
 
 
 class ExecutorFailure(Exception):
@@ -1501,17 +1544,20 @@ class D3_Q2_TargetProportionalityAnalyzer(BaseExecutor):
             "PDETMunicipalPlanAnalyzer", "_deduplicate_tables", context,
             tables=context.get("tables", [])
         )
+        # Type-safe indicator extraction: explicit None, not wrong-typed {}
         first_indicator = None
         if isinstance(financial_feasibility.get("financial_indicators", []), list):
             inds = financial_feasibility.get("financial_indicators", [])
-            first_indicator = inds[0] if inds else None
-        indicator_dict = self._execute_method(
-            "PDETMunicipalPlanAnalyzer", "_indicator_to_dict", context,
-            ind=first_indicator if first_indicator else {}
-        )
-        quality_score = self._execute_method(
-            "IndustrialPolicyProcessor", "_calculate_quality_score", context
-        )
+            if inds and isinstance(inds[0], dict):
+                first_indicator = inds[0]
+
+        # Pass None explicitly when no indicator exists, maintaining type contract
+        indicator_dict = None
+        if first_indicator is not None:
+            indicator_dict = self._execute_method(
+                "PDETMunicipalPlanAnalyzer", "_indicator_to_dict", context,
+                ind=first_indicator
+            )
         proportionality_recommendations = self._execute_method(
             "PDETMunicipalPlanAnalyzer", "_generate_recommendations", context,
             analysis_results={
@@ -1740,11 +1786,30 @@ class D3_Q3_TraceabilityValidator(BaseExecutor):
             text_length=len(document_text),
             pattern_specificity=0.5
         )
-        entity_dicts = [
-            self._execute_method("PDETMunicipalPlanAnalyzer", "_entity_to_dict", context, entity=e)
-            for e in consolidated_entities[:5]
-            if isinstance(e, dict) or hasattr(e, "__dict__")
-        ]
+
+        # Memory-safe entity processing with bounds checking
+        MAX_ENTITY_SIZE = 1024 * 1024  # 1MB limit per entity
+        entity_dicts = []
+        for e in consolidated_entities[:5]:  # Already limited to 5 entities
+            if not (isinstance(e, dict) or hasattr(e, "__dict__")):
+                continue
+
+            entity_size = sys.getsizeof(e)
+            if entity_size > MAX_ENTITY_SIZE:
+                logger.warning(f"Entity too large: {entity_size} bytes, skipping")
+                continue
+
+            try:
+                entity_dict = self._execute_method(
+                    "PDETMunicipalPlanAnalyzer", "_entity_to_dict", context, entity=e
+                )
+                entity_dicts.append(entity_dict)
+            except MemoryError:
+                logger.error("Memory exhausted during entity conversion, stopping")
+                break
+            except ExecutorFailure as e:
+                logger.warning(f"Entity conversion failed: {e}")
+                continue
         
         # Step 3: Generate traceability records
         traceability_record = self._execute_method(
@@ -2138,6 +2203,7 @@ Methods (from D3-Q5):
                 target=target,
                 intervention={"shift": 0.1}
             )
+        # Only catch specific expected exceptions, let system exceptions propagate
         matched_node = None
         try:
             matched_node = self._execute_method(
@@ -2145,8 +2211,10 @@ Methods (from D3-Q5):
                 text=context.get("document_text", "")[:200],
                 nodes=causal_nodes if isinstance(causal_nodes, dict) else {}
             )
-        except Exception:
+        except (KeyError, ValueError, TypeError, AttributeError, ExecutorFailure) as e:
+            logger.warning(f"Node matching failed: {type(e).__name__}: {e}")
             matched_node = None
+        # Let critical system exceptions (KeyboardInterrupt, SystemExit, MemoryError) propagate
         
         # Step 1: Build type hierarchy
         type_hierarchy = self._execute_method(
@@ -2225,6 +2293,7 @@ Methods (from D3-Q5):
         questionnaire_stub = self._execute_method(
             "IndustrialPolicyProcessor", "_load_questionnaire", context
         )
+        # Only catch specific expected exceptions, let system exceptions propagate
         refutation_checks = None
         try:
             confounder_keys = list(confounders.keys())
@@ -2236,8 +2305,10 @@ Methods (from D3-Q5):
                 treatment=first_pair[0],
                 confounders=list(confounders.values())[0] if confounders else []
             )
-        except Exception:
+        except (KeyError, ValueError, TypeError, AttributeError, IndexError, ExecutorFailure) as e:
+            logger.warning(f"Refutation checks failed: {type(e).__name__}: {e}")
             refutation_checks = None
+        # Let critical system exceptions (KeyboardInterrupt, SystemExit, MemoryError) propagate
         
         raw_evidence = {
             "output_outcome_links": refined_edges,
@@ -3890,8 +3961,10 @@ def _canonical_metadata(executor_id: str) -> Dict[str, Any]:
         dim_info = get_dimension_info(dim_key)
         metadata["dimension_code"] = dim_info.code
         metadata["dimension_label"] = dim_info.label
-    except Exception:
-        pass
+    except (KeyError, ValueError, IndexError, AttributeError) as e:
+        logger.warning(f"Failed to load canonical metadata for {executor_id}: {e}")
+        # Continue with empty metadata rather than failing
+    # Let critical system exceptions (KeyboardInterrupt, SystemExit) propagate
 
     if executor_id in CANONICAL_QUESTION_LABELS:
         metadata["canonical_question"] = CANONICAL_QUESTION_LABELS[executor_id]

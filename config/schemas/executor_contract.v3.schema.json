@@ -89,24 +89,24 @@
     },
     "method_binding": {
       "type": "object",
-      "description": "Binding to the analysis method(s) that implement this question's logic",
-      "required": [
-        "class_name",
-        "method_name",
-        "method_signature"
-      ],
+      "description": "Binding to the analysis method(s) that implement this question's logic. Supports both single-method and multi-method orchestration.",
       "properties": {
+        "orchestration_mode": {
+          "type": "string",
+          "enum": ["single_method", "multi_method_pipeline"],
+          "description": "Execution mode: 'single_method' (default) or 'multi_method_pipeline'"
+        },
         "method_id": {
           "type": "string",
           "description": "Unique identifier in the method catalog (optional)"
         },
         "class_name": {
           "type": "string",
-          "description": "Name of the analyzer class (e.g., Dimension1Analyzer)"
+          "description": "Name of the analyzer class (for single-method mode, e.g., Dimension1Analyzer)"
         },
         "method_name": {
           "type": "string",
-          "description": "Name of the analysis method (e.g., analyze_question_1)"
+          "description": "Name of the analysis method (for single-method mode, e.g., analyze_question_1)"
         },
         "method_signature": {
           "type": "object",
@@ -127,9 +127,68 @@
               "description": "Return type name"
             }
           }
+        },
+        "primary_method": {
+          "type": "object",
+          "description": "Primary method for single-method mode (alternative to class_name/method_name at root)",
+          "required": ["class_name", "method_name"],
+          "properties": {
+            "class_name": {"type": "string"},
+            "method_name": {"type": "string"}
+          }
+        },
+        "method_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total number of methods (for multi-method mode)"
+        },
+        "methods": {
+          "type": "array",
+          "description": "Array of methods for multi-method orchestration",
+          "items": {
+            "type": "object",
+            "required": ["class_name", "method_name", "priority"],
+            "properties": {
+              "class_name": {
+                "type": "string",
+                "description": "Name of the analyzer class"
+              },
+              "method_name": {
+                "type": "string",
+                "description": "Name of the analysis method"
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Execution priority (lower numbers execute first)"
+              },
+              "provides": {
+                "type": "string",
+                "description": "Dot-notation key path for storing result (e.g., 'text_mining.critical_links')"
+              },
+              "role": {
+                "type": "string",
+                "description": "Semantic role of this method (e.g., 'primary_analysis', 'validation', 'enrichment')"
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
-      "additionalProperties": false
+      "oneOf": [
+        {
+          "description": "Single-method mode: requires class_name and method_name",
+          "required": ["class_name", "method_name"]
+        },
+        {
+          "description": "Multi-method mode: requires orchestration_mode and methods array",
+          "required": ["orchestration_mode", "methods"],
+          "properties": {
+            "orchestration_mode": {"const": "multi_method_pipeline"}
+          }
+        }
+      ],
+      "additionalProperties": true
     },
     "question_context": {
       "type": "object",
