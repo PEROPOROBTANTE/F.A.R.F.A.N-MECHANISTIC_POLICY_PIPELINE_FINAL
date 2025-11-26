@@ -312,7 +312,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ## Related Documentation
 
-- `MANUAL_OPERACIONAL.md`: Complete system operational manual
+- `OPERATIONAL_GUIDE.md`: Current operational/install guide (replaces legacy manual)
 - `src/saaaaaa/processing/cpp_ingestion/README.md`: CPP ingestion pipeline documentation
 - `src/saaaaaa/core/orchestrator/`: Orchestrator implementation
 - `ORCHESTRATION_ARCHITECTURE_ANALYSIS.md`: Orchestration architecture details
@@ -320,7 +320,7 @@ logging.basicConfig(level=logging.DEBUG)
 ## Support
 
 For issues or questions:
-1. Check the MANUAL_OPERACIONAL.md for detailed setup instructions
+1. Check `OPERATIONAL_GUIDE.md` for detailed setup instructions
 2. Review system logs for specific error messages
 3. Ensure all dependencies are properly installed
 4. Verify input file exists and is readable

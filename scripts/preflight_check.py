@@ -2,7 +2,7 @@
 """
 Preflight Check Script - Validates system readiness before execution.
 
-Part of the MANUAL_OPERACIONAL equipment suite.
+Aligned with the OPERATIONAL_GUIDE equipment checks.
 """
 
 import sys

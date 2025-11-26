@@ -2,13 +2,16 @@
 
 ## ✅ Completado - Noviembre 6, 2025
 
-Este documento resume la implementación del Manual Operacional según los requisitos del problema planteado.
+Nota: El manual operativo legado (`MANUAL_OPERACIONAL.md`) fue retirado y reemplazado por `OPERATIONAL_GUIDE.md`, que concentra la instalación y los primeros pasos actuales. Este resumen se conserva solo para trazabilidad de los entregables anteriores.
 
 ---
 
 ## 📦 Entregables Creados
 
-### 1. MANUAL_OPERACIONAL.md (912 líneas)
+### 0. OPERATIONAL_GUIDE.md (nuevo reemplazo)
+Guía moderna y reducida para instalación verificada (bash `install.sh`) y primera ejecución del pipeline con verificaciones (`diagnose_import_error.py`, `scripts/verify_dependencies.py`, `comprehensive_health_check.sh`). Sustituye al manual anterior para operaciones cotidianas.
+
+### 1. MANUAL_OPERACIONAL.md (912 líneas, legado)
 Manual operativo completo con 9 secciones principales:
 
 ✅ **Sección 1: Prerrequisitos**
@@ -211,7 +214,7 @@ markers = [
 
 | Salida | Estado | Ubicación |
 |--------|--------|-----------|
-| MANUAL_OPERACIONAL.md | ✅ | Raíz del repositorio |
+| OPERATIONAL_GUIDE.md (reemplaza MANUAL_OPERACIONAL.md) | ✅ | Raíz del repositorio |
 | Makefile con targets equip:* | ✅ | equip-system, equip-python, equip-signals, equip-cpp |
 | tests/UPDATED_TESTS_MANIFEST.json | ✅ | tests/ |
 | Scripts opcionales | ✅ | scripts/ (4 scripts) |

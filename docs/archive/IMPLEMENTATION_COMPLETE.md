@@ -5,12 +5,17 @@
 **Branch:** copilot/create-operational-manual  
 **Commits:** 5
 
+**Note:** The legacy `MANUAL_OPERACIONAL.md` has been retired. The active operational/install reference is now `OPERATIONAL_GUIDE.md`, while the legacy content is kept only for provenance.
+
 ---
 
 ## 📦 All Deliverables Created and Validated
 
-### 1. MANUAL_OPERACIONAL.md (21KB, 912 lines)
-✅ **Complete operational manual** covering all requirements:
+### 1. OPERATIONAL_GUIDE.md (replacement for MANUAL_OPERACIONAL.md)
+✅ **Modern operational/install guide** with a single supported path (`bash install.sh`), manual fallback steps, health checks, and first-run command. Supersedes the legacy manual for day-to-day usage.
+
+### 2. MANUAL_OPERACIONAL.md (legacy, 21KB, 912 lines)
+✅ **Complete operational manual** covering all requirements (retained for audit history):
 
 **Sections:**
 1. Prerrequisitos (Python ≥3.10, system tools, environment variables)
@@ -27,7 +32,7 @@
 
 ---
 
-### 2. Makefile (Updated)
+### 3. Makefile (Updated)
 ✅ **8 new targets added:**
 
 ```bash
@@ -45,7 +50,7 @@ make preflight         # Pre-execution checklist
 
 ---
 
-### 3. tests/UPDATED_TESTS_MANIFEST.json (11KB, 250 lines)
+### 4. tests/UPDATED_TESTS_MANIFEST.json (11KB, 250 lines)
 ✅ **Test classification system:**
 
 - **61 test files** catalogued
@@ -64,7 +69,7 @@ make preflight         # Pre-execution checklist
 
 ---
 
-### 4. Outdated Tests Marked (16 files)
+### 5. Outdated Tests Marked (16 files)
 ✅ **All outdated tests marked with `@pytest.mark.skip`:**
 
 1. test_contracts.py → use test_contracts_comprehensive.py
@@ -88,7 +93,7 @@ make preflight         # Pre-execution checklist
 
 ---
 
-### 5. pyproject.toml (Updated)
+### 6. pyproject.toml (Updated)
 ✅ **7 new pytest markers added:**
 
 ```toml
@@ -105,7 +110,7 @@ markers = [
 
 ---
 
-### 6. Equipment & Validation Scripts (4 files, ~720 lines)
+### 7. Equipment & Validation Scripts (4 files, ~720 lines)
 ✅ **Complete suite:**
 
 #### scripts/preflight_check.py (4.9KB)
@@ -154,7 +159,7 @@ All requirements from problem statement met:
 
 | Requirement | Status | Location |
 |-------------|--------|----------|
-| Manual milimétrico | ✅ | MANUAL_OPERACIONAL.md |
+| Manual operativo vigente | ✅ | OPERATIONAL_GUIDE.md |
 | Comandos de inicio rápido | ✅ | Section 9 |
 | Equipamiento del sistema | ✅ | Section 3, Makefile |
 | Verificación de pins | ✅ | Section 2, 6 |
@@ -237,8 +242,8 @@ pytest -m "updated and not outdated" -v
 
 ## 📚 Documentation Links
 
-- [MANUAL_OPERACIONAL.md](MANUAL_OPERACIONAL.md) - Main operational manual
-- [MANUAL_OPERACIONAL_SUMMARY.md](MANUAL_OPERACIONAL_SUMMARY.md) - Implementation summary
+- [OPERATIONAL_GUIDE.md](OPERATIONAL_GUIDE.md) - Active operational/install guide (replaces legacy manual)
+- [MANUAL_OPERACIONAL_SUMMARY.md](MANUAL_OPERACIONAL_SUMMARY.md) - Legacy manual summary (provenance)
 - [tests/UPDATED_TESTS_MANIFEST.json](tests/UPDATED_TESTS_MANIFEST.json) - Test classification
 - [scripts/README.md](scripts/README.md) - Script documentation
 - [Makefile](Makefile) - Equipment targets

@@ -177,7 +177,7 @@ After successful execution:
 - `run_complete_analysis_plan1.py` - Main complete analysis script
 - `verify_cpp_ingestion.py` - Lightweight verification script
 - `RUN_COMPLETE_ANALYSIS_README.md` - Comprehensive documentation
-- `MANUAL_OPERACIONAL.md` - Full system operational manual
+- `OPERATIONAL_GUIDE.md` - Current operational/install guide (replaces legacy manual)
 - `requirements.txt` - All Python dependencies
 
 ## Support

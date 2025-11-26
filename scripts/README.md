@@ -221,6 +221,5 @@ grep "pytestmark" tests/test_failing.py
 ---
 
 For complete operational instructions, see:
-- **[MANUAL_OPERACIONAL.md](../MANUAL_OPERACIONAL.md)** - Complete operational manual
+- **[OPERATIONAL_GUIDE.md](../OPERATIONAL_GUIDE.md)** - Current operational/install guide
 - **[tests/UPDATED_TESTS_MANIFEST.json](../tests/UPDATED_TESTS_MANIFEST.json)** - Test classification
-- **[OPERATIONAL_GUIDE.md](../OPERATIONAL_GUIDE.md)** - System operational guide
