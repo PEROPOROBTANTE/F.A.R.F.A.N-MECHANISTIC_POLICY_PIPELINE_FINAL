@@ -36,6 +36,7 @@ class Phase2QuestionResult:
     validation: dict[str, Any] | None = None
     trace: dict[str, Any] | None = None
     metadata: dict[str, Any] | None = None
+    human_readable_output: str | None = None  # Added for v3 contracts
 
 
 @dataclass
