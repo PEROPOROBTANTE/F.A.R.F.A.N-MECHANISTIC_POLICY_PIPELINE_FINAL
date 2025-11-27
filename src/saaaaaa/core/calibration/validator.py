@@ -18,10 +18,10 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from .orchestrator import CalibrationOrchestrator
-from .parameter_loader import MethodParameterLoader
+from .parameter_loader import ParameterLoader
 from .data_structures import CalibrationResult, ContextTuple, LayerID
 from .pdt_structure import PDTStructure
-from .intrinsic_loader import IntrinsicScoreLoader
+from .intrinsic_loader import IntrinsicCalibrationLoader
 
 logger = logging.getLogger(__name__)
 
@@ -150,8 +150,8 @@ class CalibrationValidator:
     def __init__(
         self,
         orchestrator: CalibrationOrchestrator,
-        parameter_loader: MethodParameterLoader,
-        intrinsic_loader: Optional[IntrinsicScoreLoader] = None
+        parameter_loader: ParameterLoader,
+        intrinsic_loader: Optional[IntrinsicCalibrationLoader] = None
     ):
         """
         Initialize the validator.

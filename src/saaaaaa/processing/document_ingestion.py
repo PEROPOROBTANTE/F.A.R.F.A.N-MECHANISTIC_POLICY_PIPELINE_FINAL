@@ -70,7 +70,44 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
-from schemas.preprocessed_document import (
+from saaaaaa.core.orchestrator.core import PreprocessedDocument
+from dataclasses import dataclass, field
+from typing import Any, List, Dict, Optional
+
+# Local definitions for missing schema classes (Legacy Support)
+@dataclass
+class SentenceMetadata:
+    index: int
+    page_number: int
+    start_char: int
+    end_char: int
+    extra: Dict[str, Any] = field(default_factory=dict)
+
+@dataclass
+class TableAnnotation:
+    table_id: str
+    label: str
+    attributes: Dict[str, Any]
+
+@dataclass
+class StructuredSection:
+    title: str
+    start_char: int
+    content: str
+
+@dataclass
+class StructuredTextV1:
+    full_text: str
+    sections: List[StructuredSection]
+    page_boundaries: List[Any]
+
+@dataclass
+class DocumentIndexesV1:
+    term_index: Dict[str, Any]
+    numeric_index: Dict[str, Any]
+    temporal_index: Dict[str, Any]
+    entity_index: Dict[str, Any]
+
 
 # Issue deprecation warning when module is imported
 warnings.warn(
