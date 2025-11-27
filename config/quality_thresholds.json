@@ -1,0 +1,160 @@
+{
+  "_metadata": {
+    "description": "Quality Threshold Configurations for All Calibration Layers",
+    "version": "1.0.0",
+    "last_updated": "2025-11-26",
+    "rationale": "Centralized quality band definitions for consistent interpretation across layers"
+  },
+
+  "base_layer_quality": {
+    "description": "Quality bands for intrinsic method quality (@b layer scores)",
+    "excellent": {
+      "value": 0.8,
+      "interpretation": "Superior theoretical foundation, implementation, and deployment maturity"
+    },
+    "good": {
+      "value": 0.6,
+      "interpretation": "Solid quality across all three base components"
+    },
+    "acceptable": {
+      "value": 0.4,
+      "interpretation": "Meets minimum standards but has improvement areas"
+    },
+    "needs_improvement": {
+      "value": 0.0,
+      "interpretation": "Below acceptable quality - requires remediation"
+    }
+  },
+
+  "final_calibration_quality": {
+    "description": "Quality bands for final aggregated calibration scores",
+    "excellent": {
+      "value": 0.85,
+      "interpretation": "Method performs exceptionally well across all evaluated layers"
+    },
+    "good": {
+      "value": 0.70,
+      "interpretation": "Method meets expectations across most layers"
+    },
+    "acceptable": {
+      "value": 0.55,
+      "interpretation": "Method is usable but has notable limitations"
+    },
+    "insufficient": {
+      "value": 0.0,
+      "interpretation": "Method quality is below acceptable threshold"
+    }
+  },
+
+  "role_specific_validation_thresholds": {
+    "description": "Minimum calibration scores required for each method role to be considered valid",
+    "analyzer": {
+      "value": 0.70,
+      "rationale": "Analyzers must have strong base quality and contextual fit"
+    },
+    "processor": {
+      "value": 0.65,
+      "rationale": "Processors focus on transformation quality and chain integrity"
+    },
+    "ingest": {
+      "value": 0.60,
+      "rationale": "Ingestion can tolerate lower scores if structurally sound"
+    },
+    "utility": {
+      "value": 0.30,
+      "rationale": "Utility methods have minimal quality requirements"
+    },
+    "validator": {
+      "value": 0.75,
+      "rationale": "Validators must have high precision and reliability"
+    },
+    "extractor": {
+      "value": 0.65,
+      "rationale": "Extractors need good context sensitivity"
+    },
+    "aggregator": {
+      "value": 0.70,
+      "rationale": "Aggregators require strong congruence and chain integrity"
+    },
+    "executor": {
+      "value": 0.70,
+      "rationale": "Executors orchestrate full pipelines - require all 8 layers",
+      "requires_all_8_layers": true
+    }
+  },
+
+  "executor_specific_thresholds": {
+    "description": "Per-executor validation thresholds (some domains have stricter requirements)",
+    "default_executor_threshold": {
+      "value": 0.70,
+      "rationale": "Default threshold for executors not explicitly configured"
+    },
+    "executors": {
+      "D4Q1_Executor": {
+        "value": 0.80,
+        "rationale": "Financial dimension (D4) requires higher rigor"
+      },
+      "D4Q2_Executor": {
+        "value": 0.80,
+        "rationale": "Financial dimension (D4) requires higher rigor"
+      },
+      "D4Q3_Executor": {
+        "value": 0.80,
+        "rationale": "Financial dimension (D4) requires higher rigor"
+      },
+      "D4Q4_Executor": {
+        "value": 0.80,
+        "rationale": "Financial dimension (D4) requires higher rigor"
+      },
+      "D4Q5_Executor": {
+        "value": 0.80,
+        "rationale": "Financial dimension (D4) requires higher rigor"
+      }
+    }
+  },
+
+  "meta_layer_performance_thresholds": {
+    "description": "Runtime and memory thresholds for @m layer cost evaluation",
+    "runtime": {
+      "threshold_fast": {
+        "value": 1.0,
+        "unit": "seconds",
+        "description": "Excellent performance - m_cost contributes 1.0"
+      },
+      "threshold_acceptable": {
+        "value": 5.0,
+        "unit": "seconds",
+        "description": "Acceptable performance - m_cost contributes 0.8"
+      },
+      "threshold_slow": {
+        "value": 10.0,
+        "unit": "seconds",
+        "description": "Slow performance - m_cost contributes 0.5"
+      }
+    },
+    "memory": {
+      "threshold_normal": {
+        "value": 512,
+        "unit": "megabytes",
+        "description": "Normal memory usage"
+      },
+      "threshold_high": {
+        "value": 1024,
+        "unit": "megabytes",
+        "description": "High memory usage - triggers penalty"
+      },
+      "threshold_excessive": {
+        "value": 2048,
+        "unit": "megabytes",
+        "description": "Excessive memory usage - severe penalty"
+      }
+    }
+  },
+
+  "anti_universality_threshold": {
+    "value": 0.9,
+    "description": "Maximum average compatibility across Q/D/P contexts",
+    "rationale": "No method can have avg(Q_f, D_f, P_f) > 0.9 - prevents universal methods",
+    "formal_spec_reference": "canonic_calibration_methods.md section 3.4.1 Anti-Universality Constraint"
+  }
+}

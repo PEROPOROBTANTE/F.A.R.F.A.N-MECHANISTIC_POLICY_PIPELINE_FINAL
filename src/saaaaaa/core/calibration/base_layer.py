@@ -31,18 +31,10 @@ class BaseLayerEvaluator:
         score = evaluator.evaluate("pattern_extractor_v2")
     """
 
-    # Default weights (used if not in JSON)
+    # Default weights (used if not in JSON) - FALLBACK ONLY
     DEFAULT_THEORY_WEIGHT = 0.4
     DEFAULT_IMPL_WEIGHT = 0.35
     DEFAULT_DEPLOY_WEIGHT = 0.25
-
-    # Default quality thresholds (used if not in config)
-    DEFAULT_EXCELLENT_THRESHOLD = 0.8
-    DEFAULT_GOOD_THRESHOLD = 0.6
-    DEFAULT_ACCEPTABLE_THRESHOLD = 0.4
-
-    # Penalty score for methods without calibration data
-    UNCALIBRATED_PENALTY = 0.1
 
     def __init__(
         self,
@@ -68,26 +60,41 @@ class BaseLayerEvaluator:
         self.impl_weight: float = self.DEFAULT_IMPL_WEIGHT
         self.deploy_weight: float = self.DEFAULT_DEPLOY_WEIGHT
 
-        # Quality thresholds (load from config if available)
-        if parameter_loader:
-            try:
-                base_thresholds = parameter_loader.get_base_layer_quality_thresholds()
-                self.excellent_threshold = base_thresholds.get("excellent", self.DEFAULT_EXCELLENT_THRESHOLD)
-                self.good_threshold = base_thresholds.get("good", self.DEFAULT_GOOD_THRESHOLD)
-                self.acceptable_threshold = base_thresholds.get("acceptable", self.DEFAULT_ACCEPTABLE_THRESHOLD)
-            except Exception as e:
-                logger.warning(
-                    "failed_to_load_quality_thresholds_using_defaults",
-                    extra={"error": str(e)}
-                )
-                self.excellent_threshold = self.DEFAULT_EXCELLENT_THRESHOLD
-                self.good_threshold = self.DEFAULT_GOOD_THRESHOLD
-                self.acceptable_threshold = self.DEFAULT_ACCEPTABLE_THRESHOLD
-        else:
-            # Use defaults
-            self.excellent_threshold = self.DEFAULT_EXCELLENT_THRESHOLD
-            self.good_threshold = self.DEFAULT_GOOD_THRESHOLD
-            self.acceptable_threshold = self.DEFAULT_ACCEPTABLE_THRESHOLD
+        # ZERO TOLERANCE: Load thresholds and penalties from JSON
+        try:
+            from .config_loaders import ThresholdLoader, PenaltyLoader
+
+            threshold_loader = ThresholdLoader.get_instance()
+            penalty_loader = PenaltyLoader.get_instance()
+
+            # Load quality thresholds from JSON
+            base_thresholds = threshold_loader.get_base_layer_quality_thresholds()
+            self.excellent_threshold = base_thresholds["excellent"]
+            self.good_threshold = base_thresholds["good"]
+            self.acceptable_threshold = base_thresholds["acceptable"]
+
+            # Load uncalibrated penalty from JSON
+            self.uncalibrated_penalty = penalty_loader.get_base_layer_penalty("uncalibrated_method")
+
+            logger.info(
+                "base_layer_config_loaded_from_json",
+                extra={
+                    "excellent_threshold": self.excellent_threshold,
+                    "good_threshold": self.good_threshold,
+                    "acceptable_threshold": self.acceptable_threshold,
+                    "uncalibrated_penalty": self.uncalibrated_penalty
+                }
+            )
+        except Exception as e:
+            logger.error(
+                "failed_to_load_base_layer_config_from_json",
+                extra={"error": str(e)}
+            )
+            raise ValueError(
+                f"ZERO TOLERANCE VIOLATION: Failed to load base layer config from JSON.\n"
+                f"All values MUST be in JSON files, not hardcoded.\n"
+                f"Error: {e}"
+            )
 
         self._load()
 
@@ -212,14 +219,14 @@ class BaseLayerEvaluator:
                 "method_not_calibrated",
                 extra={
                     "method": method_id,
-                    "penalty_score": self.UNCALIBRATED_PENALTY,
+                    "penalty_score": self.uncalibrated_penalty,
                 }
             )
             return LayerScore(
                 layer=LayerID.BASE,
-                score=self.UNCALIBRATED_PENALTY,
+                score=self.uncalibrated_penalty,
                 rationale=f"Method '{method_id}' not found in intrinsic calibration registry. "
-                          f"Using penalty score {self.UNCALIBRATED_PENALTY}. "
+                          f"Using penalty score {self.uncalibrated_penalty} (loaded from JSON). "
                           f"Run rigorous_calibration_triage.py to calibrate.",
                 metadata={
                     "calibration_status": "not_found",

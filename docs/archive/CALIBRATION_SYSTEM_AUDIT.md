@@ -1,266 +1,472 @@
-# SAAAAAA Calibration System - Implementation Audit Report
-**Date**: 2025-11-11  
-**Auditor**: Automated Validation  
-**Scope**: 7-Layer Method Calibration System  
-**Status**: EVIDENCE-BASED VERIFICATION
+# CALIBRATION SYSTEM ZERO TOLERANCE AUDIT REPORT
+
+**Date:** 2025-11-26
+**Branch:** `claude/fake-real-executor-migration-01DkQrq2dtSN3scUvzNVKqGy`
+**Phase:** Phase 2 - Folder Restructuring & Integration
+**Auditor:** Claude Code Agent
 
 ---
 
 ## EXECUTIVE SUMMARY
 
-This audit validates each claim made in the PR description against actual implementation evidence.
+### Verdict: ❌ **FAILING** - Multiple ZERO TOLERANCE violations detected
 
-### Audit Methodology
-- ✅ **File Existence**: Verify all claimed files exist
-- ✅ **Code Functionality**: Run validation scripts to test actual behavior
-- ✅ **Test Coverage**: Count and validate actual test methods
-- ✅ **Mathematical Correctness**: Verify formulas and constraints
-- ⚠️ **Integration Completeness**: Check if integration is functional or stub
+The existing calibration system has good foundations but **VIOLATES** the user's explicit ZERO TOLERANCE requirements in **10 critical areas**. The system allows parallel instances, has hardcoded values scattered in code, and lacks enforcement mechanisms.
+
+**User's Explicit Requirement:**
+> "ZERO TOLERANCE policy for: hardcoded calibration values, parallel systems, any shortcuts or approximations"
 
 ---
 
-## SECTION 1: FILE STRUCTURE VALIDATION
+## 🚨 CRITICAL VIOLATIONS (ZERO TOLERANCE)
 
-### Claimed Files vs Reality
+### 1. ❌ **CalibrationOrchestrator is NOT a Singleton**
 
-| Claimed File | Exists | Lines | Status |
-|-------------|--------|-------|--------|
-| `src/saaaaaa/core/calibration/__init__.py` | ✅ | ? | VERIFIED |
-| `src/saaaaaa/core/calibration/data_structures.py` | ✅ | ? | VERIFIED |
-| `src/saaaaaa/core/calibration/config.py` | ✅ | ? | VERIFIED |
-| `src/saaaaaa/core/calibration/pdt_structure.py` | ✅ | ? | VERIFIED |
-| `src/saaaaaa/core/calibration/unit_layer.py` | ✅ | ? | STUB |
-| `src/saaaaaa/core/calibration/compatibility.py` | ✅ | ? | VERIFIED |
-| `src/saaaaaa/core/calibration/congruence_layer.py` | ✅ | ? | STUB |
-| `src/saaaaaa/core/calibration/chain_layer.py` | ✅ | ? | STUB |
-| `src/saaaaaa/core/calibration/meta_layer.py` | ✅ | ? | STUB |
-| `src/saaaaaa/core/calibration/choquet_aggregator.py` | ✅ | ? | VERIFIED |
-| `src/saaaaaa/core/calibration/orchestrator.py` | ✅ | ? | VERIFIED |
-| `data/method_compatibility.json` | ✅ | ? | VERIFIED |
-| `tests/calibration/test_data_structures.py` | ✅ | 231 | VERIFIED |
-| `scripts/pre_deployment_checklist.sh` | ✅ | 151 | VERIFIED |
+**Location:** `src/saaaaaa/core/calibration/orchestrator.py:50-77`
 
-**Evidence**: All 14 claimed files exist ✅
-
----
-
-## SECTION 2: TEST COVERAGE VALIDATION
-
-### Claimed: "25+ individual test cases"
-### Reality Check:
-
-**Actual Test Methods Count**: 15 (as of verification)
-
-**Test Methods Found**:
-```bash
-$ grep -c "def test_" tests/calibration/test_data_structures.py
-15
-```
-
-**Gap Identified**: ⚠️ **DISCREPANCY**
-- **Claimed**: 25+ tests
-- **Actual**: 15 tests
-- **Gap**: 10+ missing tests
-
-**Tests That Exist**:
-1. TestLayerScore (5 tests)
-2. TestContextTuple (4 tests)
-3. TestCompatibilityMapping (4 tests)
-4. TestInteractionTerm (2 tests)
-5. TestCalibrationResult (? tests)
-
-**Action Required**: Either add 10+ more tests or correct documentation to say "15 test cases"
-
----
-
-## SECTION 3: CORE FUNCTIONALITY VALIDATION
-
-### Test 1: Module Imports
-```
-✓ Core imports successful
-```
-**Status**: ✅ PASS
-
-### Test 2: Data Structure Creation
-```
-✓ LayerScore created: 0.75
-```
-**Status**: ✅ PASS
-
-### Test 3: Score Range Validation
-```
-✓ Score validation working (rejects > 1.0)
-```
-**Status**: ✅ PASS
-
-### Test 4: Canonical Notation
-```
-✓ ContextTuple created with canonical notation (DIM01, PA01)
-```
-**Status**: ✅ PASS
-
-### Test 5: Canonical Notation Enforcement
-```
-✓ Canonical notation enforcement working (rejects D1, P1)
-```
-**Status**: ✅ PASS
-
-**Summary**: 5/5 core validation tests passing ✅
-
----
-
-## SECTION 4: MATHEMATICAL VERIFICATION
-
-### Choquet Normalization Check
-
-**Claim**: "Σaℓ + Σaℓk = 1.0 (exact)"
-
-**Verification Script**:
+**Violation:**
 ```python
-from src.saaaaaa.core.calibration.config import DEFAULT_CALIBRATION_CONFIG
-
-choquet = DEFAULT_CALIBRATION_CONFIG.choquet
-linear_sum = sum(choquet.linear_weights.values())
-interaction_sum = sum(choquet.interaction_weights.values())
-total = linear_sum + interaction_sum
-
-Expected: 1.0
-Actual: [TO BE MEASURED]
+class CalibrationOrchestrator:
+    def __init__(self, config=None, ...):  # Can instantiate multiple times
+        self.config = config or DEFAULT_CALIBRATION_CONFIG
+        # ... initialization
 ```
 
-**Status**: ⏳ PENDING VERIFICATION
+**Evidence:**
+- Regular class definition (line 50)
+- No singleton pattern enforcement
+- Can create unlimited instances: `orch1 = CalibrationOrchestrator()`, `orch2 = CalibrationOrchestrator()`
+
+**Impact:**
+- Violates "only 1 CalibrationOrchestrator" requirement
+- Breaks single source of truth principle
+- Multiple instances can load different configs → non-determinism
+
+**Required Fix:**
+- Implement thread-safe singleton pattern with `_instance` class variable
+- Prevent direct instantiation via `__new__`
+- Provide `get_instance()` class method
 
 ---
 
-## SECTION 5: EXECUTOR INTEGRATION VALIDATION
+### 2. ❌ **IntrinsicScoreLoader is NOT a Singleton**
 
-### Claim: "31 executor classes updated"
+**Location:** `src/saaaaaa/core/calibration/intrinsic_loader.py:24-83`
 
-**Verification Required**:
-1. Check if AdvancedDataFlowExecutor accepts calibration_orchestrator parameter
-2. Verify all 31 executor constructors pass the parameter
-3. Test if calibration is actually invoked during execution
+**Violation:**
+```python
+class IntrinsicScoreLoader:
+    def __init__(self, calibration_path: Path | str = "config/intrinsic_calibration.json"):
+        # Can instantiate multiple times
+        self.calibration_path = Path(calibration_path)
+        # ...
+```
 
-**File to Check**: `src/saaaaaa/core/orchestrator/executors.py`
+**Evidence:**
+- Uses lazy loading pattern but NOT a singleton
+- Multiple instances can load from different files
+- No prevention of parallel instantiation
 
-**Status**: ⏳ PENDING VERIFICATION
+**Impact:**
+- Violates "only 1 IntrinsicCalibrationLoader" requirement
+- Different parts of code could load different calibration files
+- Memory waste (JSON loaded multiple times)
 
----
-
-## SECTION 6: STUB vs FUNCTIONAL COMPONENTS
-
-### Functional Components (Actually Implemented):
-- ✅ **Data Structures**: Fully functional
-- ✅ **Configuration**: Fully functional with validation
-- ✅ **Compatibility System**: Loads JSON, enforces anti-universality
-- ✅ **Choquet Aggregator**: Implements formula with interaction terms
-- ✅ **Orchestrator**: Coordinates all layers
-
-### Stub Components (Return Fixed Values):
-- ⚠️ **Unit Layer (@u)**: Returns 0.75 (stub)
-- ⚠️ **Congruence Layer (@C)**: Returns 1.0 (stub)
-- ⚠️ **Chain Layer (@chain)**: Returns 1.0 (stub)
-- ⚠️ **Meta Layer (@m)**: Returns 1.0 (stub)
-
-**Critical Question**: Can the system produce meaningful calibration scores with 4/8 layers stubbed?
-
-**Answer**: ⚠️ **PARTIALLY** - System runs but scores are not fully accurate
+**Required Fix:**
+- Same singleton pattern as CalibrationOrchestrator
+- Enforce single instance system-wide
 
 ---
 
-## SECTION 7: DEPLOYMENT READINESS
+### 3. ❌ **MethodParameterLoader is NOT a Singleton**
 
-### Pre-Deployment Checklist Status
+**Location:** `src/saaaaaa/core/calibration/parameter_loader.py:22-65`
 
-**Script Exists**: ✅ scripts/pre_deployment_checklist.sh (151 lines)
+**Violation:**
+```python
+class MethodParameterLoader:
+    def __init__(self, parameters_path: Path | str = "config/method_parameters.json"):
+        # Can instantiate multiple times
+        self.parameters_path = Path(parameters_path)
+        # ...
+```
 
-**Checklist Steps**:
-1. ⏳ File structure verification
-2. ⏳ Unit test execution
-3. ⏳ Configuration hash validation
-4. ⏳ Choquet normalization check
-5. ⏳ Compatibility registry loading
-6. ⏳ Anti-universality enforcement
-7. ⏳ Orchestrator initialization
-8. ⏳ Executor import verification
-9. ⏳ Logging configuration check
-10. ⏳ End-to-end smoke test
+**Evidence:**
+- Same issue as IntrinsicScoreLoader
+- No singleton enforcement
 
-**Status**: Script exists but needs to be executed to verify ⏳
+**Impact:**
+- Violates "only 1 ParameterLoader" requirement
+- Parallel parameter systems possible
 
----
-
-## SECTION 8: CRITICAL GAPS IDENTIFIED
-
-### Gap 1: Test Coverage
-- **Claimed**: 25+ tests
-- **Actual**: 15 tests
-- **Impact**: Medium (core functionality still tested)
-- **Action**: Add missing tests or correct documentation
-
-### Gap 2: Stub Implementations
-- **Status**: 4 out of 8 layers are stubs
-- **Impact**: High (affects score accuracy)
-- **Action**: Document clearly that full implementation pending
-
-### Gap 3: Executor Integration Verification
-- **Status**: Code modified but runtime behavior not verified
-- **Impact**: High (similar to previous ExecutorConfig issue)
-- **Action**: Add integration test showing calibration actually runs
-
-### Gap 4: End-to-End Validation
-- **Status**: Deployment checklist not executed
-- **Impact**: Medium
-- **Action**: Run checklist and capture output
+**Required Fix:**
+- Implement singleton pattern
 
 ---
 
-## SECTION 9: RECOMMENDATIONS
+### 4. ❌ **Hardcoded Choquet Aggregation Weights in Code**
 
-### Immediate Actions Required:
-1. ✅ Run full validation suite and capture evidence
-2. ✅ Execute pre_deployment_checklist.sh and include output
-3. ✅ Add integration test showing executor→calibration flow
-4. ✅ Correct test count in documentation (25+ → 15)
-5. ✅ Clearly mark which layers are stubs vs functional
+**Location:** `src/saaaaaa/core/calibration/config.py:306-326`
 
-### Medium-Term Actions:
-1. Implement full Unit Layer (S, M, I, P algorithms)
-2. Implement full Congruence, Chain, Meta layers
-3. Add regression tests with known inputs/outputs
-4. Performance benchmarking
+**Violation:**
+```python
+linear_weights: dict[str, float] = field(default_factory=lambda: {
+    "b": 0.122951,      # HARDCODED IN CODE
+    "u": 0.098361,      # HARDCODED IN CODE
+    "q": 0.081967,      # HARDCODED IN CODE
+    "d": 0.065574,      # HARDCODED IN CODE
+    "p": 0.049180,      # HARDCODED IN CODE
+    "C": 0.081967,      # HARDCODED IN CODE
+    "chain": 0.065574,  # HARDCODED IN CODE
+    "m": 0.034426,      # HARDCODED IN CODE
+})
+
+interaction_weights: dict[tuple[str, str], float] = field(default_factory=lambda: {
+    ("u", "chain"): 0.15,   # HARDCODED IN CODE
+    ("chain", "C"): 0.12,   # HARDCODED IN CODE
+    ("q", "d"): 0.08,       # HARDCODED IN CODE
+    ("d", "p"): 0.05,       # HARDCODED IN CODE
+})
+```
+
+**Evidence:**
+- Weights embedded directly in Python code
+- NOT loaded from `config/calibration_config.json` or similar
+- Violates "all values from JSON files" requirement
+
+**Impact:**
+- Cannot modify Choquet weights without code changes
+- No audit trail for weight changes
+- Violates zero hardcoded values policy
+
+**Required Fix:**
+- Create `config/choquet_weights.json`
+- Load weights from JSON
+- Keep only default fallbacks in code
 
 ---
 
-## SECTION 10: FINAL VERDICT
+### 5. ❌ **Hardcoded UNCALIBRATED_PENALTY Value**
 
-### Production Readiness: ⚠️ **PARTIAL**
+**Location:** `src/saaaaaa/core/calibration/base_layer.py:45`
 
-**What Works**:
-- ✅ Core data structures (validated)
-- ✅ Configuration system (validated)
-- ✅ Choquet aggregation (formula correct)
-- ✅ Compatibility system (anti-universality enforced)
+**Violation:**
+```python
+# Penalty score for methods without calibration data
+UNCALIBRATED_PENALTY = 0.1  # HARDCODED
+```
 
-**What's Incomplete**:
-- ⚠️ 4/8 layers are stubs
-- ⚠️ Test count discrepancy
-- ⚠️ Executor integration not runtime-verified
-- ⚠️ Deployment checklist not executed
+**Evidence:**
+- Class constant hardcoded to 0.1
+- Used in line 220 when method not found
+- No way to configure without code change
 
-**Recommendation**: 
-- ✅ **Safe for development/testing** with awareness of stub layers
-- ⚠️ **NOT ready for production** until stubs replaced with real implementations
-- ✅ **Architecture is sound** - good foundation for full implementation
+**Impact:**
+- Violates zero hardcoded values policy
+- Cannot adjust penalty without editing code
+
+**Required Fix:**
+- Load from `config/calibration_config.json` under `penalties.uncalibrated`
+- Keep as configurable parameter
 
 ---
 
-## AUDIT SIGNATURE
+### 6. ❌ **Hardcoded Quality Thresholds in Base Layer**
 
-**Validation Date**: 2025-11-11  
-**Evidence-Based**: Yes  
-**Claims Verified**: 8/12  
-**Critical Gaps**: 4  
-**Overall Grade**: B+ (Good foundation, incomplete implementation)
+**Location:** `src/saaaaaa/core/calibration/base_layer.py:40-42`
 
-**Next Steps**: Run complete validation suite and update this audit with actual measurements.
+**Violation:**
+```python
+# Default quality thresholds (used if not in config)
+DEFAULT_EXCELLENT_THRESHOLD = 0.8   # HARDCODED
+DEFAULT_GOOD_THRESHOLD = 0.6        # HARDCODED
+DEFAULT_ACCEPTABLE_THRESHOLD = 0.4  # HARDCODED
+```
+
+**Evidence:**
+- Class constants with hardcoded values
+- "Default" suggests these might be used frequently
+- Lines 244-251 use these for quality classification
+
+**Impact:**
+- Cannot adjust quality bands without code changes
+- Violates zero hardcoded values policy
+
+**Required Fix:**
+- Load from `config/calibration_config.json` under `quality_thresholds.base_layer`
+- Remove class constants
+
+---
+
+### 7. ❌ **Hardcoded Penalty Scores in Orchestrator**
+
+**Location:** `src/saaaaaa/core/calibration/orchestrator.py:302-382`
+
+**Violation:**
+```python
+# Line 302-307: Hardcoded penalty 0.1 for missing base evaluator
+layer_scores[LayerID.BASE] = LayerScore(
+    layer=LayerID.BASE,
+    score=BaseLayerEvaluator.UNCALIBRATED_PENALTY,  # Reference to hardcoded value
+    rationale="BASE layer: intrinsic calibration not available (penalty applied)",
+    metadata={"penalty": True, "reason": "no_calibration_file"}
+)
+
+# Lines 362-382: Hardcoded penalty 0.1 for missing contextual data
+layer_scores[LayerID.QUESTION] = LayerScore(
+    layer=LayerID.QUESTION,
+    score=0.1,  # HARDCODED
+    rationale="No compatibility data - penalty applied",
+    metadata={"penalty": True}
+)
+# ... repeated for DIMENSION and POLICY with same 0.1 value
+```
+
+**Evidence:**
+- Multiple hardcoded 0.1 penalty scores
+- Same penalty for different failure scenarios
+- No centralized configuration
+
+**Impact:**
+- Duplicate hardcoded values across codebase
+- Cannot configure penalties independently
+- Violates DRY and zero hardcoded values
+
+**Required Fix:**
+- Centralize all penalty values in `config/calibration_config.json`
+- Load via singleton ConfigLoader
+
+---
+
+### 8. ❌ **Hardcoded Weights and Thresholds in UnitLayerConfig**
+
+**Location:** `src/saaaaaa/core/calibration/config.py:39-145`
+
+**Violation:**
+```python
+@dataclass(frozen=True)
+class UnitLayerConfig:
+    w_S: float = 0.25  # HARDCODED weight
+    w_M: float = 0.25  # HARDCODED weight
+    w_I: float = 0.25  # HARDCODED weight
+    w_P: float = 0.25  # HARDCODED weight
+
+    # ... 100+ more hardcoded parameters
+
+    max_placeholder_ratio: float = 0.10  # HARDCODED threshold
+    min_unique_values_ratio: float = 0.5  # HARDCODED threshold
+    # ... many more
+```
+
+**Evidence:**
+- Dataclass with 50+ hardcoded default values
+- Weights, thresholds, minimums all in code
+- Line 191: `from_env()` method exists but not used
+
+**Impact:**
+- All unit layer parameters hardcoded
+- Cannot configure without code changes
+- Violates zero hardcoded values policy
+
+**Required Fix:**
+- Create `config/unit_layer_config.json`
+- Load all parameters from JSON
+- Keep dataclass for validation only
+
+---
+
+### 9. ❌ **Missing @calibrated_method Decorator**
+
+**Location:** Nowhere - decorator doesn't exist
+
+**Violation:**
+- User explicitly requested: "Implement `@calibrated_method` decorator"
+- No decorator found in codebase
+- No enforcement mechanism for calibration
+
+**Evidence:**
+```bash
+$ grep -r "@calibrated_method" src/
+# No results
+```
+
+**Impact:**
+- Methods can be executed without calibration
+- No compile-time enforcement of calibration policy
+- Cannot track which methods use calibration
+
+**Required Fix:**
+- Implement decorator in `src/saaaaaa/core/calibration/decorators.py`
+- Decorator should:
+  - Check method exists in calibration system
+  - Enforce minimum quality threshold
+  - Log calibration scores
+  - Raise exception if calibration fails
+
+---
+
+### 10. ❌ **Missing Verification Scripts**
+
+**Location:** Nowhere - scripts don't exist
+
+**Violation:**
+- User requested: "Create verification scripts to detect unanchored methods"
+- User requested: "Run test_no_parallel_systems()"
+- No scripts found to enforce ZERO TOLERANCE
+
+**Evidence:**
+```bash
+$ find scripts/ -name "*verify*" -o -name "*detect*" -o -name "*parallel*"
+# No results
+```
+
+**Impact:**
+- No automated enforcement of zero tolerance policy
+- Cannot detect violations at CI/CD time
+- Manual verification required
+
+**Required Fix:**
+- Create `scripts/verify_no_hardcoded_calibrations.py`
+- Create `scripts/verify_singleton_enforcement.py`
+- Create `tests/test_no_parallel_systems.py`
+- Integrate into CI/CD pipeline
+
+---
+
+## ✅ COMPLIANT AREAS (Good Practices Found)
+
+### 1. ✅ **Lazy Loading with Thread Safety**
+
+**Location:** `intrinsic_loader.py:84-169`, `parameter_loader.py:67-121`
+
+**Good Practice:**
+- Double-checked locking pattern
+- Thread-safe initialization
+- Lazy loading for performance
+
+### 2. ✅ **Loading from JSON Files**
+
+**Location:** `intrinsic_loader.py:112-145`, `base_layer.py:101-190`
+
+**Good Practice:**
+- Calibration scores loaded from `intrinsic_calibration.json`
+- Parameters loaded from `method_parameters.json`
+- Weights loaded from JSON `_base_weights` section
+
+### 3. ✅ **Frozen Dataclasses for Immutability**
+
+**Location:** `config.py:20, 224, 280, 383`
+
+**Good Practice:**
+- All config classes frozen (`frozen=True`)
+- Prevents accidental mutation
+- Hashable for caching
+
+### 4. ✅ **Validation in __post_init__**
+
+**Location:** `config.py:147-189, 271-277, 338-363`
+
+**Good Practice:**
+- Mathematical constraints enforced
+- Weights sum to 1.0 checked
+- Thresholds bounded to [0, 1]
+
+### 5. ✅ **Comprehensive Logging**
+
+**Location:** Throughout all modules
+
+**Good Practice:**
+- Structured logging with `logger.info/warning/debug`
+- Extra context included
+- Audit trail friendly
+
+---
+
+## 📊 VIOLATION SEVERITY MATRIX
+
+| # | Violation | Severity | Fix Effort | Blocks Phase | Priority |
+|---|-----------|----------|-----------|---------------|----------|
+| 1 | CalibrationOrchestrator not singleton | CRITICAL | Medium | Phase 5 | P0 |
+| 2 | IntrinsicScoreLoader not singleton | CRITICAL | Medium | Phase 5 | P0 |
+| 3 | MethodParameterLoader not singleton | CRITICAL | Medium | Phase 5 | P0 |
+| 4 | Hardcoded Choquet weights | CRITICAL | High | Phase 4 | P0 |
+| 5 | Hardcoded UNCALIBRATED_PENALTY | HIGH | Low | Phase 4 | P1 |
+| 6 | Hardcoded quality thresholds | HIGH | Low | Phase 4 | P1 |
+| 7 | Hardcoded penalty scores in orchestrator | HIGH | Medium | Phase 4 | P1 |
+| 8 | Hardcoded UnitLayerConfig parameters | CRITICAL | High | Phase 4 | P0 |
+| 9 | Missing @calibrated_method decorator | CRITICAL | Medium | Phase 4 | P0 |
+| 10 | Missing verification scripts | HIGH | Medium | Phase 5 | P1 |
+
+---
+
+## 🔧 REQUIRED FIXES SUMMARY
+
+### Immediate Actions (P0 - Blocking)
+
+1. **Implement Singleton Pattern** for all 3 loaders/orchestrators
+2. **Create JSON Config Files**:
+   - `config/choquet_weights.json` - Choquet aggregation weights
+   - `config/unit_layer_config.json` - Unit layer parameters
+   - `config/calibration_penalties.json` - All penalty values
+   - `config/quality_thresholds.json` - All threshold values
+3. **Implement @calibrated_method Decorator**
+4. **Refactor Config Loading** - Load all values from JSON
+
+### Secondary Actions (P1 - High Priority)
+
+1. **Create Verification Scripts**:
+   - `scripts/verify_no_hardcoded_calibrations.py`
+   - `scripts/verify_singleton_enforcement.py`
+   - `tests/test_no_parallel_systems.py`
+2. **Centralize Penalty Management**
+3. **Add Config Validation Layer**
+
+---
+
+## 📋 COMPLIANCE CHECKLIST
+
+- [ ] **Singleton Pattern Enforced**
+  - [ ] CalibrationOrchestrator singleton
+  - [ ] IntrinsicScoreLoader singleton
+  - [ ] MethodParameterLoader singleton
+- [ ] **Zero Hardcoded Values**
+  - [ ] All Choquet weights in JSON
+  - [ ] All penalties in JSON
+  - [ ] All thresholds in JSON
+  - [ ] All unit layer params in JSON
+- [ ] **Enforcement Mechanisms**
+  - [ ] @calibrated_method decorator implemented
+  - [ ] Verification scripts created
+  - [ ] test_no_parallel_systems() passing
+- [ ] **Single Source of Truth**
+  - [ ] Only 1 intrinsic_calibration.json
+  - [ ] Only 1 method_parameters.json
+  - [ ] Only 1 LAYER_REQUIREMENTS definition
+  - [ ] Only 1 CalibrationOrchestrator instance
+
+---
+
+## 🎯 SUCCESS CRITERIA
+
+Migration Phase 4 is complete when:
+
+1. ✅ **All P0 violations resolved**
+2. ✅ **`scripts/verify_no_hardcoded_calibrations.py` passes with 0 violations**
+3. ✅ **`tests/test_no_parallel_systems.py` passes**
+4. ✅ **All calibration values loaded from JSON**
+5. ✅ **Singleton pattern prevents parallel instances**
+6. ✅ **@calibrated_method decorator enforces calibration**
+
+---
+
+## 📚 REFERENCES
+
+- **User Blueprint:** Original instructions for Phase 2-5 folder restructuring
+- **Formal Spec:** MIGRATION_ARTIFACTS_FAKE_TO_REAL/01_DOCUMENTATION/CALIBRATION_MIGRATION_CONTRACT.md
+- **Mathematical Model:** canonic_calibration_methods.md (8-layer architecture)
+- **Zero Tolerance Policy:** "Be strict and severe, do not lose the maximum goal of sight: complete and full integration of calibration and parametrization system"
+
+---
+
+**Report Generated:** 2025-11-26
+**Next Action:** Begin implementing P0 fixes (singleton patterns + JSON config files)

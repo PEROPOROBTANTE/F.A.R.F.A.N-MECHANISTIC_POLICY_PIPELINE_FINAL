@@ -2,9 +2,12 @@
 Calibration orchestrator - integrates all layers.
 
 This is the TOP-LEVEL entry point for calibration.
+
+SINGLETON PATTERN enforced (only ONE instance system-wide).
 """
 import json
 import logging
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -51,6 +54,9 @@ class CalibrationOrchestrator:
     """
     Top-level orchestrator for method calibration.
 
+    **SINGLETON PATTERN**: Only ONE instance allowed system-wide.
+    Use CalibrationOrchestrator.get_instance() to access the singleton.
+
     This class coordinates all 8 calibration layers (@b, @u, @q, @d, @p, @C, @chain, @m)
     and performs Choquet aggregation to produce final calibration scores.
 
@@ -61,11 +67,15 @@ class CalibrationOrchestrator:
     4. Aggregates scores using Choquet integral for non-linear fusion
 
     Usage:
-        orchestrator = CalibrationOrchestrator(
+        # CORRECT: Use singleton instance
+        orchestrator = CalibrationOrchestrator.get_instance(
             config=DEFAULT_CALIBRATION_CONFIG,
             intrinsic_calibration_path="config/intrinsic_calibration.json",
             compatibility_path="data/method_compatibility.json"
         )
+
+        # INCORRECT: Direct instantiation raises error
+        # orchestrator = CalibrationOrchestrator()  # Raises RuntimeError!
 
         result = orchestrator.calibrate(
             method_id="pattern_extractor_v2",
@@ -75,7 +85,77 @@ class CalibrationOrchestrator:
         )
     """
 
-    def __init__(
+    # Singleton instance storage
+    _instance: Optional['CalibrationOrchestrator'] = None
+    _instance_lock = threading.Lock()
+
+    def __new__(cls, *args, **kwargs):
+        """
+        Prevent direct instantiation.
+
+        Use CalibrationOrchestrator.get_instance() instead.
+        """
+        raise RuntimeError(
+            "CalibrationOrchestrator is a singleton. "
+            "Use CalibrationOrchestrator.get_instance() instead of direct instantiation."
+        )
+
+    @classmethod
+    def get_instance(
+        cls,
+        config: Optional[CalibrationSystemConfig] = None,
+        intrinsic_calibration_path: Optional[Path | str] = None,
+        compatibility_path: Optional[Path | str] = None,
+        method_registry_path: Optional[Path | str] = None,
+        method_signatures_path: Optional[Path | str] = None,
+        parameter_loader: Optional[object] = None
+    ) -> 'CalibrationOrchestrator':
+        """
+        Get the singleton instance of CalibrationOrchestrator.
+
+        Thread-safe singleton access with double-checked locking.
+
+        Args:
+            config: Calibration system configuration
+            intrinsic_calibration_path: Path to intrinsic_calibration.json
+            compatibility_path: Path to method_compatibility.json
+            method_registry_path: Path to method_registry.json
+            method_signatures_path: Path to method_signatures.json
+            parameter_loader: Optional loader for configurable thresholds
+            (All args only used on first call, ignored afterwards)
+
+        Returns:
+            The singleton CalibrationOrchestrator instance
+
+        Example:
+            >>> orch = CalibrationOrchestrator.get_instance()
+            >>> result = orch.calibrate(method_id="my_method", ...)
+        """
+        if cls._instance is not None:
+            return cls._instance
+
+        with cls._instance_lock:
+            # Double-check after acquiring lock
+            if cls._instance is not None:
+                return cls._instance
+
+            # Create instance bypassing __new__ check
+            instance = object.__new__(cls)
+            instance._init_singleton(
+                config=config,
+                intrinsic_calibration_path=intrinsic_calibration_path,
+                compatibility_path=compatibility_path,
+                method_registry_path=method_registry_path,
+                method_signatures_path=method_signatures_path,
+                parameter_loader=parameter_loader
+            )
+            cls._instance = instance
+
+            logger.info("calibration_orchestrator_singleton_created")
+
+            return cls._instance
+
+    def _init_singleton(
         self,
         config: Optional[CalibrationSystemConfig] = None,
         intrinsic_calibration_path: Optional[Path | str] = None,
@@ -85,7 +165,7 @@ class CalibrationOrchestrator:
         parameter_loader: Optional[object] = None  # For base layer thresholds
     ) -> None:
         """
-        Initialize the calibration orchestrator.
+        Initialize the singleton calibration orchestrator.
 
         Args:
             config: Calibration system configuration
@@ -96,6 +176,10 @@ class CalibrationOrchestrator:
             parameter_loader: Optional loader for configurable thresholds
         """
         self.config = config or DEFAULT_CALIBRATION_CONFIG
+
+        # ZERO TOLERANCE: Load penalty values from JSON
+        from .config_loaders import PenaltyLoader
+        self.penalty_loader = PenaltyLoader.get_instance()
 
         # Load default paths from config
         default_paths = _load_default_paths()
@@ -114,7 +198,7 @@ class CalibrationOrchestrator:
                 f"Configure path in config/calibration_paths.json"
             )
 
-        self.intrinsic_loader = IntrinsicScoreLoader(str(intrinsic_path))
+        self.intrinsic_loader = IntrinsicScoreLoader.get_instance(str(intrinsic_path))
 
         # Initialize LayerRequirementsResolver
         self.layer_resolver = LayerRequirementsResolver(self.intrinsic_loader)
@@ -358,26 +442,29 @@ class CalibrationOrchestrator:
                         rationale=f"Policy compatibility for {context.policy_area}"
                     )
             else:
-                # No compatibility data - use penalties for required layers only
+                # ZERO TOLERANCE: Load penalties from JSON, not hardcoded
                 if needs_q:
+                    q_penalty = self.penalty_loader.get_contextual_layer_penalty("no_compatibility_data_question")
                     layer_scores[LayerID.QUESTION] = LayerScore(
                         layer=LayerID.QUESTION,
-                        score=0.1,
-                        rationale="No compatibility data - penalty applied",
+                        score=q_penalty,
+                        rationale=f"No compatibility data - penalty applied (loaded from JSON: {q_penalty})",
                         metadata={"penalty": True}
                     )
                 if needs_d:
+                    d_penalty = self.penalty_loader.get_contextual_layer_penalty("no_compatibility_data_dimension")
                     layer_scores[LayerID.DIMENSION] = LayerScore(
                         layer=LayerID.DIMENSION,
-                        score=0.1,
-                        rationale="No compatibility data - penalty applied",
+                        score=d_penalty,
+                        rationale=f"No compatibility data - penalty applied (loaded from JSON: {d_penalty})",
                         metadata={"penalty": True}
                     )
                 if needs_p:
+                    p_penalty = self.penalty_loader.get_contextual_layer_penalty("no_compatibility_data_policy")
                     layer_scores[LayerID.POLICY] = LayerScore(
                         layer=LayerID.POLICY,
-                        score=0.1,
-                        rationale="No compatibility data - penalty applied",
+                        score=p_penalty,
+                        rationale=f"No compatibility data - penalty applied (loaded from JSON: {p_penalty})",
                         metadata={"penalty": True}
                     )
 

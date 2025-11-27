@@ -5,7 +5,7 @@ This module provides thread-safe, lazy-loaded access to intrinsic calibration sc
 from the base layer (@b) JSON file.
 
 Design:
-- Singleton-like behavior with lazy initialization
+- SINGLETON PATTERN enforced (only ONE instance system-wide)
 - Thread-safe loading using locks
 - Caches all scores in memory for O(1) access
 - Filters by calibration_status to distinguish computed vs excluded methods
@@ -16,7 +16,7 @@ import json
 import logging
 import threading
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,9 @@ logger = logging.getLogger(__name__)
 class IntrinsicScoreLoader:
     """
     Loads and caches intrinsic calibration scores from JSON.
+
+    **SINGLETON PATTERN**: Only ONE instance allowed system-wide.
+    Use IntrinsicScoreLoader.get_instance() to access the singleton.
 
     The intrinsic score represents the base layer (@b) quality and is computed as:
         intrinsic_score = w_th * b_theory + w_imp * b_impl + w_dep * b_deploy
@@ -37,7 +40,11 @@ class IntrinsicScoreLoader:
     Thread-safe and lazy-loaded for optimal performance.
 
     Usage:
-        loader = IntrinsicScoreLoader("config/intrinsic_calibration.json")
+        # CORRECT: Use singleton instance
+        loader = IntrinsicScoreLoader.get_instance("config/intrinsic_calibration.json")
+
+        # INCORRECT: Direct instantiation raises error
+        # loader = IntrinsicScoreLoader()  # Raises RuntimeError!
 
         # Get score (returns default if not calibrated)
         score = loader.get_score("my_module.MyClass.my_method", default=0.5)
@@ -50,14 +57,70 @@ class IntrinsicScoreLoader:
             print("Method is calibrated!")
     """
 
+    # Singleton instance storage
+    _instance: Optional['IntrinsicScoreLoader'] = None
+    _instance_lock = threading.Lock()
+
     # Default weights (used if not specified in JSON)
     DEFAULT_W_THEORY = 0.4
     DEFAULT_W_IMPL = 0.35
     DEFAULT_W_DEPLOY = 0.25
 
-    def __init__(self, calibration_path: Path | str = "config/intrinsic_calibration.json") -> None:
+    def __new__(cls, *args, **kwargs):
         """
-        Initialize the loader.
+        Prevent direct instantiation.
+
+        Use IntrinsicScoreLoader.get_instance() instead.
+        """
+        raise RuntimeError(
+            "IntrinsicScoreLoader is a singleton. "
+            "Use IntrinsicScoreLoader.get_instance() instead of direct instantiation."
+        )
+
+    @classmethod
+    def get_instance(
+        cls,
+        calibration_path: Path | str = "config/intrinsic_calibration.json"
+    ) -> 'IntrinsicScoreLoader':
+        """
+        Get the singleton instance of IntrinsicScoreLoader.
+
+        Thread-safe singleton access with double-checked locking.
+
+        Args:
+            calibration_path: Path to intrinsic_calibration.json
+                             (only used on first call, ignored afterwards)
+
+        Returns:
+            The singleton IntrinsicScoreLoader instance
+
+        Example:
+            >>> loader = IntrinsicScoreLoader.get_instance()
+            >>> score = loader.get_score("my_method")
+        """
+        if cls._instance is not None:
+            return cls._instance
+
+        with cls._instance_lock:
+            # Double-check after acquiring lock
+            if cls._instance is not None:
+                return cls._instance
+
+            # Create instance bypassing __new__ check
+            instance = object.__new__(cls)
+            instance._init_singleton(calibration_path)
+            cls._instance = instance
+
+            logger.info(
+                "intrinsic_loader_singleton_created",
+                extra={"calibration_path": str(instance.calibration_path)}
+            )
+
+            return cls._instance
+
+    def _init_singleton(self, calibration_path: Path | str) -> None:
+        """
+        Initialize the singleton instance.
 
         Args:
             calibration_path: Path to intrinsic_calibration.json
