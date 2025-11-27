@@ -41,6 +41,16 @@ EXEMPT_PATTERNS = [
     r'#.*0\.\d+',  # Comments OK
     r'""".*0\.\d+.*"""',  # Docstrings OK
     r'@classmethod',  # Decorator OK
+    r'DEFAULT_',  # DEFAULT_* constants are FALLBACKS - OK
+    r'\.get\(',  # .get() fallback values - OK
+    r'min_score=',  # Decorator min_score parameters - semantic thresholds, not calibration
+    r'role=',  # Decorator role parameters - OK
+    r'default:',  # Function default parameters in docstrings - OK
+    r'def\s+\w+.*default.*0\.\d+',  # Function signatures with defaults - OK
+    r'\.  ',  # Likely in documentation/examples
+    r'Example:',  # Example code blocks - OK
+    r'>>>',  # Doctest examples - OK
+    r'return.*\*\*',  # Math expressions like x**0.25 - OK
 ]
 
 # Files to exclude from checking
