@@ -58,6 +58,9 @@ if not Path(saaaaaa.__file__).resolve().is_relative_to(_expected_saaaaaa_prefix)
     )
 
 # Import contract enforcement infrastructure
+from saaaaaa.core.runtime_config import RuntimeConfig, get_runtime_config
+from saaaaaa.core.boot_checks import run_boot_checks, get_boot_check_summary, BootCheckError
+from saaaaaa.core.observability.structured_logging import log_runtime_config_loaded
 from saaaaaa.core.orchestrator.seed_registry import get_global_seed_registry
 from saaaaaa.core.orchestrator.verification_manifest import (
     VerificationManifest as VerificationManifestBuilder,
@@ -150,6 +153,19 @@ class VerifiedPipelineRunner:
 
         # Ensure artifacts directory exists
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize runtime configuration
+        self.runtime_config = RuntimeConfig.from_env()
+        self.log_claim("start", "runtime_config", 
+                      f"Runtime configuration loaded: {self.runtime_config}",
+                      {"mode": self.runtime_config.mode.value,
+                       "strict_mode": self.runtime_config.is_strict_mode()})
+        
+        # Log runtime config for observability
+        log_runtime_config_loaded(
+            config_repr=repr(self.runtime_config),
+            runtime_mode=self.runtime_config.mode
+        )
 
     def _initialize_determinism_context(self) -> dict[str, int]:
         """
@@ -275,9 +291,53 @@ class VerifiedPipelineRunner:
 
         self.log_claim("complete", "input_verification",
                       "Input verification successful (PDF + questionnaire)",
-                      {"pdf_path": str(self.plan_pdf_path),
-                       "questionnaire_path": str(self.questionnaire_path)})
+                       {"pdf_path": str(self.plan_pdf_path),
+                        "questionnaire_path": str(self.questionnaire_path)})
         return True
+    
+    def run_boot_checks(self) -> bool:
+        """
+        Run boot-time validation checks.
+        
+        Returns:
+            True if all checks pass or fallbacks are allowed
+            
+        Raises:
+            BootCheckError: If critical check fails in PROD mode
+        """
+        self.log_claim("start", "boot_checks", "Running boot-time validation checks")
+        
+        try:
+            results = run_boot_checks(self.runtime_config)
+            summary = get_boot_check_summary(results)
+            
+            # Log summary
+            self.log_claim("complete", "boot_checks",
+                          f"Boot checks completed\n{summary}",
+                          {"results": results})
+            
+            # Print summary for visibility
+            print("\n" + summary + "\n", flush=True)
+            
+            return True
+            
+        except BootCheckError as e:
+            # Critical boot check failed in PROD mode
+            error_msg = f"Boot check failed: {e}"
+            self.log_claim("error", "boot_checks", error_msg,
+                          {"component": e.component,
+                           "code": e.code,
+                           "reason": e.reason})
+            self.errors.append(error_msg)
+            
+            # In PROD mode, abort execution
+            if self.runtime_config.mode.value == "prod":
+                print(f"\n❌ FATAL: {error_msg}\n", flush=True)
+                raise
+            
+            # In DEV/EXPLORATORY, log warning but continue
+            print(f"\n⚠️  WARNING: {error_msg} (continuing in {self.runtime_config.mode.value} mode)\n", flush=True)
+            return False
     
     async def run_spc_ingestion(self) -> Optional[Any]:
         """
@@ -968,6 +1028,17 @@ class VerifiedPipelineRunner:
         
         # Step 1: Verify input
         if not self.verify_input():
+            self.generate_verification_manifest([], {})
+            return False
+        
+        # Step 1.5: Run boot checks
+        try:
+            if not self.run_boot_checks():
+                # Boot checks failed but we're in DEV mode - log warning
+                self.log_claim("warning", "boot_checks", 
+                              "Boot checks failed but continuing in non-PROD mode")
+        except BootCheckError:
+            # Boot check failed in PROD mode - abort
             self.generate_verification_manifest([], {})
             return False
         

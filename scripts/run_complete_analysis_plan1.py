@@ -38,6 +38,9 @@ from saaaaaa.utils.proof_generator import (
     generate_proof,
     collect_artifacts_manifest,
 )
+from saaaaaa.core.runtime_config import RuntimeConfig
+from saaaaaa.core.boot_checks import run_boot_checks, get_boot_check_summary, BootCheckError
+from saaaaaa.core.observability.structured_logging import log_runtime_config_loaded
 
 
 def load_cpp_from_directory(cpp_dir: Path) -> CanonPolicyPackage:
@@ -163,6 +166,49 @@ def load_cpp_from_directory(cpp_dir: Path) -> CanonPolicyPackage:
 
 async def main():
     """Main execution function."""
+    
+    # ========================================================================
+    # PHASE 0: RUNTIME CONFIGURATION & BOOT CHECKS
+    # ========================================================================
+    print("=" * 80)
+    print("F.A.R.F.A.N COMPLETE ANALYSIS PIPELINE")
+    print("=" * 80)
+    print()
+    
+    print("⚙️  PHASE 0: RUNTIME CONFIGURATION")
+    print("-" * 80)
+    
+    # Initialize runtime configuration
+    runtime_config = RuntimeConfig.from_env()
+    print(f"  ✓ Runtime mode: {runtime_config.mode.value}")
+    print(f"  ✓ Strict mode: {runtime_config.is_strict_mode()}")
+    print(f"  ✓ Preferred spaCy model: {runtime_config.preferred_spacy_model}")
+    print()
+    
+    # Log runtime config
+    log_runtime_config_loaded(
+        config_repr=repr(runtime_config),
+        runtime_mode=runtime_config.mode
+    )
+    
+    # Run boot checks
+    print("🔍 BOOT CHECKS")
+    print("-" * 80)
+    try:
+        boot_results = run_boot_checks(runtime_config)
+        boot_summary = get_boot_check_summary(boot_results)
+        print(boot_summary)
+        print()
+    except BootCheckError as e:
+        print(f"\n❌ FATAL: Boot check failed: {e}")
+        print(f"   Component: {e.component}")
+        print(f"   Code: {e.code}")
+        print(f"   Reason: {e.reason}")
+        if runtime_config.mode.value == "prod":
+            print("\n   Aborting execution in PROD mode.\n")
+            return 1
+        else:
+            print(f"\n   ⚠️  Continuing in {runtime_config.mode.value} mode despite failure.\n")
     
     print("=" * 80)
     print("CPP + ORCHESTRATOR PIPELINE: Plan_1.pdf")
