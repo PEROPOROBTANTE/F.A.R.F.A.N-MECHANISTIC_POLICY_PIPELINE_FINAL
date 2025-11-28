@@ -1,0 +1,2090 @@
+{
+  "identity": {
+    "base_slot": "D1-Q1",
+    "question_id": "Q211",
+    "dimension_id": "DIM01",
+    "policy_area_id": "PA07",
+    "contract_version": "3.0.0",
+    "contract_hash": "TODO_COMPUTE_SHA256_OF_THIS_FILE",
+    "created_at": "2025-11-28T03:50:41.908742+00:00",
+    "validated_against_schema": "executor_contract.v3.schema.json",
+    "cluster_id": "CL01",
+    "question_global": 211
+  },
+  "executor_binding": {
+    "executor_class": "D1_Q1_Executor",
+    "executor_module": "saaaaaa.core.orchestrator.executors"
+  },
+  "method_binding": {
+    "orchestration_mode": "multi_method_pipeline",
+    "method_count": 17,
+    "methods": [
+      {
+        "class_name": "TextMiningEngine",
+        "method_name": "diagnose_critical_links",
+        "priority": 1,
+        "provides": "text_mining.diagnose_critical_links",
+        "role": "diagnose_critical_links_diagnosis",
+        "description": "TextMiningEngine.diagnose_critical_links"
+      },
+      {
+        "class_name": "TextMiningEngine",
+        "method_name": "_analyze_link_text",
+        "priority": 2,
+        "provides": "text_mining.analyze_link_text",
+        "role": "_analyze_link_text_analysis",
+        "description": "TextMiningEngine._analyze_link_text"
+      },
+      {
+        "class_name": "IndustrialPolicyProcessor",
+        "method_name": "process",
+        "priority": 3,
+        "provides": "industrial_policy.process",
+        "role": "process_processing",
+        "description": "IndustrialPolicyProcessor.process"
+      },
+      {
+        "class_name": "IndustrialPolicyProcessor",
+        "method_name": "_match_patterns_in_sentences",
+        "priority": 4,
+        "provides": "industrial_policy.match_patterns_in_sentences",
+        "role": "_match_patterns_in_sentences_matching",
+        "description": "IndustrialPolicyProcessor._match_patterns_in_sentences"
+      },
+      {
+        "class_name": "IndustrialPolicyProcessor",
+        "method_name": "_extract_point_evidence",
+        "priority": 5,
+        "provides": "industrial_policy.extract_point_evidence",
+        "role": "_extract_point_evidence_extraction",
+        "description": "IndustrialPolicyProcessor._extract_point_evidence"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_extract_goals",
+        "priority": 6,
+        "provides": "causal_extraction.extract_goals",
+        "role": "_extract_goals_extraction",
+        "description": "CausalExtractor._extract_goals"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_parse_goal_context",
+        "priority": 7,
+        "provides": "causal_extraction.parse_goal_context",
+        "role": "_parse_goal_context_parsing",
+        "description": "CausalExtractor._parse_goal_context"
+      },
+      {
+        "class_name": "FinancialAuditor",
+        "method_name": "_parse_amount",
+        "priority": 8,
+        "provides": "financial_audit.parse_amount",
+        "role": "_parse_amount_parsing",
+        "description": "FinancialAuditor._parse_amount"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_extract_financial_amounts",
+        "priority": 9,
+        "provides": "pdet_analysis.extract_financial_amounts",
+        "role": "_extract_financial_amounts_extraction",
+        "description": "PDETMunicipalPlanAnalyzer._extract_financial_amounts"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_extract_from_budget_table",
+        "priority": 10,
+        "provides": "pdet_analysis.extract_from_budget_table",
+        "role": "_extract_from_budget_table_extraction",
+        "description": "PDETMunicipalPlanAnalyzer._extract_from_budget_table"
+      },
+      {
+        "class_name": "PolicyContradictionDetector",
+        "method_name": "_extract_quantitative_claims",
+        "priority": 11,
+        "provides": "contradiction_detection.extract_quantitative_claims",
+        "role": "_extract_quantitative_claims_extraction",
+        "description": "PolicyContradictionDetector._extract_quantitative_claims"
+      },
+      {
+        "class_name": "PolicyContradictionDetector",
+        "method_name": "_parse_number",
+        "priority": 12,
+        "provides": "contradiction_detection.parse_number",
+        "role": "_parse_number_parsing",
+        "description": "PolicyContradictionDetector._parse_number"
+      },
+      {
+        "class_name": "PolicyContradictionDetector",
+        "method_name": "_statistical_significance_test",
+        "priority": 13,
+        "provides": "contradiction_detection.statistical_significance_test",
+        "role": "_statistical_significance_test_execution",
+        "description": "PolicyContradictionDetector._statistical_significance_test"
+      },
+      {
+        "class_name": "BayesianNumericalAnalyzer",
+        "method_name": "evaluate_policy_metric",
+        "priority": 14,
+        "provides": "bayesian_analysis.evaluate_policy_metric",
+        "role": "evaluate_policy_metric_evaluation",
+        "description": "BayesianNumericalAnalyzer.evaluate_policy_metric"
+      },
+      {
+        "class_name": "BayesianNumericalAnalyzer",
+        "method_name": "compare_policies",
+        "priority": 15,
+        "provides": "bayesian_analysis.compare_policies",
+        "role": "compare_policies_comparison",
+        "description": "BayesianNumericalAnalyzer.compare_policies"
+      },
+      {
+        "class_name": "SemanticProcessor",
+        "method_name": "chunk_text",
+        "priority": 16,
+        "provides": "semantic_processing.chunk_text",
+        "role": "chunk_text_chunking",
+        "description": "SemanticProcessor.chunk_text"
+      },
+      {
+        "class_name": "SemanticProcessor",
+        "method_name": "embed_single",
+        "priority": 17,
+        "provides": "semantic_processing.embed_single",
+        "role": "embed_single_embedding",
+        "description": "SemanticProcessor.embed_single"
+      }
+    ],
+    "note": "All 17 methods extracted from D1_Q1_Executor in executors.py"
+  },
+  "question_context": {
+    "question_text": "¿El diagnóstico presenta datos numéricos (porcentaje de predios sin formalizar, km de vías terciarias en mal estado, avance del catastro multipropósito) sobre el área de Tierras y territorios que sirvan como línea base? Se debe verificar el año y fuentes (ej. IGAC, ANT, INVIAS).",
+    "question_type": "micro",
+    "scoring_modality": "TYPE_A",
+    "modality": "count_and_scale",
+    "expected_output_type": "score",
+    "patterns": [
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-000",
+        "match_type": "REGEX",
+        "pattern": "línea base|diagnóstico rural|caracterización predial|situación actual"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-001",
+        "match_type": "REGEX",
+        "pattern": "fuente:|según|reportado por|con datos de"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-002",
+        "match_type": "REGEX",
+        "pattern": "IGAC|Instituto Geográfico Agustín Codazzi|Catastro"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-003",
+        "match_type": "REGEX",
+        "pattern": "ANT|Agencia Nacional de Tierras|URT|Unidad de Restitución de Tierras"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-004",
+        "match_type": "REGEX",
+        "pattern": "ADR|Agencia de Desarrollo Rural|UPRA|INVIAS|MinAgricultura"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-005",
+        "match_type": "REGEX",
+        "pattern": "SNR|Superintendencia de Notariado y Registro"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-006",
+        "match_type": "REGEX",
+        "pattern": "Secretaría de Planeación|UMATA|Secretaría de Infraestructura"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-007",
+        "match_type": "REGEX",
+        "pattern": "informalidad predial|predios sin formalizar|tenencia de la tierra"
+      },
+      {
+        "category": "INDICADOR",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-008",
+        "match_type": "REGEX",
+        "pattern": "porcentaje de desactualización catastral|catastro multipropósito"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-009",
+        "match_type": "REGEX",
+        "pattern": "kilómetros de vías terciarias en mal estado|estado de la red vial"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-010",
+        "match_type": "REGEX",
+        "pattern": "hectáreas (Ha) en conflicto de uso del suelo|frontera agrícola"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-011",
+        "match_type": "REGEX",
+        "pattern": "déficit de infraestructura de riego|distritos de riego"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-012",
+        "match_type": "LITERAL",
+        "pattern": "2021|2022|2023|vigencia anterior|serie histórica"
+      },
+      {
+        "category": "INDICADOR",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q211-013",
+        "match_type": "REGEX",
+        "pattern": "porcentaje|hectáreas|kilómetros|número de predios|familias"
+      }
+    ],
+    "expected_elements": [
+      {
+        "minimum": 2,
+        "type": "fuentes_oficiales"
+      },
+      {
+        "minimum": 3,
+        "type": "indicadores_cuantitativos"
+      },
+      {
+        "minimum": 2,
+        "type": "series_temporales_años"
+      }
+    ],
+    "validations": {
+      "buscar_indicadores_cuantitativos": {
+        "minimum_required": 3,
+        "patterns": [
+          "\\d+%",
+          "\\d+\\s*por\\s*\\d+",
+          "tasa de",
+          "índice de",
+          "cobertura de"
+        ],
+        "specificity": "HIGH"
+      },
+      "cobertura": {
+        "minimum_required": 1,
+        "patterns": [
+          "departamental",
+          "municipal",
+          "urbano",
+          "rural",
+          "territorial",
+          "poblacional"
+        ],
+        "specificity": "HIGH"
+      },
+      "series_temporales": {
+        "minimum_years": 3,
+        "patterns": [
+          "20\\d{2}",
+          "año",
+          "periodo",
+          "histórico",
+          "serie"
+        ],
+        "specificity": "MEDIUM"
+      },
+      "unidades_medicion": {
+        "minimum_required": 2,
+        "patterns": [
+          "por 100.000",
+          "por 1.000",
+          "%",
+          "porcentaje",
+          "tasa",
+          "razón"
+        ],
+        "specificity": "MEDIUM"
+      },
+      "verificar_fuentes": {
+        "minimum_required": 2,
+        "patterns": [
+          "fuente:",
+          "según",
+          "datos de",
+          "DANE",
+          "DNP",
+          "SISPRO",
+          "SIVIGILA",
+          "Ministerio"
+        ],
+        "specificity": "MEDIUM"
+      }
+    }
+  },
+  "signal_requirements": {
+    "mandatory_signals": [],
+    "optional_signals": [],
+    "signal_aggregation": "weighted_mean",
+    "minimum_signal_threshold": 0.0,
+    "note": "Signal requirements are currently under development. Signal IDs will be populated once the signal_registry provides a canonical mapping for PA01/DIM01."
+  },
+  "evidence_assembly": {
+    "module": "saaaaaa.core.orchestrator.evidence_assembler",
+    "class_name": "EvidenceAssembler",
+    "method_name": "assemble",
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "elements",
+        "raw_results"
+      ],
+      "properties": {
+        "elements": {
+          "type": "array",
+          "description": "Lista de elementos de evidencia encontrados para esta micro-pregunta."
+        },
+        "raw_results": {
+          "type": "object",
+          "properties": {
+            "confidence_scores": {
+              "type": "array",
+              "description": "Scores de confianza usados por el scorer."
+            },
+            "semantic_similarity": {
+              "description": "Métrica de similitud semántica (si aplica)."
+            },
+            "pattern_matches": {
+              "type": "object",
+              "description": "Matches de patrones esperados vs texto."
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Metadatos arbitrarios pasados al scorer."
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "assembly_rules": [
+      {
+        "target": "elements_found",
+        "sources": [
+          "text_mining.critical_links",
+          "industrial_policy.processed_evidence",
+          "causal_extraction.goals",
+          "financial_audit.amounts",
+          "pdet_analysis.financial_data",
+          "contradiction_detection.quantitative_claims",
+          "bayesian_analysis.policy_metrics"
+        ],
+        "merge_strategy": "concat",
+        "description": "Combine all evidence elements from 17 method invocations"
+      },
+      {
+        "target": "confidence_scores",
+        "sources": [
+          "*.confidence",
+          "*.bayesian_posterior"
+        ],
+        "merge_strategy": "weighted_mean",
+        "default": [],
+        "description": "Aggregate confidence scores across all methods"
+      },
+      {
+        "target": "pattern_matches",
+        "sources": [
+          "text_mining.patterns",
+          "industrial_policy.patterns"
+        ],
+        "merge_strategy": "concat",
+        "default": {},
+        "description": "Combine pattern matches from text mining methods"
+      },
+      {
+        "target": "metadata",
+        "sources": [
+          "*.metadata"
+        ],
+        "merge_strategy": "concat",
+        "description": "Combine metadata from all 17 methods for full traceability"
+      }
+    ]
+  },
+  "output_contract": {
+    "result_type": "Phase2QuestionResult",
+    "schema": {
+      "type": "object",
+      "required": [
+        "base_slot",
+        "question_id",
+        "question_global",
+        "evidence",
+        "validation"
+      ],
+      "properties": {
+        "base_slot": {
+          "type": "string",
+          "description": "Debe coincidir con identity.base_slot.",
+          "const": "D1-Q1"
+        },
+        "question_id": {
+          "type": "string",
+          "description": "Debe coincidir con identity.question_id.",
+          "const": "Q271"
+        },
+        "question_global": {
+          "type": "integer",
+          "description": "Índice global de la pregunta (de questionnaire_monolith).",
+          "const": 271
+        },
+        "policy_area_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "PA canónica, debe ser coherente con identity.policy_area_id.",
+          "const": "PA09"
+        },
+        "dimension_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Dimensión canónica, coherente con identity.dimension_id.",
+          "const": null
+        },
+        "cluster_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cluster de análisis según el monolith, si aplica.",
+          "const": null
+        },
+        "evidence": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Objeto de evidencia ensamblado por el EvidenceAssembler; debe cumplir evidence_assembly.output_schema.",
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Resultado de validaciones lógicas de la respuesta (coherencia, integridad, etc.).",
+          "additionalProperties": true
+        },
+        "trace": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Información de trazabilidad (provenance, logs) específica de la ejecución.",
+          "additionalProperties": true
+        },
+        "metadata": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Metadatos adicionales de la pregunta para consumo posterior.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "consumer_modules": [
+      "src.saaaaaa.core.phases.phase2_types.validate_phase2_result",
+      "src.saaaaaa.core.orchestrator.core.Orchestrator._score_micro_results_async",
+      "src.saaaaaa.analysis.scoring.MicroQuestionScorer"
+    ],
+    "human_readable_output": {
+      "format": "markdown",
+      "template": {
+        "title": "## Análisis D1-Q1: Línea Base Cuantitativa en Derechos de las Mujeres",
+        "summary": "### Resumen Ejecutivo\n\nSe analizó la presencia de **{evidence.elements_found_count}** elementos de evidencia cuantitativa relacionados con la línea base diagnóstica en el área de Derechos de las Mujeres e Igualdad de Género.\n\n**Puntaje**: {score}/3.0 | **Calidad**: {quality_level}",
+        "score_section": "### Evaluación Cuantitativa\n\n- **Puntaje bruto**: {score}/3.0\n- **Nivel de calidad**: {quality_level}\n- **Confianza promedio**: {evidence.confidence_scores.mean}%\n- **Cobertura de patrones**: {evidence.pattern_matches_count}/14 patrones detectados",
+        "elements_section": "### Elementos de Evidencia Identificados\n\n{evidence.elements_found_list}\n\n**Elementos críticos faltantes**: {evidence.missing_required_elements}",
+        "details": [
+          "**Fuentes oficiales identificadas**: {evidence.official_sources_count}",
+          "**Indicadores cuantitativos**: {evidence.quantitative_indicators_count}",
+          "**Series temporales**: {evidence.temporal_series_count}",
+          "**Cobertura territorial**: {evidence.territorial_coverage}"
+        ],
+        "interpretation": "### Interpretación de Resultados\n\n{methodological_interpretation}",
+        "recommendations": "### Recomendaciones\n\n{evidence.recommendations}"
+      },
+      "methodological_depth": {
+        "methods": [
+          {
+            "method_name": "diagnose_critical_links",
+            "class_name": "TextMiningEngine",
+            "priority": 1,
+            "role": "critical_link_diagnosis",
+            "epistemological_foundation": {
+              "paradigm": "Critical text mining with causal link detection",
+              "ontological_basis": "Texts contain latent causal structures that can be detected through linguistic patterns indicating causal relationships (because, therefore, leads to, etc.)",
+              "epistemological_stance": "Empirical-interpretive: Knowledge about policy mechanisms emerges from detecting linguistic markers of causality in policy documents",
+              "theoretical_framework": [
+                "Causal discourse analysis: Texts reveal causal beliefs through specific linguistic constructions (Fairclough, 2003)",
+                "Theory of change reconstruction: Policy documents implicitly encode theories of change that can be extracted via causal link detection (Weiss, 1995)"
+              ],
+              "justification": "Diagnosing critical causal links in baseline diagnostics reveals whether policymakers understand the causal pathways between gender inequalities and their determinants"
+            },
+            "technical_approach": {
+              "method_type": "pattern_based_causal_link_extraction",
+              "algorithm": "Multi-pattern regex matching with context window analysis",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Identify causal connectors (porque, por lo tanto, conduce a, genera, resulta en)"
+                },
+                {
+                  "step": 2,
+                  "description": "Extract entities before and after connector (cause → effect)"
+                },
+                {
+                  "step": 3,
+                  "description": "Classify link criticality based on proximity to gender indicators"
+                }
+              ],
+              "assumptions": [
+                "Causal language reflects causal understanding",
+                "Critical links mention gender-related outcomes"
+              ],
+              "limitations": [
+                "Cannot detect implicit causality without linguistic markers",
+                "May miss causal relationships expressed across distant sentences"
+              ],
+              "complexity": "O(n*p) where n=sentences, p=causal patterns"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "critical_links": "List of detected causal links with source/target entities",
+                "link_scores": "Criticality scores (0-1) based on relevance to gender outcomes"
+              },
+              "interpretation_guide": {
+                "high_criticality": "≥0.8: Link directly connects to gender inequality outcomes",
+                "medium_criticality": "0.5-0.79: Link relates to intermediate factors",
+                "low_criticality": "<0.5: Peripheral causal relationship"
+              },
+              "actionable_insights": [
+                "If few critical links found: Diagnosis lacks causal depth, may be purely descriptive",
+                "If many links but low criticality: Diagnosis discusses tangential issues, not core gender inequalities"
+              ]
+            }
+          },
+          {
+            "method_name": "_analyze_link_text",
+            "class_name": "TextMiningEngine",
+            "priority": 2,
+            "role": "link_context_analysis",
+            "epistemological_foundation": {
+              "paradigm": "Contextual semantic analysis",
+              "ontological_basis": "The meaning and validity of a causal claim depends on its textual context (surrounding sentences, semantic coherence)",
+              "epistemological_stance": "Coherentist: A causal link is epistemically justified if it coheres with surrounding textual evidence",
+              "theoretical_framework": [
+                "Semantic coherence theory: Valid claims are embedded in coherent semantic contexts",
+                "Evidential reasoning: Context provides supporting or undermining evidence for causal claims"
+              ],
+              "justification": "Detecting a causal connector alone is insufficient; analyzing surrounding text validates whether the link is substantive or superficial"
+            },
+            "technical_approach": {
+              "method_type": "context_window_semantic_analysis",
+              "algorithm": "Extract ±N sentences around link, analyze semantic consistency",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Extract context window (±3 sentences) around detected causal link"
+                },
+                {
+                  "step": 2,
+                  "description": "Calculate semantic similarity between link and context using embeddings"
+                },
+                {
+                  "step": 3,
+                  "description": "Identify supporting/contradicting evidence in context"
+                }
+              ],
+              "assumptions": [
+                "Coherent contexts indicate valid causal claims",
+                "Context window of ±3 sentences captures relevant information"
+              ],
+              "limitations": [
+                "May miss long-range dependencies beyond context window",
+                "Semantic similarity doesn't guarantee logical validity"
+              ],
+              "complexity": "O(k*w) where k=links, w=context window size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "context_coherence_score": "Semantic coherence metric (0-1)",
+                "supporting_evidence": "Contextual sentences that support the link",
+                "contradicting_evidence": "Contextual sentences that contradict the link"
+              },
+              "interpretation_guide": {
+                "high_coherence": "≥0.7: Link is well-supported by context",
+                "low_coherence": "<0.5: Link may be spurious or poorly contextualized"
+              },
+              "actionable_insights": [
+                "Low coherence + many links: Document has scattered causal claims without substantiation",
+                "High coherence: Causal claims are evidence-based and well-argued"
+              ]
+            }
+          },
+          {
+            "method_name": "process",
+            "class_name": "IndustrialPolicyProcessor",
+            "priority": 3,
+            "role": "industrial_policy_pattern_processing",
+            "epistemological_foundation": {
+              "paradigm": "Structured policy analysis with industrial rigor",
+              "ontological_basis": "Policy documents follow recognizable structural patterns (policy pillars, strategic objectives, action lines) that can be systematically extracted",
+              "epistemological_stance": "Structuralism: Policy knowledge is organized according to hierarchical structures that determine meaning",
+              "theoretical_framework": [
+                "Policy architecture theory: Effective policies have clear structural organization",
+                "Industrial-grade analysis: Systematic, replicable methods ensure consistency across documents"
+              ],
+              "justification": "Gender policy baselines must be extracted systematically to ensure comparability across municipalities and policy cycles"
+            },
+            "technical_approach": {
+              "method_type": "hierarchical_pattern_extraction",
+              "algorithm": "Multi-level pattern matching with structural validation",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Identify policy structure markers (pillar headers, objective numbering)"
+                },
+                {
+                  "step": 2,
+                  "description": "Extract content within each structural segment"
+                },
+                {
+                  "step": 3,
+                  "description": "Match predefined policy patterns (baseline data, targets, indicators)"
+                },
+                {
+                  "step": 4,
+                  "description": "Validate structural completeness and coherence"
+                }
+              ],
+              "assumptions": [
+                "Policy documents follow standard Colombian municipal planning structures",
+                "Structural markers are consistently used"
+              ],
+              "limitations": [
+                "Fails on highly non-standard document structures",
+                "Cannot process purely narrative documents without structural markers"
+              ],
+              "complexity": "O(n*m) where n=document sections, m=pattern types"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "extracted_segments": "Hierarchical dict of policy structure → content",
+                "pattern_matches": "Dict of pattern_type → matched instances",
+                "structural_completeness": "Score indicating presence of expected structural elements"
+              },
+              "interpretation_guide": {
+                "complete_structure": "≥0.8: Document has well-defined policy architecture",
+                "incomplete_structure": "<0.5: Document lacks standard structure, may be disorganized"
+              },
+              "actionable_insights": [
+                "Incomplete structure: Municipality may lack technical capacity for formal policy design",
+                "Complete structure but no baseline data: Structural compliance without substantive content"
+              ]
+            }
+          },
+          {
+            "method_name": "_match_patterns_in_sentences",
+            "class_name": "IndustrialPolicyProcessor",
+            "priority": 4,
+            "role": "sentence_level_pattern_matching",
+            "epistemological_foundation": {
+              "paradigm": "Micro-level pattern detection",
+              "ontological_basis": "Policy commitments and evidence are encoded at sentence level through specific linguistic patterns",
+              "epistemological_stance": "Linguistic realism: Specific phrases reliably indicate policy elements (e.g., 'línea base' indicates baseline data)",
+              "theoretical_framework": [
+                "Information extraction theory: Structured information can be extracted from unstructured text via pattern recognition"
+              ],
+              "justification": "Sentence-level granularity ensures precise localization of policy elements for traceability and validation"
+            },
+            "technical_approach": {
+              "method_type": "regex_pattern_matching_per_sentence",
+              "algorithm": "Apply pattern registry to each sentence, collect matches with positions",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Segment document into sentences"
+                },
+                {
+                  "step": 2,
+                  "description": "For each sentence, apply all relevant regex patterns"
+                },
+                {
+                  "step": 3,
+                  "description": "Record matches with sentence ID, start/end positions, matched text"
+                }
+              ],
+              "assumptions": [
+                "Sentence boundaries are correctly detected",
+                "Patterns comprehensively cover expected phrasings"
+              ],
+              "limitations": [
+                "Misses patterns spanning multiple sentences",
+                "Regex cannot handle complex syntactic variations"
+              ],
+              "complexity": "O(s*p) where s=sentences, p=patterns"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "sentence_matches": "List of {sentence_id, pattern_id, matched_text, position}"
+              },
+              "interpretation_guide": {
+                "dense_matches": "Many matches per sentence: Rich informational content",
+                "sparse_matches": "Few matches: Document may lack expected policy elements"
+              },
+              "actionable_insights": [
+                "Sentences with multiple pattern types (e.g., baseline + source + indicator): High-quality evidence",
+                "Matches concentrated in few sentences: Evidence is localized, not systemic"
+              ]
+            }
+          },
+          {
+            "method_name": "_extract_point_evidence",
+            "class_name": "IndustrialPolicyProcessor",
+            "priority": 5,
+            "role": "point_evidence_extraction",
+            "epistemological_foundation": {
+              "paradigm": "Evidence atomization",
+              "ontological_basis": "Complex policy evidence can be decomposed into atomic 'points' (individual data claims, sources, indicators)",
+              "epistemological_stance": "Logical atomism: Understanding complex evidence requires breaking it into elementary propositions",
+              "theoretical_framework": [
+                "Evidence granularity theory: Fine-grained evidence units enable precise validation and reuse"
+              ],
+              "justification": "Extracting point-level evidence allows detailed auditing and prevents conflating distinct claims"
+            },
+            "technical_approach": {
+              "method_type": "atomic_evidence_extraction",
+              "algorithm": "Identify and isolate individual evidence points (numbers, sources, indicators)",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Detect evidence units (numeric values, entity names, temporal references)"
+                },
+                {
+                  "step": 2,
+                  "description": "Extract unit with minimal context (subject, predicate)"
+                },
+                {
+                  "step": 3,
+                  "description": "Classify unit type (quantitative_indicator, official_source, temporal_marker)"
+                }
+              ],
+              "assumptions": [
+                "Evidence points can be meaningfully isolated from context",
+                "Each point has a primary classification"
+              ],
+              "limitations": [
+                "Decontextualization may lose nuance",
+                "Complex evidence may not fit atomic model"
+              ],
+              "complexity": "O(n) where n=detected evidence units"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "evidence_points": "List of {type, value, context_snippet, confidence}"
+              },
+              "interpretation_guide": {
+                "high_point_count": "Rich evidence base",
+                "low_point_count": "Sparse evidence"
+              },
+              "actionable_insights": [
+                "Many quantitative points + few sources: Data without provenance",
+                "Balanced distribution: Comprehensive evidence base"
+              ]
+            }
+          },
+          {
+            "method_name": "_extract_goals",
+            "class_name": "CausalExtractor",
+            "priority": 6,
+            "role": "goal_extraction",
+            "epistemological_foundation": {
+              "paradigm": "Teleological policy analysis",
+              "ontological_basis": "Policies are goal-directed interventions; goals are explicitly or implicitly stated desired outcomes",
+              "epistemological_stance": "Intentionalism: Understanding policy requires identifying intended goals",
+              "theoretical_framework": [
+                "Means-ends rationality: Policies are structured around goals (ends) and actions (means)",
+                "Theory of change: Goals are nodes in causal pathways from inputs to impacts"
+              ],
+              "justification": "Baseline diagnostics should connect data to goals (e.g., 'reduce VBG by X%'); extracting goals enables evaluating this connection"
+            },
+            "technical_approach": {
+              "method_type": "goal_phrase_extraction",
+              "algorithm": "Identify goal markers (reducir, aumentar, lograr) + target entity + quantifier",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Detect goal verbs (reducir, incrementar, alcanzar)"
+                },
+                {
+                  "step": 2,
+                  "description": "Extract object of goal verb (what is to be reduced/increased)"
+                },
+                {
+                  "step": 3,
+                  "description": "Extract quantifier if present (percentage, absolute number)"
+                }
+              ],
+              "assumptions": [
+                "Goals are expressed with standard verbs",
+                "Goals have identifiable objects and quantifiers"
+              ],
+              "limitations": [
+                "Misses implicit goals",
+                "May confuse aspirational language with concrete goals"
+              ],
+              "complexity": "O(n) where n=sentences"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "goals": "List of {goal_verb, target_entity, quantifier, sentence}"
+              },
+              "interpretation_guide": {
+                "quantified_goals": "Goals with numbers are measurable",
+                "vague_goals": "Goals without quantifiers are non-measurable"
+              },
+              "actionable_insights": [
+                "Goals without baseline data: Targets lack empirical foundation",
+                "Goals aligned with baseline indicators: Evidence-based planning"
+              ]
+            }
+          },
+          {
+            "method_name": "_parse_goal_context",
+            "class_name": "CausalExtractor",
+            "priority": 7,
+            "role": "goal_contextualization",
+            "epistemological_foundation": {
+              "paradigm": "Contextual goal interpretation",
+              "ontological_basis": "Goals are situated in policy contexts that specify conditions, timeframes, and responsible actors",
+              "epistemological_stance": "Contextualism: Goal meaning depends on context",
+              "theoretical_framework": [
+                "Situated policy analysis: Goals must be understood in their institutional and temporal context"
+              ],
+              "justification": "A goal like 'reduce VBG' is ambiguous without context (by how much? by when? who is responsible?)"
+            },
+            "technical_approach": {
+              "method_type": "context_parsing_around_goals",
+              "algorithm": "Extract temporal, spatial, and actor context around identified goals",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "For each goal, extract surrounding context window"
+                },
+                {
+                  "step": 2,
+                  "description": "Identify temporal markers (plazo, 2024-2027)"
+                },
+                {
+                  "step": 3,
+                  "description": "Identify responsible actors (Secretaría de...)"
+                },
+                {
+                  "step": 4,
+                  "description": "Identify spatial scope (municipal, rural, etc.)"
+                }
+              ],
+              "assumptions": [
+                "Context is proximal to goal statement",
+                "Context markers use standard terminology"
+              ],
+              "limitations": [
+                "May miss context stated in distant document sections",
+                "Cannot infer implicit context"
+              ],
+              "complexity": "O(g*w) where g=goals, w=context window"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "goal_contexts": "Dict mapping goal_id → {temporal, spatial, actor} context"
+              },
+              "interpretation_guide": {
+                "complete_context": "All three dimensions present: Well-specified goal",
+                "incomplete_context": "Missing dimensions: Ambiguous goal"
+              },
+              "actionable_insights": [
+                "Goals without temporal context: No deadline, low accountability",
+                "Goals without responsible actors: Diffused responsibility"
+              ]
+            }
+          },
+          {
+            "method_name": "_parse_amount",
+            "class_name": "FinancialAuditor",
+            "priority": 8,
+            "role": "financial_amount_parsing",
+            "epistemological_foundation": {
+              "paradigm": "Financial data extraction and normalization",
+              "ontological_basis": "Financial commitments are expressed as monetary amounts in various formats (text, numbers, currencies)",
+              "epistemological_stance": "Representationalism: Textual representations of amounts map to objective financial realities",
+              "theoretical_framework": [
+                "Financial accountability: Budget transparency requires extracting and verifying financial allocations"
+              ],
+              "justification": "Gender policies require budget backing; extracting financial amounts enables assessing resource adequacy"
+            },
+            "technical_approach": {
+              "method_type": "numeric_parsing_with_normalization",
+              "algorithm": "Detect numeric patterns, parse to float, normalize units (thousands, millions)",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Detect amount patterns ($ X.XXX.XXX, X millones)"
+                },
+                {
+                  "step": 2,
+                  "description": "Parse numeric component to float"
+                },
+                {
+                  "step": 3,
+                  "description": "Identify unit (millones, mil millones) and multiply"
+                },
+                {
+                  "step": 4,
+                  "description": "Normalize to standard unit (e.g., COP)"
+                }
+              ],
+              "assumptions": [
+                "Amounts follow Colombian formatting conventions (. as thousands separator)",
+                "Units are explicitly stated or inferable from context"
+              ],
+              "limitations": [
+                "May fail on non-standard formats",
+                "Cannot verify accuracy of stated amounts"
+              ],
+              "complexity": "O(n) where n=detected amount patterns"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "parsed_amounts": "List of {raw_text, normalized_value, currency, confidence}"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.9: Amount clearly stated and parsed",
+                "low_confidence": "<0.7: Ambiguous format, may be misparsed"
+              },
+              "actionable_insights": [
+                "Many amounts but low confidence: Financial data is poorly formatted",
+                "No amounts found: Budget information missing from diagnosis"
+              ]
+            }
+          },
+          {
+            "method_name": "_extract_financial_amounts",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 9,
+            "role": "pdet_specific_financial_extraction",
+            "epistemological_foundation": {
+              "paradigm": "Context-specific financial analysis for PDET municipalities",
+              "ontological_basis": "PDET plans have specific financial reporting requirements and structures",
+              "epistemological_stance": "Domain-specific realism: Financial data extraction must account for PDET-specific terminologies and structures",
+              "theoretical_framework": [
+                "Institutional context sensitivity: Policy analysis tools must adapt to specific institutional frameworks (PDET)"
+              ],
+              "justification": "PDET municipalities may use specific financial categories (PAC, SGR) requiring specialized extraction"
+            },
+            "technical_approach": {
+              "method_type": "domain_specific_financial_extraction",
+              "algorithm": "Augment generic financial parsing with PDET-specific patterns",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Apply generic amount parsing"
+                },
+                {
+                  "step": 2,
+                  "description": "Detect PDET-specific financial categories (SGR, regalías, PAC)"
+                },
+                {
+                  "step": 3,
+                  "description": "Link amounts to categories based on proximity"
+                }
+              ],
+              "assumptions": [
+                "PDET plans mention financial categories near amounts",
+                "Category terminology is standardized"
+              ],
+              "limitations": [
+                "Limited to known PDET financial categories",
+                "Cannot extract amounts from complex table formats without table parsing"
+              ],
+              "complexity": "O(n*c) where n=amounts, c=categories"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "categorized_amounts": "List of {amount, category, source_type, confidence}"
+              },
+              "interpretation_guide": {
+                "categorized": "Amount linked to financial category (e.g., SGR)",
+                "uncategorized": "Amount found but no category detected"
+              },
+              "actionable_insights": [
+                "Uncategorized amounts: Budget detail without transparency on funding source",
+                "Heavy reliance on specific source (e.g., all from SGR): Diversification risk"
+              ]
+            }
+          },
+          {
+            "method_name": "_extract_from_budget_table",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 10,
+            "role": "structured_budget_table_extraction",
+            "epistemological_foundation": {
+              "paradigm": "Structured data extraction from tabular formats",
+              "ontological_basis": "Budget data is often presented in tables with rows (programs/projects) and columns (years/amounts)",
+              "epistemological_stance": "Structural realism: Tables encode structured financial information requiring specialized parsing",
+              "theoretical_framework": [
+                "Information architecture: Tabular formats embed relational structures (rows, columns, cells) that determine information retrieval strategies"
+              ],
+              "justification": "Tables contain dense, structured financial data that cannot be extracted via sentence-level text mining"
+            },
+            "technical_approach": {
+              "method_type": "table_parsing_and_cell_extraction",
+              "algorithm": "Detect table structures, parse rows/columns, extract cell values",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Detect table markers (HTML <table>, Markdown tables, aligned whitespace)"
+                },
+                {
+                  "step": 2,
+                  "description": "Parse table structure (identify headers, rows, columns)"
+                },
+                {
+                  "step": 3,
+                  "description": "Extract cells containing financial amounts"
+                },
+                {
+                  "step": 4,
+                  "description": "Link amounts to row labels (program names) and column labels (years)"
+                }
+              ],
+              "assumptions": [
+                "Tables follow standard row-column format",
+                "Headers are identifiable",
+                "Amounts are in consistent column positions"
+              ],
+              "limitations": [
+                "Fails on complex nested tables",
+                "May misparse poorly formatted tables",
+                "Cannot extract from image-based tables without OCR"
+              ],
+              "complexity": "O(r*c) where r=rows, c=columns"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "table_data": "List of {row_label, column_label, amount, table_id}"
+              },
+              "interpretation_guide": {
+                "complete_tables": "All expected columns present: Comprehensive budget detail",
+                "incomplete_tables": "Missing columns/rows: Incomplete financial information"
+              },
+              "actionable_insights": [
+                "Multi-year budget tables: Indicates planning horizon and resource trajectory",
+                "Single-year tables: Short-term planning, no long-term resource commitment"
+              ]
+            }
+          },
+          {
+            "method_name": "_extract_quantitative_claims",
+            "class_name": "PolicyContradictionDetector",
+            "priority": 11,
+            "role": "quantitative_claim_extraction",
+            "epistemological_foundation": {
+              "paradigm": "Claim extraction for contradiction detection",
+              "ontological_basis": "Policies make quantitative claims (e.g., 'VBG rate is 15%') that can be contradictory or inconsistent",
+              "epistemological_stance": "Logical consistency checking: Policy documents should be internally consistent in their quantitative claims",
+              "theoretical_framework": [
+                "Coherence theory of justification: Contradictory claims undermine policy credibility"
+              ],
+              "justification": "Extracting quantitative claims enables detecting contradictions that signal data quality issues or errors"
+            },
+            "technical_approach": {
+              "method_type": "quantitative_proposition_extraction",
+              "algorithm": "Extract statements with quantifiers, normalize for comparison",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Identify quantitative statements (X es Y%, la tasa de X es Y)"
+                },
+                {
+                  "step": 2,
+                  "description": "Parse subject (X) and value (Y)"
+                },
+                {
+                  "step": 3,
+                  "description": "Store as structured claim {subject, predicate, value}"
+                }
+              ],
+              "assumptions": [
+                "Quantitative claims have standard subject-predicate-value structure",
+                "Same subjects are referred to consistently (no synonyms)"
+              ],
+              "limitations": [
+                "Cannot resolve synonyms (tasa de VBG vs. violencia de género)",
+                "May extract claims that are not meant to be factual (hypothetical scenarios)"
+              ],
+              "complexity": "O(n) where n=quantitative statements"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "claims": "List of {subject, value, unit, sentence_id, confidence}"
+              },
+              "interpretation_guide": {
+                "duplicate_subjects": "Multiple claims about same subject: Check for contradictions",
+                "unique_subjects": "Each claim covers distinct topic"
+              },
+              "actionable_insights": [
+                "Contradictory claims: Data quality issue or conceptual confusion",
+                "Consistent claims: Internal coherence of baseline data"
+              ]
+            }
+          },
+          {
+            "method_name": "_parse_number",
+            "class_name": "PolicyContradictionDetector",
+            "priority": 12,
+            "role": "numeric_value_parsing",
+            "epistemological_foundation": {
+              "paradigm": "Numerical data normalization",
+              "ontological_basis": "Numbers are objective entities that must be correctly parsed for valid comparisons",
+              "epistemological_stance": "Objectivism about numbers: Numeric values have objective meanings independent of representation",
+              "theoretical_framework": [
+                "Formal semantics of numbers: Numerical representations map to abstract mathematical objects"
+              ],
+              "justification": "Detecting contradictions requires comparing numbers; parsing ensures accurate comparison"
+            },
+            "technical_approach": {
+              "method_type": "robust_numeric_parsing",
+              "algorithm": "Handle multiple numeric formats, convert to standard float",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Detect numeric patterns (12.5%, 1.234, 1,234.56)"
+                },
+                {
+                  "step": 2,
+                  "description": "Normalize separators (. vs , for decimals/thousands)"
+                },
+                {
+                  "step": 3,
+                  "description": "Convert to float, preserve precision"
+                }
+              ],
+              "assumptions": [
+                "Colombian format conventions (. for thousands, , for decimals or vice versa depending on context)"
+              ],
+              "limitations": [
+                "Ambiguity in separator usage (1.234 could be 1234 or 1.234)",
+                "May fail on non-standard formats"
+              ],
+              "complexity": "O(n) where n=numeric strings"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "parsed_value": "Float representation of number",
+                "parsing_confidence": "Confidence in parsing correctness (0-1)"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.95: Unambiguous format",
+                "low_confidence": "<0.8: Ambiguous, may be misparsed"
+              },
+              "actionable_insights": [
+                "Low parsing confidence: Document uses non-standard number formatting"
+              ]
+            }
+          },
+          {
+            "method_name": "_statistical_significance_test",
+            "class_name": "PolicyContradictionDetector",
+            "priority": 13,
+            "role": "statistical_significance_testing",
+            "epistemological_foundation": {
+              "paradigm": "Frequentist hypothesis testing",
+              "ontological_basis": "Observed differences between claimed values may be due to sampling error or genuine contradictions",
+              "epistemological_stance": "Statistical inference: Use hypothesis testing to distinguish signal from noise",
+              "theoretical_framework": [
+                "Frequentist statistics: p-values quantify evidence against null hypothesis (no difference)",
+                "Error control: Significance testing controls Type I error (false positive contradictions)"
+              ],
+              "justification": "Not all numeric discrepancies are meaningful; statistical testing prevents false alarms from minor variations"
+            },
+            "technical_approach": {
+              "method_type": "hypothesis_testing_for_contradictions",
+              "algorithm": "Apply t-test or chi-square test to compare claimed values",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "For each pair of claims about same subject, compute difference"
+                },
+                {
+                  "step": 2,
+                  "description": "Estimate measurement error (if metadata available)"
+                },
+                {
+                  "step": 3,
+                  "description": "Perform significance test (H0: difference = 0)"
+                },
+                {
+                  "step": 4,
+                  "description": "Flag contradiction if p < 0.05"
+                }
+              ],
+              "assumptions": [
+                "Measurement errors are normally distributed",
+                "Alpha = 0.05 is appropriate threshold"
+              ],
+              "limitations": [
+                "Requires error estimates (often unavailable in policy documents)",
+                "Significance ≠ practical importance"
+              ],
+              "complexity": "O(n²) for pairwise comparisons of n claims"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "test_results": "List of {claim1_id, claim2_id, difference, p_value, significant}"
+              },
+              "interpretation_guide": {
+                "p < 0.05": "Statistically significant contradiction",
+                "p ≥ 0.05": "Difference not statistically significant"
+              },
+              "actionable_insights": [
+                "Significant contradictions: Data quality problem requiring investigation",
+                "Non-significant differences: Likely rounding or measurement error"
+              ]
+            }
+          },
+          {
+            "method_name": "evaluate_policy_metric",
+            "class_name": "BayesianNumericalAnalyzer",
+            "priority": 14,
+            "role": "bayesian_metric_evaluation",
+            "epistemological_foundation": {
+              "paradigm": "Bayesian statistical inference",
+              "ontological_basis": "Policy metrics (e.g., VBG rates) are uncertain quantities with probability distributions, not point estimates",
+              "epistemological_stance": "Bayesian epistemology: Knowledge is represented as probability distributions updated via Bayes' theorem",
+              "theoretical_framework": [
+                "Bayesian inference: Prior beliefs + data → posterior beliefs",
+                "Uncertainty quantification: Bayesian methods explicitly model uncertainty"
+              ],
+              "justification": "Policy baselines often come from small samples or imperfect data; Bayesian methods quantify uncertainty properly"
+            },
+            "technical_approach": {
+              "method_type": "bayesian_posterior_computation",
+              "algorithm": "Combine prior distribution with observed data to compute posterior",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Specify prior distribution for metric (e.g., Beta for rates)"
+                },
+                {
+                  "step": 2,
+                  "description": "Incorporate observed data (e.g., count of VBG cases, population)"
+                },
+                {
+                  "step": 3,
+                  "description": "Compute posterior distribution via conjugate updates or MCMC"
+                },
+                {
+                  "step": 4,
+                  "description": "Extract posterior mean, credible intervals"
+                }
+              ],
+              "assumptions": [
+                "Prior is appropriate for metric domain",
+                "Data generation process matches likelihood model"
+              ],
+              "limitations": [
+                "Prior choice affects results (subjective)",
+                "Computational cost for non-conjugate models"
+              ],
+              "complexity": "O(MCMC iterations) for non-conjugate, O(1) for conjugate"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "posterior_mean": "Point estimate of metric",
+                "credible_interval": "95% Bayesian credible interval",
+                "posterior_distribution": "Full posterior (if needed for downstream analysis)"
+              },
+              "interpretation_guide": {
+                "narrow_CI": "High precision, low uncertainty",
+                "wide_CI": "High uncertainty, more data needed"
+              },
+              "actionable_insights": [
+                "Wide credible intervals: Baseline estimates unreliable, strengthen data collection",
+                "Posterior far from prior: Data strongly updates beliefs"
+              ]
+            }
+          },
+          {
+            "method_name": "compare_policies",
+            "class_name": "BayesianNumericalAnalyzer",
+            "priority": 15,
+            "role": "bayesian_policy_comparison",
+            "epistemological_foundation": {
+              "paradigm": "Bayesian comparative analysis",
+              "ontological_basis": "Comparing municipalities or policy cycles requires accounting for uncertainty in all estimates",
+              "epistemological_stance": "Probabilistic comparison: Compare posterior distributions, not point estimates",
+              "theoretical_framework": [
+                "Bayesian model comparison: Quantify probability that policy A > policy B",
+                "Decision theory: Bayesian methods support rational decision-making under uncertainty"
+              ],
+              "justification": "Ranking municipalities by baseline indicators requires proper uncertainty quantification to avoid spurious rankings"
+            },
+            "technical_approach": {
+              "method_type": "posterior_distribution_comparison",
+              "algorithm": "Compute P(metric_A > metric_B | data) from posterior samples",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Obtain posterior distributions for both policies"
+                },
+                {
+                  "step": 2,
+                  "description": "Draw samples from both posteriors"
+                },
+                {
+                  "step": 3,
+                  "description": "Compute proportion of samples where policy A > policy B"
+                },
+                {
+                  "step": 4,
+                  "description": "Report probability and effect size"
+                }
+              ],
+              "assumptions": [
+                "Posteriors are correctly specified",
+                "Sufficient samples for stable probability estimate"
+              ],
+              "limitations": [
+                "Requires posterior samples (computational cost)",
+                "Interpretation requires Bayesian literacy"
+              ],
+              "complexity": "O(S) where S=number of posterior samples"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "prob_A_better": "P(metric_A > metric_B | data)",
+                "effect_size": "Mean difference in metric",
+                "overlap": "Degree of posterior overlap"
+              },
+              "interpretation_guide": {
+                "P > 0.95": "Strong evidence A is better",
+                "0.75 < P < 0.95": "Moderate evidence",
+                "P ≈ 0.5": "No clear difference"
+              },
+              "actionable_insights": [
+                "High overlap despite different point estimates: Differences not meaningful given uncertainty",
+                "Clear separation: Confident ranking"
+              ]
+            }
+          },
+          {
+            "method_name": "chunk_text",
+            "class_name": "SemanticProcessor",
+            "priority": 16,
+            "role": "text_chunking_for_embedding",
+            "epistemological_foundation": {
+              "paradigm": "Semantic preprocessing for neural methods",
+              "ontological_basis": "Long documents must be divided into chunks that fit neural model context windows while preserving semantic coherence",
+              "epistemological_stance": "Pragmatism: Chunking strategies are justified by their utility for downstream tasks (embedding, retrieval)",
+              "theoretical_framework": [
+                "Information retrieval: Chunk granularity affects retrieval precision and recall",
+                "Neural model constraints: Transformer models have fixed context windows requiring chunking"
+              ],
+              "justification": "Semantic search and embedding require chunked text; good chunking preserves semantic units (paragraphs, sections)"
+            },
+            "technical_approach": {
+              "method_type": "semantic_aware_text_chunking",
+              "algorithm": "Chunk by paragraph/section with overlap to preserve context",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Identify natural boundaries (paragraphs, sections)"
+                },
+                {
+                  "step": 2,
+                  "description": "Create chunks respecting boundaries, max N tokens"
+                },
+                {
+                  "step": 3,
+                  "description": "Add overlap (e.g., 50 tokens) between chunks for continuity"
+                }
+              ],
+              "assumptions": [
+                "Document has clear structural boundaries",
+                "Overlap improves retrieval (empirical assumption)"
+              ],
+              "limitations": [
+                "Fixed chunk size may split semantic units",
+                "Overlap increases storage and computation"
+              ],
+              "complexity": "O(n) where n=document length"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "chunks": "List of {chunk_text, start_pos, end_pos, chunk_id}"
+              },
+              "interpretation_guide": {
+                "many_small_chunks": "Document is dense or highly structured",
+                "few_large_chunks": "Document is sparse or unstructured"
+              },
+              "actionable_insights": [
+                "Chunk boundaries split semantic units: Consider different chunking strategy",
+                "Chunks align with document structure: Good chunking"
+              ]
+            }
+          },
+          {
+            "method_name": "embed_single",
+            "class_name": "SemanticProcessor",
+            "priority": 17,
+            "role": "semantic_embedding",
+            "epistemological_foundation": {
+              "paradigm": "Distributional semantics via neural embeddings",
+              "ontological_basis": "Text meaning can be represented as high-dimensional vectors in semantic space",
+              "epistemological_stance": "Distributional hypothesis: Words/phrases with similar meanings occur in similar contexts, captured by embeddings",
+              "theoretical_framework": [
+                "Vector semantics: Meaning is position in vector space",
+                "Neural language models: Transformers learn contextual representations"
+              ],
+              "justification": "Embeddings enable semantic similarity search and clustering beyond keyword matching"
+            },
+            "technical_approach": {
+              "method_type": "transformer_based_text_embedding",
+              "algorithm": "Pass text through pretrained transformer, extract embedding vector",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Tokenize text for transformer model"
+                },
+                {
+                  "step": 2,
+                  "description": "Pass through model (e.g., BERT, MPNet)"
+                },
+                {
+                  "step": 3,
+                  "description": "Extract embedding (e.g., [CLS] token or mean pooling)"
+                },
+                {
+                  "step": 4,
+                  "description": "Normalize to unit vector"
+                }
+              ],
+              "assumptions": [
+                "Pretrained model generalizes to policy domain",
+                "Embedding dimensionality (e.g., 768) captures relevant semantics"
+              ],
+              "limitations": [
+                "Domain shift: Model trained on general text may miss domain-specific nuances",
+                "Black box: Embeddings are not directly interpretable"
+              ],
+              "complexity": "O(L) where L=sequence length for transformer forward pass"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "embedding": "Dense vector (e.g., 768-dim float array)",
+                "model_id": "Identifier of embedding model used"
+              },
+              "interpretation_guide": {
+                "cosine_similarity": "Use cosine similarity to compare embeddings",
+                "clustering": "High-dimensional clustering reveals thematic groups"
+              },
+              "actionable_insights": [
+                "Low similarity between baseline and goals: Diagnostic-planning disconnect",
+                "High similarity: Coherent evidence-based planning"
+              ]
+            }
+          }
+        ],
+        "method_combination_logic": {
+          "combination_strategy": "Sequential multi-method pipeline with evidence fusion",
+          "rationale": "D1-Q1 requires comprehensive extraction of quantitative baseline data from multiple sources (text, tables, causal links). The 17 methods cover complementary aspects: text mining (methods 1-5), goal extraction (6-7), financial analysis (8-10), contradiction detection (11-13), Bayesian inference (14-15), and semantic processing (16-17).",
+          "evidence_fusion": "Evidence from all 17 methods is aggregated by the EvidenceAssembler. Overlapping evidence (e.g., same numeric value detected by multiple methods) is deduplicated. Confidence scores are combined via weighted averaging.",
+          "confidence_aggregation": "Final confidence per evidence element = weighted_mean([confidence_method1, confidence_method2, ...]) where weights reflect method reliability (e.g., Bayesian methods have higher weight than simple regex).",
+          "execution_order": "Methods execute in priority order (1→17). Later methods can access outputs of earlier methods (e.g., method 7 uses goals extracted by method 6).",
+          "trade_offs": [
+            "Comprehensiveness vs. Complexity: 17 methods ensure thorough coverage but increase computational cost and maintenance burden",
+            "Precision vs. Recall: Multiple methods increase recall (find more evidence) but may introduce redundancy; deduplication and confidence weighting mitigate this",
+            "Interpretability vs. Sophistication: Bayesian and embedding methods are powerful but less transparent than regex; human_readable_output compensates via methodological documentation"
+          ]
+        }
+      }
+    }
+  },
+  "validation_rules": {
+    "na_policy": "abort_on_critical",
+    "rules": [
+      {
+        "field": "elements_found",
+        "type": "array",
+        "must_contain": {
+          "count": 1,
+          "elements": [
+            "cobertura_territorial_especificada"
+          ]
+        },
+        "description": "Derived from monolith expected_elements where required is true"
+      },
+      {
+        "field": "elements_found",
+        "type": "array",
+        "should_contain": [
+          {
+            "elements": [
+              "fuentes_oficiales"
+            ],
+            "minimum": 2
+          },
+          {
+            "elements": [
+              "indicadores_cuantitativos"
+            ],
+            "minimum": 3
+          },
+          {
+            "elements": [
+              "series_temporales_años"
+            ],
+            "minimum": 3
+          }
+        ],
+        "description": "Derived from monolith expected_elements with minimum counts"
+      }
+    ]
+  },
+  "traceability": {
+    "source_file": "data/questionnaire_monolith.json",
+    "json_path": "blocks.micro_questions[270]",
+    "method_source": "src/saaaaaa/core/orchestrator/executors.py:D1_Q1_Executor",
+    "method_mapping_source": "executor_methods_mapping.json",
+    "ontology_source": "config/canonical_ontologies/policy_areas_and_dimensions.json",
+    "source_hash": "TODO_SHA256_HASH_OF_QUESTIONNAIRE_MONOLITH",
+    "contract_generation_method": "automated_specialization_from_monolith",
+    "contract_author": "F.A.R.F.A.N Mechanistic Policy Pipeline",
+    "provenance_note": "This contract was generated with full multi-method orchestration support. The method_binding.methods array contains all 17 methods from D1_Q1_QuantitativeBaselineExtractor, and human_answer_structure documents the expected evidence output after execution.",
+    "source_question_id": "Q211",
+    "specialized_from_base_slot": "D1-Q1",
+    "specialization_timestamp": "2025-11-28T03:50:41.908805+00:00"
+  },
+  "error_handling": {
+    "on_method_not_found": "raise",
+    "on_method_failure": "propagate_with_trace",
+    "on_assembly_failure": "propagate_with_trace",
+    "failure_contract": {
+      "abort_if": [
+        "missing_required_element",
+        "incomplete_text"
+      ],
+      "emit_code": "ABORT-Q211-REQ"
+    }
+  },
+  "fallback_strategy": {
+    "use_llm_direct": false,
+    "use_heuristics": false,
+    "note": "No fallback strategies enabled. All failures propagate according to error_handling configuration."
+  },
+  "test_configuration": {
+    "test_files": [
+      "tests/core/orchestrator/test_executors_contract.py",
+      "tests/core/phases/test_phase2.py"
+    ],
+    "test_document_fixtures": [
+      "tests/fixtures/preprocessed_documents/sample_pdet_plan.json"
+    ],
+    "expected_test_coverage": ">=90%",
+    "integration_test_required": true
+  },
+  "compatibility": {
+    "orchestrator_min_version": "TODO_VERSION",
+    "signal_registry_min_version": "TODO_VERSION",
+    "method_executor_min_version": "TODO_VERSION",
+    "questionnaire_monolith_version": "3.0.0",
+    "phase2_types_version": "TODO_VERSION"
+  },
+  "calibration": {
+    "status": "placeholder",
+    "note": "Contract does not embed calibration scores. Actual calibration managed via src/saaaaaa/core/calibration/ + config/intrinsic_calibration.json + config/fusion_specification.json",
+    "source": {
+      "intrinsic_calibration": "config/intrinsic_calibration.json",
+      "fusion_specification": "config/fusion_specification.json",
+      "layer_calibrations_dir": "config/layer_calibrations/",
+      "canonical_spec": "canonic_calibration_methods.md"
+    }
+  },
+  "human_answer_structure": {
+    "description": "Expected structure of evidence dict after all 17 methods execute and evidence is assembled according to assembly_rules",
+    "assembly_flow": {
+      "step_1_method_execution": "17 methods execute in priority order, outputs stored with dot-notation keys",
+      "step_2_evidence_assembly": "EvidenceAssembler merges outputs according to assembly_rules",
+      "step_3_validation": "EvidenceValidator checks against validation_rules",
+      "step_4_output_generation": "Phase2QuestionResult constructed with evidence, validation, trace"
+    },
+    "evidence_structure_schema": {
+      "type": "object",
+      "description": "Assembled evidence after all methods complete",
+      "properties": {
+        "elements_found": {
+          "type": "array",
+          "description": "Concatenated evidence elements from multiple methods (assembly_rules target)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "element_id": {
+                "type": "string",
+                "example": "E-001"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "fuentes_oficiales",
+                  "indicadores_cuantitativos",
+                  "series_temporales_años",
+                  "cobertura_territorial_especificada",
+                  "financial_amounts",
+                  "policy_goals",
+                  "causal_links"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "example": "DANE"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "source_method": {
+                "type": "string",
+                "example": "IndustrialPolicyProcessor._extract_point_evidence"
+              },
+              "sentence_id": {
+                "type": "integer"
+              },
+              "context": {
+                "type": "string"
+              }
+            }
+          },
+          "example_count": "Expected 15-50 elements for a complete diagnostic"
+        },
+        "elements_summary": {
+          "type": "object",
+          "properties": {
+            "total_count": {
+              "type": "integer"
+            },
+            "by_type": {
+              "type": "object",
+              "properties": {
+                "fuentes_oficiales": {
+                  "type": "integer",
+                  "minimum_expected": 2
+                },
+                "indicadores_cuantitativos": {
+                  "type": "integer",
+                  "minimum_expected": 3
+                },
+                "series_temporales_años": {
+                  "type": "integer",
+                  "minimum_expected": 3
+                },
+                "cobertura_territorial_especificada": {
+                  "type": "integer",
+                  "minimum_expected": 1
+                }
+              }
+            }
+          }
+        },
+        "confidence_scores": {
+          "type": "object",
+          "description": "Aggregated confidence metrics (weighted_mean strategy)",
+          "properties": {
+            "mean": {
+              "type": "number"
+            },
+            "std": {
+              "type": "number"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "by_method": {
+              "type": "object",
+              "description": "Average confidence per analyzer class"
+            }
+          }
+        },
+        "pattern_matches": {
+          "type": "array",
+          "description": "Aggregated pattern matches from text mining methods",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern_id": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer"
+              },
+              "avg_confidence": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "critical_links": {
+          "type": "array",
+          "description": "Causal links extracted by TextMiningEngine",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cause": {
+                "type": "string"
+              },
+              "effect": {
+                "type": "string"
+              },
+              "criticality": {
+                "type": "number"
+              },
+              "coherence": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "financial_summary": {
+          "type": "object",
+          "description": "Aggregated financial data from FinancialAuditor and PDETMunicipalPlanAnalyzer",
+          "properties": {
+            "total_budget_cop": {
+              "type": "number"
+            },
+            "amounts_found": {
+              "type": "integer"
+            },
+            "by_category": {
+              "type": "object",
+              "properties": {
+                "SGR": {
+                  "type": "number"
+                },
+                "recursos_propios": {
+                  "type": "number"
+                },
+                "transferencias": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "goals_summary": {
+          "type": "object",
+          "description": "Policy goals extracted by CausalExtractor",
+          "properties": {
+            "total_goals": {
+              "type": "integer"
+            },
+            "quantified_goals": {
+              "type": "integer"
+            },
+            "goals_with_complete_context": {
+              "type": "integer"
+            }
+          }
+        },
+        "contradictions": {
+          "type": "object",
+          "description": "Results from PolicyContradictionDetector",
+          "properties": {
+            "found": {
+              "type": "integer"
+            },
+            "tests_performed": {
+              "type": "integer"
+            },
+            "interpretation": {
+              "type": "string"
+            }
+          }
+        },
+        "bayesian_insights": {
+          "type": "object",
+          "description": "Results from BayesianNumericalAnalyzer",
+          "properties": {
+            "metrics_with_high_uncertainty": {
+              "type": "array"
+            },
+            "significant_comparisons": {
+              "type": "integer"
+            }
+          }
+        },
+        "semantic_processing": {
+          "type": "object",
+          "description": "Results from SemanticProcessor",
+          "properties": {
+            "chunks_created": {
+              "type": "integer"
+            },
+            "embeddings_generated": {
+              "type": "integer"
+            },
+            "avg_semantic_similarity_to_query": {
+              "type": "number"
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "methods_executed": {
+              "type": "integer",
+              "const": 17
+            },
+            "execution_time_ms": {
+              "type": "number"
+            },
+            "document_length": {
+              "type": "integer"
+            },
+            "analysis_timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "concrete_example": {
+      "elements_found": [
+        {
+          "element_id": "E-001",
+          "type": "fuentes_oficiales",
+          "value": "DANE",
+          "confidence": 0.95,
+          "source_method": "IndustrialPolicyProcessor._extract_point_evidence",
+          "source_sentence": "según datos de DANE para el año 2022",
+          "sentence_id": 45,
+          "position": {
+            "start": 123,
+            "end": 145
+          }
+        },
+        {
+          "element_id": "E-002",
+          "type": "indicadores_cuantitativos",
+          "value": "tasa de VBG: 12.3%",
+          "normalized_value": 12.3,
+          "unit": "%",
+          "confidence": 0.89,
+          "source_method": "PolicyContradictionDetector._extract_quantitative_claims",
+          "bayesian_posterior": {
+            "mean": 0.123,
+            "ci_95": [
+              0.11,
+              0.145
+            ]
+          },
+          "sentence_id": 45
+        },
+        {
+          "element_id": "E-003",
+          "type": "series_temporales_años",
+          "years": [
+            2020,
+            2021,
+            2022
+          ],
+          "confidence": 0.92,
+          "source_method": "TextMiningEngine.diagnose_critical_links"
+        },
+        {
+          "element_id": "E-004",
+          "type": "cobertura_territorial_especificada",
+          "coverage": "municipal - zona rural y urbana",
+          "confidence": 0.88,
+          "source_method": "CausalExtractor._parse_goal_context"
+        }
+      ],
+      "elements_summary": {
+        "total_count": 38,
+        "by_type": {
+          "fuentes_oficiales": 5,
+          "indicadores_cuantitativos": 12,
+          "series_temporales_años": 4,
+          "cobertura_territorial_especificada": 1,
+          "financial_amounts": 8,
+          "policy_goals": 7,
+          "causal_links": 5
+        }
+      },
+      "confidence_scores": {
+        "mean": 0.876,
+        "std": 0.089,
+        "min": 0.72,
+        "max": 0.98,
+        "by_method": {
+          "TextMiningEngine": 0.83,
+          "IndustrialPolicyProcessor": 0.91,
+          "CausalExtractor": 0.79,
+          "FinancialAuditor": 0.94,
+          "PDETMunicipalPlanAnalyzer": 0.88,
+          "PolicyContradictionDetector": 0.9,
+          "BayesianNumericalAnalyzer": 0.92,
+          "SemanticProcessor": 0.85
+        }
+      },
+      "pattern_matches": [
+        {
+          "pattern_id": "PAT-Q001-000",
+          "count": 3,
+          "avg_confidence": 0.87
+        },
+        {
+          "pattern_id": "PAT-Q001-002",
+          "count": 5,
+          "avg_confidence": 0.95
+        }
+      ],
+      "critical_links": [
+        {
+          "cause": "alta tasa de VBG",
+          "effect": "baja autonomía económica",
+          "criticality": 0.87,
+          "coherence": 0.82
+        }
+      ],
+      "financial_summary": {
+        "total_budget_cop": 850000000.0,
+        "amounts_found": 12,
+        "by_category": {
+          "SGR": 250000000.0,
+          "recursos_propios": 180000000.0
+        }
+      },
+      "goals_summary": {
+        "total_goals": 7,
+        "quantified_goals": 5,
+        "goals_with_complete_context": 4
+      },
+      "contradictions": {
+        "found": 0,
+        "tests_performed": 15,
+        "interpretation": "No statistical contradictions in quantitative claims"
+      },
+      "bayesian_insights": {
+        "metrics_with_high_uncertainty": [],
+        "significant_comparisons": 1
+      },
+      "semantic_processing": {
+        "chunks_created": 45,
+        "embeddings_generated": 45,
+        "avg_semantic_similarity_to_query": 0.78
+      },
+      "metadata": {
+        "methods_executed": 17,
+        "execution_time_ms": 2845,
+        "document_length": 15230,
+        "analysis_timestamp": "2025-11-26T12:34:56Z"
+      }
+    },
+    "validation_against_expected_elements": {
+      "cobertura_territorial_especificada": {
+        "required": true,
+        "found_in_example": true,
+        "example_element_id": "E-004"
+      },
+      "fuentes_oficiales": {
+        "minimum": 2,
+        "found_in_example": 5,
+        "status": "PASS"
+      },
+      "indicadores_cuantitativos": {
+        "minimum": 3,
+        "found_in_example": 12,
+        "status": "PASS"
+      },
+      "series_temporales_años": {
+        "minimum": 3,
+        "found_in_example": 4,
+        "status": "PASS"
+      },
+      "overall_validation_result": "PASS - All required and minimum elements present"
+    },
+    "template_variable_bindings": {
+      "description": "These variables are available for human_readable_output template",
+      "variables": {
+        "{evidence.elements_found_count}": 38,
+        "{score}": "Calculated by scorer based on elements",
+        "{quality_level}": "ALTO",
+        "{evidence.confidence_scores.mean}": "87.6%",
+        "{evidence.pattern_matches_count}": 14,
+        "{evidence.official_sources_count}": 5,
+        "{evidence.quantitative_indicators_count}": 12,
+        "{evidence.temporal_series_count}": 4,
+        "{evidence.territorial_coverage}": "municipal - zona rural y urbana"
+      }
+    },
+    "usage_notes": {
+      "for_developers": "This structure shows the expected evidence dict after BaseExecutorWithContract._execute_v3() completes all 17 method executions and evidence assembly.",
+      "for_validators": "Use this to verify that actual execution output matches expected structure.",
+      "for_auditors": "This provides traceability from raw method outputs to final assembled evidence."
+    }
+  }
+}

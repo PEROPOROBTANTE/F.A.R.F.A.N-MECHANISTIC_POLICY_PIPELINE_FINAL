@@ -1,0 +1,2361 @@
+{
+  "identity": {
+    "base_slot": "D3-Q5",
+    "question_id": "Q075",
+    "dimension_id": "DIM03",
+    "policy_area_id": "PA02",
+    "contract_version": "3.0.0",
+    "contract_hash": "TODO_COMPUTE_SHA256_OF_THIS_FILE",
+    "created_at": "2025-11-28T03:50:09.636401+00:00",
+    "validated_against_schema": "executor_contract.v3.schema.json",
+    "cluster_id": "CL01",
+    "question_global": 75
+  },
+  "executor_binding": {
+    "executor_class": "D3_Q5_Executor",
+    "executor_module": "saaaaaa.core.orchestrator.executors"
+  },
+  "method_binding": {
+    "orchestration_mode": "multi_method_pipeline",
+    "method_count": 25,
+    "methods": [
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_identify_confounders",
+        "priority": 1,
+        "provides": "pdet_analysis.identify_confounders",
+        "role": "_identify_confounders_execution",
+        "description": "PDETMunicipalPlanAnalyzer._identify_confounders"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_effect_to_dict",
+        "priority": 2,
+        "provides": "pdet_analysis.effect_to_dict",
+        "role": "_effect_to_dict_execution",
+        "description": "PDETMunicipalPlanAnalyzer._effect_to_dict"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_scenario_to_dict",
+        "priority": 3,
+        "provides": "pdet_analysis.scenario_to_dict",
+        "role": "_scenario_to_dict_execution",
+        "description": "PDETMunicipalPlanAnalyzer._scenario_to_dict"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_simulate_intervention",
+        "priority": 4,
+        "provides": "pdet_analysis.simulate_intervention",
+        "role": "_simulate_intervention_execution",
+        "description": "PDETMunicipalPlanAnalyzer._simulate_intervention"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_generate_recommendations",
+        "priority": 5,
+        "provides": "pdet_analysis.generate_recommendations",
+        "role": "_generate_recommendations_execution",
+        "description": "PDETMunicipalPlanAnalyzer._generate_recommendations"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_identify_causal_nodes",
+        "priority": 6,
+        "provides": "pdet_analysis.identify_causal_nodes",
+        "role": "_identify_causal_nodes_execution",
+        "description": "PDETMunicipalPlanAnalyzer._identify_causal_nodes"
+      },
+      {
+        "class_name": "BayesianCounterfactualAuditor",
+        "method_name": "_evaluate_factual",
+        "priority": 7,
+        "provides": "bayesiancounterfactualauditor.evaluate_factual",
+        "role": "_evaluate_factual_evaluation",
+        "description": "BayesianCounterfactualAuditor._evaluate_factual"
+      },
+      {
+        "class_name": "BayesianCounterfactualAuditor",
+        "method_name": "_evaluate_counterfactual",
+        "priority": 8,
+        "provides": "bayesiancounterfactualauditor.evaluate_counterfactual",
+        "role": "_evaluate_counterfactual_evaluation",
+        "description": "BayesianCounterfactualAuditor._evaluate_counterfactual"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_assess_financial_consistency",
+        "priority": 9,
+        "provides": "causal_extraction.assess_financial_consistency",
+        "role": "_assess_financial_consistency_execution",
+        "description": "CausalExtractor._assess_financial_consistency"
+      },
+      {
+        "class_name": "BayesianMechanismInference",
+        "method_name": "_infer_activity_sequence",
+        "priority": 10,
+        "provides": "bayesianmechanisminference.infer_activity_sequence",
+        "role": "_infer_activity_sequence_execution",
+        "description": "BayesianMechanismInference._infer_activity_sequence"
+      },
+      {
+        "class_name": "BayesianMechanismInference",
+        "method_name": "_generate_necessity_remediation",
+        "priority": 11,
+        "provides": "bayesianmechanisminference.generate_necessity_remediation",
+        "role": "_generate_necessity_remediation_execution",
+        "description": "BayesianMechanismInference._generate_necessity_remediation"
+      },
+      {
+        "class_name": "BayesianCounterfactualAuditor",
+        "method_name": "refutation_and_sanity_checks",
+        "priority": 12,
+        "provides": "bayesiancounterfactualauditor.refutation_and_sanity_checks",
+        "role": "refutation_and_sanity_checks_execution",
+        "description": "BayesianCounterfactualAuditor.refutation_and_sanity_checks"
+      },
+      {
+        "class_name": "IndustrialPolicyProcessor",
+        "method_name": "_load_questionnaire",
+        "priority": 13,
+        "provides": "industrial_policy.load_questionnaire",
+        "role": "_load_questionnaire_execution",
+        "description": "IndustrialPolicyProcessor._load_questionnaire"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "analyze_financial_feasibility",
+        "priority": 14,
+        "provides": "pdet_analysis.analyze_financial_feasibility",
+        "role": "analyze_financial_feasibility_analysis",
+        "description": "PDETMunicipalPlanAnalyzer.analyze_financial_feasibility"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "construct_causal_dag",
+        "priority": 15,
+        "provides": "pdet_analysis.construct_causal_dag",
+        "role": "construct_causal_dag_execution",
+        "description": "PDETMunicipalPlanAnalyzer.construct_causal_dag"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "estimate_causal_effects",
+        "priority": 16,
+        "provides": "pdet_analysis.estimate_causal_effects",
+        "role": "estimate_causal_effects_execution",
+        "description": "PDETMunicipalPlanAnalyzer.estimate_causal_effects"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "generate_counterfactuals",
+        "priority": 17,
+        "provides": "pdet_analysis.generate_counterfactuals",
+        "role": "generate_counterfactuals_execution",
+        "description": "PDETMunicipalPlanAnalyzer.generate_counterfactuals"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_build_type_hierarchy",
+        "priority": 18,
+        "provides": "causal_extraction.build_type_hierarchy",
+        "role": "_build_type_hierarchy_execution",
+        "description": "CausalExtractor._build_type_hierarchy"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_check_structural_violation",
+        "priority": 19,
+        "provides": "causal_extraction.check_structural_violation",
+        "role": "_check_structural_violation_execution",
+        "description": "CausalExtractor._check_structural_violation"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_calculate_type_transition_prior",
+        "priority": 20,
+        "provides": "causal_extraction.calculate_type_transition_prior",
+        "role": "_calculate_type_transition_prior_calculation",
+        "description": "CausalExtractor._calculate_type_transition_prior"
+      },
+      {
+        "class_name": "CausalExtractor",
+        "method_name": "_calculate_textual_proximity",
+        "priority": 21,
+        "provides": "causal_extraction.calculate_textual_proximity",
+        "role": "_calculate_textual_proximity_calculation",
+        "description": "CausalExtractor._calculate_textual_proximity"
+      },
+      {
+        "class_name": "TeoriaCambio",
+        "method_name": "_validar_orden_causal",
+        "priority": 22,
+        "provides": "teoriacambio.validar_orden_causal",
+        "role": "_validar_orden_causal_execution",
+        "description": "TeoriaCambio._validar_orden_causal"
+      },
+      {
+        "class_name": "PDETMunicipalPlanAnalyzer",
+        "method_name": "_refine_edge_probabilities",
+        "priority": 23,
+        "provides": "pdet_analysis.refine_edge_probabilities",
+        "role": "_refine_edge_probabilities_execution",
+        "description": "PDETMunicipalPlanAnalyzer._refine_edge_probabilities"
+      },
+      {
+        "class_name": "PolicyAnalysisEmbedder",
+        "method_name": "compare_policy_interventions",
+        "priority": 24,
+        "provides": "policyanalysisembedder.compare_policy_interventions",
+        "role": "compare_policy_interventions_comparison",
+        "description": "PolicyAnalysisEmbedder.compare_policy_interventions"
+      },
+      {
+        "class_name": "BayesianMechanismInference",
+        "method_name": "infer_mechanisms",
+        "priority": 25,
+        "provides": "bayesianmechanisminference.infer_mechanisms",
+        "role": "infer_mechanisms_execution",
+        "description": "BayesianMechanismInference.infer_mechanisms"
+      }
+    ],
+    "note": "All 25 methods extracted from D3_Q5_Executor in executors.py"
+  },
+  "question_context": {
+    "question_text": "¿El PDM explica cómo los productos de protección (ej. 'personas atendidas en albergues') contribuyen a generar resultados (ej. 'reducción de la vulnerabilidad')? Se debe buscar la descripción de este 'mecanismo' causal.",
+    "question_type": "micro",
+    "scoring_modality": "TYPE_A",
+    "modality": "count_and_scale",
+    "expected_output_type": "score",
+    "patterns": [
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q075-000",
+        "match_type": "REGEX",
+        "pattern": "la atención humanitaria permite que|lo cual contribuirá a reducir"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q075-001",
+        "match_type": "LITERAL",
+        "pattern": "el mecanismo es|la lógica es que"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q075-002",
+        "match_type": "REGEX",
+        "pattern": "al activar las rutas de protección, se reduce la probabilidad de un hecho victimizante"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q075-003",
+        "match_type": "REGEX",
+        "pattern": "el acompañamiento a comunidades genera capacidades de autoprotección, lo que resulta en..."
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q075-004",
+        "match_type": "REGEX",
+        "pattern": "variable intermedia|mediador|eslabón causal"
+      },
+      {
+        "category": "GENERAL",
+        "confidence_weight": 0.85,
+        "flags": "i",
+        "id": "PAT-Q075-005",
+        "match_type": "REGEX",
+        "pattern": "cadena de valor de la protección|ruta de cambio"
+      }
+    ],
+    "expected_elements": [
+      {
+        "required": true,
+        "type": "conexion_producto_resultado"
+      },
+      {
+        "required": true,
+        "type": "mecanismo_causal_explicito"
+      }
+    ],
+    "validations": {}
+  },
+  "signal_requirements": {
+    "mandatory_signals": [],
+    "optional_signals": [],
+    "signal_aggregation": "weighted_mean",
+    "minimum_signal_threshold": 0.0,
+    "note": "Signal requirements are currently under development. Signal IDs will be populated once the signal_registry provides a canonical mapping for PA01/DIM01."
+  },
+  "evidence_assembly": {
+    "module": "saaaaaa.core.orchestrator.evidence_assembler",
+    "class_name": "EvidenceAssembler",
+    "method_name": "assemble",
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "elements",
+        "raw_results"
+      ],
+      "properties": {
+        "elements": {
+          "type": "array",
+          "description": "Lista de elementos de evidencia encontrados para esta micro-pregunta."
+        },
+        "raw_results": {
+          "type": "object",
+          "properties": {
+            "confidence_scores": {
+              "type": "array",
+              "description": "Scores de confianza usados por el scorer."
+            },
+            "semantic_similarity": {
+              "description": "Métrica de similitud semántica (si aplica)."
+            },
+            "pattern_matches": {
+              "type": "object",
+              "description": "Matches de patrones esperados vs texto."
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Metadatos arbitrarios pasados al scorer."
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "assembly_rules": [
+      {
+        "target": "elements_found",
+        "sources": [
+          "text_mining.critical_links",
+          "industrial_policy.processed_evidence",
+          "causal_extraction.goals",
+          "financial_audit.amounts",
+          "pdet_analysis.financial_data",
+          "contradiction_detection.quantitative_claims",
+          "bayesian_analysis.policy_metrics"
+        ],
+        "merge_strategy": "concat",
+        "description": "Combine all evidence elements from 17 method invocations"
+      },
+      {
+        "target": "confidence_scores",
+        "sources": [
+          "*.confidence",
+          "*.bayesian_posterior"
+        ],
+        "merge_strategy": "weighted_mean",
+        "default": [],
+        "description": "Aggregate confidence scores across all methods"
+      },
+      {
+        "target": "pattern_matches",
+        "sources": [
+          "text_mining.patterns",
+          "industrial_policy.patterns"
+        ],
+        "merge_strategy": "concat",
+        "default": {},
+        "description": "Combine pattern matches from text mining methods"
+      },
+      {
+        "target": "metadata",
+        "sources": [
+          "*.metadata"
+        ],
+        "merge_strategy": "concat",
+        "description": "Combine metadata from all 17 methods for full traceability"
+      }
+    ]
+  },
+  "output_contract": {
+    "result_type": "Phase2QuestionResult",
+    "schema": {
+      "type": "object",
+      "required": [
+        "base_slot",
+        "question_id",
+        "question_global",
+        "evidence",
+        "validation"
+      ],
+      "properties": {
+        "base_slot": {
+          "type": "string",
+          "description": "Debe coincidir con identity.base_slot.",
+          "const": "D3-Q5"
+        },
+        "question_id": {
+          "type": "string",
+          "description": "Debe coincidir con identity.question_id.",
+          "const": "Q285"
+        },
+        "question_global": {
+          "type": "integer",
+          "description": "Índice global de la pregunta (de questionnaire_monolith).",
+          "const": 285
+        },
+        "policy_area_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "PA canónica, debe ser coherente con identity.policy_area_id.",
+          "const": "PA09"
+        },
+        "dimension_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Dimensión canónica, coherente con identity.dimension_id.",
+          "const": null
+        },
+        "cluster_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cluster de análisis según el monolith, si aplica.",
+          "const": null
+        },
+        "evidence": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Objeto de evidencia ensamblado por el EvidenceAssembler; debe cumplir evidence_assembly.output_schema.",
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Resultado de validaciones lógicas de la respuesta (coherencia, integridad, etc.).",
+          "additionalProperties": true
+        },
+        "trace": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Información de trazabilidad (provenance, logs) específica de la ejecución.",
+          "additionalProperties": true
+        },
+        "metadata": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Metadatos adicionales de la pregunta para consumo posterior.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "consumer_modules": [
+      "src.saaaaaa.core.phases.phase2_types.validate_phase2_result",
+      "src.saaaaaa.core.orchestrator.core.Orchestrator._score_micro_results_async",
+      "src.saaaaaa.analysis.scoring.MicroQuestionScorer"
+    ],
+    "human_readable_output": {
+      "format": "markdown",
+      "template": {
+        "title": "## Análisis D1-Q1: Línea Base Cuantitativa en Derechos de las Mujeres",
+        "summary": "### Resumen Ejecutivo\n\nSe analizó la presencia de **{evidence.elements_found_count}** elementos de evidencia cuantitativa relacionados con la línea base diagnóstica en el área de Derechos de las Mujeres e Igualdad de Género.\n\n**Puntaje**: {score}/3.0 | **Calidad**: {quality_level}",
+        "score_section": "### Evaluación Cuantitativa\n\n- **Puntaje bruto**: {score}/3.0\n- **Nivel de calidad**: {quality_level}\n- **Confianza promedio**: {evidence.confidence_scores.mean}%\n- **Cobertura de patrones**: {evidence.pattern_matches_count}/14 patrones detectados",
+        "elements_section": "### Elementos de Evidencia Identificados\n\n{evidence.elements_found_list}\n\n**Elementos críticos faltantes**: {evidence.missing_required_elements}",
+        "details": [
+          "**Fuentes oficiales identificadas**: {evidence.official_sources_count}",
+          "**Indicadores cuantitativos**: {evidence.quantitative_indicators_count}",
+          "**Series temporales**: {evidence.temporal_series_count}",
+          "**Cobertura territorial**: {evidence.territorial_coverage}"
+        ],
+        "interpretation": "### Interpretación de Resultados\n\n{methodological_interpretation}",
+        "recommendations": "### Recomendaciones\n\n{evidence.recommendations}"
+      },
+      "methodological_depth": {
+        "methods": [
+          {
+            "method_name": "_identify_confounders",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 1,
+            "role": "_identify_confounders_identification",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._identify_confounders",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _identify_confounders implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._identify_confounders algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _identify_confounders"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _identify_confounders"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _identify_confounders results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_effect_to_dict",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 2,
+            "role": "_effect_to_dict",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._effect_to_dict",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _effect_to_dict implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._effect_to_dict algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _effect_to_dict"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _effect_to_dict"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _effect_to_dict results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_scenario_to_dict",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 3,
+            "role": "_scenario_to_dict",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._scenario_to_dict",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _scenario_to_dict implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._scenario_to_dict algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _scenario_to_dict"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _scenario_to_dict"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _scenario_to_dict results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_simulate_intervention",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 4,
+            "role": "_simulate_intervention",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._simulate_intervention",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _simulate_intervention implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._simulate_intervention algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _simulate_intervention"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _simulate_intervention"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _simulate_intervention results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_generate_recommendations",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 5,
+            "role": "_generate_recommendations_generation",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._generate_recommendations",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _generate_recommendations implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._generate_recommendations algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _generate_recommendations"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _generate_recommendations"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _generate_recommendations results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_identify_causal_nodes",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 6,
+            "role": "_identify_causal_nodes_identification",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._identify_causal_nodes",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _identify_causal_nodes implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._identify_causal_nodes algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _identify_causal_nodes"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _identify_causal_nodes"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _identify_causal_nodes results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_evaluate_factual",
+            "class_name": "BayesianCounterfactualAuditor",
+            "priority": 7,
+            "role": "_evaluate_factual_evaluation",
+            "epistemological_foundation": {
+              "paradigm": "BayesianCounterfactualAuditor analytical paradigm",
+              "ontological_basis": "Analysis via BayesianCounterfactualAuditor._evaluate_factual",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _evaluate_factual implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "BayesianCounterfactualAuditor._evaluate_factual algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _evaluate_factual"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _evaluate_factual"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _evaluate_factual results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_evaluate_counterfactual",
+            "class_name": "BayesianCounterfactualAuditor",
+            "priority": 8,
+            "role": "_evaluate_counterfactual_evaluation",
+            "epistemological_foundation": {
+              "paradigm": "BayesianCounterfactualAuditor analytical paradigm",
+              "ontological_basis": "Analysis via BayesianCounterfactualAuditor._evaluate_counterfactual",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _evaluate_counterfactual implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "BayesianCounterfactualAuditor._evaluate_counterfactual algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _evaluate_counterfactual"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _evaluate_counterfactual"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _evaluate_counterfactual results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_assess_financial_consistency",
+            "class_name": "CausalExtractor",
+            "priority": 9,
+            "role": "_assess_financial_consistency",
+            "epistemological_foundation": {
+              "paradigm": "CausalExtractor analytical paradigm",
+              "ontological_basis": "Analysis via CausalExtractor._assess_financial_consistency",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _assess_financial_consistency implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "CausalExtractor._assess_financial_consistency algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _assess_financial_consistency"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _assess_financial_consistency"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _assess_financial_consistency results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_infer_activity_sequence",
+            "class_name": "BayesianMechanismInference",
+            "priority": 10,
+            "role": "_infer_activity_sequence_inference",
+            "epistemological_foundation": {
+              "paradigm": "BayesianMechanismInference analytical paradigm",
+              "ontological_basis": "Analysis via BayesianMechanismInference._infer_activity_sequence",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _infer_activity_sequence implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "BayesianMechanismInference._infer_activity_sequence algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _infer_activity_sequence"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _infer_activity_sequence"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _infer_activity_sequence results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_generate_necessity_remediation",
+            "class_name": "BayesianMechanismInference",
+            "priority": 11,
+            "role": "_generate_necessity_remediation_generation",
+            "epistemological_foundation": {
+              "paradigm": "BayesianMechanismInference analytical paradigm",
+              "ontological_basis": "Analysis via BayesianMechanismInference._generate_necessity_remediation",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _generate_necessity_remediation implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "BayesianMechanismInference._generate_necessity_remediation algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _generate_necessity_remediation"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _generate_necessity_remediation"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _generate_necessity_remediation results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "refutation_and_sanity_checks",
+            "class_name": "BayesianCounterfactualAuditor",
+            "priority": 12,
+            "role": "refutation_and_sanity_checks",
+            "epistemological_foundation": {
+              "paradigm": "BayesianCounterfactualAuditor analytical paradigm",
+              "ontological_basis": "Analysis via BayesianCounterfactualAuditor.refutation_and_sanity_checks",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method refutation_and_sanity_checks implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "BayesianCounterfactualAuditor.refutation_and_sanity_checks algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute refutation_and_sanity_checks"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from refutation_and_sanity_checks"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use refutation_and_sanity_checks results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_load_questionnaire",
+            "class_name": "IndustrialPolicyProcessor",
+            "priority": 13,
+            "role": "_load_questionnaire",
+            "epistemological_foundation": {
+              "paradigm": "IndustrialPolicyProcessor analytical paradigm",
+              "ontological_basis": "Analysis via IndustrialPolicyProcessor._load_questionnaire",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _load_questionnaire implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "IndustrialPolicyProcessor._load_questionnaire algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _load_questionnaire"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _load_questionnaire"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _load_questionnaire results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "analyze_financial_feasibility",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 14,
+            "role": "analyze_financial_feasibility_analysis",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer.analyze_financial_feasibility",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method analyze_financial_feasibility implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer.analyze_financial_feasibility algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute analyze_financial_feasibility"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from analyze_financial_feasibility"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use analyze_financial_feasibility results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "construct_causal_dag",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 15,
+            "role": "construct_causal_dag_construction",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer.construct_causal_dag",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method construct_causal_dag implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer.construct_causal_dag algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute construct_causal_dag"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from construct_causal_dag"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use construct_causal_dag results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "estimate_causal_effects",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 16,
+            "role": "estimate_causal_effects",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer.estimate_causal_effects",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method estimate_causal_effects implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer.estimate_causal_effects algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute estimate_causal_effects"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from estimate_causal_effects"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use estimate_causal_effects results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "generate_counterfactuals",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 17,
+            "role": "generate_counterfactuals_generation",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer.generate_counterfactuals",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method generate_counterfactuals implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer.generate_counterfactuals algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute generate_counterfactuals"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from generate_counterfactuals"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use generate_counterfactuals results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_build_type_hierarchy",
+            "class_name": "CausalExtractor",
+            "priority": 18,
+            "role": "_build_type_hierarchy",
+            "epistemological_foundation": {
+              "paradigm": "CausalExtractor analytical paradigm",
+              "ontological_basis": "Analysis via CausalExtractor._build_type_hierarchy",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _build_type_hierarchy implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "CausalExtractor._build_type_hierarchy algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _build_type_hierarchy"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _build_type_hierarchy"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _build_type_hierarchy results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_check_structural_violation",
+            "class_name": "CausalExtractor",
+            "priority": 19,
+            "role": "_check_structural_violation",
+            "epistemological_foundation": {
+              "paradigm": "CausalExtractor analytical paradigm",
+              "ontological_basis": "Analysis via CausalExtractor._check_structural_violation",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _check_structural_violation implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "CausalExtractor._check_structural_violation algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _check_structural_violation"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _check_structural_violation"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _check_structural_violation results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_calculate_type_transition_prior",
+            "class_name": "CausalExtractor",
+            "priority": 20,
+            "role": "_calculate_type_transition_prior_calculation",
+            "epistemological_foundation": {
+              "paradigm": "CausalExtractor analytical paradigm",
+              "ontological_basis": "Analysis via CausalExtractor._calculate_type_transition_prior",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _calculate_type_transition_prior implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "CausalExtractor._calculate_type_transition_prior algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _calculate_type_transition_prior"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _calculate_type_transition_prior"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _calculate_type_transition_prior results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_calculate_textual_proximity",
+            "class_name": "CausalExtractor",
+            "priority": 21,
+            "role": "_calculate_textual_proximity_calculation",
+            "epistemological_foundation": {
+              "paradigm": "CausalExtractor analytical paradigm",
+              "ontological_basis": "Analysis via CausalExtractor._calculate_textual_proximity",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _calculate_textual_proximity implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "CausalExtractor._calculate_textual_proximity algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _calculate_textual_proximity"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _calculate_textual_proximity"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _calculate_textual_proximity results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_validar_orden_causal",
+            "class_name": "TeoriaCambio",
+            "priority": 22,
+            "role": "_validar_orden_causal",
+            "epistemological_foundation": {
+              "paradigm": "TeoriaCambio analytical paradigm",
+              "ontological_basis": "Analysis via TeoriaCambio._validar_orden_causal",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _validar_orden_causal implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "TeoriaCambio._validar_orden_causal algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _validar_orden_causal"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _validar_orden_causal"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _validar_orden_causal results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "_refine_edge_probabilities",
+            "class_name": "PDETMunicipalPlanAnalyzer",
+            "priority": 23,
+            "role": "_refine_edge_probabilities",
+            "epistemological_foundation": {
+              "paradigm": "PDETMunicipalPlanAnalyzer analytical paradigm",
+              "ontological_basis": "Analysis via PDETMunicipalPlanAnalyzer._refine_edge_probabilities",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method _refine_edge_probabilities implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PDETMunicipalPlanAnalyzer._refine_edge_probabilities algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute _refine_edge_probabilities"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from _refine_edge_probabilities"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use _refine_edge_probabilities results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "compare_policy_interventions",
+            "class_name": "PolicyAnalysisEmbedder",
+            "priority": 24,
+            "role": "compare_policy_interventions_comparison",
+            "epistemological_foundation": {
+              "paradigm": "PolicyAnalysisEmbedder analytical paradigm",
+              "ontological_basis": "Analysis via PolicyAnalysisEmbedder.compare_policy_interventions",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method compare_policy_interventions implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "PolicyAnalysisEmbedder.compare_policy_interventions algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute compare_policy_interventions"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from compare_policy_interventions"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use compare_policy_interventions results for downstream analysis"
+              ]
+            }
+          },
+          {
+            "method_name": "infer_mechanisms",
+            "class_name": "BayesianMechanismInference",
+            "priority": 25,
+            "role": "infer_mechanisms_inference",
+            "epistemological_foundation": {
+              "paradigm": "BayesianMechanismInference analytical paradigm",
+              "ontological_basis": "Analysis via BayesianMechanismInference.infer_mechanisms",
+              "epistemological_stance": "Empirical-analytical approach",
+              "theoretical_framework": [
+                "Method infer_mechanisms implements structured analysis for D3-Q5"
+              ],
+              "justification": "This method contributes to D3-Q5 analysis"
+            },
+            "technical_approach": {
+              "method_type": "analytical_processing",
+              "algorithm": "BayesianMechanismInference.infer_mechanisms algorithm",
+              "steps": [
+                {
+                  "step": 1,
+                  "description": "Execute infer_mechanisms"
+                },
+                {
+                  "step": 2,
+                  "description": "Process results"
+                },
+                {
+                  "step": 3,
+                  "description": "Return structured output"
+                }
+              ],
+              "assumptions": [
+                "Input data is preprocessed and valid"
+              ],
+              "limitations": [
+                "Method-specific limitations apply"
+              ],
+              "complexity": "O(n) where n=input size"
+            },
+            "output_interpretation": {
+              "output_structure": {
+                "result": "Structured output from infer_mechanisms"
+              },
+              "interpretation_guide": {
+                "high_confidence": "≥0.8: Strong evidence",
+                "medium_confidence": "0.5-0.79: Moderate evidence",
+                "low_confidence": "<0.5: Weak evidence"
+              },
+              "actionable_insights": [
+                "Use infer_mechanisms results for downstream analysis"
+              ]
+            }
+          }
+        ],
+        "method_combination_logic": {
+          "combination_strategy": "Sequential multi-method pipeline with evidence fusion",
+          "rationale": "D1-Q1 requires comprehensive extraction of quantitative baseline data from multiple sources (text, tables, causal links). The 17 methods cover complementary aspects: text mining (methods 1-5), goal extraction (6-7), financial analysis (8-10), contradiction detection (11-13), Bayesian inference (14-15), and semantic processing (16-17).",
+          "evidence_fusion": "Evidence from all 17 methods is aggregated by the EvidenceAssembler. Overlapping evidence (e.g., same numeric value detected by multiple methods) is deduplicated. Confidence scores are combined via weighted averaging.",
+          "confidence_aggregation": "Final confidence per evidence element = weighted_mean([confidence_method1, confidence_method2, ...]) where weights reflect method reliability (e.g., Bayesian methods have higher weight than simple regex).",
+          "execution_order": "Methods execute in priority order (1→17). Later methods can access outputs of earlier methods (e.g., method 7 uses goals extracted by method 6).",
+          "trade_offs": [
+            "Comprehensiveness vs. Complexity: 17 methods ensure thorough coverage but increase computational cost and maintenance burden",
+            "Precision vs. Recall: Multiple methods increase recall (find more evidence) but may introduce redundancy; deduplication and confidence weighting mitigate this",
+            "Interpretability vs. Sophistication: Bayesian and embedding methods are powerful but less transparent than regex; human_readable_output compensates via methodological documentation"
+          ]
+        }
+      }
+    }
+  },
+  "validation_rules": {
+    "na_policy": "abort_on_critical",
+    "rules": [
+      {
+        "field": "elements_found",
+        "type": "array",
+        "must_contain": {
+          "count": 1,
+          "elements": [
+            "cobertura_territorial_especificada"
+          ]
+        },
+        "description": "Derived from monolith expected_elements where required is true"
+      },
+      {
+        "field": "elements_found",
+        "type": "array",
+        "should_contain": [
+          {
+            "elements": [
+              "fuentes_oficiales"
+            ],
+            "minimum": 2
+          },
+          {
+            "elements": [
+              "indicadores_cuantitativos"
+            ],
+            "minimum": 3
+          },
+          {
+            "elements": [
+              "series_temporales_años"
+            ],
+            "minimum": 3
+          }
+        ],
+        "description": "Derived from monolith expected_elements with minimum counts"
+      }
+    ]
+  },
+  "traceability": {
+    "source_file": "data/questionnaire_monolith.json",
+    "json_path": "blocks.micro_questions[284]",
+    "method_source": "src/saaaaaa/core/orchestrator/executors.py:D3_Q5_Executor",
+    "method_mapping_source": "executor_methods_mapping.json",
+    "ontology_source": "config/canonical_ontologies/policy_areas_and_dimensions.json",
+    "source_hash": "TODO_SHA256_HASH_OF_QUESTIONNAIRE_MONOLITH",
+    "contract_generation_method": "automated_specialization_from_monolith",
+    "contract_author": "F.A.R.F.A.N Mechanistic Policy Pipeline",
+    "provenance_note": "This contract was generated with full multi-method orchestration support. The method_binding.methods array contains all 17 methods from D1_Q1_QuantitativeBaselineExtractor, and human_answer_structure documents the expected evidence output after execution.",
+    "source_question_id": "Q075",
+    "specialized_from_base_slot": "D3-Q5",
+    "specialization_timestamp": "2025-11-28T03:50:09.636498+00:00"
+  },
+  "error_handling": {
+    "on_method_not_found": "raise",
+    "on_method_failure": "propagate_with_trace",
+    "on_assembly_failure": "propagate_with_trace",
+    "failure_contract": {
+      "abort_if": [
+        "missing_required_element",
+        "incomplete_text"
+      ],
+      "emit_code": "ABORT-Q075-REQ"
+    }
+  },
+  "fallback_strategy": {
+    "use_llm_direct": false,
+    "use_heuristics": false,
+    "note": "No fallback strategies enabled. All failures propagate according to error_handling configuration."
+  },
+  "test_configuration": {
+    "test_files": [
+      "tests/core/orchestrator/test_executors_contract.py",
+      "tests/core/phases/test_phase2.py"
+    ],
+    "test_document_fixtures": [
+      "tests/fixtures/preprocessed_documents/sample_pdet_plan.json"
+    ],
+    "expected_test_coverage": ">=90%",
+    "integration_test_required": true
+  },
+  "compatibility": {
+    "orchestrator_min_version": "TODO_VERSION",
+    "signal_registry_min_version": "TODO_VERSION",
+    "method_executor_min_version": "TODO_VERSION",
+    "questionnaire_monolith_version": "3.0.0",
+    "phase2_types_version": "TODO_VERSION"
+  },
+  "calibration": {
+    "status": "placeholder",
+    "note": "Contract does not embed calibration scores. Actual calibration managed via src/saaaaaa/core/calibration/ + config/intrinsic_calibration.json + config/fusion_specification.json",
+    "source": {
+      "intrinsic_calibration": "config/intrinsic_calibration.json",
+      "fusion_specification": "config/fusion_specification.json",
+      "layer_calibrations_dir": "config/layer_calibrations/",
+      "canonical_spec": "canonic_calibration_methods.md"
+    }
+  },
+  "human_answer_structure": {
+    "description": "Expected structure of evidence dict after all 17 methods execute and evidence is assembled according to assembly_rules",
+    "assembly_flow": {
+      "step_1_method_execution": "17 methods execute in priority order, outputs stored with dot-notation keys",
+      "step_2_evidence_assembly": "EvidenceAssembler merges outputs according to assembly_rules",
+      "step_3_validation": "EvidenceValidator checks against validation_rules",
+      "step_4_output_generation": "Phase2QuestionResult constructed with evidence, validation, trace"
+    },
+    "evidence_structure_schema": {
+      "type": "object",
+      "description": "Assembled evidence after all methods complete",
+      "properties": {
+        "elements_found": {
+          "type": "array",
+          "description": "Concatenated evidence elements from multiple methods (assembly_rules target)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "element_id": {
+                "type": "string",
+                "example": "E-001"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "fuentes_oficiales",
+                  "indicadores_cuantitativos",
+                  "series_temporales_años",
+                  "cobertura_territorial_especificada",
+                  "financial_amounts",
+                  "policy_goals",
+                  "causal_links"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "example": "DANE"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "source_method": {
+                "type": "string",
+                "example": "IndustrialPolicyProcessor._extract_point_evidence"
+              },
+              "sentence_id": {
+                "type": "integer"
+              },
+              "context": {
+                "type": "string"
+              }
+            }
+          },
+          "example_count": "Expected 15-50 elements for a complete diagnostic"
+        },
+        "elements_summary": {
+          "type": "object",
+          "properties": {
+            "total_count": {
+              "type": "integer"
+            },
+            "by_type": {
+              "type": "object",
+              "properties": {
+                "fuentes_oficiales": {
+                  "type": "integer",
+                  "minimum_expected": 2
+                },
+                "indicadores_cuantitativos": {
+                  "type": "integer",
+                  "minimum_expected": 3
+                },
+                "series_temporales_años": {
+                  "type": "integer",
+                  "minimum_expected": 3
+                },
+                "cobertura_territorial_especificada": {
+                  "type": "integer",
+                  "minimum_expected": 1
+                }
+              }
+            }
+          }
+        },
+        "confidence_scores": {
+          "type": "object",
+          "description": "Aggregated confidence metrics (weighted_mean strategy)",
+          "properties": {
+            "mean": {
+              "type": "number"
+            },
+            "std": {
+              "type": "number"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "by_method": {
+              "type": "object",
+              "description": "Average confidence per analyzer class"
+            }
+          }
+        },
+        "pattern_matches": {
+          "type": "array",
+          "description": "Aggregated pattern matches from text mining methods",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern_id": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer"
+              },
+              "avg_confidence": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "critical_links": {
+          "type": "array",
+          "description": "Causal links extracted by TextMiningEngine",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cause": {
+                "type": "string"
+              },
+              "effect": {
+                "type": "string"
+              },
+              "criticality": {
+                "type": "number"
+              },
+              "coherence": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "financial_summary": {
+          "type": "object",
+          "description": "Aggregated financial data from FinancialAuditor and PDETMunicipalPlanAnalyzer",
+          "properties": {
+            "total_budget_cop": {
+              "type": "number"
+            },
+            "amounts_found": {
+              "type": "integer"
+            },
+            "by_category": {
+              "type": "object",
+              "properties": {
+                "SGR": {
+                  "type": "number"
+                },
+                "recursos_propios": {
+                  "type": "number"
+                },
+                "transferencias": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "goals_summary": {
+          "type": "object",
+          "description": "Policy goals extracted by CausalExtractor",
+          "properties": {
+            "total_goals": {
+              "type": "integer"
+            },
+            "quantified_goals": {
+              "type": "integer"
+            },
+            "goals_with_complete_context": {
+              "type": "integer"
+            }
+          }
+        },
+        "contradictions": {
+          "type": "object",
+          "description": "Results from PolicyContradictionDetector",
+          "properties": {
+            "found": {
+              "type": "integer"
+            },
+            "tests_performed": {
+              "type": "integer"
+            },
+            "interpretation": {
+              "type": "string"
+            }
+          }
+        },
+        "bayesian_insights": {
+          "type": "object",
+          "description": "Results from BayesianNumericalAnalyzer",
+          "properties": {
+            "metrics_with_high_uncertainty": {
+              "type": "array"
+            },
+            "significant_comparisons": {
+              "type": "integer"
+            }
+          }
+        },
+        "semantic_processing": {
+          "type": "object",
+          "description": "Results from SemanticProcessor",
+          "properties": {
+            "chunks_created": {
+              "type": "integer"
+            },
+            "embeddings_generated": {
+              "type": "integer"
+            },
+            "avg_semantic_similarity_to_query": {
+              "type": "number"
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "methods_executed": {
+              "type": "integer",
+              "const": 25
+            },
+            "execution_time_ms": {
+              "type": "number"
+            },
+            "document_length": {
+              "type": "integer"
+            },
+            "analysis_timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "concrete_example": {
+      "elements_found": [
+        {
+          "element_id": "E-001",
+          "type": "fuentes_oficiales",
+          "value": "DANE",
+          "confidence": 0.95,
+          "source_method": "IndustrialPolicyProcessor._extract_point_evidence",
+          "source_sentence": "según datos de DANE para el año 2022",
+          "sentence_id": 45,
+          "position": {
+            "start": 123,
+            "end": 145
+          }
+        },
+        {
+          "element_id": "E-002",
+          "type": "indicadores_cuantitativos",
+          "value": "tasa de VBG: 12.3%",
+          "normalized_value": 12.3,
+          "unit": "%",
+          "confidence": 0.89,
+          "source_method": "PolicyContradictionDetector._extract_quantitative_claims",
+          "bayesian_posterior": {
+            "mean": 0.123,
+            "ci_95": [
+              0.11,
+              0.145
+            ]
+          },
+          "sentence_id": 45
+        },
+        {
+          "element_id": "E-003",
+          "type": "series_temporales_años",
+          "years": [
+            2020,
+            2021,
+            2022
+          ],
+          "confidence": 0.92,
+          "source_method": "TextMiningEngine.diagnose_critical_links"
+        },
+        {
+          "element_id": "E-004",
+          "type": "cobertura_territorial_especificada",
+          "coverage": "municipal - zona rural y urbana",
+          "confidence": 0.88,
+          "source_method": "CausalExtractor._parse_goal_context"
+        }
+      ],
+      "elements_summary": {
+        "total_count": 38,
+        "by_type": {
+          "fuentes_oficiales": 5,
+          "indicadores_cuantitativos": 12,
+          "series_temporales_años": 4,
+          "cobertura_territorial_especificada": 1,
+          "financial_amounts": 8,
+          "policy_goals": 7,
+          "causal_links": 5
+        }
+      },
+      "confidence_scores": {
+        "mean": 0.876,
+        "std": 0.089,
+        "min": 0.72,
+        "max": 0.98,
+        "by_method": {
+          "TextMiningEngine": 0.83,
+          "IndustrialPolicyProcessor": 0.91,
+          "CausalExtractor": 0.79,
+          "FinancialAuditor": 0.94,
+          "PDETMunicipalPlanAnalyzer": 0.88,
+          "PolicyContradictionDetector": 0.9,
+          "BayesianNumericalAnalyzer": 0.92,
+          "SemanticProcessor": 0.85
+        }
+      },
+      "pattern_matches": [
+        {
+          "pattern_id": "PAT-Q001-000",
+          "count": 3,
+          "avg_confidence": 0.87
+        },
+        {
+          "pattern_id": "PAT-Q001-002",
+          "count": 5,
+          "avg_confidence": 0.95
+        }
+      ],
+      "critical_links": [
+        {
+          "cause": "alta tasa de VBG",
+          "effect": "baja autonomía económica",
+          "criticality": 0.87,
+          "coherence": 0.82
+        }
+      ],
+      "financial_summary": {
+        "total_budget_cop": 850000000.0,
+        "amounts_found": 12,
+        "by_category": {
+          "SGR": 250000000.0,
+          "recursos_propios": 180000000.0
+        }
+      },
+      "goals_summary": {
+        "total_goals": 7,
+        "quantified_goals": 5,
+        "goals_with_complete_context": 4
+      },
+      "contradictions": {
+        "found": 0,
+        "tests_performed": 15,
+        "interpretation": "No statistical contradictions in quantitative claims"
+      },
+      "bayesian_insights": {
+        "metrics_with_high_uncertainty": [],
+        "significant_comparisons": 1
+      },
+      "semantic_processing": {
+        "chunks_created": 45,
+        "embeddings_generated": 45,
+        "avg_semantic_similarity_to_query": 0.78
+      },
+      "metadata": {
+        "methods_executed": 25,
+        "execution_time_ms": 2845,
+        "document_length": 15230,
+        "analysis_timestamp": "2025-11-26T12:34:56Z"
+      }
+    },
+    "validation_against_expected_elements": {
+      "cobertura_territorial_especificada": {
+        "required": true,
+        "found_in_example": true,
+        "example_element_id": "E-004"
+      },
+      "fuentes_oficiales": {
+        "minimum": 2,
+        "found_in_example": 5,
+        "status": "PASS"
+      },
+      "indicadores_cuantitativos": {
+        "minimum": 3,
+        "found_in_example": 12,
+        "status": "PASS"
+      },
+      "series_temporales_años": {
+        "minimum": 3,
+        "found_in_example": 4,
+        "status": "PASS"
+      },
+      "overall_validation_result": "PASS - All required and minimum elements present"
+    },
+    "template_variable_bindings": {
+      "description": "These variables are available for human_readable_output template",
+      "variables": {
+        "{evidence.elements_found_count}": 38,
+        "{score}": "Calculated by scorer based on elements",
+        "{quality_level}": "ALTO",
+        "{evidence.confidence_scores.mean}": "87.6%",
+        "{evidence.pattern_matches_count}": 14,
+        "{evidence.official_sources_count}": 5,
+        "{evidence.quantitative_indicators_count}": 12,
+        "{evidence.temporal_series_count}": 4,
+        "{evidence.territorial_coverage}": "municipal - zona rural y urbana"
+      }
+    },
+    "usage_notes": {
+      "for_developers": "This structure shows the expected evidence dict after BaseExecutorWithContract._execute_v3() completes all 17 method executions and evidence assembly.",
+      "for_validators": "Use this to verify that actual execution output matches expected structure.",
+      "for_auditors": "This provides traceability from raw method outputs to final assembled evidence."
+    }
+  }
+}
