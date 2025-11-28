@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from types import MappingProxyType
 from typing import Any
 
-from saaaaaa.core.orchestrator.core import PreprocessedDocument
+from saaaaaa.core.orchestrator.core import PreprocessedDocument, ChunkData
 from saaaaaa import get_parameter_loader
 from saaaaaa.core.calibration.decorators import calibrated_method
 
@@ -175,6 +175,7 @@ class CPPAdapter:
         tables: list[dict[str, Any]] = []
         chunk_index: dict[str, int] = {}
         chunk_summaries: list[dict[str, Any]] = []
+        chunks_data: list[ChunkData] = []
 
         # Track indices for building indexes
         term_index: dict[str, list[int]] = {}
@@ -299,6 +300,22 @@ class CPPAdapter:
                     }
                 )
 
+            # Create ChunkData object
+            chunks_data.append(ChunkData(
+                id=idx,
+                text=chunk_text,
+                chunk_type=getattr(chunk, "chunk_type", "diagnostic"),
+                sentences=[idx],
+                tables=[len(tables) - 1] if hasattr(chunk, "budget") and chunk.budget else [],
+                start_pos=chunk_start,
+                end_pos=chunk_end,
+                confidence=getattr(chunk.confidence, "overall", 1.0) if hasattr(chunk, "confidence") else 1.0,
+                edges_out=[],  # Edges populated later if needed or from chunk_graph
+                edges_in=[],
+                policy_area_id=extra_metadata["policy_area_id"],
+                dimension_id=extra_metadata["dimension_id"]
+            ))
+
         # Join full text
         full_text = " ".join(full_text_parts)
 
@@ -372,7 +389,7 @@ class CPPAdapter:
             language=language,
             ingested_at=datetime.now(timezone.utc),
             full_text=full_text,
-            chunks=[],
+            chunks=chunks_data,
             chunk_index=chunk_index,
             chunk_graph={
                 "chunks": {cid: chunk_index[cid] for cid in chunk_index},

@@ -131,6 +131,7 @@ class VerifiedPipelineRunner:
         self.versions = get_all_versions()
         self.phase2_report: dict[str, Any] | None = None
         self._last_manifest_success: bool = False
+        self._bootstrap_failed: bool = False
 
         # Set questionnaire path (explicit input, SIN_CARRETA compliance)
         if questionnaire_path is None:
@@ -152,20 +153,46 @@ class VerifiedPipelineRunner:
         self.manifest_builder.manifest_data["versions"] = dict(self.versions)
 
         # Ensure artifacts directory exists
-        self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            self.log_claim("error", "bootstrap", f"Failed to create artifacts directory: {e}")
+            self.errors.append(f"Failed to create artifacts directory: {e}")
+            self._bootstrap_failed = True
         
         # Initialize runtime configuration
-        self.runtime_config = RuntimeConfig.from_env()
-        self.log_claim("start", "runtime_config", 
-                      f"Runtime configuration loaded: {self.runtime_config}",
-                      {"mode": self.runtime_config.mode.value,
-                       "strict_mode": self.runtime_config.is_strict_mode()})
-        
-        # Log runtime config for observability
-        log_runtime_config_loaded(
-            config_repr=repr(self.runtime_config),
-            runtime_mode=self.runtime_config.mode
-        )
+        self.runtime_config: Optional[RuntimeConfig] = None
+        try:
+            self.runtime_config = RuntimeConfig.from_env()
+            self.log_claim("start", "runtime_config", 
+                          f"Runtime configuration loaded: {self.runtime_config}",
+                          {"mode": self.runtime_config.mode.value,
+                           "strict_mode": self.runtime_config.is_strict_mode()})
+            
+            # Log runtime config for observability
+            log_runtime_config_loaded(
+                config_repr=repr(self.runtime_config),
+                runtime_mode=self.runtime_config.mode
+            )
+        except Exception as e:
+            self.log_claim("error", "runtime_config", f"Failed to load runtime config: {e}")
+            self.errors.append(f"Failed to load runtime config: {e}")
+            self._bootstrap_failed = True
+            self.runtime_config = None
+
+        # Log bootstrap complete claim
+        if not self._bootstrap_failed:
+            self.log_claim(
+                "start", "bootstrap",
+                "Bootstrap complete",
+                {
+                  "execution_id": self.execution_id,
+                  "policy_unit_id": self.policy_unit_id,
+                  "plan_pdf_path": str(self.plan_pdf_path),
+                  "questionnaire_path": str(self.questionnaire_path),
+                  "versions": dict(self.versions),
+                },
+            )
 
     def _initialize_determinism_context(self) -> dict[str, int]:
         """
@@ -182,6 +209,10 @@ class VerifiedPipelineRunner:
         python_seed = seeds.get("python")
         if python_seed is not None:
             random.seed(python_seed)
+        else:
+            self.log_claim("error", "determinism", "Missing python seed in registry response")
+            self.errors.append("Missing python seed in registry response")
+            self._bootstrap_failed = True
 
         numpy_seed = seeds.get("numpy")
         if numpy_seed is not None:
@@ -196,6 +227,14 @@ class VerifiedPipelineRunner:
                     f"Failed to seed NumPy RNG: {exc}",
                     {"seed": numpy_seed},
                 )
+
+        if not self._bootstrap_failed:
+             self.log_claim(
+                "start",
+                "determinism",
+                "Deterministic seeds applied",
+                {"seeds": seeds, "policy_unit_id": self.policy_unit_id, "correlation_id": self.correlation_id},
+            )
 
         return seeds
 
@@ -724,7 +763,7 @@ class VerifiedPipelineRunner:
         
         # Calculate execution savings
         # Use actual metrics from orchestrator if available
-        if results and hasattr(results, '_execution_metrics') and 'phase_2' in results._execution_metrics:
+        if results and hasattr(results, '_execution_metrics') and isinstance(results._execution_metrics, dict) and 'phase_2' in results._execution_metrics:
             metrics = results._execution_metrics['phase_2']
             chunk_metrics["execution_savings"] = {
                 "chunk_executions": metrics['chunk_executions'],
@@ -845,16 +884,23 @@ class VerifiedPipelineRunner:
             phase2_entry["errors"].append("Phase 2 not executed")
 
         # Determine success based on strict criteria + hostile invariants
-        success = all(
-            [
-                self.phases_failed == 0,
-                self.phases_completed > 0,
-                len(self.errors) == 0,
-                len(artifacts) > 0,
-                len(hostile_failures) == 0,
-                phase2_entry["success"],
-            ]
-        )
+        # We start assuming success is possible, then disqualify based on failures
+        success = True
+        
+        if self._bootstrap_failed:
+            success = False
+        if self.phases_failed > 0:
+            success = False
+        if self.phases_completed == 0:
+            success = False
+        if len(self.errors) > 0:
+            success = False
+        if len(artifacts) == 0:
+            success = False
+        if len(hostile_failures) > 0:
+            success = False
+        if not phase2_entry["success"]:
+            success = False
 
         if hostile_failures:
             self.log_claim(
@@ -866,10 +912,29 @@ class VerifiedPipelineRunner:
 
         builder = self.manifest_builder
         builder.manifest_data["versions"] = dict(self.versions)
+        
+        # Set environment with strict error handling
+        try:
+            builder.set_environment()
+        except Exception as e:
+            error_msg = f"Failed to set environment in manifest: {e}"
+            self.log_claim("error", "environment", error_msg)
+            self.errors.append(error_msg)
+            success = False
+
+        # Set pipeline hash with strict validation
+        pipeline_hash = getattr(self, "input_pdf_sha256", "")
+        if not pipeline_hash:
+            error_msg = "Missing input PDF hash for manifest"
+            self.log_claim("error", "input_verification", error_msg)
+            self.errors.append(error_msg)
+            success = False
+            
+        builder.set_pipeline_hash(pipeline_hash)
+
+        # Update success status in builder and self
         self._last_manifest_success = success
         builder.set_success(success)
-        builder.set_pipeline_hash(getattr(self, "input_pdf_sha256", ""))
-        builder.set_environment()
 
         # Determinism metadata
         seed_entry = self.seed_registry.get_manifest_entry(
@@ -1024,6 +1089,11 @@ class VerifiedPipelineRunner:
         Returns:
             True if pipeline succeeded, False otherwise
         """
+        # Check for bootstrap failures (Phase 0.0)
+        if self._bootstrap_failed:
+             self.generate_verification_manifest([], {})
+             return False
+
         self.log_claim("start", "pipeline", "Starting verified pipeline execution")
         
         # Step 1: Verify input
@@ -1033,6 +1103,10 @@ class VerifiedPipelineRunner:
         
         # Step 1.5: Run boot checks
         try:
+            # Ensure runtime_config is available (should be if bootstrap passed, but be safe)
+            if self.runtime_config is None:
+                raise BootCheckError("Runtime config is None", "BOOT_CONFIG_MISSING", "Runtime config not initialized")
+
             if not self.run_boot_checks():
                 # Boot checks failed but we're in DEV mode - log warning
                 self.log_claim("warning", "boot_checks", 

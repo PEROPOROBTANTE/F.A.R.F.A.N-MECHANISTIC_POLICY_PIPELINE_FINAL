@@ -24,7 +24,7 @@ import threading
 import time
 from collections import deque
 from collections.abc import Callable
-from dataclasses import asdict, dataclass, field, is_dataclass
+from dataclasses import asdict, dataclass, field, is_dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from types import MappingProxyType
@@ -302,6 +302,8 @@ class ChunkData:
     confidence: float
     edges_out: list[int] = field(default_factory=list)  # Chunk IDs this connects to
     edges_in: list[int] = field(default_factory=list)   # Chunk IDs connecting to this
+    policy_area_id: str | None = None
+    dimension_id: str | None = None
 
 
 @dataclass
@@ -2279,21 +2281,16 @@ class Orchestrator:
                 logger.warning("ChunkRouter not available, falling back to flat mode")
                 chunk_routes = {}
 
-        questions_by_slot: dict[str, deque] = {}
-        for question in micro_questions:
-            slot = question.get("base_slot")
-            questions_by_slot.setdefault(slot, deque()).append(question)
-
-        slots = sorted(questions_by_slot.keys())
-        while True:
-            added = False
-            for slot in slots:
-                queue = questions_by_slot.get(slot)
-                if queue:
-                    ordered_questions.append(queue.popleft())
-                    added = True
-            if not added:
-                break
+        # STRICT ORDERING: Dimension -> Policy Area -> Question ID
+        # This enforces the requirement: "FIRST ALL THE QUESTIONS OF DIMENSION 1... THEN SECOND DIMENSION..."
+        ordered_questions = sorted(
+            micro_questions,
+            key=lambda q: (
+                q.get("dimension_id", "DIM99"),
+                q.get("policy_area_id", "PA99"),
+                q.get("question_id", "Q999")
+            )
+        )
 
         semaphore = asyncio.Semaphore(self.resource_limits.max_workers)
         self.resource_limits.attach_semaphore(semaphore)
@@ -2360,8 +2357,8 @@ class Orchestrator:
                 if cpu_exceeded:
                     instrumentation.record_warning("resource", "Límite de CPU excedido", usage=usage)
 
-                executor_class = self.executors.get(base_slot)
                 start_time = time.perf_counter()
+                executor_class = self.executors.get(base_slot)
                 evidence: Evidence | None = None
                 error_message: str | None = None
 
@@ -2378,12 +2375,27 @@ class Orchestrator:
                             calibration_orchestrator=self.calibration_orchestrator
                         )
 
-                        # Pass the question context to the executor
+                        # STRICT FILTERING: Pass ONLY chunks matching the question's PA and DIM
+                        target_pa = question.get("policy_area_id")
+                        target_dim = question.get("dimension_id")
+                        
+                        filtered_chunks = [
+                            c for c in document.chunks
+                            if c.policy_area_id == target_pa and c.dimension_id == target_dim
+                        ]
+                        
+                        # Create scoped document with ONLY relevant chunks
+                        scoped_document = replace(document, chunks=filtered_chunks)
+
+                        # Execute question with SCOPED document
                         evidence = await asyncio.to_thread(
-                            executor_instance.execute, document, self.executor, question_context=question
+                            executor_instance.execute, 
+                            scoped_document, 
+                            self.executor,
+                            question_context=question
                         )
                         circuit["failures"] = 0
-                    except Exception as exc:  # pragma: no cover - dependencias externas
+                    except Exception as exc:
                         circuit["failures"] += 1
                         error_message = str(exc)
                         instrumentation.record_error(

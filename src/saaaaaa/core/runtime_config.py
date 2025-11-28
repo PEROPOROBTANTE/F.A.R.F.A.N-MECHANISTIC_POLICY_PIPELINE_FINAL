@@ -24,7 +24,7 @@ Example:
 import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Final
+from typing import Final, ClassVar, Dict
 
 
 class RuntimeMode(Enum):
@@ -79,7 +79,7 @@ class RuntimeConfig:
     preferred_spacy_model: str
     
     # Illegal combinations in PROD mode
-    _PROD_ILLEGAL_COMBOS: Final = {
+    _PROD_ILLEGAL_COMBOS: ClassVar[Dict[str, str]] = {
         "ALLOW_DEV_INGESTION_FALLBACKS": "Development ingestion fallbacks not allowed in PROD",
         "ALLOW_EXECUTION_ESTIMATES": "Execution metric estimation not allowed in PROD",
         "ALLOW_AGGREGATION_DEFAULTS": "Aggregation defaults not allowed in PROD",
