@@ -1,0 +1,48 @@
+{
+  "can_execute": false,
+  "blockers": [
+    {
+      "type": "INIT_FAIL",
+      "component": "Orchestrator",
+      "description": "Cannot initialize: attempted relative import with no known parent package",
+      "fix": "Fix initialization errors",
+      "command": "python -c 'import orchestrator'"
+    },
+    {
+      "type": "INIT_FAIL",
+      "component": "CPPAdapter",
+      "description": "Cannot initialize: invalid syntax (aggregation.py, line 604)",
+      "fix": "Fix initialization errors",
+      "command": "python -c 'import cpp_adapter'"
+    },
+    {
+      "type": "INIT_FAIL",
+      "component": "Processor",
+      "description": "Cannot initialize: invalid syntax. Perhaps you forgot a comma? (policy_processor.py, line 1002)",
+      "fix": "Fix initialization errors",
+      "command": "python -c 'import policy_processor'"
+    },
+    {
+      "type": "REQUIRED_PHASE_MISSING",
+      "component": "Phase: ingestion",
+      "description": "Required phase 'ingestion' not found",
+      "fix": "Create ingestion phase",
+      "command": null
+    },
+    {
+      "type": "REQUIRED_PHASE_MISSING",
+      "component": "Phase: generation",
+      "description": "Required phase 'generation' not found",
+      "fix": "Create generation phase",
+      "command": null
+    },
+    {
+      "type": "REQUIRED_PHASE_MISSING",
+      "component": "Phase: synthesis",
+      "description": "Required phase 'synthesis' not found",
+      "fix": "Create synthesis phase",
+      "command": null
+    }
+  ],
+  "immediate_action": "\ud83d\udd27 IMMEDIATE: Create ingestion phase"
+}
