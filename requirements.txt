@@ -36,6 +36,10 @@ sse-starlette==2.2.1
 starlette==0.48.0 # Pinned for fastapi compatibility.
 httpx==0.28.1
 requests==2.32.4
+flask==2.3.2
+flask-cors==4.0.0
+flask-socketio==5.3.6
+pyjwt==2.8.0
 
 # Data Validation & Configuration - Tightly pinned versions
 pydantic==2.10.6
@@ -52,6 +56,8 @@ tenacity==9.0.0
 blake3==0.4.1
 filelock==3.15.0
 networkx==3.5
+fuzzywuzzy==0.18.0
+pydot==4.0.1
 
 # Transitive dependencies that need to be pinned for stability
 protobuf==4.25.8 # Required by transformers for some tokenizers

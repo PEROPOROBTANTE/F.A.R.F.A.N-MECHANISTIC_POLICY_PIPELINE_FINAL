@@ -58,3 +58,10 @@ htmlcov/
 dmypy.json
 farfan-env/
 data/questionnaire_monolith.json.backup
+
+# Environment variables
+.env
+
+# Runtime files
+logs/api_server.pid
+stop_atroz.sh

@@ -67,49 +67,17 @@ print_info "Installing dependencies..."
 if [ -f "requirements_atroz.txt" ]; then
     pip install -q -r requirements_atroz.txt
     print_info "✓ AtroZ dependencies installed"
+elif [ -f "requirements.txt" ]; then
+    pip install -q -r requirements.txt
+    print_info "✓ requirements.txt dependencies installed"
 else
-    print_warn "requirements_atroz.txt not found, skipping"
+    print_warn "requirements_atroz.txt and requirements.txt not found, skipping"
 fi
 
 # Create necessary directories
 print_info "Creating directories..."
-mkdir -p static/js static/css output cache logs
+mkdir -p output cache logs
 print_info "✓ Directories created"
-
-# Copy HTML if needed
-if [ ! -f "static/index.html" ] && [ -f "deepseek_html_20251022_29a8c3.html" ]; then
-    print_info "Copying dashboard HTML..."
-    cp deepseek_html_20251022_29a8c3.html static/index.html
-    
-    # Inject integration scripts
-    print_info "Injecting integration scripts..."
-    
-    # Create backup
-    cp static/index.html static/index.html.bak
-    
-    # Insert scripts before </body>
-    cat >> static/index.html << 'EOF'
-
-<!-- Socket.IO for WebSocket support -->
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-
-<!-- AtroZ Data Service -->
-<script src="/static/js/atroz-data-service.js"></script>
-
-<!-- AtroZ Dashboard Integration -->
-<script src="/static/js/atroz-dashboard-integration.js"></script>
-
-<!-- Configuration -->
-<script>
-    window.ATROZ_API_URL = 'http://localhost:5000';
-    window.ATROZ_ENABLE_REALTIME = 'true';
-    window.ATROZ_ENABLE_AUTH = 'false';
-    window.ATROZ_CLIENT_ID = 'atroz-dashboard-v1';
-</script>
-EOF
-    
-    print_info "✓ Dashboard HTML configured"
-fi
 
 # Create .env if doesn't exist
 if [ ! -f ".env" ]; then
@@ -146,11 +114,11 @@ fi
 # Check if required files exist
 print_info "Checking required files..."
 REQUIRED_FILES=(
-    "api_server.py"
-    "orchestrator.py"
-    "choreographer.py"
-    "static/js/atroz-data-service.js"
-    "static/js/atroz-dashboard-integration.js"
+    "src/saaaaaa/api/api_server.py"
+    "src/saaaaaa/core/orchestrator/core.py"
+    "src/saaaaaa/dashboard/index.html"
+    "src/saaaaaa/dashboard/js/admin.js"
+    "src/saaaaaa/dashboard/js/ai.js"
 )
 
 for file in "${REQUIRED_FILES[@]}"; do
@@ -165,10 +133,10 @@ print_info "✓ All required files present"
 print_info "Testing Python imports..."
 python3 -c "
 import sys
+sys.path.append('src')
 try:
-    from api_server import app
-    from orchestrator import PolicyAnalysisOrchestrator
-    from choreographer import ExecutionChoreographer
+    from saaaaaa.api.api_server import app
+    from saaaaaa.core.orchestrator.core import Orchestrator
     print('✓ All modules imported successfully')
 except ImportError as e:
     print(f'✗ Import error: {e}')
@@ -184,35 +152,20 @@ if [ "$MODE" == "dev" ]; then
     
     # Start API server in background
     print_info "Starting API server on port $PORT..."
-    FLASK_APP=api_server.py FLASK_ENV=development python3 api_server.py > logs/api_server.log 2>&1 &
+    export FLASK_APP=src/saaaaaa/api/api_server.py
+    flask run --port=$PORT > logs/api_server.log 2>&1 &
     API_PID=$!
     echo $API_PID > logs/api_server.pid
     
     # Wait for API server to start
-    sleep 3
+    print_info "Waiting for API server to start..."
+    sleep 15
     
     # Check if API server is running
-    if ps -p $API_PID > /dev/null; then
+    if ps -p $API_PID > /dev/null && curl -s http://127.0.0.1:$PORT/api/v1/health > /dev/null; then
         print_info "✓ API server started (PID: $API_PID)"
     else
         print_error "API server failed to start. Check logs/api_server.log"
-        exit 1
-    fi
-    
-    # Start static file server
-    print_info "Starting static file server on port $STATIC_PORT..."
-    python3 -m http.server $STATIC_PORT --directory static > logs/static_server.log 2>&1 &
-    STATIC_PID=$!
-    echo $STATIC_PID > logs/static_server.pid
-    
-    # Wait for static server to start
-    sleep 2
-    
-    if ps -p $STATIC_PID > /dev/null; then
-        print_info "✓ Static file server started (PID: $STATIC_PID)"
-    else
-        print_error "Static file server failed to start. Check logs/static_server.log"
-        kill $API_PID 2>/dev/null || true
         exit 1
     fi
     
@@ -221,16 +174,15 @@ if [ "$MODE" == "dev" ]; then
     echo -e "${GREEN}  AtroZ Dashboard is RUNNING!${NC}"
     echo "==============================================="
     echo ""
-    echo "  Dashboard:    http://localhost:$STATIC_PORT"
+    echo "  Dashboard:    http://localhost:$PORT"
     echo "  API:          http://localhost:$PORT/api/v1/health"
     echo "  API Docs:     http://localhost:$PORT/api/v1/"
     echo ""
     echo "  Logs:"
     echo "    API Server:   tail -f logs/api_server.log"
-    echo "    Static:       tail -f logs/static_server.log"
     echo ""
     echo "  To stop:"
-    echo "    kill \$(cat logs/api_server.pid) \$(cat logs/static_server.pid)"
+    echo "    kill \$(cat logs/api_server.pid)"
     echo ""
     echo "==============================================="
     
@@ -241,10 +193,6 @@ echo "Stopping AtroZ Dashboard..."
 if [ -f "logs/api_server.pid" ]; then
     kill $(cat logs/api_server.pid) 2>/dev/null && echo "✓ API server stopped"
     rm logs/api_server.pid
-fi
-if [ -f "logs/static_server.pid" ]; then
-    kill $(cat logs/static_server.pid) 2>/dev/null && echo "✓ Static server stopped"
-    rm logs/static_server.pid
 fi
 echo "AtroZ Dashboard stopped"
 STOPEOF

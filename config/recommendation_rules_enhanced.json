@@ -12863,7 +12863,7 @@
       },
       "template": {
         "problem": "El cluster CL01 Seguridad y Paz permanece en banda ALTO (≥75) con varianza BAJA; las diferencias internas permanecen por debajo de 4 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA02-DIM02, PA03-DIM03 y PA07-DIM05.",
-        "intervention": "Documentar lecciones aprendidas y transferir capacidades a subregiones con riesgo latente.",
+        "intervention": "Formalizar un protocolo de sostenibilidad para el cluster CL01, incluyendo la documentación de buenas prácticas en la gestión de PA02, PA03 y PA07, y establecer un programa de mentoría trimestral para transferir estas capacidades a los equipos de los clusters con desempeño inferior. El protocolo debe ser validado por la Oficina de Planeación.",
         "indicator": {
           "name": "CL01 dispersión baja sostenida",
           "baseline": null,
@@ -15656,7 +15656,7 @@
       },
       "template": {
         "problem": "El cluster CL02 Grupos Poblacionales permanece en banda ALTO (≥75) con varianza BAJA; las diferencias internas permanecen por debajo de 4 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA01-DIM02, PA05-DIM03 y PA06-DIM05.",
-        "intervention": "Documentar protocolos de transferencia y acompañamiento técnico a municipios vecinos.",
+        "intervention": "Formalizar un protocolo de sostenibilidad para el cluster CL02, documentando las lecciones aprendidas en la gestión de PA01, PA05 y PA06. Establecer un programa de acompañamiento técnico para transferir estas capacidades a los equipos de los clusters con desempeño inferior, con reportes de avance bimensuales.",
         "indicator": {
           "name": "CL02 dispersión baja sostenida",
           "baseline": null,
@@ -16022,7 +16022,7 @@
       },
       "template": {
         "problem": "El cluster CL02 Grupos Poblacionales permanece en banda MEDIO (55-74) con varianza BAJA; las diferencias internas son menores a 6 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA01-DIM02, PA05-DIM03 y PA06-DIM05.",
-        "intervention": "Asegurar contratos de operación y supervisión diferencial con auditoría externa.",
+        "intervention": "Asegurar la sostenibilidad de los programas mediante la formalización de contratos de operación a largo plazo y la implementación de un sistema de supervisión diferencial con auditorías externas trimestrales. Los hallazgos de la auditoría deben presentarse al Comité de Sostenibilidad.",
         "indicator": {
           "name": "CL02 dispersión baja sostenida",
           "baseline": null,
@@ -17884,7 +17884,7 @@
       },
       "template": {
         "problem": "El cluster CL03 Territorio y Garantías Colectivas permanece en banda ALTO (≥75) con varianza BAJA; las diferencias internas permanecen por debajo de 4 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA04-DIM03 y PA08-DIM05.",
-        "intervention": "Documentar procesos replicables de articulación socioambiental y protección comunitaria.",
+        "intervention": "Formalizar un protocolo de sostenibilidad para el cluster CL03, documentando los procesos de articulación socioambiental y protección comunitaria. Establecer un programa de capacitación para transferir estas capacidades a otros territorios, con seguimiento trimestral.",
         "indicator": {
           "name": "CL03 dispersión baja sostenida",
           "baseline": null,
@@ -18063,7 +18063,7 @@
       },
       "template": {
         "problem": "El cluster CL03 Territorio y Garantías Colectivas permanece en banda BAJO (<55) con varianza BAJA; las diferencias internas se reducen a menos de 8 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA04-DIM03 y PA08-DIM05.",
-        "intervention": "Garantizar paquetes mínimos de servicio y protección con reservas presupuestales y supervisión conjunta.",
+        "intervention": "Establecer y financiar paquetes de servicios mínimos de atención y protección para los territorios con mayores rezagos, asegurando la asignación de recursos mediante reservas presupuestarias específicas y un esquema de supervisión conjunta con la participación de la comunidad.",
         "indicator": {
           "name": "CL03 dispersión baja sostenida",
           "baseline": null,
@@ -18250,7 +18250,7 @@
       },
       "template": {
         "problem": "El cluster CL03 Territorio y Garantías Colectivas permanece en banda MEDIO (55-74) con varianza BAJA; las diferencias internas son menores a 6 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA04-DIM03 y PA08-DIM05.",
-        "intervention": "Blindar contratos de operación y convenios de protección mediante auditoría técnica.",
+        "intervention": "Asegurar la continuidad de los servicios y la protección mediante la formalización de contratos de operación a largo plazo y convenios interinstitucionales, los cuales serán sometidos a una auditoría técnica semestral para verificar su cumplimiento y efectividad.",
         "indicator": {
           "name": "CL03 dispersión baja sostenida",
           "baseline": null,
@@ -18429,7 +18429,7 @@
       },
       "template": {
         "problem": "El cluster CL03 Territorio y Garantías Colectivas se ubica en banda ALTO (≥75) con varianza MEDIA; persisten brechas residuales de 6 a 8 puntos y exige calibrar agendas para sostener cierres en PA04-DIM03 y PA08-DIM05.",
-        "intervention": "Consolidar mantenimiento preventivo y actualización de planes de protección para sostener la calidad del servicio y la seguridad comunitaria.",
+        "intervention": "Implementar un programa de mantenimiento preventivo para la infraestructura de servicios sociales y actualizar los planes de protección comunitaria, asegurando la asignación de recursos y la realización de simulacros trimestrales para garantizar la calidad y la respuesta oportuna.",
         "indicator": {
           "name": "CL03 dispersión media controlada",
           "baseline": null,
@@ -18608,7 +18608,7 @@
       },
       "template": {
         "problem": "El cluster CL03 Territorio y Garantías Colectivas se ubica en banda BAJO (<55) con varianza MEDIA; las diferencias oscilan entre 12 y 18 puntos en componentes críticos y exige calibrar agendas para sostener cierres en PA04-DIM03 y PA08-DIM05.",
-        "intervention": "Reprogramar inversiones sociales y esquemas de protección colectiva en territorios críticos integrando análisis socioambiental.",
+        "intervention": "Realizar una reprogramación de las inversiones en servicios sociales y protección colectiva, priorizando los territorios más críticos. Esta reprogramación se basará en un análisis socioambiental detallado para asegurar la pertinencia y efectividad de las intervenciones.",
         "indicator": {
           "name": "CL03 dispersión media controlada",
           "baseline": null,
@@ -18795,7 +18795,7 @@
       },
       "template": {
         "problem": "El cluster CL03 Territorio y Garantías Colectivas se ubica en banda MEDIO (55-74) con varianza MEDIA; las diferencias se mantienen entre 8 y 12 puntos y exige calibrar agendas para sostener cierres en PA04-DIM03 y PA08-DIM05.",
-        "intervention": "Sincronizar obras, operación de servicios y protección comunitaria en un tablero territorial con alertas tempranas.",
+        "intervention": "Desarrollar e implementar un tablero de control territorial que sincronice el avance de las obras de infraestructura, la operación de los servicios sociales y las acciones de protección comunitaria. Este tablero deberá incluir un sistema de alertas tempranas para identificar y mitigar riesgos de manera proactiva.",
         "indicator": {
           "name": "CL03 dispersión media controlada",
           "baseline": null,
@@ -20112,7 +20112,7 @@
       },
       "template": {
         "problem": "El cluster CL04 Derechos Sociales y Crisis permanece en banda ALTO (≥75) con varianza BAJA; las diferencias internas permanecen por debajo de 4 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA09-DIM03, PA10-DIM02 y PA10-DIM05.",
-        "intervention": "Documentar mecanismos de integración y resocialización replicables.",
+        "intervention": "Desarrollar y documentar un manual de buenas prácticas en integración de población migrante y resocialización de personas privadas de la libertad. Este manual deberá incluir protocolos y procedimientos replicables para ser transferidos a otros territorios.",
         "indicator": {
           "name": "CL04 dispersión baja sostenida",
           "baseline": null,
@@ -20291,7 +20291,7 @@
       },
       "template": {
         "problem": "El cluster CL04 Derechos Sociales y Crisis permanece en banda BAJO (<55) con varianza BAJA; las diferencias internas se reducen a menos de 8 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA09-DIM03, PA10-DIM02 y PA10-DIM05.",
-        "intervention": "Asegurar paquetes mínimos de servicios y protocolos humanitarios con respaldo financiero.",
+        "intervention": "Definir y asegurar el financiamiento de paquetes de servicios mínimos para la atención de la población privada de la libertad y migrante. Esto incluye la formalización de protocolos humanitarios y la asignación de recursos específicos para su implementación.",
         "indicator": {
           "name": "CL04 dispersión baja sostenida",
           "baseline": null,
@@ -20478,7 +20478,7 @@
       },
       "template": {
         "problem": "El cluster CL04 Derechos Sociales y Crisis permanece en banda MEDIO (55-74) con varianza BAJA; las diferencias internas son menores a 6 puntos y requiere consolidar mecanismos de sostenibilidad para los cierres en PA09-DIM03, PA10-DIM02 y PA10-DIM05.",
-        "intervention": "Blindar contratos y convenios de atención con auditorías externas.",
+        "intervention": "Fortalecer la supervisión de los contratos y convenios de atención a población vulnerable mediante la implementación de auditorías externas semestrales. Los resultados de estas auditorías serán vinculantes y deberán ser presentados al Comité de Sostenibilidad.",
         "indicator": {
           "name": "CL04 dispersión baja sostenida",
           "baseline": null,
@@ -20657,7 +20657,7 @@
       },
       "template": {
         "problem": "El cluster CL04 Derechos Sociales y Crisis se ubica en banda ALTO (≥75) con varianza MEDIA; persisten brechas residuales de 6 a 8 puntos y exige calibrar agendas para sostener cierres en PA09-DIM03, PA10-DIM02 y PA10-DIM05.",
-        "intervention": "Consolidar capacidad instalada con convenios de cooperación y vigilancia de indicadores críticos.",
+        "intervention": "Fortalecer la capacidad instalada para la atención a población vulnerable mediante la firma de convenios de cooperación con organizaciones especializadas. Se establecerá un sistema de vigilancia de indicadores críticos para monitorear el desempeño y asegurar la calidad de los servicios.",
         "indicator": {
           "name": "CL04 dispersión media controlada",
           "baseline": null,
@@ -20836,7 +20836,7 @@
       },
       "template": {
         "problem": "El cluster CL04 Derechos Sociales y Crisis se ubica en banda BAJO (<55) con varianza MEDIA; las diferencias oscilan entre 12 y 18 puntos en componentes críticos y exige calibrar agendas para sostener cierres en PA09-DIM03, PA10-DIM02 y PA10-DIM05.",
-        "intervention": "Reorientar recursos hacia cupos penitenciarios, salud carcelaria y servicios a migrantes con metas corregidas por población objetivo.",
+        "intervention": "Realizar una reorientación estratégica de los recursos para atender las necesidades más urgentes en materia de cupos penitenciarios, salud carcelaria y servicios a migrantes. Se establecerán metas corregidas y específicas para cada población objetivo, con seguimiento trimestral.",
         "indicator": {
           "name": "CL04 dispersión media controlada",
           "baseline": null,
@@ -21023,7 +21023,7 @@
       },
       "template": {
         "problem": "El cluster CL04 Derechos Sociales y Crisis se ubica en banda MEDIO (55-74) con varianza MEDIA; las diferencias se mantienen entre 8 y 12 puntos y exige calibrar agendas para sostener cierres en PA09-DIM03, PA10-DIM02 y PA10-DIM05.",
-        "intervention": "Sincronizar tableros penitenciarios y migratorios para balancear coberturas y reducir tensiones comunitarias.",
+        "intervention": "Implementar un tablero de control unificado que sincronice los datos de los sistemas penitenciario y migratorio. Este tablero permitirá balancear las coberturas de servicios y desarrollar estrategias para reducir las tensiones en las comunidades de acogida.",
         "indicator": {
           "name": "CL04 dispersión media controlada",
           "baseline": null,
@@ -21590,9 +21590,13 @@
       "level": "MACRO",
       "when": {
         "macro_band": "EXCELENTE",
-        "clusters_below_target": [],
+        "clusters_below_target": [
+          "CL01"
+        ],
         "variance_alert": "SIN_ALERTA",
-        "priority_micro_gaps": []
+        "priority_micro_gaps": [
+          "PA01-DIM01"
+        ]
       },
       "template": {
         "problem": "El puntaje macro es EXCELENTE sin alertas de varianza; se requiere blindar la sostenibilidad y la trazabilidad de los logros alcanzados.",

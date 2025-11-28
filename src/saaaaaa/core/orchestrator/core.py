@@ -33,10 +33,10 @@ from typing import TYPE_CHECKING, Any, Literal, ParamSpec, TypedDict, TypeVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .questionnaire import CanonicalQuestionnaire
+    from .factory import CanonicalQuestionnaire
 
 from ...analysis.recommendation_engine import RecommendationEngine
-from ...config.paths import PROJECT_ROOT, RULES_DIR
+from ...config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
 from ...processing.aggregation import (
     AggregationSettings,
     AreaPolicyAggregator,
@@ -960,6 +960,7 @@ class MethodExecutor:
 
         # Create ExtendedArgRouter with the registry for enhanced validation and metrics
         self._router = ExtendedArgRouter(registry)
+        self.instances = _LazyInstanceDict(self._method_registry)
 
     @staticmethod
     def _supports_parameter(callable_obj: Any, parameter_name: str) -> bool:
@@ -1257,7 +1258,7 @@ class Orchestrator:
             resource_limits: Resource limit configuration.
             resource_snapshot_interval: Interval for resource snapshots.
         """
-        from .questionnaire import _validate_questionnaire_structure
+        from .factory import _validate_questionnaire_structure
 
         validate_phase_definitions(self.FASES, self.__class__)
 
@@ -1268,9 +1269,8 @@ class Orchestrator:
         self.calibration_orchestrator = calibration_orchestrator
         self.resource_limits = resource_limits or ResourceLimits()
         self.resource_snapshot_interval = max(1, resource_snapshot_interval)
+        from .factory import get_questionnaire_provider
         self.questionnaire_provider = get_questionnaire_provider()
-        if not self.questionnaire_provider.has_data():
-            self.questionnaire_provider.set_data(self._monolith_data)
 
         # Validate questionnaire structure
         try:
@@ -1321,7 +1321,7 @@ class Orchestrator:
 
         try:
             self.recommendation_engine = RecommendationEngine(
-                rules_path=CONFIG_DIR / "recommendation_rules_enhanced.json",
+                rules_path=RULES_DIR / "recommendation_rules_enhanced.json",
                 schema_path=RULES_DIR / "recommendation_rules_enhanced.schema.json",
                 questionnaire_provider=self.questionnaire_provider,
                 orchestrator=self
