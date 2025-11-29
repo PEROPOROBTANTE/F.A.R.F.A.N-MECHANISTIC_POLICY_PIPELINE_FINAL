@@ -10,11 +10,11 @@ canonical FARFAN flow.
 Canonical entrypoint is scripts/run_policy_pipeline_verified.py.
 
 This module is an INTERNAL COMPONENT of:
-    scripts/smart_policy_chunks_canonic_phase_one.py (StrategicChunkingSystem)
+    src/saaaaaa/processing/spc_ingestion.py (StrategicChunkingSystem)
 
 DO NOT use this module directly as an independent pipeline. It is consumed
 internally by the SPC core and should only be imported from within:
-    - smart_policy_chunks_canonic_phase_one.py
+    - saaaaaa.processing.spc_ingestion
     - Unit tests for SPC components
 
 State-of-the-Art Components:
@@ -38,6 +38,8 @@ from typing import TYPE_CHECKING, Any, Literal, Protocol, TypedDict
 import numpy as np
 from sentence_transformers import CrossEncoder, SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -296,6 +298,7 @@ class AdvancedSemanticChunker:
 
         return semantic_chunks
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._normalize_text")
     def _normalize_text(self, text: str) -> str:
         """Normalize text while preserving structure."""
         # Remove excessive whitespace but preserve paragraph breaks
@@ -303,6 +306,7 @@ class AdvancedSemanticChunker:
         text = re.sub(r"\n{3,}", "\n\n", text)
         return text.strip()
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._recursive_split")
     def _recursive_split(self, text: str, target_size: int, overlap: int) -> list[str]:
         """
         Recursive character splitting with semantic boundary respect.
@@ -345,6 +349,7 @@ class AdvancedSemanticChunker:
 
         return chunks
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._find_sentence_boundary")
     def _find_sentence_boundary(self, text: str, start: int, end: int) -> int | None:
         """Find sentence boundary using Spanish punctuation rules."""
         # Spanish sentence endings: . ! ? ; followed by space or newline
@@ -356,6 +361,7 @@ class AdvancedSemanticChunker:
             return matches[-1].end()
         return None
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._extract_sections")
     def _extract_sections(self, text: str) -> list[dict[str, Any]]:
         """Extract document sections with hierarchical structure."""
         sections = []
@@ -372,6 +378,7 @@ class AdvancedSemanticChunker:
     # Number of characters to consider as table extent after marker
     TABLE_EXTENT_CHARS = 300
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._extract_tables")
     def _extract_tables(self, text: str) -> list[dict[str, Any]]:
         """Identify table regions in document."""
         tables = []
@@ -386,6 +393,7 @@ class AdvancedSemanticChunker:
             )
         return tables
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._extract_lists")
     def _extract_lists(self, text: str) -> list[dict[str, Any]]:
         """Identify list structures."""
         lists = []
@@ -464,6 +472,7 @@ class AdvancedSemanticChunker:
             for table in tables
         )
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.AdvancedSemanticChunker._contains_list")
     def _contains_list(self, chunk_text: str, lists: list[dict[str, Any]]) -> bool:
         """Check if chunk contains list structures."""
         return bool(self.LIST_MARKERS.search(chunk_text))
@@ -499,7 +508,7 @@ class BayesianNumericalAnalyzer:
         Initialize Bayesian analyzer.
 
         Args:
-            prior_strength: Prior belief strength (1.0 = weak, 10.0 = strong)
+            prior_strength: Prior belief strength (get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer.__init__").get("auto_param_L510_51", 1.0) = weak, 1get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer.__init__").get("auto_param_L510_64", 0.0) = strong)
         """
         self.prior_strength = prior_strength
         self._logger = logging.getLogger(self.__class__.__name__)
@@ -605,7 +614,7 @@ class BayesianNumericalAnalyzer:
         """
         n_obs = len(observations)
         obs_mean = np.mean(observations)
-        obs_std = np.std(observations, ddof=1) if n_obs > 1 else 1.0
+        obs_std = np.std(observations, ddof=1) if n_obs > 1 else get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer.__init__").get("auto_param_L616_65", 1.0)
 
         # Prior parameters (weakly informative centered on observed mean)
         mu_prior = obs_mean
@@ -638,15 +647,16 @@ class BayesianNumericalAnalyzer:
         Returns:
             Evidence strength classification (weak/moderate/strong/very_strong)
         """
-        if credible_interval_width > 0.5:
+        if credible_interval_width > get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer.__init__").get("auto_param_L649_37", 0.5):
             return "weak"
-        elif credible_interval_width > 0.3:
+        elif credible_interval_width > get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer.__init__").get("auto_param_L651_39", 0.3):
             return "moderate"
-        elif credible_interval_width > 0.15:
+        elif credible_interval_width > get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer.__init__").get("auto_param_L653_39", 0.15):
             return "strong"
         else:
             return "very_strong"
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._compute_coherence")
     def _compute_coherence(self, observations: NDArray[np.float32], **kwargs: Any) -> float:
         """
         Compute numerical coherence (consistency) score.
@@ -661,33 +671,34 @@ class BayesianNumericalAnalyzer:
             Coherence score in [0, 1]
         """
         if len(observations) < 2:
-            return 1.0
+            return get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._compute_coherence").get("auto_param_L673_19", 1.0)
 
         # Coefficient of variation
         mean_val = np.mean(observations)
         std_val = np.std(observations, ddof=1)
 
         if mean_val == 0:
-            return 0.0
+            return get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._compute_coherence").get("auto_param_L680_19", 0.0)
 
         cv = std_val / abs(mean_val)
 
         # Normalize: lower CV = higher coherence
         coherence = np.exp(-cv)  # Exponential decay
 
-        return float(np.clip(coherence, 0.0, 1.0))
+        return float(np.clip(coherence, get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._compute_coherence").get("auto_param_L687_40", 0.0), get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._compute_coherence").get("auto_param_L687_45", 1.0)))
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation")
     def _null_evaluation(self) -> BayesianEvaluation:
         """Return null evaluation when no data available."""
-        null_samples = to_dict_samples(np.array([0.0], dtype=np.float32))
+        null_samples = to_dict_samples(np.array([get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L692_49", 0.0)], dtype=np.float32))
 
         return BayesianEvaluation(
-            point_estimate=0.0,
-            credible_interval_95=(0.0, 0.0),
+            point_estimate=get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L695_27", 0.0),
+            credible_interval_95=(get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L696_34", 0.0), get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L696_39", 0.0)),
             posterior_samples=null_samples,
             evidence_strength="weak",
-            numerical_coherence=0.0,
-            posterior_records=[{"coherence": 0.0}],
+            numerical_coherence=get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L699_32", 0.0),
+            posterior_records=[{"coherence": get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L700_45", 0.0)}],
         )
 
     def serialize_posterior_samples(
@@ -723,7 +734,7 @@ class BayesianNumericalAnalyzer:
         Returns probability that A > B and Bayes factor.
         """
         if not policy_a_values or not policy_b_values:
-            return {"probability_a_better": 0.5, "bayes_factor": 1.0}
+            return {"probability_a_better": get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L736_44", 0.5), "bayes_factor": get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L736_65", 1.0)}
 
         # Get posterior distributions
         eval_a = self.evaluate_policy_metric(policy_a_values)
@@ -737,10 +748,10 @@ class BayesianNumericalAnalyzer:
         # Compute probability that A > B and clip to avoid exact 0/1 which can cause
         # division-by-zero in subsequent Bayes factor calculation.
         prob_a_better = float(np.mean(samples_a > samples_b))
-        prob_a_better = float(np.clip(prob_a_better, 1e-6, 1.0 - 1e-6))
+        prob_a_better = float(np.clip(prob_a_better, 1e-6, get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L750_59", 1.0) - 1e-6))
 
         # Compute Bayes factor (simplified)
-        if prob_a_better > 0.5:
+        if prob_a_better > get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L753_27", 0.5):
             bayes_factor = prob_a_better / (1 - prob_a_better)
         else:
             bayes_factor = (1 - prob_a_better) / prob_a_better
@@ -835,7 +846,7 @@ class PolicyCrossEncoderReranker:
         query: str,
         candidates: list[SemanticChunk],
         top_k: int = 10,
-        min_score: float = 0.0,
+        min_score: float = get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L848_27", 0.0),
     ) -> list[tuple[SemanticChunk, float]]:
         """
         Rerank candidates using cross-encoder attention.
@@ -887,10 +898,10 @@ class PolicyEmbeddingConfig:
     # Retrieval parameters
     top_k_candidates: int = 50  # Bi-encoder retrieval
     top_k_rerank: int = 10  # Cross-encoder rerank
-    mmr_lambda: float = 0.7  # Diversity vs relevance trade-off
+    mmr_lambda: float = get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L900_24", 0.7)  # Diversity vs relevance trade-off
 
     # Bayesian analysis
-    prior_strength: float = 1.0  # Weakly informative prior
+    prior_strength: float = get_parameter_loader().get("saaaaaa.processing.embedding_policy.BayesianNumericalAnalyzer._null_evaluation").get("auto_param_L903_28", 1.0)  # Weakly informative prior
 
     # Performance
     batch_size: int = 32
@@ -1214,6 +1225,7 @@ class PolicyAnalysisEmbedder:
     # PRIVATE METHODS
     # ========================================================================
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._embed_texts")
     def _embed_texts(self, texts: list[str]) -> NDArray[np.float32]:
         """Generate embeddings with caching and retry logic."""
         uncached_texts = []
@@ -1415,6 +1427,7 @@ class PolicyAnalysisEmbedder:
         # Reorder by MMR selection
         return [(chunks[i], scores[i]) for i in selected_indices]
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._extract_numerical_values")
     def _extract_numerical_values(self, chunks: list[SemanticChunk]) -> list[float]:
         """
         Extract numerical values from chunks using advanced patterns.
@@ -1459,7 +1472,7 @@ class PolicyAnalysisEmbedder:
 
                         # Normalize to 0-1 scale if it's a percentage
                         if "%" in match.group(0) and value <= 100:
-                            value = value / 100.0
+                            value = value / 10get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._extract_numerical_values").get("auto_param_L1474_46", 0.0)
 
                         # Filter outliers
                         if 0 <= value <= 1e9:  # Reasonable range
@@ -1470,6 +1483,7 @@ class PolicyAnalysisEmbedder:
 
         return numerical_values
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq")
     def _generate_query_from_pdq(self, pdq: PDQIdentifier) -> str:
         """Generate search query from P-D-Q identifier."""
         policy_name = PolicyDomain[pdq["policy"]].value
@@ -1493,20 +1507,20 @@ class PolicyAnalysisEmbedder:
         - Statistical coherence
         """
         if not relevant_chunks:
-            return 0.0
+            return get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1509_19", 0.0)
 
         # Semantic confidence: average of top scores
         semantic_scores = [score for _, score in relevant_chunks[:5]]
         semantic_confidence = (
-            float(np.mean(semantic_scores)) if semantic_scores else 0.0
+            float(np.mean(semantic_scores)) if semantic_scores else get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1514_68", 0.0)
         )
 
         # Numerical confidence: based on evidence strength and coherence
         evidence_strength_map = {
-            "weak": 0.25,
-            "moderate": 0.5,
-            "strong": 0.75,
-            "very_strong": 1.0,
+            "weak": get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1519_20", 0.25),
+            "moderate": get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1520_24", 0.5),
+            "strong": get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1521_22", 0.75),
+            "very_strong": get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1522_27", 1.0),
         }
         numerical_confidence = (
             evidence_strength_map[numerical_eval["evidence_strength"]]
@@ -1514,11 +1528,12 @@ class PolicyAnalysisEmbedder:
         )
 
         # Combined confidence: weighted average
-        overall_confidence = 0.6 * semantic_confidence + 0.4 * numerical_confidence
+        overall_confidence = get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1530_29", 0.6) * semantic_confidence + get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1530_57", 0.4) * numerical_confidence
 
-        return float(np.clip(overall_confidence, 0.0, 1.0))
+        return float(np.clip(overall_confidence, get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1532_49", 0.0), get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._generate_query_from_pdq").get("auto_param_L1532_54", 1.0)))
 
     @lru_cache(maxsize=1024)
+    @calibrated_method("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder._cached_similarity")
     def _cached_similarity(self, text_hash1: str, text_hash2: str) -> float:
         """Cached similarity computation for performance.
         Assumes embeddings are cached in self._embedding_cache using text_hash as key.
@@ -1527,6 +1542,7 @@ class PolicyAnalysisEmbedder:
         emb2 = self._embedding_cache[text_hash2]
         return float(cosine_similarity(emb1.reshape(1, -1), emb2.reshape(1, -1))[0, 0])
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder.get_diagnostics")
     def get_diagnostics(self) -> dict[str, Any]:
         """Get system diagnostics and performance metrics."""
         return {
@@ -1612,7 +1628,7 @@ class EmbeddingPolicyProducer:
     Provides public API methods for orchestrator integration without exposing
     internal implementation details or summarization logic.
 
-    Version: 1.0.0
+    Version: get_parameter_loader().get("saaaaaa.processing.embedding_policy.PolicyAnalysisEmbedder.get_diagnostics").get("auto_param_L1630_13", 1.0).0
     Producer Type: Embedding / Semantic Search
     """
 
@@ -1643,22 +1659,27 @@ class EmbeddingPolicyProducer:
         """Process document into semantic chunks with embeddings"""
         return self.embedder.process_document(document_text, document_metadata)
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_chunk_count")
     def get_chunk_count(self, chunks: list[SemanticChunk]) -> int:
         """Get number of chunks"""
         return len(chunks)
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_chunk_text")
     def get_chunk_text(self, chunk: SemanticChunk) -> str:
         """Extract text from chunk"""
         return chunk["content"]
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_chunk_embedding")
     def get_chunk_embedding(self, chunk: SemanticChunk) -> NDArray[np.float32]:
         """Extract embedding from chunk"""
         return chunk["embedding"]
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_chunk_metadata")
     def get_chunk_metadata(self, chunk: SemanticChunk) -> dict[str, Any]:
         """Extract metadata from chunk"""
         return chunk["metadata"]
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_chunk_pdq_context")
     def get_chunk_pdq_context(self, chunk: SemanticChunk) -> PDQIdentifier | None:
         """Extract P-D-Q context from chunk"""
         return chunk["pdq_context"]
@@ -1703,21 +1724,25 @@ class EmbeddingPolicyProducer:
         """Generate comprehensive analytical report for P-D-Q question"""
         return self.embedder.generate_pdq_report(document_chunks, target_pdq)
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_pdq_evidence_count")
     def get_pdq_evidence_count(self, report: dict[str, Any]) -> int:
         """Extract evidence count from P-D-Q report"""
         return report.get("evidence_count", 0)
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_pdq_numerical_evaluation")
     def get_pdq_numerical_evaluation(self, report: dict[str, Any]) -> dict[str, Any]:
         """Extract numerical evaluation from P-D-Q report"""
         return report.get("numerical_evaluation", {})
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_pdq_evidence_passages")
     def get_pdq_evidence_passages(self, report: dict[str, Any]) -> list[dict[str, Any]]:
         """Extract evidence passages from P-D-Q report"""
         return report.get("evidence_passages", [])
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_pdq_confidence")
     def get_pdq_confidence(self, report: dict[str, Any]) -> float:
         """Extract confidence from P-D-Q report"""
-        return report.get("confidence", 0.0)
+        return report.get("confidence", get_parameter_loader().get("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_pdq_confidence").get("auto_param_L1744_40", 0.0))
 
     # ========================================================================
     # BAYESIAN NUMERICAL ANALYSIS API
@@ -1733,6 +1758,7 @@ class EmbeddingPolicyProducer:
             chunks, pdq_context
         )
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_point_estimate")
     def get_point_estimate(self, evaluation: BayesianEvaluation) -> float:
         """Extract point estimate from Bayesian evaluation"""
         return evaluation["point_estimate"]
@@ -1749,6 +1775,7 @@ class EmbeddingPolicyProducer:
         """Extract evidence strength classification"""
         return evaluation["evidence_strength"]
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_numerical_coherence")
     def get_numerical_coherence(self, evaluation: BayesianEvaluation) -> float:
         """Extract numerical coherence score"""
         return evaluation["numerical_coherence"]
@@ -1768,42 +1795,51 @@ class EmbeddingPolicyProducer:
             intervention_a_chunks, intervention_b_chunks, pdq_context
         )
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_comparison_probability")
     def get_comparison_probability(self, comparison: dict[str, Any]) -> float:
         """Extract probability that A is better than B"""
-        return comparison.get("probability_a_better", 0.5)
+        return comparison.get("probability_a_better", get_parameter_loader().get("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_comparison_probability").get("auto_param_L1800_54", 0.5))
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_comparison_bayes_factor")
     def get_comparison_bayes_factor(self, comparison: dict[str, Any]) -> float:
         """Extract Bayes factor from comparison"""
-        return comparison.get("bayes_factor", 1.0)
+        return comparison.get("bayes_factor", get_parameter_loader().get("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_comparison_bayes_factor").get("auto_param_L1805_46", 1.0))
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_comparison_difference_mean")
     def get_comparison_difference_mean(self, comparison: dict[str, Any]) -> float:
         """Extract mean difference from comparison"""
-        return comparison.get("difference_mean", 0.0)
+        return comparison.get("difference_mean", get_parameter_loader().get("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_comparison_difference_mean").get("auto_param_L1810_49", 0.0))
 
     # ========================================================================
     # UTILITY API
     # ========================================================================
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_diagnostics")
     def get_diagnostics(self) -> dict[str, Any]:
         """Get system diagnostics and performance metrics"""
         return self.embedder.get_diagnostics()
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_config")
     def get_config(self) -> PolicyEmbeddingConfig:
         """Get current configuration"""
         return self.embedder.config
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.list_policy_domains")
     def list_policy_domains(self) -> list[PolicyDomain]:
         """List all policy domains"""
         return list(PolicyDomain)
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.list_analytical_dimensions")
     def list_analytical_dimensions(self) -> list[AnalyticalDimension]:
         """List all analytical dimensions"""
         return list(AnalyticalDimension)
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_policy_domain_description")
     def get_policy_domain_description(self, domain: PolicyDomain) -> str:
         """Get description for policy domain"""
         return domain.value
 
+    @calibrated_method("saaaaaa.processing.embedding_policy.EmbeddingPolicyProducer.get_analytical_dimension_description")
     def get_analytical_dimension_description(self, dimension: AnalyticalDimension) -> str:
         """Get description for analytical dimension"""
         return dimension.value

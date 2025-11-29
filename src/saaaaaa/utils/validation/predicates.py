@@ -13,6 +13,7 @@ Python: 3.10+
 
 from dataclasses import dataclass
 from typing import Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 @dataclass

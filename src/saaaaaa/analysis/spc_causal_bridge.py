@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 try:
     import networkx as nx
@@ -46,6 +48,7 @@ class SPCCausalBridge:
                 "Install networkx for full causal graph construction."
             )
 
+    @calibrated_method("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge.build_causal_graph_from_spc")
     def build_causal_graph_from_spc(self, chunk_graph: dict) -> Any:
         """
         Convert SPC chunk graph to causal DAG.
@@ -86,7 +89,7 @@ class SPCCausalBridge:
                 f"chunk_{node_id}",
                 chunk_type=node.get("type", "unknown"),
                 text_summary=node.get("text", "")[:100],  # First 100 chars
-                confidence=node.get("confidence", 0.0),
+                confidence=node.get("confidence", get_parameter_loader().get("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge.build_causal_graph_from_spc").get("auto_param_L91_50", 0.0)),
             )
 
         # Add edges with causal interpretation
@@ -135,6 +138,7 @@ class SPCCausalBridge:
 
         return G
 
+    @calibrated_method("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge._compute_causal_weight")
     def _compute_causal_weight(self, edge_type: str) -> float:
         """
         Map SPC edge type to causal weight.
@@ -143,10 +147,11 @@ class SPCCausalBridge:
             edge_type: Type of edge from SPC graph
 
         Returns:
-            Causal weight between 0.0 and 1.0
+            Causal weight between get_parameter_loader().get("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge._compute_causal_weight").get("auto_param_L149_34", 0.0) and get_parameter_loader().get("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge._compute_causal_weight").get("auto_param_L149_42", 1.0)
         """
-        return self.CAUSAL_WEIGHTS.get(edge_type, 0.0)
+        return self.CAUSAL_WEIGHTS.get(edge_type, get_parameter_loader().get("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge._compute_causal_weight").get("auto_param_L151_50", 0.0))
 
+    @calibrated_method("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge._remove_cycles")
     def _remove_cycles(self, G: Any) -> Any:
         """
         Remove cycles from graph to create a DAG.
@@ -177,7 +182,7 @@ class SPCCausalBridge:
 
                 for u, v, direction in cycle:
                     if direction == "forward":
-                        weight = G_dag[u][v].get("weight", 0.0)
+                        weight = G_dag[u][v].get("weight", get_parameter_loader().get("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge._remove_cycles").get("auto_param_L184_59", 0.0))
                         if weight < min_weight:
                             min_weight = weight
                             min_edge = (u, v)
@@ -197,6 +202,7 @@ class SPCCausalBridge:
 
         return G_dag
 
+    @calibrated_method("saaaaaa.analysis.spc_causal_bridge.SPCCausalBridge.enhance_graph_with_content")
     def enhance_graph_with_content(self, G: Any, chunks: list) -> Any:
         """
         Enhance causal graph with content-based relationships.

@@ -7,6 +7,8 @@ ensuring zero-tolerance for invalid values at ingestion time.
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from typing_extensions import Self
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 class AggregationWeights(BaseModel):
@@ -42,13 +44,14 @@ class AggregationWeights(BaseModel):
         return v
 
     @model_validator(mode='after')
+    @calibrated_method("saaaaaa.utils.validation.aggregation_models.AggregationWeights.validate_sum")
     def validate_sum(self) -> Self:
-        """Ensure weights sum to 1.0 within tolerance."""
+        """Ensure weights sum to get_parameter_loader().get("saaaaaa.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L48_33", 1.0) within tolerance."""
         weight_sum = sum(self.weights)
-        if abs(weight_sum - 1.0) > self.tolerance:
+        if abs(weight_sum - get_parameter_loader().get("saaaaaa.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L50_28", 1.0)) > self.tolerance:
             raise ValueError(
-                f"Weight sum validation failed: sum={weight_sum:.6f}, expected=1.0. "
-                f"Difference {abs(weight_sum - 1.0):.6f} exceeds tolerance {self.tolerance:.6f}."
+                f"Weight sum validation failed: sum={weight_sum:.6f}, expected=get_parameter_loader().get("saaaaaa.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L52_79", 1.0). "
+                f"Difference {abs(weight_sum - get_parameter_loader().get("saaaaaa.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L53_47", 1.0)):.6f} exceeds tolerance {self.tolerance:.6f}."
             )
         return self
 

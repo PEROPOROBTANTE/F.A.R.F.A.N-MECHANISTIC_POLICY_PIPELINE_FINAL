@@ -17,6 +17,7 @@ from ..core.orchestrator.core import Orchestrator
 from ..core.orchestrator.factory import build_processor
 from ..core.orchestrator.questionnaire import load_questionnaire
 from ..core.orchestrator.verification_manifest import write_verification_manifest
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -355,6 +356,7 @@ class PipelineConnector:
                 f"Ensure CPPIngestionPipeline and SPCAdapter are working correctly."
             ) from e
 
+    @calibrated_method("saaaaaa.api.pipeline_connector.PipelineConnector._extract_metrics")
     def _extract_metrics(self, orchestrator_result: dict[str, Any]) -> dict[str, Any]:
         """Extract key metrics from orchestrator result"""
         metrics = {}
@@ -428,6 +430,7 @@ class PipelineConnector:
         logger.info(f"Verification manifest written to: {manifest_path}")
         return str(manifest_path)
 
+    @calibrated_method("saaaaaa.api.pipeline_connector.PipelineConnector._update_job_status")
     def _update_job_status(self, job_id: str, status: str, progress: int, message: str) -> None:
         """Update status of running job"""
         if job_id in self.running_jobs:
@@ -438,6 +441,7 @@ class PipelineConnector:
                 "updated_at": datetime.now().isoformat()
             })
 
+    @calibrated_method("saaaaaa.api.pipeline_connector.PipelineConnector.get_job_status")
     def get_job_status(self, job_id: str) -> dict[str, Any] | None:
         """Get current status of a job"""
         if job_id in self.running_jobs:
@@ -451,6 +455,7 @@ class PipelineConnector:
             }
         return None
 
+    @calibrated_method("saaaaaa.api.pipeline_connector.PipelineConnector.get_result")
     def get_result(self, job_id: str) -> PipelineResult | None:
         """Get final result for a completed job"""
         return self.completed_jobs.get(job_id)

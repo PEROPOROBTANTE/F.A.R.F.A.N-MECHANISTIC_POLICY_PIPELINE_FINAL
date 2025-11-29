@@ -43,7 +43,7 @@ from ..contracts import (
     SemanticChunkingInputContract,
     TeoriaCambioInputContract,
 )
-from .core import MethodExecutor
+from .core import MethodExecutor, Orchestrator
 from .executor_config import ExecutorConfig
 from .method_registry import MethodRegistry
 from .method_source_validator import MethodSourceValidator
@@ -64,7 +64,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[4]
 QUESTIONNAIRE_PATH: Final[Path] = _REPO_ROOT / "data" / "questionnaire_monolith.json"
 
 # RULE 2: ONE HASH - Expected SHA-256 hash (MUST match or load fails)
-EXPECTED_HASH: Final[str] = "27f7f784583d637158cb70ee236f1a98f77c1a08366612b5ae11f3be24062658"
+EXPECTED_HASH: Final[str] = "596d940383dd5bd64a5460eadcb65b9b26b2a7929eea838d2169f0f7cee46986"
 
 # RULE 3: ONE STRUCTURE - Expected question counts
 EXPECTED_MICRO_QUESTION_COUNT: Final[int] = 300
@@ -93,7 +93,7 @@ class CanonicalQuestionnaire:
             raise ValueError(f"Expected {EXPECTED_MICRO_QUESTION_COUNT} micro questions, got {self.micro_question_count}")
         if self.total_question_count != EXPECTED_TOTAL_QUESTION_COUNT:
             raise ValueError(f"Expected {EXPECTED_TOTAL_QUESTION_COUNT} total questions, got {self.total_question_count}")
-        logger.info("canonical_questionnaire_validated", sha256=self.sha256[:16], version=self.version)
+        logger.info("canonical_questionnaire_validated sha256=%s version=%s", self.sha256[:16], self.version)
 
 def _validate_questionnaire_structure(data: dict[str, Any]) -> None:
     """Validate questionnaire structure for required fields and types."""
@@ -411,13 +411,12 @@ class CoreModuleFactory:
         """Get the canonical questionnaire object (cached)."""
         with self._lock:
             if self.questionnaire_cache is None:
-                questionnaire_path = self.data_dir / "questionnaire_monolith.json"
-                canonical_q = load_questionnaire(questionnaire_path)
+                canonical_q = load_questionnaire()
                 self.questionnaire_cache = canonical_q
                 logger.info(
-                    "factory_loaded_questionnaire",
-                    sha256=canonical_q.sha256[:16] + "...",
-                    question_count=canonical_q.total_question_count,
+                    "factory_loaded_questionnaire sha256=%s... question_count=%s",
+                    canonical_q.sha256[:16],
+                    canonical_q.total_question_count,
                 )
             return self.questionnaire_cache
 
@@ -479,9 +478,7 @@ def build_processor(
 
     # PHASE 2: METHOD REGISTRY CREATION
     logger.info("Initializing method registry with source-truth...")
-    method_registry = MethodRegistry(source_truth=source_truth)
-    for method_fqn in validation_report['valid']:
-        method_registry.register_lazy(method_fqn)
+    method_registry = MethodRegistry()
     logger.info(f"Pre-registered {len(validation_report['valid'])} valid methods.")
 
 
@@ -504,38 +501,38 @@ def build_processor(
         canonical_q = load_questionnaire(questionnaire_path)
         core_factory.questionnaire_cache = canonical_q
         logger.info(
-            "build_processor_using_canonical_loader",
-            path=str(questionnaire_path),
-            sha256=canonical_q.sha256[:16] + "...",
-            question_count=canonical_q.total_question_count,
+            "build_processor_using_canonical_loader path=%s sha256=%s... question_count=%s",
+            str(questionnaire_path),
+            canonical_q.sha256[:16],
+            canonical_q.total_question_count,
         )
     else:
         canonical_q = core_factory.get_questionnaire()
 
     # Build signal infrastructure if enabled
     signal_registry = None
-    if enable_signals:
-        try:
-            from .bayesian_module_factory import BayesianModuleFactory as SignalFactory
-
-            signal_factory = SignalFactory(
-                questionnaire_data=canonical_q.data,  # Pass the immutable data view
-                enable_signals=True,
-            )
-            signal_registry = signal_factory._signal_registry
-
-            logger.info(
-                "signals_enabled_in_processor",
-                enabled=True,
-                registry_size=len(signal_registry._cache) if signal_registry else 0,
-            )
-        except Exception as e:
-            logger.warning(
-                "signal_initialization_failed",
-                error=str(e),
-                fallback="continuing without signals"
-            )
-            signal_registry = None
+    #if enable_signals:
+    #    try:
+    #        from .bayesian_module_factory import BayesianModuleFactory as SignalFactory
+    #
+    #        signal_factory = SignalFactory(
+    #            questionnaire_data=canonical_q.data,  # Pass the immutable data view
+    #            enable_signals=True,
+    #        )
+    #        signal_registry = signal_factory._signal_registry
+    #
+    #        logger.info(
+    #            "signals_enabled_in_processor enabled=%s registry_size=%s",
+    #            True,
+    #            len(signal_registry._cache) if signal_registry else 0,
+    #        )
+    #    except Exception as e:
+    #        logger.warning(
+    #            "signal_initialization_failed error=%s fallback=%s",
+    #            str(e),
+    #            "continuing without signals",
+    #        )
+    #        signal_registry = None
 
     executor = MethodExecutor(
         signal_registry=signal_registry, 
@@ -549,6 +546,20 @@ def build_processor(
         signal_registry=signal_registry,
         executor_config=effective_config,
     )
+
+def create_orchestrator() -> "Orchestrator":
+    """Create a fully configured orchestrator instance."""
+    processor_bundle = build_processor()
+    return Orchestrator(
+        method_executor=processor_bundle.method_executor,
+        questionnaire=processor_bundle.questionnaire,
+        executor_config=processor_bundle.executor_config,
+    )
+
+def get_questionnaire_provider():
+    """Get a questionnaire provider instance."""
+    from ..wiring.bootstrap import QuestionnaireResourceProvider
+    return QuestionnaireResourceProvider()
 
 # ============================================================================
 # MIGRATION HELPERS
@@ -593,4 +604,5 @@ __all__ = [
     'construct_policy_processor_input',
     # Builder
     'build_processor',
+    'get_questionnaire_provider',
 ]

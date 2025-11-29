@@ -8,6 +8,8 @@ import ast
 import json
 from pathlib import Path
 from typing import Any
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 class MethodConfigLoader:
@@ -40,6 +42,7 @@ class MethodConfigLoader:
             for method in self.spec["methods"]
         }
 
+    @calibrated_method("saaaaaa.utils.method_config_loader.MethodConfigLoader.validate_spec_schema")
     def validate_spec_schema(self) -> None:
         """
         Validate JSON spec matches expected schema.
@@ -84,10 +87,12 @@ class MethodConfigLoader:
 
         raise KeyError(f"Parameter {param_name} not found for method {canonical_id}")
 
+    @calibrated_method("saaaaaa.utils.method_config_loader.MethodConfigLoader.get_method_description")
     def get_method_description(self, canonical_id: str) -> str:
         """Get method description."""
         return self._method_index[canonical_id]["description"]
 
+    @calibrated_method("saaaaaa.utils.method_config_loader.MethodConfigLoader.get_parameter_spec")
     def get_parameter_spec(self, canonical_id: str, param_name: str) -> dict:
         """Get full parameter specification including allowed values."""
         method = self._method_index[canonical_id]
@@ -125,9 +130,10 @@ class MethodConfigLoader:
 
         return True
 
+    @calibrated_method("saaaaaa.utils.method_config_loader.MethodConfigLoader._parse_range")
     def _parse_range(self, spec: str) -> tuple[float, float]:
         """
-        Parse range specification like '[0.0, 1.0], inclusive' or '[100, 10000], integer'.
+        Parse range specification like '[get_parameter_loader().get("saaaaaa.utils.method_config_loader.MethodConfigLoader._parse_range").get("auto_param_L135_41", 0.0), get_parameter_loader().get("saaaaaa.utils.method_config_loader.MethodConfigLoader._parse_range").get("auto_param_L135_46", 1.0)], inclusive' or '[100, 10000], integer'.
 
         Args:
             spec: Range specification string with format "[min, max], modifiers"
@@ -154,6 +160,7 @@ class MethodConfigLoader:
         except (IndexError, ValueError) as e:
             raise ValueError(f"Invalid range spec: {spec}") from e
 
+    @calibrated_method("saaaaaa.utils.method_config_loader.MethodConfigLoader._parse_set")
     def _parse_set(self, spec: str | list) -> set:
         """
         Parse set specification safely.

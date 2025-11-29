@@ -17,6 +17,17 @@ from opentelemetry import metrics, trace
 from pydantic import BaseModel, ValidationError
 
 # Contract infrastructure - ACTUAL INTEGRATION
+from saaaaaa.core.runtime_config import RuntimeConfig, get_runtime_config
+from saaaaaa.core.contracts.runtime_contracts import (
+    SegmentationMethod,
+    SegmentationInfo,
+    FallbackCategory,
+)
+from saaaaaa.core.observability.structured_logging import log_fallback
+from saaaaaa.core.observability.metrics import (
+    increment_fallback,
+    increment_segmentation_method,
+)
 from saaaaaa.utils.contract_io import ContractEnvelope
 from saaaaaa.utils.json_logger import get_json_logger, log_io_event
 from saaaaaa.utils.paths import reports_dir
@@ -230,25 +241,108 @@ def run_normalize(
             span.set_attribute("diacritics_removed", True)
 
         # Step 4: Sentence Segmentation with spaCy (MAXIMUM STANDARD)
-        # Try spaCy first (high quality), fallback to regex if unavailable
+        # Try spaCy with structured downgrade path: LG → MD → SM → REGEX → LINE
         sentences: list[str] = []
         sentence_meta: list[dict[str, Any]] = []
-
+        segmentation_info: SegmentationInfo | None = None
+        
+        # Get runtime config for preferred model
+        runtime_config = get_runtime_config()
+        preferred_model = runtime_config.preferred_spacy_model
+        
+        # Define downgrade chain based on preferred model
+        model_chain = []
+        if preferred_model == "es_core_news_lg":
+            model_chain = ["es_core_news_lg", "es_core_news_md", "es_core_news_sm"]
+        elif preferred_model == "es_core_news_md":
+            model_chain = ["es_core_news_md", "es_core_news_sm"]
+        elif preferred_model == "es_core_news_sm":
+            model_chain = ["es_core_news_sm"]
+        else:
+            # Unknown model, try default chain
+            model_chain = ["es_core_news_lg", "es_core_news_md", "es_core_news_sm"]
+        
+        spacy_success = False
+        actual_model = None
+        downgraded_from = None
+        
         try:
             import spacy
-            # Load Spanish model (large for maximum precision)
-            try:
-                nlp = spacy.load("es_core_news_lg")
-            except OSError:
-                # Fallback to medium model
-                logger.warning("es_core_news_lg not found, using es_core_news_md")
+            
+            # Try each model in the chain
+            for i, model_name in enumerate(model_chain):
                 try:
-                    nlp = spacy.load("es_core_news_md")
+                    nlp = spacy.load(model_name)
+                    actual_model = model_name
+                    
+                    # Track if we downgraded
+                    if i > 0:
+                        downgraded_from = model_chain[0]  # Original preferred model
+                        
+                        # Determine segmentation method
+                        if model_name == "es_core_news_lg":
+                            method = SegmentationMethod.SPACY_LG
+                        elif model_name == "es_core_news_md":
+                            method = SegmentationMethod.SPACY_MD
+                        else:
+                            method = SegmentationMethod.SPACY_SM
+                        
+                        # Log downgrade
+                        reason = f"Model {downgraded_from} not available, downgraded to {model_name}"
+                        logger.warning(reason)
+                        
+                        segmentation_info = SegmentationInfo(
+                            method=method,
+                            downgraded_from=SegmentationMethod.SPACY_LG if downgraded_from == "es_core_news_lg" else SegmentationMethod.SPACY_MD,
+                            reason=reason
+                        )
+                        
+                        # Emit structured log and metrics (Category B: Quality degradation)
+                        log_fallback(
+                            component='text_segmentation',
+                            subsystem='flux_normalize',
+                            fallback_category=FallbackCategory.B,
+                            fallback_mode=f'spacy_downgrade_{model_name}',
+                            reason=reason,
+                            runtime_mode=runtime_config.mode,
+                        )
+                        
+                        increment_fallback(
+                            component='text_segmentation',
+                            fallback_category=FallbackCategory.B,
+                            fallback_mode=f'spacy_downgrade_{model_name}',
+                            runtime_mode=runtime_config.mode,
+                        )
+                    else:
+                        # No downgrade, using preferred model
+                        if model_name == "es_core_news_lg":
+                            method = SegmentationMethod.SPACY_LG
+                        elif model_name == "es_core_news_md":
+                            method = SegmentationMethod.SPACY_MD
+                        else:
+                            method = SegmentationMethod.SPACY_SM
+                        
+                        segmentation_info = SegmentationInfo(
+                            method=method,
+                            downgraded_from=None,
+                            reason=None
+                        )
+                    
+                    # Emit segmentation method metric
+                    increment_segmentation_method(
+                        method=method,
+                        runtime_mode=runtime_config.mode,
+                    )
+                    
+                    break  # Successfully loaded model
+                    
                 except OSError:
-                    # Fallback to small model
-                    logger.warning("es_core_news_md not found, using es_core_news_sm")
-                    nlp = spacy.load("es_core_news_sm")
-
+                    if i == len(model_chain) - 1:
+                        # Last model in chain also failed, will fall back to regex
+                        raise
+                    # Try next model in chain
+                    continue
+            
             # Process with spaCy pipeline
             doc = nlp(normalized_text)
 
@@ -273,11 +367,43 @@ def run_normalize(
                     "root_pos": sent.root.pos_ if sent.root else None,
                 })
 
-            logger.info(f"spaCy segmentation: {len(sentences)} sentences extracted")
-            span.set_attribute("segmentation_method", "spacy")
+            logger.info(f"spaCy segmentation ({actual_model}): {len(sentences)} sentences extracted")
+            span.set_attribute("segmentation_method", actual_model)
+            spacy_success = True
 
-        except ImportError:
-            logger.warning("spaCy not available, using regex fallback for sentence segmentation")
+        except (ImportError, OSError) as e:
+            # spaCy not available or all models failed - fall back to regex
+            reason = f"spaCy not available or all models failed: {str(e)}"
+            logger.warning(f"{reason}, using regex fallback for sentence segmentation")
+            
+            segmentation_info = SegmentationInfo(
+                method=SegmentationMethod.REGEX,
+                downgraded_from=SegmentationMethod.SPACY_LG if preferred_model == "es_core_news_lg" else None,
+                reason=reason
+            )
+            
+            # Emit structured log and metrics (Category B: Quality degradation)
+            log_fallback(
+                component='text_segmentation',
+                subsystem='flux_normalize',
+                fallback_category=FallbackCategory.B,
+                fallback_mode='regex_fallback',
+                reason=reason,
+                runtime_mode=runtime_config.mode,
+            )
+            
+            increment_fallback(
+                component='text_segmentation',
+                fallback_category=FallbackCategory.B,
+                fallback_mode='regex_fallback',
+                runtime_mode=runtime_config.mode,
+            )
+            
+            increment_segmentation_method(
+                method=SegmentationMethod.REGEX,
+                runtime_mode=runtime_config.mode,
+            )
+            
             span.set_attribute("segmentation_method", "regex_fallback")
 
             # FALLBACK: Advanced regex-based segmentation
@@ -313,9 +439,40 @@ def run_normalize(
 
             logger.info(f"Regex segmentation: {len(sentences)} sentences extracted")
 
-        # Final validation
+        # Final validation - LINE fallback if still no sentences
         if not sentences:
             logger.error("Normalization produced zero sentences - attempting line-based fallback")
+            
+            # Update segmentation info for LINE fallback
+            reason = "Both spaCy and regex segmentation produced zero sentences"
+            segmentation_info = SegmentationInfo(
+                method=SegmentationMethod.LINE,
+                downgraded_from=SegmentationMethod.SPACY_LG if preferred_model == "es_core_news_lg" else SegmentationMethod.REGEX,
+                reason=reason
+            )
+            
+            # Emit structured log and metrics (Category B: Quality degradation)
+            log_fallback(
+                component='text_segmentation',
+                subsystem='flux_normalize',
+                fallback_category=FallbackCategory.B,
+                fallback_mode='line_fallback',
+                reason=reason,
+                runtime_mode=runtime_config.mode,
+            )
+            
+            increment_fallback(
+                component='text_segmentation',
+                fallback_category=FallbackCategory.B,
+                fallback_mode='line_fallback',
+                runtime_mode=runtime_config.mode,
+            )
+            
+            increment_segmentation_method(
+                method=SegmentationMethod.LINE,
+                runtime_mode=runtime_config.mode,
+            )
+            
             # Last resort: split by newlines (but still normalize each)
             for i, line in enumerate(normalized_text.split('\n')):
                 line = line.strip()
@@ -333,6 +490,13 @@ def run_normalize(
                         "root_lemma": None,
                         "root_pos": None,
                     })
+        
+        # Add segmentation info to sentence metadata for observability
+        if segmentation_info:
+            for meta in sentence_meta:
+                meta['segmentation_method'] = segmentation_info.method.value
+                if segmentation_info.downgraded_from:
+                    meta['downgraded_from'] = segmentation_info.downgraded_from.value
 
         out = NormalizeDeliverable(sentences=sentences, sentence_meta=sentence_meta)
 

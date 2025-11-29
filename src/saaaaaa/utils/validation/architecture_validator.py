@@ -15,6 +15,7 @@ import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 # Regular expression used to capture fully-qualified method references such as
 # ``ClassName.method_name``.
@@ -50,6 +51,7 @@ class ArchitectureValidationResult:
     per_dimension: Mapping[str, Mapping[str, list[str]]]
     global_methods: tuple[str, ...] = field(default_factory=tuple)
 
+    @calibrated_method("saaaaaa.utils.validation.architecture_validator.ArchitectureValidationResult.to_dict")
     def to_dict(self) -> dict[str, object]:
         """Serialise the validation result into a JSON-compatible dict."""
 

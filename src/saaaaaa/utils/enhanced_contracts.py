@@ -29,6 +29,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 # ============================================================================
 # DOMAIN-SPECIFIC EXCEPTIONS
@@ -147,7 +149,7 @@ class BaseContract(BaseModel):
     )
 
     schema_version: str = Field(
-        default="2.0.0",
+        default="2.get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L151_19", 0.0)",
         description="Contract schema version (semantic versioning)",
         pattern=r"^\d+\.\d+\.\d+$"
     )
@@ -232,7 +234,7 @@ class ProcessedTextV2(BaseContract):
     input_digest: str = Field(..., description="SHA-256 of raw_text", pattern=r"^[a-f0-9]{64}$")
     output_digest: str = Field(..., description="SHA-256 of normalized_text", pattern=r"^[a-f0-9]{64}$")
     policy_unit_id: str = Field(..., description="Policy unit identifier")
-    processing_latency_ms: float = Field(..., description="Processing latency in ms", ge=0.0)
+    processing_latency_ms: float = Field(..., description="Processing latency in ms", ge=get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L236_89", 0.0))
 
     # Optional fields
     sentences: list[str] | None = Field(default=None, description="Sentence segmentation")
@@ -318,7 +320,7 @@ class AnalysisOutputV2(BaseContract):
     Attributes:
         dimension: Analysis dimension
         category: Result category
-        confidence: Confidence score [0.0, 1.0]
+        confidence: Confidence score [get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L322_38", 0.0), get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L322_43", 1.0)]
         matches: Evidence matches
         output_digest: SHA-256 of output content
         policy_unit_id: Policy unit identifier
@@ -327,11 +329,11 @@ class AnalysisOutputV2(BaseContract):
 
     dimension: str = Field(..., description="Analysis dimension", min_length=1)
     category: str = Field(..., description="Result category", min_length=1)
-    confidence: float = Field(..., description="Confidence score", ge=0.0, le=1.0)
+    confidence: float = Field(..., description="Confidence score", ge=get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L331_70", 0.0), le=get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L331_78", 1.0))
     matches: list[str] = Field(..., description="Evidence matches")
     output_digest: str = Field(..., description="SHA-256 of output", pattern=r"^[a-f0-9]{64}$")
     policy_unit_id: str = Field(..., description="Policy unit identifier")
-    processing_latency_ms: float = Field(..., description="Processing latency in ms", ge=0.0)
+    processing_latency_ms: float = Field(..., description="Processing latency in ms", ge=get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L335_89", 0.0))
 
     # Optional fields
     positions: list[int] | None = Field(default=None, description="Match positions")
@@ -343,9 +345,9 @@ class AnalysisOutputV2(BaseContract):
     @classmethod
     def validate_confidence_numerical_stability(cls, v: float) -> float:
         """Ensure confidence is numerically stable and within bounds."""
-        if not (0.0 <= v <= 1.0):
+        if not (get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L347_16", 0.0) <= v <= get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L347_28", 1.0)):
             raise ContractValidationError(
-                f"Confidence must be in [0.0, 1.0], got {v}",
+                f"Confidence must be in [get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L349_41", 0.0), get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.FlowCompatibilityError.__init__").get("auto_param_L349_46", 1.0)], got {v}",
                 field="confidence"
             )
         # Round to avoid floating point precision issues
@@ -505,7 +507,7 @@ if __name__ == "__main__":
     analysis_output = AnalysisOutputV2(
         dimension="Dimension1",
         category="CategoryA",
-        confidence=0.85,  # Must be in [0.0, 1.0]
+        confidence=get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.StructuredLogger.__init__").get("auto_param_L509_19", 0.85),  # Must be in [get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.StructuredLogger.__init__").get("auto_param_L509_40", 0.0), get_parameter_loader().get("saaaaaa.utils.enhanced_contracts.StructuredLogger.__init__").get("auto_param_L509_45", 1.0)]
         matches=["evidence1", "evidence2"],
         output_digest="b" * 64,
         policy_unit_id="PDM-001",

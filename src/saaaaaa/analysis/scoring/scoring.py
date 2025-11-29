@@ -34,6 +34,8 @@ from decimal import ROUND_DOWN, ROUND_HALF_EVEN, ROUND_HALF_UP, Decimal, Invalid
 from enum import Enum
 from numbers import Real
 from typing import Any, ClassVar
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -95,6 +97,7 @@ class ScoredResult:
     metadata: dict[str, Any] = field(default_factory=dict)
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))
 
+    @calibrated_method("saaaaaa.analysis.scoring.scoring.ScoredResult.to_dict")
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary representation."""
         return asdict(self)
@@ -137,6 +140,7 @@ class ModalityConfig:
     expected_elements: int | None = None
     deterministic: bool = True
 
+    @calibrated_method("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence")
     def validate_evidence(self, evidence: dict[str, Any]) -> None:
         """
         Validate evidence structure against modality requirements.
@@ -176,41 +180,41 @@ class ScoringValidator:
         ScoringModality.TYPE_A: ModalityConfig(
             name="TYPE_A",
             description="Bayesian: Numerical claims, gaps, risks",
-            score_range=(0.0, 3.0),
+            score_range=(get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L182_25", 0.0), 3.0),
             required_evidence_keys=["elements", "confidence"],
             expected_elements=4,
         ),
         ScoringModality.TYPE_B: ModalityConfig(
             name="TYPE_B",
             description="DAG: Causal chains, ToC completeness",
-            score_range=(0.0, 3.0),
+            score_range=(get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L189_25", 0.0), 3.0),
             required_evidence_keys=["elements", "completeness"],
             expected_elements=3,
         ),
         ScoringModality.TYPE_C: ModalityConfig(
             name="TYPE_C",
             description="Coherence: Inverted contradictions",
-            score_range=(0.0, 3.0),
+            score_range=(get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L196_25", 0.0), 3.0),
             required_evidence_keys=["elements", "coherence_score"],
             expected_elements=2,
         ),
         ScoringModality.TYPE_D: ModalityConfig(
             name="TYPE_D",
             description="Pattern: Baseline data, formalization",
-            score_range=(0.0, 3.0),
+            score_range=(get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L203_25", 0.0), 3.0),
             required_evidence_keys=["elements", "pattern_matches"],
             expected_elements=3,
         ),
         ScoringModality.TYPE_E: ModalityConfig(
             name="TYPE_E",
             description="Financial: Budget traceability",
-            score_range=(0.0, 3.0),
+            score_range=(get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L210_25", 0.0), 3.0),
             required_evidence_keys=["elements", "traceability"],
         ),
         ScoringModality.TYPE_F: ModalityConfig(
             name="TYPE_F",
             description="Beach: Mechanism inference, plausibility",
-            score_range=(0.0, 3.0),
+            score_range=(get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L216_25", 0.0), 3.0),
             required_evidence_keys=["elements", "plausibility"],
         ),
     }
@@ -329,7 +333,7 @@ def _validate_quality_thresholds(thresholds: dict[str, float]) -> dict[str, floa
         if math.isnan(numeric_value) or math.isinf(numeric_value):
             raise ValueError(f"Threshold for {key} cannot be NaN or infinite")
 
-        if not 0.0 <= numeric_value <= 1.0:
+        if not get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L335_15", 0.0) <= numeric_value <= get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L335_39", 1.0):
             raise ValueError(
                 f"Threshold for {key} must be between 0 and 1 inclusive"
             )
@@ -366,7 +370,7 @@ def score_type_a(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
         Tuple of (score, metadata)
     """
     elements = evidence.get("elements", [])
-    confidence = evidence.get("confidence", 0.0)
+    confidence = evidence.get("confidence", get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L372_44", 0.0))
 
     if not isinstance(elements, list):
         raise ModalityValidationError("TYPE_A: 'elements' must be a list")
@@ -379,7 +383,7 @@ def score_type_a(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
 
     max_elements = config.expected_elements or 4
     max_score = config.score_range[1] if config.score_range else 3.0
-    min_score = config.score_range[0] if config.score_range else 0.0
+    min_score = config.score_range[0] if config.score_range else get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L385_65", 0.0)
 
     # Calculate raw score: count weighted by confidence, scale to range
     max_elements = config.expected_elements if config.expected_elements is not None else 4
@@ -425,7 +429,7 @@ def score_type_b(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
         Tuple of (score, metadata)
     """
     elements = evidence.get("elements", [])
-    completeness = evidence.get("completeness", 0.0)
+    completeness = evidence.get("completeness", get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L431_48", 0.0))
 
     if not isinstance(elements, list):
         raise ModalityValidationError("TYPE_B: 'elements' must be a list")
@@ -477,7 +481,7 @@ def score_type_c(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
         Tuple of (score, metadata)
     """
     elements = evidence.get("elements", [])
-    coherence_score = evidence.get("coherence_score", 0.0)
+    coherence_score = evidence.get("coherence_score", get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L483_54", 0.0))
 
     if not isinstance(elements, list):
         raise ModalityValidationError("TYPE_C: 'elements' must be a list")
@@ -591,7 +595,7 @@ def score_type_e(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
 
     # Handle both boolean and numeric traceability
     if isinstance(traceability, bool):
-        traceability_score = 1.0 if traceability else 0.0
+        traceability_score = get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L597_29", 1.0) if traceability else get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L597_54", 0.0)
     elif isinstance(traceability, (int, float)):
         if not (0 <= traceability <= 1):
             raise ModalityValidationError("TYPE_E: numeric 'traceability' must be between 0 and 1")
@@ -604,7 +608,7 @@ def score_type_e(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
     has_elements = element_count > 0
 
     # Calculate raw score: presence check weighted by traceability
-    raw_score = 3.0 * traceability_score if has_elements else 0.0
+    raw_score = 3.0 * traceability_score if has_elements else get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L610_62", 0.0)
 
     # Clamp to valid range
     score = max(config.score_range[0], min(config.score_range[1], raw_score))
@@ -644,7 +648,7 @@ def score_type_f(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
         Tuple of (score, metadata)
     """
     elements = evidence.get("elements", [])
-    plausibility = evidence.get("plausibility", 0.0)
+    plausibility = evidence.get("plausibility", get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L650_48", 0.0))
 
     if not isinstance(elements, list):
         raise ModalityValidationError("TYPE_F: 'elements' must be a list")
@@ -656,7 +660,7 @@ def score_type_f(evidence: dict[str, Any], config: ModalityConfig) -> tuple[floa
     element_count = len(elements)
 
     # Calculate raw score: continuous scale weighted by plausibility
-    raw_score = 3.0 * plausibility if element_count > 0 else 0.0
+    raw_score = 3.0 * plausibility if element_count > 0 else get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L662_61", 0.0)
 
     # Clamp to valid range
     score = max(config.score_range[0], min(config.score_range[1], raw_score))
@@ -700,22 +704,22 @@ def determine_quality_level(
 
     Note:
         Default thresholds:
-        - EXCELENTE: >= 0.85
-        - BUENO: >= 0.70
-        - ACEPTABLE: >= 0.55
-        - INSUFICIENTE: < 0.55
+        - EXCELENTE: >= get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L706_24", 0.85)
+        - BUENO: >= get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L707_20", 0.70)
+        - ACEPTABLE: >= get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L708_24", 0.55)
+        - INSUFICIENTE: < get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L709_26", 0.55)
     """
     if thresholds is None:
         thresholds = {
-            "EXCELENTE": 0.85,
-            "BUENO": 0.70,
-            "ACEPTABLE": 0.55,
+            "EXCELENTE": get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L713_25", 0.85),
+            "BUENO": get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L714_21", 0.70),
+            "ACEPTABLE": get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L715_25", 0.55),
         }
 
     thresholds = _validate_quality_thresholds(thresholds)
 
     # Clamp score to account for minor floating-point drift
-    normalized_score = clamp(float(normalized_score), 0.0, 1.0)
+    normalized_score = clamp(float(normalized_score), get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L721_54", 0.0), get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L721_59", 1.0))
 
     if normalized_score >= thresholds["EXCELENTE"]:
         return QualityLevel.EXCELENTE
@@ -820,7 +824,7 @@ def apply_scoring(
 
     # Normalize score to 0-1 range
     normalized_score = (clamped_score - min_score) / (max_score - min_score)
-    normalized_score = clamp(normalized_score, 0.0, 1.0)
+    normalized_score = clamp(normalized_score, get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L826_47", 0.0), get_parameter_loader().get("saaaaaa.analysis.scoring.scoring.ModalityConfig.validate_evidence").get("auto_param_L826_52", 1.0))
 
     # Determine quality level
     quality_level = determine_quality_level(normalized_score, quality_thresholds)

@@ -40,6 +40,7 @@ if TYPE_CHECKING:
 # Import V2 contracts from enhanced_contracts module
 # Use these for new code; V1 contracts maintained for backward compatibility
 from .enhanced_contracts import (
+from saaaaaa.core.calibration.decorators import calibrated_method
     # Pydantic Models
     AnalysisInputV2,
     AnalysisOutputV2,
@@ -158,10 +159,12 @@ class ContractMismatchError(TypedDict, total=True):
 class TextProcessorProtocol(Protocol):
     """Protocol for text processing components."""
 
+    @calibrated_method("saaaaaa.utils.contracts.TextProcessorProtocol.normalize_unicode")
     def normalize_unicode(self, text: str) -> str:
         """Normalize unicode characters in text."""
         ...
 
+    @calibrated_method("saaaaaa.utils.contracts.TextProcessorProtocol.segment_into_sentences")
     def segment_into_sentences(self, text: str) -> Sequence[str]:
         """Segment text into sentences."""
         ...
@@ -169,10 +172,12 @@ class TextProcessorProtocol(Protocol):
 class DocumentLoaderProtocol(Protocol):
     """Protocol for document loading components."""
 
+    @calibrated_method("saaaaaa.utils.contracts.DocumentLoaderProtocol.load_pdf")
     def load_pdf(self, *, pdf_path: Path) -> DocumentMetadataV1:
         """Load PDF and return metadata - keyword-only params."""
         ...
 
+    @calibrated_method("saaaaaa.utils.contracts.DocumentLoaderProtocol.validate_pdf")
     def validate_pdf(self, *, pdf_path: Path) -> bool:
         """Validate PDF file - keyword-only params."""
         ...

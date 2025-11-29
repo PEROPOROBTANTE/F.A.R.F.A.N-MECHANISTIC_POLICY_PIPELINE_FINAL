@@ -27,6 +27,8 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +76,7 @@ class Recommendation:
     template_id: str | None = None
     template_params: dict[str, Any] | None = None
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.Recommendation.to_dict")
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
         result = asdict(self)
@@ -92,6 +95,7 @@ class RecommendationSet:
     rules_matched: int
     metadata: dict[str, Any] = field(default_factory=dict)
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationSet.to_dict")
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
         return {
@@ -159,6 +163,7 @@ class RecommendationEngine:
             f"{len(self.rules_by_level['MACRO'])} MACRO rules"
         )
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._load_canonical_notation")
     def _load_canonical_notation(self) -> None:
         """Load canonical notation for validation"""
         try:
@@ -174,6 +179,7 @@ class RecommendationEngine:
             self.canonical_dimensions = {}
             self.canonical_policy_areas = {}
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._load_schema")
     def _load_schema(self) -> None:
         """Load JSON schema for rule validation"""
         # Delegate to factory for I/O operation
@@ -186,6 +192,7 @@ class RecommendationEngine:
             logger.error(f"Failed to load schema: {e}")
             raise
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._load_rules")
     def _load_rules(self) -> None:
         """Load and validate recommendation rules"""
         # Delegate to factory for I/O operation
@@ -213,11 +220,13 @@ class RecommendationEngine:
             logger.error(f"Failed to load rules: {e}")
             raise
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine.reload_rules")
     def reload_rules(self) -> None:
         """Reload rules from disk (useful for hot-reloading)"""
         self.rules_by_level = {'MICRO': [], 'MESO': [], 'MACRO': []}
         self._load_rules()
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith")
     def get_thresholds_from_monolith(self) -> dict[str, Any]:
         """
         Get scoring thresholds from questionnaire monolith.
@@ -268,7 +277,7 @@ class RecommendationEngine:
         Generate MICRO-level recommendations based on PA-DIM scores
 
         Args:
-            scores: Dictionary mapping "PA##-DIM##" to scores (0.0-3.0)
+            scores: Dictionary mapping "PA##-DIM##" to scores (get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L279_63", 0.0)-3.0)
             context: Additional context for template rendering
 
         Returns:
@@ -387,8 +396,8 @@ class RecommendationEngine:
         Args:
             cluster_data: Dictionary with cluster metrics:
                 {
-                    'CL01': {'score': 75.0, 'variance': 0.15, 'weak_pa': 'PA02'},
-                    'CL02': {'score': 62.0, 'variance': 0.22, 'weak_pa': 'PA05'},
+                    'CL01': {'score': 75.0, 'variance': get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L398_56", 0.15), 'weak_pa': 'PA02'},
+                    'CL02': {'score': 62.0, 'variance': get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L399_56", 0.22), 'weak_pa': 'PA05'},
                     ...
                 }
             context: Additional context for template rendering
@@ -477,10 +486,10 @@ class RecommendationEngine:
             return False
 
         # Check variance level
-        if variance_level == 'BAJA' and variance >= 0.08 or variance_level == 'MEDIA' and (variance < 0.08 or variance >= 0.18):
+        if variance_level == 'BAJA' and variance >= get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L488_52", 0.08) or variance_level == 'MEDIA' and (variance < get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L488_102", 0.08) or variance >= get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L488_122", 0.18)):
             return False
         elif variance_level == 'ALTA':
-            if variance_threshold and variance < variance_threshold / 100 or not variance_threshold and variance < 0.18:
+            if variance_threshold and variance < variance_threshold / 100 or not variance_threshold and variance < get_parameter_loader().get("saaaaaa.analysis.recommendation_engine.RecommendationEngine.get_thresholds_from_monolith").get("auto_param_L491_115", 0.18):
                 return False
 
         # Check weak PA if specified
@@ -637,6 +646,7 @@ class RecommendationEngine:
     # UTILITY METHODS
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._substitute_variables")
     def _substitute_variables(self, text: str, substitutions: dict[str, str]) -> str:
         """
         Substitute variables in text using {{variable}} syntax
@@ -654,6 +664,7 @@ class RecommendationEngine:
             result = re.sub(pattern, value, result)
         return result
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._render_template")
     def _render_template(self, template: dict[str, Any], substitutions: dict[str, str]) -> dict[str, Any]:
         """Recursively render a template applying substitutions to nested structures."""
 
@@ -672,6 +683,7 @@ class RecommendationEngine:
     # VALIDATION UTILITIES
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_rule")
     def _validate_rule(self, rule: dict[str, Any]) -> None:
         """Apply structural validation to guarantee rigorous recommendations."""
         rule_id = rule.get('rule_id')
@@ -709,6 +721,7 @@ class RecommendationEngine:
             raise ValueError(f"Rule {rule_id} is missing budget block required for enhanced rules")
         self._validate_budget(rule_id, budget)
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_micro_when")
     def _validate_micro_when(self, rule_id: str, when: dict[str, Any]) -> None:
         required_keys = ('pa_id', 'dim_id', 'score_lt')
         for key in required_keys:
@@ -728,6 +741,7 @@ class RecommendationEngine:
         if not 0 <= float(score_lt) <= 3:
             raise ValueError(f"Rule {rule_id} MICRO threshold must be between 0 and 3")
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_meso_when")
     def _validate_meso_when(self, rule_id: str, when: dict[str, Any]) -> None:
         cluster_id = when.get('cluster_id')
         if not isinstance(cluster_id, str) or not cluster_id.strip():
@@ -762,6 +776,7 @@ class RecommendationEngine:
                 f"Rule {rule_id} must specify at least one discriminant condition for MESO"
             )
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_macro_when")
     def _validate_macro_when(self, rule_id: str, when: dict[str, Any]) -> None:
         discriminants = 0
 
@@ -798,6 +813,7 @@ class RecommendationEngine:
                 f"Rule {rule_id} must specify at least one MACRO discriminant condition"
             )
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_template")
     def _validate_template(self, rule_id: str, template: dict[str, Any], level: str) -> None:
         required_fields = ['problem', 'intervention', 'indicator', 'responsible', 'horizon', 'verification', 'template_id', 'template_params']
         for field in required_fields:
@@ -933,6 +949,7 @@ class RecommendationEngine:
                         f"Rule {rule_id} verification artifact field '{key}' cannot be empty"
                     )
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_execution")
     def _validate_execution(self, rule_id: str, execution: dict[str, Any]) -> None:
         if not isinstance(execution, dict):
             raise ValueError(f"Rule {rule_id} execution block must be an object")
@@ -960,6 +977,7 @@ class RecommendationEngine:
         if any(not isinstance(role, str) or not role.strip() for role in roles):
             raise ValueError(f"Rule {rule_id} execution approval_roles must contain non-empty strings")
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_budget")
     def _validate_budget(self, rule_id: str, budget: dict[str, Any]) -> None:
         if not isinstance(budget, dict):
             raise ValueError(f"Rule {rule_id} budget block must be an object")
@@ -1001,6 +1019,7 @@ class RecommendationEngine:
         if not isinstance(fiscal_year, int):
             raise ValueError(f"Rule {rule_id} fiscal_year must be an integer")
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._validate_ruleset_metadata")
     def _validate_ruleset_metadata(self) -> None:
         version = self.rules.get('version')
         if not isinstance(version, str) or not version.startswith('2.0'):
@@ -1080,6 +1099,7 @@ class RecommendationEngine:
 
         logger.info(f"Exported recommendations to {output_path} in {format} format")
 
+    @calibrated_method("saaaaaa.analysis.recommendation_engine.RecommendationEngine._format_as_markdown")
     def _format_as_markdown(self, recommendations: dict[str, RecommendationSet]) -> str:
         """Format recommendations as Markdown"""
         lines = ["# Recomendaciones del Plan de Desarrollo\n"]

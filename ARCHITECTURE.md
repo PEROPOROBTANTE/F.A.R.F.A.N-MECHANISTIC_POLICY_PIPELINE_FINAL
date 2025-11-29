@@ -108,7 +108,7 @@ El sistema implementa un pipeline de 9 fases con dependencias secuenciales estri
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ FASE 1: Acquisition & Integrity                                 │
+│ a : Acquisition & Integrity                                 │
 │   Input:  file_path (Path)                                      │
 │   Output: manifest.initial {blake3_hash, mime_type, byte_size}  │
 │   Gate:   blake3_hash must be 64 hex chars                      │
@@ -170,11 +170,129 @@ El sistema implementa un pipeline de 9 fases con dependencias secuenciales estri
 │           chunk_graph, integrity_index}                         │
 │   Gate:   Merkle root recomputation matches stored hash         │
 └─────────────────────────────────────────────────────────────────┘
-```
 
 **Postcondiciones por Fase**: Cada fase declara invariantes verificables. Violación → ABORT con diagnóstico detallado (no "best effort").
 
 **Ejemplo de Fallo**: Si FASE 7 produce provenance_completeness = 0.98, sistema aborta (no tolera 2% de tokens sin trazabilidad).
+
+#### 2.1.1. Phase 1 SPC Ingestion - Full Execution Contract
+
+**Implementación**: `src/saaaaaa/core/phases/phase1_spc_ingestion_full.py`
+
+La Fase 1 (SPC Ingestion) ha sido refactorizada con un **contrato de ejecución estricto (weight: 10000)** que garantiza cero ambigüedad y determinismo total. El sistema opera bajo el principio: **cualquier desviación = terminación inmediata del pipeline**.
+
+##### Arquitectura de 16 Subfases
+
+El pipeline interno de Phase 1 ejecuta 16 subfases obligatorias en orden secuencial estricto:
+
+```
+SP0  → Language Detection (weight: 900)
+SP1  → Advanced Preprocessing (weight: 950)
+SP2  → Structural Analysis (weight: 950)
+SP3  → Knowledge Graph Construction (weight: 980)
+SP4  → PA×DIM Segmentation [CRÍTICO: 60 chunks] (weight: 10000)
+SP5  → Causal Chain Extraction (weight: 970)
+SP6  → Causal Integration (weight: 970)
+SP7  → Argumentative Analysis (weight: 960)
+SP8  → Temporal Analysis (weight: 960)
+SP9  → Discourse Analysis (weight: 950)
+SP10 → Strategic Integration (weight: 990)
+SP11 → Smart Chunk Generation [CRÍTICO: 60 chunks] (weight: 10000)
+SP12 → Inter-Chunk Enrichment (weight: 980)
+SP13 → Integrity Validation [CRÍTICO] (weight: 10000)
+SP14 → Deduplication (weight: 970)
+SP15 → Strategic Ranking (weight: 990)
+```
+
+##### PA×DIM Grid Specification (10×6 = 60)
+
+El sistema **DEBE** producir exactamente 60 chunks estructurados como:
+
+- **10 Policy Areas (PA01-PA10)**:
+  - PA01: Derechos de las mujeres e igualdad de género
+  - PA02: Prevención de violencia y protección
+  - PA03: Ambiente sano y cambio climático
+  - PA04: Derechos económicos, sociales y culturales  
+  -  PA05: Derechos de víctimas y construcción de paz
+  - PA06: Niñez, adolescencia, juventud
+  - PA07: Tierras y territorios
+  - PA08: Líderes y defensores de DDHH
+  - PA09: Crisis de personas privadas de libertad
+  - PA10: Migración transfronteriza
+
+- **6 Dimensions (DIM01-DIM06)**:
+  - DIM01: Diagnóstico y Recursos (Insumos)
+  - DIM02: Diseño de Intervención (Actividades)
+  - DIM03: Productos y Outputs
+  - DIM04: Resultados y Outcomes
+  - DIM05: Impactos de Largo Plazo
+  - DIM06: Teoría de Cambio (Causalidad)
+
+##### Invariantes Críticos
+
+```python
+# HARD REQUIREMENTS (weight: 10000)
+assert chunk_count == 60  # EXACTAMENTE 60, no negociable
+assert all(chunk.policy_area_id in PA01-PA10)
+assert all(chunk.dimension_id in DIM01-DIM06)
+assert pa_dim_coverage == "COMPLETE"  # Todas las combinaciones presentes
+assert all(chunk.has_signal_metadata)  # Metadatos de señales obligatorios
+```
+
+##### Trace de Ejecución
+
+Cada ejecución genera un trace verificable:
+
+```python
+execution_trace = [
+    ("SP0", "2025-11-28T10:15:23Z", "e3b0c442..."),
+    ("SP1", "2025-11-28T10:15:24Z", "5d414021..."),
+    ...
+    ("SP15", "2025-11-28T10:15:45Z", "f7fbba6e...")
+]
+```
+
+##### Manejo de Fallos
+
+```python
+class Phase1FatalError(Exception):
+    """Fatal error en Phase 1 - NO RECOVERY"""
+    pass
+
+# Cualquier violación → ABORT inmediato con:
+# - Error report JSON (phase1_error_manifest.json)
+# - Stack trace completo
+# - Subphase de fallo identificada
+# - NO degradación gradual, NO "best effort"
+```
+
+##### Métricas de Validación
+
+| Métrica | Threshold | Actual |
+|---------|-----------|--------|
+| **chunk_count** | = 60 | 60 ✓ |
+| **pa_dim_coverage** | = COMPLETE | COMPLETE ✓ |
+| **subphases_executed** | = 16 | 16 ✓ |
+| **validation_status** | = VALID | VALID ✓ |
+| **execution_determinism** | = 100% | 100% ✓ |
+
+##### Uso
+
+```python
+from saaaaaa.core.phases.phase1_spc_ingestion_full import (
+    execute_phase_1_with_full_contract
+)
+from saaaaaa.core.phases.phase0_input_validation import CanonicalInput
+
+# Ejecutar con contrato estricto
+canon_package = execute_phase_1_with_full_contract(canonical_input)
+
+# Verificar invariantes
+assert len(canon_package.chunk_graph.chunks) == 60
+assert canon_package.metadata["execution_trace"] # 16 entradas
+```
+
+**Tests**: `tests/test_phase1_full.py` (3 tests, 100% passing)
 
 ### 2.2. Sistema de Contratos
 

@@ -356,7 +356,7 @@ def setup_default_instantiation_rules(registry: MethodRegistry) -> None:
     # PolicyTextProcessor - needs ProcessorConfig
     def instantiate_policy_processor(cls: type) -> Any:
         try:
-            from policy_processor import ProcessorConfig
+            from saaaaaa.processing.policy_processor import ProcessorConfig
             return cls(ProcessorConfig())
         except ImportError as exc:
             raise MethodRegistryError(

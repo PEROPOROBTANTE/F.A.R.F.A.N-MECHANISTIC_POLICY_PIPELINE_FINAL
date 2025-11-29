@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Union
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -31,9 +32,11 @@ class ContractLoadReport:
     errors: list[str]
 
     @property
+    @calibrated_method("saaaaaa.utils.json_contract_loader.ContractLoadReport.is_successful")
     def is_successful(self) -> bool:
         return not self.errors
 
+    @calibrated_method("saaaaaa.utils.json_contract_loader.ContractLoadReport.summary")
     def summary(self) -> str:
         parts = [f"contracts={len(self.documents)}"]
         if self.errors:
@@ -54,6 +57,7 @@ class JSONContractLoader:
     def __init__(self, base_path: Path | None = None) -> None:
         self.base_path = base_path or Path(__file__).resolve().parent
 
+    @calibrated_method("saaaaaa.utils.json_contract_loader.JSONContractLoader.load")
     def load(self, paths: Iterable[PathLike]) -> ContractLoadReport:
         documents: dict[str, ContractDocument] = {}
         errors: list[str] = []
@@ -69,6 +73,7 @@ class JSONContractLoader:
             documents[str(path)] = ContractDocument(path=path, payload=payload, checksum=checksum)
         return ContractLoadReport(documents=documents, errors=errors)
 
+    @calibrated_method("saaaaaa.utils.json_contract_loader.JSONContractLoader.load_directory")
     def load_directory(self, relative_directory: PathLike, pattern: str = "*.json") -> ContractLoadReport:
         directory = self._resolve_path(relative_directory)
         if not directory.exists():
@@ -82,6 +87,7 @@ class JSONContractLoader:
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
+    @calibrated_method("saaaaaa.utils.json_contract_loader.JSONContractLoader._resolve_path")
     def _resolve_path(self, raw: PathLike) -> Path:
         path = Path(raw)
         if not path.is_absolute():

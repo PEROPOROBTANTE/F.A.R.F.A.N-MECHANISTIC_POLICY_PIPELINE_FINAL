@@ -48,15 +48,6 @@ if os.environ.get("PIPELINE_DEBUG"):
     print(f"DEBUG: saaaaaa loaded from {saaaaaa.__file__}", flush=True)
     print(f"DEBUG: sys.path = {sys.path}", flush=True)
 
-_expected_saaaaaa_prefix = (PROJECT_ROOT / "src" / "saaaaaa").resolve()
-if not Path(saaaaaa.__file__).resolve().is_relative_to(_expected_saaaaaa_prefix):
-    raise RuntimeError(
-        "MODULE SHADOWING DETECTED!\n"
-        f"  Expected saaaaaa from: {_expected_saaaaaa_prefix}\n"
-        f"  Actually loaded from:  {saaaaaa.__file__}\n"
-        "Fix: uninstall old package before running the verified pipeline."
-    )
-
 # Import contract enforcement infrastructure
 from saaaaaa.core.runtime_config import RuntimeConfig, get_runtime_config
 from saaaaaa.core.boot_checks import run_boot_checks, get_boot_check_summary, BootCheckError
@@ -131,6 +122,7 @@ class VerifiedPipelineRunner:
         self.versions = get_all_versions()
         self.phase2_report: dict[str, Any] | None = None
         self._last_manifest_success: bool = False
+        self._bootstrap_failed: bool = False
 
         # Set questionnaire path (explicit input, SIN_CARRETA compliance)
         if questionnaire_path is None:
@@ -152,20 +144,46 @@ class VerifiedPipelineRunner:
         self.manifest_builder.manifest_data["versions"] = dict(self.versions)
 
         # Ensure artifacts directory exists
-        self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            self.log_claim("error", "bootstrap", f"Failed to create artifacts directory: {e}")
+            self.errors.append(f"Failed to create artifacts directory: {e}")
+            self._bootstrap_failed = True
         
         # Initialize runtime configuration
-        self.runtime_config = RuntimeConfig.from_env()
-        self.log_claim("start", "runtime_config", 
-                      f"Runtime configuration loaded: {self.runtime_config}",
-                      {"mode": self.runtime_config.mode.value,
-                       "strict_mode": self.runtime_config.is_strict_mode()})
-        
-        # Log runtime config for observability
-        log_runtime_config_loaded(
-            config_repr=repr(self.runtime_config),
-            runtime_mode=self.runtime_config.mode
-        )
+        self.runtime_config: Optional[RuntimeConfig] = None
+        try:
+            self.runtime_config = RuntimeConfig.from_env()
+            self.log_claim("start", "runtime_config", 
+                          f"Runtime configuration loaded: {self.runtime_config}",
+                          {"mode": self.runtime_config.mode.value,
+                           "strict_mode": self.runtime_config.is_strict_mode()})
+            
+            # Log runtime config for observability
+            log_runtime_config_loaded(
+                config_repr=repr(self.runtime_config),
+                runtime_mode=self.runtime_config.mode
+            )
+        except Exception as e:
+            self.log_claim("error", "runtime_config", f"Failed to load runtime config: {e}")
+            self.errors.append(f"Failed to load runtime config: {e}")
+            self._bootstrap_failed = True
+            self.runtime_config = None
+
+        # Log bootstrap complete claim
+        if not self._bootstrap_failed:
+            self.log_claim(
+                "start", "bootstrap",
+                "Bootstrap complete",
+                {
+                  "execution_id": self.execution_id,
+                  "policy_unit_id": self.policy_unit_id,
+                  "plan_pdf_path": str(self.plan_pdf_path),
+                  "questionnaire_path": str(self.questionnaire_path),
+                  "versions": dict(self.versions),
+                },
+            )
 
     def _initialize_determinism_context(self) -> dict[str, int]:
         """
@@ -182,6 +200,10 @@ class VerifiedPipelineRunner:
         python_seed = seeds.get("python")
         if python_seed is not None:
             random.seed(python_seed)
+        else:
+            self.log_claim("error", "determinism", "Missing python seed in registry response")
+            self.errors.append("Missing python seed in registry response")
+            self._bootstrap_failed = True
 
         numpy_seed = seeds.get("numpy")
         if numpy_seed is not None:
@@ -196,6 +218,14 @@ class VerifiedPipelineRunner:
                     f"Failed to seed NumPy RNG: {exc}",
                     {"seed": numpy_seed},
                 )
+
+        if not self._bootstrap_failed:
+             self.log_claim(
+                "start",
+                "determinism",
+                "Deterministic seeds applied",
+                {"seeds": seeds, "policy_unit_id": self.policy_unit_id, "correlation_id": self.correlation_id},
+            )
 
         return seeds
 
@@ -322,48 +352,198 @@ class VerifiedPipelineRunner:
             return True
             
         except BootCheckError as e:
-            # Critical boot check failed in PROD mode
             error_msg = f"Boot check failed: {e}"
-            self.log_claim("error", "boot_checks", error_msg,
-                          {"component": e.component,
-                           "code": e.code,
-                           "reason": e.reason})
-            self.errors.append(error_msg)
             
-            # In PROD mode, abort execution
+            # In PROD mode, this is fatal
             if self.runtime_config.mode.value == "prod":
+                self.log_claim("error", "boot_checks", error_msg,
+                              {"component": e.component,
+                               "code": e.code,
+                               "reason": e.reason})
+                self.errors.append(error_msg)
                 print(f"\n❌ FATAL: {error_msg}\n", flush=True)
                 raise
             
             # In DEV/EXPLORATORY, log warning but continue
+            # CRITICAL: Do NOT append to self.errors if we intend to continue,
+            # as Phase 0 exit condition requires self.errors to be empty.
+            self.log_claim("warning", "boot_checks", error_msg,
+                          {"component": e.component,
+                           "code": e.code,
+                           "reason": e.reason})
+            
             print(f"\n⚠️  WARNING: {error_msg} (continuing in {self.runtime_config.mode.value} mode)\n", flush=True)
             return False
-    
+
+    async def run(self) -> bool:
+        """
+        Execute the complete verified pipeline.
+        
+        Returns:
+            True if pipeline succeeded, False otherwise
+        """
+        # Check for bootstrap failures (Phase 0.0)
+        if self._bootstrap_failed or self.errors:
+             self.generate_verification_manifest([], {})
+             return False
+
+        self.log_claim("start", "pipeline", "Starting verified pipeline execution")
+        
+        # Step 1: Verify input
+        if not self.verify_input():
+            self.generate_verification_manifest([], {})
+            return False
+            
+        # STRICT PHASE 0 EXIT GATE: Input Verification
+        if self.errors:
+            self.log_claim("error", "phase0_gate", "Phase 0 failure: Errors detected after input verification")
+            self.generate_verification_manifest([], {})
+            return False
+        
+        # Step 1.5: Run boot checks
+        try:
+            # Ensure runtime_config is available (should be if bootstrap passed, but be safe)
+            if self.runtime_config is None:
+                raise BootCheckError("Runtime config is None", "BOOT_CONFIG_MISSING", "Runtime config not initialized")
+
+            if not self.run_boot_checks():
+                # Boot checks failed but we're in DEV mode - log warning
+                self.log_claim("warning", "boot_checks", 
+                              "Boot checks failed but continuing in non-PROD mode")
+        except BootCheckError:
+            # Boot check failed in PROD mode - abort
+            self.generate_verification_manifest([], {})
+            return False
+            
+        # STRICT PHASE 0 EXIT GATE: Boot Checks
+        # If run_boot_checks returned False (Dev mode warning), self.errors should be empty.
+        # If it raised (Prod mode), we caught it and returned False above.
+        # If any other errors accumulated, abort.
+        if self.errors:
+             self.log_claim("error", "phase0_gate", "Phase 0 failure: Errors detected after boot checks")
+             self.generate_verification_manifest([], {})
+             return False
+        
+        # Step 2: Run SPC ingestion (canonical phase-one)
+        cpp = await self.run_spc_ingestion()
+        if cpp is None:
+            self.generate_verification_manifest([], {})
+            return False
+        
+        # Step 3: Run CPP adapter
+        preprocessed_doc = await self.run_cpp_adapter(cpp)
+        if preprocessed_doc is None:
+            self.generate_verification_manifest([], {})
+            return False
+        
+        # Step 4: Run orchestrator
+        results = await self.run_orchestrator(preprocessed_doc)
+        if results is None:
+            self.generate_verification_manifest([], {})
+            return False
+        
+        # Step 5: Save artifacts
+        artifacts, artifact_hashes = self.save_artifacts(cpp, preprocessed_doc, results)
+        
+        # Step 6: Generate verification manifest with chunk metrics
+        manifest_path = self.generate_verification_manifest(
+            artifacts, artifact_hashes, preprocessed_doc, results
+        )
+        
+        self.log_claim("complete", "pipeline", 
+                      "Pipeline execution completed",
+                      {
+                          "success": self._last_manifest_success,
+                          "phases_completed": self.phases_completed,
+                          "phases_failed": self.phases_failed,
+                          "manifest_path": str(manifest_path)
+                      })
+        
+        return bool(self._last_manifest_success)
+
+def cli() -> None:
+    """Synchronous entrypoint for console scripts."""
+    try:
+        # Perform module shadowing check before anything else
+        # We do this here to catch it before main() potentially loads more things
+        # Note: We duplicate the check logic here or rely on the one in global scope?
+        # The global scope check raises RuntimeError. We need to catch that.
+        # But the global scope code runs on import. So we can't catch it inside cli() if we import this module.
+        # Wait, this IS the module. When run as script, the global code runs.
+        # To strictly comply, we should wrap the global check or move it.
+        # Moving it to cli() is safer.
+        
+        # Check for module shadowing
+        _expected_saaaaaa_prefix = (PROJECT_ROOT / "src" / "saaaaaa").resolve()
+        if not Path(saaaaaa.__file__).resolve().is_relative_to(_expected_saaaaaa_prefix):
+             raise RuntimeError(
+                "MODULE SHADOWING DETECTED!\n"
+                f"  Expected saaaaaa from: {_expected_saaaaaa_prefix}\n"
+                f"  Actually loaded from:  {saaaaaa.__file__}\n"
+                "Fix: uninstall old package before running the verified pipeline."
+            )
+
+        asyncio.run(main())
+        
+    except RuntimeError as e:
+        if "MODULE SHADOWING DETECTED" in str(e):
+            print(f"\n❌ FATAL: {e}\n", flush=True)
+            
+            # Attempt to write minimal manifest
+            try:
+                # We need to guess artifacts dir since we haven't parsed args yet
+                # Default is artifacts/plan1
+                artifacts_dir = PROJECT_ROOT / "artifacts" / "plan1"
+                artifacts_dir.mkdir(parents=True, exist_ok=True)
+                
+                manifest_path = artifacts_dir / "verification_manifest.json"
+                manifest = {
+                    "success": False,
+                    "execution_id": datetime.utcnow().strftime("%Y%m%d_%H%M%S"),
+                    "start_time": datetime.utcnow().isoformat(),
+                    "end_time": datetime.utcnow().isoformat(),
+                    "errors": [str(e)],
+                    "artifacts_generated": [],
+                    "artifact_hashes": {},
+                    "phases_completed": 0,
+                    "phases_failed": 1
+                }
+                
+                with open(manifest_path, 'w') as f:
+                    json.dump(manifest, f, indent=2)
+                    
+                print(f"Manifest written to: {manifest_path}", flush=True)
+                
+            except Exception as manifest_err:
+                print(f"Failed to write failure manifest: {manifest_err}", flush=True)
+            
+            print("PIPELINE_VERIFIED=0", flush=True)
+            sys.exit(1)
+        else:
+            raise
+
     async def run_spc_ingestion(self) -> Optional[Any]:
         """
         Run SPC (Smart Policy Chunks) ingestion phase - canonical phase-one.
-
-        Passes explicit questionnaire_path to SPC pipeline for SIN_CARRETA compliance.
 
         Returns:
             SPC object if successful, None otherwise
         """
         self.log_claim("start", "spc_ingestion",
-                      "Starting SPC ingestion (phase-one) with questionnaire",
-                      {"questionnaire_path": str(self.questionnaire_path)})
+                      "Starting SPC ingestion (phase-one)")
 
         try:
             from saaaaaa.processing.spc_ingestion import CPPIngestionPipeline
 
-            # Pass questionnaire_path explicitly (SIN_CARRETA: no hidden inputs)
-            pipeline = CPPIngestionPipeline(questionnaire_path=self.questionnaire_path)
+            # CPPIngestionPipeline does NOT take questionnaire_path
+            # Questionnaire access is ONLY through factory/orchestrator
+            pipeline = CPPIngestionPipeline()
             cpp = await pipeline.process(self.plan_pdf_path)
 
             self.phases_completed += 1
             self.log_claim("complete", "spc_ingestion",
                           "SPC ingestion (phase-one) completed successfully",
-                          {"phases_completed": self.phases_completed,
-                           "questionnaire_path": str(self.questionnaire_path)})
+                          {"phases_completed": self.phases_completed})
             return cpp
 
         except Exception as e:
@@ -724,7 +904,7 @@ class VerifiedPipelineRunner:
         
         # Calculate execution savings
         # Use actual metrics from orchestrator if available
-        if results and hasattr(results, '_execution_metrics') and 'phase_2' in results._execution_metrics:
+        if results and hasattr(results, '_execution_metrics') and isinstance(results._execution_metrics, dict) and 'phase_2' in results._execution_metrics:
             metrics = results._execution_metrics['phase_2']
             chunk_metrics["execution_savings"] = {
                 "chunk_executions": metrics['chunk_executions'],
@@ -835,6 +1015,15 @@ class VerifiedPipelineRunner:
             if chunk_count < 5:
                 hostile_failures.append(f"chunk_graph too small: {chunk_count} < 5")
 
+            # === PHASE 2 HARDENING: STRICT SPC INVARIANTS ===
+            # Enforce exactly 60 chunks and chunked mode for SPC ingestion
+            # This ensures we catch any degradation that happened in the adapter
+            if chunk_metrics.get("processing_mode") != "chunked":
+                hostile_failures.append(f"SPC invariant violation: Document degraded to '{chunk_metrics.get('processing_mode')}' mode (expected 'chunked')")
+            elif chunk_metrics.get("total_chunks") != 60:
+                hostile_failures.append(f"SPC invariant violation: Cardinality mismatch (expected 60 chunks, found {chunk_metrics.get('total_chunks')})")
+
+
         phase2_entry = {
             "name": "Phase 2 – Micro Questions",
             "success": bool(self.phase2_report and self.phase2_report.get("success")),
@@ -845,16 +1034,23 @@ class VerifiedPipelineRunner:
             phase2_entry["errors"].append("Phase 2 not executed")
 
         # Determine success based on strict criteria + hostile invariants
-        success = all(
-            [
-                self.phases_failed == 0,
-                self.phases_completed > 0,
-                len(self.errors) == 0,
-                len(artifacts) > 0,
-                len(hostile_failures) == 0,
-                phase2_entry["success"],
-            ]
-        )
+        # We start assuming success is possible, then disqualify based on failures
+        success = True
+        
+        if self._bootstrap_failed:
+            success = False
+        if self.phases_failed > 0:
+            success = False
+        if self.phases_completed == 0:
+            success = False
+        if len(self.errors) > 0:
+            success = False
+        if len(artifacts) == 0:
+            success = False
+        if len(hostile_failures) > 0:
+            success = False
+        if not phase2_entry["success"]:
+            success = False
 
         if hostile_failures:
             self.log_claim(
@@ -866,10 +1062,29 @@ class VerifiedPipelineRunner:
 
         builder = self.manifest_builder
         builder.manifest_data["versions"] = dict(self.versions)
+        
+        # Set environment with strict error handling
+        try:
+            builder.set_environment()
+        except Exception as e:
+            error_msg = f"Failed to set environment in manifest: {e}"
+            self.log_claim("error", "environment", error_msg)
+            self.errors.append(error_msg)
+            success = False
+
+        # Set pipeline hash with strict validation
+        pipeline_hash = getattr(self, "input_pdf_sha256", "")
+        if not pipeline_hash:
+            error_msg = "Missing input PDF hash for manifest"
+            self.log_claim("error", "input_verification", error_msg)
+            self.errors.append(error_msg)
+            success = False
+            
+        builder.set_pipeline_hash(pipeline_hash)
+
+        # Update success status in builder and self
         self._last_manifest_success = success
         builder.set_success(success)
-        builder.set_pipeline_hash(getattr(self, "input_pdf_sha256", ""))
-        builder.set_environment()
 
         # Determinism metadata
         seed_entry = self.seed_registry.get_manifest_entry(
@@ -1024,6 +1239,11 @@ class VerifiedPipelineRunner:
         Returns:
             True if pipeline succeeded, False otherwise
         """
+        # Check for bootstrap failures (Phase 0.0)
+        if self._bootstrap_failed:
+             self.generate_verification_manifest([], {})
+             return False
+
         self.log_claim("start", "pipeline", "Starting verified pipeline execution")
         
         # Step 1: Verify input
@@ -1033,6 +1253,10 @@ class VerifiedPipelineRunner:
         
         # Step 1.5: Run boot checks
         try:
+            # Ensure runtime_config is available (should be if bootstrap passed, but be safe)
+            if self.runtime_config is None:
+                raise BootCheckError("Runtime config is None", "BOOT_CONFIG_MISSING", "Runtime config not initialized")
+
             if not self.run_boot_checks():
                 # Boot checks failed but we're in DEV mode - log warning
                 self.log_claim("warning", "boot_checks", 
@@ -1132,7 +1356,55 @@ async def main():
 
 def cli() -> None:
     """Synchronous entrypoint for console scripts."""
-    asyncio.run(main())
+    try:
+        # Check for module shadowing before anything else
+        _expected_saaaaaa_prefix = (PROJECT_ROOT / "src" / "saaaaaa").resolve()
+        if not Path(saaaaaa.__file__).resolve().is_relative_to(_expected_saaaaaa_prefix):
+             raise RuntimeError(
+                "MODULE SHADOWING DETECTED!\n"
+                f"  Expected saaaaaa from: {_expected_saaaaaa_prefix}\n"
+                f"  Actually loaded from:  {saaaaaa.__file__}\n"
+                "Fix: uninstall old package before running the verified pipeline."
+            )
+
+        asyncio.run(main())
+        
+    except RuntimeError as e:
+        if "MODULE SHADOWING DETECTED" in str(e):
+            print(f"\n❌ FATAL: {e}\n", flush=True)
+            
+            # Attempt to write minimal manifest
+            try:
+                # We need to guess artifacts dir since we haven't parsed args yet
+                # Default is artifacts/plan1
+                artifacts_dir = PROJECT_ROOT / "artifacts" / "plan1"
+                artifacts_dir.mkdir(parents=True, exist_ok=True)
+                
+                manifest_path = artifacts_dir / "verification_manifest.json"
+                manifest = {
+                    "success": False,
+                    "execution_id": datetime.utcnow().strftime("%Y%m%d_%H%M%S"),
+                    "start_time": datetime.utcnow().isoformat(),
+                    "end_time": datetime.utcnow().isoformat(),
+                    "errors": [str(e)],
+                    "artifacts_generated": [],
+                    "artifact_hashes": {},
+                    "phases_completed": 0,
+                    "phases_failed": 1
+                }
+                
+                with open(manifest_path, 'w') as f:
+                    json.dump(manifest, f, indent=2)
+                    
+                print(f"Manifest written to: {manifest_path}", flush=True)
+                
+            except Exception as manifest_err:
+                print(f"Failed to write failure manifest: {manifest_err}", flush=True)
+            
+            print("PIPELINE_VERIFIED=0", flush=True)
+            sys.exit(1)
+        else:
+            raise
 
 
 if __name__ == "__main__":

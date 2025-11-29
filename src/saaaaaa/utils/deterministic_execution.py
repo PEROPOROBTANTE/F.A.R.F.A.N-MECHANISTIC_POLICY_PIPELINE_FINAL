@@ -30,6 +30,7 @@ from typing import Any
 import numpy as np
 
 from .enhanced_contracts import StructuredLogger, utc_now_iso
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 # ============================================================================
 # DETERMINISTIC SEED MANAGEMENT
@@ -60,6 +61,7 @@ class DeterministicSeedManager:
         self._seed_counter = 0
         self._initialize_seeds(base_seed)
 
+    @calibrated_method("saaaaaa.utils.deterministic_execution.DeterministicSeedManager._initialize_seeds")
     def _initialize_seeds(self, seed: int) -> None:
         """Initialize all random number generators with deterministic seeds."""
         random.seed(seed)
@@ -67,6 +69,7 @@ class DeterministicSeedManager:
         # For reproducibility, also set hash seed
         # Note: PYTHONHASHSEED should be set in environment for full determinism
 
+    @calibrated_method("saaaaaa.utils.deterministic_execution.DeterministicSeedManager.get_derived_seed")
     def get_derived_seed(self, operation_name: str) -> int:
         """
         Generate a deterministic seed for a specific operation.
@@ -91,6 +94,7 @@ class DeterministicSeedManager:
         return int.from_bytes(hash_digest[:4], byteorder='big')
 
     @contextmanager
+    @calibrated_method("saaaaaa.utils.deterministic_execution.DeterministicSeedManager.scoped_seed")
     def scoped_seed(self, operation_name: str) -> Iterator[int]:
         """
         Context manager for scoped seed usage.
@@ -123,6 +127,7 @@ class DeterministicSeedManager:
             random.setstate(random_state)
             np.random.set_state(np_state)
 
+    @calibrated_method("saaaaaa.utils.deterministic_execution.DeterministicSeedManager.get_event_id")
     def get_event_id(self, operation_name: str, timestamp_utc: str | None = None) -> str:
         """
         Generate a reproducible event ID for an operation.

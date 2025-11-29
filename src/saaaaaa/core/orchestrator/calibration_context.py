@@ -20,7 +20,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .calibration_registry import MethodCalibration
+    from .calibration_types import MethodCalibration
 
 logger = logging.getLogger(__name__)
 
@@ -172,7 +172,7 @@ class CalibrationModifier:
             New MethodCalibration with adjusted parameters
         """
         # Import at runtime to avoid circular dependency at module load time
-        from .calibration_registry import MethodCalibration
+        from .calibration_types import MethodCalibration
 
         # Apply multipliers and clamp to valid ranges
         min_evidence = int(calibration.min_evidence_snippets * self.min_evidence_multiplier)

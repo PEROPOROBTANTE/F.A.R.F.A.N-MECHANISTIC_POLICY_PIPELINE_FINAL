@@ -26,6 +26,7 @@ import traceback
 import uuid
 from datetime import datetime, timezone
 from typing import Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 class ContractErrorLogger:

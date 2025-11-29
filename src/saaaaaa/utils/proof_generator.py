@@ -16,6 +16,7 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 @dataclass

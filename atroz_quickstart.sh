@@ -67,8 +67,11 @@ print_info "Installing dependencies..."
 if [ -f "requirements_atroz.txt" ]; then
     pip install -q -r requirements_atroz.txt
     print_info "✓ AtroZ dependencies installed"
+elif [ -f "requirements.txt" ]; then
+    pip install -q -r requirements.txt
+    print_info "✓ requirements.txt dependencies installed"
 else
-    print_warn "requirements_atroz.txt not found, skipping"
+    print_warn "requirements_atroz.txt and requirements.txt not found, skipping"
 fi
 
 # Create necessary directories
@@ -146,11 +149,10 @@ fi
 # Check if required files exist
 print_info "Checking required files..."
 REQUIRED_FILES=(
-    "api_server.py"
-    "orchestrator.py"
-    "choreographer.py"
-    "static/js/atroz-data-service.js"
-    "static/js/atroz-dashboard-integration.js"
+    "src/saaaaaa/api/api_server.py"
+    "src/saaaaaa/core/orchestrator/core.py"
+    "src/saaaaaa/api/static/js/atroz-data-service.js"
+    "src/saaaaaa/api/static/js/atroz-dashboard-integration.js"
 )
 
 for file in "${REQUIRED_FILES[@]}"; do
@@ -165,10 +167,10 @@ print_info "✓ All required files present"
 print_info "Testing Python imports..."
 python3 -c "
 import sys
+sys.path.append('src')
 try:
-    from api_server import app
-    from orchestrator import PolicyAnalysisOrchestrator
-    from choreographer import ExecutionChoreographer
+    from saaaaaa.api.api_server import app
+    from saaaaaa.core.orchestrator.core import Orchestrator
     print('✓ All modules imported successfully')
 except ImportError as e:
     print(f'✗ Import error: {e}')
@@ -184,15 +186,17 @@ if [ "$MODE" == "dev" ]; then
     
     # Start API server in background
     print_info "Starting API server on port $PORT..."
-    FLASK_APP=api_server.py FLASK_ENV=development python3 api_server.py > logs/api_server.log 2>&1 &
+    export FLASK_APP=src/saaaaaa/api/api_server.py
+    flask run --port=$PORT > logs/api_server.log 2>&1 &
     API_PID=$!
     echo $API_PID > logs/api_server.pid
     
     # Wait for API server to start
-    sleep 3
+    print_info "Waiting for API server to start..."
+    sleep 15
     
     # Check if API server is running
-    if ps -p $API_PID > /dev/null; then
+    if ps -p $API_PID > /dev/null && curl -s http://127.0.0.1:$PORT/api/v1/health > /dev/null; then
         print_info "✓ API server started (PID: $API_PID)"
     else
         print_error "API server failed to start. Check logs/api_server.log"

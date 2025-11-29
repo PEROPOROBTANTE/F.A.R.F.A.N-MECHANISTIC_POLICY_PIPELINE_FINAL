@@ -14,6 +14,7 @@ import copy
 import json
 from pathlib import Path
 from typing import Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 def enhance_template(rule: dict[str, Any]) -> dict[str, Any]:

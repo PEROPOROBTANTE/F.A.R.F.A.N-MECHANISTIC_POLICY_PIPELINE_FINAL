@@ -71,6 +71,58 @@ Artifacts: artifacts/plan1/verification_manifest.json
 
 ---
 
+## 🛡️ Phase 0: Strict Validation Gateway
+
+### The Pre-Execution Contract
+
+**Phase 0 is F.A.R.F.A.N's deterministic bootstrap framework**—a zero-tolerance validation gateway that establishes immutable execution conditions before any policy analysis begins.
+
+#### 📊 Enforcement Dashboard
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║  PHASE 0: PRE-EXECUTION VALIDATION STATUS                    ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  P0.0 │ BOOTSTRAP          │ ✅ RuntimeConfig     │ STRICT  ║
+║       │                    │ ✅ Seed Registry     │         ║
+║       │                    │ ✅ Manifest Builder  │         ║
+║                                                              ║
+║  P0.1 │ INPUT VERIFICATION │ ✅ Plan PDF Hash     │ CRYPTO  ║
+║       │                    │ ✅ Quest. Hash       │ SHA-256 ║
+║                                                              ║
+║  P0.2 │ BOOT CHECKS        │ ✅ PROD: Fatal       │ GATED   ║
+║       │                    │ ⚠️  DEV:  Warn       │         ║
+║                                                              ║
+║  P0.3 │ DETERMINISM        │ ✅ Python RNG Seed   │ MAND.   ║
+║       │                    │ ✅ NumPy Seed        │         ║
+║                                                              ║
+║  EXIT │ GATE CONDITION     │ self.errors == []    │ ATOMIC  ║
+║       │                    │ _bootstrap_failed=F  │         ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+#### 🚨 Failure Policy: Fail Fast, Fail Clean, Fail Deterministically
+
+**When Phase 0 fails**:
+1. ❌ **Immediate Abort**: No Phase 1 execution
+2. 📋 **Manifest Generation**: `success: false` with specific error reasons
+3. 🔴 **Exit Code 1**: `PIPELINE_VERIFIED=0` printed to stdout
+4. 🔍 **Audit Trail**: Full claim log in `execution_claims.json`
+
+**Design Rationale**: In public audit contexts, **byte-by-byte reproducibility is a legal requirement**. Phase 0 ensures that every execution either:
+- ✅ Proceeds with **verified, deterministic conditions**, OR
+- ❌ Fails with **clear, actionable error messages**
+
+**No "Maybe It Worked" States**. No silent degradation. No ambiguous configuration drift.
+
+#### 📚 Documentation
+
+- **Detailed Specification**: [docs/phases/phase_0/P00-EN_v1.0.md](docs/phases/phase_0/P00-EN_v1.0.md)
+- **Spanish Version**: [docs/phases/phase_0/P00-ES_v1.0.md](docs/phases/phase_0/P00-ES_v1.0.md)
+
+---
+
 ## 💡 What is F.A.R.F.A.N?
 
 F.A.R.F.A.N (Framework for Advanced Retrieval of Administrative Narratives) is a mechanistic policy pipeline designed for rigorous, evidence-based analysis of Colombian municipal development plans.
@@ -370,9 +422,16 @@ done
 
 ### System Overview
 
-F.A.R.F.A.N follows a **9-phase deterministic pipeline** with strict quality gates:
+F.A.R.F.A.N follows a **Phase 0 + 9-phase deterministic pipeline** with strict quality gates:
 
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 0: Pre-Execution Validation                               │
+│   Input:  ENV vars, plan path, questionnaire path               │
+│   Output: Validated RuntimeConfig, verified hashes, seeds       │
+│   Gate:   self.errors == [] AND _bootstrap_failed = False       │
+└──────────────────────┬──────────────────────────────────────────┘
+                       ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │ PHASE 1: Acquisition & Integrity                                │
 │   Input:  file_path (Path)                                      │
@@ -410,6 +469,26 @@ F.A.R.F.A.N follows a **9-phase deterministic pipeline** with strict quality gat
 - Budget Consistency ≥ 0.95 (MEDIUM gate)
 
 **Output**: `CanonPolicyPackage` - canonical format for downstream phases
+
+**Phase 1 Full Execution Contract** (`phase1_spc_ingestion_full.py`):
+
+The Phase 1 SPC Ingestion has been refactored with a **strict execution contract (weight: 10000)** that enforces zero ambiguity and complete determinism:
+
+- **16 Mandatory Subphases**: SP0 (Language Detection) through SP15 (Strategic Ranking)
+- **PA×DIM Grid**: Produces EXACTLY 60 chunks (10 Policy Areas × 6 Dimensions)  
+- **Critical Gates**: SP4, SP11, SP13 have weight 10000 (any failure = immediate abort)
+- **Execution Trace**: Full cryptographic trace with SHA256 hashes for each subphase
+- **No Recovery**: Any deviation from invariants causes `Phase1FatalError` with no degradation
+
+```python
+from saaaaaa.core.phases.phase1_spc_ingestion_full import execute_phase_1_with_full_contract
+
+# Execute with strict contract
+cpp = execute_phase_1_with_full_contract(canonical_input)
+assert len(cpp.chunk_graph.chunks) == 60  # Exactly 60 chunks, always
+```
+
+See [ARCHITECTURE.md § 2.1.1](#) for complete specification.
 
 #### 2. Contract System
 

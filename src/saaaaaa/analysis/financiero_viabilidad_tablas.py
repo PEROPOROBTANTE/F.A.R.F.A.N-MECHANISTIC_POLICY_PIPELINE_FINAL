@@ -57,6 +57,8 @@ from sklearn.cluster import DBSCAN, AgglomerativeClustering
 # === MACHINE LEARNING Y SCORING ===
 from sklearn.feature_extraction.text import TfidfVectorizer
 from transformers import pipeline
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 _lockdown = get_dependency_lockdown()
 
@@ -312,6 +314,7 @@ class PDETMunicipalPlanAnalyzer:
 
         print("✅ Modelos inicializados correctamente\n")
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_spanish_stopwords")
     def _get_spanish_stopwords(self) -> list[str]:
         base_stopwords = spacy.lang.es.stop_words.STOP_WORDS
         gov_stopwords = {
@@ -336,7 +339,7 @@ class PDETMunicipalPlanAnalyzer:
                 line_scale=40, joint_tol=10, edge_tol=50
             )
             for idx, table in enumerate(lattice_tables):
-                if table.parsing_report['accuracy'] > 0.7:
+                if table.parsing_report['accuracy'] > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_spanish_stopwords").get("auto_param_L342_54", 0.7):
                     all_tables.append(ExtractedTable(
                         df=self._clean_dataframe(table.df),
                         page_number=table.page,
@@ -354,7 +357,7 @@ class PDETMunicipalPlanAnalyzer:
                 edge_tol=500, row_tol=15, column_tol=10
             )
             for idx, table in enumerate(stream_tables):
-                if table.parsing_report['accuracy'] > 0.6:
+                if table.parsing_report['accuracy'] > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_spanish_stopwords").get("auto_param_L360_54", 0.6):
                     all_tables.append(ExtractedTable(
                         df=self._clean_dataframe(table.df),
                         page_number=table.page,
@@ -378,7 +381,7 @@ class PDETMunicipalPlanAnalyzer:
                         page_number=idx + 1,
                         table_type=None,
                         extraction_method='tabula',
-                        confidence_score=0.6
+                        confidence_score = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_spanish_stopwords").get("confidence_score", 0.6) # Refactored
                     ))
         except Exception as e:
             print(f" ⚠️ Tabula: {str(e)[:50]}")
@@ -392,6 +395,7 @@ class PDETMunicipalPlanAnalyzer:
         classified = self._classify_tables(reconstructed)
         return classified
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._clean_dataframe")
     def _clean_dataframe(self, df: pd.DataFrame) -> pd.DataFrame:
         if df.empty:
             return df
@@ -410,6 +414,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return df
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._is_likely_header")
     def _is_likely_header(self, row: pd.Series, **kwargs) -> bool:
         """
         Determine if a DataFrame row is likely a header row based on linguistic analysis.
@@ -440,6 +445,7 @@ class PDETMunicipalPlanAnalyzer:
         verb_ratio = pos_counts.get('VERB', 0) / max(len(doc), 1)
         return noun_ratio > verb_ratio and len(text) < 200
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._deduplicate_tables")
     def _deduplicate_tables(self, tables: list[ExtractedTable]) -> list[ExtractedTable]:
         if len(tables) <= 1:
             return tables
@@ -457,7 +463,7 @@ class PDETMunicipalPlanAnalyzer:
         for i, table in enumerate(tables):
             if i in seen:
                 continue
-            duplicates = (similarities[i] > 0.85).nonzero(as_tuple=True)[0].tolist()
+            duplicates = (similarities[i] > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._deduplicate_tables").get("auto_param_L466_44", 0.85)).nonzero(as_tuple=True)[0].tolist()
             best_idx = max(duplicates, key=lambda idx: tables[idx].confidence_score)
             to_keep.append(tables[best_idx])
             seen.update(duplicates)
@@ -477,7 +483,7 @@ class PDETMunicipalPlanAnalyzer:
             features.append(combined)
 
         embeddings = self.semantic_model.encode(features, convert_to_tensor=False)
-        clustering = DBSCAN(eps=0.3, min_samples=2, metric='cosine').fit(embeddings)
+        clustering = DBSCAN(eps=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._deduplicate_tables").get("auto_param_L486_32", 0.3), min_samples=2, metric='cosine').fit(embeddings)
 
         reconstructed = []
         processed = set()
@@ -507,6 +513,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return reconstructed
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._classify_tables")
     def _classify_tables(self, tables: list[ExtractedTable]) -> list[ExtractedTable]:
         classification_patterns = {
             'presupuesto': ['presupuesto', 'recursos', 'millones', 'sgp', 'sgr', 'fuente', 'financiación'],
@@ -533,6 +540,7 @@ class PDETMunicipalPlanAnalyzer:
     # ANÁLISIS FINANCIERO
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.analyze_financial_feasibility")
     def analyze_financial_feasibility(self, tables: list[ExtractedTable], text: str) -> dict[str, Any]:
         print("💰 Analizando feasibility financiero...")
 
@@ -550,6 +558,7 @@ class PDETMunicipalPlanAnalyzer:
             'confidence': risk_assessment['confidence_interval']
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_financial_amounts")
     def _extract_financial_amounts(self, text: str, tables: list[ExtractedTable]) -> list[FinancialIndicator]:
         patterns = [
             r'\$?\s*(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)\s*millones?',
@@ -583,8 +592,8 @@ class PDETMunicipalPlanAnalyzer:
                         funding_source=funding_source,
                         budget_category='',
                         execution_percentage=None,
-                        confidence_interval=(0.0, 0.0),
-                        risk_level=0.0
+                        confidence_interval=(get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_financial_amounts").get("auto_param_L595_45", 0.0), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_financial_amounts").get("auto_param_L595_50", 0.0)),
+                        risk_level = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_financial_amounts").get("risk_level", 0.0) # Refactored
                     ))
                 except (ValueError, Exception):
                     continue
@@ -597,6 +606,7 @@ class PDETMunicipalPlanAnalyzer:
         print(f" ✓ {len(indicators)} indicadores financieros extraídos")
         return indicators
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_funding_source")
     def _identify_funding_source(self, context: str) -> str:
         sources = {
             'SGP': ['sgp', 'sistema general de participaciones'],
@@ -614,6 +624,7 @@ class PDETMunicipalPlanAnalyzer:
                 return source_name
         return 'No especificada'
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_from_budget_table")
     def _extract_from_budget_table(self, df: pd.DataFrame) -> list[FinancialIndicator]:
         indicators = []
         amount_cols = [col for col in df.columns if any(
@@ -646,14 +657,15 @@ class PDETMunicipalPlanAnalyzer:
                     funding_source=funding_source,
                     budget_category='',
                     execution_percentage=None,
-                    confidence_interval=(0.0, 0.0),
-                    risk_level=0.0
+                    confidence_interval=(get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_from_budget_table").get("auto_param_L660_41", 0.0), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_from_budget_table").get("auto_param_L660_46", 0.0)),
+                    risk_level = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_from_budget_table").get("risk_level", 0.0) # Refactored
                 ))
             except Exception:
                 continue
 
         return indicators
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._analyze_funding_sources")
     def _analyze_funding_sources(self, indicators: list[FinancialIndicator], tables: list[ExtractedTable]) -> dict[
         str, Any]:
         source_distribution = {}
@@ -663,7 +675,7 @@ class PDETMunicipalPlanAnalyzer:
 
         total = sum(source_distribution.values())
         if total == 0:
-            return {'distribution': {}, 'diversity_index': 0.0}
+            return {'distribution': {}, 'diversity_index': get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._analyze_funding_sources").get("auto_param_L678_59", 0.0)}
 
         proportions = [float(amount / total) for amount in source_distribution.values()]
         diversity = -sum(p * np.log(p) if p > 0 else 0 for p in proportions)
@@ -672,25 +684,27 @@ class PDETMunicipalPlanAnalyzer:
             'distribution': {k: float(v) for k, v in source_distribution.items()},
             'diversity_index': float(diversity),
             'max_diversity': np.log(len(source_distribution)),
-            'dependency_risk': 1.0 - (diversity / np.log(max(len(source_distribution), 2)))
+            'dependency_risk': get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._analyze_funding_sources").get("auto_param_L687_31", 1.0) - (diversity / np.log(max(len(source_distribution), 2)))
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability")
     def _assess_financial_sustainability(self, indicators: list[FinancialIndicator],
                                          funding_sources: dict[str, Any]) -> float:
         if not indicators:
-            return 0.0
+            return get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L694_19", 0.0)
 
-        diversity_score = min(funding_sources.get('diversity_index', 0) / funding_sources.get('max_diversity', 1), 1.0)
+        diversity_score = min(funding_sources.get('diversity_index', 0) / funding_sources.get('max_diversity', 1), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L696_115", 1.0))
 
         distribution = funding_sources.get('distribution', {})
         total = sum(distribution.values())
-        own_resources = distribution.get('Recursos Propios', 0) / total if total > 0 else 0.0
-        pdet_dependency = distribution.get('PDET', 0) / total if total > 0 else 0.0
-        pdet_risk = min(pdet_dependency * 2, 1.0)
+        own_resources = distribution.get('Recursos Propios', 0) / total if total > 0 else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L700_90", 0.0)
+        pdet_dependency = distribution.get('PDET', 0) / total if total > 0 else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L701_80", 0.0)
+        pdet_risk = min(pdet_dependency * 2, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L702_45", 1.0))
 
-        sustainability = (diversity_score * 0.3 + own_resources * 0.4 + (1 - pdet_risk) * 0.3)
+        sustainability = (diversity_score * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L704_44", 0.3) + own_resources * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L704_66", 0.4) + (1 - pdet_risk) * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._assess_financial_sustainability").get("auto_param_L704_90", 0.3))
         return float(sustainability)
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference")
     def _bayesian_risk_inference(self, indicators: list[FinancialIndicator], funding_sources: dict[str, Any],
                                  sustainability: float) -> dict[str, Any]:
         print(" 🎲 Ejecutando inferencia bayesiana...")
@@ -699,14 +713,14 @@ class PDETMunicipalPlanAnalyzer:
             'n_indicators': len(indicators),
             'diversity': funding_sources.get('diversity_index', 0),
             'sustainability': sustainability,
-            'dependency': funding_sources.get('dependency_risk', 0.5)
+            'dependency': funding_sources.get('dependency_risk', get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L716_65", 0.5))
         }
 
         with pm.Model():
             base_risk = pm.Beta('base_risk', alpha=2, beta=5)
-            diversity_effect = pm.Normal('diversity_effect', mu=-0.3, sigma=0.1)
-            sustainability_effect = pm.Normal('sustainability_effect', mu=-0.4, sigma=0.1)
-            dependency_effect = pm.Normal('dependency_effect', mu=0.5, sigma=0.15)
+            diversity_effect = pm.Normal('diversity_effect', mu=-get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L721_65", 0.3), sigma=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L721_76", 0.1))
+            sustainability_effect = pm.Normal('sustainability_effect', mu=-get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L722_75", 0.4), sigma=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L722_86", 0.1))
+            dependency_effect = pm.Normal('dependency_effect', mu=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L723_66", 0.5), sigma=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._bayesian_risk_inference").get("auto_param_L723_77", 0.15))
 
             pm.Deterministic(
                 'risk',
@@ -733,18 +747,20 @@ class PDETMunicipalPlanAnalyzer:
             'posterior_samples': risk_samples.tolist()
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_risk")
     def _interpret_risk(self, risk: float) -> str:
-        if risk < 0.2:
+        if risk < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_risk").get("auto_param_L752_18", 0.2):
             return "Riesgo bajo - Plan financieramente robusto"
-        elif risk < 0.4:
+        elif risk < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_risk").get("auto_param_L754_20", 0.4):
             return "Riesgo moderado-bajo - Sostenibilidad probable"
-        elif risk < 0.6:
+        elif risk < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_risk").get("auto_param_L756_20", 0.6):
             return "Riesgo moderado - Requiere monitoreo"
-        elif risk < 0.8:
+        elif risk < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_risk").get("auto_param_L758_20", 0.8):
             return "Riesgo alto - Vulnerabilidades significativas"
         else:
             return "Riesgo crítico - Inviabilidad financiera probable"
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._indicator_to_dict")
     def _indicator_to_dict(self, ind: FinancialIndicator) -> dict[str, Any]:
         return {
             'source_text': ind.source_text,
@@ -759,6 +775,7 @@ class PDETMunicipalPlanAnalyzer:
     # IDENTIFICACIÓN DE RESPONSABLES
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.identify_responsible_entities")
     def identify_responsible_entities(self, text: str, tables: list[ExtractedTable]) -> list[ResponsibleEntity]:
         print("👥 Identificando entidades responsables...")
 
@@ -773,6 +790,7 @@ class PDETMunicipalPlanAnalyzer:
         print(f" ✓ {len(scored_entities)} entidades responsables identificadas")
         return sorted(scored_entities, key=lambda x: x.specificity_score, reverse=True)
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_entities_ner")
     def _extract_entities_ner(self, text: str) -> list[ResponsibleEntity]:
         entities = []
         max_length = 512
@@ -783,7 +801,7 @@ class PDETMunicipalPlanAnalyzer:
             try:
                 ner_results = self.entity_classifier(chunk)
                 for entity in ner_results:
-                    if entity['entity_group'] in ['ORG', 'PER'] and entity['score'] > 0.7:
+                    if entity['entity_group'] in ['ORG', 'PER'] and entity['score'] > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_entities_ner").get("auto_param_L804_86", 0.7):
                         entities.append(ResponsibleEntity(
                             name=entity['word'],
                             entity_type='secretaría',
@@ -798,6 +816,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return entities
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_entities_syntax")
     def _extract_entities_syntax(self, text: str) -> list[ResponsibleEntity]:
         entities = []
         responsibility_patterns = [
@@ -816,7 +835,7 @@ class PDETMunicipalPlanAnalyzer:
                 entities.append(ResponsibleEntity(
                     name=name,
                     entity_type=entity_type,
-                    specificity_score=0.6,
+                    specificity_score=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_entities_syntax").get("auto_param_L838_38", 0.6),
                     mentioned_count=1,
                     associated_programs=[],
                     associated_indicators=[],
@@ -825,6 +844,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return entities
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._classify_entity_type")
     def _classify_entity_type(self, name: str) -> str:
         name_lower = name.lower()
         if 'secretaría' in name_lower or 'secretaria' in name_lower:
@@ -838,6 +858,7 @@ class PDETMunicipalPlanAnalyzer:
         else:
             return 'externo'
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_from_responsibility_tables")
     def _extract_from_responsibility_tables(self, tables: list[ExtractedTable]) -> list[ResponsibleEntity]:
         entities = []
         resp_tables = [t for t in tables if t.table_type == 'responsables']
@@ -860,7 +881,7 @@ class PDETMunicipalPlanAnalyzer:
                 entities.append(ResponsibleEntity(
                     name=name,
                     entity_type=self._classify_entity_type(name),
-                    specificity_score=0.8,
+                    specificity_score=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_from_responsibility_tables").get("auto_param_L884_38", 0.8),
                     mentioned_count=1,
                     associated_programs=[],
                     associated_indicators=[],
@@ -869,6 +890,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return entities
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._consolidate_entities")
     def _consolidate_entities(self, entities: list[ResponsibleEntity]) -> list[ResponsibleEntity]:
         if not entities:
             return []
@@ -876,7 +898,7 @@ class PDETMunicipalPlanAnalyzer:
         names = [e.name for e in entities]
         embeddings = self.semantic_model.encode(names, convert_to_tensor=True)
 
-        similarity_threshold = 0.85
+        similarity_threshold = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._consolidate_entities").get("similarity_threshold", 0.85) # Refactored
         clustering = AgglomerativeClustering(
             n_clusters=None,
             distance_threshold=1 - similarity_threshold,
@@ -903,21 +925,22 @@ class PDETMunicipalPlanAnalyzer:
 
         return consolidated
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity")
     def _score_entity_specificity(self, entities: list[ResponsibleEntity], full_text: str) -> list[ResponsibleEntity]:
         scored = []
         for entity in entities:
             doc = self.nlp(entity.name)
 
-            length_score = min(len(entity.name.split()) / 10, 1.0)
+            length_score = min(len(entity.name.split()) / 10, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L934_62", 1.0))
             propn_count = sum(1 for token in doc if token.pos_ == 'PROPN')
-            propn_score = min(propn_count / 3, 1.0)
+            propn_score = min(propn_count / 3, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L936_47", 1.0))
 
             institutional_words = ['secretaría', 'dirección', 'oficina', 'departamento', 'coordinación', 'gerencia',
                                    'subdirección']
             inst_score = float(any(word in entity.name.lower() for word in institutional_words))
-            mention_score = min(entity.mentioned_count / 10, 1.0)
+            mention_score = min(entity.mentioned_count / 10, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L941_61", 1.0))
 
-            final_score = (length_score * 0.2 + propn_score * 0.3 + inst_score * 0.3 + mention_score * 0.2)
+            final_score = (length_score * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L943_42", 0.2) + propn_score * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L943_62", 0.3) + inst_score * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L943_81", 0.3) + mention_score * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_entity_specificity").get("auto_param_L943_103", 0.2))
 
             entity.specificity_score = final_score
             scored.append(entity)
@@ -928,6 +951,7 @@ class PDETMunicipalPlanAnalyzer:
     # INFERENCIA CAUSAL - DAG CONSTRUCTION
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.construct_causal_dag")
     def construct_causal_dag(self, text: str, tables: list[ExtractedTable],
                              financial_analysis: dict[str, Any]) -> CausalDAG:
         print("🔗 Construyendo grafo causal (DAG)...")
@@ -942,12 +966,12 @@ class PDETMunicipalPlanAnalyzer:
         for node_name, node in nodes.items():
             G.add_node(node_name, **{
                 'type': node.node_type,
-                'budget': float(node.associated_budget) if node.associated_budget else 0.0,
+                'budget': float(node.associated_budget) if node.associated_budget else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.construct_causal_dag").get("auto_param_L969_87", 0.0),
                 'evidence': node.evidence_strength
             })
 
         for edge in edges:
-            if edge.probability > 0.3:
+            if edge.probability > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.construct_causal_dag").get("auto_param_L974_34", 0.3):
                 G.add_edge(edge.source, edge.target, **{
                     'type': edge.edge_type,
                     'mechanism': edge.mechanism,
@@ -970,6 +994,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return CausalDAG(nodes=nodes, edges=edges, adjacency_matrix=adj_matrix, graph=G)
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_nodes")
     def _identify_causal_nodes(self, text: str, tables: list[ExtractedTable], financial_analysis: dict[str, Any]) -> \
             dict[str, CausalNode]:
         nodes = {}
@@ -987,7 +1012,7 @@ class PDETMunicipalPlanAnalyzer:
                     embedding=pillar_embedding,
                     associated_budget=budget,
                     temporal_lag=self.context.PDET_THEORY_OF_CHANGE[pillar]['lag_years'],
-                    evidence_strength=min(len(mentions) / 5, 1.0)
+                    evidence_strength=min(len(mentions) / 5, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_nodes").get("auto_param_L1015_61", 1.0))
                 )
 
         for pillar, theory in self.context.PDET_THEORY_OF_CHANGE.items():
@@ -1003,7 +1028,7 @@ class PDETMunicipalPlanAnalyzer:
                         embedding=self.semantic_model.encode(outcome, convert_to_tensor=False),
                         associated_budget=None,
                         temporal_lag=0,
-                        evidence_strength=min(len(outcome_mentions) / 3, 1.0)
+                        evidence_strength=min(len(outcome_mentions) / 3, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_nodes").get("auto_param_L1031_73", 1.0))
                     )
 
             for mediator in theory['mediators']:
@@ -1015,11 +1040,12 @@ class PDETMunicipalPlanAnalyzer:
                         embedding=self.semantic_model.encode(mediator, convert_to_tensor=False),
                         associated_budget=None,
                         temporal_lag=0,
-                        evidence_strength=min(len(mediator_mentions) / 2, 1.0)
+                        evidence_strength=min(len(mediator_mentions) / 2, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_nodes").get("auto_param_L1043_74", 1.0))
                     )
 
         return nodes
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._find_semantic_mentions")
     def _find_semantic_mentions(self, text: str, concept: str, concept_embedding: np.ndarray) -> list[str]:
         sentences = [s.text for s in self.nlp(text[:50000]).sents]
 
@@ -1033,11 +1059,12 @@ class PDETMunicipalPlanAnalyzer:
                     np.linalg.norm(concept_embedding) * np.linalg.norm(sent_embedding)
             )
 
-            if similarity > 0.5:
+            if similarity > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._find_semantic_mentions").get("auto_param_L1062_28", 0.5):
                 mentions.append(sentence)
 
         return mentions
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._find_outcome_mentions")
     def _find_outcome_mentions(self, text: str, outcome: str) -> list[str]:
         outcome_keywords = {
             'seguridad_juridica': ['seguridad jurídica', 'formalización', 'títulos', 'propiedad'],
@@ -1070,6 +1097,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return mentions[:10]
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._find_mediator_mentions")
     def _find_mediator_mentions(self, text: str, mediator: str) -> list[str]:
         mediator_patterns = {
             'formalizacion': ['formalización', 'titulación', 'escrituras'],
@@ -1101,6 +1129,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return mentions[:8]
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_budget_for_pillar")
     def _extract_budget_for_pillar(self, pillar: str, text: str, financial_analysis: dict[str, Any]) -> Decimal | None:
         pillar_lower = pillar.lower()
 
@@ -1121,6 +1150,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return None
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_edges")
     def _identify_causal_edges(self, text: str, nodes: dict[str, CausalNode]) -> list[CausalEdge]:
         edges = []
 
@@ -1135,7 +1165,7 @@ class PDETMunicipalPlanAnalyzer:
                         target=mediator,
                         edge_type='direct',
                         mechanism="Mecanismo según teoría PDET",
-                        probability=0.8
+                        probability = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_edges").get("probability", 0.8) # Refactored
                     ))
 
             for outcome in theory['outcomes']:
@@ -1147,7 +1177,7 @@ class PDETMunicipalPlanAnalyzer:
                                 target=outcome,
                                 edge_type='mediated',
                                 mechanism=f"Mediado por {mediator}",
-                                probability=0.7
+                                probability = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_edges").get("probability", 0.7) # Refactored
                             ))
 
         causal_patterns = [
@@ -1168,7 +1198,7 @@ class PDETMunicipalPlanAnalyzer:
                     existing = next((e for e in edges if e.source == source_node and e.target == target_node), None)
 
                     if existing:
-                        existing.probability = min(existing.probability + 0.2, 1.0)
+                        existing.probability = min(existing.probability + get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_edges").get("auto_param_L1201_74", 0.2), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_edges").get("auto_param_L1201_79", 1.0))
                         existing.evidence_quotes.append(match.group(0)[:200])
                     else:
                         edges.append(CausalEdge(
@@ -1177,13 +1207,14 @@ class PDETMunicipalPlanAnalyzer:
                             edge_type=edge_type,
                             mechanism=match.group(0)[:200],
                             evidence_quotes=[match.group(0)[:200]],
-                            probability=0.6
+                            probability = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_causal_edges").get("probability", 0.6) # Refactored
                         ))
 
         edges = self._refine_edge_probabilities(edges, text, nodes)
 
         return edges
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._match_text_to_node")
     def _match_text_to_node(self, text: str, nodes: dict[str, CausalNode]) -> str | None:
         if len(text) < 5:
             return None
@@ -1191,7 +1222,7 @@ class PDETMunicipalPlanAnalyzer:
         text_embedding = self.semantic_model.encode(text, convert_to_tensor=False)
 
         best_match = None
-        best_similarity = 0.0
+        best_similarity = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._match_text_to_node").get("best_similarity", 0.0) # Refactored
 
         for node_name, node in nodes.items():
             if node.embedding is None:
@@ -1201,12 +1232,13 @@ class PDETMunicipalPlanAnalyzer:
                     np.linalg.norm(text_embedding) * np.linalg.norm(node.embedding) + 1e-10
             )
 
-            if similarity > best_similarity and similarity > 0.4:
+            if similarity > best_similarity and similarity > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._match_text_to_node").get("auto_param_L1235_61", 0.4):
                 best_similarity = similarity
                 best_match = node_name
 
         return best_match
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._refine_edge_probabilities")
     def _refine_edge_probabilities(self, edges: list[CausalEdge], text: str, nodes: dict[str, CausalNode]) -> list[
         CausalEdge]:
         text_lower = text.lower()
@@ -1225,16 +1257,17 @@ class PDETMunicipalPlanAnalyzer:
                         cooccurrence_count += 1
 
             if cooccurrence_count > 0:
-                boost = min(cooccurrence_count * 0.1, 0.3)
-                edge.probability = min(edge.probability + boost, 1.0)
+                boost = min(cooccurrence_count * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._refine_edge_probabilities").get("auto_param_L1260_49", 0.1), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._refine_edge_probabilities").get("auto_param_L1260_54", 0.3))
+                edge.probability = min(edge.probability + boost, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._refine_edge_probabilities").get("auto_param_L1261_65", 1.0))
 
         return edges
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._break_cycles")
     def _break_cycles(self, G: nx.DiGraph) -> nx.DiGraph:
         while not nx.is_directed_acyclic_graph(G):
             try:
                 cycle = nx.find_cycle(G)
-                weakest_edge = min(cycle, key=lambda e: G[e[0]][e[1]].get('probability', 0.5))
+                weakest_edge = min(cycle, key=lambda e: G[e[0]][e[1]].get('probability', get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._break_cycles").get("auto_param_L1270_89", 0.5)))
                 G.remove_edge(weakest_edge[0], weakest_edge[1])
             except nx.NetworkXNoCycle:
                 break
@@ -1245,6 +1278,7 @@ class PDETMunicipalPlanAnalyzer:
     # ESTIMACIÓN BAYESIANA DE EFECTOS CAUSALES
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.estimate_causal_effects")
     def estimate_causal_effects(self, dag: CausalDAG, text: str, financial_analysis: dict[str, Any]) -> list[
         CausalEffect]:
         print("📈 Estimando efectos causales bayesianos...")
@@ -1270,6 +1304,7 @@ class PDETMunicipalPlanAnalyzer:
         print(f" ✓ {len(effects)} efectos causales estimados")
         return effects
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian")
     def _estimate_effect_bayesian(self, treatment: str, outcome: str, dag: CausalDAG,
                                   financial_analysis: dict[str, Any]) -> CausalEffect | None:
         G = dag.graph
@@ -1287,7 +1322,7 @@ class PDETMunicipalPlanAnalyzer:
         confounders = self._identify_confounders(treatment, outcome, dag)
 
         treatment_node = dag.nodes[treatment]
-        budget_value = float(treatment_node.associated_budget) if treatment_node.associated_budget else 0.0
+        budget_value = float(treatment_node.associated_budget) if treatment_node.associated_budget else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1325_104", 0.0)
 
         with pm.Model():
             prior_mean, prior_sd = self._get_prior_effect(treatment, outcome)
@@ -1297,12 +1332,12 @@ class PDETMunicipalPlanAnalyzer:
             indirect_effects = []
             for path in indirect_paths[:3]:
                 path_name = '->'.join([p[:15] for p in path])
-                indirect_eff = pm.Normal(f'indirect_{path_name}', mu=prior_mean * 0.5, sigma=prior_sd * 1.5)
+                indirect_eff = pm.Normal(f'indirect_{path_name}', mu=prior_mean * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1335_82", 0.5), sigma=prior_sd * 1.5)
                 indirect_effects.append(indirect_eff)
 
             if budget_value > 0:
                 budget_adjustment = pm.Deterministic('budget_adjustment', pm.math.log1p(budget_value / 1e9))
-                adjusted_direct = direct_effect * (1 + budget_adjustment * 0.1)
+                adjusted_direct = direct_effect * (1 + budget_adjustment * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1340_75", 0.1))
             else:
                 adjusted_direct = direct_effect
 
@@ -1312,12 +1347,12 @@ class PDETMunicipalPlanAnalyzer:
                 total_effect = pm.Deterministic('total_effect', adjusted_direct)
 
             evidence_strength = treatment_node.evidence_strength * dag.nodes[outcome].evidence_strength
-            obs_noise = pm.HalfNormal('obs_noise', sigma=0.5)
+            obs_noise = pm.HalfNormal('obs_noise', sigma=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1350_57", 0.5))
 
             pm.Normal('pseudo_obs', mu=total_effect, sigma=obs_noise,
-                                   observed=np.array([evidence_strength * 0.5]))
+                                   observed=np.array([evidence_strength * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1353_74", 0.5)]))
 
-            trace = pm.sample(1500, tune=800, cores=1, return_inferencedata=True, progressbar=False, target_accept=0.9)
+            trace = pm.sample(1500, tune=800, cores=1, return_inferencedata=True, progressbar=False, target_accept=get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1355_115", 0.9))
 
         total_samples = trace.posterior['total_effect'].values.flatten()
         trace.posterior['direct_effect'].values.flatten()
@@ -1325,7 +1360,7 @@ class PDETMunicipalPlanAnalyzer:
         total_mean = float(np.mean(total_samples))
         total_ci = tuple(float(x) for x in np.percentile(total_samples, [2.5, 97.5]))
         prob_positive = float(np.mean(total_samples > 0))
-        prob_significant = float(np.mean(np.abs(total_samples) > 0.1))
+        prob_significant = float(np.mean(np.abs(total_samples) > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_effect_bayesian").get("auto_param_L1363_65", 0.1)))
 
         return CausalEffect(
             treatment=treatment,
@@ -1340,26 +1375,28 @@ class PDETMunicipalPlanAnalyzer:
             confounders_adjusted=confounders
         )
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect")
     def _get_prior_effect(self, treatment: str, outcome: str) -> tuple[float, float]:
         """
         Priors informados basados en meta-análisis de programas PDET
         Referencia: Cinelli et al. (2022) - Sensitivity Analysis for Causal Inference
         """
         effect_priors = {
-            ('Infraestructura y adecuación de tierras', 'productividad_agricola'): (0.35, 0.15),
-            ('Salud rural', 'mortalidad_infantil'): (-0.28, 0.12),
-            ('Educación rural y primera infancia', 'cobertura_educativa'): (0.42, 0.18),
-            ('Vivienda, agua potable y saneamiento básico', 'enfermedades_hidricas'): (-0.33, 0.14),
-            ('Reactivación económica y producción agropecuaria', 'ingreso_rural'): (0.29, 0.16),
-            ('Sistema para la garantía progresiva del derecho a la alimentación', 'seguridad_alimentaria'): (0.38,
-                                                                                                            0.17),
+            ('Infraestructura y adecuación de tierras', 'productividad_agricola'): (get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1385_84", 0.35), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1385_90", 0.15)),
+            ('Salud rural', 'mortalidad_infantil'): (-get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1386_54", 0.28), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1386_60", 0.12)),
+            ('Educación rural y primera infancia', 'cobertura_educativa'): (get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1387_76", 0.42), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1387_82", 0.18)),
+            ('Vivienda, agua potable y saneamiento básico', 'enfermedades_hidricas'): (-get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1388_88", 0.33), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1388_94", 0.14)),
+            ('Reactivación económica y producción agropecuaria', 'ingreso_rural'): (get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1389_84", 0.29), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1389_90", 0.16)),
+            ('Sistema para la garantía progresiva del derecho a la alimentación', 'seguridad_alimentaria'): (get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1390_109", 0.38),
+                                                                                                            get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1391_108", 0.17)),
         }
 
         if (treatment, outcome) in effect_priors:
             return effect_priors[(treatment, outcome)]
 
-        return (0.2, 0.25)
+        return (get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1397_16", 0.2), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._get_prior_effect").get("auto_param_L1397_21", 0.25))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._identify_confounders")
     def _identify_confounders(self, treatment: str, outcome: str, dag: CausalDAG) -> list[str]:
         """
         Identifica confounders usando d-separation (Pearl, 2009)
@@ -1380,6 +1417,7 @@ class PDETMunicipalPlanAnalyzer:
     # ANÁLISIS CONTRAFACTUAL (Pearl's Three-Layer Causal Hierarchy)
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_counterfactuals")
     def generate_counterfactuals(self, dag: CausalDAG, causal_effects: list[CausalEffect],
                                  financial_analysis: dict[str, Any]) -> list[CounterfactualScenario]:
         """
@@ -1397,7 +1435,7 @@ class PDETMunicipalPlanAnalyzer:
         pillar_nodes = [n for n, data in G.nodes(data=True) if data.get('type') == 'pilar']
 
         current_budgets = {
-            node: float(dag.nodes[node].associated_budget) if dag.nodes[node].associated_budget else 0.0
+            node: float(dag.nodes[node].associated_budget) if dag.nodes[node].associated_budget else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_counterfactuals").get("auto_param_L1438_101", 0.0)
             for node in pillar_nodes
         }
         total_budget = sum(current_budgets.values())
@@ -1433,7 +1471,7 @@ class PDETMunicipalPlanAnalyzer:
             best_effect = max(causal_effects, key=lambda e: e.probability_positive * abs(e.posterior_mean))
             best_pillar = best_effect.treatment
 
-            intervention_3 = {node: budget * 0.7 for node, budget in current_budgets.items()}
+            intervention_3 = {node: budget * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_counterfactuals").get("auto_param_L1474_45", 0.7) for node, budget in current_budgets.items()}
             if best_pillar in intervention_3:
                 intervention_3[best_pillar] = current_budgets[best_pillar] * 1.8
 
@@ -1444,6 +1482,7 @@ class PDETMunicipalPlanAnalyzer:
         print(f" ✓ {len(scenarios)} escenarios contrafactuales generados")
         return scenarios
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._simulate_intervention")
     def _simulate_intervention(self, intervention: dict[str, float], dag: CausalDAG,
                                causal_effects: list[CausalEffect], description: str) -> CounterfactualScenario:
         """
@@ -1461,8 +1500,8 @@ class PDETMunicipalPlanAnalyzer:
             if not relevant_effects:
                 continue
 
-            expected_change = 0.0
-            variance_sum = 0.0
+            expected_change = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._simulate_intervention").get("expected_change", 0.0) # Refactored
+            variance_sum = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._simulate_intervention").get("variance_sum", 0.0) # Refactored
 
             for effect in relevant_effects:
                 treatment = effect.treatment
@@ -1470,13 +1509,13 @@ class PDETMunicipalPlanAnalyzer:
                     continue
 
                 current_budget = float(dag.nodes[treatment].associated_budget) if dag.nodes[
-                    treatment].associated_budget else 0.0
+                    treatment].associated_budget else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._simulate_intervention").get("auto_param_L1512_54", 0.0)
                 new_budget = intervention[treatment]
 
-                budget_multiplier = new_budget / current_budget if current_budget > 0 else 1.0
+                budget_multiplier = new_budget / current_budget if current_budget > 0 else get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._simulate_intervention").get("auto_param_L1515_91", 1.0)
 
                 # Rendimientos decrecientes: log transform
-                effect_multiplier = np.log1p(budget_multiplier) / np.log1p(1.0)
+                effect_multiplier = np.log1p(budget_multiplier) / np.log1p(get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._simulate_intervention").get("auto_param_L1518_75", 1.0))
 
                 expected_change += effect.posterior_mean * effect_multiplier
 
@@ -1507,6 +1546,7 @@ class PDETMunicipalPlanAnalyzer:
             narrative=narrative
         )
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_scenario_narrative")
     def _generate_scenario_narrative(self, description: str, intervention: dict[str, float],
                                      predicted_outcomes: dict[str, tuple[float, float, float]],
                                      probabilities: dict[str, float]) -> str:
@@ -1522,7 +1562,7 @@ class PDETMunicipalPlanAnalyzer:
 
         narrative += "\n**Efectos esperados:**\n"
 
-        significant_outcomes = [(o, p) for o, p in probabilities.items() if p > 0.6]
+        significant_outcomes = [(o, p) for o, p in probabilities.items() if p > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_scenario_narrative").get("auto_param_L1565_80", 0.6)]
         significant_outcomes.sort(key=lambda x: -x[1])
 
         for outcome, prob in significant_outcomes[:5]:
@@ -1536,6 +1576,7 @@ class PDETMunicipalPlanAnalyzer:
     # ANÁLISIS DE SENSIBILIDAD (Cinelli et al., 2022)
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.sensitivity_analysis")
     def sensitivity_analysis(self, causal_effects: list[CausalEffect], dag: CausalDAG) -> dict[str, Any]:
         """
         Análisis de sensibilidad para supuestos de identificación causal
@@ -1559,6 +1600,7 @@ class PDETMunicipalPlanAnalyzer:
         print(f" ✓ Sensibilidad analizada para {len(sensitivity_results)} efectos")
         return sensitivity_results
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_e_value")
     def _compute_e_value(self, effect: CausalEffect) -> float:
         """
         E-value: mínima fuerza de confounding no observado para anular el efecto
@@ -1567,40 +1609,42 @@ class PDETMunicipalPlanAnalyzer:
         Referencia: VanderWeele & Ding (2017) - Ann Intern Med
         """
         if effect.posterior_mean <= 0:
-            return 1.0
+            return get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_e_value").get("auto_param_L1612_19", 1.0)
 
         rr = np.exp(effect.posterior_mean)  # Convert log-scale to risk ratio
         if rr <= 1:
-            return 1.0
+            return get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_e_value").get("auto_param_L1616_19", 1.0)
         e_value = rr + np.sqrt(rr * (rr - 1))
 
         return float(e_value)
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_robustness_value")
     def _compute_robustness_value(self, effect: CausalEffect, dag: CausalDAG) -> float:
         """
         Robustness Value: percentil de la distribución posterior que cruza cero
-        Valores altos (>0.95) indican alta robustez
+        Valores altos (>get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_robustness_value").get("auto_param_L1625_24", 0.95)) indican alta robustez
         """
         ci_lower, ci_upper = effect.credible_interval_95
 
         if ci_lower > 0 or ci_upper < 0:
-            return 1.0
+            return get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_robustness_value").get("auto_param_L1630_19", 1.0)
 
         width = ci_upper - ci_lower
         if width == 0:
-            return 0.5
+            return get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_robustness_value").get("auto_param_L1634_19", 0.5)
 
         robustness = abs(effect.posterior_mean) / (width / 2)
-        return float(min(robustness, 1.0))
+        return float(min(robustness, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._compute_robustness_value").get("auto_param_L1637_37", 1.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_sensitivity")
     def _interpret_sensitivity(self, e_value: float, robustness: float) -> str:
         """Interpretación de resultados de sensibilidad"""
 
-        if e_value > 2.0 and robustness > 0.8:
+        if e_value > 2.0 and robustness > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_sensitivity").get("auto_param_L1643_42", 0.8):
             return "Efecto robusto - Resistente a confounding no observado"
-        elif e_value > 1.5 and robustness > 0.6:
+        elif e_value > 1.5 and robustness > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_sensitivity").get("auto_param_L1645_44", 0.6):
             return "Efecto moderadamente robusto - Precaución con confounders"
-        elif e_value > 1.2 and robustness > 0.4:
+        elif e_value > 1.2 and robustness > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_sensitivity").get("auto_param_L1647_44", 0.4):
             return "Efecto sensible - Alta vulnerabilidad a confounding"
         else:
             return "Efecto frágil - Resultados no confiables sin ajustes adicionales"
@@ -1609,6 +1653,7 @@ class PDETMunicipalPlanAnalyzer:
     # SCORING INTEGRAL DE CALIDAD
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score")
     def calculate_quality_score(self, text: str, tables: list[ExtractedTable],
                                 financial_analysis: dict[str, Any],
                                 responsible_entities: list[ResponsibleEntity],
@@ -1627,7 +1672,7 @@ class PDETMunicipalPlanAnalyzer:
         pdet_score = self._score_pdet_alignment(text, tables, causal_dag)
         causal_score = self._score_causal_coherence(causal_dag, causal_effects)
 
-        weights = np.array([0.20, 0.15, 0.15, 0.10, 0.20, 0.20])
+        weights = np.array([get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1675_28", 0.20), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1675_34", 0.15), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1675_40", 0.15), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1675_46", 0.10), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1675_52", 0.20), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1675_58", 0.20)])
         scores = np.array([
             financial_score, indicator_score, responsibility_score,
             temporal_score, pdet_score, causal_score
@@ -1646,7 +1691,7 @@ class PDETMunicipalPlanAnalyzer:
             'causal_coherence': causal_score
         }
 
-        print(f" ✓ Score final: {overall_score:.2f}/10.0")
+        print(f" ✓ Score final: {overall_score:.2f}/1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score").get("auto_param_L1694_53", 0.0)")
 
         return QualityScore(
             overall_score=overall_score,
@@ -1660,27 +1705,29 @@ class PDETMunicipalPlanAnalyzer:
             evidence=evidence
         )
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component")
     def _score_financial_component(self, financial_analysis: dict[str, Any]) -> float:
         """Score componente financiero (0-10)"""
 
         budget = financial_analysis.get('total_budget', 0)
         if budget == 0:
-            return 0.0
+            return get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component").get("auto_param_L1714_19", 0.0)
 
-        budget_score = min(np.log10(float(budget)) / 12, 1.0) * 3.0
+        budget_score = min(np.log10(float(budget)) / 12, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component").get("auto_param_L1716_57", 1.0)) * 3.0
 
         diversity = financial_analysis['funding_sources'].get('diversity_index', 0)
         max_diversity = financial_analysis['funding_sources'].get('max_diversity', 1)
-        diversity_score = (diversity / max(max_diversity, 0.1)) * 3.0
+        diversity_score = (diversity / max(max_diversity, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component").get("auto_param_L1720_58", 0.1))) * 3.0
 
         sustainability = financial_analysis.get('sustainability_score', 0)
         sustainability_score = sustainability * 2.5
 
-        risk = financial_analysis['risk_assessment'].get('risk_score', 0.5)
+        risk = financial_analysis['risk_assessment'].get('risk_score', get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component").get("auto_param_L1725_71", 0.5))
         risk_score = (1 - risk) * 1.5
 
-        return float(min(budget_score + diversity_score + sustainability_score + risk_score, 10.0))
+        return float(min(budget_score + diversity_score + sustainability_score + risk_score, 1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component").get("auto_param_L1728_94", 0.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators")
     def _score_indicators(self, tables: list[ExtractedTable], text: str) -> float:
         """Score calidad de indicadores (0-10)"""
 
@@ -1694,7 +1741,7 @@ class PDETMunicipalPlanAnalyzer:
                 return 4.0
             return 2.0
 
-        completeness_score = 0.0
+        completeness_score = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators").get("completeness_score", 0.0) # Refactored
         for table in indicator_tables:
             df = table.df
             required_cols = ['indicador', 'línea base', 'meta', 'fuente']
@@ -1710,22 +1757,23 @@ class PDETMunicipalPlanAnalyzer:
         ]
 
         smart_count = sum(len(re.findall(pattern, text, re.IGNORECASE)) for pattern in smart_patterns)
-        smart_score = min(smart_count / 50, 1.0) * 3.0
+        smart_score = min(smart_count / 50, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators").get("auto_param_L1760_44", 1.0)) * 3.0
 
         formula_mentions = len(re.findall(r'f[óo]rmula', text, re.IGNORECASE))
         periodicity_mentions = len(re.findall(r'periodicidad|trimestral|anual|mensual', text, re.IGNORECASE))
 
-        technical_score = min((formula_mentions + periodicity_mentions) / 10, 1.0) * 3.0
+        technical_score = min((formula_mentions + periodicity_mentions) / 10, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators").get("auto_param_L1765_78", 1.0)) * 3.0
 
-        return float(min(completeness_score + smart_score + technical_score, 10.0))
+        return float(min(completeness_score + smart_score + technical_score, 1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators").get("auto_param_L1767_78", 0.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_responsibility_clarity")
     def _score_responsibility_clarity(self, entities: list[ResponsibleEntity]) -> float:
         """Score claridad de responsables (0-10)"""
 
         if not entities:
             return 2.0
 
-        count_score = min(len(entities) / 15, 1.0) * 3.0
+        count_score = min(len(entities) / 15, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_responsibility_clarity").get("auto_param_L1776_46", 1.0)) * 3.0
 
         avg_specificity = np.mean([e.specificity_score for e in entities])
         specificity_score = avg_specificity * 4.0
@@ -1734,8 +1782,9 @@ class PDETMunicipalPlanAnalyzer:
         institutional_ratio = len(institutional_entities) / max(len(entities), 1)
         institutional_score = institutional_ratio * 3.0
 
-        return float(min(count_score + specificity_score + institutional_score, 10.0))
+        return float(min(count_score + specificity_score + institutional_score, 1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_responsibility_clarity").get("auto_param_L1785_81", 0.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency")
     def _score_temporal_consistency(self, text: str, tables: list[ExtractedTable]) -> float:
         """Score consistencia temporal (0-10)"""
 
@@ -1746,17 +1795,18 @@ class PDETMunicipalPlanAnalyzer:
 
         years = [int(y) for y in years_mentioned]
         year_range = max(years) - min(years) if years else 0
-        range_score = min(year_range / 4, 1.0) * 3.0
+        range_score = min(year_range / 4, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency").get("auto_param_L1798_42", 1.0)) * 3.0
 
         cronograma_tables = [t for t in tables if t.table_type == 'cronograma']
         cronograma_score = min(len(cronograma_tables) * 2, 4.0)
 
         temporal_terms = ['cronograma', 'año', 'trimestre', 'mes', 'periodo', 'etapa', 'fase']
         term_count = sum(len(re.findall(rf'\b{term}\b', text, re.IGNORECASE)) for term in temporal_terms)
-        term_score = min(term_count / 30, 1.0) * 3.0
+        term_score = min(term_count / 30, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency").get("auto_param_L1805_42", 1.0)) * 3.0
 
-        return float(min(range_score + cronograma_score + term_score, 10.0))
+        return float(min(range_score + cronograma_score + term_score, 1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency").get("auto_param_L1807_71", 0.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_pdet_alignment")
     def _score_pdet_alignment(self, text: str, tables: list[ExtractedTable], dag: CausalDAG) -> float:
         """Score alineación con pilares PDET (0-10)"""
 
@@ -1775,13 +1825,14 @@ class PDETMunicipalPlanAnalyzer:
 
         pdet_explicit = len(re.findall(r'\bPDET\b', text, re.IGNORECASE))
         patr_mentions = len(re.findall(r'\bPATR\b', text, re.IGNORECASE))
-        explicit_score = min((pdet_explicit + patr_mentions) / 15, 1.0) * 3.0
+        explicit_score = min((pdet_explicit + patr_mentions) / 15, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_pdet_alignment").get("auto_param_L1828_67", 1.0)) * 3.0
 
         pdet_tables = [t for t in tables if t.table_type == 'pdet']
         table_score = min(len(pdet_tables) * 1.5, 3.0)
 
-        return float(min(coverage_score + explicit_score + table_score, 10.0))
+        return float(min(coverage_score + explicit_score + table_score, 1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_pdet_alignment").get("auto_param_L1833_73", 0.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_causal_coherence")
     def _score_causal_coherence(self, dag: CausalDAG, effects: list[CausalEffect]) -> float:
         """Score coherencia causal del plan (0-10)"""
 
@@ -1790,10 +1841,10 @@ class PDETMunicipalPlanAnalyzer:
         if G.number_of_nodes() == 0:
             return 2.0
 
-        structure_score = min(G.number_of_edges() / (G.number_of_nodes() * 1.5), 1.0) * 3.0
+        structure_score = min(G.number_of_edges() / (G.number_of_nodes() * 1.5), get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_causal_coherence").get("auto_param_L1844_81", 1.0)) * 3.0
 
         if not effects:
-            effect_quality = 0.0
+            effect_quality = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_causal_coherence").get("effect_quality", 0.0) # Refactored
         else:
             avg_probability = np.mean([e.probability_significant for e in effects])
             effect_quality = avg_probability * 4.0
@@ -1804,8 +1855,9 @@ class PDETMunicipalPlanAnalyzer:
         connected_pillars = sum(1 for p in pillar_nodes if any(nx.has_path(G, p, o) for o in outcome_nodes))
         connectivity = (connected_pillars / max(len(pillar_nodes), 1)) * 3.0
 
-        return float(min(structure_score + effect_quality + connectivity, 10.0))
+        return float(min(structure_score + effect_quality + connectivity, 1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_causal_coherence").get("auto_param_L1858_75", 0.0)))
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_score_confidence")
     def _estimate_score_confidence(self, scores: np.ndarray, weights: np.ndarray) -> tuple[float, float]:
         """Estima intervalo de confianza para el score usando bootstrap"""
 
@@ -1813,7 +1865,7 @@ class PDETMunicipalPlanAnalyzer:
         bootstrap_scores = []
 
         for _ in range(n_bootstrap):
-            noise = np.random.normal(0, 0.5, size=len(scores))
+            noise = np.random.normal(0, get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_score_confidence").get("auto_param_L1868_40", 0.5), size=len(scores))
             noisy_scores = np.clip(scores + noise, 0, 10)
 
             bootstrap_score = np.dot(weights, noisy_scores)
@@ -1827,6 +1879,7 @@ class PDETMunicipalPlanAnalyzer:
     # EXPORTACIÓN Y VISUALIZACIÓN
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.export_causal_network")
     def export_causal_network(self, dag: CausalDAG, output_path: str) -> None:
         """Exporta el DAG causal en formato GraphML para Gephi/Cytoscape"""
 
@@ -1835,15 +1888,16 @@ class PDETMunicipalPlanAnalyzer:
         for node, data in G.nodes(data=True):
             data['label'] = node[:50]
             data['node_type'] = data.get('type', 'unknown')
-            data['budget'] = data.get('budget', 0.0)
+            data['budget'] = data.get('budget', get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.export_causal_network").get("auto_param_L1891_48", 0.0))
 
         for _u, _v, data in G.edges(data=True):
-            data['weight'] = data.get('probability', 0.5)
+            data['weight'] = data.get('probability', get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.export_causal_network").get("auto_param_L1894_53", 0.5))
             data['edge_type'] = data.get('type', 'unknown')
 
         nx.write_graphml(G, output_path)
         print(f"✅ Red causal exportada a: {output_path}")
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_executive_report")
     def generate_executive_report(self, analysis_results: dict[str, Any]) -> str:
         """Genera reporte ejecutivo en Markdown"""
 
@@ -1853,7 +1907,7 @@ class PDETMunicipalPlanAnalyzer:
         report += "## 1. RESUMEN EJECUTIVO\n\n"
 
         quality = analysis_results['quality_score']
-        report += f"**Score Global de Calidad:** {quality['overall_score']:.2f}/10.0 "
+        report += f"**Score Global de Calidad:** {quality['overall_score']:.2f}/1get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_executive_report").get("auto_param_L1910_81", 0.0) "
         report += f"(IC95%: [{quality['confidence_interval'][0]:.2f}, {quality['confidence_interval'][1]:.2f}])\n\n"
 
         report += self._interpret_overall_quality(quality['overall_score'])
@@ -1887,7 +1941,7 @@ class PDETMunicipalPlanAnalyzer:
         if effects:
             report += "### Efectos Causales Principales\n\n"
 
-            significant_effects = [e for e in effects if e['probability_significant'] > 0.7]
+            significant_effects = [e for e in effects if e['probability_significant'] > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_executive_report").get("auto_param_L1944_88", 0.7)]
             significant_effects.sort(key=lambda e: abs(e['posterior_mean']), reverse=True)
 
             for effect in significant_effects[:5]:
@@ -1926,6 +1980,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return report
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._interpret_overall_quality")
     def _interpret_overall_quality(self, score: float) -> str:
         """Interpretación del score global"""
 
@@ -1947,6 +2002,7 @@ class PDETMunicipalPlanAnalyzer:
                     "El plan presenta deficiencias críticas que comprometen su viabilidad. "
                     "Se requiere reformulación integral.")
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_recommendations")
     def _generate_recommendations(self, analysis_results: dict[str, Any]) -> str:
         """Genera recomendaciones específicas basadas en el análisis"""
 
@@ -1956,13 +2012,13 @@ class PDETMunicipalPlanAnalyzer:
         # Recomendaciones financieras
         if quality['financial_feasibility'] < 6.0:
             fin = analysis_results['financial_analysis']
-            if fin['funding_sources'].get('dependency_risk', 0) > 0.6:
+            if fin['funding_sources'].get('dependency_risk', 0) > get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_recommendations").get("auto_param_L2015_66", 0.6):
                 recommendations.append(
                     "**Diversificación de fuentes:** Reducir dependencia excesiva de fuentes únicas. "
                     "Explorar alternativas como cooperación internacional, APP, o gestión de recursos propios."
                 )
 
-            if fin['sustainability_score'] < 0.5:
+            if fin['sustainability_score'] < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_recommendations").get("auto_param_L2021_45", 0.5):
                 recommendations.append(
                     "**Sostenibilidad fiscal:** Fortalecer componente de recursos propios. "
                     "Desarrollar estrategias de generación de ingresos municipales."
@@ -1979,9 +2035,9 @@ class PDETMunicipalPlanAnalyzer:
         # Recomendaciones causales
         effects = analysis_results.get('causal_effects', [])
         if effects:
-            weak_effects = [e for e in effects if e['probability_significant'] < 0.5]
+            weak_effects = [e for e in effects if e['probability_significant'] < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_recommendations").get("auto_param_L2038_81", 0.5)]
 
-            if len(weak_effects) > len(effects) * 0.5:
+            if len(weak_effects) > len(effects) * get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_recommendations").get("auto_param_L2040_50", 0.5):
                 recommendations.append(
                     "**Robustez causal:** Fortalecer vínculos entre intervenciones y resultados esperados. "
                     "Explicitar teorías de cambio y mecanismos causales subyacentes."
@@ -2025,6 +2081,7 @@ class PDETMunicipalPlanAnalyzer:
     # PIPELINE PRINCIPAL
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.analyze_municipal_plan_sync")
     def analyze_municipal_plan_sync(self, pdf_path: str, output_dir: str | None = None) -> dict[str, Any]:
         """Synchronous wrapper for analyze_municipal_plan."""
 
@@ -2141,6 +2198,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return results
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._extract_full_text")
     def _extract_full_text(self, pdf_path: str) -> str:
         """Extrae texto completo del PDF usando múltiples métodos"""
 
@@ -2177,6 +2235,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return full_text
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._entity_to_dict")
     def _entity_to_dict(self, entity: ResponsibleEntity) -> dict[str, Any]:
         """Convierte ResponsibleEntity a diccionario"""
         return {
@@ -2188,6 +2247,7 @@ class PDETMunicipalPlanAnalyzer:
             'budget': float(entity.budget_allocated) if entity.budget_allocated else None
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._effect_to_dict")
     def _effect_to_dict(self, effect: CausalEffect) -> dict[str, Any]:
         """Convierte CausalEffect a diccionario"""
         return {
@@ -2203,6 +2263,7 @@ class PDETMunicipalPlanAnalyzer:
             'confounders_adjusted': effect.confounders_adjusted
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._scenario_to_dict")
     def _scenario_to_dict(self, scenario: CounterfactualScenario) -> dict[str, Any]:
         """Convierte CounterfactualScenario a diccionario"""
         return {
@@ -2212,6 +2273,7 @@ class PDETMunicipalPlanAnalyzer:
             'narrative': scenario.narrative
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._quality_to_dict")
     def _quality_to_dict(self, quality: QualityScore) -> dict[str, Any]:
         """Convierte QualityScore a diccionario"""
         return {
@@ -2226,6 +2288,7 @@ class PDETMunicipalPlanAnalyzer:
             'evidence': quality.evidence
         }
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._find_product_mentions")
     def _find_product_mentions(self, text: str) -> list[str]:
         """
         Find mentions of products in text.
@@ -2260,6 +2323,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return products
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._generate_optimal_remediations")
     def _generate_optimal_remediations(self, gaps: list[dict[str, Any]]) -> list[dict[str, str]]:
         """
         Generate optimal remediations for identified gaps.
@@ -2298,6 +2362,7 @@ class PDETMunicipalPlanAnalyzer:
 
         return remediations
 
+    @calibrated_method("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations")
     def generate_recommendations(self, analysis_results: dict[str, Any]) -> list[str]:
         """
         Generate recommendations based on analysis results.
@@ -2311,38 +2376,38 @@ class PDETMunicipalPlanAnalyzer:
         recommendations = []
 
         # Check financial feasibility
-        if analysis_results.get('financial_feasibility', 0) < 0.7:
+        if analysis_results.get('financial_feasibility', 0) < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("auto_param_L2379_62", 0.7):
             recommendations.append(
                 "Revisar sostenibilidad financiera y diversificar fuentes de financiación"
             )
 
         # Check indicator quality
-        if analysis_results.get('indicator_quality', 0) < 0.7:
+        if analysis_results.get('indicator_quality', 0) < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("auto_param_L2385_58", 0.7):
             recommendations.append(
                 "Mejorar calidad de indicadores: asegurar línea base, meta y fuente de información"
             )
 
         # Check responsibility clarity
-        if analysis_results.get('responsibility_clarity', 0) < 0.7:
+        if analysis_results.get('responsibility_clarity', 0) < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("auto_param_L2391_63", 0.7):
             recommendations.append(
                 "Clarificar entidades responsables para cada producto y resultado"
             )
 
         # Check temporal consistency
-        if analysis_results.get('temporal_consistency', 0) < 0.7:
+        if analysis_results.get('temporal_consistency', 0) < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("auto_param_L2397_61", 0.7):
             recommendations.append(
                 "Establecer cronograma claro con hitos y plazos definidos"
             )
 
         # Check causal coherence
-        if analysis_results.get('causal_coherence', 0) < 0.7:
+        if analysis_results.get('causal_coherence', 0) < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("auto_param_L2403_57", 0.7):
             recommendations.append(
                 "Fortalecer coherencia causal: vincular productos con resultados e impactos"
             )
 
         # PDET-specific recommendations
         if analysis_results.get('is_pdet_municipality', False):
-            if analysis_results.get('pdet_alignment', 0) < 0.7:
+            if analysis_results.get('pdet_alignment', 0) < get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("auto_param_L2410_59", 0.7):
                 recommendations.append(
                     "Alinear intervenciones con lineamientos PDET y enfoque territorial"
                 )
@@ -2414,7 +2479,7 @@ async def main_example() -> None:
     analyzer = PDETMunicipalPlanAnalyzer(
         use_gpu=True,
         language='es',
-        confidence_threshold=0.7
+        confidence_threshold = get_parameter_loader().get("saaaaaa.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_recommendations").get("confidence_threshold", 0.7) # Refactored
     )
 
     # Ruta al PDF del Plan de Desarrollo Municipal

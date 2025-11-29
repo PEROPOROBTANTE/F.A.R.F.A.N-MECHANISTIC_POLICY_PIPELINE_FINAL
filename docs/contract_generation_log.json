@@ -1,8 +1,0 @@
-{
-  "timestamp": "2025-11-27T05:09:36.503561",
-  "generated_count": 300,
-  "total_expected": 300,
-  "errors": [],
-  "template_used": "/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_FINAL/config/executor_contracts/D1-Q1.v3.FINAL.json",
-  "output_directory": "/home/user/F.A.R.F.A.N-MECHANISTIC_POLICY_PIPELINE_FINAL/config/executor_contracts"
-}

@@ -10,6 +10,7 @@ These fixes are applied defensively to prevent crashes in production.
 """
 
 from typing import TYPE_CHECKING, Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     import numpy as np

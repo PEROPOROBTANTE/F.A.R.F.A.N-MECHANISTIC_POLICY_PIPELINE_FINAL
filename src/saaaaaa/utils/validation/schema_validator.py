@@ -13,6 +13,7 @@ from typing import Any
 
 import jsonschema
 from pydantic import BaseModel, ConfigDict, Field
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 class SchemaInitializationError(Exception):
@@ -64,6 +65,7 @@ class MonolithSchemaValidator:
         if schema_path:
             self._load_schema()
 
+    @calibrated_method("saaaaaa.utils.validation.schema_validator.MonolithSchemaValidator._load_schema")
     def _load_schema(self) -> None:
         """Load JSON schema from file."""
         if not self.schema_path:
@@ -142,6 +144,7 @@ class MonolithSchemaValidator:
 
         return report
 
+    @calibrated_method("saaaaaa.utils.validation.schema_validator.MonolithSchemaValidator._validate_structure")
     def _validate_structure(self, monolith: dict[str, Any]) -> None:
         """Validate top-level structure."""
         required_keys = ['schema_version', 'version', 'blocks', 'integrity']
@@ -164,6 +167,7 @@ class MonolithSchemaValidator:
                 if block not in blocks:
                     self.errors.append(f"Missing required block: {block}")
 
+    @calibrated_method("saaaaaa.utils.validation.schema_validator.MonolithSchemaValidator._validate_schema_version")
     def _validate_schema_version(self, monolith: dict[str, Any]) -> str:
         """Validate schema version."""
         schema_version = monolith.get('schema_version', '')
@@ -181,6 +185,7 @@ class MonolithSchemaValidator:
 
         return schema_version
 
+    @calibrated_method("saaaaaa.utils.validation.schema_validator.MonolithSchemaValidator._validate_question_counts")
     def _validate_question_counts(self, monolith: dict[str, Any]) -> dict[str, int]:
         """Validate question counts."""
         blocks = monolith.get('blocks', {})
@@ -299,6 +304,7 @@ class MonolithSchemaValidator:
 
         return results
 
+    @calibrated_method("saaaaaa.utils.validation.schema_validator.MonolithSchemaValidator._validate_against_schema")
     def _validate_against_schema(self, monolith: dict[str, Any]) -> None:
         """Validate monolith against JSON schema."""
         if not self.schema:
@@ -311,6 +317,7 @@ class MonolithSchemaValidator:
         except Exception as e:
             self.warnings.append(f"Schema validation failed: {e}")
 
+    @calibrated_method("saaaaaa.utils.validation.schema_validator.MonolithSchemaValidator._calculate_schema_hash")
     def _calculate_schema_hash(self, monolith: dict[str, Any]) -> str:
         """Calculate deterministic hash of monolith schema."""
         # Create canonical JSON representation

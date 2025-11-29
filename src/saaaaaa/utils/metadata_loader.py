@@ -12,6 +12,8 @@ from typing import Any
 import yaml
 
 from saaaaaa.utils.paths import proj_root
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 try:
     import jsonschema
@@ -101,7 +103,7 @@ class MetadataLoader:
         Args:
             path: Path to metadata file (JSON or YAML)
             schema_ref: Schema file name (e.g., "rubric.schema.json")
-            required_version: Required version string (e.g., "2.0.0")
+            required_version: Required version string (e.g., "2.get_parameter_loader().get("saaaaaa.utils.metadata_loader.MetadataLoader.__init__").get("auto_param_L105_64", 0.0)")
             expected_checksum: Expected SHA-256 checksum (hex)
             checksum_algorithm: Hash algorithm ("sha256", "md5")
 
@@ -167,6 +169,7 @@ class MetadataLoader:
 
         return metadata
 
+    @calibrated_method("saaaaaa.utils.metadata_loader.MetadataLoader._load_file")
     def _load_file(self, path: Path) -> dict[str, Any]:
         """Load JSON or YAML file"""
         if not path.exists():
@@ -186,6 +189,7 @@ class MetadataLoader:
         except (json.JSONDecodeError, yaml.YAMLError) as e:
             raise MetadataError(f"Failed to parse {path}: {e}")
 
+    @calibrated_method("saaaaaa.utils.metadata_loader.MetadataLoader._calculate_checksum")
     def _calculate_checksum(self, metadata: dict[str, Any], algorithm: str = "sha256") -> str:
         """
         Calculate reproducible checksum of metadata
@@ -204,6 +208,7 @@ class MetadataLoader:
         else:
             raise ValueError(f"Unsupported algorithm: {algorithm}")
 
+    @calibrated_method("saaaaaa.utils.metadata_loader.MetadataLoader._load_schema")
     def _load_schema(self, schema_ref: str) -> dict[str, Any]:
         """Load JSON Schema from schemas directory"""
         if schema_ref in self._schema_cache:
@@ -220,6 +225,7 @@ class MetadataLoader:
         self._schema_cache[schema_ref] = schema
         return schema
 
+    @calibrated_method("saaaaaa.utils.metadata_loader.MetadataLoader._validate_schema")
     def _validate_schema(self, metadata: dict[str, Any], schema: dict[str, Any]) -> list:
         """Validate metadata against JSON Schema"""
         if not JSONSCHEMA_AVAILABLE:
@@ -237,6 +243,7 @@ class MetadataLoader:
 
         return errors
 
+    @calibrated_method("saaaaaa.utils.metadata_loader.MetadataLoader._log_error")
     def _log_error(self, rule_id: str, file_path: str, **kwargs) -> None:
         """Structured error logging"""
         from datetime import datetime, timezone
@@ -258,7 +265,7 @@ class MetadataLoader:
 
 def load_execution_mapping(
     path: Path | None = None,
-    required_version: str = "2.0.0"
+    required_version: str = "2.get_parameter_loader().get("saaaaaa.utils.metadata_loader.MetadataLoader._log_error").get("auto_param_L267_31", 0.0)"
 ) -> dict[str, Any]:
     """
     Load and validate execution_mapping.yaml
@@ -282,7 +289,7 @@ def load_execution_mapping(
 
 def load_rubric_scoring(
     path: Path | None = None,
-    required_version: str = "2.0.0"
+    required_version: str = "2.get_parameter_loader().get("saaaaaa.utils.metadata_loader.MetadataLoader._log_error").get("auto_param_L291_31", 0.0)"
 ) -> dict[str, Any]:
     """
     Load and validate rubric_scoring.json

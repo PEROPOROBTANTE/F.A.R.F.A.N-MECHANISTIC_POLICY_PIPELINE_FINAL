@@ -25,6 +25,7 @@ import logging
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -71,6 +72,7 @@ class AnalysisReport:
     macro_summary: dict[str, Any]
     evidence_chain_hash: str | None = None
 
+    @calibrated_method("saaaaaa.analysis.report_assembly.AnalysisReport.to_dict")
     def to_dict(self) -> dict[str, Any]:
         """Convert report to dictionary for JSON serialization"""
         return {
@@ -275,6 +277,7 @@ class ReportAssembler:
 
         logger.info(f"Report exported to {output_path} in {format} format")
 
+    @calibrated_method("saaaaaa.analysis.report_assembly.ReportAssembler._format_as_markdown")
     def _format_as_markdown(self, report: AnalysisReport) -> str:
         """Format report as Markdown"""
         lines = [

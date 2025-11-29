@@ -390,10 +390,10 @@ def main():
 
     # Import smart_policy_chunks script imports
     print("\n" + "=" * 80)
-    print("ANALYSIS: scripts/smart_policy_chunks_canonic_phase_one.py")
+    print("ANALYSIS: src/saaaaaa/processing/spc_ingestion.py")
     print("=" * 80)
 
-    smart_chunks_path = repo_root / 'scripts' / 'smart_policy_chunks_canonic_phase_one.py'
+    smart_chunks_path = repo_root / 'src' / 'saaaaaa' / 'processing' / 'spc_ingestion.py'
     if smart_chunks_path.exists():
         smart_analyzer = ImportAnalyzer(repo_root)
         smart_info = smart_analyzer.analyze_specific_imports(str(smart_chunks_path))

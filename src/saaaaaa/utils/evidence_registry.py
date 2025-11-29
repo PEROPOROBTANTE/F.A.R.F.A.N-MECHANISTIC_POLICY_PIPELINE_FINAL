@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -75,6 +76,7 @@ class EvidenceRegistry:
             self._records = self._load_records(self.storage_path)
 
     @property
+    @calibrated_method("saaaaaa.utils.evidence_registry.EvidenceRegistry.records")
     def records(self) -> tuple[EvidenceRecord, ...]:
         """Expose records as an immutable tuple."""
         return tuple(self._records)
@@ -118,6 +120,7 @@ class EvidenceRegistry:
     # ------------------------------------------------------------------
     # Persistence
     # ------------------------------------------------------------------
+    @calibrated_method("saaaaaa.utils.evidence_registry.EvidenceRegistry.save")
     def save(self) -> None:
         """Persist the registry to disk."""
         payload = [_serialize_record(record) for record in self._records]
@@ -126,6 +129,7 @@ class EvidenceRegistry:
             encoding="utf-8",
         )
 
+    @calibrated_method("saaaaaa.utils.evidence_registry.EvidenceRegistry._load_records")
     def _load_records(self, path: Path) -> list[EvidenceRecord]:
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
@@ -161,6 +165,7 @@ class EvidenceRegistry:
     # ------------------------------------------------------------------
     # Verification utilities
     # ------------------------------------------------------------------
+    @calibrated_method("saaaaaa.utils.evidence_registry.EvidenceRegistry.verify")
     def verify(self) -> bool:
         """Verify registry integrity by recomputing all hashes."""
         self._assert_chain(self._records)

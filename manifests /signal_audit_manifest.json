@@ -1,0 +1,14 @@
+{
+    "audit_timestamp": "2025-11-23T12:00:00Z",
+    "metrics": {
+        "total_pas_in_questionnaire": 10,
+        "pas_with_signals": 10,
+        "dimensions_with_signals": 6,
+        "orphan_signals_not_in_monolith": 0,
+        "pa_coverage_percentage": 100.0
+    },
+    "gaps": {
+        "pas_without_signals": [],
+        "orphan_signals_not_in_monolith": []
+    }
+}

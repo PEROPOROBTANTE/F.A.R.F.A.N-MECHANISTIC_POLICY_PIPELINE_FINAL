@@ -13,6 +13,7 @@ import json
 import logging
 from pathlib import Path
 from typing import Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 try:
     import pdfplumber

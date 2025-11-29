@@ -1,0 +1,9 @@
+{
+  "phase": "PHASE_1_SPC_INGESTION",
+  "subphase": "SP4",
+  "error_type": "AssertionError",
+  "error_message": "Expected 60 chunks, got 0",
+  "timestamp": "2025-11-28T10:24:24.792793",
+  "fatal": true,
+  "recovery_possible": false
+}

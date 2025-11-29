@@ -19,6 +19,7 @@ import json
 import logging
 import time
 from typing import Any
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 # Import will be available at runtime
 try:
@@ -35,6 +36,7 @@ class JsonFormatter(logging.Formatter):
     Formats LogRecord as JSON with standard fields plus custom extras.
     """
 
+    @calibrated_method("saaaaaa.utils.json_logger.JsonFormatter.format")
     def format(self, record: logging.LogRecord) -> str:
         """
         Format LogRecord as JSON string.

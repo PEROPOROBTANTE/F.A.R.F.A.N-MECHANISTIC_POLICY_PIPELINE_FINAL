@@ -11,6 +11,8 @@ from datetime import datetime
 from functools import wraps
 from pathlib import Path
 from typing import Any
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +43,7 @@ class QMCMRecorder:
             input_types: dict[str, str],
             output_type: str,
             execution_status: str = "success",
-            execution_time_ms: float = 0.0,
+            execution_time_ms: float = get_parameter_loader().get("saaaaaa.utils.qmcm_hooks.QMCMRecorder.__init__").get("auto_param_L45_39", 0.0),
             monolith_hash: str | None = None
     ) -> None:
         """
@@ -78,6 +80,7 @@ class QMCMRecorder:
         self.calls.append(call_record)
         logger.debug(f"QMCM recorded: {method_name}")
 
+    @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.get_statistics")
     def get_statistics(self) -> dict[str, Any]:
         """
         Get recording statistics
@@ -89,7 +92,7 @@ class QMCMRecorder:
                 "total_calls": 0,
                 "unique_methods": 0,
                 "method_frequency": {},
-                "success_rate": 0.0,
+                "success_rate": get_parameter_loader().get("saaaaaa.utils.qmcm_hooks.QMCMRecorder.get_statistics").get("auto_param_L94_32", 0.0),
                 "most_called_method": None
             }
 
@@ -111,10 +114,11 @@ class QMCMRecorder:
             "total_calls": len(self.calls),
             "unique_methods": len(method_counts),
             "method_frequency": method_counts,
-            "success_rate": success_count / len(self.calls) if self.calls else 0.0,
+            "success_rate": success_count / len(self.calls) if self.calls else get_parameter_loader().get("saaaaaa.utils.qmcm_hooks.QMCMRecorder.get_statistics").get("auto_param_L116_79", 0.0),
             "most_called_method": most_called
         }
 
+    @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.save_recording")
     def save_recording(self) -> None:
         """Save recording to disk"""
         recording_data = {
@@ -131,6 +135,7 @@ class QMCMRecorder:
 
         logger.info(f"QMCM recording saved: {self.recording_path}")
 
+    @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.load_recording")
     def load_recording(self) -> None:
         """Load recording from disk"""
         if not self.recording_path.exists():
@@ -143,15 +148,18 @@ class QMCMRecorder:
         self.calls = recording_data.get("calls", [])
         logger.info(f"QMCM recording loaded: {len(self.calls)} calls")
 
+    @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.clear_recording")
     def clear_recording(self) -> None:
         """Clear all recorded calls"""
         self.calls = []
         logger.info("QMCM recording cleared")
 
+    @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.enable")
     def enable(self) -> None:
         """Enable recording"""
         self.enabled = True
 
+    @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.disable")
     def disable(self) -> None:
         """Disable recording"""
         self.enabled = False
@@ -172,11 +180,13 @@ def qmcm_record(method=None, *, monolith_hash: str | None = None):
 
     Usage:
         @qmcm_record
+        @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.my_method")
         def my_method(self, arg1: str, arg2: int) -> dict:
             return {"result": "data"}
 
         # With monolith hash (recommended for questionnaire-dependent methods)
         @qmcm_record(monolith_hash=compute_monolith_hash(questionnaire))
+        @calibrated_method("saaaaaa.utils.qmcm_hooks.QMCMRecorder.my_questionnaire_method")
         def my_questionnaire_method(self, question_id: str) -> dict:
             return {"result": "data"}
     """

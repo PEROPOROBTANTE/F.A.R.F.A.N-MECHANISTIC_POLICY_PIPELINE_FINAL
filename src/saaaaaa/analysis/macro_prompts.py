@@ -22,6 +22,8 @@ from typing import Any
 
 # Import runtime error fixes for defensive programming
 from saaaaaa.utils.runtime_error_fixes import ensure_list_return
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -697,7 +699,7 @@ class RoadmapOptimizer:
             critical_gaps: List of gaps to address
             dependency_graph: Gap ID -> list of prerequisite gap IDs
             effort_estimates: Gap ID -> effort estimate (person-months)
-            impact_scores: Gap ID -> expected impact (0.0-1.0)
+            impact_scores: Gap ID -> expected impact (get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L702_54", 0.0)-get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L702_58", 1.0))
 
         Returns:
             ImplementationRoadmap with phased action plan
@@ -747,11 +749,11 @@ class RoadmapOptimizer:
 
         for gap in gaps:
             gap_id = gap.get("id", "unknown")
-            effort = effort_estimates.get(gap_id, 1.0)
-            impact = impact_scores.get(gap_id, 0.5)
+            effort = effort_estimates.get(gap_id, get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L752_50", 1.0))
+            impact = impact_scores.get(gap_id, get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L753_47", 0.5))
 
             # Calculate ratio (avoid division by zero)
-            ratio = impact / max(effort, 0.1)
+            ratio = impact / max(effort, get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L756_41", 0.1))
 
             prioritized.append({
                 **gap,
@@ -773,9 +775,9 @@ class RoadmapOptimizer:
     ) -> list[dict[str, Any]]:
         """Assign gaps to time phases respecting dependencies"""
         phases = [
-            {"name": "0-3m", "actions": [], "effort": 0.0, "max_effort": 9.0},
-            {"name": "3-6m", "actions": [], "effort": 0.0, "max_effort": 9.0},
-            {"name": "6-12m", "actions": [], "effort": 0.0, "max_effort": 18.0}
+            {"name": "0-3m", "actions": [], "effort": get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L778_54", 0.0), "max_effort": 9.0},
+            {"name": "3-6m", "actions": [], "effort": get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L779_54", 0.0), "max_effort": 9.0},
+            {"name": "6-12m", "actions": [], "effort": get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L780_55", 0.0), "max_effort": 18.0}
         ]
 
         assigned = set()
@@ -798,7 +800,7 @@ class RoadmapOptimizer:
             # Now assign this gap
             if gap_id not in assigned and gap_id in gap_dict:
                 gap = gap_dict[gap_id]
-                effort = gap.get("effort", 1.0)
+                effort = gap.get("effort", get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L803_43", 1.0))
 
                 # Find earliest phase where all dependencies are satisfied
                 earliest_phase = self._get_earliest_phase(dependencies, assigned, phases)
@@ -850,12 +852,12 @@ class RoadmapOptimizer:
         impact_scores: dict[str, float]
     ) -> float:
         """Calculate total expected uplift across all phases"""
-        total = 0.0
+        total = get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("total", 0.0) # Refactored
 
         for phase in phases:
             for action in phase["actions"]:
                 gap_id = action.get("id", "unknown")
-                impact = impact_scores.get(gap_id, 0.0)
+                impact = impact_scores.get(gap_id, get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L860_51", 0.0))
                 total += impact
 
         return total
@@ -881,11 +883,11 @@ class RoadmapOptimizer:
 
         # For each endpoint, trace back to find highest-impact path
         best_path = []
-        best_impact = 0.0
+        best_impact = get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("best_impact", 0.0) # Refactored
 
         for endpoint in endpoints:
             path = self._trace_path(endpoint, dependency_graph)
-            path_impact = sum(impact_scores.get(gap_id, 0.0) for gap_id in path)
+            path_impact = sum(impact_scores.get(gap_id, get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L890_56", 0.0)) for gap_id in path)
 
             if path_impact > best_impact:
                 best_impact = path_impact
@@ -951,8 +953,8 @@ class PeerNormalizer:
 
     MANDATES:
     - Calcular z-scores
-    - Penalizar si >k áreas están < -1.0 z
-    - Aumentar confianza si todas dentro ±0.5 z y dispersión baja
+    - Penalizar si >k áreas están < -get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L956_37", 1.0) z
+    - Aumentar confianza si todas dentro ±get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L957_42", 0.5) z y dispersión baja
 
     OUTPUT:
     JSON {z_scores, adjusted_confidence}
@@ -1003,7 +1005,7 @@ class PeerNormalizer:
         # Count low-performing areas
         low_performers = [
             area for area, z in z_scores.items()
-            if z < -1.0
+            if z < -get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1008_20", 1.0)
         ]
 
         # Adjust confidence
@@ -1039,11 +1041,11 @@ class PeerNormalizer:
         for area, score in convergence.items():
             if area in peer_distributions:
                 peer = peer_distributions[area]
-                mean = peer.get("mean", 0.5)
-                std = peer.get("std", 0.1)
+                mean = peer.get("mean", get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1044_40", 0.5))
+                std = peer.get("std", get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1045_38", 0.1))
 
                 # Calculate z-score
-                z = (score - mean) / std if std > 0 else 0.0
+                z = (score - mean) / std if std > 0 else get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1048_57", 0.0)
 
                 z_scores[area] = z
 
@@ -1073,17 +1075,17 @@ class PeerNormalizer:
 
         # Penalize if too many low performers
         if len(low_performers) > self.k:
-            penalty = 0.1 * (len(low_performers) - self.k)
-            adjusted *= (1.0 - min(penalty, 0.5))
+            penalty = get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1078_22", 0.1) * (len(low_performers) - self.k)
+            adjusted *= (get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1079_25", 1.0) - min(penalty, get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1079_44", 0.5)))
 
-        # Check if all within ±0.5 z (tight distribution)
-        all_tight = all(abs(z) <= 0.5 for z in z_scores.values())
+        # Check if all within ±get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1081_31", 0.5) z (tight distribution)
+        all_tight = all(abs(z) <= get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1082_34", 0.5) for z in z_scores.values())
 
         if all_tight and len(z_scores) > 0:
             # Increase confidence for consistent performance
             adjusted *= 1.1
 
-        return max(0.0, min(1.0, adjusted))
+        return max(get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1088_19", 0.0), min(get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1088_28", 1.0), adjusted))
 
     def _determine_position(
         self,
@@ -1095,9 +1097,9 @@ class PeerNormalizer:
 
         avg_z = statistics.mean(z_scores.values())
 
-        if avg_z > 0.5:
+        if avg_z > get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1100_19", 0.5):
             return "above_average"
-        elif avg_z < -0.5:
+        elif avg_z < -get_parameter_loader().get("saaaaaa.analysis.macro_prompts.RoadmapOptimizer.__init__").get("auto_param_L1102_22", 0.5):
             return "below_average"
         else:
             return "average"
@@ -1160,7 +1162,7 @@ class MacroPromptsOrchestrator:
             missing_clusters=macro_data.get("missing_clusters", []),
             dimension_coverage=macro_data.get("dimension_coverage", {}),
             policy_area_coverage=macro_data.get("policy_area_coverage", {}),
-            baseline_confidence=macro_data.get("baseline_confidence", 1.0)
+            baseline_confidence=macro_data.get("baseline_confidence", get_parameter_loader().get("saaaaaa.analysis.macro_prompts.MacroPromptsOrchestrator.__init__").get("auto_param_L1165_70", 1.0))
         )
         results["coverage_analysis"] = asdict(coverage_analysis)
 
@@ -1193,7 +1195,7 @@ class MacroPromptsOrchestrator:
         peer_normalization = self.peer_normalizer.normalize(
             convergence_by_policy_area=macro_data.get("convergence_by_policy_area", {}),
             peer_distributions=macro_data.get("peer_distributions", {}),
-            baseline_confidence=macro_data.get("baseline_confidence", 1.0)
+            baseline_confidence=macro_data.get("baseline_confidence", get_parameter_loader().get("saaaaaa.analysis.macro_prompts.MacroPromptsOrchestrator.__init__").get("auto_param_L1198_70", 1.0))
         )
         results["peer_normalization"] = asdict(peer_normalization)
 

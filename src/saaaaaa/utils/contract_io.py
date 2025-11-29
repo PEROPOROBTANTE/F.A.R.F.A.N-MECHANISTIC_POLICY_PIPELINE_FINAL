@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, Field, field_validator
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

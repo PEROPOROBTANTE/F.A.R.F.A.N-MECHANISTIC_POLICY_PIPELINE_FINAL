@@ -17,6 +17,7 @@ Status: Active - Runtime validation available in contracts_runtime.py
 """
 
 from typing import Any, TypedDict
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 try:
     from typing import NotRequired  # Python 3.11+

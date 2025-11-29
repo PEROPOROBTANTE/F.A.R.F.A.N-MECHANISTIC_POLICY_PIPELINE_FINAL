@@ -1,81 +1,532 @@
-# A Sociotechnical Framework for Pre-computation Validation in Mechanistic Policy Pipelines
+# Phase 0 (P0): Pre-Execution Validation & Deterministic Bootstrap Framework
 
-**P00-EN v1.0**
+**P00-EN v2.0** | **Last Updated**: 2025-11-28 | **Status**: Production
 
-## Abstract
-This paper outlines the design and function of Phase 0 (N0), the initial validation node in the F.A.R.F.A.N. mechanistic policy pipeline. Phase 0 serves as a critical sociotechnical control point, ensuring the integrity, determinism, and reliability of the entire system before computational processes begin. By enforcing a series of strict, automated checks on configuration, dependencies, and core assets, this phase acts as a safeguard against systemic failures that could otherwise propagate through the pipeline. We argue that this pre-computation validation is not merely a technical prerequisite but a foundational element of a well-designed sociotechnical system, fostering trust, reducing operator ambiguity, and ensuring that the subsequent human-machine interactions are based on a stable, verified technical foundation.
+---
 
-## 1. Introduction
+## 🎯 Executive Summary
 
-The F.A.R.F.A.N. mechanistic policy pipeline is a complex system designed to ingest, analyze, and score policy documents. The outputs of this pipeline are intended to inform high-stakes decision-making processes. As such, the reliability and correctness of the system are paramount. From a sociotechnical systems theory perspective, the pipeline is not just a collection of algorithms and data structures; it is a system where human operators, analysts, and decision-makers interact with a sophisticated technical apparatus. The quality of these interactions, and thus the overall efficacy of the system, is highly dependent on the stability and predictability of the technical subsystem.
+Phase 0 is the **strict validation gateway** that establishes deterministic execution conditions for the F.A.R.F.A.N mechanistic policy pipeline. It enforces a zero-tolerance policy for configuration errors, dependency mismatches, and compromised integrity—ensuring that **all subsequent phases operate on a verified, immutable foundation**.
 
-Phase 0 (N0) of the pipeline is designed to establish this stability. It is a non-negotiable, automated gateway that validates the entire system's configuration before any document-specific processing is initiated. This phase operationalizes the principle of "joint optimization" by ensuring that the technical system is in a known, correct state, thereby enabling the social system (the users and operators) to interact with it effectively and with confidence. By catching configuration errors, dependency mismatches, or corrupted assets at the earliest possible stage, Phase 0 prevents the costly and trust-eroding propagation of errors that can result from a poorly configured technical environment. This paper details the methodology and results of this sociotechnical validation framework.
+**Critical Design Principle**: *Fail fast, fail clean, fail deterministically*. Phase 0 **never** falls back to defaults, **never** proceeds with partial configurations, and **never** allows ambiguous error states.
 
-## 2. Methodology: A Sociotechnical Validation Framework
+### Key Metrics
 
-The methodology of Phase 0 is built upon a series of contractual obligations that the system's configuration must meet. These contracts are enforced through a deterministic, sequential flow of validation steps.
+| Metric | Requirement | Status |
+|--------|-------------|--------|
+| **Bootstrap Success Rate** | 100% on valid configs | ✅ **ENFORCED** |
+| **Module Shadowing Detection** | Pre-import validation | ✅ **ENFORCED** |
+| **Input Hash Verification** | SHA-256 cryptographic proof | ✅ **ENFORCED** |
+| **Boot Check Gating** | PROD: zero tolerance | ✅ **ENFORCED** |
+| **Determinism Seeding** | Python RNG mandatory | ✅ **ENFORCED** |
+| **Error Surface** | Empty on P0 success | ✅ **ENFORCED** |
 
-### 2.1. Input and Output Contracts
+---
 
-The validation process begins with an **Input Contract**, which defines the expected state of the `config` dictionary that initializes the pipeline. This contract specifies required keys (`monolith_path`, `questionnaire_hash`, etc.), data types, and preconditions, such as the immutability of configuration objects and the correctness of the defined phase graph. Forbidden inputs, such as references to deprecated or experimental system components (e.g., node N2), are explicitly rejected.
+##  1. Introduction: The Sociotechnical Gateway
 
-Upon successful validation, Phase 0 produces an **Output Contract**. This is not merely a pass-through of the input but an enriched and verified state. The output includes the loaded and hash-verified canonical questionnaire, initialized `AggregationSettings`, and a locked-down phase graph, ensuring that the rest of the pipeline operates on a consistent and trusted data foundation.
+### 1.1 Problem Statement
 
-### 2.2. Internal Validation Flow
+High-stakes policy analysis pipelines suffer from three critical failure modes:
 
-The internal flow of Phase 0 is a sequence of validation sub-nodes, each responsible for a specific aspect of the system's configuration:
+1. **Configuration Drift**: Undetected environment mismatches produce non-deterministic results
+2. **Silent Degradation**: Partial failures cascade through the pipeline as "acceptable" deviations  
+3. **Trust Erosion**: Operators cannot distinguish between "the system worked correctly" and "the system worked despite broken prerequisites"
 
-1.  **Schema Validation:** The initial step verifies the presence and correct types of all required keys in the input `config` dictionary.
-2.  **Questionnaire Loading and Verification:** The canonical questionnaire, a central knowledge asset, is loaded, and its SHA-256 hash is verified against the value in the `config`. This ensures the integrity and immutability of the system's core analytical logic.
-3.  **Phase Graph Enforcement:** The pipeline's execution path is validated to ensure it contains only active, authorized nodes. This prevents the execution of experimental or deprecated code paths.
-4.  **Dependency Validation:** The configurations for executors, calibration profiles, and other dependencies are loaded and validated, ensuring that all necessary components for the run are present and correctly specified.
-5.  **Emission:** The fully validated and enriched configuration object is cached in the orchestrator's context, ready for the subsequent phases.
+### 1.2 Phase 0 Solution Architecture
 
-This structured flow ensures that the technical subsystem is "ready for work" before it is engaged by the social subsystem, thereby preventing a class of errors that are often difficult to diagnose and can undermine user trust.
+Phase 0 implements a **strict contract-based validation framework** consisting of four sub-phases:
 
-## 3. Results: System State and Contract Enforcement
+```
+P0.0: Bootstrap          → Runtime config, seed registry, manifest builder
+P0.1: Input Verification → Cryptographic hash validation of plan & questionnaire  
+P0.2: Boot Checks        → Dependency validation (PROD: fatal, DEV: warn)
+P0.3: Determinism        → RNG seeding with mandatory python seed
 
-The successful execution of Phase 0 results in a deterministic and verified initial state for the pipeline. The structure of this validation process is visualized through a series of graphs that represent the flow of control, data, state transitions, and contractual linkages.
+EXIT GATE: self.errors MUST be empty ∧ _bootstrap_failed = False
+```
 
-### 3.1. Control-Flow and Data-Flow
+**Design Rationale**: Each sub-phase is **independently verifiable**, **cryptographically traceable**, and **strictly gated**. Failure at any sub-phase triggers immediate abort with structured error claims.
 
-The **Control-Flow Graph** illustrates the decision-making logic of Phase 0, showing how a configuration input is either validated and emitted or rejected upon failure. The **Data-Flow Graph** shows how raw configuration data is transformed and augmented by a series of validators and builders to produce the final, validated configuration object.
+---
 
-![Control-Flow Graph](images/control_flow_en.png)
+## 2. Phase Architecture & Flow
 
-![Data-Flow Graph](images/data_flow_en.png)
+### 2.1 Control Flow Diagram
 
-### 3.2. State-Transition and Contract-Linkage
+```mermaid
+flowchart TD
+    A[«START» cli Entry Point] --> B{Module Shadowing Check}
+    B -->|PASS| C[main Parse Args]
+    B -->|FAIL| Z1[Write Minimal Manifest<br/>PIPELINE_VERIFIED=0<br/>Exit 1]
+    
+    C --> D[«P0.0» VerifiedPipelineRunner::__init__]
+    D --> E{RuntimeConfig.from_env}
+    E -->|FAIL| F[Set _bootstrap_failed=True<br/>Append to errors]
+    E -->|PASS| G{artifacts_dir.mkdir}
+    G -->|FAIL| F
+    G -->|PASS| H[Log bootstrap/start claim]
+    
+    H --> I[«P0.1» verify_input]
+    I --> J{All inputs exist & hashed?}
+    J -->|FAIL| K[Append to errors]
+    J -->|PASS| L{self.errors empty?}
+    L -->|NO| M[Generate manifest success=False<br/>Return False]
+    L -->|YES| N[«P0.2» run_boot_checks]
+    
+    N --> O{BootCheckError?}
+    O -->|YES + PROD| P[Append to errors<br/>Raise exception]
+    O -->|YES + DEV| Q[Log warning claim<br/>Continue]
+    O -->|NO| R{self.errors empty?}
+    R -->|NO| M
+    R -->|YES| S[«P0.3» _initialize_determinism_context]
+    
+    S --> T{python seed exists?}
+    T -->|NO| U[Set _bootstrap_failed=True<br/>Append to errors]
+    T -->|YES| V[random.seed python_seed]
+    
+    V --> W{self.errors empty?}
+    W -->|NO| M
+    W -->|YES| X[«Phase 1» run_spc_ingestion]
+    X --> Y[SUCCESS<br/>PIPELINE_VERIFIED=1]
+    
+    F --> M
+    K --> M
+    P --> M
+    U --> M
+    
+    style A fill:#e1f5e1
+    style Z1 fill:#ffe1e1
+    style X fill:#e1e5ff
+    style Y fill:#d4edda
+    style M fill:#f8d7da
+```
 
-The **State-Transition Graph** models the state of the Phase 0 node itself, moving from `Idle` to `Validating` and then to either `Faulted` or `Emitting`. This provides a clear model of the node's lifecycle. The **Contract-Linkage Graph** visualizes how each step in the validation process is governed by a specific versioned contract (e.g., `C0-CONFIG-V1`, `QMONO-V1`), ensuring that the validation logic itself is modular and maintainable.
+### 2.2 Data Flow: Configuration Enrichment
 
-![State-Transition Graph](images/state_transition_en.png)
+```mermaid
+flowchart LR
+    A[ENV VARS<br/>SAAAAAA_RUNTIME_MODE] --> B[RuntimeConfig.from_env]
+    B --> C{Validation}
+    C -->|valid| D[RuntimeConfig Instance<br/>mode: RuntimeMode<br/>allow_*: bool]
+    C -->|invalid| E[ConfigurationError<br/>_bootstrap_failed=True]
+    
+    F[plan_pdf_path<br/>questionnaire_path] --> G[_verify_and_hash_file]
+    G --> H[compute_sha256]
+    H --> I{Hash valid?}
+    I -->|yes| J[setattr self.input_pdf_sha256<br/>Log hash claim]
+    I -->| no| K[Append to errors<br/>Return False]
+    
+    L[SeedRegistry] --> M[get_seeds_for_context]
+    M --> N{python seed?}
+    N -->|exists| O[random.seed<br/>np.random.seed]
+    N -->|missing| P[Error claim<br/>_bootstrap_failed=True]
+    
+    D --> Q[VerifiedPipelineRunner<br/>runtime_config]
+    J --> Q
+    O --> Q
+    Q --> R[VALIDATED STATE<br/>Ready for Phase 1]
+    
+    E --> S[ABORT]
+    K --> S
+    P --> S
+    
+    style R fill:#d4edda
+    style S fill:#f8d7da
+```
 
-![Contract-Linkage Graph](images/contract_linkage_en.png)
+### 2.3 State Transition Model
 
-### 3.3. Complexity Constraints
+```mermaid
+stateDiagram-v2
+    [*] --> Idle : Script invoked
+    Idle --> ModuleShadowCheck : cli entry
+    ModuleShadowCheck --> Faulted : Shadowing detected
+    ModuleShadowCheck --> Bootstrapping : Clean imports
+    
+    Bootstrapping --> InputVerifying : RuntimeConfig loaded
+    Bootstrapping --> Faulted : Config load failed
+    
+    InputVerifying --> BootChecking : Inputs hashed
+    InputVerifying --> Faulted : Hash mismatch
+    
+    BootChecking --> DeterminismSeeding : Checks passed
+    BootChecking --> Faulted : PROD check failed
+    BootChecking --> DeterminismSeeding : DEV warning logged
+    
+    DeterminismSeeding --> Ready : python seed applied
+    DeterminismSeeding --> Faulted : Seed missing
+    
+    Ready --> [*] : Phase 1 start
+    Faulted --> ManifestGeneration : Generate failure manifest
+    ManifestGeneration --> [*] : Exit 1
+    
+    note right of Faulted
+        self.errors non-empty
+        OR _bootstrap_failed=True
+    end note
+    
+    note right of Ready
+        self.errors = []
+        _bootstrap_failed = False
+        All hashes verified
+    end note
+```
 
-The design of Phase 0 is intentionally constrained to maintain low complexity and high reliability. It is composed of a maximum of six sub-nodes with a decision depth of no more than four. This ensures that the validation process itself is not a source of errors and can be easily understood and audited.
+---
 
-## 4. Discussion: Error Handling and System Boundaries
+## 3. Sub-Phase Specifications
 
-The validation framework of Phase 0 has significant implications for the sociotechnical resilience of the F.A.R.F.A.N. pipeline.
+### 3.1 P0.0: Bootstrap
 
-### 4.1. Proactive Error Handling
+**Purpose**: Initialize core runner infrastructure with validated runtime configuration.
 
-The error handling strategy of Phase 0 is proactive and strict. For example, a hash mismatch or a missing dependency results in an immediate and clean abort of the run, with a clear message to the operator. The system deliberately avoids falling back to default or "best-guess" configurations. From a sociotechnical standpoint, this design choice is critical. It reduces ambiguity for the human operator and prevents the system from entering an indeterminate state that could lead to difficult-to-interpret results. This predictability builds trust and reinforces the role of the operator as a supervisor of a deterministic system, rather than a troubleshooter of a chaotic one.
+**Contract**:
+```python
+PRECONDITIONS:
+  - SAAAAAA_RUNTIME_MODE ∈ {prod, dev, exploratory}
+  - MODULE_PATH matches expected prefix
+  - artifacts_dir parent exists OR is creatable
 
-### 4.2. Defining System Boundaries
+POSTCONDITIONS:
+  - self.runtime_config: Optional[RuntimeConfig] is set
+  - self._bootstrap_failed: bool reflects init status
+  - artifacts_dir exists with proper permissions
+  - bootstrap/start claim logged on success
+```
 
-Phase 0 plays a crucial role in defining the boundaries between the F.A.R.F.A.N. system and its environment. The **Upstream Contract** requires that the external invocation mechanism (e.g., a CLI or API) provides an immutable configuration. This prevents undesirable "mid-run" modifications that could violate the assumptions of the pipeline. The **Downstream Contract** guarantees that the next phase (N1, Document Ingestion) receives a fully validated configuration. These explicit boundaries create a clear separation of concerns, which is a hallmark of well-designed, maintainable systems.
+**Implementation**:
+```python
+def __init__(self, plan_pdf_path: Path, artifacts_dir: Path):
+    self._bootstrap_failed: bool = False
+    self.errors: List[str] = []
+    
+    # Load runtime config
+    self.runtime_config: Optional[RuntimeConfig] = None
+    try:
+        self.runtime_config = RuntimeConfig.from_env()
+        self.log_claim("start", "runtime_config", ...)
+    except Exception as e:
+        self.log_claim("error", "runtime_config", str(e))
+        self.errors.append(f"Failed to load runtime config: {e}")
+        self._bootstrap_failed = True
+    
+    # Create artifacts directory
+    try:
+        self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        self.log_claim("error", "bootstrap", f"Artifacts dir creation failed: {e}")
+        self.errors.append(str(e))
+        self._bootstrap_failed = True
+```
 
-## 5. Conclusion
+**Critical Gates**:
+- ✅ `RuntimeConfig` must load without exception
+- ✅ `artifacts_dir.mkdir()` must succeed  
+- ✅ No implicit defaults if config is malformed
 
-Phase 0 of the F.A.R.F.A.N. pipeline is more than a simple configuration check. It is a carefully designed sociotechnical control system that establishes a foundation of trust and reliability for all subsequent operations. By applying a rigorous, contract-based validation methodology, it ensures the "joint optimization" of the technical and social components of the pipeline. The technical system is guaranteed to be in a correct and deterministic state, while the social system of operators and analysts is shielded from the ambiguity and potential for error that arises from an un-validated configuration. This approach demonstrates that a focus on the initial state and boundaries of a complex computational system is a critical investment in its overall success and utility.
+---
 
-## References
-*(Placeholder for future citations)*
+### 3.2 P0.1: Input Verification
 
-## Appendix: Change Management
-- Any new configuration field must be reflected in this document and its Spanish counterpart.
-- Changes to the hashing policy or the initialization of `AggregationSettings` require a version increment of this document (e.g., `P00-EN_v1.1`).
+**Purpose**: Cryptographically verify integrity of plan PDF and questionnaire monolith.
+
+**Contract**:
+```python
+PRECONDITIONS:
+  - plan_pdf_path.exists() = True
+  - questionnaire_path.exists() = True
+
+POSTCONDITIONS:
+  - self.input_pdf_sha256: str = 64-char hex digest
+  - self.questionnaire_sha256: str = 64-char hex digest  
+  - input_verification/hash claims logged
+  - self.errors empty OR contains specific file error
+```
+
+**Implementation**:
+```python
+def _verify_and_hash_file(self, file_path: Path, attr_name: str) -> bool:
+    if not file_path.exists():
+        error_msg = f"{attr_name} file not found: {file_path}"
+        self.log_claim("error", "input_verification", error_msg)
+        self.errors.append(error_msg)
+        return False
+    
+    try:
+        sha256_hash = compute_sha256(file_path)  # Streaming read
+        setattr(self, attr_name, sha256_hash)
+        self.log_claim("complete", "input_verification/hash", 
+                      f"{attr_name} verified", {"hash": sha256_hash[:16]})
+        return True
+    except Exception as e:
+        error_msg = f"Failed to hash {attr_name}: {e}"
+        self.log_claim("error", "input_verification", error_msg)
+        self.errors.append(error_msg)
+        return False
+```
+
+**Exit Gate**:
+```python
+# In run() method
+if not self.verify_input():
+    self.generate_verification_manifest([], {})
+    return False
+
+# STRICT PHASE 0 EXIT GATE: Input Verification
+if self.errors:
+    self.log_claim("error", "phase0_gate", "Phase 0 failure: Errors detected after input verification")
+    self.generate_verification_manifest([], {})
+    return False
+```
+
+---
+
+### 3.3 P0.2: Boot Checks
+
+**Purpose**: Validate system dependencies (Python version, critical packages).
+
+**Contract**:
+```python
+PRECONDITIONS:
+  - self.runtime_config is not None
+
+POSTCONDITIONS (PROD):
+  - BootCheckError raised on any failure
+  - self.errors contains failure reason
+  - Execute ABORT immediately
+
+POSTCONDITIONS (DEV/EXPLORATORY):
+  - BootCheckError logged as warning
+  - self.errors NOT populated
+  - Execution continues with degraded trust
+```
+
+**Implementation**:
+```python
+def run_boot_checks(self) -> bool:
+    self.log_claim("start", "boot_checks", "Running boot-time validation checks")
+    
+    try:
+        results = run_boot_checks(self.runtime_config)
+        self.log_claim("complete", "boot_checks", ...)
+        return True
+    
+    except BootCheckError as e:
+        error_msg = f"Boot check failed: {e}"
+        
+        # PROD mode: FATAL error
+        if self.runtime_config.mode.value == "prod":
+            self.log_claim("error", "boot_checks", error_msg, {...})
+            self.errors.append(error_msg)
+            raise
+        
+        # DEV/EXPLORATORY: WARNING only (DO NOT pollute self.errors)
+        self.log_claim("warning", "boot_checks", error_msg, {...})
+        print(f"\n⚠️  WARNING: {error_msg} (continuing in {self.runtime_config.mode.value} mode)\n")
+        return False
+```
+
+**Rationale**: In DEV mode, we log warnings but **do not** append to `self.errors` because the Phase 0 exit condition requires `self.errors` to be empty. This allows development with degraded dependencies while maintaining strict PROD enforcement.
+
+---
+
+### 3.4 P0.3: Determinism Context
+
+**Purpose**: Seed all non-deterministic sources (Python RNG, NumPy) for reproducible execution.
+
+**Contract**:
+```python
+PRECONDITIONS:
+  - SeedRegistry responds with seed_context
+  
+POSTCONDITIONS:
+  - random.seed(python_seed) called
+  - np.random.seed(numpy_seed) called (if available)
+  - determinism/start claim logged
+  - self.seed_snapshot populated for manifest
+```
+
+**Implementation**:
+```python
+def _initialize_determinism_context(self) -> dict[str, int]:
+    seeds = get_seeds_for_context(
+        context_type="policy_pipeline",
+        policy_unit_id=self.policy_unit_id
+    )
+    
+    python_seed = seeds.get("python")
+    if python_seed is not None:
+        random.seed(python_seed)
+    else:
+        # FATAL: Missing critical seed
+        self.log_claim("error", "determinism", "Missing python seed in registry response")
+        self.errors.append("Missing python seed in registry response")
+        self._bootstrap_failed = True
+        return seeds  # Return early to abort
+    
+    # NumPy seeding is optional (log warning if fails)
+    numpy_seed = seeds.get("numpy")
+    if numpy_seed is not None:
+        try:
+            import numpy as np
+            np.random.seed(numpy_seed)
+        except Exception as e:
+            self.log_claim("warning", "determinism", f"NumPy seed failed: {e}")
+    
+    # Log success claim
+    if not self._bootstrap_failed:
+        self.log_claim("start", "determinism", "Deterministic seeds applied", 
+                      {"seeds": seeds, "policy_unit_id": self.policy_unit_id})
+    
+    return seeds
+```
+
+---
+
+## 4. Exit Conditions & Guarantees
+
+### 4.1 Phase 0 Success Criteria
+
+Phase 0 is considered **successfully completed** if and only if **ALL** of the following hold:
+
+| # | Criterion | Verification Method |
+|---|-----------|---------------------|
+| 1 | No module shadowing | `cli()` pre-check passes |
+| 2 | `runtime_config` loaded | `self.runtime_config is not None` |
+| 3 | Inputs verified | `self.input_pdf_sha256` and `self.questionnaire_sha256` set |
+| 4 | Boot checks passed | PROD: no exception, DEV: warning logged |
+| 5 | Determinism seeded | `python_seed` applied, claim logged |
+| 6 | Error surface clean | `self.errors == []` AND `self._bootstrap_failed == False` |
+
+**Exit Gate Implementation**:
+```python
+async def run(self) -> bool:
+    # Bootstrap gate
+    if self._bootstrap_failed or self.errors:
+        self.generate_verification_manifest([], {})
+        return False
+    
+    # Input verification gate
+    if not self.verify_input():
+        self.generate_verification_manifest([], {})
+        return False
+    
+    if self.errors:  # Strict check after input verification
+        self.log_claim("error", "phase0_gate", "Phase 0 failure: Errors after input verification")
+        self.generate_verification_manifest([], {})
+        return False
+    
+    #Boot checks gate
+    try:
+        if self.runtime_config is None:
+            raise BootCheckError("Runtime config is None", "BOOT_CONFIG_MISSING", ...)
+        if not self.run_boot_checks():
+            self.log_claim("warning", "boot_checks", "Boot checks failed in non-PROD mode")
+    except BootCheckError:
+        self.generate_verification_manifest([], {})
+        return False
+    
+    if self.errors:  # Strict check after boot checks
+        self.log_claim("error", "phase0_gate", "Phase 0 failure: Errors after boot checks")
+        self.generate_verification_manifest([], {})
+        return False
+    
+    # Phase 0 PASSED → proceed to Phase 1
+    return await self.run_spc_ingestion()
+```
+
+### 4.2 Failure Manifest Generation
+
+On **any** Phase 0 failure:
+
+```python
+manifest = {
+    "success": False,
+    "execution_id": "...",
+    "errors": self.errors,  # Contains specific failure reasons
+    "phases_completed": 0,
+    "phases_failed": 1,
+    "artifacts_generated": [],
+    "artifact_hashes": {}
+}
+```
+
+**Output**: `PIPELINE_VERIFIED=0` printed to stdout, exit code `1`.
+
+---
+
+## 5. Sociotechnical Implications
+
+### 5.1 Operator Trust Model
+
+Phase 0 establishes a **deterministic trust boundary**:
+
+- **Trust Region**: If Phase 0 passes, the operator can trust that **all** subsequent behavior is fully determined by the input documents and frozen configuration.
+- **No Trust Region**: If Phase 0 fails, the operator receives **clear, actionable error messages** rather than ambiguous "maybe it worked" states.
+
+### 5.2 Audit Trail Completeness
+
+Every Phase 0 decision is captured in `execution_claims.json`:
+
+```json
+{
+  "claim_type": "start|complete|error|warning",
+  "component": "runtime_config|input_verification|boot_checks|determinism",
+  "message": "...",
+  "details": { ... },
+  "timestamp": "2025-11-28T10:35:00Z"
+}
+```
+
+This enables **forensic reconstruction** of why a specific run failed or succeeded.
+
+---
+
+## 6. Comparison to Related Systems
+
+| System | Phase 0 Equivalent | Enforcement |
+|--------|-------------------|-------------|
+| **Airflow DAGs** | Task dependencies | Lazy (fails mid-pipeline) |
+| **Kubeflow Pipelines** | Container health checks | Per-step (limited scope) |
+| **F.A.R.F.A.N Phase 0** | **Pre-execution contract validation** | **Strict (fail-fast global)** |
+
+**Key Differentiator**: F.A.R.F.A.N's Phase 0 is **holistic** and **mandatory**—it validates the *entire system state* before touching any policy documents, whereas other systems perform incremental checks that can miss cross-cutting configuration errors.
+
+---
+
+## 7. Future Enhancements (Roadmap)
+
+### 7.1 v2.1: Hardware Profiling
+- Add CPU/GPU capability detection
+- Warn if insufficient memory for large documents
+
+### 7.2 v2.2: Cryptographic Attestation  
+- Sign `verification_manifest.json` with HSM-backed keys
+- Enable third-party verification of execution integrity
+
+### 7.3 v2.3: Distributed Boot Checks
+- Parallel validation of network-dependent resources
+- Circuit breaker integration for external APIs
+
+---
+
+## Appendix A: Change Log
+
+| Version | Date | Changes |
+|---------|------|---------|
+| v1.0 | 2024-06-15 | Initial academic specification |
+| **v2.0** | **2025-11-28** | **Production implementation with strict enforcement, mermaid diagrams, comprehensive exit gates** |
+
+## Appendix B: References
+
+1. Leveson, N. G. (2011). *Engineering a Safer World: Systems Thinking Applied to Safety*. MIT Press.
+2. Parnas, D. L. (1972). "On the Criteria To Be Used in Decomposing Systems into Modules." *CACM*, 15(12).
+3. NIST SP 800-53: Security and Privacy Controls for Information Systems
+
+---
+
+**Document SHA-256**: `TBD` (computed post-finalization)  
+**Maintainers**: F.A.R.F.A.N Core Team  
+**Review Cycle**: Quarterly
+

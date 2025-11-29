@@ -9,6 +9,7 @@ import secrets
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +23,12 @@ class AdminSession:
     last_activity: datetime
     ip_address: str
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminSession.is_expired")
     def is_expired(self, timeout_minutes: int = 60) -> bool:
         """Check if session has expired"""
         return datetime.now() - self.last_activity > timedelta(minutes=timeout_minutes)
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminSession.update_activity")
     def update_activity(self) -> None:
         """Update last activity timestamp"""
         self.last_activity = datetime.now()
@@ -59,14 +62,17 @@ class AdminAuthenticator:
 
         logger.info("Admin authenticator initialized")
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator._hash_password")
     def _hash_password(self, password: str, salt: str) -> str:
         """Hash password with salt using SHA-256"""
         return hashlib.sha256(f"{password}{salt}".encode()).hexdigest()
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator._generate_session_id")
     def _generate_session_id(self) -> str:
         """Generate secure random session ID"""
         return secrets.token_urlsafe(32)
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator._check_rate_limit")
     def _check_rate_limit(self, ip_address: str, max_attempts: int = 5, window_minutes: int = 15) -> bool:
         """Check if IP has exceeded login attempt rate limit"""
         now = time.time()
@@ -88,6 +94,7 @@ class AdminAuthenticator:
 
         return True
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.authenticate")
     def authenticate(self, username: str, password: str, ip_address: str) -> str | None:
         """
         Authenticate user and create session.
@@ -136,6 +143,7 @@ class AdminAuthenticator:
         logger.info(f"Successful login for user: {username} from IP: {ip_address}")
         return session_id
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.validate_session")
     def validate_session(self, session_id: str, ip_address: str | None = None) -> bool:
         """
         Validate if session is active and valid.
@@ -167,12 +175,14 @@ class AdminAuthenticator:
         session.update_activity()
         return True
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.get_session")
     def get_session(self, session_id: str) -> AdminSession | None:
         """Get session details if valid"""
         if self.validate_session(session_id):
             return self.sessions[session_id]
         return None
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.logout")
     def logout(self, session_id: str) -> None:
         """Terminate session"""
         if session_id in self.sessions:
@@ -180,6 +190,7 @@ class AdminAuthenticator:
             del self.sessions[session_id]
             logger.info(f"User logged out: {username}")
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.cleanup_expired_sessions")
     def cleanup_expired_sessions(self) -> None:
         """Remove all expired sessions (should be called periodically)"""
         expired = [
@@ -193,6 +204,7 @@ class AdminAuthenticator:
         if expired:
             logger.info(f"Cleaned up {len(expired)} expired sessions")
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.add_user")
     def add_user(self, username: str, password: str, role: str = "user") -> None:
         """Add new user (admin function)"""
         salt = secrets.token_hex(16)
@@ -206,6 +218,7 @@ class AdminAuthenticator:
 
         logger.info(f"New user added: {username} with role: {role}")
 
+    @calibrated_method("saaaaaa.api.auth_admin.AdminAuthenticator.change_password")
     def change_password(self, username: str, old_password: str, new_password: str) -> bool:
         """Change user password"""
         if username not in self.users:

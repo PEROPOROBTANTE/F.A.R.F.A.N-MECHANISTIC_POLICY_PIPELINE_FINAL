@@ -69,6 +69,8 @@ from enum import Enum
 from typing import Any
 
 import numpy as np
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -233,28 +235,29 @@ class MicroQuestionScorer:
     # MÉTODO 1: SCORE TYPE_A
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a")
     def score_type_a(self, evidence: Evidence) -> tuple[float, dict[str, Any]]:
         """
         MÉTODO 1: TYPE_A - Count 4 elements and scale to 0-3.
 
         ESPECIFICACIÓN (línea 34568 del monolith):
         - Aggregation: "presence_threshold"
-        - Threshold: 0.7
+        - Threshold: get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a").get("auto_param_L245_21", 0.7)
         - Max_score: 3
         - Expected_elements: 4
 
         LÓGICA:
         1. Contar elementos encontrados (expected: 4)
         2. Calcular ratio = found / 4
-        3. Si ratio >= 0.7: aplicar escala proporcional
-        4. Si ratio < 0.7: penalizar fuertemente
+        3. Si ratio >= get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a").get("auto_param_L252_23", 0.7): aplicar escala proporcional
+        4. Si ratio < get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a").get("auto_param_L253_22", 0.7): penalizar fuertemente
 
         ESCALA:
         - 4/4 elementos (100%) → 3.0
         - 3/4 elementos (75%) → 2.25
         - 2/4 elementos (50%) → penalizado
         - 1/4 elementos (25%) → penalizado
-        - 0/4 elementos (0%) → 0.0
+        - 0/4 elementos (0%) → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a").get("auto_param_L260_31", 0.0)
 
         Args:
             evidence: Evidencia extraída con elements_found
@@ -268,7 +271,7 @@ class MicroQuestionScorer:
         max_score = self.config.type_a_max_score
 
         # Calcular ratio
-        ratio = elements_found / expected if expected > 0 else 0.0
+        ratio = elements_found / expected if expected > 0 else get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a").get("auto_param_L274_63", 0.0)
 
         # Aplicar threshold del monolith
         if ratio >= threshold:
@@ -279,7 +282,7 @@ class MicroQuestionScorer:
             score = (ratio / threshold) * (ratio * max_score)
 
         # Clip al rango [0, max_score]
-        score = max(0.0, min(max_score, score))
+        score = max(get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_a").get("auto_param_L285_20", 0.0), min(max_score, score))
 
         details = {
             'modality': 'TYPE_A',
@@ -300,6 +303,7 @@ class MicroQuestionScorer:
     # MÉTODO 2: SCORE TYPE_B
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_b")
     def score_type_b(self, evidence: Evidence) -> tuple[float, dict[str, Any]]:
         """
         MÉTODO 2: TYPE_B - Count up to 3 elements, each worth 1 point.
@@ -317,8 +321,8 @@ class MicroQuestionScorer:
         ESCALA:
         - 3+ elementos → 3.0
         - 2 elementos → 2.0
-        - 1 elemento → 1.0
-        - 0 elementos → 0.0
+        - 1 elemento → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_b").get("auto_param_L324_23", 1.0)
+        - 0 elementos → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_b").get("auto_param_L325_24", 0.0)
 
         Args:
             evidence: Evidencia extraída con elements_found
@@ -352,26 +356,27 @@ class MicroQuestionScorer:
     # MÉTODO 3: SCORE TYPE_C
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c")
     def score_type_c(self, evidence: Evidence) -> tuple[float, dict[str, Any]]:
         """
         MÉTODO 3: TYPE_C - Count 2 elements and scale to 0-3.
 
         ESPECIFICACIÓN (línea 34580 del monolith):
         - Aggregation: "presence_threshold"
-        - Threshold: 0.5
+        - Threshold: get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c").get("auto_param_L366_21", 0.5)
         - Max_score: 3
         - Expected_elements: 2
 
         LÓGICA:
         1. Contar elementos encontrados (expected: 2)
         2. Calcular ratio = found / 2
-        3. Si ratio >= 0.5: aplicar escala proporcional
-        4. Si ratio < 0.5: penalizar
+        3. Si ratio >= get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c").get("auto_param_L373_23", 0.5): aplicar escala proporcional
+        4. Si ratio < get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c").get("auto_param_L374_22", 0.5): penalizar
 
         ESCALA:
         - 2/2 elementos (100%) → 3.0
         - 1/2 elementos (50%) → 1.5
-        - 0/2 elementos (0%) → 0.0
+        - 0/2 elementos (0%) → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c").get("auto_param_L379_31", 0.0)
 
         Args:
             evidence: Evidencia extraída con elements_found
@@ -385,7 +390,7 @@ class MicroQuestionScorer:
         max_score = self.config.type_c_max_score
 
         # Calcular ratio
-        ratio = elements_found / expected if expected > 0 else 0.0
+        ratio = elements_found / expected if expected > 0 else get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c").get("auto_param_L393_63", 0.0)
 
         # Aplicar threshold del monolith
         if ratio >= threshold:
@@ -396,7 +401,7 @@ class MicroQuestionScorer:
             score = (ratio / threshold) * (ratio * max_score)
 
         # Clip al rango [0, max_score]
-        score = max(0.0, min(max_score, score))
+        score = max(get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_c").get("auto_param_L404_20", 0.0), min(max_score, score))
 
         details = {
             'modality': 'TYPE_C',
@@ -417,28 +422,29 @@ class MicroQuestionScorer:
     # MÉTODO 4: SCORE TYPE_D
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d")
     def score_type_d(self, evidence: Evidence) -> tuple[float, dict[str, Any]]:
         """
-        MÉTODO 4: TYPE_D - Count 3 elements, weighted [0.4, 0.3, 0.3].
+        MÉTODO 4: TYPE_D - Count 3 elements, weighted [get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L428_55", 0.4), get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L428_60", 0.3), get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L428_65", 0.3)].
 
         ESPECIFICACIÓN (línea 34586 del monolith):
         - Aggregation: "weighted_sum"
-        - Weights: [0.4, 0.3, 0.3]
+        - Weights: [get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L432_20", 0.4), get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L432_25", 0.3), get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L432_30", 0.3)]
         - Max_score: 3
         - Expected_elements: 3
 
         LÓGICA:
         1. Se esperan 3 elementos con importancia diferente
-        2. Elemento 1: peso 0.4 (más importante)
-        3. Elemento 2: peso 0.3
-        4. Elemento 3: peso 0.3
+        2. Elemento 1: peso get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L438_28", 0.4) (más importante)
+        3. Elemento 2: peso get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L439_28", 0.3)
+        4. Elemento 3: peso get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L440_28", 0.3)
         5. Score = (sum of weights for found elements) * max_score
 
         ESCALA:
-        - 3 elementos (todos) → weights_sum=1.0 → 3.0
-        - 2 elementos (ej: elem1+elem2) → weights_sum=0.7 → 2.1
-        - 1 elemento (ej: elem1) → weights_sum=0.4 → 1.2
-        - 0 elementos → 0.0
+        - 3 elementos (todos) → weights_sum=get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L444_44", 1.0) → 3.0
+        - 2 elementos (ej: elem1+elem2) → weights_sum=get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L445_54", 0.7) → 2.1
+        - 1 elemento (ej: elem1) → weights_sum=get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L446_47", 0.4) → 1.2
+        - 0 elementos → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L447_24", 0.0)
 
         Args:
             evidence: Evidencia extraída con elements_found y confidence_scores
@@ -470,7 +476,7 @@ class MicroQuestionScorer:
         score = weighted_sum * max_score
 
         # Clip al rango [0, max_score]
-        score = max(0.0, min(max_score, score))
+        score = max(get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_d").get("auto_param_L479_20", 0.0), min(max_score, score))
 
         details = {
             'modality': 'TYPE_D',
@@ -490,6 +496,7 @@ class MicroQuestionScorer:
     # MÉTODO 5: SCORE TYPE_E
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_e")
     def score_type_e(self, evidence: Evidence) -> tuple[float, dict[str, Any]]:
         """
         MÉTODO 5: TYPE_E - Boolean presence check.
@@ -501,11 +508,11 @@ class MicroQuestionScorer:
         LÓGICA:
         1. Verificar si existe evidencia (binario: sí/no)
         2. Si existe: 3.0
-        3. Si no existe: 0.0
+        3. Si no existe: get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_e").get("auto_param_L511_25", 0.0)
 
         ESCALA:
         - Evidencia presente → 3.0
-        - Evidencia ausente → 0.0
+        - Evidencia ausente → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_e").get("auto_param_L515_30", 0.0)
 
         Args:
             evidence: Evidencia extraída
@@ -519,11 +526,11 @@ class MicroQuestionScorer:
         has_evidence = (
             len(evidence.elements_found) > 0 or
             bool(evidence.pattern_matches) or
-            (evidence.semantic_similarity is not None and evidence.semantic_similarity > 0.5)
+            (evidence.semantic_similarity is not None and evidence.semantic_similarity > get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_e").get("auto_param_L529_89", 0.5))
         )
 
         # Binary: todo o nada
-        score = max_score if has_evidence else 0.0
+        score = max_score if has_evidence else get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_e").get("auto_param_L533_47", 0.0)
 
         details = {
             'modality': 'TYPE_E',
@@ -532,7 +539,7 @@ class MicroQuestionScorer:
             'pattern_matches': len(evidence.pattern_matches),
             'semantic_similarity': evidence.semantic_similarity,
             'raw_score': score,
-            'formula': 'max_score if has_evidence else 0.0'
+            'formula': 'max_score if has_evidence else get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_e").get("auto_param_L542_55", 0.0)'
         }
 
         self.logger.debug(f"TYPE_E: evidencia={'presente' if has_evidence else 'ausente'} → score={score:.2f}")
@@ -543,6 +550,7 @@ class MicroQuestionScorer:
     # MÉTODO 6: SCORE TYPE_F
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f")
     def score_type_f(self, evidence: Evidence) -> tuple[float, dict[str, Any]]:
         """
         MÉTODO 6: TYPE_F - Semantic matching with cosine similarity.
@@ -558,11 +566,11 @@ class MicroQuestionScorer:
         3. Score = normalized_similarity * max_score
 
         ESCALA:
-        - Similarity = 1.0 → 3.0
-        - Similarity = 0.75 → 2.25
-        - Similarity = 0.5 → 1.5
-        - Similarity = 0.25 → 0.75
-        - Similarity = 0.0 → 0.0
+        - Similarity = get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L569_23", 1.0) → 3.0
+        - Similarity = get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L570_23", 0.75) → 2.25
+        - Similarity = get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L571_23", 0.5) → 1.5
+        - Similarity = get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L572_23", 0.25) → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L572_30", 0.75)
+        - Similarity = get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L573_23", 0.0) → get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L573_29", 0.0)
 
         Args:
             evidence: Evidencia con semantic_similarity
@@ -579,10 +587,10 @@ class MicroQuestionScorer:
         elif evidence.confidence_scores:
             similarity = float(np.mean(evidence.confidence_scores))
         else:
-            similarity = 0.0
+            similarity = get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("similarity", 0.0) # Refactored
 
         # Normalización minmax (ya está en rango 0-1)
-        normalized_similarity = max(0.0, min(1.0, similarity))
+        normalized_similarity = max(get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L593_36", 0.0), min(get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.score_type_f").get("auto_param_L593_45", 1.0), similarity))
 
         # Score continuo
         score = normalized_similarity * max_score
@@ -678,15 +686,16 @@ class MicroQuestionScorer:
     # MÉTODO 8: DETERMINE QUALITY LEVEL
     # ========================================================================
 
+    @calibrated_method("saaaaaa.analysis.scoring.MicroQuestionScorer.determine_quality_level")
     def determine_quality_level(self, normalized_score: float) -> tuple[QualityLevel, str]:
         """
         MÉTODO 8: Determina nivel de calidad según umbrales del monolith.
 
         UMBRALES (línea 34513 del monolith):
-        - EXCELENTE: ≥ 0.85 (verde)
-        - BUENO: ≥ 0.70 (azul)
-        - ACEPTABLE: ≥ 0.55 (amarillo)
-        - INSUFICIENTE: < 0.55 (rojo)
+        - EXCELENTE: ≥ get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.determine_quality_level").get("auto_param_L695_23", 0.85) (verde)
+        - BUENO: ≥ get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.determine_quality_level").get("auto_param_L696_19", 0.70) (azul)
+        - ACEPTABLE: ≥ get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.determine_quality_level").get("auto_param_L697_23", 0.55) (amarillo)
+        - INSUFICIENTE: < get_parameter_loader().get("saaaaaa.analysis.scoring.MicroQuestionScorer.determine_quality_level").get("auto_param_L698_26", 0.55) (rojo)
 
         Args:
             normalized_score: Score en rango 0-1

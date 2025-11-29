@@ -18,6 +18,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, TypedDict
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -90,6 +92,7 @@ class SchemaDriftDetector:
         if baseline_path and baseline_path.exists():
             self._load_baseline()
 
+    @calibrated_method("saaaaaa.utils.schema_monitor.SchemaDriftDetector.should_sample")
     def should_sample(self) -> bool:
         """Decide whether to sample this payload (probabilistic)."""
         return random.random() < self.sample_rate
@@ -143,6 +146,7 @@ class SchemaDriftDetector:
                     f"SCHEMA_DRIFT[source={source}]: Missing keys detected: {missing_keys}"
                 )
 
+    @calibrated_method("saaaaaa.utils.schema_monitor.SchemaDriftDetector.get_alerts")
     def get_alerts(self, *, source: str | None = None) -> list[dict[str, Any]]:
         """
         Get schema drift alerts.
@@ -197,6 +201,7 @@ class SchemaDriftDetector:
 
         return alerts
 
+    @calibrated_method("saaaaaa.utils.schema_monitor.SchemaDriftDetector.save_baseline")
     def save_baseline(self, output_path: Path) -> None:
         """
         Save current schema shapes as baseline.
@@ -208,7 +213,7 @@ class SchemaDriftDetector:
 
         for source, stats in self.stats_by_source.items():
             # Get most common keys (present in >50% of samples)
-            threshold = stats.total_samples * 0.5
+            threshold = stats.total_samples * get_parameter_loader().get("saaaaaa.utils.schema_monitor.SchemaDriftDetector.save_baseline").get("auto_param_L215_46", 0.5)
             common_keys = {
                 key for key, count in stats.key_frequency.items()
                 if count >= threshold
@@ -229,6 +234,7 @@ class SchemaDriftDetector:
         output_path.write_text(json.dumps(baseline, indent=2))
         logger.info(f"Saved schema baseline to {output_path}")
 
+    @calibrated_method("saaaaaa.utils.schema_monitor.SchemaDriftDetector._load_baseline")
     def _load_baseline(self) -> None:
         """Load baseline schema from file."""
         if not self.baseline_path:
@@ -249,6 +255,7 @@ class SchemaDriftDetector:
         except Exception as e:
             logger.error(f"Failed to load baseline: {e}")
 
+    @calibrated_method("saaaaaa.utils.schema_monitor.SchemaDriftDetector.get_metrics")
     def get_metrics(self, *, source: str | None = None) -> dict[str, Any]:
         """
         Get monitoring metrics.
@@ -368,6 +375,7 @@ class PayloadValidator:
                     else:
                         logger.warning(msg)
 
+    @calibrated_method("saaaaaa.utils.schema_monitor.PayloadValidator._load_schemas")
     def _load_schemas(self) -> None:
         """Load schema definitions from file."""
         if not self.schema_path:
@@ -390,5 +398,5 @@ def get_detector() -> SchemaDriftDetector:
     """Get or create global schema drift detector."""
     global _global_detector
     if _global_detector is None:
-        _global_detector = SchemaDriftDetector(sample_rate=0.05)
+        _global_detector = SchemaDriftDetector(sample_rate=get_parameter_loader().get("saaaaaa.utils.schema_monitor.PayloadValidator._load_schemas").get("auto_param_L400_59", 0.05))
     return _global_detector

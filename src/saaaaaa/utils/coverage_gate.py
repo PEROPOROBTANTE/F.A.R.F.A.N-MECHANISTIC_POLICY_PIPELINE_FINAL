@@ -16,6 +16,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 
 def count_methods_in_class(filepath: Path, class_name: str) -> tuple[list[str], dict[str, int]]:

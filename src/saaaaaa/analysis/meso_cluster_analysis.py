@@ -24,6 +24,8 @@ from dataclasses import dataclass
 from functools import reduce
 from statistics import fmean, pstdev
 from typing import TYPE_CHECKING
+from saaaaaa import get_parameter_loader
+from saaaaaa.core.calibration.decorators import calibrated_method
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping, Sequence
@@ -203,6 +205,7 @@ class MetricViolation:
     entity_misalignment: bool = False
     out_of_range: bool = False
 
+    @calibrated_method("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict")
     def to_flag_dict(self) -> dict[str, object]:
         return {
             "metric_id": self.metric_id,
@@ -240,7 +243,7 @@ def reconcile_cross_metrics(
 
     for metric in aggregated_metrics:
         metric_id = str(metric.get("metric_id"))
-        value = float(metric.get("value", 0.0))
+        value = float(metric.get("value", get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L246_42", 0.0)))
         unit = str(metric.get("unit")) if metric.get("unit") is not None else ""
         period = str(metric.get("period")) if metric.get("period") is not None else ""
         entity = str(metric.get("entity")) if metric.get("entity") is not None else ""
@@ -300,7 +303,7 @@ def reconcile_cross_metrics(
         for violation in violations
         for flag in ("unit_mismatch", "stale_period", "entity_misalignment", "out_of_range")
     )
-    reconciled_confidence = max(0.0, 1.0 - total_violations / total_checks)
+    reconciled_confidence = max(get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L306_32", 0.0), get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L306_37", 1.0) - total_violations / total_checks)
 
     return {
         "metrics_validated": validated_metrics,
@@ -320,7 +323,7 @@ def compose_cluster_posterior(
         raise ValueError("micro_posteriors cannot be empty")
 
     if weighting_trace is None:
-        weights = [1.0] * len(posts)
+        weights = [get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L326_19", 1.0)] * len(posts)
     else:
         weights = _to_float_sequence(weighting_trace)
         if len(weights) != len(posts):
@@ -328,10 +331,10 @@ def compose_cluster_posterior(
         if any(w < 0 for w in weights):
             raise ValueError("weighting_trace values must be non-negative")
     if all(w == 0 for w in weights):
-        weights = [1.0] * len(posts)
+        weights = [get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L334_19", 1.0)] * len(posts)
 
     # Prevent degenerate/negative totals; fallback to uniform if needed.
-    weights = [max(0.0, float(w)) for w in weights]
+    weights = [max(get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L337_19", 0.0), float(w)) for w in weights]
     total_weight = sum(weights)
     if total_weight == 0:
         raise ValueError("At least one weight must be positive")
@@ -339,21 +342,21 @@ def compose_cluster_posterior(
     prior_meso = float(sum(p * w for p, w in zip(posts, normalised_weights, strict=True)))
 
     variance = float(sum(w * (p - prior_meso) ** 2 for p, w in zip(posts, normalised_weights, strict=True)))
-    uncertainty_index = float(variance ** 0.5)
+    uncertainty_index = float(variance ** get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L345_42", 0.5))
 
     penalties_input = reconciliation_penalties or {}
-    dispersion_penalty = float(penalties_input.get("dispersion_penalty", 0.0))
-    coverage_penalty = float(penalties_input.get("coverage_penalty", 0.0))
-    reconciliation_penalty = float(penalties_input.get("reconciliation_penalty", 0.0))
+    dispersion_penalty = float(penalties_input.get("dispersion_penalty", get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L348_73", 0.0)))
+    coverage_penalty = float(penalties_input.get("coverage_penalty", get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L349_69", 0.0)))
+    reconciliation_penalty = float(penalties_input.get("reconciliation_penalty", get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L350_81", 0.0)))
 
     penalty_factor = reduce(
         lambda acc, val: acc * val,
         [
-            max(0.0, 1.0 - dispersion_penalty),
-            max(0.0, 1.0 - coverage_penalty),
-            max(0.0, 1.0 - reconciliation_penalty),
+            max(get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L355_16", 0.0), get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L355_21", 1.0) - dispersion_penalty),
+            max(get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L356_16", 0.0), get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L356_21", 1.0) - coverage_penalty),
+            max(get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L357_16", 0.0), get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L357_21", 1.0) - reconciliation_penalty),
         ],
-        1.0,
+        get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L359_8", 1.0),
     )
     posterior_meso = float(prior_meso * penalty_factor)
 
@@ -389,9 +392,9 @@ def calibrate_against_peers(
     if dispersion_values:
         cluster_mean = _safe_mean(dispersion_values)
         cluster_std = _safe_std(dispersion_values)
-        cluster_cv = cluster_std / cluster_mean if cluster_mean else 0.0
+        cluster_cv = cluster_std / cluster_mean if cluster_mean else get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("auto_param_L395_69", 0.0)
     else:
-        cluster_cv = 0.0
+        cluster_cv = get_parameter_loader().get("saaaaaa.analysis.meso_cluster_analysis.MetricViolation.to_flag_dict").get("cluster_cv", 0.0) # Refactored
 
     for area, score in policy_area_scores.items():
         peers = peer_context.get(area, {})

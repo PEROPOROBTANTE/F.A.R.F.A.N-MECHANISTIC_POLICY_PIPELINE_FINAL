@@ -24,7 +24,7 @@ import threading
 import time
 from collections import deque
 from collections.abc import Callable
-from dataclasses import asdict, dataclass, field, is_dataclass
+from dataclasses import asdict, dataclass, field, is_dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from types import MappingProxyType
@@ -33,10 +33,10 @@ from typing import TYPE_CHECKING, Any, Literal, ParamSpec, TypedDict, TypeVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .questionnaire import CanonicalQuestionnaire
+    from .factory import CanonicalQuestionnaire
 
 from ...analysis.recommendation_engine import RecommendationEngine
-from ...config.paths import PROJECT_ROOT, RULES_DIR
+from ...config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
 from ...processing.aggregation import (
     AggregationSettings,
     AreaPolicyAggregator,
@@ -286,6 +286,15 @@ class MacroEvaluation:
 
 
 @dataclass(frozen=True)
+class Provenance:
+    """Provenance metadata for a chunk."""
+    page_number: int
+    section_header: str | None = None
+    bbox: tuple[float, float, float, float] | None = None
+    span_in_page: tuple[int, int] | None = None
+    source_file: str | None = None
+
+@dataclass(frozen=True)
 class ChunkData:
     """Single semantic chunk from SPC (Smart Policy Chunks).
 
@@ -302,6 +311,9 @@ class ChunkData:
     confidence: float
     edges_out: list[int] = field(default_factory=list)  # Chunk IDs this connects to
     edges_in: list[int] = field(default_factory=list)   # Chunk IDs connecting to this
+    policy_area_id: str | None = None
+    dimension_id: str | None = None
+    provenance: Provenance | None = None
 
 
 @dataclass
@@ -960,6 +972,7 @@ class MethodExecutor:
 
         # Create ExtendedArgRouter with the registry for enhanced validation and metrics
         self._router = ExtendedArgRouter(registry)
+        self.instances = _LazyInstanceDict(self._method_registry)
 
     @staticmethod
     def _supports_parameter(callable_obj: Any, parameter_name: str) -> bool:
@@ -1257,7 +1270,7 @@ class Orchestrator:
             resource_limits: Resource limit configuration.
             resource_snapshot_interval: Interval for resource snapshots.
         """
-        from .questionnaire import _validate_questionnaire_structure
+        from .factory import _validate_questionnaire_structure
 
         validate_phase_definitions(self.FASES, self.__class__)
 
@@ -1268,9 +1281,8 @@ class Orchestrator:
         self.calibration_orchestrator = calibration_orchestrator
         self.resource_limits = resource_limits or ResourceLimits()
         self.resource_snapshot_interval = max(1, resource_snapshot_interval)
+        from .factory import get_questionnaire_provider
         self.questionnaire_provider = get_questionnaire_provider()
-        if not self.questionnaire_provider.has_data():
-            self.questionnaire_provider.set_data(self._monolith_data)
 
         # Validate questionnaire structure
         try:
@@ -1321,7 +1333,7 @@ class Orchestrator:
 
         try:
             self.recommendation_engine = RecommendationEngine(
-                rules_path=CONFIG_DIR / "recommendation_rules_enhanced.json",
+                rules_path=RULES_DIR / "recommendation_rules_enhanced.json",
                 schema_path=RULES_DIR / "recommendation_rules_enhanced.schema.json",
                 questionnaire_provider=self.questionnaire_provider,
                 orchestrator=self
@@ -2279,21 +2291,16 @@ class Orchestrator:
                 logger.warning("ChunkRouter not available, falling back to flat mode")
                 chunk_routes = {}
 
-        questions_by_slot: dict[str, deque] = {}
-        for question in micro_questions:
-            slot = question.get("base_slot")
-            questions_by_slot.setdefault(slot, deque()).append(question)
-
-        slots = sorted(questions_by_slot.keys())
-        while True:
-            added = False
-            for slot in slots:
-                queue = questions_by_slot.get(slot)
-                if queue:
-                    ordered_questions.append(queue.popleft())
-                    added = True
-            if not added:
-                break
+        # STRICT ORDERING: Dimension -> Policy Area -> Question ID
+        # This enforces the requirement: "FIRST ALL THE QUESTIONS OF DIMENSION 1... THEN SECOND DIMENSION..."
+        ordered_questions = sorted(
+            micro_questions,
+            key=lambda q: (
+                q.get("dimension_id", "DIM99"),
+                q.get("policy_area_id", "PA99"),
+                q.get("question_id", "Q999")
+            )
+        )
 
         semaphore = asyncio.Semaphore(self.resource_limits.max_workers)
         self.resource_limits.attach_semaphore(semaphore)
@@ -2360,8 +2367,8 @@ class Orchestrator:
                 if cpu_exceeded:
                     instrumentation.record_warning("resource", "Límite de CPU excedido", usage=usage)
 
-                executor_class = self.executors.get(base_slot)
                 start_time = time.perf_counter()
+                executor_class = self.executors.get(base_slot)
                 evidence: Evidence | None = None
                 error_message: str | None = None
 
@@ -2378,12 +2385,27 @@ class Orchestrator:
                             calibration_orchestrator=self.calibration_orchestrator
                         )
 
-                        # Pass the question context to the executor
+                        # STRICT FILTERING: Pass ONLY chunks matching the question's PA and DIM
+                        target_pa = question.get("policy_area_id")
+                        target_dim = question.get("dimension_id")
+                        
+                        filtered_chunks = [
+                            c for c in document.chunks
+                            if c.policy_area_id == target_pa and c.dimension_id == target_dim
+                        ]
+                        
+                        # Create scoped document with ONLY relevant chunks
+                        scoped_document = replace(document, chunks=filtered_chunks)
+
+                        # Execute question with SCOPED document
                         evidence = await asyncio.to_thread(
-                            executor_instance.execute, document, self.executor, question_context=question
+                            executor_instance.execute, 
+                            scoped_document, 
+                            self.executor,
+                            question_context=question
                         )
                         circuit["failures"] = 0
-                    except Exception as exc:  # pragma: no cover - dependencias externas
+                    except Exception as exc:
                         circuit["failures"] += 1
                         error_message = str(exc)
                         instrumentation.record_error(

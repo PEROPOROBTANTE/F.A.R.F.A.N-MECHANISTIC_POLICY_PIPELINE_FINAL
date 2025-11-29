@@ -71,6 +71,58 @@ Artefactos: artifacts/plan1/verification_manifest.json
 
 ---
 
+## 🛡️ Fase 0: Puerta de Validación Estricta
+
+### El Contrato Pre-Ejecución
+
+**La Fase 0 es el marco de bootstrap determinístico de F.A.R.F.A.N**—una puerta de validación de cero tolerancia que establece condiciones de ejecución inmutables antes de que cualquier análisis de políticas comience.
+
+#### 📊 Dashboard de Aplicación
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  FASE 0: ESTADO DE VALIDACIÓN PRE-EJECUCIÓN                   ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  P0.0 │ BOOTSTRAP           │ ✅ RuntimeConfig      │ ESTRICTO║
+║       │                     │ ✅ Seed Registry      │         ║
+║       │                     │ ✅ Manifest Builder   │         ║
+║                                                                ║
+║  P0.1 │ VERIFICACIÓN ENTRADA │ ✅ Hash PDF Plan      │ CRYPTO  ║
+║       │                     │ ✅ Hash Cuestion.     │ SHA-256 ║
+║                                                                ║
+║  P0.2 │ CONTROLES ARRANQUE  │ ✅ PROD: Fatal        │ CUSTODIA║
+║       │                     │ ⚠️  DEV:  Advertir    │         ║
+║                                                                ║
+║  P0.3 │ DETERMINISMO        │ ✅ Semilla Python RNG │ OBLIG.  ║
+║       │                     │ ✅ Semilla NumPy      │         ║
+║                                                                ║
+║  SALIDA │ CONDICIÓN PUERTA    │ self.errors == []   │ ATÓMICO ║
+║       │                     │ _bootstrap_failed=F │         ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+#### 🚨 Política de Fallos: Fallar Rápido, Fallar Limpio, Fallar Determinísticamente
+
+**Cuando la Fase 0 falla**:
+1. ❌ **Aborto Inmediato**: Sin ejecución de Fase 1
+2. 📋 **Generación de Manifiesto**: `success: false` con razones específicas de error
+3. 🔴 **Código de Salida 1**: `PIPELINE_VERIFIED=0` impreso a stdout
+4. 🔍 **Rastro de Auditoría**: Log completo de claims en `execution_claims.json`
+
+**Racionalidad del Diseño**: En contextos de auditoría pública, **la reproducibilidad byte-a-byte es un requisito legal**. La Fase 0 asegura que cada ejecución:
+- ✅ Procede con **condiciones verificadas y determinísticas**, O
+- ❌ Falla con **mensajes de error claros y accionables**
+
+**Sin Estados "Tal Vez Funcioó"**. Sin degradación silenciosa. Sin deriva de configuración ambigua.
+
+#### 📚 Documentación
+
+- **Especificación Detallada**: [docs/phases/phase_0/P00-ES_v1.0.md](docs/phases/phase_0/P00-ES_v1.0.md)
+- **Versión en Inglés**: [docs/phases/phase_0/P00-EN_v1.0.md](docs/phases/phase_0/P00-EN_v1.0.md)
+
+---
+
 ## 💡 ¿Qué es F.A.R.F.A.N?
 
 F.A.R.F.A.N (Framework for Advanced Retrieval of Administrative Narratives) es un pipeline mecanístico de políticas diseñado para el análisis riguroso y basado en evidencia de planes de desarrollo municipales colombianos.
@@ -370,11 +422,18 @@ done
 
 ### Visión General del Sistema
 
-F.A.R.F.A.N sigue un **pipeline determinista de 9 fases** con puertas de calidad estrictas:
+F.A.R.F.A.N sigue un **pipeline determinístico de Fase 0 + 9 fases** con puertas de calidad estrictas:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ FASE 1: Adquisición e Integridad                                │
+┌─────────────────────────────────────────────────────────────────────┐
+│ FASE 0: Validación Pre-Ejecución                                  │
+│   Entrada:  ENV vars, ruta plan, ruta cuestionario                │
+│   Salida:   RuntimeConfig validado, hashes verificados, semillas  │
+│   Puerta:   self.errors == [] AND _bootstrap_failed = False       │
+└───────────────────────┬─────────────────────────────────────────────┘
+                       ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│ FASE 1: Adquisición e Integridad                                   │
 │   Entrada:  file_path (Path)                                    │
 │   Salida:   manifest.initial {blake3_hash, mime_type, byte_size}│
 │   Puerta:   blake3_hash debe ser 64 caracteres hex              │
