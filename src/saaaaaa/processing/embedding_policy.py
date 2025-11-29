@@ -10,11 +10,11 @@ canonical FARFAN flow.
 Canonical entrypoint is scripts/run_policy_pipeline_verified.py.
 
 This module is an INTERNAL COMPONENT of:
-    scripts/smart_policy_chunks_canonic_phase_one.py (StrategicChunkingSystem)
+    src/saaaaaa/processing/spc_ingestion.py (StrategicChunkingSystem)
 
 DO NOT use this module directly as an independent pipeline. It is consumed
 internally by the SPC core and should only be imported from within:
-    - smart_policy_chunks_canonic_phase_one.py
+    - saaaaaa.processing.spc_ingestion
     - Unit tests for SPC components
 
 State-of-the-Art Components:

@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from types import MappingProxyType
 from typing import Any
 
-from saaaaaa.core.orchestrator.core import PreprocessedDocument, ChunkData
+from saaaaaa.core.orchestrator.core import PreprocessedDocument, ChunkData, Provenance
 from saaaaaa import get_parameter_loader
 from saaaaaa.core.calibration.decorators import calibrated_method
 
@@ -165,6 +165,31 @@ class CPPAdapter:
             chunk_graph.chunks.values(),
             key=lambda c: c.text_span.start if hasattr(c, 'text_span') and c.text_span else 0
         )
+
+        # === PHASE 2 HARDENING: STRICT CARDINALITY & METADATA ===
+        # Enforce exactly 60 chunks for SPC/CPP canonical documents
+        processing_mode = "chunked"
+        degradation_reason = None
+        
+        if len(sorted_chunks) != 60:
+            processing_mode = "flat"
+            degradation_reason = f"Cardinality mismatch: Expected 60 chunks, found {len(sorted_chunks)}"
+            self.logger.warning(f"Degrading to flat mode: {degradation_reason}")
+        
+        # Enforce metadata integrity if still in chunked mode
+        if processing_mode == "chunked":
+            for idx, chunk in enumerate(sorted_chunks):
+                if not hasattr(chunk, "policy_area_id") or not chunk.policy_area_id:
+                    processing_mode = "flat"
+                    degradation_reason = f"Missing policy_area_id in chunk {chunk.id}"
+                    break
+                if not hasattr(chunk, "dimension_id") or not chunk.dimension_id:
+                    processing_mode = "flat"
+                    degradation_reason = f"Missing dimension_id in chunk {chunk.id}"
+                    break
+            
+            if processing_mode == "flat":
+                self.logger.warning(f"Degrading to flat mode: {degradation_reason}")
 
         self.logger.info(f"Processing {len(sorted_chunks)} chunks")
 
@@ -312,8 +337,16 @@ class CPPAdapter:
                 confidence=getattr(chunk.confidence, "overall", 1.0) if hasattr(chunk, "confidence") else 1.0,
                 edges_out=[],  # Edges populated later if needed or from chunk_graph
                 edges_in=[],
+                edges_in=[],
                 policy_area_id=extra_metadata["policy_area_id"],
-                dimension_id=extra_metadata["dimension_id"]
+                dimension_id=extra_metadata["dimension_id"],
+                provenance=Provenance(
+                    page_number=chunk.provenance.page_number,
+                    section_header=getattr(chunk.provenance, "section_header", None),
+                    bbox=getattr(chunk.provenance, "bbox", None),
+                    span_in_page=getattr(chunk.provenance, "span_in_page", None),
+                    source_file=getattr(chunk.provenance, "source_file", None)
+                ) if hasattr(chunk, "provenance") and chunk.provenance else None
             ))
 
         # Join full text
@@ -395,7 +428,7 @@ class CPPAdapter:
                 "chunks": {cid: chunk_index[cid] for cid in chunk_index},
                 "edges": list(getattr(chunk_graph, "edges", [])),
             },
-            processing_mode="chunked",
+            processing_mode=processing_mode,
         )
 
         self.logger.info(

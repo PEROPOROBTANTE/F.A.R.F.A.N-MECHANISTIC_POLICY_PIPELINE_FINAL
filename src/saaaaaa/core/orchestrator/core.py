@@ -286,6 +286,15 @@ class MacroEvaluation:
 
 
 @dataclass(frozen=True)
+class Provenance:
+    """Provenance metadata for a chunk."""
+    page_number: int
+    section_header: str | None = None
+    bbox: tuple[float, float, float, float] | None = None
+    span_in_page: tuple[int, int] | None = None
+    source_file: str | None = None
+
+@dataclass(frozen=True)
 class ChunkData:
     """Single semantic chunk from SPC (Smart Policy Chunks).
 
@@ -304,6 +313,7 @@ class ChunkData:
     edges_in: list[int] = field(default_factory=list)   # Chunk IDs connecting to this
     policy_area_id: str | None = None
     dimension_id: str | None = None
+    provenance: Provenance | None = None
 
 
 @dataclass

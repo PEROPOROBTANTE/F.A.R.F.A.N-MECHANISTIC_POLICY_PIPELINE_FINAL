@@ -1015,6 +1015,15 @@ def cli() -> None:
             if chunk_count < 5:
                 hostile_failures.append(f"chunk_graph too small: {chunk_count} < 5")
 
+            # === PHASE 2 HARDENING: STRICT SPC INVARIANTS ===
+            # Enforce exactly 60 chunks and chunked mode for SPC ingestion
+            # This ensures we catch any degradation that happened in the adapter
+            if chunk_metrics.get("processing_mode") != "chunked":
+                hostile_failures.append(f"SPC invariant violation: Document degraded to '{chunk_metrics.get('processing_mode')}' mode (expected 'chunked')")
+            elif chunk_metrics.get("total_chunks") != 60:
+                hostile_failures.append(f"SPC invariant violation: Cardinality mismatch (expected 60 chunks, found {chunk_metrics.get('total_chunks')})")
+
+
         phase2_entry = {
             "name": "Phase 2 – Micro Questions",
             "success": bool(self.phase2_report and self.phase2_report.get("success")),

@@ -19,12 +19,23 @@ class ImportFixer:
     def find_correct_module(self, phantom_module: str, current_file: Path) -> Optional[str]:
         """
         Attempt to find the correct absolute module path for a phantom import.
-        Strategies:
-        1. Check if it's a sibling file (implicit relative import)
-        2. Check if it's in a parent directory
-        3. Check if it's a top-level module in src/saaaaaa
         """
-        # Strategy 1: Sibling file
+        # Case 0: It's already a valid absolute path but maybe the auditor flagged it wrongly?
+        # Or it's a dotted path that exists but was flagged as phantom because of some other reason?
+        # Let's check if the dotted path exists relative to root
+        parts = phantom_module.split('.')
+        if parts[0] == 'saaaaaa':
+            # It's already an absolute path, check if it exists
+            potential_path = self.root.parent.joinpath(*parts).with_suffix('.py')
+            if potential_path.exists():
+                return phantom_module
+            # Check if it's a package
+            potential_pkg = self.root.parent.joinpath(*parts)
+            if potential_pkg.is_dir() and (potential_pkg / "__init__.py").exists():
+                return phantom_module
+
+        # Strategy 1: Sibling file (implicit relative import)
+        # If phantom_module is "decorators", check current_dir/decorators.py
         sibling_path = current_file.parent / f"{phantom_module}.py"
         if sibling_path.exists():
             return self._path_to_module(sibling_path)
@@ -33,14 +44,19 @@ class ImportFixer:
         if sibling_dir.is_dir() and (sibling_dir / "__init__.py").exists():
             return self._path_to_module(sibling_dir)
 
-        # Strategy 2: Check standard saaaaaa locations
-        # Try finding the file in the repo
-        matches = list(self.root.rglob(f"{phantom_module}.py"))
+        # Strategy 2: Check standard saaaaaa locations by name
+        # Only works if the name is unique in the repo
+        name = phantom_module.split('.')[-1]
+        matches = list(self.root.rglob(f"{name}.py"))
         if len(matches) == 1:
             return self._path_to_module(matches[0])
+        elif len(matches) > 1:
+            # If multiple matches, try to find one that makes sense (e.g. closest in tree)
+            # For now, just pick the first one or skip to avoid wrong fixes
+            pass
             
         # Strategy 3: Check if it's a package
-        matches = list(self.root.rglob(phantom_module))
+        matches = list(self.root.rglob(name))
         valid_packages = [p for p in matches if p.is_dir() and (p / "__init__.py").exists()]
         if len(valid_packages) == 1:
             return self._path_to_module(valid_packages[0])
