@@ -1,0 +1,323 @@
+{
+  "_metadata": {
+    "version": "1.1.0",
+    "generated_at": "2025-11-14T00:00:00Z",
+    "description": "Contextual parametrization - SPECIFICATION ONLY (not operational)",
+    "spec_compliance": "SUPERPROMPT Three-Pillar Calibration System",
+    "purpose": "Defines computation rules for @chain, @u, @q, @d, @p, @C, @m layers",
+    "role": "SPECIFICATION",
+    "note": "This file documents the INTENDED parameter values. Operational values are defined in src/saaaaaa/core/calibration/config.py",
+    "authority": "config.py is SINGLE SOURCE OF TRUTH for runtime values",
+    "validation": "Run scripts/validate_config_consistency.py to verify consistency",
+    "last_harmonized": "2025-11-14",
+    "status": "legacy",
+    "superseded_by": "config/quality_thresholds.json"
+  },
+  "layer_chain": {
+    "description": "Chain compatibility rules (@chain)",
+    "discrete_mappings": {
+      "hard_mismatch": 0.0,
+      "missing_critical_optional": 0.3,
+      "soft_schema_violation": 0.6,
+      "all_contracts_pass_with_warnings": 0.8,
+      "all_contracts_pass_no_warnings": 1.0
+    },
+    "rules": {
+      "hard_mismatch": "schema_incompatible OR required_input_missing",
+      "missing_critical_optional": "optional_missing AND beneficial_for_quality",
+      "soft_schema_violation": "weakly_incompatible OR optional_missing",
+      "all_contracts_pass_with_warnings": "contracts_pass AND warnings_exist",
+      "all_contracts_pass_no_warnings": "contracts_pass AND no_warnings"
+    }
+  },
+  "layer_unit_of_analysis": {
+    "description": "Unit-of-analysis sensitivity (@u)",
+    "U_computation": {
+      "description": "How to compute U from PDT/PDM evidence",
+      "components": {
+        "structural_compliance": {
+          "weight": 0.25,
+          "function": "structural_compliance(pdt, legal_patterns)",
+          "_note": "Updated 2025-11-14 to match config.py (was 0.30)"
+        },
+        "mandatory_sections_ratio": {
+          "weight": 0.25,
+          "function": "count(present_sections) / count(required_sections)"
+        },
+        "indicator_quality_score": {
+          "weight": 0.25,
+          "function": "indicator_quality_score(pdt)"
+        },
+        "ppi_completeness": {
+          "weight": 0.25,
+          "function": "ppi_completeness(pdt)",
+          "_note": "Updated 2025-11-14 to match config.py (was 0.20)"
+        }
+      },
+      "_constraint": "sum(weights) = 1.0",
+      "_harmonization_note": "Weights harmonized with config.py on 2025-11-14. Equal weighting (0.25 each) reflects balanced importance of all components."
+    },
+    "g_functions": {
+      "description": "Sensitivity functions g_M(U) by role/family",
+      "INGEST_PDM": {
+        "type": "identity",
+        "formula": "U",
+        "rationale": "Ingestion directly sensitive to unit quality"
+      },
+      "STRUCTURE": {
+        "type": "piecewise_linear",
+        "formula": "max(0, min(1, 2*U - 0.6)) if U >= 0.3 else 0",
+        "abort_threshold": 0.3,
+        "saturation": 0.8,
+        "rationale": "Structure extraction requires minimum quality"
+      },
+      "EXTRACT": {
+        "type": "piecewise_linear",
+        "formula": "max(0, min(1, 2*U - 0.6)) if U >= 0.3 else 0",
+        "abort_threshold": 0.3,
+        "saturation": 0.8,
+        "rationale": "Extraction requires minimum quality"
+      },
+      "SCORE_Q": {
+        "type": "sigmoidal",
+        "formula": "1 - exp(-5*(U - 0.5))",
+        "inflection": 0.5,
+        "rationale": "Question answering quality degrades smoothly with U"
+      },
+      "AGGREGATE": {
+        "type": "constant",
+        "formula": "1.0",
+        "rationale": "Aggregation not directly sensitive to unit quality"
+      },
+      "REPORT": {
+        "type": "constant",
+        "formula": "1.0",
+        "rationale": "Reporting not sensitive to unit quality"
+      },
+      "META_TOOL": {
+        "type": "constant",
+        "formula": "1.0",
+        "rationale": "Meta tools not sensitive to unit quality"
+      },
+      "TRANSFORM": {
+        "type": "constant",
+        "formula": "1.0",
+        "rationale": "Transforms not sensitive to unit quality"
+      }
+    }
+  },
+  "layer_question": {
+    "description": "Question compatibility (@q)",
+    "compatibility_levels": {
+      "primary": 1.0,
+      "secondary": 0.7,
+      "validator": 0.3,
+      "undeclared": 0.1,
+      "incompatible": 0.0
+    },
+    "source": "questionnaire_monolith.json::method_sets",
+    "mapping_rules": {
+      "primary": "method in method_sets with priority=1 or method_type='extraction'",
+      "secondary": "method in method_sets with priority=2",
+      "validator": "method in method_sets with method_type='validation'",
+      "undeclared": "method not in method_sets but compatible with dimension",
+      "incompatible": "method explicitly marked incompatible"
+    }
+  },
+  "layer_dimension": {
+    "description": "Dimension compatibility (@d)",
+    "alignment_matrix": {
+      "DIM01": {
+        "description": "INSUMOS - Diagnóstico y Recursos",
+        "compatible_method_families": [
+          "ingestion",
+          "structure",
+          "extract"
+        ],
+        "default_score": 1.0
+      },
+      "DIM02": {
+        "description": "ACTIVIDADES - Diseño de Intervención",
+        "compatible_method_families": [
+          "structure",
+          "extract",
+          "score"
+        ],
+        "default_score": 1.0
+      },
+      "DIM03": {
+        "description": "PRODUCTOS - Productos y Outputs",
+        "compatible_method_families": [
+          "extract",
+          "score",
+          "aggregate"
+        ],
+        "default_score": 1.0
+      },
+      "DIM04": {
+        "description": "RESULTADOS - Resultados y Outcomes",
+        "compatible_method_families": [
+          "score",
+          "aggregate"
+        ],
+        "default_score": 1.0
+      },
+      "DIM05": {
+        "description": "IMPACTOS - Impactos de Largo Plazo",
+        "compatible_method_families": [
+          "score",
+          "aggregate"
+        ],
+        "default_score": 1.0
+      },
+      "DIM06": {
+        "description": "CAUSALIDAD - Teoría de Cambio",
+        "compatible_method_families": [
+          "score",
+          "aggregate",
+          "causal"
+        ],
+        "default_score": 1.0
+      }
+    },
+    "compatibility_function": "D_f(M, D) based on method role and dimension alignment"
+  },
+  "layer_policy": {
+    "description": "Policy area compatibility (@p)",
+    "policy_areas": {
+      "PA01": {
+        "name": "Derechos de las mujeres e igualdad de género",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA02": {
+        "name": "Prevención de la violencia",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA03": {
+        "name": "Ambiente sano, cambio climático",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA04": {
+        "name": "Derechos económicos, sociales y culturales",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA05": {
+        "name": "Derechos de las víctimas y construcción de paz",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA06": {
+        "name": "Derecho al buen futuro de la niñez",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA07": {
+        "name": "Tierras y territorios",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA08": {
+        "name": "Líderes y lideresas, defensores de DDHH",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA09": {
+        "name": "Crisis de derechos de personas privadas de la libertad",
+        "compatible_all": true,
+        "default_score": 0.9
+      },
+      "PA10": {
+        "name": "Migración transfronteriza",
+        "compatible_all": true,
+        "default_score": 0.9
+      }
+    },
+    "compatibility_function": "P_f(M, P) based on method applicability to policy area",
+    "_note": "Default 0.9 to satisfy anti-universality constraint"
+  },
+  "layer_interplay": {
+    "description": "Interplay congruence (@C)",
+    "components": {
+      "c_scale": {
+        "same_range": 1.0,
+        "convertible_with_transform": 0.8,
+        "incompatible": 0.0
+      },
+      "c_sem": {
+        "formula": "semantic_overlap = |intersection(concepts)| / |union(concepts)|",
+        "concept_source": "method semantic tags from config"
+      },
+      "c_fusion": {
+        "declared_and_satisfied": 1.0,
+        "declared_partial_inputs": 0.5,
+        "not_declared": 0.0
+      }
+    },
+    "formula": "c_scale * c_sem * c_fusion",
+    "default_when_not_in_interplay": 1.0
+  },
+  "layer_meta": {
+    "description": "Meta/governance layer (@m)",
+    "components": {
+      "m_transp": {
+        "all_three_conditions": 1.0,
+        "two_of_three": 0.7,
+        "one_of_three": 0.4,
+        "none": 0.0,
+        "conditions": [
+          "formula_export_valid",
+          "trace_complete",
+          "logs_conform_schema"
+        ]
+      },
+      "m_gov": {
+        "all_three_conditions": 1.0,
+        "two_of_three": 0.66,
+        "one_of_three": 0.33,
+        "none": 0.0,
+        "conditions": [
+          "version_tagged",
+          "config_hash_matches",
+          "signature_valid"
+        ]
+      },
+      "m_cost": {
+        "fast": 1.0,
+        "acceptable": 0.8,
+        "slow": 0.5,
+        "timeout": 0.0,
+        "thresholds": {
+          "fast_runtime_ms": 1000,
+          "acceptable_runtime_ms": 5000,
+          "normal_memory_mb": 512,
+          "excessive_memory_mb": 2048
+        }
+      }
+    },
+    "aggregation": {
+      "formula": "0.5 * m_transp + 0.4 * m_gov + 0.1 * m_cost",
+      "weights": {
+        "transparency": 0.5,
+        "governance": 0.4,
+        "cost": 0.1
+      }
+    }
+  },
+  "anti_universality_constraint": {
+    "description": "No method may be perfectly compatible (1.0) with ALL Q, D, and P",
+    "enforcement": "CI validation",
+    "rule": "For all methods M: exists Q, D, or P such that min(x_@q(M,Q), x_@d(M,D), x_@p(M,P)) < 0.9"
+  },
+  "_notes": [
+    "All layer computations MUST be deterministic",
+    "All outputs MUST be in [0,1]",
+    "All rules MUST be machine-checkable",
+    "Context IDs (Q, D, P) MUST match questionnaire_monolith.json"
+  ],
+  "_live": false,
+  "_deprecated": true
+}

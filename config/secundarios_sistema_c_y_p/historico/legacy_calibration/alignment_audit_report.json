@@ -1,0 +1,518 @@
+{
+  "metadata": {
+    "generated_at": "2025-11-08",
+    "audit_version": "1.0.0"
+  },
+  "inventory": {
+    "catalog_methods": 590,
+    "registry_methods": 180,
+    "used_methods": 292
+  },
+  "alignment": {
+    "catalog_and_registry": 137,
+    "catalog_not_registry": 453,
+    "registry_not_catalog": 43,
+    "used_not_catalog": 0,
+    "catalog_not_used": 298,
+    "used_not_registry": 183
+  },
+  "defects": [],
+  "acceptable_divergence": [
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "ArgumentAnalyzer.analyze_arguments",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "BayesianMechanismInference._aggregate_bayesian_confidence",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "BayesianMechanismInference._build_transition_matrix",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "BayesianMechanismInference._calculate_type_transition_prior",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "BayesianMechanismInference._classify_mechanism_type",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CDAFFramework._audit_causal_coherence",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CDAFFramework._generate_causal_model_json",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CDAFFramework._generate_dnp_compliance_report",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CDAFFramework._generate_extraction_report",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CausalChainAnalyzer.extract_causal_chains",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CausalExtractor._calculate_confidence",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CausalExtractor._classify_goal_type",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CausalExtractor._extract_causal_justifications",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CausalExtractor._extract_goal_text",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "CausalInferenceSetup._get_dynamics_pattern",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "DiscourseAnalyzer.analyze_discourse",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "FinancialAuditor._calculate_sufficiency",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "FinancialAuditor._detect_allocation_gaps",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "FinancialAuditor._match_goal_to_budget",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "KnowledgeGraphBuilder.build_graph",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "MechanismPartExtractor._calculate_ea_confidence",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "MechanismPartExtractor._find_action_verb",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "MechanismPartExtractor._find_subject_entity",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "MechanismPartExtractor._validate_entity_activity",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "OperationalizationAuditor._perform_counterfactual_budget_check",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "PDETMunicipalPlanAnalyzer._find_product_mentions",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "PDETMunicipalPlanAnalyzer._generate_optimal_remediations",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "PDETMunicipalPlanAnalyzer._reconstruct_fragmented_tables",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "PDETMunicipalPlanAnalyzer.analyze_municipal_plan",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "PDETMunicipalPlanAnalyzer.extract_tables",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "PDETMunicipalPlanAnalyzer.generate_recommendations",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "SemanticProcessor._detect_table",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem._attach_canonical_evidence",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem._intelligent_deduplication",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem._validate_strategic_integrity",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem.evaluate_numerical_consistency",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem.generate_smart_chunks",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem.process_document",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicChunkingSystem.semantic_search_with_rerank",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "StrategicIntegrator.integrate_analyses",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "TemporalAnalyzer.analyze_temporal_dynamics",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "TeoriaCambio._execute_generar_sugerencias_internas",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    },
+    {
+      "type": "REGISTRY_NOT_IN_CATALOG_UNUSED",
+      "severity": "INFO",
+      "method": "TopicModeler.infer_topics",
+      "description": "Method has calibration but is not in catalog (unused - acceptable per policy)",
+      "action": "No action required (different scopes) - see CATALOG_REGISTRY_ALIGNMENT_POLICY.md"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "DerekBeachProducer.get_success_probability",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "DerekBeachProducer.is_hoop_test",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "EmbeddingPolicyProducer.evaluate_numerical_consistency",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "EmbeddingPolicyProducer.get_comparison_difference_mean",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "EmbeddingPolicyProducer.get_pdq_evidence_count",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "PDETMunicipalPlanAnalyzer._generate_recommendations",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "PDETMunicipalPlanAnalyzer.analyze_municipal_plan_sync",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "PerformanceAnalyzer.__init__",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "PolicyTextProcessor.normalize_unicode",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ProcessorConfig.from_legacy",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssembler._assess_evidence_quality",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssembler._calculate_coefficient_of_variation",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssembler._calculate_confidence_metrics",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssembler._classify_plan",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssemblyProducer.classify_score",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssemblyProducer.convert_percentage_to_score",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssemblyProducer.get_macro_gap_analysis",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportAssemblyProducer.get_meso_cluster_question_counts",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "ReportingEngine.generate_causal_model_json",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "CATALOGUED_NOT_USED",
+      "severity": "LOW",
+      "method": "TeoriaCambio.construir_grafo_causal",
+      "description": "Method in catalog but never used in codebase",
+      "action": "Consider if method is obsolete"
+    },
+    {
+      "type": "USED_NOT_CALIBRATED",
+      "severity": "MEDIUM",
+      "method": "CausalExtractor._check_structural_violation",
+      "description": "Method is used and requires calibration but not in registry",
+      "action": "Add calibration entry (auto-decision: REQUIRES_CALIBRATION)"
+    },
+    {
+      "type": "USED_NOT_CALIBRATED",
+      "severity": "MEDIUM",
+      "method": "ConfigLoader._validate_config",
+      "description": "Method is used and requires calibration but not in registry",
+      "action": "Add calibration entry (auto-decision: REQUIRES_CALIBRATION)"
+    },
+    {
+      "type": "USED_NOT_CALIBRATED",
+      "severity": "MEDIUM",
+      "method": "HierarchicalGenerativeModel._calculate_waic_difference",
+      "description": "Method is used and requires calibration but not in registry",
+      "action": "Add calibration entry (auto-decision: REQUIRES_CALIBRATION)"
+    },
+    {
+      "type": "USED_NOT_CALIBRATED",
+      "severity": "MEDIUM",
+      "method": "OperationalizationAuditor._audit_direct_evidence",
+      "description": "Method is used and requires calibration but not in registry",
+      "action": "Add calibration entry (auto-decision: REQUIRES_CALIBRATION)"
+    },
+    {
+      "type": "USED_NOT_CALIBRATED",
+      "severity": "MEDIUM",
+      "method": "PDETMunicipalPlanAnalyzer.export_causal_network",
+      "description": "Method is used and requires calibration but not in registry",
+      "action": "Add calibration entry (auto-decision: REQUIRES_CALIBRATION)"
+    },
+    {
+      "type": "USED_NOT_CALIBRATED",
+      "severity": "MEDIUM",
+      "method": "PolicyAnalysisEmbedder.evaluate_policy_numerical_consistency",
+      "description": "Method is used and requires calibration but not in registry",
+      "action": "Add calibration entry (auto-decision: REQUIRES_CALIBRATION)"
+    }
+  ],
+  "alignment_score": {
+    "catalog_registry_alignment": 23.22,
+    "catalog_usage_alignment": 49.49,
+    "overall_integrity": "PASS"
+  },
+  "_metadata": {
+    "status": "legacy",
+    "superseded_by": "config/alignment_audit_report.json"
+  },
+  "_live": false,
+  "_deprecated": true
+}

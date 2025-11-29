@@ -1,0 +1,12 @@
+{
+  "_metadata": {
+    "status": "primary",
+    "source": "generated placeholder from calibration/config.py defaults",
+    "superseded_by": null
+  },
+  "w_S": 0.25,
+  "w_M": 0.25,
+  "w_I": 0.25,
+  "w_P": 0.25,
+  "_live": true
+}
