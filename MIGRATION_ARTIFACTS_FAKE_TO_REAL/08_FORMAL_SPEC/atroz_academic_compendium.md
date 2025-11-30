@@ -1,4 +1,3 @@
-
 # Compendio de Metodologías de Calibración, Parametrización e Integración del Modelo F.A.R.F.A.N.
 
 ## 0. Front Matter
