@@ -72,12 +72,12 @@ def test_enforce_metadata():
         adapter.to_preprocessed_document(package_missing_chunk_type, "doc1")
 
     # Test with invalid chunk_type
-    chunks_invalid_ct = [MockChunk(id=f"c{i}", text=f"chunk {i}", text_span_start=i*10, policy_area_id="PA01", dimension_id="DIM01") for i in range(60)]
-    for chunk in chunks_invalid_ct:
+    chunks_invalid_chunk_type = [MockChunk(id=f"c{i}", text=f"chunk {i}", text_span_start=i*10, policy_area_id="PA01", dimension_id="DIM01") for i in range(60)]
+    for chunk in chunks_invalid_chunk_type:
         chunk.chunk_type = "invalid"
-    package_invalid_ct = MockCanonPackage(chunks_invalid_ct)
+    package_invalid_chunk_type = MockCanonPackage(chunks_invalid_chunk_type)
     with pytest.raises(CPPAdapterError, match="Invalid chunk_type"):
-        adapter.to_preprocessed_document(package_invalid_ct, "doc1")
+        adapter.to_preprocessed_document(package_invalid_chunk_type, "doc1")
 
 def test_enforce_provenance():
     adapter = CPPAdapter()
