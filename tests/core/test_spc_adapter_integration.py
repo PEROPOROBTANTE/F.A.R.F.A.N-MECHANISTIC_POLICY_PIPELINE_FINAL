@@ -1,5 +1,5 @@
 import pytest
-from farfan_core.farfan_core.utils.cpp_adapter import CPPAdapter, CPPAdapterError
+from farfan_core.farfan_core.utils.cpp_adapter import CPPAdapter
 from farfan_core.farfan_core.core.phases.phase1_models import Chunk as CanonChunk
 from farfan_core.farfan_core.core.orchestrator.core import PreprocessedDocument
 
