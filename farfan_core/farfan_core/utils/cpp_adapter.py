@@ -167,29 +167,25 @@ class CPPAdapter:
         )
 
         # === PHASE 2 HARDENING: STRICT CARDINALITY & METADATA ===
-        # Enforce exactly 60 chunks for SPC/CPP canonical documents
+        # Enforce exactly 60 chunks for SPC/CPP canonical documents as per Jobfront 1
         processing_mode = "chunked"
         degradation_reason = None
         
         if len(sorted_chunks) != 60:
-            processing_mode = "flat"
-            degradation_reason = f"Cardinality mismatch: Expected 60 chunks, found {len(sorted_chunks)}"
-            self.logger.warning(f"Degrading to flat mode: {degradation_reason}")
+            raise CPPAdapterError(
+                f"Cardinality mismatch: Expected 60 chunks for 'chunked' processing mode, "
+                f"but found {len(sorted_chunks)}. This is a critical violation of the "
+                f"SPC canonical format."
+            )
         
-        # Enforce metadata integrity if still in chunked mode
-        if processing_mode == "chunked":
-            for idx, chunk in enumerate(sorted_chunks):
-                if not hasattr(chunk, "policy_area_id") or not chunk.policy_area_id:
-                    processing_mode = "flat"
-                    degradation_reason = f"Missing policy_area_id in chunk {chunk.id}"
-                    break
-                if not hasattr(chunk, "dimension_id") or not chunk.dimension_id:
-                    processing_mode = "flat"
-                    degradation_reason = f"Missing dimension_id in chunk {chunk.id}"
-                    break
-            
-            if processing_mode == "flat":
-                self.logger.warning(f"Degrading to flat mode: {degradation_reason}")
+        # Enforce metadata integrity
+        for idx, chunk in enumerate(sorted_chunks):
+            if not hasattr(chunk, "policy_area_id") or not chunk.policy_area_id:
+                raise CPPAdapterError(f"Missing policy_area_id in chunk {chunk.id}")
+            if not hasattr(chunk, "dimension_id") or not chunk.dimension_id:
+                raise CPPAdapterError(f"Missing dimension_id in chunk {chunk.id}")
+            if not hasattr(chunk, "chunk_type") or not chunk.chunk_type:
+                raise CPPAdapterError(f"Missing chunk_type in chunk {chunk.id}")
 
         self.logger.info(f"Processing {len(sorted_chunks)} chunks")
 
@@ -289,6 +285,12 @@ class CPPAdapter:
 
             if hasattr(chunk, "provenance") and chunk.provenance:
                 provenance_with_data += 1
+                if not hasattr(chunk.provenance, "page_number") or chunk.provenance.page_number is None:
+                    raise CPPAdapterError(f"Missing provenance.page_number in chunk {chunk.id}")
+                if not hasattr(chunk.provenance, "section_header") or not chunk.provenance.section_header:
+                    raise CPPAdapterError(f"Missing provenance.section_header in chunk {chunk.id}")
+            else:
+                raise CPPAdapterError(f"Missing provenance in chunk {chunk.id}")
 
             # Advance offset by chunk length + 1 space separator
             current_offset = chunk_end + 1
@@ -326,18 +328,20 @@ class CPPAdapter:
                 )
 
             # Create ChunkData object
+            chunk_type_value = getattr(chunk, "chunk_type", "diagnostic")
+            if chunk_type_value not in ["diagnostic", "activity", "indicator", "resource", "temporal", "entity"]:
+                raise CPPAdapterError(f"Invalid chunk_type '{chunk_type_value}' in chunk {chunk.id}")
+
             chunks_data.append(ChunkData(
                 id=idx,
                 text=chunk_text,
-                chunk_type=getattr(chunk, "chunk_type", "diagnostic"),
+                chunk_type=chunk_type_value,
                 sentences=[idx],
                 tables=[len(tables) - 1] if hasattr(chunk, "budget") and chunk.budget else [],
                 start_pos=chunk_start,
                 end_pos=chunk_end,
                 confidence=getattr(chunk.confidence, "overall", 1.0) if hasattr(chunk, "confidence") else 1.0,
                 edges_out=[],  # Edges populated later if needed or from chunk_graph
-                edges_in=[],
-                edges_in=[],
                 policy_area_id=extra_metadata["policy_area_id"],
                 dimension_id=extra_metadata["dimension_id"],
                 provenance=Provenance(
