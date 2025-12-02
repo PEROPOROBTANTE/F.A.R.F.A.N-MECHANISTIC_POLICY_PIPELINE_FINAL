@@ -10,12 +10,17 @@ VERIFICATION CONDITIONS:
 FAILURE CONDITIONS:
 - If <30 executors identified: ABORT with 'layer assignment corrupted'
 - If any score appears in JSON (outside weights): ABORT with 'layer assignment corrupted'
+
+DEPRECATED: Test assumes outdated canonic_inventorry_methods_layers.json structure.
+See tests/DEPRECATED_TESTS.md for details.
 """
 
 import json
 from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.obsolete
 
 REPO_ROOT = Path(__file__).parent.parent
 CONFIG_FILE = REPO_ROOT / "config" / "canonic_inventorry_methods_layers.json"

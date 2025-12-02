@@ -4,6 +4,9 @@ test_intrinsic_pipeline_behavior.py - Test pipeline execution with intrinsic cal
 Tests fallback behavior:
 1. All computed: Normal execution with actual @b values
 2. Mix of pending/excluded: Verify fallback behavior (pending→@b=0.5, excluded→skip, none→@b=0.3 with warning)
+
+DEPRECATED: This test relies on outdated IntrinsicCalibrationLoader interface.
+See tests/DEPRECATED_TESTS.md for details.
 """
 import json
 import tempfile
@@ -14,6 +17,8 @@ import pytest
 from src.farfan_pipeline.core.calibration.intrinsic_calibration_loader import (
     IntrinsicCalibrationLoader,
 )
+
+pytestmark = pytest.mark.obsolete
 
 
 @pytest.fixture

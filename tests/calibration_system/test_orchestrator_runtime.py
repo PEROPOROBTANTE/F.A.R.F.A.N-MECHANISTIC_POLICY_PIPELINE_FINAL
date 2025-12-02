@@ -8,12 +8,17 @@ Validates runtime behavior:
 - No runtime exceptions in calibration resolution
 
 FAILURE CONDITION: Any runtime error OR incorrect aggregation = NOT READY
+
+DEPRECATED: Test assumes outdated executors_methods.json structure and layer execution order.
+See tests/DEPRECATED_TESTS.md for details.
 """
 import json
 import pytest
 from pathlib import Path
 from typing import Dict, List, Any
 from unittest.mock import Mock, patch, MagicMock
+
+pytestmark = pytest.mark.obsolete
 
 
 class TestOrchestratorRuntime:

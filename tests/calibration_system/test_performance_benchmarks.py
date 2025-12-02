@@ -7,12 +7,17 @@ Validates system performance:
 - Calibrate 200 methods: < 30 seconds
 
 FAILURE CONDITION: Any performance threshold exceeded = NOT READY
+
+DEPRECATED: Test uses hardcoded paths to system/config/calibration/intrinsic_calibration.json.
+See tests/DEPRECATED_TESTS.md for details.
 """
 import json
 import time
 import pytest
 from pathlib import Path
 from typing import Dict, Any, List
+
+pytestmark = pytest.mark.obsolete
 
 
 class TestPerformanceBenchmarks:

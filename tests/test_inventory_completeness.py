@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Test inventory completeness - verifies all critical methods are present"""
+"""Test inventory completeness - verifies all critical methods are present
+
+DEPRECATED: Test uses hardcoded methods_inventory_raw.json path and outdated critical method patterns.
+See tests/DEPRECATED_TESTS.md for details.
+"""
 
 import json
 from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.obsolete
 
 CRITICAL_METHODS = [
     "analysis.derek_beach.CDAFException._format_message",

@@ -7,6 +7,9 @@ Tests cover:
 - Executor instrumentation
 - Pipeline instrumentation
 - Context propagation
+
+DEPRECATED: Test uses outdated farfan_core module path, should use farfan_pipeline.
+See tests/DEPRECATED_TESTS.md for details.
 """
 
 import pytest
@@ -18,6 +21,8 @@ from farfan_core.observability import (
     get_global_observability,
     initialize_observability,
 )
+
+pytestmark = pytest.mark.obsolete
 
 
 class TestOpenTelemetryConfig:

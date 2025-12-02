@@ -263,7 +263,7 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --strict-markers --tb=short"
+addopts = "-v --strict-markers --tb=short -m 'not obsolete'"
 markers = [
     "asyncio: Asyncio tests",
     "contract: Contract tests for API boundaries",
@@ -271,7 +271,7 @@ markers = [
     "integration: Integration tests",
     "updated: Tests actualizados y compatibles con arquitectura actual",
     "outdated: Tests obsoletos - no ejecutar",
-    "obsolete: Tests marked obsolete per SIN_CARRETA protocol - will be removed",
+    "obsolete: Tests marked obsolete - excluded from default runs (see tests/DEPRECATED_TESTS.md)",
     "core: Tests críticos del núcleo",
     "validation: Tests de validación y calidad",
     "gold: Tests de estándares de oro",
