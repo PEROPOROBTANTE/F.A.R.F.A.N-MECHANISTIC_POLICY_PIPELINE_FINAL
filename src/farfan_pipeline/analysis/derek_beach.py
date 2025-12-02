@@ -56,7 +56,7 @@ except ImportError as e:
 
 # DNP Standards Integration
 try:
-    from dnp_integration import ValidadorDNP, validar_plan_desarrollo_completo
+    from dnp_integration import ValidadorDNP
 
     DNP_AVAILABLE = True
 except ImportError:
