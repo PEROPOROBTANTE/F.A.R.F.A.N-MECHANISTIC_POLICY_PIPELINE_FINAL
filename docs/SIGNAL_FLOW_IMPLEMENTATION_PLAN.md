@@ -124,9 +124,10 @@
 
 | ID | Componente | Estado | Última Actualización |
 |----|------------|--------|---------------------|
+| 0 | **Intelligence Layer Tipos** | ✅ COMPLETED | 2025-12-02 - Tests 15/15 passing |
 | 1 | Chunking | PENDING | - |
 | 2 | Executors | PENDING | - |
-| 3 | Registry | PENDING | - |
+| 3 | Registry | IN_PROGRESS | 2025-12-02 - Starting factory implementation |
 | 4 | Evidence | PENDING | - |
 | 5 | Validation | PENDING | - |
 | 6 | Assembly | PENDING | - |

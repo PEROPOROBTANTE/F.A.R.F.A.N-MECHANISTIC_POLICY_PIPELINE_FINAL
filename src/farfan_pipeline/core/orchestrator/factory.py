@@ -32,7 +32,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Final, Optional
 
-from ..contracts import (
+from ...contracts import (
     CDAFFrameworkInputContract,
     ContradictionDetectorInputContract,
     DocumentData,
@@ -572,6 +572,94 @@ def migrate_io_from_module(module_name: str, line_numbers: list[int]) -> None:
         f"lines {line_numbers}"
     )
 
+# ============================================================================
+# ENRICHED SIGNAL REGISTRY FACTORY (JOBFRONT 2)
+# ============================================================================
+
+def create_enriched_signal_registry(
+    monolith_path: str | Path | None = None,
+    enable_semantic_expansion: bool = True,
+    enable_context_scoping: bool = True,
+    enable_contract_validation: bool = True,
+    enable_evidence_extraction: bool = True,
+) -> dict[str, Any]:
+    """
+    Factory function to create enriched signal registry.
+
+    This wraps QuestionnaireSignalRegistry with EnrichedSignalPack for each policy area,
+    providing the full intelligence layer capabilities without modifying the base registry.
+
+    Args:
+        monolith_path: Path to questionnaire monolith (if None, uses canonical path)
+        enable_semantic_expansion: Enable 5x pattern expansion
+        enable_context_scoping: Enable context-aware filtering
+        enable_contract_validation: Enable failure contract validation
+        enable_evidence_extraction: Enable structured evidence extraction
+
+    Returns:
+        dict[str, EnrichedSignalPack] mapping policy_area_id → enriched pack
+
+    Example:
+        >>> registry = create_enriched_signal_registry()
+        >>> enriched_pack = registry['PA01']
+        >>> patterns = enriched_pack.get_patterns_for_context({'section': 'budget'})
+    """
+    from .signal_intelligence_layer import create_enriched_signal_pack
+    from .signal_registry import QuestionnaireSignalRegistry
+
+    # Use canonical path if not specified
+    if monolith_path is None:
+        monolith_path = str(QUESTIONNAIRE_PATH)
+    elif isinstance(monolith_path, Path):
+        monolith_path = str(monolith_path)
+
+    logger.info(
+        "creating_enriched_signal_registry path=%s semantic=%s context=%s contract=%s evidence=%s",
+        monolith_path,
+        enable_semantic_expansion,
+        enable_context_scoping,
+        enable_contract_validation,
+        enable_evidence_extraction,
+    )
+
+    # Create base registry
+    base_registry = QuestionnaireSignalRegistry(monolith_path)
+
+    # Enumerate all policy areas
+    policy_area_ids = base_registry.list_policy_areas()
+
+    enriched_registry = {}
+    for pa_id in policy_area_ids:
+        # Get base signal pack
+        base_pack = base_registry.get(pa_id)
+
+        if base_pack is None:
+            logger.warning("signal_pack_not_found policy_area=%s", pa_id)
+            continue
+
+        # Wrap with intelligence layer
+        enriched_pack = create_enriched_signal_pack(
+            base_pack,
+            enable_semantic_expansion=enable_semantic_expansion
+        )
+
+        enriched_registry[pa_id] = enriched_pack
+
+        logger.debug(
+            "enriched_signal_pack_created policy_area=%s pattern_count=%s",
+            pa_id,
+            len(enriched_pack.patterns)
+        )
+
+    logger.info(
+        "enriched_signal_registry_complete policy_area_count=%s total_patterns=%s",
+        len(enriched_registry),
+        sum(len(pack.patterns) for pack in enriched_registry.values())
+    )
+
+    return enriched_registry
+
+
 __all__ = [
     # Questionnaire integrity types and constants
     'CanonicalQuestionnaire',
@@ -585,6 +673,8 @@ __all__ = [
     # Factory classes
     'CoreModuleFactory',
     'ProcessorBundle',
+    # Signal intelligence factory
+    'create_enriched_signal_registry',
     # Other loaders
     'load_catalog',
     'load_method_map',

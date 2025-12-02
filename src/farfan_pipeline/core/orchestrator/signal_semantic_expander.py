@@ -41,7 +41,7 @@ def extract_core_term(pattern: str) -> str | None:
         Core term or None if not extractable
     
     Example:
-        >>> extract_core_term(r"presupuesto\s+asignado")
+        >>> extract_core_term(r"presupuesto\\s+asignado")
         "presupuesto"
     """
     # Remove common regex metacharacters
@@ -79,7 +79,7 @@ def expand_pattern_semantically(
     Example:
         Input:
         {
-            "pattern": r"presupuesto\s+asignado",
+            "pattern": r"presupuesto\\s+asignado",
             "semantic_expansion": "presupuesto|recursos|financiamiento|fondos",
             "id": "PAT-001",
             "confidence_weight": 0.8
