@@ -142,8 +142,6 @@ def run_extraction() -> Path:
     output_path = Path("artifacts/test_runs/method_inventory_verification.json")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    sys.path.insert(0, str(Path("src").resolve()))
-
     try:
         from farfan_pipeline.core.method_inventory import (
             build_method_inventory,

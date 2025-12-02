@@ -96,14 +96,19 @@ def normalize_id(raw_id: str) -> str:
     - Replace '/' with '.'
     - Strip leading/trailing dots
     - Remove file path prefixes (keep only module.Class.method)
+    - REJECT IDs with spaces (indicating backup files like "Copia de")
     
     Args:
         raw_id: Raw ID from JSON file
         
     Returns:
-        Normalized ID
+        Normalized ID or None if ID should be removed
     """
     normalized = raw_id
+    
+    # Check for spaces (indicates backup/invalid files)
+    if ' ' in normalized:
+        return None  # Mark for removal
     
     # Replace separators
     normalized = normalized.replace('::', '.')
@@ -231,29 +236,39 @@ def apply_catalog_normalization(dry_run: bool = True) -> Set[str]:
     """
     Normalize IDs in the canonical catalog itself.
     
-   Returns:
+    Returns:
         Updated set of canonical IDs
     """
     print("\n🔧 Normalizing canonical_method_catalogue_v2.json...")
     
     catalog = load_json(CATALOG_PATH)
     updated_count = 0
+    removed_count = 0
     new_canonical_ids = set()
+    new_catalog = []
     
     for entry in catalog:
         if 'unique_id' in entry:
             original_id = entry['unique_id']
             normalized_id = normalize_id(original_id)
             
+            # Skip entries with invalid IDs (spaces, backup files)
+            if normalized_id is None:
+                removed_count += 1
+                continue
+            
             if original_id != normalized_id:
                 entry['unique_id'] = normalized_id
                 updated_count += 1
             
             new_canonical_ids.add(normalized_id)
+            new_catalog.append(entry)
+        else:
+            new_catalog.append(entry)
     
-    if updated_count > 0:
-        save_json(CATALOG_PATH, catalog, dry_run=dry_run)
-        print(f"  ✓ Normalized {updated_count} IDs in catalog")
+    if updated_count > 0 or removed_count > 0:
+        save_json(CATALOG_PATH, new_catalog, dry_run=dry_run)
+        print(f"  ✓ Normalized {updated_count} IDs, removed {removed_count} invalid IDs")
     else:
         print("  ✓ Catalog already normalized")
     

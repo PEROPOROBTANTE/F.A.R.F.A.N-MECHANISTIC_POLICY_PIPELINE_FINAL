@@ -10,12 +10,11 @@ import json
 import sys
 from pathlib import Path
 
-repo_root = Path(__file__).parent.parent
-sys.path.insert(0, str(repo_root / "src"))
-
 from farfan_pipeline.core.calibration.layer_assignment import (
     generate_canonical_inventory,
 )
+
+repo_root = Path(__file__).parent.parent
 
 
 def main():

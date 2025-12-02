@@ -24,7 +24,7 @@ from farfan_pipeline.core.orchestrator.signal_contract_validator import (
 @pytest.fixture
 def mock_base_signal_pack():
     """Mock base signal pack for testing."""
-    mock_pack = Mock()
+    mock_pack = Mock(spec=['patterns', 'micro_questions'])
     mock_pack.patterns = [
         {
             'id': 'PAT_001',

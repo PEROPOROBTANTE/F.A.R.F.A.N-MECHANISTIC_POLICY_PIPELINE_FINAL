@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, TypeVar
 from farfan_pipeline.core.calibration.parameter_loader import get_parameter_loader
 from farfan_pipeline.core.calibration.decorators import calibrated_method
+from farfan_pipeline.core.parameters import ParameterLoaderV2
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
