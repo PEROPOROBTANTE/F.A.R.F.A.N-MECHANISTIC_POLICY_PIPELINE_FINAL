@@ -32,7 +32,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Final, Optional
 
-from ...contracts import (
+from ...utils.core_contracts import (
     CDAFFrameworkInputContract,
     ContradictionDetectorInputContract,
     DocumentData,
