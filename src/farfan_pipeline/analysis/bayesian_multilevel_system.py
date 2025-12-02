@@ -250,9 +250,9 @@ class ProbativeTest:
         elif self.test_type == ProbativeTestType.HOOP_TEST:
             return 1.2 if test_passed else ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L251_43", 0.1)
         elif self.test_type == ProbativeTestType.SMOKING_GUN:
-            return 1ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L253_20", 0.0) if test_passed else ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L253_44", 0.9)
+            return 1.0 if test_passed else ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L253_44", 0.9)
         elif self.test_type == ProbativeTestType.DOUBLY_DECISIVE:
-            return 2ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L255_20", 0.0) if test_passed else ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L255_44", 0.05)
+            return 2.0 if test_passed else ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L255_44", 0.05)
         else:
             return ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ProbativeTest.calculate_likelihood_ratio", "auto_param_L257_19", 1.0)
 
@@ -552,11 +552,11 @@ class PeerCalibrator:
         z_score = (target_score - peer_mean) / (peer_std + 1e-10)
 
         # Calculate percentile
-        percentile = stats.percentileofscore(peer_scores, target_score) / 10ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.PeerCalibrator.__init__", "auto_param_L555_76", 0.0)
+        percentile = stats.percentileofscore(peer_scores, target_score) / 100.0
 
         # Calculate deviation penalty
-        deviation_penalty = max(ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.PeerCalibrator.__init__", "auto_param_L558_32", 0.0), (abs(z_score) - self.deviation_threshold) * ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.PeerCalibrator.__init__", "auto_param_L558_81", 0.2))
-        deviation_penalty = min(ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.PeerCalibrator.__init__", "auto_param_L559_32", 0.5), deviation_penalty)  # Cap at ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.PeerCalibrator.__init__", "auto_param_L559_66", 0.5)
+        deviation_penalty = max(0.0, (abs(z_score) - self.deviation_threshold) * 0.2)
+        deviation_penalty = min(0.5, deviation_penalty)
 
         # Generate narrative
         narrative = self._generate_narrative(
@@ -813,9 +813,9 @@ class ContradictionScanner:
 
         # Average severity weighted by number of contradictions
         avg_severity = np.mean([c.severity for c in self.contradictions])
-        count_factor = min(ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ContradictionScanner.calculate_contradiction_penalty", "auto_param_L816_27", 1.0), len(self.contradictions) / 1ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ContradictionScanner.calculate_contradiction_penalty", "auto_param_L816_60", 0.0))  # Max at 10 contradictions
+        count_factor = min(1.0, len(self.contradictions) / 10.0)
 
-        penalty = avg_severity * count_factor * ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ContradictionScanner.calculate_contradiction_penalty", "auto_param_L818_48", 0.5)  # Max penalty ParameterLoaderV2.get("farfan_core.analysis.bayesian_multilevel_system.ContradictionScanner.calculate_contradiction_penalty", "auto_param_L818_67", 0.5)
+        penalty = avg_severity * count_factor * 0.5
 
         return penalty
 

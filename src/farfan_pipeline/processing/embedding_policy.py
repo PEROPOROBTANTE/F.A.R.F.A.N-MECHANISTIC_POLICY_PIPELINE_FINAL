@@ -1472,7 +1472,7 @@ class PolicyAnalysisEmbedder:
 
                         # Normalize to 0-1 scale if it's a percentage
                         if "%" in match.group(0) and value <= 100:
-                            value = value / 10ParameterLoaderV2.get("farfan_core.processing.embedding_policy.PolicyAnalysisEmbedder._extract_numerical_values", "auto_param_L1474_46", 0.0)
+                            value = value / 100.0
 
                         # Filter outliers
                         if 0 <= value <= 1e9:  # Reasonable range

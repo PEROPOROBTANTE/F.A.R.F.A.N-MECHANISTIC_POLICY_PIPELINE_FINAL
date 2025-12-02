@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Chunk Router for SPC Exploitation.
 
@@ -7,8 +9,6 @@ enabling targeted execution and reducing redundant processing.
 
 # Routing table version identifier
 ROUTING_TABLE_VERSION = "v1"
-
-from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING

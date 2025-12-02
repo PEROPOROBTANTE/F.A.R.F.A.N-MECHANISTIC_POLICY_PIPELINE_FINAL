@@ -922,7 +922,7 @@ class IndustrialGradeValidator:
             f"  - Tasa de Éxito de Métricas: {success_rate:.1f}%% ({passed}/{len(self.metrics)})"
         )
 
-        meets_standards = all(results) and success_rate >= 9ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.execute_suite", "auto_param_L925_60", 0.0)
+        meets_standards = all(results) and success_rate >= 90.0
         self.logger.info(
             f"  🏆 VEREDICTO: {'CERTIFICACIÓN OTORGADA' if meets_standards else 'SE REQUIEREN MEJORAS'}"
         )

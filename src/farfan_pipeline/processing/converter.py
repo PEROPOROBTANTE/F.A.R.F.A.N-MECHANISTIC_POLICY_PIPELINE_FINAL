@@ -28,9 +28,8 @@ import json
 import logging
 from typing import TYPE_CHECKING, Any
 
-from farfan_pipeline.processing.cpp_ingestion.models import (
-# from farfan_pipeline import get_parameter_loader  # CALIBRATION DISABLED
 from farfan_pipeline.core.calibration.decorators import calibrated_method
+from farfan_pipeline.processing.cpp_ingestion.models import (
     KPI,
     Budget,
     CanonPolicyPackage,

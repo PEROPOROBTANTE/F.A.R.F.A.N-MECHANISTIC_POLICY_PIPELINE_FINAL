@@ -1691,7 +1691,7 @@ class PDETMunicipalPlanAnalyzer:
             'causal_coherence': causal_score
         }
 
-        print(f" ✓ Score final: {overall_score:.2f}/1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.calculate_quality_score", "auto_param_L1694_53", 0.0)")
+        print(f" ✓ Score final: {overall_score:.2f}/10.0")
 
         return QualityScore(
             overall_score=overall_score,
@@ -1725,7 +1725,7 @@ class PDETMunicipalPlanAnalyzer:
         risk = financial_analysis['risk_assessment'].get('risk_score', ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component", "auto_param_L1725_71", 0.5))
         risk_score = (1 - risk) * 1.5
 
-        return float(min(budget_score + diversity_score + sustainability_score + risk_score, 1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_financial_component", "auto_param_L1728_94", 0.0)))
+        return float(min(budget_score + diversity_score + sustainability_score + risk_score, 1.0))
 
     @calibrated_method("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators")
     def _score_indicators(self, tables: list[ExtractedTable], text: str) -> float:
@@ -1764,7 +1764,7 @@ class PDETMunicipalPlanAnalyzer:
 
         technical_score = min((formula_mentions + periodicity_mentions) / 10, ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators", "auto_param_L1765_78", 1.0)) * 3.0
 
-        return float(min(completeness_score + smart_score + technical_score, 1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_indicators", "auto_param_L1767_78", 0.0)))
+        return float(min(completeness_score + smart_score + technical_score, 10.0))
 
     @calibrated_method("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_responsibility_clarity")
     def _score_responsibility_clarity(self, entities: list[ResponsibleEntity]) -> float:
@@ -1782,7 +1782,7 @@ class PDETMunicipalPlanAnalyzer:
         institutional_ratio = len(institutional_entities) / max(len(entities), 1)
         institutional_score = institutional_ratio * 3.0
 
-        return float(min(count_score + specificity_score + institutional_score, 1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_responsibility_clarity", "auto_param_L1785_81", 0.0)))
+        return float(min(count_score + specificity_score + institutional_score, 10.0))
 
     @calibrated_method("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency")
     def _score_temporal_consistency(self, text: str, tables: list[ExtractedTable]) -> float:
@@ -1804,7 +1804,7 @@ class PDETMunicipalPlanAnalyzer:
         term_count = sum(len(re.findall(rf'\b{term}\b', text, re.IGNORECASE)) for term in temporal_terms)
         term_score = min(term_count / 30, ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency", "auto_param_L1805_42", 1.0)) * 3.0
 
-        return float(min(range_score + cronograma_score + term_score, 1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_temporal_consistency", "auto_param_L1807_71", 0.0)))
+        return float(min(range_score + cronograma_score + term_score, 10.0))
 
     @calibrated_method("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_pdet_alignment")
     def _score_pdet_alignment(self, text: str, tables: list[ExtractedTable], dag: CausalDAG) -> float:
@@ -1830,7 +1830,7 @@ class PDETMunicipalPlanAnalyzer:
         pdet_tables = [t for t in tables if t.table_type == 'pdet']
         table_score = min(len(pdet_tables) * 1.5, 3.0)
 
-        return float(min(coverage_score + explicit_score + table_score, 1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_pdet_alignment", "auto_param_L1833_73", 0.0)))
+        return float(min(coverage_score + explicit_score + table_score, 10.0))
 
     @calibrated_method("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_causal_coherence")
     def _score_causal_coherence(self, dag: CausalDAG, effects: list[CausalEffect]) -> float:
@@ -1855,7 +1855,7 @@ class PDETMunicipalPlanAnalyzer:
         connected_pillars = sum(1 for p in pillar_nodes if any(nx.has_path(G, p, o) for o in outcome_nodes))
         connectivity = (connected_pillars / max(len(pillar_nodes), 1)) * 3.0
 
-        return float(min(structure_score + effect_quality + connectivity, 1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._score_causal_coherence", "auto_param_L1858_75", 0.0)))
+        return float(min(structure_score + effect_quality + connectivity, 10.0))
 
     @calibrated_method("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer._estimate_score_confidence")
     def _estimate_score_confidence(self, scores: np.ndarray, weights: np.ndarray) -> tuple[float, float]:
@@ -1907,7 +1907,7 @@ class PDETMunicipalPlanAnalyzer:
         report += "## 1. RESUMEN EJECUTIVO\n\n"
 
         quality = analysis_results['quality_score']
-        report += f"**Score Global de Calidad:** {quality['overall_score']:.2f}/1ParameterLoaderV2.get("farfan_core.analysis.financiero_viabilidad_tablas.PDETMunicipalPlanAnalyzer.generate_executive_report", "auto_param_L1910_81", 0.0) "
+        report += f"**Score Global de Calidad:** {quality['overall_score']:.2f}/10.0 "
         report += f"(IC95%: [{quality['confidence_interval'][0]:.2f}, {quality['confidence_interval'][1]:.2f}])\n\n"
 
         report += self._interpret_overall_quality(quality['overall_score'])

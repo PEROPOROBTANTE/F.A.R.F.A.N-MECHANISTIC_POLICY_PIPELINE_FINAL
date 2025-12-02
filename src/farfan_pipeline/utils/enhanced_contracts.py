@@ -149,7 +149,7 @@ class BaseContract(BaseModel):
     )
 
     schema_version: str = Field(
-        default="2.ParameterLoaderV2.get("farfan_core.utils.enhanced_contracts.FlowCompatibilityError.__init__", "auto_param_L151_19", 0.0)",
+        default="2.0.0",
         description="Contract schema version (semantic versioning)",
         pattern=r"^\d+\.\d+\.\d+$"
     )
@@ -345,9 +345,9 @@ class AnalysisOutputV2(BaseContract):
     @classmethod
     def validate_confidence_numerical_stability(cls, v: float) -> float:
         """Ensure confidence is numerically stable and within bounds."""
-        if not (ParameterLoaderV2.get("farfan_core.utils.enhanced_contracts.FlowCompatibilityError.__init__", "auto_param_L347_16", 0.0) <= v <= ParameterLoaderV2.get("farfan_core.utils.enhanced_contracts.FlowCompatibilityError.__init__", "auto_param_L347_28", 1.0)):
+        if not (0.0 <= v <= 1.0):
             raise ContractValidationError(
-                f"Confidence must be in [ParameterLoaderV2.get("farfan_core.utils.enhanced_contracts.FlowCompatibilityError.__init__", "auto_param_L349_41", 0.0), ParameterLoaderV2.get("farfan_core.utils.enhanced_contracts.FlowCompatibilityError.__init__", "auto_param_L349_46", 1.0)], got {v}",
+                f"Confidence must be in [0.0, 1.0], got {v}",
                 field="confidence"
             )
         # Round to avoid floating point precision issues
