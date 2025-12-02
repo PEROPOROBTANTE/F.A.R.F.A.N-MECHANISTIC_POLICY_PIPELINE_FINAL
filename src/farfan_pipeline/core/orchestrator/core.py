@@ -28,14 +28,14 @@ from dataclasses import asdict, dataclass, field, is_dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Literal, ParamSpec, TypedDict, TypeVar
+from typing import TYPE_CHECKING, Any, ParamSpec, TypedDict, TypeVar
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
     from .factory import CanonicalQuestionnaire
 
-
+from ...analysis.recommendation_engine import RecommendationEngine
 from ...config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
 from ...processing.aggregation import (
     AggregationSettings,
@@ -51,13 +51,13 @@ from ...processing.aggregation import (
     group_by,
     validate_scored_results,
 )
+from ...utils.paths import safe_join
 from ..dependency_lockdown import get_dependency_lockdown
+from ..types import PreprocessedDocument
 from . import executors_contract as executors
 from .arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
-from .class_registry import ClassRegistryError, build_class_registry
+from .class_registry import ClassRegistryError
 from .executor_config import ExecutorConfig
-from .versions import CALIBRATION_VERSION
-from ...utils.paths import safe_join
 
 logger = logging.getLogger(__name__)
 _CORE_MODULE_DIR = Path(__file__).resolve().parent
@@ -92,6 +92,7 @@ def resolve_workspace_path(
 
     return sanitized
 
+
 # Environment-configurable expectations for validation
 EXPECTED_QUESTION_COUNT = int(os.getenv("EXPECTED_QUESTION_COUNT", "305"))
 EXPECTED_METHOD_COUNT = int(os.getenv("EXPECTED_METHOD_COUNT", "416"))
@@ -121,7 +122,9 @@ async def execute_phase_with_timeout(
     phase_name: str,
     coro: Callable[P, T] | None = None,
     *varargs: P.args,
-    handler: Callable[P, T] | None = None,  # Legacy parameter for backward compatibility
+    handler: (
+        Callable[P, T] | None
+    ) = None,  # Legacy parameter for backward compatibility
     args: tuple | None = None,  # Legacy parameter for backward compatibility
     timeout_s: float = 300.0,
     **kwargs: P.kwargs,
@@ -247,7 +250,9 @@ def _normalize_monolith_for_hash(monolith: dict | MappingProxyType) -> dict:
     # Verify normalization is idempotent
     try:
         # Test that we can serialize it
-        json.dumps(normalized, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        json.dumps(
+            normalized, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+        )
     except (TypeError, ValueError) as exc:
         raise RuntimeError(f"Monolith normalization failed: {exc}") from exc
 
@@ -256,6 +261,7 @@ def _normalize_monolith_for_hash(monolith: dict | MappingProxyType) -> dict:
 
 class MacroScoreDict(TypedDict):
     """Typed container for macro score evaluation results."""
+
     macro_score: MacroScore
     macro_score_normalized: float
     cluster_scores: list[ClusterScore]
@@ -268,6 +274,7 @@ class MacroScoreDict(TypedDict):
 @dataclass
 class ClusterScoreData:
     """Type-safe cluster score data for macro evaluation."""
+
     id: str
     score: float
     normalized_score: float
@@ -280,204 +287,24 @@ class MacroEvaluation:
     This replaces polymorphic dict/object handling with a strict contract.
     All downstream consumers must treat macro scores as this type.
     """
+
     macro_score: float
     macro_score_normalized: float
     clusters: list[ClusterScoreData]
 
 
-@dataclass(frozen=True)
-class Provenance:
-    """Provenance metadata for a chunk."""
-    page_number: int
-    section_header: str | None = None
-    bbox: tuple[float, float, float, float] | None = None
-    span_in_page: tuple[int, int] | None = None
-    source_file: str | None = None
-
-@dataclass(frozen=True)
-class ChunkData:
-    """Single semantic chunk from SPC (Smart Policy Chunks).
-
-    Preserves chunk structure and metadata from the ingestion pipeline,
-    enabling chunk-aware executor routing and scoped processing.
-    """
-    id: int
-    text: str
-    chunk_type: Literal["diagnostic", "activity", "indicator", "resource", "temporal", "entity"]
-    sentences: list[int]  # Global sentence IDs in this chunk
-    tables: list[int]     # Global table IDs in this chunk
-    start_pos: int
-    end_pos: int
-    confidence: float
-    edges_out: list[int] = field(default_factory=list)  # Chunk IDs this connects to
-    edges_in: list[int] = field(default_factory=list)   # Chunk IDs connecting to this
-    policy_area_id: str | None = None
-    dimension_id: str | None = None
-    provenance: Provenance | None = None
-
-
-@dataclass
-class PreprocessedDocument:
-    """Orchestrator representation of a processed document.
-
-    This is the normalized document format used internally by the orchestrator.
-    It can be constructed from ingestion payloads or created directly.
-    """
-    document_id: str
-    raw_text: str
-    sentences: list[Any]
-    tables: list[Any]
-    metadata: dict[str, Any]
-    source_path: Path | None = None
-    sentence_metadata: list[Any] = field(default_factory=list)
-    indexes: dict[str, Any] | None = None
-    structured_text: dict[str, Any] | None = None
-    language: str | None = None
-    ingested_at: datetime | None = None
-    full_text: str | None = None
-
-    # NEW CHUNK FIELDS for SPC exploitation
-    chunks: list[ChunkData] = field(default_factory=list)
-    chunk_index: dict[str, int] = field(default_factory=dict)  # Fast lookup: entity_id → chunk_id
-    chunk_graph: dict[str, Any] = field(default_factory=dict)  # Exposed graph structure
-    processing_mode: Literal["flat", "chunked"] = "flat"  # Mode flag for backward compatibility
-
-    def __post_init__(self) -> None:
-        """Validate document fields after initialization.
-
-        Raises:
-            ValueError: If raw_text is empty or whitespace-only
-        """
-        if (not self.raw_text or not self.raw_text.strip()) and self.full_text:
-            # Backward-compatible fallback when only full_text is provided
-            self.raw_text = self.full_text
-        if not self.raw_text or not self.raw_text.strip():
-            raise ValueError(
-                "PreprocessedDocument cannot have empty raw_text. "
-                "Use PreprocessedDocument.ensure() to create from SPC pipeline."
-            )
-
-    @staticmethod
-    def _dataclass_to_dict(value: Any) -> Any:
-        """Convert a dataclass to a dictionary if applicable."""
-        if is_dataclass(value):
-            return asdict(value)
-        return value
-
-    @classmethod
-    def ensure(
-        cls, document: Any, *, document_id: str | None = None, use_spc_ingestion: bool = True
-    ) -> PreprocessedDocument:
-        """Normalize arbitrary ingestion payloads into orchestrator documents.
-
-        Args:
-            document: Document to normalize (PreprocessedDocument or CanonPolicyPackage)
-            document_id: Optional document ID override
-            use_spc_ingestion: Must be True (SPC is now the only supported ingestion method)
-
-        Returns:
-            PreprocessedDocument instance
-
-        Raises:
-            ValueError: If use_spc_ingestion is False
-            TypeError: If document type is not supported
-        """
-        # Enforce SPC-only ingestion
-        if not use_spc_ingestion:
-            raise ValueError(
-                "SPC ingestion is now required. Set use_spc_ingestion=True or remove the parameter. "
-                "Legacy ingestion methods (document_ingestion module) are no longer supported."
-            )
-
-        # Reject class types - only accept instances
-        if isinstance(document, type):
-            class_name = getattr(document, '__name__', str(document))
-            raise TypeError(
-                f"Expected document instance, got class type '{class_name}'. "
-                "Pass an instance of the document, not the class itself."
-            )
-
-        if isinstance(document, cls):
-            return document
-
-        # Check for SPC (Smart Policy Chunks) ingestion - canonical phase-one
-        # Documents must have chunk_graph attribute (from CanonPolicyPackage)
-        if hasattr(document, "chunk_graph"):
-            # Validate chunk_graph exists and is not empty
-            chunk_graph = getattr(document, "chunk_graph", None)
-            if chunk_graph is None:
-                raise ValueError(
-                    "Document has chunk_graph attribute but it is None. "
-                    "Ensure SPC ingestion pipeline completed successfully."
-                )
-
-            # Validate chunk_graph has chunks
-            if not hasattr(chunk_graph, 'chunks') or not chunk_graph.chunks:
-                raise ValueError(
-                    "Document chunk_graph is empty. "
-                    "Ensure SPC ingestion pipeline completed successfully and extracted chunks."
-                )
-
-            try:
-                from farfan_pipeline.utils.spc_adapter import SPCAdapter
-                adapter = SPCAdapter()
-                preprocessed = adapter.to_preprocessed_document(document, document_id=document_id)
-
-                # Comprehensive SPC ingestion validation
-                validation_results = []
-
-                # Validate raw_text
-                if not preprocessed.raw_text or not preprocessed.raw_text.strip():
-                    raise ValueError(
-                        "SPC ingestion produced empty document. "
-                        "Check that the source document contains extractable text."
-                    )
-                text_length = len(preprocessed.raw_text)
-                validation_results.append(f"raw_text: {text_length} chars")
-
-                # Validate sentences extracted
-                sentence_count = len(preprocessed.sentences) if preprocessed.sentences else 0
-                if sentence_count == 0:
-                    logger.warning("SPC ingestion produced zero sentences - document may be malformed")
-                validation_results.append(f"sentences: {sentence_count}")
-
-                # Validate chunk_graph exists
-                chunk_count = preprocessed.metadata.get("chunk_count", 0)
-                validation_results.append(f"chunks: {chunk_count}")
-
-                # Log successful validation
-                logger.info(f"SPC ingestion validation passed: {', '.join(validation_results)}")
-
-                return preprocessed
-            except ImportError as e:
-                raise ImportError(
-                    "SPC ingestion requires spc_adapter module. "
-                    "Ensure farfan_core.utils.spc_adapter is available."
-                ) from e
-            except ValueError:
-                # Re-raise ValueError directly (e.g., empty document validation)
-                raise
-            except Exception as e:
-                raise TypeError(
-                    f"Failed to adapt SPC document: {e}. "
-                    "Ensure document is a valid CanonPolicyPackage instance from SPC pipeline."
-                ) from e
-
-        raise TypeError(
-            "Unsupported preprocessed document payload. "
-            f"Expected PreprocessedDocument or CanonPolicyPackage with chunk_graph, got {type(document)!r}. "
-            "Documents must be processed through the SPC ingestion pipeline first."
-        )
-
 @dataclass
 class Evidence:
     """Evidence container for orchestrator results."""
+
     modality: str
     elements: list[Any] = field(default_factory=list)
     raw_results: dict[str, Any] = field(default_factory=dict)
 
+
 class AbortRequested(RuntimeError):
     """Raised when an abort signal is triggered during orchestration."""
+
 
 class AbortSignal:
     """Thread-safe abort signal shared across orchestration phases."""
@@ -522,6 +349,7 @@ class AbortSignal:
         finally:
             self._lock.release()
 
+
 class ResourceLimits:
     """Runtime resource guard with adaptive worker prediction."""
 
@@ -538,7 +366,9 @@ class ResourceLimits:
         self.max_cpu_percent = max_cpu_percent
         self.min_workers = max(1, min_workers)
         self.hard_max_workers = max(self.min_workers, hard_max_workers)
-        self._max_workers = max(self.min_workers, min(max_workers, self.hard_max_workers))
+        self._max_workers = max(
+            self.min_workers, min(max_workers, self.hard_max_workers)
+        )
         self._usage_history: deque[dict[str, float]] = deque(maxlen=history)
         self._semaphore: asyncio.Semaphore | None = None
         self._semaphore_limit = self._max_workers
@@ -603,12 +433,19 @@ class ResourceLimits:
         avg_mem = statistics.mean(recent_mem)
 
         new_budget = self._max_workers
-        if self.max_cpu_percent and avg_cpu > self.max_cpu_percent * 0.95 or self.max_memory_mb and avg_mem > 90.0:
+        if (
+            self.max_cpu_percent
+            and avg_cpu > self.max_cpu_percent * 0.95
+            or self.max_memory_mb
+            and avg_mem > 90.0
+        ):
             new_budget = max(self.min_workers, self._max_workers - 1)
         elif avg_cpu < self.max_cpu_percent * 0.6 and avg_mem < 70.0:
             new_budget = min(self.hard_max_workers, self._max_workers + 1)
 
-        self._max_workers = max(self.min_workers, min(new_budget, self.hard_max_workers))
+        self._max_workers = max(
+            self.min_workers, min(new_budget, self.hard_max_workers)
+        )
 
     def check_memory_exceeded(
         self, usage: dict[str, float] | None = None
@@ -643,7 +480,9 @@ class ResourceLimits:
                 virtual_memory = self._psutil.virtual_memory()
                 memory_percent = float(virtual_memory.percent)
                 if self._psutil_process is not None:
-                    rss_mb = float(self._psutil_process.memory_info().rss / (1024 * 1024))
+                    rss_mb = float(
+                        self._psutil_process.memory_info().rss / (1024 * 1024)
+                    )
             except Exception:
                 cpu_percent = 0.0
         else:
@@ -673,6 +512,7 @@ class ResourceLimits:
     def get_usage_history(self) -> list[dict[str, float]]:
         """Return the recorded usage history."""
         return list(self._usage_history)
+
 
 class PhaseInstrumentation:
     """Collects granular telemetry for each orchestration phase."""
@@ -838,9 +678,11 @@ class PhaseInstrumentation:
             "anomalies": list(self.anomalies),
         }
 
+
 @dataclass
 class PhaseResult:
     """Result of a single orchestration phase."""
+
     success: bool
     phase_id: str
     data: Any
@@ -849,9 +691,11 @@ class PhaseResult:
     mode: str
     aborted: bool = False
 
+
 @dataclass
 class MicroQuestionRun:
     """Result of executing a single micro-question."""
+
     question_id: str
     question_global: int
     base_slot: str
@@ -861,9 +705,11 @@ class MicroQuestionRun:
     duration_ms: float | None = None
     aborted: bool = False
 
+
 @dataclass
 class ScoredMicroQuestion:
     """Scored micro-question result."""
+
     question_id: str
     question_global: int
     base_slot: str
@@ -933,9 +779,9 @@ class MethodExecutor:
 
     def __init__(
         self,
-        dispatcher: Any | None = None, # dispatcher is deprecated
+        dispatcher: Any | None = None,  # dispatcher is deprecated
         signal_registry: Any | None = None,
-        method_registry: Any | None = None, # MethodRegistry instance
+        method_registry: Any | None = None,  # MethodRegistry instance
     ) -> None:
         from .method_registry import MethodRegistry, setup_default_instantiation_rules
 
@@ -963,6 +809,7 @@ class MethodExecutor:
         # Note: This doesn't instantiate classes, just loads types
         try:
             from .class_registry import build_class_registry
+
             registry = build_class_registry()
         except (ClassRegistryError, ModuleNotFoundError, ImportError) as exc:
             self.degraded_mode = True
@@ -1021,13 +868,19 @@ class MethodExecutor:
 
         # Route arguments and execute
         try:
-            args, routed_kwargs = self._router.route(class_name, method_name, dict(kwargs))
+            args, routed_kwargs = self._router.route(
+                class_name, method_name, dict(kwargs)
+            )
             return method(*args, **routed_kwargs)
         except (ArgRouterError, ArgumentValidationError):
-            logger.exception("Argument routing failed for %s.%s", class_name, method_name)
+            logger.exception(
+                "Argument routing failed for %s.%s", class_name, method_name
+            )
             raise
         except Exception:
-            logger.exception("Method execution failed for %s.%s", class_name, method_name)
+            logger.exception(
+                "Method execution failed for %s.%s", class_name, method_name
+            )
             raise
 
     def inject_method(
@@ -1096,11 +949,14 @@ class MethodExecutor:
             - validation_errors: Count of validation failures
             - silent_drops_prevented: Count of silent parameter drops prevented
         """
-        if hasattr(self._router, 'get_metrics'):
+        if hasattr(self._router, "get_metrics"):
             return self._router.get_metrics()
         return {}
 
-def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orchestrator_class: type) -> None:
+
+def validate_phase_definitions(
+    phase_list: list[tuple[int, str, str, str]], orchestrator_class: type
+) -> None:
     """Validate phase definitions for structural coherence.
 
     This is a hard gate: if phase definitions are broken, the orchestrator cannot start.
@@ -1114,7 +970,9 @@ def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orch
         RuntimeError: If phase definitions are invalid
     """
     if not phase_list:
-        raise RuntimeError("FASES cannot be empty - no phases defined for orchestration")
+        raise RuntimeError(
+            "FASES cannot be empty - no phases defined for orchestration"
+        )
 
     # Extract phase IDs
     phase_ids = [phase[0] for phase in phase_list]
@@ -1136,9 +994,7 @@ def validate_phase_definitions(phase_list: list[tuple[int, str, str, str]], orch
             f"Phase IDs must be sorted in ascending order. Got {phase_ids}"
         )
     if phase_ids[0] != 0:
-        raise RuntimeError(
-            f"Phase IDs must start from 0. Got first ID: {phase_ids[0]}"
-        )
+        raise RuntimeError(f"Phase IDs must start from 0. Got first ID: {phase_ids[0]}")
     if phase_ids[-1] != len(phase_list) - 1:
         raise RuntimeError(
             f"Phase IDs must be contiguous from 0 to {len(phase_list) - 1}. "
@@ -1236,17 +1092,17 @@ class Orchestrator:
 
     # Phase timeout configuration (in seconds)
     PHASE_TIMEOUTS: dict[int, float] = {
-        0: 60,     # Configuration validation
-        1: 120,    # Document ingestion
-        2: 600,    # Micro questions (300 items)
-        3: 300,    # Scoring micro
-        4: 180,    # Dimension aggregation
-        5: 120,    # Policy area aggregation
-        6: 60,     # Cluster aggregation
-        7: 60,     # Macro evaluation
-        8: 120,    # Recommendations
-        9: 60,     # Report assembly
-        10: 120,   # Format and export
+        0: 60,  # Configuration validation
+        1: 120,  # Document ingestion
+        2: 600,  # Micro questions (300 items)
+        3: 300,  # Scoring micro
+        4: 180,  # Dimension aggregation
+        5: 120,  # Policy area aggregation
+        6: 60,  # Cluster aggregation
+        7: 60,  # Macro evaluation
+        8: 120,  # Recommendations
+        9: 60,  # Report assembly
+        10: 120,  # Format and export
     }
 
     # Score normalization constant
@@ -1257,7 +1113,7 @@ class Orchestrator:
         method_executor: MethodExecutor,
         questionnaire: CanonicalQuestionnaire,
         executor_config: "ExecutorConfig",
-        calibration_orchestrator: Optional["CalibrationOrchestrator"] = None,
+        calibration_orchestrator: Any | None = None,
         resource_limits: ResourceLimits | None = None,
         recommendation_engine: Any | None = None,
         resource_snapshot_interval: int = 10,
@@ -1284,6 +1140,7 @@ class Orchestrator:
         self.resource_limits = resource_limits or ResourceLimits()
         self.resource_snapshot_interval = max(1, resource_snapshot_interval)
         from .factory import get_questionnaire_provider
+
         self.questionnaire_provider = get_questionnaire_provider()
 
         # Validate questionnaire structure
@@ -1301,21 +1158,36 @@ class Orchestrator:
             )
 
         self.executors = {
-            "D1-Q1": executors.D1Q1_Executor, "D1-Q2": executors.D1Q2_Executor,
-            "D1-Q3": executors.D1Q3_Executor, "D1-Q4": executors.D1Q4_Executor,
-            "D1-Q5": executors.D1Q5_Executor, "D2-Q1": executors.D2Q1_Executor,
-            "D2-Q2": executors.D2Q2_Executor, "D2-Q3": executors.D2Q3_Executor,
-            "D2-Q4": executors.D2Q4_Executor, "D2-Q5": executors.D2Q5_Executor,
-            "D3-Q1": executors.D3Q1_Executor, "D3-Q2": executors.D3Q2_Executor,
-            "D3-Q3": executors.D3Q3_Executor, "D3-Q4": executors.D3Q4_Executor,
-            "D3-Q5": executors.D3Q5_Executor, "D4-Q1": executors.D4Q1_Executor,
-            "D4-Q2": executors.D4Q2_Executor, "D4-Q3": executors.D4Q3_Executor,
-            "D4-Q4": executors.D4Q4_Executor, "D4-Q5": executors.D4Q5_Executor,
-            "D5-Q1": executors.D5Q1_Executor, "D5-Q2": executors.D5Q2_Executor,
-            "D5-Q3": executors.D5Q3_Executor, "D5-Q4": executors.D5Q4_Executor,
-            "D5-Q5": executors.D5Q5_Executor, "D6-Q1": executors.D6Q1_Executor,
-            "D6-Q2": executors.D6Q2_Executor, "D6-Q3": executors.D6Q3_Executor,
-            "D6-Q4": executors.D6Q4_Executor, "D6-Q5": executors.D6Q5_Executor,
+            "D1-Q1": executors.D1Q1_Executor,
+            "D1-Q2": executors.D1Q2_Executor,
+            "D1-Q3": executors.D1Q3_Executor,
+            "D1-Q4": executors.D1Q4_Executor,
+            "D1-Q5": executors.D1Q5_Executor,
+            "D2-Q1": executors.D2Q1_Executor,
+            "D2-Q2": executors.D2Q2_Executor,
+            "D2-Q3": executors.D2Q3_Executor,
+            "D2-Q4": executors.D2Q4_Executor,
+            "D2-Q5": executors.D2Q5_Executor,
+            "D3-Q1": executors.D3Q1_Executor,
+            "D3-Q2": executors.D3Q2_Executor,
+            "D3-Q3": executors.D3Q3_Executor,
+            "D3-Q4": executors.D3Q4_Executor,
+            "D3-Q5": executors.D3Q5_Executor,
+            "D4-Q1": executors.D4Q1_Executor,
+            "D4-Q2": executors.D4Q2_Executor,
+            "D4-Q3": executors.D4Q3_Executor,
+            "D4-Q4": executors.D4Q4_Executor,
+            "D4-Q5": executors.D4Q5_Executor,
+            "D5-Q1": executors.D5Q1_Executor,
+            "D5-Q2": executors.D5Q2_Executor,
+            "D5-Q3": executors.D5Q3_Executor,
+            "D5-Q4": executors.D5Q4_Executor,
+            "D5-Q5": executors.D5Q5_Executor,
+            "D6-Q1": executors.D6Q1_Executor,
+            "D6-Q2": executors.D6Q2_Executor,
+            "D6-Q3": executors.D6Q3_Executor,
+            "D6-Q4": executors.D6Q4_Executor,
+            "D6-Q5": executors.D6Q5_Executor,
         }
 
         self.abort_signal = AbortSignal()
@@ -1338,7 +1210,7 @@ class Orchestrator:
                 rules_path=RULES_DIR / "recommendation_rules_enhanced.json",
                 schema_path=RULES_DIR / "recommendation_rules_enhanced.schema.json",
                 questionnaire_provider=self.questionnaire_provider,
-                orchestrator=self
+                orchestrator=self,
             )
             logger.info("RecommendationEngine initialized with enhanced v2.0 rules")
         except Exception as e:
@@ -1418,7 +1290,9 @@ class Orchestrator:
                 if progress_callback:
                     progress_callback(0, "Configuration Validation", 0.0)
 
-                with tracer.start_span("phase.0.configuration", kind=SpanKind.INTERNAL) as span:
+                with tracer.start_span(
+                    "phase.0.configuration", kind=SpanKind.INTERNAL
+                ) as span:
                     span.set_attribute("phase_id", 0)
                     span.set_attribute("phase_name", "Configuration Validation")
                     logger.info("phase_start", phase=0, name="Configuration Validation")
@@ -1436,16 +1310,25 @@ class Orchestrator:
                 if progress_callback:
                     progress_callback(1, "Document Ingestion Validation", 9.1)
 
-                with tracer.start_span("phase.1.ingestion_validation", kind=SpanKind.INTERNAL) as span:
+                with tracer.start_span(
+                    "phase.1.ingestion_validation", kind=SpanKind.INTERNAL
+                ) as span:
                     span.set_attribute("phase_id", 1)
                     span.set_attribute("phase_name", "Document Ingestion Validation")
-                    span.set_attribute("sentence_count", len(preprocessed_doc.sentences))
+                    span.set_attribute(
+                        "sentence_count", len(preprocessed_doc.sentences)
+                    )
 
-                    logger.info("phase_start", phase=1, name="Document Ingestion Validation")
+                    logger.info(
+                        "phase_start", phase=1, name="Document Ingestion Validation"
+                    )
 
                     # Runtime validation: Adapter → Orchestrator contract
                     try:
-                        from farfan_pipeline.core.wiring.validation import WiringValidator
+                        from farfan_pipeline.core.wiring.validation import (
+                            WiringValidator,
+                        )
+
                         validator = WiringValidator()
 
                         preprocessed_dict = {
@@ -1454,17 +1337,22 @@ class Orchestrator:
                             "sentences": list(preprocessed_doc.sentences),
                             "language": preprocessed_doc.language,
                             "sentence_count": len(preprocessed_doc.sentences),
-                            "has_structured_text": preprocessed_doc.structured_text is not None,
+                            "has_structured_text": preprocessed_doc.structured_text
+                            is not None,
                             "has_indexes": preprocessed_doc.indexes is not None,
                         }
 
                         validator.validate_adapter_to_orchestrator(preprocessed_dict)
                         logger.info("✓ Adapter → Orchestrator contract validated")
                     except ImportError:
-                        logger.warning("WiringValidator not available, skipping contract validation")
+                        logger.warning(
+                            "WiringValidator not available, skipping contract validation"
+                        )
                     except Exception as e:
                         logger.error(f"Contract validation failed: {e}")
-                        raise RuntimeError(f"Adapter → Orchestrator contract violation: {e}") from e
+                        raise RuntimeError(
+                            f"Adapter → Orchestrator contract violation: {e}"
+                        ) from e
 
                     logger.info("phase_complete", phase=1)
                     results["phases_completed"] = 2
@@ -1489,14 +1377,18 @@ class Orchestrator:
                     if progress_callback:
                         progress_callback(phase_id, phase_name, progress)
 
-                    with tracer.start_span(f"phase.{phase_id}.{output_key}", kind=SpanKind.INTERNAL) as span:
+                    with tracer.start_span(
+                        f"phase.{phase_id}.{output_key}", kind=SpanKind.INTERNAL
+                    ) as span:
                         span.set_attribute("phase_id", phase_id)
                         span.set_attribute("phase_name", phase_name)
 
                         logger.info("phase_start", phase=phase_id, name=phase_name)
 
                         # Execute phase handler if it exists
-                        phase_tuple = next((p for p in self.FASES if p[0] == phase_id), None)
+                        phase_tuple = next(
+                            (p for p in self.FASES if p[0] == phase_id), None
+                        )
                         if phase_tuple:
                             _, mode, handler_name, _ = phase_tuple
 
@@ -1508,29 +1400,50 @@ class Orchestrator:
                                 try:
                                     if mode == "async":
                                         # Async handler - await it
-                                        phase_output = await handler(preprocessed_doc=preprocessed_doc)
+                                        phase_output = await handler(
+                                            preprocessed_doc=preprocessed_doc
+                                        )
                                     else:
                                         # Sync handler
-                                        phase_output = handler(preprocessed_doc=preprocessed_doc)
+                                        phase_output = handler(
+                                            preprocessed_doc=preprocessed_doc
+                                        )
 
                                     # Store output
                                     self._phase_outputs[phase_id] = phase_output
                                     results[output_key] = phase_output
 
                                     span.set_attribute("phase_success", True)
-                                    logger.info("phase_complete", phase=phase_id, output_size=len(str(phase_output)))
+                                    logger.info(
+                                        "phase_complete",
+                                        phase=phase_id,
+                                        output_size=len(str(phase_output)),
+                                    )
                                 except Exception as e:
-                                    logger.error(f"Phase {phase_id} handler failed: {e}")
+                                    logger.error(
+                                        f"Phase {phase_id} handler failed: {e}"
+                                    )
                                     span.set_attribute("phase_success", False)
                                     span.set_attribute("phase_error", str(e))
                                     # Continue with empty output for now
-                                    results[output_key] = {"error": str(e), "phase": phase_id}
+                                    results[output_key] = {
+                                        "error": str(e),
+                                        "phase": phase_id,
+                                    }
                             else:
-                                logger.warning(f"Phase {phase_id} handler '{handler_name}' not found")
-                                results[output_key] = {"placeholder": True, "phase": phase_id}
+                                logger.warning(
+                                    f"Phase {phase_id} handler '{handler_name}' not found"
+                                )
+                                results[output_key] = {
+                                    "placeholder": True,
+                                    "phase": phase_id,
+                                }
                         else:
                             logger.warning(f"Phase {phase_id} not defined in FASES")
-                            results[output_key] = {"placeholder": True, "phase": phase_id}
+                            results[output_key] = {
+                                "placeholder": True,
+                                "phase": phase_id,
+                            }
 
                         results["phases_completed"] = phase_id + 1
 
@@ -1546,7 +1459,7 @@ class Orchestrator:
                     output_file = Path(output_path)
                     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-                    with open(output_file, 'w', encoding='utf-8') as f:
+                    with open(output_file, "w", encoding="utf-8") as f:
                         json.dump(results, f, indent=2, ensure_ascii=False, default=str)
 
                     logger.info(f"Results written to: {output_path}")
@@ -1556,7 +1469,10 @@ class Orchestrator:
                 results["metadata"]["success"] = True
 
                 root_span.set_attribute("orchestration_success", True)
-                logger.info("orchestration_complete", phases_completed=results["phases_completed"])
+                logger.info(
+                    "orchestration_complete",
+                    phases_completed=results["phases_completed"],
+                )
 
                 return results
 
@@ -1571,7 +1487,9 @@ class Orchestrator:
 
                 raise RuntimeError(f"Orchestration pipeline failed: {e}") from e
 
-    def execute_sophisticated_engineering_operation(self, policy_area_id: str) -> dict[str, Any]:
+    def execute_sophisticated_engineering_operation(
+        self, policy_area_id: str
+    ) -> dict[str, Any]:
         """
         Orchestrates a sophisticated engineering operation:
         1. Generates 10 smart policy chunks using the canonical SPC ingestion pipeline.
@@ -1580,7 +1498,9 @@ class Orchestrator:
         4. Distributes a "work package" (chunks and signals) to the executor.
         5. Returns the generated artifacts as evidence.
         """
-        logger.info(f"--- Starting Sophisticated Engineering Operation for: {policy_area_id} ---")
+        logger.info(
+            f"--- Starting Sophisticated Engineering Operation for: {policy_area_id} ---"
+        )
 
         # 1. Generate 10 smart policy chunks
         from pathlib import Path
@@ -1591,17 +1511,25 @@ class Orchestrator:
         logger.info(f"Processing document: {document_path}")
 
         ingestion_pipeline = CPPIngestionPipeline()
-        canon_package = asyncio.run(ingestion_pipeline.process(document_path, max_chunks=10))
+        canon_package = asyncio.run(
+            ingestion_pipeline.process(document_path, max_chunks=10)
+        )
 
-        logger.info(f"Generated {len(canon_package.chunk_graph.chunks)} chunks for {policy_area_id}.")
+        logger.info(
+            f"Generated {len(canon_package.chunk_graph.chunks)} chunks for {policy_area_id}."
+        )
 
         # 2. Load signals
         from .questionnaire import load_questionnaire
         from .signal_loader import build_signal_pack_from_monolith
 
         questionnaire = load_questionnaire()
-        signal_pack = build_signal_pack_from_monolith(policy_area_id, questionnaire=questionnaire)
-        logger.info(f"Loaded signal pack for {policy_area_id} with {len(signal_pack.patterns)} patterns.")
+        signal_pack = build_signal_pack_from_monolith(
+            policy_area_id, questionnaire=questionnaire
+        )
+        logger.info(
+            f"Loaded signal pack for {policy_area_id} with {len(signal_pack.patterns)} patterns."
+        )
 
         # 3. Instantiate an executor
         from . import executors
@@ -1610,12 +1538,13 @@ class Orchestrator:
         class MockSignalRegistry:
             def __init__(self, pack) -> None:
                 self._pack = pack
+
             def get(self, _policy_area):
                 return self._pack
 
         executor_instance = executors.D1Q1_Executor(
             method_executor=self.executor,
-            signal_registry=MockSignalRegistry(signal_pack)
+            signal_registry=MockSignalRegistry(signal_pack),
         )
         logger.info(f"Instantiated executor: {executor_instance.__class__.__name__}")
 
@@ -1627,12 +1556,16 @@ class Orchestrator:
 
         logger.info(f"Distributing work package to executor for {policy_area_id}.")
         # This simulates the distribution. The executor method will provide the evidence of receipt.
-        if hasattr(executor_instance, 'receive_and_process_work_package'):
+        if hasattr(executor_instance, "receive_and_process_work_package"):
             executor_instance.receive_and_process_work_package(work_package)
         else:
-            logger.error("Executor does not have the 'receive_and_process_work_package' method.")
+            logger.error(
+                "Executor does not have the 'receive_and_process_work_package' method."
+            )
 
-        logger.info(f"--- Completed Sophisticated Engineering Operation for: {policy_area_id} ---")
+        logger.info(
+            f"--- Completed Sophisticated Engineering Operation for: {policy_area_id} ---"
+        )
 
         # 5. Return evidence
         return {
@@ -1652,14 +1585,16 @@ class Orchestrator:
         return self.PHASE_TIMEOUTS.get(phase_id, 300.0)  # Default 5 minutes
 
     def process_development_plan(
-            self, pdf_path: str, preprocessed_document: Any | None = None
+        self, pdf_path: str, preprocessed_document: Any | None = None
     ) -> list[PhaseResult]:
         try:
             loop = asyncio.get_running_loop()
         except RuntimeError:
             loop = None
         if loop and loop.is_running():
-            raise RuntimeError("process_development_plan() debe ejecutarse fuera de un loop asyncio activo")
+            raise RuntimeError(
+                "process_development_plan() debe ejecutarse fuera de un loop asyncio activo"
+            )
         return asyncio.run(
             self.process_development_plan_async(
                 pdf_path, preprocessed_document=preprocessed_document
@@ -1685,27 +1620,27 @@ class Orchestrator:
             DeprecationWarning: This method is deprecated
         """
         import warnings
+
         warnings.warn(
             "Orchestrator.process() is deprecated. "
             "Use process_development_plan_async(pdf_path, preprocessed_document=...) instead.",
             DeprecationWarning,
-            stacklevel=2
+            stacklevel=2,
         )
 
         # Extract pdf_path from preprocessed_document if available
-        pdf_path = getattr(preprocessed_document, 'source_path', None)
+        pdf_path = getattr(preprocessed_document, "source_path", None)
         if pdf_path is None:
             # Try to get from metadata
-            metadata = getattr(preprocessed_document, 'metadata', {})
-            pdf_path = metadata.get('source_path', 'unknown.pdf')
+            metadata = getattr(preprocessed_document, "metadata", {})
+            pdf_path = metadata.get("source_path", "unknown.pdf")
 
         return await self.process_development_plan_async(
-            pdf_path=str(pdf_path),
-            preprocessed_document=preprocessed_document
+            pdf_path=str(pdf_path), preprocessed_document=preprocessed_document
         )
 
     async def process_development_plan_async(
-            self, pdf_path: str, preprocessed_document: Any | None = None
+        self, pdf_path: str, preprocessed_document: Any | None = None
     ) -> list[PhaseResult]:
         self.reset_abort()
         self.phase_results = []
@@ -1731,7 +1666,9 @@ class Orchestrator:
             self._phase_instrumentation[phase_id] = instrumentation
             self._phase_status[phase_id] = "running"
 
-            args = [self._context[key] for key in self.PHASE_ARGUMENT_KEYS.get(phase_id, [])]
+            args = [
+                self._context[key] for key in self.PHASE_ARGUMENT_KEYS.get(phase_id, [])
+            ]
 
             success = False
             data: Any = None
@@ -1804,9 +1741,14 @@ class Orchestrator:
             aborted = self.abort_signal.is_aborted()
             status = "aborted" if aborted else "running"
             elapsed = time.perf_counter() - self._start_time
-            completed_flag = all(state == "completed" for state in self._phase_status.values()) and not aborted
+            completed_flag = (
+                all(state == "completed" for state in self._phase_status.values())
+                and not aborted
+            )
 
-        completed = sum(1 for state in self._phase_status.values() if state == "completed")
+        completed = sum(
+            1 for state in self._phase_status.values() if state == "completed"
+        )
         total = len(self.FASES)
         overall_progress = completed / total if total else 0.0
 
@@ -1815,7 +1757,9 @@ class Orchestrator:
             for phase_id, instr in self._phase_instrumentation.items()
         }
 
-        resource_usage = self.resource_limits.get_resource_usage() if self._start_time else {}
+        resource_usage = (
+            self.resource_limits.get_resource_usage() if self._start_time else {}
+        )
 
         return {
             "status": status,
@@ -1863,15 +1807,36 @@ class Orchestrator:
 
     def health_check(self) -> dict[str, Any]:
         usage = self.resource_limits.get_resource_usage()
-        cpu_headroom = max(0.0, self.resource_limits.max_cpu_percent - usage.get("cpu_percent", 0.0))
-        mem_headroom = max(0.0, (self.resource_limits.max_memory_mb or 0.0) - usage.get("rss_mb", 0.0))
-        score = max(0.0, min(100.0, (cpu_headroom / max(1.0, self.resource_limits.max_cpu_percent)) * 50.0))
+        cpu_headroom = max(
+            0.0, self.resource_limits.max_cpu_percent - usage.get("cpu_percent", 0.0)
+        )
+        mem_headroom = max(
+            0.0, (self.resource_limits.max_memory_mb or 0.0) - usage.get("rss_mb", 0.0)
+        )
+        score = max(
+            0.0,
+            min(
+                100.0,
+                (cpu_headroom / max(1.0, self.resource_limits.max_cpu_percent)) * 50.0,
+            ),
+        )
         if self.resource_limits.max_memory_mb:
-            score += max(0.0, min(50.0, (mem_headroom / max(1.0, self.resource_limits.max_memory_mb)) * 50.0))
+            score += max(
+                0.0,
+                min(
+                    50.0,
+                    (mem_headroom / max(1.0, self.resource_limits.max_memory_mb))
+                    * 50.0,
+                ),
+            )
         score = min(100.0, score)
         if self.abort_signal.is_aborted():
             score = min(score, 20.0)
-        return {"score": score, "resource_usage": usage, "abort": self.abort_signal.is_aborted()}
+        return {
+            "score": score,
+            "resource_usage": usage,
+            "abort": self.abort_signal.is_aborted(),
+        }
 
     def get_system_health(self) -> dict[str, Any]:
         """
@@ -1887,78 +1852,76 @@ class Orchestrator:
             and component-specific health information
         """
         health = {
-            'status': 'healthy',
-            'timestamp': datetime.utcnow().isoformat(),
-            'components': {}
+            "status": "healthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "components": {},
         }
 
         # Check method executor
         try:
             executor_health = {
-                'instances_loaded': len(self.executor.instances),
-                'calibrations_loaded': len(self.executor.calibrations),
-                'status': 'healthy'
+                "instances_loaded": len(self.executor.instances),
+                "calibrations_loaded": len(self.executor.calibrations),
+                "status": "healthy",
             }
-            health['components']['method_executor'] = executor_health
+            health["components"]["method_executor"] = executor_health
         except Exception as e:
-            health['status'] = 'unhealthy'
-            health['components']['method_executor'] = {
-                'status': 'unhealthy',
-                'error': str(e)
+            health["status"] = "unhealthy"
+            health["components"]["method_executor"] = {
+                "status": "unhealthy",
+                "error": str(e),
             }
 
         # Check questionnaire provider (if available)
         try:
             from . import get_questionnaire_provider
+
             provider = get_questionnaire_provider()
             questionnaire_health = {
-                'has_data': provider.has_data(),
-                'status': 'healthy' if provider.has_data() else 'unhealthy'
+                "has_data": provider.has_data(),
+                "status": "healthy" if provider.has_data() else "unhealthy",
             }
-            health['components']['questionnaire_provider'] = questionnaire_health
+            health["components"]["questionnaire_provider"] = questionnaire_health
 
             if not provider.has_data():
-                health['status'] = 'degraded'
+                health["status"] = "degraded"
         except Exception as e:
-            health['status'] = 'unhealthy'
-            health['components']['questionnaire_provider'] = {
-                'status': 'unhealthy',
-                'error': str(e)
+            health["status"] = "unhealthy"
+            health["components"]["questionnaire_provider"] = {
+                "status": "unhealthy",
+                "error": str(e),
             }
 
         # Check resource limits
         try:
             usage = self.resource_limits.get_resource_usage()
             resource_health = {
-                'cpu_percent': usage.get('cpu_percent', 0),
-                'memory_mb': usage.get('rss_mb', 0),
-                'worker_budget': usage.get('worker_budget', 0),
-                'status': 'healthy'
+                "cpu_percent": usage.get("cpu_percent", 0),
+                "memory_mb": usage.get("rss_mb", 0),
+                "worker_budget": usage.get("worker_budget", 0),
+                "status": "healthy",
             }
 
             # Warning thresholds
-            if usage.get('cpu_percent', 0) > 80:
-                resource_health['status'] = 'degraded'
-                resource_health['warning'] = 'High CPU usage'
-                health['status'] = 'degraded'
+            if usage.get("cpu_percent", 0) > 80:
+                resource_health["status"] = "degraded"
+                resource_health["warning"] = "High CPU usage"
+                health["status"] = "degraded"
 
-            if usage.get('rss_mb', 0) > 3500:  # Near 4GB limit
-                resource_health['status'] = 'degraded'
-                resource_health['warning'] = 'High memory usage'
-                health['status'] = 'degraded'
+            if usage.get("rss_mb", 0) > 3500:  # Near 4GB limit
+                resource_health["status"] = "degraded"
+                resource_health["warning"] = "High memory usage"
+                health["status"] = "degraded"
 
-            health['components']['resources'] = resource_health
+            health["components"]["resources"] = resource_health
         except Exception as e:
-            health['status'] = 'unhealthy'
-            health['components']['resources'] = {
-                'status': 'unhealthy',
-                'error': str(e)
-            }
+            health["status"] = "unhealthy"
+            health["components"]["resources"] = {"status": "unhealthy", "error": str(e)}
 
         # Check abort status
         if self.abort_signal.is_aborted():
-            health['status'] = 'unhealthy'
-            health['abort_reason'] = self.abort_signal.get_reason()
+            health["status"] = "unhealthy"
+            health["abort_reason"] = self.abort_signal.get_reason()
 
         return health
 
@@ -1977,15 +1940,15 @@ class Orchestrator:
         abort_timestamp = self.abort_signal.get_timestamp()
 
         return {
-            'timestamp': datetime.utcnow().isoformat(),
-            'phase_metrics': self.get_phase_metrics(),
-            'resource_usage': self.resource_limits.get_usage_history(),
-            'abort_status': {
-                'is_aborted': self.abort_signal.is_aborted(),
-                'reason': self.abort_signal.get_reason(),
-                'timestamp': abort_timestamp.isoformat() if abort_timestamp else None,
+            "timestamp": datetime.utcnow().isoformat(),
+            "phase_metrics": self.get_phase_metrics(),
+            "resource_usage": self.resource_limits.get_usage_history(),
+            "abort_status": {
+                "is_aborted": self.abort_signal.is_aborted(),
+                "reason": self.abort_signal.get_reason(),
+                "timestamp": abort_timestamp.isoformat() if abort_timestamp else None,
             },
-            'phase_status': dict(self._phase_status),
+            "phase_status": dict(self._phase_status),
         }
 
     def _load_configuration(self) -> dict[str, Any]:
@@ -2000,7 +1963,9 @@ class Orchestrator:
 
             # Stable, content-based hash for reproducibility
             monolith_hash = hashlib.sha256(
-                json.dumps(monolith, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                json.dumps(
+                    monolith, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+                ).encode("utf-8")
             ).hexdigest()
         else:
             raise ValueError(
@@ -2008,14 +1973,29 @@ class Orchestrator:
                 "data and pass via monolith parameter for I/O-free initialization."
             )
 
-        micro_questions: list[dict[str, Any]] = monolith["blocks"].get("micro_questions", [])
-        meso_questions: list[dict[str, Any]] = monolith["blocks"].get("meso_questions", [])
+        micro_questions: list[dict[str, Any]] = monolith["blocks"].get(
+            "micro_questions", []
+        )
+        meso_questions: list[dict[str, Any]] = monolith["blocks"].get(
+            "meso_questions", []
+        )
         macro_question: dict[str, Any] = monolith["blocks"].get("macro_question", {})
 
-        question_total = len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
+        question_total = (
+            len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
+        )
         if question_total != EXPECTED_QUESTION_COUNT:
-            logger.warning("Question count mismatch: expected %s, got %s", EXPECTED_QUESTION_COUNT, question_total)
-            instrumentation.record_error("integrity", f"Conteo de preguntas inesperado: {question_total}", expected=EXPECTED_QUESTION_COUNT, found=question_total)
+            logger.warning(
+                "Question count mismatch: expected %s, got %s",
+                EXPECTED_QUESTION_COUNT,
+                question_total,
+            )
+            instrumentation.record_error(
+                "integrity",
+                f"Conteo de preguntas inesperado: {question_total}",
+                expected=EXPECTED_QUESTION_COUNT,
+                found=question_total,
+            )
 
         structure_report = self._validate_contract_structure(monolith, instrumentation)
 
@@ -2037,7 +2017,11 @@ class Orchestrator:
             summary = method_map.get("summary", {})
             total_methods = summary.get("total_methods")
             if total_methods != EXPECTED_METHOD_COUNT:
-                logger.warning("Method count mismatch: expected %s, got %s", EXPECTED_METHOD_COUNT, total_methods)
+                logger.warning(
+                    "Method count mismatch: expected %s, got %s",
+                    EXPECTED_METHOD_COUNT,
+                    total_methods,
+                )
                 instrumentation.record_error(
                     "catalog",
                     "Total de métodos inesperado",
@@ -2097,12 +2081,20 @@ class Orchestrator:
 
         return config
 
-    def _validate_contract_structure(self, monolith: dict[str, Any], instrumentation: PhaseInstrumentation) -> dict[
-        str, Any]:
+    def _validate_contract_structure(
+        self, monolith: dict[str, Any], instrumentation: PhaseInstrumentation
+    ) -> dict[str, Any]:
         micro_questions = monolith["blocks"].get("micro_questions", [])
         base_slots = {question.get("base_slot") for question in micro_questions}
         modalities = {question.get("scoring_modality") for question in micro_questions}
-        expected_modalities = {"TYPE_A", "TYPE_B", "TYPE_C", "TYPE_D", "TYPE_E", "TYPE_F"}
+        expected_modalities = {
+            "TYPE_A",
+            "TYPE_B",
+            "TYPE_C",
+            "TYPE_D",
+            "TYPE_E",
+            "TYPE_F",
+        }
 
         if len(base_slots) != 30:
             instrumentation.record_error(
@@ -2154,7 +2146,9 @@ class Orchestrator:
             "area_cluster_map": area_cluster_map,
         }
 
-    def _ingest_document(self, pdf_path: str, config: dict[str, Any]) -> PreprocessedDocument:
+    def _ingest_document(
+        self, pdf_path: str, config: dict[str, Any]
+    ) -> PreprocessedDocument:
         self._ensure_not_aborted()
         instrumentation = self._phase_instrumentation[1]
         start = time.perf_counter()
@@ -2168,17 +2162,18 @@ class Orchestrator:
 
             pipeline = CPPIngestionPipeline()
             # Note: The process method in the pipeline is async
-            canon_package = asyncio.run(pipeline.process(
-                document_path=Path(pdf_path),
-                document_id=document_id
-            ))
+            canon_package = asyncio.run(
+                pipeline.process(document_path=Path(pdf_path), document_id=document_id)
+            )
         except ImportError as e:
             error_msg = f"Failed to import CPPIngestionPipeline: {e}"
             instrumentation.record_error("ingestion", "Import Error", reason=error_msg)
             raise RuntimeError(error_msg) from e
         except Exception as e:
             error_msg = f"SPC Ingestion pipeline failed: {e}"
-            instrumentation.record_error("ingestion", "Pipeline Failure", reason=error_msg)
+            instrumentation.record_error(
+                "ingestion", "Pipeline Failure", reason=error_msg
+            )
             raise RuntimeError(error_msg) from e
 
         # Adapt the output CanonPolicyPackage to the PreprocessedDocument format
@@ -2187,15 +2182,17 @@ class Orchestrator:
                 canon_package, document_id=document_id, use_spc_ingestion=True
             )
         except (TypeError, ValueError) as exc:
-            error_msg = f"Failed to adapt CanonPolicyPackage to PreprocessedDocument: {exc}"
-            instrumentation.record_error(
-                "ingestion", "Adapter Error", reason=error_msg
+            error_msg = (
+                f"Failed to adapt CanonPolicyPackage to PreprocessedDocument: {exc}"
             )
+            instrumentation.record_error("ingestion", "Adapter Error", reason=error_msg)
             raise TypeError(error_msg) from exc
 
         # Validate that the document is not empty
         if not preprocessed.raw_text or not preprocessed.raw_text.strip():
-            error_msg = "Empty document after ingestion - raw_text is empty or whitespace-only"
+            error_msg = (
+                "Empty document after ingestion - raw_text is empty or whitespace-only"
+            )
             instrumentation.record_error(
                 "ingestion", "Empty document", reason=error_msg
             )
@@ -2209,31 +2206,51 @@ class Orchestrator:
                 f"P01 Validation Failed: Expected exactly {P01_EXPECTED_CHUNK_COUNT} chunks, "
                 f"but found {actual_chunk_count}."
             )
-            instrumentation.record_error("ingestion", "Chunk Count Mismatch", reason=error_msg)
+            instrumentation.record_error(
+                "ingestion", "Chunk Count Mismatch", reason=error_msg
+            )
             raise ValueError(error_msg)
 
         # 2. Enforce presence of policy_area_id and dimension_id in all chunks
         if not preprocessed.chunks:
-            error_msg = "P01 Validation Failed: No chunks found in PreprocessedDocument."
-            instrumentation.record_error("ingestion", "Empty Chunk List", reason=error_msg)
+            error_msg = (
+                "P01 Validation Failed: No chunks found in PreprocessedDocument."
+            )
+            instrumentation.record_error(
+                "ingestion", "Empty Chunk List", reason=error_msg
+            )
             raise ValueError(error_msg)
 
         for i, chunk in enumerate(preprocessed.chunks):
             # The chunk object from the adapter is a dataclass, so we use getattr
-            if not getattr(chunk, 'policy_area_id', None):
-                error_msg = f"P01 Validation Failed: Chunk {i} is missing 'policy_area_id'."
-                instrumentation.record_error("ingestion", "Missing Metadata", reason=error_msg)
+            if not getattr(chunk, "policy_area_id", None):
+                error_msg = (
+                    f"P01 Validation Failed: Chunk {i} is missing 'policy_area_id'."
+                )
+                instrumentation.record_error(
+                    "ingestion", "Missing Metadata", reason=error_msg
+                )
                 raise ValueError(error_msg)
-            if not getattr(chunk, 'dimension_id', None):
-                error_msg = f"P01 Validation Failed: Chunk {i} is missing 'dimension_id'."
-                instrumentation.record_error("ingestion", "Missing Metadata", reason=error_msg)
+            if not getattr(chunk, "dimension_id", None):
+                error_msg = (
+                    f"P01 Validation Failed: Chunk {i} is missing 'dimension_id'."
+                )
+                instrumentation.record_error(
+                    "ingestion", "Missing Metadata", reason=error_msg
+                )
                 raise ValueError(error_msg)
-            if not getattr(chunk, 'source_path', None):
-                error_msg = f"P01 Validation Failed: Chunk {i} is missing 'source_path'."
-                instrumentation.record_error("ingestion", "Missing Metadata", reason=error_msg)
+            if not getattr(chunk, "source_path", None):
+                error_msg = (
+                    f"P01 Validation Failed: Chunk {i} is missing 'source_path'."
+                )
+                instrumentation.record_error(
+                    "ingestion", "Missing Metadata", reason=error_msg
+                )
                 raise ValueError(error_msg)
 
-        logger.info(f"✅ P01-ES v1.0 validation gates passed for {actual_chunk_count} chunks.")
+        logger.info(
+            f"✅ P01-ES v1.0 validation gates passed for {actual_chunk_count} chunks."
+        )
 
         # Ensure processing_mode is 'chunked' for SPC pipeline
         if preprocessed.processing_mode != "chunked":
@@ -2274,9 +2291,9 @@ class Orchestrator:
         return preprocessed
 
     async def _execute_micro_questions_async(
-            self,
-            document: PreprocessedDocument,
-            config: dict[str, Any],
+        self,
+        document: PreprocessedDocument,
+        config: dict[str, Any],
     ) -> list[MicroQuestionRun]:
         self._ensure_not_aborted()
         instrumentation = self._phase_instrumentation[2]
@@ -2289,6 +2306,7 @@ class Orchestrator:
         if document.processing_mode == "chunked" and document.chunks:
             try:
                 from farfan_pipeline.core.orchestrator.chunk_router import ChunkRouter
+
                 router = ChunkRouter()
 
                 # Route chunks to executors
@@ -2312,16 +2330,15 @@ class Orchestrator:
             key=lambda q: (
                 q.get("dimension_id", "DIM99"),
                 q.get("policy_area_id", "PA99"),
-                q.get("question_id", "Q999")
-            )
+                q.get("question_id", "Q999"),
+            ),
         )
 
         semaphore = asyncio.Semaphore(self.resource_limits.max_workers)
         self.resource_limits.attach_semaphore(semaphore)
 
         circuit_breakers: dict[str, dict[str, Any]] = {
-            slot: {"failures": 0, "open": False}
-            for slot in self.executors
+            slot: {"failures": 0, "open": False} for slot in self.executors
         }
 
         results: list[MicroQuestionRun] = []
@@ -2354,7 +2371,9 @@ class Orchestrator:
                     )
                 }
 
-                circuit = circuit_breakers.setdefault(base_slot, {"failures": 0, "open": False})
+                circuit = circuit_breakers.setdefault(
+                    base_slot, {"failures": 0, "open": False}
+                )
                 if circuit.get("open"):
                     instrumentation.record_warning(
                         "circuit_breaker",
@@ -2377,9 +2396,13 @@ class Orchestrator:
                 mem_exceeded, usage = self.resource_limits.check_memory_exceeded(usage)
                 cpu_exceeded, usage = self.resource_limits.check_cpu_exceeded(usage)
                 if mem_exceeded:
-                    instrumentation.record_warning("resource", "Límite de memoria excedido", usage=usage)
+                    instrumentation.record_warning(
+                        "resource", "Límite de memoria excedido", usage=usage
+                    )
                 if cpu_exceeded:
-                    instrumentation.record_warning("resource", "Límite de CPU excedido", usage=usage)
+                    instrumentation.record_warning(
+                        "resource", "Límite de CPU excedido", usage=usage
+                    )
 
                 start_time = time.perf_counter()
                 executor_class = self.executors.get(base_slot)
@@ -2388,7 +2411,9 @@ class Orchestrator:
 
                 if not executor_class:
                     error_message = f"Ejecutor no definido para {base_slot}"
-                    instrumentation.record_error("executor", error_message, base_slot=base_slot)
+                    instrumentation.record_error(
+                        "executor", error_message, base_slot=base_slot
+                    )
                 else:
                     try:
                         executor_instance = executor_class(
@@ -2397,19 +2422,21 @@ class Orchestrator:
                             config=self.executor_config,
                             questionnaire_provider=self.questionnaire_provider,
                             calibration_orchestrator=self.calibration_orchestrator,
-                            document_id=document.document_id
+                            document_id=document.document_id,
                         )
 
                         # STRICT FILTERING: Pass ONLY chunks matching the question's PA and DIM
                         target_pa = question.get("policy_area_id")
                         target_dim = question.get("dimension_id")
-                        
+
                         # 1. Identify candidate chunks based on metadata (PA/DIM)
                         candidate_chunks = [
-                            c for c in document.chunks
-                            if c.policy_area_id == target_pa and c.dimension_id == target_dim
+                            c
+                            for c in document.chunks
+                            if c.policy_area_id == target_pa
+                            and c.dimension_id == target_dim
                         ]
-                        
+
                         filtered_chunks = candidate_chunks
 
                         # 2. Apply Chunk Routing optimization if available
@@ -2422,30 +2449,31 @@ class Orchestrator:
                                     route_key = route.executor_class
                                     if len(route_key) == 4 and route_key[0] == "D":
                                         route_key = f"{route_key[:2]}-{route_key[2:]}"
-                                    
+
                                     if route_key == base_slot:
                                         routed_chunks.append(chunk)
-                            
+
                             # Use routed chunks (subset of candidates)
                             filtered_chunks = routed_chunks
 
-                        
                         # Update execution metrics based on whether we have chunk-level execution
                         if filtered_chunks:
                             execution_metrics["chunk_executions"] += 1
-                            execution_metrics["total_chunks_processed"] += len(filtered_chunks)
+                            execution_metrics["total_chunks_processed"] += len(
+                                filtered_chunks
+                            )
                         else:
                             execution_metrics["full_doc_executions"] += 1
-                        
+
                         # Create scoped document with ONLY relevant chunks (may be empty for full-doc fallback)
                         scoped_document = replace(document, chunks=filtered_chunks)
 
                         # Execute question with SCOPED document
                         evidence = await asyncio.to_thread(
-                            executor_instance.execute, 
-                            scoped_document, 
+                            executor_instance.execute,
+                            scoped_document,
                             self.executor,
-                            question_context=question
+                            question_context=question,
                         )
                         circuit["failures"] = 0
                     except Exception as exc:
@@ -2486,14 +2514,19 @@ class Orchestrator:
                     aborted=self.abort_signal.is_aborted(),
                 )
 
-        tasks = [asyncio.create_task(process_question(question)) for question in ordered_questions]
+        tasks = [
+            asyncio.create_task(process_question(question))
+            for question in ordered_questions
+        ]
 
         try:
             for task in asyncio.as_completed(tasks):
                 result = await task
                 results.append(result)
                 if self.abort_signal.is_aborted():
-                    raise AbortRequested(self.abort_signal.get_reason() or "Abort requested")
+                    raise AbortRequested(
+                        self.abort_signal.get_reason() or "Abort requested"
+                    )
         except AbortRequested:
             for task in tasks:
                 task.cancel()
@@ -2502,8 +2535,15 @@ class Orchestrator:
         # Log chunk execution metrics
         if chunk_routes and document.processing_mode == "chunked":
             total_possible = len(micro_questions) * len(document.chunks)
-            actual_executed = execution_metrics["chunk_executions"] + execution_metrics["full_doc_executions"]
-            savings_pct = ((total_possible - actual_executed) / max(total_possible, 1)) * 100 if total_possible > 0 else 0
+            actual_executed = (
+                execution_metrics["chunk_executions"]
+                + execution_metrics["full_doc_executions"]
+            )
+            savings_pct = (
+                ((total_possible - actual_executed) / max(total_possible, 1)) * 100
+                if total_possible > 0
+                else 0
+            )
 
             logger.info(
                 f"Chunk execution metrics: {execution_metrics['chunk_executions']} chunk-scoped, "
@@ -2513,25 +2553,25 @@ class Orchestrator:
             )
 
             # Store metrics for verification manifest
-            if not hasattr(self, '_execution_metrics'):
+            if not hasattr(self, "_execution_metrics"):
                 self._execution_metrics = {}
-            self._execution_metrics['phase_2'] = {
-                'chunk_executions': execution_metrics['chunk_executions'],
-                'full_doc_executions': execution_metrics['full_doc_executions'],
-                'total_possible_executions': total_possible,
-                'actual_executions': actual_executed,
-                'savings_percent': savings_pct,
-                'total_chunks_processed': execution_metrics['total_chunks_processed'],
+            self._execution_metrics["phase_2"] = {
+                "chunk_executions": execution_metrics["chunk_executions"],
+                "full_doc_executions": execution_metrics["full_doc_executions"],
+                "total_possible_executions": total_possible,
+                "actual_executions": actual_executed,
+                "savings_percent": savings_pct,
+                "total_chunks_processed": execution_metrics["total_chunks_processed"],
                 # Include routing table version if available
-                'routing_table_version': getattr(router, 'ROUTING_TABLE_VERSION', 'v1'),
+                "routing_table_version": getattr(router, "ROUTING_TABLE_VERSION", "v1"),
             }
 
         return results
 
     async def _score_micro_results_async(
-            self,
-            micro_results: list[MicroQuestionRun],
-            config: dict[str, Any],
+        self,
+        micro_results: list[MicroQuestionRun],
+        config: dict[str, Any],
     ) -> list[ScoredMicroQuestion]:
         self._ensure_not_aborted()
         instrumentation = self._phase_instrumentation[3]
@@ -2540,7 +2580,10 @@ class Orchestrator:
         # Import from the flat scoring.py module file
         import importlib.util
         from pathlib import Path
-        scoring_file_path = Path(__file__).parent.parent.parent / "analysis" / "scoring.py"
+
+        scoring_file_path = (
+            Path(__file__).parent.parent.parent / "analysis" / "scoring.py"
+        )
         spec = importlib.util.spec_from_file_location("scoring_flat", scoring_file_path)
         scoring_flat = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(scoring_flat)
@@ -2647,14 +2690,16 @@ class Orchestrator:
             result = await task
             results.append(result)
             if self.abort_signal.is_aborted():
-                raise AbortRequested(self.abort_signal.get_reason() or "Abort requested")
+                raise AbortRequested(
+                    self.abort_signal.get_reason() or "Abort requested"
+                )
 
         return results
 
     async def _aggregate_dimensions_async(
-            self,
-            scored_results: list[ScoredMicroQuestion],
-            config: dict[str, Any],
+        self,
+        scored_results: list[ScoredMicroQuestion],
+        config: dict[str, Any],
     ) -> list[DimensionScore]:
         """Aggregate micro question scores into dimension scores using DimensionAggregator.
 
@@ -2691,7 +2736,9 @@ class Orchestrator:
             metadata = item.metadata or {}
             if item.score is None:
                 continue
-            policy_area = metadata.get("policy_area_id") or metadata.get("policy_area") or ""
+            policy_area = (
+                metadata.get("policy_area_id") or metadata.get("policy_area") or ""
+            )
             dimension = metadata.get("dimension_id") or metadata.get("dimension") or ""
             evidence_payload: dict[str, Any]
             if item.evidence and is_dataclass(item.evidence):
@@ -2700,7 +2747,9 @@ class Orchestrator:
                 evidence_payload = item.evidence
             else:
                 evidence_payload = {}
-            raw_results = item.scoring_details if isinstance(item.scoring_details, dict) else {}
+            raw_results = (
+                item.scoring_details if isinstance(item.scoring_details, dict) else {}
+            )
             scored_payloads.append(
                 {
                     "question_global": item.question_global,
@@ -2725,7 +2774,9 @@ class Orchestrator:
             raise
 
         group_by_keys = aggregator.dimension_group_by_keys
-        key_func = lambda result: tuple(getattr(result, key, None) for key in group_by_keys)
+        key_func = lambda result: tuple(
+            getattr(result, key, None) for key in group_by_keys
+        )
         grouped_results = group_by(validated_results, key_func)
 
         instrumentation.items_total = len(grouped_results)
@@ -2754,9 +2805,9 @@ class Orchestrator:
         return dimension_scores
 
     async def _aggregate_policy_areas_async(
-            self,
-            dimension_scores: list[DimensionScore],
-            config: dict[str, Any],
+        self,
+        dimension_scores: list[DimensionScore],
+        config: dict[str, Any],
     ) -> list[AreaScore]:
         """Aggregate dimension scores into policy area scores using AreaPolicyAggregator.
 
@@ -2789,7 +2840,9 @@ class Orchestrator:
         )
 
         group_by_keys = aggregator.area_group_by_keys
-        key_func = lambda score: tuple(getattr(score, key, None) for key in group_by_keys)
+        key_func = lambda score: tuple(
+            getattr(score, key, None) for key in group_by_keys
+        )
         grouped_scores = group_by(dimension_scores, key_func)
 
         instrumentation.items_total = len(grouped_scores)
@@ -2817,9 +2870,9 @@ class Orchestrator:
         return area_scores
 
     def _aggregate_clusters(
-            self,
-            policy_area_scores: list[AreaScore],
-            config: dict[str, Any],
+        self,
+        policy_area_scores: list[AreaScore],
+        config: dict[str, Any],
     ) -> list[ClusterScore]:
         """Aggregate policy area scores into cluster scores using ClusterAggregator.
 
@@ -2873,7 +2926,9 @@ class Orchestrator:
             enriched_scores.append(score)
 
         group_by_keys = aggregator.cluster_group_by_keys
-        key_func = lambda area_score: tuple(getattr(area_score, key, None) for key in group_by_keys)
+        key_func = lambda area_score: tuple(
+            getattr(area_score, key, None) for key in group_by_keys
+        )
         grouped_scores = group_by(enriched_scores, key_func)
 
         instrumentation.items_total = len(grouped_scores)
@@ -2899,7 +2954,9 @@ class Orchestrator:
 
         return cluster_scores
 
-    def _evaluate_macro(self, cluster_scores: list[ClusterScore], config: dict[str, Any]) -> MacroScoreDict:
+    def _evaluate_macro(
+        self, cluster_scores: list[ClusterScore], config: dict[str, Any]
+    ) -> MacroScoreDict:
         """Evaluate macro level using MacroAggregator.
 
         Args:
@@ -2925,7 +2982,7 @@ class Orchestrator:
                 strategic_alignment=0.0,
                 cluster_scores=[],
                 validation_passed=False,
-                validation_details={"error": "No monolith", "type": "config"}
+                validation_details={"error": "No monolith", "type": "config"},
             )
             result: MacroScoreDict = {
                 "macro_score": macro_score,
@@ -2980,7 +3037,7 @@ class Orchestrator:
             macro_score = aggregator.evaluate_macro(
                 cluster_scores=cluster_scores,
                 area_scores=unique_areas,
-                dimension_scores=unique_dims
+                dimension_scores=unique_dims,
             )
         except Exception as e:
             logger.error(f"Failed to evaluate macro: {e}")
@@ -2992,13 +3049,17 @@ class Orchestrator:
                 strategic_alignment=0.0,
                 cluster_scores=cluster_scores,
                 validation_passed=False,
-                validation_details={"error": str(e), "type": "exception"}
+                validation_details={"error": str(e), "type": "exception"},
             )
 
         instrumentation.increment(latency=time.perf_counter() - start)
         # macro_score is already normalized to 0-1 range from averaging cluster scores
         # Extract the score field from the MacroScore object with explicit float conversion
-        macro_score_normalized = float(macro_score.score) if isinstance(macro_score, MacroScore) else float(macro_score)
+        macro_score_normalized = (
+            float(macro_score.score)
+            if isinstance(macro_score, MacroScore)
+            else float(macro_score)
+        )
 
         result: MacroScoreDict = {
             "macro_score": macro_score,
@@ -3012,9 +3073,9 @@ class Orchestrator:
         return result
 
     async def _generate_recommendations(
-            self,
-            macro_result: dict[str, Any],
-            config: dict[str, Any],
+        self,
+        macro_result: dict[str, Any],
+        config: dict[str, Any],
     ) -> dict[str, Any]:
         """
         Generate recommendations at MICRO, MESO, and MACRO levels using RecommendationEngine.
@@ -3039,11 +3100,25 @@ class Orchestrator:
 
         # If RecommendationEngine is not available, return empty recommendations
         if self.recommendation_engine is None:
-            logger.warning("RecommendationEngine not available, returning empty recommendations")
+            logger.warning(
+                "RecommendationEngine not available, returning empty recommendations"
+            )
             recommendations = {
-                "MICRO": {"level": "MICRO", "recommendations": [], "generated_at": datetime.utcnow().isoformat()},
-                "MESO": {"level": "MESO", "recommendations": [], "generated_at": datetime.utcnow().isoformat()},
-                "MACRO": {"level": "MACRO", "recommendations": [], "generated_at": datetime.utcnow().isoformat()},
+                "MICRO": {
+                    "level": "MICRO",
+                    "recommendations": [],
+                    "generated_at": datetime.utcnow().isoformat(),
+                },
+                "MESO": {
+                    "level": "MESO",
+                    "recommendations": [],
+                    "generated_at": datetime.utcnow().isoformat(),
+                },
+                "MACRO": {
+                    "level": "MACRO",
+                    "recommendations": [],
+                    "generated_at": datetime.utcnow().isoformat(),
+                },
                 "macro_score": macro_result.get("macro_score"),
             }
             instrumentation.increment(latency=time.perf_counter() - start)
@@ -3054,14 +3129,14 @@ class Orchestrator:
             # MICRO LEVEL: Transform scored results to PA-DIM scores
             # ========================================================================
             micro_scores: dict[str, float] = {}
-            scored_results = self._context.get('scored_results', [])
+            scored_results = self._context.get("scored_results", [])
 
             # Group by policy area and dimension to calculate average scores
             pa_dim_groups: dict[str, list[float]] = {}
             for result in scored_results:
-                if hasattr(result, 'metadata') and result.metadata:
-                    pa_id = result.metadata.get('policy_area_id')
-                    dim_id = result.metadata.get('dimension_id')
+                if hasattr(result, "metadata") and result.metadata:
+                    pa_id = result.metadata.get("policy_area_id")
+                    dim_id = result.metadata.get("dimension_id")
                     score = result.normalized_score
 
                     if pa_id and dim_id and score is not None:
@@ -3075,18 +3150,20 @@ class Orchestrator:
                 if scores:
                     micro_scores[key] = sum(scores) / len(scores)
 
-            logger.info(f"Extracted {len(micro_scores)} MICRO PA-DIM scores for recommendations")
+            logger.info(
+                f"Extracted {len(micro_scores)} MICRO PA-DIM scores for recommendations"
+            )
 
             # ========================================================================
             # MESO LEVEL: Transform cluster scores
             # ========================================================================
             cluster_data: dict[str, Any] = {}
-            cluster_scores = self._context.get('cluster_scores', [])
+            cluster_scores = self._context.get("cluster_scores", [])
 
             for cluster in cluster_scores:
-                cluster_id = cluster.get('cluster_id')
-                cluster_score = cluster.get('score')
-                areas = cluster.get('areas', [])
+                cluster_id = cluster.get("cluster_id")
+                cluster_score = cluster.get("score")
+                areas = cluster.get("areas", [])
 
                 if cluster_id and cluster_score is not None:
                     # cluster_score is already normalized to 0-1 range from aggregation
@@ -3095,9 +3172,9 @@ class Orchestrator:
                     # Calculate variance across areas in this cluster using normalized scores
                     # area scores are already normalized to 0-1 range from aggregation
                     valid_area_scores = [
-                        (area, area.get('score'))
+                        (area, area.get("score"))
                         for area in areas
-                        if area.get('score') is not None
+                        if area.get("score") is not None
                     ]
                     normalized_area_values = [score for _, score in valid_area_scores]
                     variance = (
@@ -3112,33 +3189,40 @@ class Orchestrator:
                         if valid_area_scores
                         else None
                     )
-                    weak_pa = weakest_area[0].get('area_id') if weakest_area else None
+                    weak_pa = weakest_area[0].get("area_id") if weakest_area else None
 
                     cluster_data[cluster_id] = {
-                        'score': normalized_cluster_score * self.PERCENTAGE_SCALE,  # 0-100 scale
-                        'variance': variance,
-                        'weak_pa': weak_pa
+                        "score": normalized_cluster_score
+                        * self.PERCENTAGE_SCALE,  # 0-100 scale
+                        "variance": variance,
+                        "weak_pa": weak_pa,
                     }
 
-            logger.info(f"Extracted {len(cluster_data)} MESO cluster metrics for recommendations")
+            logger.info(
+                f"Extracted {len(cluster_data)} MESO cluster metrics for recommendations"
+            )
 
             # ========================================================================
             # MACRO LEVEL: Transform macro evaluation
             # ========================================================================
-            macro_score = macro_result.get('macro_score')
-            macro_score_normalized = macro_result.get('macro_score_normalized')
+            macro_score = macro_result.get("macro_score")
+            macro_score_normalized = macro_result.get("macro_score_normalized")
 
             # macro_score is already normalized to 0-1 range
             # Extract the score value if macro_score is a MacroScore object
             if macro_score is not None and macro_score_normalized is None:
-                macro_score_normalized = macro_score.score if isinstance(macro_score, MacroScore) else macro_score
+                macro_score_normalized = (
+                    macro_score.score
+                    if isinstance(macro_score, MacroScore)
+                    else macro_score
+                )
 
             # Extract numeric value from macro_score_normalized (may be dict/object)
             macro_score_numeric = None
             if macro_score_normalized is not None:
                 if isinstance(macro_score_normalized, dict):
-                    macro_score_numeric = macro_score_normalized.get('score')
-                elif hasattr(macro_score_normalized, 'score'):
+                    macro_score_numeric = macro_score_normalized.get("score")
+                elif hasattr(macro_score_normalized, "score"):
                     try:
                         macro_score_numeric = macro_score_normalized.score
                     except (AttributeError, TypeError) as e:
@@ -3149,38 +3233,41 @@ class Orchestrator:
                     macro_score_numeric = macro_score_normalized
 
                 # Validate that extracted value is numeric
-                if macro_score_numeric is not None and not isinstance(macro_score_numeric, (int, float)):
+                if macro_score_numeric is not None and not isinstance(
+                    macro_score_numeric, (int, float)
+                ):
                     logger.warning(
                         f"Expected numeric macro_score, got {type(macro_score_numeric).__name__}: {macro_score_numeric!r}"
                     )
                     macro_score_numeric = None
 
             # Determine macro band based on score
-            macro_band = 'INSUFICIENTE'
+            macro_band = "INSUFICIENTE"
             if macro_score_numeric is not None:
                 scaled_score = float(macro_score_numeric) * self.PERCENTAGE_SCALE
                 if scaled_score >= 75:
-                    macro_band = 'SATISFACTORIO'
+                    macro_band = "SATISFACTORIO"
                 elif scaled_score >= 55:
-                    macro_band = 'ACEPTABLE'
+                    macro_band = "ACEPTABLE"
                 elif scaled_score >= 35:
-                    macro_band = 'DEFICIENTE'
+                    macro_band = "DEFICIENTE"
 
             # Find clusters below target (< 55%)
             # cluster scores are already normalized to 0-1 range
             clusters_below_target = []
             for cluster in cluster_scores:
-                cluster_id = cluster.get('cluster_id')
-                cluster_score = cluster.get('score', 0)
-                if cluster_score is not None and cluster_score * self.PERCENTAGE_SCALE < 55:
+                cluster_id = cluster.get("cluster_id")
+                cluster_score = cluster.get("score", 0)
+                if (
+                    cluster_score is not None
+                    and cluster_score * self.PERCENTAGE_SCALE < 55
+                ):
                     clusters_below_target.append(cluster_id)
 
             # Calculate overall variance
             # cluster scores are already normalized to 0-1 range
             normalized_cluster_scores = [
-                c.get('score')
-                for c in cluster_scores
-                if c.get('score') is not None
+                c.get("score") for c in cluster_scores if c.get("score") is not None
             ]
             overall_variance = (
                 statistics.variance(normalized_cluster_scores)
@@ -3188,49 +3275,56 @@ class Orchestrator:
                 else 0.0
             )
 
-            variance_alert = 'BAJA'
+            variance_alert = "BAJA"
             if overall_variance >= 0.18:
-                variance_alert = 'ALTA'
+                variance_alert = "ALTA"
             elif overall_variance >= 0.08:
-                variance_alert = 'MODERADA'
+                variance_alert = "MODERADA"
 
             # Find priority micro gaps (lowest scoring PA-DIM combinations)
             sorted_micro = sorted(micro_scores.items(), key=lambda x: x[1])
             priority_micro_gaps = [k for k, v in sorted_micro[:5] if v < 0.55]
 
             macro_data = {
-                'macro_band': macro_band,
-                'clusters_below_target': clusters_below_target,
-                'variance_alert': variance_alert,
-                'priority_micro_gaps': priority_micro_gaps,
-                'macro_score_percentage': (
-                    float(macro_score_numeric) * self.PERCENTAGE_SCALE if macro_score_numeric is not None else None
-                )
+                "macro_band": macro_band,
+                "clusters_below_target": clusters_below_target,
+                "variance_alert": variance_alert,
+                "priority_micro_gaps": priority_micro_gaps,
+                "macro_score_percentage": (
+                    float(macro_score_numeric) * self.PERCENTAGE_SCALE
+                    if macro_score_numeric is not None
+                    else None
+                ),
             }
 
-            logger.info(f"Macro band: {macro_band}, Clusters below target: {len(clusters_below_target)}")
+            logger.info(
+                f"Macro band: {macro_band}, Clusters below target: {len(clusters_below_target)}"
+            )
 
             # ========================================================================
             # GENERATE RECOMMENDATIONS AT ALL 3 LEVELS
             # ========================================================================
             context = {
-                'generated_at': datetime.utcnow().isoformat(),
-                'macro_score': macro_score
+                "generated_at": datetime.utcnow().isoformat(),
+                "macro_score": macro_score,
             }
 
-            recommendation_sets = self.recommendation_engine.generate_all_recommendations(
-                micro_scores=micro_scores,
-                cluster_data=cluster_data,
-                macro_data=macro_data,
-                context=context
+            recommendation_sets = (
+                self.recommendation_engine.generate_all_recommendations(
+                    micro_scores=micro_scores,
+                    cluster_data=cluster_data,
+                    macro_data=macro_data,
+                    context=context,
+                )
             )
 
             # Convert RecommendationSet objects to dictionaries
             recommendations = {
-                level: rec_set.to_dict() for level, rec_set in recommendation_sets.items()
+                level: rec_set.to_dict()
+                for level, rec_set in recommendation_sets.items()
             }
-            recommendations['macro_score'] = macro_score
-            recommendations['macro_score_normalized'] = macro_score_normalized
+            recommendations["macro_score"] = macro_score
+            recommendations["macro_score_normalized"] = macro_score_normalized
 
             logger.info(
                 f"Generated recommendations: "
@@ -3242,17 +3336,31 @@ class Orchestrator:
         except Exception as e:
             logger.error(f"Error generating recommendations: {e}", exc_info=True)
             recommendations = {
-                "MICRO": {"level": "MICRO", "recommendations": [], "generated_at": datetime.utcnow().isoformat()},
-                "MESO": {"level": "MESO", "recommendations": [], "generated_at": datetime.utcnow().isoformat()},
-                "MACRO": {"level": "MACRO", "recommendations": [], "generated_at": datetime.utcnow().isoformat()},
+                "MICRO": {
+                    "level": "MICRO",
+                    "recommendations": [],
+                    "generated_at": datetime.utcnow().isoformat(),
+                },
+                "MESO": {
+                    "level": "MESO",
+                    "recommendations": [],
+                    "generated_at": datetime.utcnow().isoformat(),
+                },
+                "MACRO": {
+                    "level": "MACRO",
+                    "recommendations": [],
+                    "generated_at": datetime.utcnow().isoformat(),
+                },
                 "macro_score": macro_result.get("macro_score"),
-                "error": str(e)
+                "error": str(e),
             }
 
         instrumentation.increment(latency=time.perf_counter() - start)
         return recommendations
 
-    def _assemble_report(self, recommendations: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
+    def _assemble_report(
+        self, recommendations: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
         self._ensure_not_aborted()
         instrumentation = self._phase_instrumentation[9]
         start = time.perf_counter()
@@ -3269,7 +3377,9 @@ class Orchestrator:
         instrumentation.increment(latency=time.perf_counter() - start)
         return report
 
-    async def _format_and_export(self, report: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
+    async def _format_and_export(
+        self, report: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
         self._ensure_not_aborted()
         instrumentation = self._phase_instrumentation[10]
         start = time.perf_counter()
@@ -3309,7 +3419,9 @@ def describe_pipeline_shape(
         micro_questions = monolith.get("blocks", {}).get("micro_questions", [])
         meso_questions = monolith.get("blocks", {}).get("meso_questions", [])
         macro_question = monolith.get("blocks", {}).get("macro_question", {})
-        question_total = len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
+        question_total = (
+            len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
+        )
         shape["expected_micro_questions"] = question_total
 
     if executor_instances:

@@ -8,11 +8,12 @@ from jsonschema import Draft7Validator
 
 from farfan_pipeline.config.paths import PROJECT_ROOT
 from farfan_pipeline.core.orchestrator.evidence_assembler import EvidenceAssembler
-from farfan_pipeline.core.orchestrator.evidence_validator import EvidenceValidator
 from farfan_pipeline.core.orchestrator.evidence_registry import get_global_registry
+from farfan_pipeline.core.orchestrator.evidence_validator import EvidenceValidator
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.core import MethodExecutor, PreprocessedDocument
+    from farfan_pipeline.core.orchestrator.core import MethodExecutor
+    from farfan_pipeline.core.types import PreprocessedDocument
 else:  # pragma: no cover - runtime avoids import to break cycles
     MethodExecutor = Any
     PreprocessedDocument = Any
@@ -42,14 +43,18 @@ class BaseExecutorWithContract(ABC):
         enriched_packs: dict[str, Any] | None = None,
     ) -> None:
         try:
-            from farfan_pipeline.core.orchestrator.core import MethodExecutor as _MethodExecutor
+            from farfan_pipeline.core.orchestrator.core import (
+                MethodExecutor as _MethodExecutor,
+            )
         except Exception as exc:  # pragma: no cover - defensive guard
             raise RuntimeError(
                 "Failed to import MethodExecutor for BaseExecutorWithContract invariants. "
                 "Ensure farfan_core.core.orchestrator.core is importable before constructing contract executors."
             ) from exc
         if not isinstance(method_executor, _MethodExecutor):
-            raise RuntimeError("A valid MethodExecutor instance is required for contract executors.")
+            raise RuntimeError(
+                "A valid MethodExecutor instance is required for contract executors."
+            )
         self.method_executor = method_executor
         self.signal_registry = signal_registry
         self.config = config
@@ -76,7 +81,12 @@ class BaseExecutorWithContract(ABC):
         """
         if version not in cls._schema_validators:
             if version == "v3":
-                schema_path = PROJECT_ROOT / "config" / "schemas" / "executor_contract.v3.schema.json"
+                schema_path = (
+                    PROJECT_ROOT
+                    / "config"
+                    / "schemas"
+                    / "executor_contract.v3.schema.json"
+                )
             else:
                 schema_path = PROJECT_ROOT / "config" / "executor_contract.schema.json"
 
@@ -96,7 +106,12 @@ class BaseExecutorWithContract(ABC):
         Returns:
             "v3" or "v2"
         """
-        v3_indicators = ["identity", "executor_binding", "method_binding", "question_context"]
+        v3_indicators = [
+            "identity",
+            "executor_binding",
+            "method_binding",
+            "question_context",
+        ]
         if all(key in contract for key in v3_indicators):
             return "v3"
         return "v2"
@@ -108,7 +123,9 @@ class BaseExecutorWithContract(ABC):
             return cls._contract_cache[base_slot]
 
         # Try v3 contract first, then fall back to v2
-        v3_path = PROJECT_ROOT / "config" / "executor_contracts" / f"{base_slot}.v3.json"
+        v3_path = (
+            PROJECT_ROOT / "config" / "executor_contracts" / f"{base_slot}.v3.json"
+        )
         v2_path = PROJECT_ROOT / "config" / "executor_contracts" / f"{base_slot}.json"
 
         if v3_path.exists():
@@ -119,8 +136,7 @@ class BaseExecutorWithContract(ABC):
             expected_version = "v2"
         else:
             raise FileNotFoundError(
-                f"Contract not found for {base_slot}. "
-                f"Tried: {v3_path}, {v2_path}"
+                f"Contract not found for {base_slot}. " f"Tried: {v3_path}, {v2_path}"
             )
 
         contract = json.loads(contract_path.read_text(encoding="utf-8"))
@@ -129,6 +145,7 @@ class BaseExecutorWithContract(ABC):
         detected_version = cls._detect_contract_version(contract)
         if detected_version != expected_version:
             import logging
+
             logging.warning(
                 f"Contract {contract_path.name} has structure of {detected_version} "
                 f"but file naming suggests {expected_version}"
@@ -139,18 +156,24 @@ class BaseExecutorWithContract(ABC):
         errors = sorted(validator.iter_errors(contract), key=lambda e: e.path)
         if errors:
             messages = "; ".join(err.message for err in errors)
-            raise ValueError(f"Contract validation failed for {base_slot} ({detected_version}): {messages}")
+            raise ValueError(
+                f"Contract validation failed for {base_slot} ({detected_version}): {messages}"
+            )
 
         # Tag contract with version for later use
         contract["_contract_version"] = detected_version
 
         contract_version = contract.get("contract_version")
         if contract_version and not str(contract_version).startswith("2"):
-            raise ValueError(f"Unsupported contract_version {contract_version} for {base_slot}; expected v2.x")
+            raise ValueError(
+                f"Unsupported contract_version {contract_version} for {base_slot}; expected v2.x"
+            )
 
         identity_base_slot = contract.get("identity", {}).get("base_slot")
         if identity_base_slot and identity_base_slot != base_slot:
-            raise ValueError(f"Contract base_slot mismatch: expected {base_slot}, found {identity_base_slot}")
+            raise ValueError(
+                f"Contract base_slot mismatch: expected {base_slot}, found {identity_base_slot}"
+            )
 
         cls._contract_cache[base_slot] = contract
         return contract
@@ -185,8 +208,14 @@ class BaseExecutorWithContract(ABC):
         # If signal pack exists, validate signal strength
         if signal_pack is not None and minimum_threshold > 0:
             # Check if signal pack has strength attribute
-            if hasattr(signal_pack, "strength") or (isinstance(signal_pack, dict) and "strength" in signal_pack):
-                strength = signal_pack.strength if hasattr(signal_pack, "strength") else signal_pack["strength"]
+            if hasattr(signal_pack, "strength") or (
+                isinstance(signal_pack, dict) and "strength" in signal_pack
+            ):
+                strength = (
+                    signal_pack.strength
+                    if hasattr(signal_pack, "strength")
+                    else signal_pack["strength"]
+                )
                 if strength < minimum_threshold:
                     raise RuntimeError(
                         f"Contract {base_slot} requires minimum signal threshold {minimum_threshold}, "
@@ -195,7 +224,9 @@ class BaseExecutorWithContract(ABC):
                     )
 
     @staticmethod
-    def _set_nested_value(target_dict: dict[str, Any], key_path: str, value: Any) -> None:
+    def _set_nested_value(
+        target_dict: dict[str, Any], key_path: str, value: Any
+    ) -> None:
         """Set a value in a nested dict using dot-notation key path.
 
         Args:
@@ -224,7 +255,9 @@ class BaseExecutorWithContract(ABC):
         # Set the final key
         current[keys[-1]] = value
 
-    def _check_failure_contract(self, evidence: dict[str, Any], error_handling: dict[str, Any]):
+    def _check_failure_contract(
+        self, evidence: dict[str, Any], error_handling: dict[str, Any]
+    ):
         failure_contract = error_handling.get("failure_contract", {})
         abort_conditions = failure_contract.get("abort_if", [])
         if not abort_conditions:
@@ -234,12 +267,20 @@ class BaseExecutorWithContract(ABC):
 
         for condition in abort_conditions:
             # Example condition check. This could be made more sophisticated.
-            if condition == "missing_required_element" and evidence.get("validation", {}).get("errors"):
+            if condition == "missing_required_element" and evidence.get(
+                "validation", {}
+            ).get("errors"):
                 # This logic assumes errors from the validator imply a missing required element,
                 # which is true with our new validator.
-                raise ValueError(f"Execution aborted by failure contract due to '{condition}'. Emit code: {emit_code}")
-            if condition == "incomplete_text" and not evidence.get("metadata", {}).get("text_complete", True):
-                raise ValueError(f"Execution aborted by failure contract due to '{condition}'. Emit code: {emit_code}")
+                raise ValueError(
+                    f"Execution aborted by failure contract due to '{condition}'. Emit code: {emit_code}"
+                )
+            if condition == "incomplete_text" and not evidence.get("metadata", {}).get(
+                "text_complete", True
+            ):
+                raise ValueError(
+                    f"Execution aborted by failure contract due to '{condition}'. Emit code: {emit_code}"
+                )
 
     def execute(
         self,
@@ -249,7 +290,9 @@ class BaseExecutorWithContract(ABC):
         question_context: dict[str, Any],
     ) -> dict[str, Any]:
         if method_executor is not self.method_executor:
-            raise RuntimeError("Mismatched MethodExecutor instance for contract executor")
+            raise RuntimeError(
+                "Mismatched MethodExecutor instance for contract executor"
+            )
 
         base_slot = self.get_base_slot()
         if question_context.get("base_slot") != base_slot:
@@ -338,7 +381,9 @@ class BaseExecutorWithContract(ABC):
         method_outputs: dict[str, Any] = {}
         method_inputs = contract.get("method_inputs", [])
         indexed = list(enumerate(method_inputs))
-        sorted_inputs = sorted(indexed, key=lambda pair: (pair[1].get("priority", 2), pair[0]))
+        sorted_inputs = sorted(
+            indexed, key=lambda pair: (pair[1].get("priority", 2), pair[0])
+        )
         for _, entry in sorted_inputs:
             class_name = entry["class"]
             method_name = entry["method"]
@@ -356,11 +401,13 @@ class BaseExecutorWithContract(ABC):
             if "signal_pack" in payload and payload["signal_pack"] is not None:
                 if "_signal_usage" not in method_outputs:
                     method_outputs["_signal_usage"] = []
-                method_outputs["_signal_usage"].append({
-                    "method": f"{class_name}.{method_name}",
-                    "policy_area": payload["signal_pack"].policy_area,
-                    "version": payload["signal_pack"].version,
-                })
+                method_outputs["_signal_usage"].append(
+                    {
+                        "method": f"{class_name}.{method_name}",
+                        "policy_area": payload["signal_pack"].policy_area,
+                        "version": payload["signal_pack"].version,
+                    }
+                )
 
             if isinstance(provides, str):
                 method_outputs[provides] = result
@@ -451,6 +498,7 @@ class BaseExecutorWithContract(ABC):
             except KeyError as e:
                 human_answer = f"Error formatting human answer: Missing key {e}. Template: '{human_answer_template}'"
                 import logging
+
                 logging.warning(human_answer)
 
         result = {
@@ -495,7 +543,11 @@ class BaseExecutorWithContract(ABC):
         calibration = contract.get("calibration", {})
         calibration_status = calibration.get("status", "placeholder")
         if calibration_status == "placeholder":
-            abort_on_placeholder = self.config.get("abort_on_placeholder_calibration", True) if hasattr(self.config, "get") else True
+            abort_on_placeholder = (
+                self.config.get("abort_on_placeholder_calibration", True)
+                if hasattr(self.config, "get")
+                else True
+            )
             if abort_on_placeholder:
                 note = calibration.get("note", "No calibration note provided")
                 raise RuntimeError(
@@ -505,19 +557,27 @@ class BaseExecutorWithContract(ABC):
 
         # Extract question context from contract (source of truth for v3)
         question_context = contract["question_context"]
-        question_global = question_context_external.get("question_global")  # May come from orchestrator
+        question_global = question_context_external.get(
+            "question_global"
+        )  # May come from orchestrator
         patterns = question_context.get("patterns", [])
         expected_elements = question_context.get("expected_elements", [])
 
         # Signal pack
         signal_pack = None
-        if self.signal_registry is not None and hasattr(self.signal_registry, "get") and policy_area_id:
+        if (
+            self.signal_registry is not None
+            and hasattr(self.signal_registry, "get")
+            and policy_area_id
+        ):
             signal_pack = self.signal_registry.get(policy_area_id)
 
         # SIGNAL REQUIREMENTS VALIDATION: Verify signal requirements from contract
         signal_requirements = contract.get("signal_requirements", {})
         if signal_requirements:
-            self._validate_signal_requirements(signal_pack, signal_requirements, base_slot)
+            self._validate_signal_requirements(
+                signal_pack, signal_requirements, base_slot
+            )
 
         # Extract method binding
         method_binding = contract["method_binding"]
@@ -573,27 +633,37 @@ class BaseExecutorWithContract(ABC):
 
                     # Track signal usage for this method
                     if signal_pack is not None:
-                        signal_usage_list.append({
-                            "method": f"{class_name}.{method_name}",
-                            "policy_area": signal_pack.policy_area,
-                            "version": signal_pack.version,
-                            "priority": priority,
-                        })
+                        signal_usage_list.append(
+                            {
+                                "method": f"{class_name}.{method_name}",
+                                "policy_area": signal_pack.policy_area,
+                                "version": signal_pack.version,
+                                "priority": priority,
+                            }
+                        )
 
                 except Exception as exc:
                     import logging
+
                     logging.error(
                         f"Method execution failed in multi-method pipeline: {class_name}.{method_name}",
                         exc_info=True,
                     )
                     # Store error in trace for debugging
                     # Store error in a flat structure under _errors[provides]
-                    if "_errors" not in method_outputs or not isinstance(method_outputs["_errors"], dict):
+                    if "_errors" not in method_outputs or not isinstance(
+                        method_outputs["_errors"], dict
+                    ):
                         method_outputs["_errors"] = {}
-                    method_outputs["_errors"][provides] = {"error": str(exc), "method": f"{class_name}.{method_name}"}
+                    method_outputs["_errors"][provides] = {
+                        "error": str(exc),
+                        "method": f"{class_name}.{method_name}",
+                    }
                     # Re-raise if error_handling policy requires it
                     error_handling = contract.get("error_handling", {})
-                    on_method_failure = error_handling.get("on_method_failure", "propagate_with_trace")
+                    on_method_failure = error_handling.get(
+                        "on_method_failure", "propagate_with_trace"
+                    )
                     if on_method_failure == "raise":
                         raise
                     # Otherwise continue with other methods
@@ -623,11 +693,13 @@ class BaseExecutorWithContract(ABC):
 
             # Track signal usage
             if signal_pack is not None:
-                signal_usage_list.append({
-                    "method": f"{class_name}.{method_name}",
-                    "policy_area": signal_pack.policy_area,
-                    "version": signal_pack.version,
-                })
+                signal_usage_list.append(
+                    {
+                        "method": f"{class_name}.{method_name}",
+                        "policy_area": signal_pack.policy_area,
+                        "version": signal_pack.version,
+                    }
+                )
 
         # Store signal usage in method_outputs for trace
         if signal_usage_list:
@@ -695,7 +767,9 @@ class BaseExecutorWithContract(ABC):
         # Validate output against output_contract schema if present
         output_contract = contract.get("output_contract", {})
         if output_contract and "schema" in output_contract:
-            self._validate_output_contract(result_data, output_contract["schema"], base_slot)
+            self._validate_output_contract(
+                result_data, output_contract["schema"], base_slot
+            )
 
         # Generate human_readable_output if template exists
         human_readable_config = output_contract.get("human_readable_output", {})
@@ -706,7 +780,9 @@ class BaseExecutorWithContract(ABC):
 
         return result_data
 
-    def _validate_output_contract(self, result: dict[str, Any], schema: dict[str, Any], base_slot: str) -> None:
+    def _validate_output_contract(
+        self, result: dict[str, Any], schema: dict[str, Any], base_slot: str
+    ) -> None:
         """Validate result against output_contract schema with detailed error messages.
 
         Args:
@@ -718,11 +794,14 @@ class BaseExecutorWithContract(ABC):
             ValueError: If validation fails with detailed path information
         """
         from jsonschema import ValidationError, validate
+
         try:
             validate(instance=result, schema=schema)
         except ValidationError as e:
             # Enhanced error message with JSON path
-            path = ".".join(str(p) for p in e.absolute_path) if e.absolute_path else "root"
+            path = (
+                ".".join(str(p) for p in e.absolute_path) if e.absolute_path else "root"
+            )
             raise ValueError(
                 f"Output contract validation failed for {base_slot} at '{path}': {e.message}. "
                 f"Schema constraint: {e.schema}"
@@ -765,22 +844,40 @@ class BaseExecutorWithContract(ABC):
 
         # Title
         if "title" in template_config:
-            sections.append(self._render_template_string(template_config["title"], context, format_type))
+            sections.append(
+                self._render_template_string(
+                    template_config["title"], context, format_type
+                )
+            )
 
         # Summary
         if "summary" in template_config:
-            sections.append(self._render_template_string(template_config["summary"], context, format_type))
+            sections.append(
+                self._render_template_string(
+                    template_config["summary"], context, format_type
+                )
+            )
 
         # Score section
         if "score_section" in template_config:
-            sections.append(self._render_template_string(template_config["score_section"], context, format_type))
+            sections.append(
+                self._render_template_string(
+                    template_config["score_section"], context, format_type
+                )
+            )
 
         # Elements section
         if "elements_section" in template_config:
-            sections.append(self._render_template_string(template_config["elements_section"], context, format_type))
+            sections.append(
+                self._render_template_string(
+                    template_config["elements_section"], context, format_type
+                )
+            )
 
         # Details (list of items)
-        if "details" in template_config and isinstance(template_config["details"], list):
+        if "details" in template_config and isinstance(
+            template_config["details"], list
+        ):
             detail_items = [
                 self._render_template_string(item, context, format_type)
                 for item in template_config["details"]
@@ -790,17 +887,31 @@ class BaseExecutorWithContract(ABC):
         # Interpretation
         if "interpretation" in template_config:
             # Add methodological interpretation if available
-            context["methodological_interpretation"] = self._render_methodological_depth(
-                methodological_depth_config, evidence, validation, format_type
+            context["methodological_interpretation"] = (
+                self._render_methodological_depth(
+                    methodological_depth_config, evidence, validation, format_type
+                )
             )
-            sections.append(self._render_template_string(template_config["interpretation"], context, format_type))
+            sections.append(
+                self._render_template_string(
+                    template_config["interpretation"], context, format_type
+                )
+            )
 
         # Recommendations
         if "recommendations" in template_config:
-            sections.append(self._render_template_string(template_config["recommendations"], context, format_type))
+            sections.append(
+                self._render_template_string(
+                    template_config["recommendations"], context, format_type
+                )
+            )
 
         # Join sections with appropriate separator for format
-        separator = "\n\n" if format_type == "markdown" else "\n\n" if format_type == "plain_text" else "<br><br>"
+        separator = (
+            "\n\n"
+            if format_type == "markdown"
+            else "\n\n" if format_type == "plain_text" else "<br><br>"
+        )
         return separator.join(filter(None, sections))
 
     def _build_template_context(
@@ -828,7 +939,9 @@ class BaseExecutorWithContract(ABC):
         # Add derived metrics from evidence
         if "elements" in evidence and isinstance(evidence["elements"], list):
             context["evidence"]["elements_found_count"] = len(evidence["elements"])
-            context["evidence"]["elements_found_list"] = self._format_evidence_list(evidence["elements"])
+            context["evidence"]["elements_found_list"] = self._format_evidence_list(
+                evidence["elements"]
+            )
 
         if "confidences" in evidence and isinstance(evidence["confidences"], list):
             confidences = evidence["confidences"]
@@ -848,11 +961,15 @@ class BaseExecutorWithContract(ABC):
         context["evidence"].setdefault("quantitative_indicators_count", 0)
         context["evidence"].setdefault("temporal_series_count", 0)
         context["evidence"].setdefault("territorial_coverage", "Not specified")
-        context["evidence"].setdefault("recommendations", "No specific recommendations available")
+        context["evidence"].setdefault(
+            "recommendations", "No specific recommendations available"
+        )
 
         # Add score and quality from validation or defaults
         context["score"] = validation.get("score", 0.0)
-        context["quality_level"] = self._determine_quality_level(validation.get("score", 0.0))
+        context["quality_level"] = self._determine_quality_level(
+            validation.get("score", 0.0)
+        )
 
         return context
 
@@ -876,7 +993,9 @@ class BaseExecutorWithContract(ABC):
         else:
             return "FAILED"
 
-    def _render_template_string(self, template: str, context: dict[str, Any], format_type: str) -> str:
+    def _render_template_string(
+        self, template: str, context: dict[str, Any], format_type: str
+    ) -> str:
         """Render a template string with variable substitution.
 
         Supports dot-notation: {evidence.elements_found_count}
@@ -918,7 +1037,7 @@ class BaseExecutorWithContract(ABC):
                 return f"{{MISSING:{var_path}}}"
 
         # Replace all {variable} patterns
-        rendered = re.sub(r'\{([^}]+)\}', replace_var, template)
+        rendered = re.sub(r"\{([^}]+)\}", replace_var, template)
         return rendered
 
     def _format_evidence_list(self, elements: list) -> str:
@@ -1003,14 +1122,20 @@ class BaseExecutorWithContract(ABC):
 
             # Method header
             if format_type == "markdown":
-                sections.append(f"##### {class_name}.{method_name} (Priority {priority}, Role: {role})\n")
+                sections.append(
+                    f"##### {class_name}.{method_name} (Priority {priority}, Role: {role})\n"
+                )
             else:
-                sections.append(f"\n{class_name}.{method_name} (Priority {priority}, Role: {role})\n")
+                sections.append(
+                    f"\n{class_name}.{method_name} (Priority {priority}, Role: {role})\n"
+                )
 
             # Epistemological foundation
             epist = method_info.get("epistemological_foundation", {})
             if epist:
-                sections.append(self._render_epistemological_foundation(epist, format_type))
+                sections.append(
+                    self._render_epistemological_foundation(epist, format_type)
+                )
 
             # Technical approach
             technical = method_info.get("technical_approach", {})
@@ -1020,7 +1145,9 @@ class BaseExecutorWithContract(ABC):
             # Output interpretation
             output_interp = method_info.get("output_interpretation", {})
             if output_interp:
-                sections.append(self._render_output_interpretation(output_interp, format_type))
+                sections.append(
+                    self._render_output_interpretation(output_interp, format_type)
+                )
 
         # Method combination logic
         combination = config.get("method_combination_logic", {})
@@ -1029,7 +1156,9 @@ class BaseExecutorWithContract(ABC):
 
         return "\n\n".join(filter(None, sections))
 
-    def _render_epistemological_foundation(self, foundation: dict[str, Any], format_type: str) -> str:
+    def _render_epistemological_foundation(
+        self, foundation: dict[str, Any], format_type: str
+    ) -> str:
         """Render epistemological foundation section.
 
         Args:
@@ -1065,7 +1194,9 @@ class BaseExecutorWithContract(ABC):
 
         return "\n".join(parts) if format_type != "html" else "<br>".join(parts)
 
-    def _render_technical_approach(self, technical: dict[str, Any], format_type: str) -> str:
+    def _render_technical_approach(
+        self, technical: dict[str, Any], format_type: str
+    ) -> str:
         """Render technical approach section.
 
         Args:
@@ -1108,7 +1239,9 @@ class BaseExecutorWithContract(ABC):
 
         return "\n".join(parts) if format_type != "html" else "<br>".join(parts)
 
-    def _render_output_interpretation(self, interpretation: dict[str, Any], format_type: str) -> str:
+    def _render_output_interpretation(
+        self, interpretation: dict[str, Any], format_type: str
+    ) -> str:
         """Render output interpretation section.
 
         Args:
@@ -1134,7 +1267,9 @@ class BaseExecutorWithContract(ABC):
 
         return "\n".join(parts) if format_type != "html" else "<br>".join(parts)
 
-    def _render_method_combination(self, combination: dict[str, Any], format_type: str) -> str:
+    def _render_method_combination(
+        self, combination: dict[str, Any], format_type: str
+    ) -> str:
         """Render method combination logic section.
 
         Args:

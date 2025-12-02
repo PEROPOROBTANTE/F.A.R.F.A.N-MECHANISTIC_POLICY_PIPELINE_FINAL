@@ -49,7 +49,7 @@ from farfan_pipeline.analysis.recommendation_engine import load_recommendation_e
 from farfan_pipeline.core.parameters import ParameterLoaderV2
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 from farfan_pipeline.core.orchestrator.factory import create_orchestrator
-from farfan_pipeline.core.orchestrator.core import PreprocessedDocument
+from farfan_pipeline.core.types import PreprocessedDocument
 
 # Configure logging
 logging.basicConfig(

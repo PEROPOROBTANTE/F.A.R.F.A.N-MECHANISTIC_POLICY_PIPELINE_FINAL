@@ -1,20 +1,23 @@
 from farfan_pipeline.utils.cpp_adapter import CPPAdapter
 from farfan_pipeline.core.phases.phase1_models import Chunk as CanonChunk
-from farfan_pipeline.core.orchestrator.core import PreprocessedDocument
+from farfan_pipeline.core.types import PreprocessedDocument
+
 
 class MockProvenance:
     def __init__(self, page_number, section_header):
         self.page_number = page_number
         self.section_header = section_header
 
+
 class MockCanonPolicyPackage:
     def __init__(self, chunks):
         self.chunk_graph = lambda: None
         self.chunk_graph.chunks = {chunk.id: chunk for chunk in chunks}
-        self.schema_version = 'SPC-2025.1'
+        self.schema_version = "SPC-2025.1"
         self.quality_metrics = None
         self.policy_manifest = None
         self.metadata = None
+
 
 def create_mock_chunk(i):
     chunk = CanonChunk(
@@ -25,8 +28,11 @@ def create_mock_chunk(i):
         dimension_id=f"DIM{i % 6 + 1:02d}",
         chunk_type="diagnostic",
     )
-    chunk.provenance = MockProvenance(page_number=i + 1, section_header=f"Section {i + 1}")
+    chunk.provenance = MockProvenance(
+        page_number=i + 1, section_header=f"Section {i + 1}"
+    )
     return chunk
+
 
 def test_spc_adapter_integration():
     """

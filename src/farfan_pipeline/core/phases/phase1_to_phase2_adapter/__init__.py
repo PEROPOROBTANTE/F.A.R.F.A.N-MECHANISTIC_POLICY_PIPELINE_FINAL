@@ -53,7 +53,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from farfan_pipeline.core.orchestrator.core import PreprocessedDocument
+from farfan_pipeline.core.types import PreprocessedDocument
 from farfan_pipeline.core.phases.phase_protocol import (
     ContractValidationResult,
     PhaseContract,
@@ -105,7 +105,9 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
         self.add_invariant(
             name="chunk_id_preserved",
             description="All sentence_metadata must have chunk_id in extra",
-            check=lambda data: all("chunk_id" in _meta_extra(meta) for meta in data.sentence_metadata),
+            check=lambda data: all(
+                "chunk_id" in _meta_extra(meta) for meta in data.sentence_metadata
+            ),
             error_message="Missing chunk_id in sentence_metadata.extra",
         )
 
@@ -113,7 +115,9 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
         self.add_invariant(
             name="policy_area_id_preserved",
             description="All sentence_metadata must have policy_area_id in extra",
-            check=lambda data: all("policy_area_id" in _meta_extra(meta) for meta in data.sentence_metadata),
+            check=lambda data: all(
+                "policy_area_id" in _meta_extra(meta) for meta in data.sentence_metadata
+            ),
             error_message="Missing policy_area_id in sentence_metadata.extra - CRITICAL for Phase 2",
         )
 
@@ -121,7 +125,9 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
         self.add_invariant(
             name="dimension_id_preserved",
             description="All sentence_metadata must have dimension_id in extra",
-            check=lambda data: all("dimension_id" in _meta_extra(meta) for meta in data.sentence_metadata),
+            check=lambda data: all(
+                "dimension_id" in _meta_extra(meta) for meta in data.sentence_metadata
+            ),
             error_message="Missing dimension_id in sentence_metadata.extra - CRITICAL for Phase 2",
         )
 
@@ -151,11 +157,11 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
             )
 
         # Validate chunk_graph exists
-        if not hasattr(input_data, 'chunk_graph') or not input_data.chunk_graph:
+        if not hasattr(input_data, "chunk_graph") or not input_data.chunk_graph:
             errors.append("CanonPolicyPackage missing chunk_graph")
 
         # Validate chunks exist
-        if hasattr(input_data, 'chunk_graph') and input_data.chunk_graph:
+        if hasattr(input_data, "chunk_graph") and input_data.chunk_graph:
             chunk_count = len(input_data.chunk_graph.chunks)
             if chunk_count == 0:
                 errors.append("chunk_graph.chunks is empty")
@@ -167,15 +173,13 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
             # Validate PA×DIM tags present
             missing_pa_dim = []
             for chunk_id, chunk in input_data.chunk_graph.chunks.items():
-                if not hasattr(chunk, 'policy_area_id') or not chunk.policy_area_id:
+                if not hasattr(chunk, "policy_area_id") or not chunk.policy_area_id:
                     missing_pa_dim.append(f"{chunk_id}: missing policy_area_id")
-                if not hasattr(chunk, 'dimension_id') or not chunk.dimension_id:
+                if not hasattr(chunk, "dimension_id") or not chunk.dimension_id:
                     missing_pa_dim.append(f"{chunk_id}: missing dimension_id")
 
             if missing_pa_dim:
-                errors.append(
-                    f"Chunks missing PA×DIM tags: {missing_pa_dim[:5]}"
-                )
+                errors.append(f"Chunks missing PA×DIM tags: {missing_pa_dim[:5]}")
 
         return ContractValidationResult(
             passed=len(errors) == 0,
@@ -211,17 +215,22 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
             )
 
         # Validate sentences exist
-        if not hasattr(output_data, 'sentences') or not output_data.sentences:
+        if not hasattr(output_data, "sentences") or not output_data.sentences:
             errors.append("PreprocessedDocument.sentences is empty")
 
         # Validate processing_mode
-        if not hasattr(output_data, 'processing_mode') or output_data.processing_mode != "chunked":
+        if (
+            not hasattr(output_data, "processing_mode")
+            or output_data.processing_mode != "chunked"
+        ):
             errors.append(
                 f"processing_mode must be 'chunked', got '{getattr(output_data, 'processing_mode', None)}'"
             )
 
         # Validate sentence_metadata exists and matches sentences
-        if hasattr(output_data, 'sentences') and hasattr(output_data, 'sentence_metadata'):
+        if hasattr(output_data, "sentences") and hasattr(
+            output_data, "sentence_metadata"
+        ):
             if len(output_data.sentence_metadata) != len(output_data.sentences):
                 errors.append(
                     f"sentence_metadata count ({len(output_data.sentence_metadata)}) != "
@@ -236,17 +245,15 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
                     missing_metadata.append(f"sentence[{idx}]: no extra field")
                     continue
 
-                if 'chunk_id' not in extra:
+                if "chunk_id" not in extra:
                     missing_metadata.append(f"sentence[{idx}]: missing chunk_id")
-                if 'policy_area_id' not in extra:
+                if "policy_area_id" not in extra:
                     missing_metadata.append(f"sentence[{idx}]: missing policy_area_id")
-                if 'dimension_id' not in extra:
+                if "dimension_id" not in extra:
                     missing_metadata.append(f"sentence[{idx}]: missing dimension_id")
 
             if missing_metadata:
-                errors.append(
-                    f"Metadata preservation failed: {missing_metadata[:5]}"
-                )
+                errors.append(f"Metadata preservation failed: {missing_metadata[:5]}")
 
         return ContractValidationResult(
             passed=len(errors) == 0,
@@ -278,12 +285,11 @@ class AdapterContract(PhaseContract[CanonPolicyPackage, PreprocessedDocument]):
         adapter = SPCAdapter(enable_runtime_validation=False)  # We validate here
 
         # Get document_id from metadata
-        document_id = input_data.metadata.get('document_id', 'unknown')
+        document_id = input_data.metadata.get("document_id", "unknown")
 
         # Transform
         preprocessed = adapter.to_preprocessed_document(
-            input_data,
-            document_id=document_id
+            input_data, document_id=document_id
         )
 
         logger.info(

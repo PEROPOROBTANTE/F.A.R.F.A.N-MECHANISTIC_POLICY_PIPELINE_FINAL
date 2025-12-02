@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 Chunk Router for SPC Exploitation.
 
@@ -7,19 +5,22 @@ Routes semantic chunks to appropriate executors based on chunk type,
 enabling targeted execution and reducing redundant processing.
 """
 
-# Routing table version identifier
-ROUTING_TABLE_VERSION = "v1"
+from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .core import ChunkData
+    from ..types import ChunkData
+
+# Routing table version identifier
+ROUTING_TABLE_VERSION = "v1"
 
 
 @dataclass
 class ChunkRoute:
     """Routing decision for a single chunk."""
+
     chunk_id: int
     chunk_type: str
     executor_class: str
@@ -40,7 +41,13 @@ class ChunkRouter:
     # Maps chunk types to executor base slots (e.g., "D1Q1", "D2Q3")
     ROUTING_TABLE: dict[str, list[str]] = {
         "diagnostic": ["D1Q1", "D1Q2", "D1Q5"],  # Baseline/gap analysis executors
-        "activity": ["D2Q1", "D2Q2", "D2Q3", "D2Q4", "D2Q5"],  # Activity/intervention executors
+        "activity": [
+            "D2Q1",
+            "D2Q2",
+            "D2Q3",
+            "D2Q4",
+            "D2Q5",
+        ],  # Activity/intervention executors
         "indicator": ["D3Q1", "D3Q2", "D4Q1", "D5Q1"],  # Metric/indicator executors
         "resource": ["D1Q3", "D2Q4", "D5Q5"],  # Financial/resource executors
         "temporal": ["D1Q5", "D3Q4", "D5Q4"],  # Timeline/temporal executors
@@ -74,7 +81,7 @@ class ChunkRouter:
                 chunk_type=chunk.chunk_type,
                 executor_class="",
                 methods=[],
-                skip_reason=f"No executor mapping for chunk type '{chunk.chunk_type}'"
+                skip_reason=f"No executor mapping for chunk type '{chunk.chunk_type}'",
             )
 
         # Get primary executor for this chunk type

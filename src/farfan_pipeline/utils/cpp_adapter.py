@@ -22,9 +22,8 @@ from datetime import datetime, timezone
 from types import MappingProxyType
 from typing import Any
 
-from farfan_pipeline.core.orchestrator.core import PreprocessedDocument, ChunkData, Provenance
 from farfan_pipeline.core.parameters import ParameterLoaderV2
-from farfan_pipeline.core.calibration.decorators import calibrated_method
+from farfan_pipeline.core.types import ChunkData, PreprocessedDocument, Provenance
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +32,7 @@ _EMPTY_MAPPING = MappingProxyType({})
 
 class CPPAdapterError(Exception):
     """Raised when CPP to PreprocessedDocument conversion fails."""
+
     pass
 
 
@@ -57,8 +57,11 @@ class CPPAdapter:
         if enable_runtime_validation:
             try:
                 from farfan_pipeline.core.wiring.validation import WiringValidator
+
                 self.wiring_validator = WiringValidator()
-                self.logger.info("WiringValidator enabled for runtime contract checking")
+                self.logger.info(
+                    "WiringValidator enabled for runtime contract checking"
+                )
             except ImportError:
                 self.logger.warning(
                     "WiringValidator not available. Runtime validation disabled."
@@ -68,9 +71,7 @@ class CPPAdapter:
             self.wiring_validator = None
 
     def to_preprocessed_document(
-        self,
-        canon_package: Any,
-        document_id: str
+        self, canon_package: Any, document_id: str
     ) -> PreprocessedDocument:
         """
         Convert CanonPolicyPackage to PreprocessedDocument.
@@ -103,7 +104,9 @@ class CPPAdapter:
                 - time_facets: object with .years list
                 - budget: object with amount, currency, year, use, source attributes
         """
-        self.logger.info(f"Converting CanonPolicyPackage to PreprocessedDocument: {document_id}")
+        self.logger.info(
+            f"Converting CanonPolicyPackage to PreprocessedDocument: {document_id}"
+        )
 
         # === COMPREHENSIVE VALIDATION PHASE (H1.5) ===
         # 6-layer validation for robust phase-one output processing
@@ -116,14 +119,18 @@ class CPPAdapter:
             )
 
         # V2: Validate document_id
-        if not document_id or not isinstance(document_id, str) or not document_id.strip():
+        if (
+            not document_id
+            or not isinstance(document_id, str)
+            or not document_id.strip()
+        ):
             raise CPPAdapterError(
                 f"document_id must be a non-empty string. "
                 f"Received: {repr(document_id)}"
             )
 
         # V3: Validate chunk_graph exists
-        if not hasattr(canon_package, 'chunk_graph') or not canon_package.chunk_graph:
+        if not hasattr(canon_package, "chunk_graph") or not canon_package.chunk_graph:
             raise CPPAdapterError(
                 "canon_package must have a valid chunk_graph. "
                 "Check that SmartChunkConverter produced valid output."
@@ -141,15 +148,25 @@ class CPPAdapter:
         # V5: Validate individual chunks have required attributes
         validation_failures = []
         for chunk_id, chunk in chunk_graph.chunks.items():
-            if not hasattr(chunk, 'text'):
-                validation_failures.append(f"Chunk {chunk_id}: missing 'text' attribute")
+            if not hasattr(chunk, "text"):
+                validation_failures.append(
+                    f"Chunk {chunk_id}: missing 'text' attribute"
+                )
             elif not chunk.text or not chunk.text.strip():
-                validation_failures.append(f"Chunk {chunk_id}: text is empty or whitespace")
+                validation_failures.append(
+                    f"Chunk {chunk_id}: text is empty or whitespace"
+                )
 
-            if not hasattr(chunk, 'text_span'):
-                validation_failures.append(f"Chunk {chunk_id}: missing 'text_span' attribute")
-            elif not hasattr(chunk.text_span, 'start') or not hasattr(chunk.text_span, 'end'):
-                validation_failures.append(f"Chunk {chunk_id}: invalid text_span (missing start/end)")
+            if not hasattr(chunk, "text_span"):
+                validation_failures.append(
+                    f"Chunk {chunk_id}: missing 'text_span' attribute"
+                )
+            elif not hasattr(chunk.text_span, "start") or not hasattr(
+                chunk.text_span, "end"
+            ):
+                validation_failures.append(
+                    f"Chunk {chunk_id}: invalid text_span (missing start/end)"
+                )
 
         # V6: Report validation failures with context
         if validation_failures:
@@ -163,21 +180,23 @@ class CPPAdapter:
         # Sort chunks by document position for deterministic ordering
         sorted_chunks = sorted(
             chunk_graph.chunks.values(),
-            key=lambda c: c.text_span.start if hasattr(c, 'text_span') and c.text_span else 0
+            key=lambda c: (
+                c.text_span.start if hasattr(c, "text_span") and c.text_span else 0
+            ),
         )
 
         # === PHASE 2 HARDENING: STRICT CARDINALITY & METADATA ===
         # Enforce exactly 60 chunks for SPC/CPP canonical documents as per Jobfront 1
         processing_mode = "chunked"
         degradation_reason = None
-        
+
         if len(sorted_chunks) != 60:
             raise CPPAdapterError(
                 f"Cardinality mismatch: Expected 60 chunks for 'chunked' processing mode, "
                 f"but found {len(sorted_chunks)}. This is a critical violation of the "
                 f"SPC canonical format."
             )
-        
+
         # Enforce metadata integrity
         for idx, chunk in enumerate(sorted_chunks):
             if not hasattr(chunk, "policy_area_id") or not chunk.policy_area_id:
@@ -222,7 +241,11 @@ class CPPAdapter:
                 {
                     "text": chunk_text,
                     "chunk_id": chunk.id,
-                    "resolution": (chunk.resolution.value.lower() if hasattr(chunk, "resolution") else None),
+                    "resolution": (
+                        chunk.resolution.value.lower()
+                        if hasattr(chunk, "resolution")
+                        else None
+                    ),
                 }
             )
 
@@ -232,29 +255,65 @@ class CPPAdapter:
             # CRITICAL: Preserve PA×DIM metadata for Phase 2 question routing
             extra_metadata = {
                 "chunk_id": chunk.id,
-                "policy_area_id": chunk.policy_area_id if hasattr(chunk, "policy_area_id") else None,
-                "dimension_id": chunk.dimension_id if hasattr(chunk, "dimension_id") else None,
-                "resolution": chunk.resolution.value.lower() if hasattr(chunk, "resolution") else None,
+                "policy_area_id": (
+                    chunk.policy_area_id if hasattr(chunk, "policy_area_id") else None
+                ),
+                "dimension_id": (
+                    chunk.dimension_id if hasattr(chunk, "dimension_id") else None
+                ),
+                "resolution": (
+                    chunk.resolution.value.lower()
+                    if hasattr(chunk, "resolution")
+                    else None
+                ),
             }
 
             # Add facets if available
             if hasattr(chunk, "policy_facets") and chunk.policy_facets:
                 extra_metadata["policy_facets"] = {
-                    "axes": chunk.policy_facets.axes if hasattr(chunk.policy_facets, "axes") else [],
-                    "programs": chunk.policy_facets.programs if hasattr(chunk.policy_facets, "programs") else [],
-                    "projects": chunk.policy_facets.projects if hasattr(chunk.policy_facets, "projects") else [],
+                    "axes": (
+                        chunk.policy_facets.axes
+                        if hasattr(chunk.policy_facets, "axes")
+                        else []
+                    ),
+                    "programs": (
+                        chunk.policy_facets.programs
+                        if hasattr(chunk.policy_facets, "programs")
+                        else []
+                    ),
+                    "projects": (
+                        chunk.policy_facets.projects
+                        if hasattr(chunk.policy_facets, "projects")
+                        else []
+                    ),
                 }
 
             if hasattr(chunk, "time_facets") and chunk.time_facets:
                 extra_metadata["time_facets"] = {
-                    "years": chunk.time_facets.years if hasattr(chunk.time_facets, "years") else [],
-                    "periods": chunk.time_facets.periods if hasattr(chunk.time_facets, "periods") else [],
+                    "years": (
+                        chunk.time_facets.years
+                        if hasattr(chunk.time_facets, "years")
+                        else []
+                    ),
+                    "periods": (
+                        chunk.time_facets.periods
+                        if hasattr(chunk.time_facets, "periods")
+                        else []
+                    ),
                 }
 
             if hasattr(chunk, "geo_facets") and chunk.geo_facets:
                 extra_metadata["geo_facets"] = {
-                    "territories": chunk.geo_facets.territories if hasattr(chunk.geo_facets, "territories") else [],
-                    "regions": chunk.geo_facets.regions if hasattr(chunk.geo_facets, "regions") else [],
+                    "territories": (
+                        chunk.geo_facets.territories
+                        if hasattr(chunk.geo_facets, "territories")
+                        else []
+                    ),
+                    "regions": (
+                        chunk.geo_facets.regions
+                        if hasattr(chunk.geo_facets, "regions")
+                        else []
+                    ),
                 }
 
             sentence_metadata.append(
@@ -269,26 +328,88 @@ class CPPAdapter:
 
             chunk_summary = {
                 "id": chunk.id,
-                "resolution": (chunk.resolution.value.lower() if hasattr(chunk, "resolution") else None),
+                "resolution": (
+                    chunk.resolution.value.lower()
+                    if hasattr(chunk, "resolution")
+                    else None
+                ),
                 "text_span": {"start": chunk_start, "end": chunk_end},
                 "policy_area_id": extra_metadata["policy_area_id"],
                 "dimension_id": extra_metadata["dimension_id"],
                 "has_kpi": hasattr(chunk, "kpi") and chunk.kpi is not None,
                 "has_budget": hasattr(chunk, "budget") and chunk.budget is not None,
                 "confidence": {
-                    "layout": getattr(chunk.confidence, "layout", ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L256_66", 0.0)) if hasattr(chunk, "confidence") else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L256_108", 0.0),
-                    "ocr": getattr(chunk.confidence, "ocr", ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L257_60", 0.0)) if hasattr(chunk, "confidence") else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L257_102", 0.0),
-                    "typing": getattr(chunk.confidence, "typing", ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L258_66", 0.0)) if hasattr(chunk, "confidence") else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L258_108", 0.0),
+                    "layout": (
+                        getattr(
+                            chunk.confidence,
+                            "layout",
+                            ParameterLoaderV2.get(
+                                "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                                "auto_param_L256_66",
+                                0.0,
+                            ),
+                        )
+                        if hasattr(chunk, "confidence")
+                        else ParameterLoaderV2.get(
+                            "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                            "auto_param_L256_108",
+                            0.0,
+                        )
+                    ),
+                    "ocr": (
+                        getattr(
+                            chunk.confidence,
+                            "ocr",
+                            ParameterLoaderV2.get(
+                                "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                                "auto_param_L257_60",
+                                0.0,
+                            ),
+                        )
+                        if hasattr(chunk, "confidence")
+                        else ParameterLoaderV2.get(
+                            "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                            "auto_param_L257_102",
+                            0.0,
+                        )
+                    ),
+                    "typing": (
+                        getattr(
+                            chunk.confidence,
+                            "typing",
+                            ParameterLoaderV2.get(
+                                "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                                "auto_param_L258_66",
+                                0.0,
+                            ),
+                        )
+                        if hasattr(chunk, "confidence")
+                        else ParameterLoaderV2.get(
+                            "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                            "auto_param_L258_108",
+                            0.0,
+                        )
+                    ),
                 },
             }
             chunk_summaries.append(chunk_summary)
 
             if hasattr(chunk, "provenance") and chunk.provenance:
                 provenance_with_data += 1
-                if not hasattr(chunk.provenance, "page_number") or chunk.provenance.page_number is None:
-                    raise CPPAdapterError(f"Missing provenance.page_number in chunk {chunk.id}")
-                if not hasattr(chunk.provenance, "section_header") or not chunk.provenance.section_header:
-                    raise CPPAdapterError(f"Missing provenance.section_header in chunk {chunk.id}")
+                if (
+                    not hasattr(chunk.provenance, "page_number")
+                    or chunk.provenance.page_number is None
+                ):
+                    raise CPPAdapterError(
+                        f"Missing provenance.page_number in chunk {chunk.id}"
+                    )
+                if (
+                    not hasattr(chunk.provenance, "section_header")
+                    or not chunk.provenance.section_header
+                ):
+                    raise CPPAdapterError(
+                        f"Missing provenance.section_header in chunk {chunk.id}"
+                    )
             else:
                 raise CPPAdapterError(f"Missing provenance in chunk {chunk.id}")
 
@@ -298,7 +419,9 @@ class CPPAdapter:
             # Extract entities for entity_index
             if hasattr(chunk, "entities") and chunk.entities:
                 for entity in chunk.entities:
-                    entity_text = entity.text if hasattr(entity, "text") else str(entity)
+                    entity_text = (
+                        entity.text if hasattr(entity, "text") else str(entity)
+                    )
                     if entity_text not in entity_index:
                         entity_index[entity_text] = []
                     entity_index[entity_text].append(idx)
@@ -329,29 +452,56 @@ class CPPAdapter:
 
             # Create ChunkData object
             chunk_type_value = chunk.chunk_type
-            if chunk_type_value not in ["diagnostic", "activity", "indicator", "resource", "temporal", "entity"]:
-                raise CPPAdapterError(f"Invalid chunk_type '{chunk_type_value}' in chunk {chunk.id}")
+            if chunk_type_value not in [
+                "diagnostic",
+                "activity",
+                "indicator",
+                "resource",
+                "temporal",
+                "entity",
+            ]:
+                raise CPPAdapterError(
+                    f"Invalid chunk_type '{chunk_type_value}' in chunk {chunk.id}"
+                )
 
-            chunks_data.append(ChunkData(
-                id=idx,
-                text=chunk_text,
-                chunk_type=chunk_type_value,
-                sentences=[idx],
-                tables=[len(tables) - 1] if hasattr(chunk, "budget") and chunk.budget else [],
-                start_pos=chunk_start,
-                end_pos=chunk_end,
-                confidence=getattr(chunk.confidence, "overall", 1.0) if hasattr(chunk, "confidence") else 1.0,
-                edges_out=[],  # Edges populated later if needed or from chunk_graph
-                policy_area_id=extra_metadata["policy_area_id"],
-                dimension_id=extra_metadata["dimension_id"],
-                provenance=Provenance(
-                    page_number=chunk.provenance.page_number,
-                    section_header=getattr(chunk.provenance, "section_header", None),
-                    bbox=getattr(chunk.provenance, "bbox", None),
-                    span_in_page=getattr(chunk.provenance, "span_in_page", None),
-                    source_file=getattr(chunk.provenance, "source_file", None)
-                ) if hasattr(chunk, "provenance") and chunk.provenance else None
-            ))
+            chunks_data.append(
+                ChunkData(
+                    id=idx,
+                    text=chunk_text,
+                    chunk_type=chunk_type_value,
+                    sentences=[idx],
+                    tables=(
+                        [len(tables) - 1]
+                        if hasattr(chunk, "budget") and chunk.budget
+                        else []
+                    ),
+                    start_pos=chunk_start,
+                    end_pos=chunk_end,
+                    confidence=(
+                        getattr(chunk.confidence, "overall", 1.0)
+                        if hasattr(chunk, "confidence")
+                        else 1.0
+                    ),
+                    edges_out=[],  # Edges populated later if needed or from chunk_graph
+                    policy_area_id=extra_metadata["policy_area_id"],
+                    dimension_id=extra_metadata["dimension_id"],
+                    provenance=(
+                        Provenance(
+                            page_number=chunk.provenance.page_number,
+                            section_header=getattr(
+                                chunk.provenance, "section_header", None
+                            ),
+                            bbox=getattr(chunk.provenance, "bbox", None),
+                            span_in_page=getattr(
+                                chunk.provenance, "span_in_page", None
+                            ),
+                            source_file=getattr(chunk.provenance, "source_file", None),
+                        )
+                        if hasattr(chunk, "provenance") and chunk.provenance
+                        else None
+                    ),
+                )
+            )
 
         # Join full text
         full_text = " ".join(full_text_parts)
@@ -369,44 +519,106 @@ class CPPAdapter:
 
         # Build metadata from canon_package
         metadata_dict = {
-            'adapter_source': 'CPPAdapter',
-            'schema_version': canon_package.schema_version if hasattr(canon_package, 'schema_version') else 'SPC-2025.1',
-            'chunk_count': len(sorted_chunks),
-            'processing_mode': 'chunked',
-            'chunks': chunk_summaries,
+            "adapter_source": "CPPAdapter",
+            "schema_version": (
+                canon_package.schema_version
+                if hasattr(canon_package, "schema_version")
+                else "SPC-2025.1"
+            ),
+            "chunk_count": len(sorted_chunks),
+            "processing_mode": "chunked",
+            "chunks": chunk_summaries,
         }
 
         # Add quality metrics if available
-        if hasattr(canon_package, 'quality_metrics') and canon_package.quality_metrics:
+        if hasattr(canon_package, "quality_metrics") and canon_package.quality_metrics:
             qm = canon_package.quality_metrics
-            metadata_dict['quality_metrics'] = {
-                'provenance_completeness': qm.provenance_completeness if hasattr(qm, 'provenance_completeness') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L328_117", 0.0),
-                'structural_consistency': qm.structural_consistency if hasattr(qm, 'structural_consistency') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L329_114", 0.0),
-                'boundary_f1': qm.boundary_f1 if hasattr(qm, 'boundary_f1') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L330_81", 0.0),
-                'kpi_linkage_rate': qm.kpi_linkage_rate if hasattr(qm, 'kpi_linkage_rate') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L331_96", 0.0),
-                'budget_consistency_score': qm.budget_consistency_score if hasattr(qm, 'budget_consistency_score') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L332_120", 0.0),
-                'temporal_robustness': qm.temporal_robustness if hasattr(qm, 'temporal_robustness') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L333_105", 0.0),
-                'chunk_context_coverage': qm.chunk_context_coverage if hasattr(qm, 'chunk_context_coverage') else ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L334_114", 0.0),
+            metadata_dict["quality_metrics"] = {
+                "provenance_completeness": (
+                    qm.provenance_completeness
+                    if hasattr(qm, "provenance_completeness")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L328_117",
+                        0.0,
+                    )
+                ),
+                "structural_consistency": (
+                    qm.structural_consistency
+                    if hasattr(qm, "structural_consistency")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L329_114",
+                        0.0,
+                    )
+                ),
+                "boundary_f1": (
+                    qm.boundary_f1
+                    if hasattr(qm, "boundary_f1")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L330_81",
+                        0.0,
+                    )
+                ),
+                "kpi_linkage_rate": (
+                    qm.kpi_linkage_rate
+                    if hasattr(qm, "kpi_linkage_rate")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L331_96",
+                        0.0,
+                    )
+                ),
+                "budget_consistency_score": (
+                    qm.budget_consistency_score
+                    if hasattr(qm, "budget_consistency_score")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L332_120",
+                        0.0,
+                    )
+                ),
+                "temporal_robustness": (
+                    qm.temporal_robustness
+                    if hasattr(qm, "temporal_robustness")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L333_105",
+                        0.0,
+                    )
+                ),
+                "chunk_context_coverage": (
+                    qm.chunk_context_coverage
+                    if hasattr(qm, "chunk_context_coverage")
+                    else ParameterLoaderV2.get(
+                        "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                        "auto_param_L334_114",
+                        0.0,
+                    )
+                ),
             }
 
         # Add policy manifest if available
-        if hasattr(canon_package, 'policy_manifest') and canon_package.policy_manifest:
+        if hasattr(canon_package, "policy_manifest") and canon_package.policy_manifest:
             pm = canon_package.policy_manifest
-            metadata_dict['policy_manifest'] = {
-                'axes': pm.axes if hasattr(pm, 'axes') else [],
-                'programs': pm.programs if hasattr(pm, 'programs') else [],
-                'projects': pm.projects if hasattr(pm, 'projects') else [],
-                'years': pm.years if hasattr(pm, 'years') else [],
-                'territories': pm.territories if hasattr(pm, 'territories') else [],
+            metadata_dict["policy_manifest"] = {
+                "axes": pm.axes if hasattr(pm, "axes") else [],
+                "programs": pm.programs if hasattr(pm, "programs") else [],
+                "projects": pm.projects if hasattr(pm, "projects") else [],
+                "years": pm.years if hasattr(pm, "years") else [],
+                "territories": pm.territories if hasattr(pm, "territories") else [],
             }
 
         # Add SPC rich data if available in metadata
-        if hasattr(canon_package, 'metadata') and canon_package.metadata:
-            if 'spc_rich_data' in canon_package.metadata:
-                metadata_dict['spc_rich_data'] = canon_package.metadata['spc_rich_data']
+        if hasattr(canon_package, "metadata") and canon_package.metadata:
+            if "spc_rich_data" in canon_package.metadata:
+                metadata_dict["spc_rich_data"] = canon_package.metadata["spc_rich_data"]
 
         if len(sorted_chunks) > 0:
-            metadata_dict['provenance_completeness'] = provenance_with_data / len(sorted_chunks)
+            metadata_dict["provenance_completeness"] = provenance_with_data / len(
+                sorted_chunks
+            )
 
         metadata = MappingProxyType(metadata_dict)
 
@@ -422,7 +634,11 @@ class CPPAdapter:
             metadata=dict(metadata),
             sentence_metadata=sentence_metadata,
             indexes=indexes,
-            structured_text={"full_text": full_text, "sections": (), "page_boundaries": ()},
+            structured_text={
+                "full_text": full_text,
+                "sections": (),
+                "page_boundaries": (),
+            },
             language=language,
             ingested_at=datetime.now(timezone.utc),
             full_text=full_text,
@@ -449,12 +665,23 @@ class CPPAdapter:
                     "document_id": preprocessed_doc.document_id,
                     "sentence_metadata": preprocessed_doc.sentence_metadata,
                     "resolution_index": {},  # Placeholder, as it's not generated by the adapter
-                    "provenance_completeness": metadata_dict.get('provenance_completeness', ParameterLoaderV2.get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__", "auto_param_L397_92", 0.0)),
+                    "provenance_completeness": metadata_dict.get(
+                        "provenance_completeness",
+                        ParameterLoaderV2.get(
+                            "farfan_core.utils.cpp_adapter.CPPAdapter.__init__",
+                            "auto_param_L397_92",
+                            0.0,
+                        ),
+                    ),
                 }
-                self.wiring_validator.validate_adapter_to_orchestrator(preprocessed_dict)
+                self.wiring_validator.validate_adapter_to_orchestrator(
+                    preprocessed_dict
+                )
                 self.logger.info("✓ Adapter → Orchestrator contract validation passed")
             except Exception as e:
-                self.logger.error(f"Adapter → Orchestrator contract validation failed: {e}")
+                self.logger.error(
+                    f"Adapter → Orchestrator contract validation failed: {e}"
+                )
                 raise ValueError(
                     f"Runtime contract violation at Adapter → Orchestrator boundary: {e}"
                 ) from e
@@ -463,8 +690,7 @@ class CPPAdapter:
 
 
 def adapt_cpp_to_orchestrator(
-    canon_package: Any,
-    document_id: str
+    canon_package: Any, document_id: str
 ) -> PreprocessedDocument:
     """
     Convenience function to adapt CPP to PreprocessedDocument.
@@ -484,7 +710,7 @@ def adapt_cpp_to_orchestrator(
 
 
 __all__ = [
-    'CPPAdapter',
-    'CPPAdapterError',
-    'adapt_cpp_to_orchestrator',
+    "CPPAdapter",
+    "CPPAdapterError",
+    "adapt_cpp_to_orchestrator",
 ]

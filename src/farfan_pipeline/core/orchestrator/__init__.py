@@ -1,4 +1,5 @@
 """Orchestrator utilities with contract validation on import."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -6,7 +7,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .questionnaire import CanonicalQuestionnaire
 
-# Import core classes from the refactored package
+from ..types import ChunkData, PreprocessedDocument, Provenance
 from .core import (
     AbortRequested,
     AbortSignal,
@@ -16,7 +17,6 @@ from .core import (
     Orchestrator,
     PhaseInstrumentation,
     PhaseResult,
-    PreprocessedDocument,
     ResourceLimits,
     ScoredMicroQuestion,
 )
@@ -37,6 +37,8 @@ __all__ = [
     "Orchestrator",
     "MethodExecutor",
     "PreprocessedDocument",
+    "ChunkData",
+    "Provenance",
     "Evidence",
     "AbortSignal",
     "AbortRequested",

@@ -1,10 +1,12 @@
 import pytest
 from farfan_pipeline.core.orchestrator.chunk_router import ChunkRouter, ChunkRoute
-from farfan_pipeline.core.orchestrator.core import ChunkData, Provenance
+from farfan_pipeline.core.types import ChunkData, Provenance
+
 
 @pytest.fixture
 def chunk_router():
     return ChunkRouter()
+
 
 def test_routing_contract_execution_map(chunk_router):
     """
@@ -23,7 +25,7 @@ def test_routing_contract_execution_map(chunk_router):
             end_pos=100,
             confidence=0.95,
             policy_area_id="PA05",
-            dimension_id="DIM01"
+            dimension_id="DIM01",
         ),
         ChunkData(
             id=102,
@@ -35,7 +37,7 @@ def test_routing_contract_execution_map(chunk_router):
             end_pos=200,
             confidence=0.92,
             policy_area_id="PA05",
-            dimension_id="DIM02"
+            dimension_id="DIM02",
         ),
         ChunkData(
             id=103,
@@ -46,7 +48,7 @@ def test_routing_contract_execution_map(chunk_router):
             start_pos=201,
             end_pos=300,
             confidence=0.5,
-        )
+        ),
     ]
 
     # Generate Execution Map
@@ -54,7 +56,7 @@ def test_routing_contract_execution_map(chunk_router):
 
     # Assertions
     assert len(execution_map) == 3
-    
+
     # Check Chunk 101 (Diagnostic) -> Should go to D1Q1 (first in diagnostic list)
     route_101 = execution_map[101]
     assert route_101.chunk_id == 101
@@ -75,22 +77,41 @@ def test_routing_contract_execution_map(chunk_router):
     assert route_103.executor_class == ""
     assert "No executor mapping" in route_103.skip_reason
 
+
 def test_routing_determinism(chunk_router):
     """
     Verifies that the ExecutionMap generation is deterministic regardless of input order.
     """
-    chunk1 = ChunkData(id=1, text="A", chunk_type="diagnostic", sentences=[], tables=[], start_pos=0, end_pos=1, confidence=1.0)
-    chunk2 = ChunkData(id=2, text="B", chunk_type="activity", sentences=[], tables=[], start_pos=0, end_pos=1, confidence=1.0)
-    
+    chunk1 = ChunkData(
+        id=1,
+        text="A",
+        chunk_type="diagnostic",
+        sentences=[],
+        tables=[],
+        start_pos=0,
+        end_pos=1,
+        confidence=1.0,
+    )
+    chunk2 = ChunkData(
+        id=2,
+        text="B",
+        chunk_type="activity",
+        sentences=[],
+        tables=[],
+        start_pos=0,
+        end_pos=1,
+        confidence=1.0,
+    )
+
     # Order 1
     map1 = chunk_router.generate_execution_map([chunk1, chunk2])
-    
+
     # Order 2
     map2 = chunk_router.generate_execution_map([chunk2, chunk1])
-    
+
     # Keys should be identical
     assert list(map1.keys()) == list(map2.keys())
-    
+
     # Values should be identical
     assert map1[1] == map2[1]
     assert map1[2] == map2[2]
