@@ -1,21 +1,24 @@
+"""Calibration decorators - LEGACY STUB for backward compatibility."""
+
 import functools
-import logging
-from typing import Any, Callable
-from farfan_pipeline.core.calibration.calibration_registry import get_calibration
+from collections.abc import Callable
+from typing import TypeVar
 
-logger = logging.getLogger(__name__)
+_F = TypeVar("_F", bound=Callable[..., object])
 
-def calibrated_method(method_id: str) -> Callable:
+
+def calibrated_method(method_id: str) -> Callable[[_F], _F]:  # noqa: ARG001
+    """No-op decorator for backward compatibility.
+
+    Previously used to apply calibration parameters to methods.
+    Now serves as a marker for methods that were calibrated.
     """
-    Decorator to apply calibration to a method.
-    """
-    def decorator(func: Callable) -> Callable:
+
+    def decorator(func: _F) -> _F:
         @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
-            calibration_params = get_calibration(method_id)
-            logger.info(f"Calling calibrated method '{method_id}' with params: {calibration_params}")
-            # In a real implementation, we would use the calibration_params
-            # to modify the behavior of the decorated function.
-            return func(*args, **kwargs)
-        return wrapper
+        def wrapper(*args: object, **kwargs: object) -> object:
+            return func(*args, **kwargs)  # type: ignore[call-arg]
+
+        return wrapper  # type: ignore[return-value]
+
     return decorator

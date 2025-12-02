@@ -89,3 +89,8 @@ contract-badge.json
 # Contract Certificates (generated, not committed)
 *_certificate.json
 !.github/workflows/
+
+# Calibration cleanup artifacts
+.cleanup_backup/
+test_imports.py
+test_calibration_imports.py

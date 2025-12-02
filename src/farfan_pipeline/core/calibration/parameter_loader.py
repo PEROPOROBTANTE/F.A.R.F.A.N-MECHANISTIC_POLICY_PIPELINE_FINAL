@@ -1,27 +1,23 @@
-from typing import Any, Dict
-from .calibration_registry import CALIBRATIONS
+"""Parameter loader - LEGACY STUB for backward compatibility."""
+
 
 class ParameterLoader:
+    """Stub parameter loader for backward compatibility.
+
+    Returns empty dictionaries for all parameter requests.
     """
-    Loads and provides access to calibration parameters.
-    """
-    def __init__(self):
-        self._params: Dict[str, Dict[str, Any]] | None = None
 
-    def load(self):
-        """
-        Loads parameters from the central registry.
-        """
-        self._params = CALIBRATIONS
+    def get(self, method_id: str) -> dict[str, object]:  # noqa: ARG002
+        """Return empty parameters for any method."""
+        return {}
 
-    def get(self, method_id: str, default: Dict[str, Any] = None) -> Dict[str, Any]:
-        """
-        Gets the parameters for a given method_id.
-        """
-        if self._params is None:
-            self.load()
 
-        if default is None:
-            default = {}
+_instance: ParameterLoader | None = None
 
-        return self._params.get(method_id, default)
+
+def get_parameter_loader() -> ParameterLoader:
+    """Get singleton parameter loader instance."""
+    global _instance  # noqa: PLW0603
+    if _instance is None:
+        _instance = ParameterLoader()
+    return _instance
