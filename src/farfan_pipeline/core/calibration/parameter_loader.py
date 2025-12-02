@@ -31,3 +31,11 @@ class ParameterLoader:
 
         params = ParameterLoaderV2.get_all(method_id)
         return params if params else default
+
+
+_parameter_loader = ParameterLoader()
+
+
+def get_parameter_loader() -> ParameterLoader:
+    """Get the global parameter loader instance."""
+    return _parameter_loader

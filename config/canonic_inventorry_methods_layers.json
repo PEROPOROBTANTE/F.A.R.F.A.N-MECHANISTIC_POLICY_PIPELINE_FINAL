@@ -1,0 +1,36 @@
+{
+  "test_method_executor": {
+    "required_layers": ["chain", "quality", "provenance"],
+    "weights": {
+      "chain": 0.4,
+      "quality": 0.35,
+      "provenance": 0.25
+    },
+    "aggregation_method": "choquet_integral"
+  },
+  "test_method_analyzer": {
+    "required_layers": ["quality", "density", "coverage"],
+    "weights": {
+      "quality": 0.4,
+      "density": 0.3,
+      "coverage": 0.3
+    },
+    "aggregation_method": "weighted_sum"
+  },
+  "test_method_missing_intrinsic": {
+    "required_layers": ["quality"],
+    "weights": {
+      "quality": 1.0
+    },
+    "aggregation_method": "weighted_sum"
+  },
+  "farfan_core.analysis.derek_beach.BayesianThresholdsConfig": {
+    "required_layers": ["mechanism", "uncertainty", "provenance"],
+    "weights": {
+      "mechanism": 0.4,
+      "uncertainty": 0.35,
+      "provenance": 0.25
+    },
+    "aggregation_method": "weighted_sum"
+  }
+}
