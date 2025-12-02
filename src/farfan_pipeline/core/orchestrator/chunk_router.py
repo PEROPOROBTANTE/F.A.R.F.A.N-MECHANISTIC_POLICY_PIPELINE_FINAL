@@ -4,17 +4,17 @@ Chunk Router for SPC Exploitation.
 Routes semantic chunks to appropriate executors based on chunk type,
 enabling targeted execution and reducing redundant processing.
 """
-from __future__ import annotations
 
 # Routing table version identifier
 ROUTING_TABLE_VERSION = "v1"
 
+from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.core import ChunkData
+    from .core import ChunkData
 
 
 @dataclass

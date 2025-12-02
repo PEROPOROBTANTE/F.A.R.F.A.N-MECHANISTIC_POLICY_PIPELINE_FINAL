@@ -12,7 +12,7 @@ import blake3
 import structlog
 from pydantic import BaseModel, ValidationError
 
-from farfan_pipeline.core.wiring.contracts import (
+from .contracts import (
     AdapterExpectation,
     AggregateExpectation,
     ArgRouterExpectation,
@@ -30,7 +30,7 @@ from farfan_pipeline.core.wiring.contracts import (
     SignalPackDeliverable,
     SignalRegistryExpectation,
 )
-from farfan_pipeline.core.wiring.errors import WiringContractError
+from .errors import WiringContractError
 
 logger = structlog.get_logger(__name__)
 
@@ -186,7 +186,7 @@ class WiringValidator:
         Raises:
             WiringContractError: If validation fails
         """
-        from farfan_pipeline.core.wiring.contracts import SPCDeliverable
+        from .contracts import SPCDeliverable
 
         validator = self._validators["spc->adapter"]
         validator.validate(

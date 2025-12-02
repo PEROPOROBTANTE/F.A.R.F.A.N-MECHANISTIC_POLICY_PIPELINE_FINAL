@@ -65,7 +65,7 @@ class MonolithSchemaValidator:
         if schema_path:
             self._load_schema()
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._load_schema")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._load_schema")
     def _load_schema(self, **kwargs: Any) -> None:
         """
         Load JSON schema from file.
@@ -156,7 +156,7 @@ class MonolithSchemaValidator:
 
         return report
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._validate_structure")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._validate_structure")
     def _validate_structure(self, monolith: dict[str, Any], **kwargs: Any) -> None:
         """Validate top-level structure."""
         required_keys = ['schema_version', 'version', 'blocks', 'integrity']
@@ -179,7 +179,7 @@ class MonolithSchemaValidator:
                 if block not in blocks:
                     self.errors.append(f"Missing required block: {block}")
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._validate_schema_version")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._validate_schema_version")
     def _validate_schema_version(self, monolith: dict[str, Any], **kwargs: Any) -> str:
         """Validate schema version."""
         schema_version = monolith.get('schema_version', '')
@@ -197,7 +197,7 @@ class MonolithSchemaValidator:
 
         return schema_version
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._validate_question_counts")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._validate_question_counts")
     def _validate_question_counts(self, monolith: dict[str, Any], **kwargs: Any) -> dict[str, int]:
         """Validate question counts."""
         blocks = monolith.get('blocks', {})
@@ -316,7 +316,7 @@ class MonolithSchemaValidator:
 
         return results
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._validate_against_schema")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._validate_against_schema")
     def _validate_against_schema(self, monolith: dict[str, Any], **kwargs: Any) -> None:
         """Validate monolith against JSON schema."""
         if not self.schema:
@@ -329,7 +329,7 @@ class MonolithSchemaValidator:
         except Exception as e:
             self.warnings.append(f"Schema validation failed: {e}")
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._validate_field_coverage")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._validate_field_coverage")
     def _validate_field_coverage(self, monolith: dict[str, Any], **kwargs: Any) -> dict[str, float]:
         """
         Validate field coverage for micro-questions.
@@ -385,7 +385,7 @@ class MonolithSchemaValidator:
 
         return coverage_stats
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._validate_semantic_consistency")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._validate_semantic_consistency")
     def _validate_semantic_consistency(self, monolith: dict[str, Any], **kwargs: Any) -> bool:
         """
         Validate semantic consistency of micro-questions.
@@ -454,7 +454,7 @@ class MonolithSchemaValidator:
         
         return all_valid
 
-    @calibrated_method("farfan_pipeline.utils.validation.schema_validator.MonolithSchemaValidator._calculate_schema_hash")
+    @calibrated_method("farfan_core.utils.validation.schema_validator.MonolithSchemaValidator._calculate_schema_hash")
     def _calculate_schema_hash(self, monolith: dict[str, Any], **kwargs: Any) -> str:
         """Calculate deterministic hash of monolith schema."""
         # Create canonical JSON representation

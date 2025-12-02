@@ -75,7 +75,7 @@ except ImportError:
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.questionnaire import CanonicalQuestionnaire
+    from .questionnaire import CanonicalQuestionnaire
 
 # ============================================================================
 # TYPE-SAFE SIGNAL PACKS (Pydantic v2)
@@ -929,7 +929,7 @@ def create_signal_registry(
         Initialized signal registry
 
     Example:
-        >>> from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+        >>> from farfan_core.core.orchestrator.questionnaire import load_questionnaire
         >>> canonical = load_questionnaire()
         >>> registry = create_signal_registry(canonical)
         >>> signals = registry.get_chunking_signals()

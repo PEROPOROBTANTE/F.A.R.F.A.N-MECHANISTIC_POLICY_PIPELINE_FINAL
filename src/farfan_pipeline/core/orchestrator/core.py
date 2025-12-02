@@ -33,7 +33,7 @@ from typing import TYPE_CHECKING, Any, Literal, ParamSpec, TypedDict, TypeVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from farfan_pipeline.core.orchestrator.factory import CanonicalQuestionnaire
+    from .factory import CanonicalQuestionnaire
 
 from ...analysis.recommendation_engine import RecommendationEngine
 from ...config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
@@ -51,12 +51,12 @@ from ...processing.aggregation import (
     group_by,
     validate_scored_results,
 )
-from farfan_pipeline.core.dependency_lockdown import get_dependency_lockdown
-from farfan_pipeline.core.orchestrator import executors_contract as executors
-from farfan_pipeline.core.orchestrator.arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
-from farfan_pipeline.core.orchestrator.class_registry import ClassRegistryError, build_class_registry
-from farfan_pipeline.core.orchestrator.executor_config import ExecutorConfig
-from farfan_pipeline.core.orchestrator.versions import CALIBRATION_VERSION
+from ..dependency_lockdown import get_dependency_lockdown
+from . import executors_contract as executors
+from .arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
+from .class_registry import ClassRegistryError, build_class_registry
+from .executor_config import ExecutorConfig
+from .versions import CALIBRATION_VERSION
 from ...utils.paths import safe_join
 
 logger = logging.getLogger(__name__)
@@ -452,7 +452,7 @@ class PreprocessedDocument:
             except ImportError as e:
                 raise ImportError(
                     "SPC ingestion requires spc_adapter module. "
-                    "Ensure farfan_pipeline.utils.spc_adapter is available."
+                    "Ensure farfan_core.utils.spc_adapter is available."
                 ) from e
             except ValueError:
                 # Re-raise ValueError directly (e.g., empty document validation)
@@ -937,7 +937,7 @@ class MethodExecutor:
         signal_registry: Any | None = None,
         method_registry: Any | None = None, # MethodRegistry instance
     ) -> None:
-        from farfan_pipeline.core.orchestrator.method_registry import MethodRegistry, setup_default_instantiation_rules
+        from .method_registry import MethodRegistry, setup_default_instantiation_rules
 
         self.degraded_mode = False
         self.degraded_reasons: list[str] = []
@@ -962,7 +962,7 @@ class MethodExecutor:
         # Build minimal class type registry for ArgRouter compatibility
         # Note: This doesn't instantiate classes, just loads types
         try:
-            from farfan_pipeline.core.orchestrator.class_registry import build_class_registry
+            from .class_registry import build_class_registry
             registry = build_class_registry()
         except (ClassRegistryError, ModuleNotFoundError, ImportError) as exc:
             self.degraded_mode = True
@@ -999,7 +999,7 @@ class MethodExecutor:
             AttributeError: If method doesn't exist
             MethodRegistryError: If method cannot be retrieved
         """
-        from farfan_pipeline.core.orchestrator.method_registry import MethodRegistryError
+        from .method_registry import MethodRegistryError
 
         # Get method from registry (lazy instantiation)
         try:
@@ -1271,7 +1271,7 @@ class Orchestrator:
             resource_limits: Resource limit configuration.
             resource_snapshot_interval: Interval for resource snapshots.
         """
-        from farfan_pipeline.core.orchestrator.factory import _validate_questionnaire_structure
+        from .factory import _validate_questionnaire_structure
 
         validate_phase_definitions(self.FASES, self.__class__)
 
@@ -1282,7 +1282,7 @@ class Orchestrator:
         self.calibration_orchestrator = calibration_orchestrator
         self.resource_limits = resource_limits or ResourceLimits()
         self.resource_snapshot_interval = max(1, resource_snapshot_interval)
-        from farfan_pipeline.core.orchestrator.factory import get_questionnaire_provider
+        from .factory import get_questionnaire_provider
         self.questionnaire_provider = get_questionnaire_provider()
 
         # Validate questionnaire structure
@@ -1595,15 +1595,15 @@ class Orchestrator:
         logger.info(f"Generated {len(canon_package.chunk_graph.chunks)} chunks for {policy_area_id}.")
 
         # 2. Load signals
-        from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
-        from farfan_pipeline.core.orchestrator.signal_loader import build_signal_pack_from_monolith
+        from .questionnaire import load_questionnaire
+        from .signal_loader import build_signal_pack_from_monolith
 
         questionnaire = load_questionnaire()
         signal_pack = build_signal_pack_from_monolith(policy_area_id, questionnaire=questionnaire)
         logger.info(f"Loaded signal pack for {policy_area_id} with {len(signal_pack.patterns)} patterns.")
 
         # 3. Instantiate an executor
-        from farfan_pipeline.core.orchestrator import executors
+        from . import executors
 
         # Simple mock for the signal registry, as the executor expects an object with a 'get' method.
         class MockSignalRegistry:
@@ -1908,7 +1908,7 @@ class Orchestrator:
 
         # Check questionnaire provider (if available)
         try:
-            from farfan_pipeline.core.orchestrator import get_questionnaire_provider
+            from . import get_questionnaire_provider
             provider = get_questionnaire_provider()
             questionnaire_health = {
                 'has_data': provider.has_data(),
@@ -2003,7 +2003,7 @@ class Orchestrator:
             ).hexdigest()
         else:
             raise ValueError(
-                "No monolith data available. Use farfan_pipeline.core.orchestrator.factory to load "
+                "No monolith data available. Use farfan_core.core.orchestrator.factory to load "
                 "data and pass via monolith parameter for I/O-free initialization."
             )
 

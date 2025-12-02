@@ -14,7 +14,7 @@ This module is an INTERNAL COMPONENT of:
 
 DO NOT use this module directly as an independent pipeline. It is consumed
 internally by the SPC core and should only be imported from within:
-    - farfan_pipeline.processing.spc_ingestion
+    - farfan_core.processing.spc_ingestion
     - Unit tests for SPC components
 
 Scientific Foundation:
@@ -42,7 +42,7 @@ from scipy.special import rel_entr
 # Check dependency lockdown before importing transformers
 from farfan_pipeline.core.dependency_lockdown import get_dependency_lockdown
 from transformers import AutoModel, AutoTokenizer
-from farfan_core import get_parameter_loader
+from farfan_pipeline import get_parameter_loader
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 _lockdown = get_dependency_lockdown()
@@ -142,7 +142,7 @@ class SemanticProcessor:
         self._tokenizer = None
         self._loaded = False
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor._lazy_load")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor._lazy_load")
     def _lazy_load(self) -> None:
         if self._loaded:
             return
@@ -170,7 +170,7 @@ class SemanticProcessor:
                 f"Missing dependency: {missing}. Please install with 'pip install {missing}'"
             ) from e
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor.chunk_text")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor.chunk_text")
     def chunk_text(self, text: str, preserve_structure: bool = True) -> list[dict[str, Any]]:
         """
         Policy-aware semantic chunking:
@@ -213,7 +213,7 @@ class SemanticProcessor:
         logger.info(f"Generated {len(chunks)} policy-aware chunks")
         return [_upgrade_chunk_schema(chunk) for chunk in chunks]
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor._detect_pdm_structure")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor._detect_pdm_structure")
     def _detect_pdm_structure(self, text: str) -> list[dict[str, Any]]:
         """Detect PDM sections using Colombian policy document patterns"""
         sections = []
@@ -241,7 +241,7 @@ class SemanticProcessor:
             })
         return sections
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor._detect_table")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor._detect_table")
     def _detect_table(self, text: str) -> bool:
         """Detect if chunk contains tabular data"""
         # Multiple tabs or pipes suggest table structure
@@ -249,7 +249,7 @@ class SemanticProcessor:
                 text.count('|') > 3 or
                 bool(re.search(r'\d+\s+\d+\s+\d+', text)))
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor._detect_numerical_data")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor._detect_numerical_data")
     def _detect_numerical_data(self, text: str) -> bool:
         """Detect if chunk contains significant numerical/financial data"""
         # Look for currency, percentages, large numbers
@@ -260,7 +260,7 @@ class SemanticProcessor:
         ]
         return any(re.search(p, text) for p in patterns)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor._embed_batch")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor._embed_batch")
     def _embed_batch(self, texts: list[str]) -> list[NDArray[np.floating[Any]]]:
         """Batch embedding with BGE-M3"""
         self._lazy_load()
@@ -288,7 +288,7 @@ class SemanticProcessor:
             embeddings.extend([emb.astype(np.float32) for emb in batch_embeddings])
         return embeddings
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticProcessor.embed_single")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticProcessor.embed_single")
     def embed_single(self, text: str) -> NDArray[np.floating[Any]]:
         """Single text embedding"""
         return self._embed_batch([text])[0]
@@ -343,7 +343,7 @@ class BayesianEvidenceIntegrator:
         # 3. Aggregate weighted evidence
         # Dirichlet posterior parameters: α_post = α_prior + weighted_counts
         positive_evidence = np.sum(weights * probs)
-        negative_evidence = np.sum(weights * (get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L348_46", 1.0) - probs))
+        negative_evidence = np.sum(weights * (get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L348_46", 1.0) - probs))
         alpha_pos = self.prior_alpha + positive_evidence
         alpha_neg = self.prior_alpha + negative_evidence
         alpha_total = alpha_pos + alpha_neg
@@ -361,31 +361,31 @@ class BayesianEvidenceIntegrator:
         # 6. Entropy-based calibrated confidence
         posterior_entropy = stats.beta.entropy(alpha_pos, alpha_neg)
         max_entropy = stats.beta.entropy(1, 1)  # Maximum uncertainty
-        confidence = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L366_21", 1.0) - (posterior_entropy / max_entropy)
+        confidence = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L366_21", 1.0) - (posterior_entropy / max_entropy)
         return {
-            "posterior_mean": float(np.clip(posterior_mean, get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L368_60", 0.0), get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L368_65", 1.0))),
+            "posterior_mean": float(np.clip(posterior_mean, get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L368_60", 0.0), get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L368_65", 1.0))),
             "posterior_std": float(np.sqrt(posterior_variance)),
             "information_gain": float(kl_divergence),
             "confidence": float(confidence),
             "evidence_strength": float(
                 positive_evidence / (alpha_total - 2 * self.prior_alpha)
-                if abs(alpha_total - 2 * self.prior_alpha) > 1e-8 else get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L374_71", 0.0)
+                if abs(alpha_total - 2 * self.prior_alpha) > 1e-8 else get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator.__init__").get("auto_param_L374_71", 0.0)
             ),
             "n_chunks": len(similarities)
         }
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability")
     def _similarity_to_probability(self, sims: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Calibrated transform from cosine similarity [-1,1] to probability [0,1]
         Using sigmoid with empirically derived temperature
         """
         # Shift to [0,2], scale to reasonable range
-        x = (sims + get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability").get("auto_param_L386_20", 1.0)) * 2.0
+        x = (sims + get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability").get("auto_param_L386_20", 1.0)) * 2.0
         # Sigmoid with temperature=2.0 (calibrated on policy corpus)
-        return get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability").get("auto_param_L388_15", 1.0) / (get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability").get("auto_param_L388_22", 1.0) + np.exp(-x / 2.0))
+        return get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability").get("auto_param_L388_15", 1.0) / (get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._similarity_to_probability").get("auto_param_L388_22", 1.0) + np.exp(-x / 2.0))
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._compute_reliability_weights")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._compute_reliability_weights")
     def _compute_reliability_weights(self, metadata: list[dict[str, Any]]) -> NDArray[np.float64]:
         """
         Evidence reliability based on:
@@ -397,9 +397,9 @@ class BayesianEvidenceIntegrator:
         weights = np.ones(n, dtype=np.float64)
         for i, meta in enumerate(metadata):
             # Position weight (early = more reliable)
-            pos_weight = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._compute_reliability_weights").get("auto_param_L402_25", 1.0) - (meta["position"] / max(1, n)) * POSITION_WEIGHT_SCALE
+            pos_weight = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._compute_reliability_weights").get("auto_param_L402_25", 1.0) - (meta["position"] / max(1, n)) * POSITION_WEIGHT_SCALE
             # Content type weight
-            content_weight = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._compute_reliability_weights").get("content_weight", 1.0) # Refactored
+            content_weight = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._compute_reliability_weights").get("content_weight", 1.0) # Refactored
             if meta.get("has_table", False):
                 content_weight *= TABLE_WEIGHT_FACTOR
             if meta.get("has_numerical", False):
@@ -414,18 +414,18 @@ class BayesianEvidenceIntegrator:
         # Normalize to sum to n (preserve total evidence mass)
         return weights * (n / weights.sum())
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence")
     def _null_evidence(self) -> dict[str, float]:
         """Return prior state (no evidence)"""
-        prior_mean = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("prior_mean", 0.5) # Refactored
+        prior_mean = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("prior_mean", 0.5) # Refactored
         prior_var = self.prior_alpha / \
             ((2 * self.prior_alpha)**2 * (2 * self.prior_alpha + 1))
         return {
             "posterior_mean": prior_mean,
             "posterior_std": float(np.sqrt(prior_var)),
-            "information_gain": get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L428_32", 0.0),
-            "confidence": get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L429_26", 0.0),
-            "evidence_strength": get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L430_33", 0.0),
+            "information_gain": get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L428_32", 0.0),
+            "confidence": get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L429_26", 0.0),
+            "evidence_strength": get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L430_33", 0.0),
             "n_chunks": 0
         }
 
@@ -441,14 +441,14 @@ class BayesianEvidenceIntegrator:
         Intuition: Strong causal link if cause-effect similar AND
         both relate similarly to context (conditional independence test proxy)
         """
-        sim_ce = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L446_17", 1.0) - cosine(cause_emb, effect_emb)
-        sim_c_ctx = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L447_20", 1.0) - cosine(cause_emb, context_emb)
-        sim_e_ctx = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L448_20", 1.0) - cosine(effect_emb, context_emb)
+        sim_ce = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L446_17", 1.0) - cosine(cause_emb, effect_emb)
+        sim_c_ctx = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L447_20", 1.0) - cosine(cause_emb, context_emb)
+        sim_e_ctx = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L448_20", 1.0) - cosine(effect_emb, context_emb)
         # Conditional independence proxy
-        cond_indep = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L450_21", 1.0) - abs(sim_c_ctx - sim_e_ctx)
+        cond_indep = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L450_21", 1.0) - abs(sim_c_ctx - sim_e_ctx)
         # Combined strength (normalized to [0,1])
         strength = ((sim_ce + 1) / 2) * cond_indep
-        return float(np.clip(strength, get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L453_39", 0.0), get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L453_44", 1.0)))
+        return float(np.clip(strength, get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L453_39", 0.0), get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.BayesianEvidenceIntegrator._null_evidence").get("auto_param_L453_44", 1.0)))
 
 # ========================
 # POLICY ANALYZER (INTEGRATED)
@@ -472,7 +472,7 @@ class PolicyDocumentAnalyzer:
         # Initialize dimension embeddings
         self.dimension_embeddings = self._init_dimension_embeddings()
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.PolicyDocumentAnalyzer._init_dimension_embeddings")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.PolicyDocumentAnalyzer._init_dimension_embeddings")
     def _init_dimension_embeddings(self) -> dict[CausalDimension, NDArray[np.floating[Any]]]:
         """
         Canonical embeddings for Marco Lógico dimensions
@@ -509,7 +509,7 @@ class PolicyDocumentAnalyzer:
             for dim, desc in descriptions.items()
         }
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze")
     def analyze(self, text: str) -> dict[str, Any]:
         """
         Full pipeline: chunking → embedding → dimension analysis → evidence integration
@@ -521,7 +521,7 @@ class PolicyDocumentAnalyzer:
         dimension_results = {}
         for dim, dim_emb in self.dimension_embeddings.items():
             similarities = np.array([
-                get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze").get("auto_param_L526_16", 1.0) - cosine(chunk["embedding"], dim_emb)
+                get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze").get("auto_param_L526_16", 1.0) - cosine(chunk["embedding"], dim_emb)
                 for chunk in chunks
             ])
             # Filter by threshold
@@ -566,7 +566,7 @@ class PolicyDocumentAnalyzer:
         for dim, dim_emb in self.dimension_embeddings.items():
             # Rank chunks by similarity
             sims = [
-                (i, get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze").get("auto_param_L571_20", 1.0) - cosine(chunk["embedding"], dim_emb))
+                (i, get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze").get("auto_param_L571_20", 1.0) - cosine(chunk["embedding"], dim_emb))
                 for i, chunk in enumerate(chunks)
             ]
             sims.sort(key=lambda x: x[1], reverse=True)
@@ -590,7 +590,7 @@ class SemanticChunkingProducer:
     Provides public API methods for orchestrator integration without exposing
     internal implementation details or summarization logic.
 
-    Version: get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze").get("auto_param_L595_13", 1.0).0
+    Version: get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.PolicyDocumentAnalyzer.analyze").get("auto_param_L595_13", 1.0).0
     Producer Type: Semantic Analysis / Chunking
     """
 
@@ -608,27 +608,27 @@ class SemanticChunkingProducer:
     # CHUNKING API
     # ========================================================================
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.chunk_document")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.chunk_document")
     def chunk_document(self, text: str, preserve_structure: bool = True) -> list[dict[str, Any]]:
         """Chunk document into semantic units with embeddings"""
         return self.semantic.chunk_text(text, preserve_structure)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_count")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_count")
     def get_chunk_count(self, chunks: list[dict[str, Any]]) -> int:
         """Get number of chunks"""
         return len(chunks)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_text")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_text")
     def get_chunk_text(self, chunk: dict[str, Any]) -> str:
         """Extract text from chunk"""
         return _get_chunk_content(chunk)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_embedding")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_embedding")
     def get_chunk_embedding(self, chunk: dict[str, Any]) -> NDArray[np.floating[Any]]:
         """Extract embedding from chunk"""
         return chunk.get("embedding", np.array([]))
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_metadata")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_chunk_metadata")
     def get_chunk_metadata(self, chunk: dict[str, Any]) -> dict[str, Any]:
         """Extract metadata from chunk"""
         return {
@@ -644,12 +644,12 @@ class SemanticChunkingProducer:
     # EMBEDDING API
     # ========================================================================
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.embed_text")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.embed_text")
     def embed_text(self, text: str) -> NDArray[np.floating[Any]]:
         """Generate single embedding for text"""
         return self.semantic.embed_single(text)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.embed_batch")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.embed_batch")
     def embed_batch(self, texts: list[str]) -> list[NDArray[np.floating[Any]]]:
         """Generate embeddings for batch of texts"""
         return self.semantic._embed_batch(texts)
@@ -658,7 +658,7 @@ class SemanticChunkingProducer:
     # ANALYSIS API
     # ========================================================================
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.analyze_document")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.analyze_document")
     def analyze_document(self, text: str) -> dict[str, Any]:
         """Full pipeline analysis of document"""
         return self.analyzer.analyze(text)
@@ -678,7 +678,7 @@ class SemanticChunkingProducer:
     ) -> float:
         """Extract dimension evidence strength score"""
         dim_result = self.get_dimension_analysis(analysis, dimension)
-        return dim_result.get("evidence_strength", get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.analyze_document").get("auto_param_L683_51", 0.0))
+        return dim_result.get("evidence_strength", get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.analyze_document").get("auto_param_L683_51", 0.0))
 
     def get_dimension_confidence(
         self,
@@ -687,7 +687,7 @@ class SemanticChunkingProducer:
     ) -> float:
         """Extract dimension confidence score"""
         dim_result = self.get_dimension_analysis(analysis, dimension)
-        return dim_result.get("confidence", get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.analyze_document").get("auto_param_L692_44", 0.0))
+        return dim_result.get("confidence", get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.analyze_document").get("auto_param_L692_44", 0.0))
 
     def get_dimension_excerpts(
         self,
@@ -718,25 +718,25 @@ class SemanticChunkingProducer:
         """Calculate causal strength between embeddings"""
         return self.bayesian.causal_strength(cause_emb, effect_emb, context_emb)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_mean")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_mean")
     def get_posterior_mean(self, evidence: dict[str, float]) -> float:
         """Extract posterior mean from evidence integration"""
-        return evidence.get("posterior_mean", get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_mean").get("auto_param_L726_46", 0.0))
+        return evidence.get("posterior_mean", get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_mean").get("auto_param_L726_46", 0.0))
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_std")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_std")
     def get_posterior_std(self, evidence: dict[str, float]) -> float:
         """Extract posterior standard deviation"""
-        return evidence.get("posterior_std", get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_std").get("auto_param_L731_45", 0.0))
+        return evidence.get("posterior_std", get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_posterior_std").get("auto_param_L731_45", 0.0))
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_information_gain")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_information_gain")
     def get_information_gain(self, evidence: dict[str, float]) -> float:
         """Extract information gain (KL divergence)"""
-        return evidence.get("information_gain", get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_information_gain").get("auto_param_L736_48", 0.0))
+        return evidence.get("information_gain", get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_information_gain").get("auto_param_L736_48", 0.0))
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_confidence")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_confidence")
     def get_confidence(self, evidence: dict[str, float]) -> float:
         """Extract confidence score"""
-        return evidence.get("confidence", get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_confidence").get("auto_param_L741_42", 0.0))
+        return evidence.get("confidence", get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_confidence").get("auto_param_L741_42", 0.0))
 
     # ========================================================================
     # SEMANTIC SEARCH API
@@ -756,7 +756,7 @@ class SemanticChunkingProducer:
         for chunk in chunks:
             chunk_emb = chunk.get("embedding")
             if chunk_emb is not None and len(chunk_emb) > 0:
-                similarity = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_confidence").get("auto_param_L761_29", 1.0) - cosine(query_emb, chunk_emb)
+                similarity = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_confidence").get("auto_param_L761_29", 1.0) - cosine(query_emb, chunk_emb)
 
                 # Filter by dimension if specified
                 if dimension is None or chunk.get("section_type") == dimension:
@@ -771,12 +771,12 @@ class SemanticChunkingProducer:
     # UTILITY API
     # ========================================================================
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.list_dimensions")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.list_dimensions")
     def list_dimensions(self) -> list[CausalDimension]:
         """List all causal dimensions"""
         return list(CausalDimension)
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_dimension_description")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_dimension_description")
     def get_dimension_description(self, dimension: CausalDimension) -> str:
         """Get description for dimension"""
         descriptions = {
@@ -789,12 +789,12 @@ class SemanticChunkingProducer:
         }
         return descriptions.get(dimension, "")
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.get_config")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.get_config")
     def get_config(self) -> SemanticConfig:
         """Get current configuration"""
         return self.config
 
-    @calibrated_method("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.set_config")
+    @calibrated_method("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.set_config")
     def set_config(self, config: SemanticConfig) -> None:
         """Update configuration (requires reinitialization)"""
         self.config = config
@@ -831,7 +831,7 @@ Se implementará sistema de indicadores alineado con ODS, con mediciones semestr
     config = SemanticConfig(
         chunk_size=512,
         chunk_overlap=100,
-        similarity_threshold = get_parameter_loader().get("farfan_pipeline.processing.semantic_chunking_policy.SemanticChunkingProducer.set_config").get("similarity_threshold", 0.8) # Refactored
+        similarity_threshold = get_parameter_loader().get("farfan_core.processing.semantic_chunking_policy.SemanticChunkingProducer.set_config").get("similarity_threshold", 0.8) # Refactored
     )
     analyzer = PolicyDocumentAnalyzer(config)
     results = analyzer.analyze(sample_pdm)

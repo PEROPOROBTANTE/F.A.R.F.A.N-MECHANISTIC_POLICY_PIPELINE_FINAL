@@ -19,7 +19,7 @@ try:
     from opentelemetry.trace import Status, StatusCode
 
     HAS_OTEL = True
-    tracer = trace.get_tracer("farfan_pipeline.wiring")
+    tracer = trace.get_tracer("farfan_core.wiring")
 except ImportError:
     HAS_OTEL = False
     tracer = None

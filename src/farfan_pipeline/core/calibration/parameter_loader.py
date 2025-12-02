@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from farfan_pipeline.core.calibration.calibration_registry import CALIBRATIONS
+from .calibration_registry import CALIBRATIONS
 
 class ParameterLoader:
     """

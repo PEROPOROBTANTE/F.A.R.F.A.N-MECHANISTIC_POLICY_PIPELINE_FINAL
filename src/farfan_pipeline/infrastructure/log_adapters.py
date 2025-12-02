@@ -17,7 +17,7 @@ class StandardLogAdapter:
         >>> log_port.info("Processing started", document_id="123")
     """
 
-    def __init__(self, name: str = "farfan_pipeline") -> None:
+    def __init__(self, name: str = "farfan_core") -> None:
         self._logger = logging.getLogger(name)
 
     def debug(self, message: str, **kwargs: Any) -> None:

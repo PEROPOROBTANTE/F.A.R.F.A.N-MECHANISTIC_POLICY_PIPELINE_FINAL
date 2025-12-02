@@ -2,7 +2,7 @@
 Runtime-facing console entrypoints for the SAAAAAA package.
 
 Modules in this package are designed to be executed via
-``python -m farfan_pipeline.scripts.<name>`` so that repository
+``python -m farfan_core.scripts.<name>`` so that repository
 scripts no longer need to mutate ``sys.path`` at runtime.
 """
 

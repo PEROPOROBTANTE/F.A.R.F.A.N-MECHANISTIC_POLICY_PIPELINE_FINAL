@@ -6,11 +6,11 @@ and reproducible results.
 
 NOTE: Evidence and MicroQuestionScorer are NOT in this package.
 They exist in the parent MODULE: farfan_core/analysis/scoring.py
-Import them directly from there: `from farfan_pipeline.analysis.scoring import Evidence`
+Import them directly from there: `from farfan_core.analysis.scoring import Evidence`
 """
 
 # Import from this package's scoring.py
-from farfan_pipeline.analysis.scoring.scoring import (
+from .scoring import (
     EvidenceStructureError,
     ModalityConfig,
     ModalityValidationError,

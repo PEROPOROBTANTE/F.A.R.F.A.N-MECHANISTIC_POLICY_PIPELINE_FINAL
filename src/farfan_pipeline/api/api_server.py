@@ -46,7 +46,7 @@ from werkzeug.exceptions import HTTPException
 # Import orchestrator components
 import asyncio
 from farfan_pipeline.analysis.recommendation_engine import load_recommendation_engine
-from farfan_core import get_parameter_loader
+from farfan_pipeline import get_parameter_loader
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 from farfan_pipeline.core.orchestrator.factory import create_orchestrator
 from farfan_pipeline.core.orchestrator.core import PreprocessedDocument
@@ -236,7 +236,7 @@ class DataService:
         self._load_baseline_data()
         logger.info("DataService initialized with real data")
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService._load_baseline_data")
+    @calibrated_method("farfan_core.api.api_server.DataService._load_baseline_data")
     def _load_baseline_data(self) -> None:
         """Load baseline data from files"""
         try:
@@ -251,7 +251,7 @@ class DataService:
         except Exception as e:
             logger.error(f"Failed to load baseline data: {e}")
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService.get_pdet_regions")
+    @calibrated_method("farfan_core.api.api_server.DataService.get_pdet_regions")
     def get_pdet_regions(self) -> list[dict[str, Any]]:
         """
         Get all PDET regions with scores
@@ -279,9 +279,9 @@ class DataService:
                 },
                 'connections': ['pacifico-medio', 'sur-tolima'],
                 'indicators': {
-                    'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L277_33", 0.72),
-                    'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L278_38", 0.68),
-                    'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L279_30", 0.75)
+                    'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L277_33", 0.72),
+                    'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L278_38", 0.68),
+                    'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L279_30", 0.75)
                 }
             },
             {
@@ -303,9 +303,9 @@ class DataService:
                 },
                 'connections': ['catatumbo'],
                 'indicators': {
-                    'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L301_33", 0.68),
-                    'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L302_38", 0.65),
-                    'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L303_30", 0.70)
+                    'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L301_33", 0.68),
+                    'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L302_38", 0.65),
+                    'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L303_30", 0.70)
                 }
             },
             {
@@ -315,7 +315,7 @@ class DataService:
                 'metadata': {'municipalities': 13, 'population': 280000, 'area': 8485},
                 'scores': {'overall': 65, 'governance': 62, 'social': 66, 'economic': 64, 'environmental': 68, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['sur-cordoba', 'sur-bolivar'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L313_44", 0.65), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L313_68", 0.62), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L313_84", 0.67)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L313_44", 0.65), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L313_68", 0.62), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L313_84", 0.67)}
             },
             {
                 'id': 'catatumbo',
@@ -324,7 +324,7 @@ class DataService:
                 'metadata': {'municipalities': 11, 'population': 220000, 'area': 11700},
                 'scores': {'overall': 61, 'governance': 58, 'social': 62, 'economic': 60, 'environmental': 64, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['arauca'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L322_44", 0.61), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L322_68", 0.58), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L322_84", 0.63)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L322_44", 0.61), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L322_68", 0.58), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L322_84", 0.63)}
             },
             {
                 'id': 'choco',
@@ -333,7 +333,7 @@ class DataService:
                 'metadata': {'municipalities': 14, 'population': 180000, 'area': 43000},
                 'scores': {'overall': 58, 'governance': 55, 'social': 59, 'economic': 57, 'environmental': 61, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['uraba', 'pacifico-medio'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L331_44", 0.58), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L331_68", 0.55), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L331_84", 0.60)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L331_44", 0.58), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L331_68", 0.55), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L331_84", 0.60)}
             },
             {
                 'id': 'caguan',
@@ -342,7 +342,7 @@ class DataService:
                 'metadata': {'municipalities': 17, 'population': 350000, 'area': 39000},
                 'scores': {'overall': 70, 'governance': 67, 'social': 71, 'economic': 69, 'environmental': 72, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['macarena', 'putumayo'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L340_44", 0.70), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L340_68", 0.67), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L340_84", 0.71)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L340_44", 0.70), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L340_68", 0.67), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L340_84", 0.71)}
             },
             {
                 'id': 'macarena',
@@ -351,7 +351,7 @@ class DataService:
                 'metadata': {'municipalities': 10, 'population': 140000, 'area': 32000},
                 'scores': {'overall': 66, 'governance': 63, 'social': 67, 'economic': 65, 'environmental': 68, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['caguan'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L349_44", 0.66), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L349_68", 0.63), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L349_84", 0.67)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L349_44", 0.66), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L349_68", 0.63), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L349_84", 0.67)}
             },
             {
                 'id': 'montes-maria',
@@ -360,7 +360,7 @@ class DataService:
                 'metadata': {'municipalities': 15, 'population': 330000, 'area': 6500},
                 'scores': {'overall': 74, 'governance': 71, 'social': 75, 'economic': 73, 'environmental': 76, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['sur-bolivar'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L358_44", 0.74), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L358_68", 0.71), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L358_84", 0.75)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L358_44", 0.74), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L358_68", 0.71), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L358_84", 0.75)}
             },
             {
                 'id': 'pacifico-medio',
@@ -369,7 +369,7 @@ class DataService:
                 'metadata': {'municipalities': 4, 'population': 120000, 'area': 10000},
                 'scores': {'overall': 62, 'governance': 59, 'social': 63, 'economic': 61, 'environmental': 64, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['choco', 'alto-patia'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L367_44", 0.62), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L367_68", 0.59), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L367_84", 0.63)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L367_44", 0.62), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L367_68", 0.59), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L367_84", 0.63)}
             },
             {
                 'id': 'pacifico-narinense',
@@ -378,7 +378,7 @@ class DataService:
                 'metadata': {'municipalities': 11, 'population': 190000, 'area': 14000},
                 'scores': {'overall': 59, 'governance': 56, 'social': 60, 'economic': 58, 'environmental': 61, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['putumayo'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L376_44", 0.59), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L376_68", 0.56), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L376_84", 0.60)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L376_44", 0.59), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L376_68", 0.56), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L376_84", 0.60)}
             },
             {
                 'id': 'putumayo',
@@ -387,7 +387,7 @@ class DataService:
                 'metadata': {'municipalities': 11, 'population': 270000, 'area': 25000},
                 'scores': {'overall': 67, 'governance': 64, 'social': 68, 'economic': 66, 'environmental': 69, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['caguan', 'pacifico-narinense'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L385_44", 0.67), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L385_68", 0.64), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L385_84", 0.68)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L385_44", 0.67), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L385_68", 0.64), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L385_84", 0.68)}
             },
             {
                 'id': 'sierra-nevada',
@@ -396,7 +396,7 @@ class DataService:
                 'metadata': {'municipalities': 10, 'population': 380000, 'area': 15000},
                 'scores': {'overall': 63, 'governance': 60, 'social': 64, 'economic': 62, 'environmental': 65, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['catatumbo'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L394_44", 0.63), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L394_68", 0.60), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L394_84", 0.64)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L394_44", 0.63), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L394_68", 0.60), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L394_84", 0.64)}
             },
             {
                 'id': 'sur-bolivar',
@@ -405,7 +405,7 @@ class DataService:
                 'metadata': {'municipalities': 7, 'population': 150000, 'area': 7000},
                 'scores': {'overall': 60, 'governance': 57, 'social': 61, 'economic': 59, 'environmental': 62, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['bajo-cauca', 'montes-maria'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L403_44", 0.60), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L403_68", 0.57), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L403_84", 0.61)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L403_44", 0.60), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L403_68", 0.57), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L403_84", 0.61)}
             },
             {
                 'id': 'sur-cordoba',
@@ -414,7 +414,7 @@ class DataService:
                 'metadata': {'municipalities': 5, 'population': 180000, 'area': 4500},
                 'scores': {'overall': 69, 'governance': 66, 'social': 70, 'economic': 68, 'environmental': 71, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['bajo-cauca', 'uraba'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L412_44", 0.69), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L412_68", 0.66), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L412_84", 0.70)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L412_44", 0.69), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L412_68", 0.66), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L412_84", 0.70)}
             },
             {
                 'id': 'sur-tolima',
@@ -423,7 +423,7 @@ class DataService:
                 'metadata': {'municipalities': 4, 'population': 110000, 'area': 3500},
                 'scores': {'overall': 71, 'governance': 68, 'social': 72, 'economic': 70, 'environmental': 73, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['alto-patia', 'caguan'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L421_44", 0.71), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L421_68", 0.68), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L421_84", 0.72)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L421_44", 0.71), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L421_68", 0.68), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L421_84", 0.72)}
             },
             {
                 'id': 'uraba',
@@ -432,7 +432,7 @@ class DataService:
                 'metadata': {'municipalities': 10, 'population': 420000, 'area': 11600},
                 'scores': {'overall': 64, 'governance': 61, 'social': 65, 'economic': 63, 'environmental': 66, 'lastUpdated': datetime.now().isoformat()},
                 'connections': ['choco', 'sur-cordoba'],
-                'indicators': {'alignment': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L430_44", 0.64), 'implementation': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L430_68", 0.61), 'impact': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_pdet_regions").get("auto_param_L430_84", 0.65)}
+                'indicators': {'alignment': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L430_44", 0.64), 'implementation': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L430_68", 0.61), 'impact': get_parameter_loader().get("farfan_core.api.api_server.DataService.get_pdet_regions").get("auto_param_L430_84", 0.65)}
             }
         ]
         return regions
@@ -464,7 +464,7 @@ class DataService:
             ]
         }
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService.get_region_detail")
+    @calibrated_method("farfan_core.api.api_server.DataService.get_region_detail")
     def get_region_detail(self, region_id: str) -> dict[str, Any] | None:
         """Get detailed information for a specific region"""
         regions = self.get_pdet_regions()
@@ -480,34 +480,34 @@ class DataService:
                 return region
         return None
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService._get_cluster_breakdown")
+    @calibrated_method("farfan_core.api.api_server.DataService._get_cluster_breakdown")
     def _get_cluster_breakdown(self, region_id: str) -> list[dict[str, Any]]:
         """Get cluster analysis for region"""
         return [
-            {'name': 'GOBERNANZA', 'value': 72, 'trend': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L456_57", 0.05)},
-            {'name': 'SOCIAL', 'value': 68, 'trend': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L457_53", 0.02)},
-            {'name': 'ECONÓMICO', 'value': 81, 'trend': -get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L458_57", 0.03)},
-            {'name': 'AMBIENTAL', 'value': 76, 'trend': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L459_56", 0.07)}
+            {'name': 'GOBERNANZA', 'value': 72, 'trend': get_parameter_loader().get("farfan_core.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L456_57", 0.05)},
+            {'name': 'SOCIAL', 'value': 68, 'trend': get_parameter_loader().get("farfan_core.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L457_53", 0.02)},
+            {'name': 'ECONÓMICO', 'value': 81, 'trend': -get_parameter_loader().get("farfan_core.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L458_57", 0.03)},
+            {'name': 'AMBIENTAL', 'value': 76, 'trend': get_parameter_loader().get("farfan_core.api.api_server.DataService._get_cluster_breakdown").get("auto_param_L459_56", 0.07)}
         ]
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService._get_question_matrix")
+    @calibrated_method("farfan_core.api.api_server.DataService._get_question_matrix")
     def _get_question_matrix(self, region_id: str) -> list[dict[str, Any]]:
         """Get question matrix (44 questions) for region"""
         import random
         questions = []
         for i in range(1, 45):
-            score = random.uniform(get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_question_matrix").get("auto_param_L468_35", 0.4), get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_question_matrix").get("auto_param_L468_40", 1.0))
+            score = random.uniform(get_parameter_loader().get("farfan_core.api.api_server.DataService._get_question_matrix").get("auto_param_L468_35", 0.4), get_parameter_loader().get("farfan_core.api.api_server.DataService._get_question_matrix").get("auto_param_L468_40", 1.0))
             questions.append({
                 'id': i,
                 'text': f'Pregunta {i}',
                 'score': score,
                 'category': f'D{(i-1)//7 + 1}',
                 'evidence': [f'PDT Sección {i//10 + 1}'],
-                'recommendations': [f'Recomendación {i}'] if score < get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_question_matrix").get("auto_param_L475_69", 0.7) else []
+                'recommendations': [f'Recomendación {i}'] if score < get_parameter_loader().get("farfan_core.api.api_server.DataService._get_question_matrix").get("auto_param_L475_69", 0.7) else []
             })
         return questions
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService._get_recommendations")
+    @calibrated_method("farfan_core.api.api_server.DataService._get_recommendations")
     def _get_recommendations(self, region_id: str) -> list[dict[str, Any]]:
         """Get strategic recommendations for region"""
         return [
@@ -531,7 +531,7 @@ class DataService:
             }
         ]
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService._get_evidence_for_region")
+    @calibrated_method("farfan_core.api.api_server.DataService._get_evidence_for_region")
     def _get_evidence_for_region(self, region_id: str) -> list[dict[str, Any]]:
         """Get evidence items for region"""
         return [
@@ -539,17 +539,17 @@ class DataService:
                 'source': 'PDT Sección 3.2',
                 'page': 45,
                 'text': 'Implementación de estrategias municipales',
-                'relevance': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_evidence_for_region").get("auto_param_L511_29", 0.92)
+                'relevance': get_parameter_loader().get("farfan_core.api.api_server.DataService._get_evidence_for_region").get("auto_param_L511_29", 0.92)
             },
             {
                 'source': 'PDT Capítulo 4',
                 'page': 67,
                 'text': 'Articulación con Decálogo DDHH',
-                'relevance': get_parameter_loader().get("farfan_pipeline.api.api_server.DataService._get_evidence_for_region").get("auto_param_L517_29", 0.88)
+                'relevance': get_parameter_loader().get("farfan_core.api.api_server.DataService._get_evidence_for_region").get("auto_param_L517_29", 0.88)
             }
         ]
 
-    @calibrated_method("farfan_pipeline.api.api_server.DataService.get_evidence_stream")
+    @calibrated_method("farfan_core.api.api_server.DataService.get_evidence_stream")
     def get_evidence_stream(self) -> list[dict[str, Any]]:
         """Get evidence stream for ticker display"""
         return [
@@ -600,7 +600,7 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'timestamp': datetime.now().isoformat(),
-        'version': 'get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_evidence_stream").get("auto_param_L572_20", 1.0).0'
+        'version': 'get_parameter_loader().get("farfan_core.api.api_server.DataService.get_evidence_stream").get("auto_param_L572_20", 1.0).0'
     })
 
 @app.route('/api/v1/auth/token', methods=['POST'])
@@ -917,7 +917,7 @@ def generate_meso_recommendations():
     Request Body:
         {
             "cluster_data": {
-                "CL01": {"score": 72.0, "variance": get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_evidence_stream").get("auto_param_L865_52", 0.25), "weak_pa": "PA02"},
+                "CL01": {"score": 72.0, "variance": get_parameter_loader().get("farfan_core.api.api_server.DataService.get_evidence_stream").get("auto_param_L865_52", 0.25), "weak_pa": "PA02"},
                 ...
             },
             "context": {}  // Optional
@@ -1128,7 +1128,7 @@ def main() -> None:
     # Run server
     socketio.run(
         app,
-        host='get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_evidence_stream").get("auto_param_L1076_14", 0.0).get_parameter_loader().get("farfan_pipeline.api.api_server.DataService.get_evidence_stream").get("auto_param_L1076_18", 0.0)',
+        host='get_parameter_loader().get("farfan_core.api.api_server.DataService.get_evidence_stream").get("auto_param_L1076_14", 0.0).get_parameter_loader().get("farfan_core.api.api_server.DataService.get_evidence_stream").get("auto_param_L1076_18", 0.0)',
         port=int(os.getenv('ATROZ_API_PORT', '5000')),
         debug=os.getenv('ATROZ_DEBUG', 'false').lower() == 'true'
     )

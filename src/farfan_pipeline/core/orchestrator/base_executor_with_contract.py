@@ -45,7 +45,7 @@ class BaseExecutorWithContract(ABC):
         except Exception as exc:  # pragma: no cover - defensive guard
             raise RuntimeError(
                 "Failed to import MethodExecutor for BaseExecutorWithContract invariants. "
-                "Ensure farfan_pipeline.core.orchestrator.core is importable before constructing contract executors."
+                "Ensure farfan_core.core.orchestrator.core is importable before constructing contract executors."
             ) from exc
         if not isinstance(method_executor, _MethodExecutor):
             raise RuntimeError("A valid MethodExecutor instance is required for contract executors.")

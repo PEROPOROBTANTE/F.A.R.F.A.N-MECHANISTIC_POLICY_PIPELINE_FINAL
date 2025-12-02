@@ -1,6 +1,6 @@
 """Validation module for pre-execution checks and preconditions."""
 
-from farfan_pipeline.utils.validation.aggregation_models import (
+from .aggregation_models import (
     AggregationWeights,
     AreaAggregationConfig,
     ClusterAggregationConfig,
@@ -9,13 +9,13 @@ from farfan_pipeline.utils.validation.aggregation_models import (
     validate_dimension_config,
     validate_weights,
 )
-from farfan_pipeline.utils.validation.architecture_validator import (
+from .architecture_validator import (
     ArchitectureValidationResult,
     validate_architecture,
     write_validation_report,
 )
-from farfan_pipeline.utils.validation.golden_rule import GoldenRuleValidator, GoldenRuleViolation
-from farfan_pipeline.utils.validation.schema_validator import (
+from .golden_rule import GoldenRuleValidator, GoldenRuleViolation
+from .schema_validator import (
     MonolithIntegrityReport,
     MonolithSchemaValidator,
     SchemaInitializationError,

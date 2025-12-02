@@ -23,7 +23,7 @@ import sys
 from typing import Any
 
 # Lazy loading utilities for heavy dependencies
-from farfan_pipeline.compat.lazy_deps import (
+from .lazy_deps import (
     get_numpy,
     get_pandas,
     get_polars,
@@ -32,7 +32,7 @@ from farfan_pipeline.compat.lazy_deps import (
     get_torch,
     get_transformers,
 )
-from farfan_pipeline.compat.safe_imports import (
+from .safe_imports import (
     ImportErrorDetailed,
     check_import_available,
     get_import_version,

@@ -22,8 +22,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.signals import SignalPack
-    from farfan_pipeline.core.orchestrator.signal_quality_metrics import SignalQualityMetrics
+    from .signals import SignalPack
+    from .signal_quality_metrics import SignalQualityMetrics
 
 try:
     import structlog

@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
-from farfan_core import get_parameter_loader
+from farfan_pipeline import get_parameter_loader
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 
@@ -135,12 +135,12 @@ class ChunkGraph:
     chunks: dict[str, Chunk] = field(default_factory=dict)
     edges: list[tuple[str, str, str]] = field(default_factory=list)  # (from_id, to_id, relation_type)
 
-    @calibrated_method("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_chunk")
+    @calibrated_method("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_chunk")
     def add_chunk(self, chunk: Chunk) -> None:
         """Add a chunk to the graph."""
         self.chunks[chunk.id] = chunk
 
-    @calibrated_method("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge")
+    @calibrated_method("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge")
     def add_edge(self, from_id: str, to_id: str, relation_type: str) -> None:
         """Add an edge to the graph."""
         self.edges.append((from_id, to_id, relation_type))
@@ -165,13 +165,13 @@ class QualityMetrics:
     """
     Quality metrics for the ingestion process.
     """
-    boundary_f1: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L167_25", 0.0)
-    kpi_linkage_rate: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L168_30", 0.0)
-    budget_consistency_score: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L169_38", 0.0)
-    provenance_completeness: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L170_37", 0.0)
-    structural_consistency: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L171_36", 0.0)
-    temporal_robustness: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L172_33", 0.0)
-    chunk_context_coverage: float = get_parameter_loader().get("farfan_pipeline.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L173_36", 0.0)
+    boundary_f1: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L167_25", 0.0)
+    kpi_linkage_rate: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L168_30", 0.0)
+    budget_consistency_score: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L169_38", 0.0)
+    provenance_completeness: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L170_37", 0.0)
+    structural_consistency: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L171_36", 0.0)
+    temporal_robustness: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L172_33", 0.0)
+    chunk_context_coverage: float = get_parameter_loader().get("farfan_core.processing.cpp_ingestion.models.ChunkGraph.add_edge").get("auto_param_L173_36", 0.0)
 
 
 @dataclass

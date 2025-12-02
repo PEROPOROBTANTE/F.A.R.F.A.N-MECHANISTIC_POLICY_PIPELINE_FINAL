@@ -14,7 +14,7 @@ Author: Python Pipeline Expert
 Date: 2025-11-15
 
 Usage:
-    from farfan_pipeline.config.paths import DATA_DIR, OUTPUT_DIR, CACHE_DIR
+    from farfan_core.config.paths import DATA_DIR, OUTPUT_DIR, CACHE_DIR
 
     questionnaire = DATA_DIR / 'questionnaire_monolith.json'
     report = OUTPUT_DIR / 'analysis_report.json'
@@ -30,7 +30,7 @@ from typing import Final, Tuple
 # Project Root Detection
 # ============================================================================
 
-logger = logging.getLogger("farfan_pipeline.config.paths")
+logger = logging.getLogger("farfan_core.config.paths")
 
 
 def _detect_project_root() -> Tuple[Path, str]:
@@ -72,7 +72,7 @@ logger.info("Project root detected via %s: %s", PROJECT_ROOT_SOURCE, PROJECT_ROO
 # ============================================================================
 
 # Source code directory
-SRC_DIR: Final[Path] = PROJECT_ROOT / 'src' / "farfan_pipeline"
+SRC_DIR: Final[Path] = PROJECT_ROOT / 'src' / 'farfan_core'
 
 # Package root (for importlib.resources)
 PACKAGE_ROOT: Final[Path] = SRC_DIR

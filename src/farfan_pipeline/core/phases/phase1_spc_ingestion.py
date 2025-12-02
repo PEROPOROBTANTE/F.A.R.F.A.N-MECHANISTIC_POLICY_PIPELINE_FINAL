@@ -385,7 +385,7 @@ class Phase1SPCIngestionContract(PhaseContract[CanonicalInput, CanonPolicyPackag
         except ImportError as e:
             raise ImportError(
                 "SPC ingestion pipeline not available. "
-                "Ensure farfan_pipeline.processing.spc_ingestion is installed."
+                "Ensure farfan_core.processing.spc_ingestion is installed."
             ) from e
 
         # Initialize pipeline with questionnaire

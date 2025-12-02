@@ -176,7 +176,7 @@ class PolicyProcessorOutputContract(TypedDict):
 # ============================================================================
 
 class DocumentData(TypedDict):
-    """Standard document data structure from farfan_pipeline.core.orchestrator.
+    """Standard document data structure from farfan_core.core.orchestrator.
 
     This is what the orchestrator/factory provides to core modules.
     """

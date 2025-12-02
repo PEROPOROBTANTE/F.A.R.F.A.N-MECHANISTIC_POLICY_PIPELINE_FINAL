@@ -117,6 +117,6 @@ ALLOWED_THIRD_PARTY_MODULES: FrozenSet[str] = frozenset(
 ALLOWED_DYNAMIC_IMPORTS: FrozenSet[str] = frozenset(
     {
         # Add dynamic imports here if needed
-        # Example: "farfan_pipeline.plugins.optional_module"
+        # Example: "farfan_core.plugins.optional_module"
     }
 )

@@ -48,7 +48,7 @@ class Settings:
     # Database Configuration
     DB_HOST: str = os.getenv("DB_HOST", "localhost")
     DB_PORT: int = _get_int("DB_PORT", 5432)
-    DB_NAME: str = os.getenv("DB_NAME", "farfan_pipeline")
+    DB_NAME: str = os.getenv("DB_NAME", "farfan_core")
     DB_USER: str = os.getenv("DB_USER", "farfan_core_user")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
 

@@ -4,10 +4,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.questionnaire import CanonicalQuestionnaire
+    from .questionnaire import CanonicalQuestionnaire
 
 # Import core classes from the refactored package
-from farfan_pipeline.core.orchestrator.core import (
+from .core import (
     AbortRequested,
     AbortSignal,
     Evidence,
@@ -20,7 +20,7 @@ from farfan_pipeline.core.orchestrator.core import (
     ResourceLimits,
     ScoredMicroQuestion,
 )
-from farfan_pipeline.core.orchestrator.evidence_registry import (
+from .evidence_registry import (
     EvidenceRecord,
     EvidenceRegistry,
     ProvenanceDAG,

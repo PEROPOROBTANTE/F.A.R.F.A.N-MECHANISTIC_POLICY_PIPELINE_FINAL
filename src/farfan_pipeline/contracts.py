@@ -1,7 +1,7 @@
 """Contracts module re-exports from utils.contracts package.
 
 This module provides backward compatibility for code that imports
-contracts from farfan_pipeline.contracts instead of farfan_pipeline.utils.contracts.
+contracts from farfan_core.contracts instead of farfan_core.utils.contracts.
 """
 
 from farfan_pipeline.utils.contracts import (

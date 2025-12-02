@@ -17,7 +17,7 @@ Key Features:
 - No fabricated logs or unverifiable banners
 
 Usage:
-    python -m farfan_pipeline.scripts.run_policy_pipeline_verified [--plan PLAN_PDF]
+    python -m farfan_core.scripts.run_policy_pipeline_verified [--plan PLAN_PDF]
 
 Requirements:
     - Input PDF must exist (default: data/plans/Plan_1.pdf)
@@ -41,7 +41,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import farfan_core
+import farfan_pipeline
 from farfan_pipeline.config.paths import PROJECT_ROOT
 
 if os.environ.get("PIPELINE_DEBUG"):
@@ -106,7 +106,7 @@ class VerifiedPipelineRunner:
             plan_pdf_path: Path to input PDF
             artifacts_dir: Directory for output artifacts
             questionnaire_path: Optional path to questionnaire file.
-                               If None, uses canonical path from farfan_pipeline.config.paths.QUESTIONNAIRE_FILE
+                               If None, uses canonical path from farfan_core.config.paths.QUESTIONNAIRE_FILE
         """
         self.plan_pdf_path = plan_pdf_path
         self.artifacts_dir = artifacts_dir
@@ -451,9 +451,9 @@ class VerifiedPipelineRunner:
             # Static import analysis
             static_report = validate_imports(
                 roots=[
-                    self.repo_root / "farfan_pipeline" / "farfan_pipeline" / "core",
-                    self.repo_root / "farfan_pipeline" / "farfan_pipeline" / "entrypoint",
-                    self.repo_root / "farfan_pipeline" / "farfan_pipeline" / "processing",
+                    self.repo_root / "farfan_core" / "farfan_core" / "core",
+                    self.repo_root / "farfan_core" / "farfan_core" / "entrypoint",
+                    self.repo_root / "farfan_core" / "farfan_core" / "processing",
                 ],
                 import_policy=self.import_policy,
                 repo_root=self.repo_root
@@ -553,11 +553,11 @@ def cli() -> None:
         # Moving it to cli() is safer.
         
         # Check for module shadowing
-        _expected_farfan_core_prefix = (PROJECT_ROOT / "src" / "farfan_pipeline").resolve()
-        if not Path(farfan_pipeline.__file__).resolve().is_relative_to(_expected_farfan_core_prefix):
+        _expected_farfan_pipeline_prefix = (PROJECT_ROOT / "src" / "farfan_pipeline").resolve()
+        if not Path(farfan_pipeline.__file__).resolve().is_relative_to(_expected_farfan_pipeline_prefix):
              raise RuntimeError(
                 "MODULE SHADOWING DETECTED!\n"
-                f"  Expected farfan_core from: {_expected_farfan_core_prefix}\n"
+                f"  Expected farfan_pipeline from: {_expected_farfan_pipeline_prefix}\n"
                 f"  Actually loaded from:  {farfan_pipeline.__file__}\n"
                 "Fix: uninstall old package before running the verified pipeline."
             )
@@ -1125,7 +1125,7 @@ def cli() -> None:
 #             param_loader = get_parameter_loader()  # CALIBRATION DISABLED
             
             # Fetch threshold for this specific method
-            method_key = "farfan_pipeline.scripts.run_policy_pipeline_verified.VerifiedPipelineRunner.generate_verification_manifest"
+            method_key = "farfan_core.scripts.run_policy_pipeline_verified.VerifiedPipelineRunner.generate_verification_manifest"
 #             calibrated_params = param_loader.get(method_key)  # CALIBRATION DISABLED
             
             # Default to 1.0 (strict) if not found, but log warning if falling back
@@ -1476,11 +1476,11 @@ def cli() -> None:
     """Synchronous entrypoint for console scripts."""
     try:
         # Check for module shadowing before anything else
-        _expected_farfan_core_prefix = (PROJECT_ROOT / "src" / "farfan_pipeline").resolve()
-        if not Path(farfan_pipeline.__file__).resolve().is_relative_to(_expected_farfan_core_prefix):
+        _expected_farfan_pipeline_prefix = (PROJECT_ROOT / "src" / "farfan_pipeline").resolve()
+        if not Path(farfan_pipeline.__file__).resolve().is_relative_to(_expected_farfan_pipeline_prefix):
              raise RuntimeError(
                 "MODULE SHADOWING DETECTED!\n"
-                f"  Expected farfan_core from: {_expected_farfan_core_prefix}\n"
+                f"  Expected farfan_pipeline from: {_expected_farfan_pipeline_prefix}\n"
                 f"  Actually loaded from:  {farfan_pipeline.__file__}\n"
                 "Fix: uninstall old package before running the verified pipeline."
             )

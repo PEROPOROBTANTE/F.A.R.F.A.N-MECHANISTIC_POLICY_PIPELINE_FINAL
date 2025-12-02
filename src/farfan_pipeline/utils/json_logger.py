@@ -23,7 +23,7 @@ from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 # Import will be available at runtime
 try:
-    from farfan_pipeline.utils.contract_io import ContractEnvelope
+    from .contract_io import ContractEnvelope
 except ImportError:
     # Allow module to load for testing
     ContractEnvelope = None  # type: ignore
@@ -36,7 +36,7 @@ class JsonFormatter(logging.Formatter):
     Formats LogRecord as JSON with standard fields plus custom extras.
     """
 
-    @calibrated_method("farfan_pipeline.utils.json_logger.JsonFormatter.format")
+    @calibrated_method("farfan_core.utils.json_logger.JsonFormatter.format")
     def format(self, record: logging.LogRecord) -> str:
         """
         Format LogRecord as JSON string.
@@ -67,7 +67,7 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
 
 
-def get_json_logger(name: str = "farfan_pipeline") -> logging.Logger:
+def get_json_logger(name: str = "farfan_core") -> logging.Logger:
     """
     Get or create a JSON logger.
 
@@ -116,7 +116,7 @@ def log_io_event(
 
     Examples:
         >>> import time
-        >>> from farfan_pipeline.utils.contract_io import ContractEnvelope
+        >>> from farfan_core.utils.contract_io import ContractEnvelope
         >>> logger = get_json_logger("test")
         >>> out = ContractEnvelope.wrap(
         ...     {"ok": True},
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     print("\n3. Testing I/O event logging:")
     # Only test if ContractEnvelope is available
     if ContractEnvelope is not None:
-        from farfan_pipeline.utils.contract_io import ContractEnvelope
+        from .contract_io import ContractEnvelope
 
         lg = get_json_logger("demo")
         out = ContractEnvelope.wrap(

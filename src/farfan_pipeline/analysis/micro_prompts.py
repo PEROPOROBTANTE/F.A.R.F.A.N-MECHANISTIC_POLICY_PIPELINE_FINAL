@@ -36,7 +36,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 import numpy as np
-# from farfan_core import get_parameter_loader  # CALIBRATION DISABLED
+# from farfan_pipeline import get_parameter_loader  # CALIBRATION DISABLED
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
@@ -78,12 +78,12 @@ class ProvenanceDAG:
     nodes: dict[str, ProvenanceNode]
     edges: list[tuple[str, str]]  # (from_node_id, to_node_id)
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.ProvenanceDAG.get_root_nodes")
+    @calibrated_method("farfan_core.analysis.micro_prompts.ProvenanceDAG.get_root_nodes")
     def get_root_nodes(self) -> list[str]:
         """Get nodes without parents (primary inputs)"""
         return [nid for nid, node in self.nodes.items() if not node.parent_ids]
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.ProvenanceDAG.get_orphan_nodes")
+    @calibrated_method("farfan_core.analysis.micro_prompts.ProvenanceDAG.get_orphan_nodes")
     def get_orphan_nodes(self) -> list[str]:
         """Get nodes without parents that are not primary inputs"""
         return [
@@ -121,7 +121,7 @@ class ProvenanceAuditor:
             p95_latency_threshold: Historical p95 latency for anomaly detection
             method_contracts: Expected output schemas by method
         """
-        self.p95_threshold = p95_latency_threshold or 1000  # Default 1 second in milliseconds  # Default 1 second
+        self.p95_threshold = p95_latency_threshold or 100get_parameter_loader().get("farfan_core.analysis.micro_prompts.ProvenanceDAG.get_orphan_nodes").get("auto_param_L123_57", 0.0)  # Default 1 second
         self.method_contracts = method_contracts or {}
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -202,7 +202,7 @@ class ProvenanceAuditor:
                     missing.append(node_id)
         return missing
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.ProvenanceAuditor._check_latency_anomalies")
+    @calibrated_method("farfan_core.analysis.micro_prompts.ProvenanceAuditor._check_latency_anomalies")
     def _check_latency_anomalies(self, dag: ProvenanceDAG) -> list[dict[str, Any]]:
         """Detect timing outliers beyond p95 threshold"""
         anomalies = []
@@ -240,7 +240,7 @@ class ProvenanceAuditor:
                         })
         return mismatches
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.ProvenanceAuditor._schemas_match")
+    @calibrated_method("farfan_core.analysis.micro_prompts.ProvenanceAuditor._schemas_match")
     def _schemas_match(self, expected: dict[str, Any], actual: dict[str, Any]) -> bool:
         """Check if actual schema matches expected schema"""
         # Simple type-based matching
@@ -299,7 +299,7 @@ class ProvenanceAuditor:
 
         return narrative
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.ProvenanceAuditor.to_json")
+    @calibrated_method("farfan_core.analysis.micro_prompts.ProvenanceAuditor.to_json")
     def to_json(self, result: AuditResult) -> dict[str, Any]:
         """Export audit result as JSON"""
         return asdict(result)
@@ -316,7 +316,7 @@ class Signal:
     weight: float
     raw_evidence_id: str
     reconciled: bool
-    delta_posterior: float = get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.ProvenanceAuditor.to_json").get("auto_param_L318_29", 0.0)
+    delta_posterior: float = get_parameter_loader().get("farfan_core.analysis.micro_prompts.ProvenanceAuditor.to_json").get("auto_param_L318_29", 0.0)
     reason: str = ""
 
 @dataclass
@@ -378,7 +378,7 @@ class BayesianPosteriorExplainer:
 
         # Check if anti-miracle cap was applied
         cap_applied = posterior > self.anti_miracle_cap
-        cap_delta = max(0, posterior - self.anti_miracle_cap) if cap_applied else get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.BayesianPosteriorExplainer.__init__").get("auto_param_L380_82", 0.0)
+        cap_delta = max(0, posterior - self.anti_miracle_cap) if cap_applied else get_parameter_loader().get("farfan_core.analysis.micro_prompts.BayesianPosteriorExplainer.__init__").get("auto_param_L380_82", 0.0)
 
         # Adjust posterior if capped
         final_posterior = min(posterior, self.anti_miracle_cap)
@@ -402,7 +402,7 @@ class BayesianPosteriorExplainer:
             robustness_narrative=narrative
         )
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.BayesianPosteriorExplainer._rank_signals_by_impact")
+    @calibrated_method("farfan_core.analysis.micro_prompts.BayesianPosteriorExplainer._rank_signals_by_impact")
     def _rank_signals_by_impact(self, signals: list[Signal]) -> list[Signal]:
         """Sort signals by absolute marginal impact"""
         # Only rank reconciled signals
@@ -417,7 +417,7 @@ class BayesianPosteriorExplainer:
 
         return ranked
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.BayesianPosteriorExplainer._justify_test_type")
+    @calibrated_method("farfan_core.analysis.micro_prompts.BayesianPosteriorExplainer._justify_test_type")
     def _justify_test_type(self, test_type: str, rank: int) -> str:
         """Generate 1-line justification for test type"""
         justifications = {
@@ -428,7 +428,7 @@ class BayesianPosteriorExplainer:
         }
         return justifications.get(test_type, f"Rank {rank}: {test_type} test applied")
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.BayesianPosteriorExplainer._signal_to_dict")
+    @calibrated_method("farfan_core.analysis.micro_prompts.BayesianPosteriorExplainer._signal_to_dict")
     def _signal_to_dict(self, signal: Signal) -> dict[str, Any]:
         """Convert Signal to dictionary"""
         return {
@@ -476,7 +476,7 @@ class BayesianPosteriorExplainer:
 
         return narrative
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.BayesianPosteriorExplainer.to_json")
+    @calibrated_method("farfan_core.analysis.micro_prompts.BayesianPosteriorExplainer.to_json")
     def to_json(self, result: PosteriorJustification) -> dict[str, Any]:
         """Export justification as JSON"""
         return asdict(result)
@@ -491,7 +491,7 @@ class CausalChain:
     steps: list[str]
     edges: list[tuple[str, str]]
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.CausalChain.length")
+    @calibrated_method("farfan_core.analysis.micro_prompts.CausalChain.length")
     def length(self) -> int:
         return len(self.steps)
 
@@ -499,7 +499,7 @@ class CausalChain:
 class ProportionalityPattern:
     """Pattern indicating proportional causal relationship"""
     pattern_type: str  # 'linear', 'dose-response', 'threshold', 'mechanism'
-    strength: float  # get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.CausalChain.length").get("auto_param_L501_23", 0.0)-get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.CausalChain.length").get("auto_param_L501_27", 1.0)
+    strength: float  # get_parameter_loader().get("farfan_core.analysis.micro_prompts.CausalChain.length").get("auto_param_L501_23", 0.0)-get_parameter_loader().get("farfan_core.analysis.micro_prompts.CausalChain.length").get("auto_param_L501_27", 1.0)
     location: str  # Where in chain this appears
 
 @dataclass
@@ -580,7 +580,7 @@ class AntiMilagroStressTester:
     ) -> float:
         """Calculate patterns per chain step"""
         if chain.length() == 0:
-            return get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L582_19", 0.0)
+            return get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L582_19", 0.0)
         return len(patterns) / chain.length()
 
     def _calculate_pattern_coverage(
@@ -588,7 +588,7 @@ class AntiMilagroStressTester:
     ) -> float:
         """Calculate fraction of chain covered by patterns"""
         if chain.length() == 0:
-            return get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L590_19", 0.0)
+            return get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L590_19", 0.0)
 
         # Count unique steps covered by patterns
         covered_steps = set()
@@ -604,7 +604,7 @@ class AntiMilagroStressTester:
     ) -> float:
         """Simulate removal of weak nodes and measure support drop"""
         if not patterns or chain.length() == 0:
-            return get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L606_19", 1.0)  # Maximum drop if no patterns
+            return get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L606_19", 1.0)  # Maximum drop if no patterns
 
         # Calculate baseline support score
         baseline_support = self._calculate_support_score(patterns)
@@ -622,22 +622,22 @@ class AntiMilagroStressTester:
 
         # Calculate drop
         if baseline_support == 0:
-            return get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L624_19", 0.0)
+            return get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L624_19", 0.0)
 
         drop = (baseline_support - reduced_support) / baseline_support
-        return max(get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L627_19", 0.0), min(get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L627_28", 1.0), drop))  # Clamp to [0, 1]
+        return max(get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L627_19", 0.0), min(get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.__init__").get("auto_param_L627_28", 1.0), drop))  # Clamp to [0, 1]
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester._calculate_support_score")
+    @calibrated_method("farfan_core.analysis.micro_prompts.AntiMilagroStressTester._calculate_support_score")
     def _calculate_support_score(self, patterns: list[ProportionalityPattern]) -> float:
         """Calculate overall support score from patterns"""
         if not patterns:
-            return get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester._calculate_support_score").get("auto_param_L633_19", 0.0)
+            return get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester._calculate_support_score").get("auto_param_L633_19", 0.0)
 
         # Weighted average of pattern strengths
         total_weight = sum(p.strength for p in patterns)
         return total_weight / len(patterns)
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester._generate_explanation")
+    @calibrated_method("farfan_core.analysis.micro_prompts.AntiMilagroStressTester._generate_explanation")
     def _generate_explanation(self, density: float, drop: float, fragility: bool) -> str:
         """Generate 3-line explanation"""
         explanation = f"Pattern density: {density:.2f} patterns/step. "
@@ -650,7 +650,7 @@ class AntiMilagroStressTester:
 
         return explanation
 
-    @calibrated_method("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.to_json")
+    @calibrated_method("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.to_json")
     def to_json(self, result: StressTestResult) -> dict[str, Any]:
         """Export stress test result as JSON"""
         return asdict(result)
@@ -666,10 +666,10 @@ def create_provenance_auditor(
     """Factory function for ProvenanceAuditor"""
     return ProvenanceAuditor(p95_latency, contracts)
 
-def create_posterior_explainer(anti_miracle_cap: float = get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.to_json").get("auto_param_L668_57", 0.95)) -> BayesianPosteriorExplainer:
+def create_posterior_explainer(anti_miracle_cap: float = get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.to_json").get("auto_param_L668_57", 0.95)) -> BayesianPosteriorExplainer:
     """Factory function for BayesianPosteriorExplainer"""
     return BayesianPosteriorExplainer(anti_miracle_cap)
 
-def create_stress_tester(fragility_threshold: float = get_parameter_loader().get("farfan_pipeline.analysis.micro_prompts.AntiMilagroStressTester.to_json").get("auto_param_L672_54", 0.3)) -> AntiMilagroStressTester:
+def create_stress_tester(fragility_threshold: float = get_parameter_loader().get("farfan_core.analysis.micro_prompts.AntiMilagroStressTester.to_json").get("auto_param_L672_54", 0.3)) -> AntiMilagroStressTester:
     """Factory function for AntiMilagroStressTester"""
     return AntiMilagroStressTester(fragility_threshold)

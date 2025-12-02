@@ -23,8 +23,8 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.signals import SignalPack
-    from farfan_pipeline.core.orchestrator.signal_quality_metrics import SignalQualityMetrics
+    from .signals import SignalPack
+    from .signal_quality_metrics import SignalQualityMetrics
 
 try:
     import structlog
@@ -329,7 +329,7 @@ def validate_fingerprint_uniqueness_gate(
 
     if config.require_unique_fingerprints:
         # Import here to avoid circular dependency
-        from farfan_pipeline.core.orchestrator.signal_aliasing import validate_fingerprint_uniqueness
+        from .signal_aliasing import validate_fingerprint_uniqueness
 
         result = validate_fingerprint_uniqueness(signal_packs)
 

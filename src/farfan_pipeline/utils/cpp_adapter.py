@@ -23,7 +23,7 @@ from types import MappingProxyType
 from typing import Any
 
 from farfan_pipeline.core.orchestrator.core import PreprocessedDocument, ChunkData, Provenance
-from farfan_core import get_parameter_loader
+from farfan_pipeline import get_parameter_loader
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
@@ -276,9 +276,9 @@ class CPPAdapter:
                 "has_kpi": hasattr(chunk, "kpi") and chunk.kpi is not None,
                 "has_budget": hasattr(chunk, "budget") and chunk.budget is not None,
                 "confidence": {
-                    "layout": getattr(chunk.confidence, "layout", get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L256_66", 0.0)) if hasattr(chunk, "confidence") else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L256_108", 0.0),
-                    "ocr": getattr(chunk.confidence, "ocr", get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L257_60", 0.0)) if hasattr(chunk, "confidence") else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L257_102", 0.0),
-                    "typing": getattr(chunk.confidence, "typing", get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L258_66", 0.0)) if hasattr(chunk, "confidence") else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L258_108", 0.0),
+                    "layout": getattr(chunk.confidence, "layout", get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L256_66", 0.0)) if hasattr(chunk, "confidence") else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L256_108", 0.0),
+                    "ocr": getattr(chunk.confidence, "ocr", get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L257_60", 0.0)) if hasattr(chunk, "confidence") else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L257_102", 0.0),
+                    "typing": getattr(chunk.confidence, "typing", get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L258_66", 0.0)) if hasattr(chunk, "confidence") else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L258_108", 0.0),
                 },
             }
             chunk_summaries.append(chunk_summary)
@@ -380,13 +380,13 @@ class CPPAdapter:
         if hasattr(canon_package, 'quality_metrics') and canon_package.quality_metrics:
             qm = canon_package.quality_metrics
             metadata_dict['quality_metrics'] = {
-                'provenance_completeness': qm.provenance_completeness if hasattr(qm, 'provenance_completeness') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L328_117", 0.0),
-                'structural_consistency': qm.structural_consistency if hasattr(qm, 'structural_consistency') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L329_114", 0.0),
-                'boundary_f1': qm.boundary_f1 if hasattr(qm, 'boundary_f1') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L330_81", 0.0),
-                'kpi_linkage_rate': qm.kpi_linkage_rate if hasattr(qm, 'kpi_linkage_rate') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L331_96", 0.0),
-                'budget_consistency_score': qm.budget_consistency_score if hasattr(qm, 'budget_consistency_score') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L332_120", 0.0),
-                'temporal_robustness': qm.temporal_robustness if hasattr(qm, 'temporal_robustness') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L333_105", 0.0),
-                'chunk_context_coverage': qm.chunk_context_coverage if hasattr(qm, 'chunk_context_coverage') else get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L334_114", 0.0),
+                'provenance_completeness': qm.provenance_completeness if hasattr(qm, 'provenance_completeness') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L328_117", 0.0),
+                'structural_consistency': qm.structural_consistency if hasattr(qm, 'structural_consistency') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L329_114", 0.0),
+                'boundary_f1': qm.boundary_f1 if hasattr(qm, 'boundary_f1') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L330_81", 0.0),
+                'kpi_linkage_rate': qm.kpi_linkage_rate if hasattr(qm, 'kpi_linkage_rate') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L331_96", 0.0),
+                'budget_consistency_score': qm.budget_consistency_score if hasattr(qm, 'budget_consistency_score') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L332_120", 0.0),
+                'temporal_robustness': qm.temporal_robustness if hasattr(qm, 'temporal_robustness') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L333_105", 0.0),
+                'chunk_context_coverage': qm.chunk_context_coverage if hasattr(qm, 'chunk_context_coverage') else get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L334_114", 0.0),
             }
 
         # Add policy manifest if available
@@ -449,7 +449,7 @@ class CPPAdapter:
                     "document_id": preprocessed_doc.document_id,
                     "sentence_metadata": preprocessed_doc.sentence_metadata,
                     "resolution_index": {},  # Placeholder, as it's not generated by the adapter
-                    "provenance_completeness": metadata_dict.get('provenance_completeness', get_parameter_loader().get("farfan_pipeline.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L397_92", 0.0)),
+                    "provenance_completeness": metadata_dict.get('provenance_completeness', get_parameter_loader().get("farfan_core.utils.cpp_adapter.CPPAdapter.__init__").get("auto_param_L397_92", 0.0)),
                 }
                 self.wiring_validator.validate_adapter_to_orchestrator(preprocessed_dict)
                 self.logger.info("✓ Adapter → Orchestrator contract validation passed")

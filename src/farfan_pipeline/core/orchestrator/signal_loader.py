@@ -19,7 +19,7 @@ import json
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.questionnaire import CanonicalQuestionnaire
+    from .questionnaire import CanonicalQuestionnaire
 
 try:
     import blake3
@@ -34,8 +34,8 @@ except ImportError:
     import logging
     logger = logging.getLogger(__name__)
 
-from farfan_pipeline.core.orchestrator.signal_consumption import SignalManifest, generate_signal_manifests
-from farfan_pipeline.core.orchestrator.signals import SignalPack
+from .signal_consumption import SignalManifest, generate_signal_manifests
+from .signals import SignalPack
 
 
 def compute_fingerprint(content: str | bytes) -> str:
@@ -225,14 +225,14 @@ def build_signal_pack_from_monolith(
         SignalPack object with extracted patterns
 
     Example:
-        >>> from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+        >>> from farfan_core.core.orchestrator.questionnaire import load_questionnaire
         >>> canonical = load_questionnaire()
         >>> pack = build_signal_pack_from_monolith("PA01", questionnaire=canonical)
         >>> print(f"Patterns: {len(pack.patterns)}")
         >>> print(f"Indicators: {len(pack.indicators)}")
     """
     # Import here to avoid circular dependency
-    from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+    from .questionnaire import load_questionnaire
 
     # Handle legacy monolith parameter
     if monolith is not None:
@@ -347,13 +347,13 @@ def build_all_signal_packs(
         Dict mapping policy_area_id to SignalPack
 
     Example:
-        >>> from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+        >>> from farfan_core.core.orchestrator.questionnaire import load_questionnaire
         >>> canonical = load_questionnaire()
         >>> packs = build_all_signal_packs(questionnaire=canonical)
         >>> print(f"Built {len(packs)} signal packs")
     """
     # Import here to avoid circular dependency
-    from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+    from .questionnaire import load_questionnaire
 
     # Handle legacy monolith parameter and ensure questionnaire is loaded only once
     if monolith is not None:
@@ -401,13 +401,13 @@ def build_signal_manifests(
         Dict mapping policy_area_id to SignalManifest
 
     Example:
-        >>> from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+        >>> from farfan_core.core.orchestrator.questionnaire import load_questionnaire
         >>> canonical = load_questionnaire()
         >>> manifests = build_signal_manifests(questionnaire=canonical)
         >>> print(f"Built {len(manifests)} manifests")
     """
     # Import here to avoid circular dependency
-    from farfan_pipeline.core.orchestrator.questionnaire import QUESTIONNAIRE_PATH, load_questionnaire
+    from .questionnaire import QUESTIONNAIRE_PATH, load_questionnaire
 
     # Handle legacy monolith parameter
     if monolith is not None:

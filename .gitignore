@@ -61,3 +61,13 @@ data/questionnaire_monolith.json.backup
 
 # Environment variables
 .env
+
+# Migration artifacts
+migrate_to_pep420.py
+
+# libcst
+.libcst.metadata/
+
+# Build artifacts
+*.whl
+pip-wheel-metadata/

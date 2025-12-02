@@ -341,7 +341,7 @@ def enhance_rule(rule: dict[str, Any]) -> dict[str, Any]:
 def main() -> None:
     """Main enhancement process"""
     # Delegate to factory for I/O operations
-    from farfan_pipeline.analysis.factory import load_json, save_json
+    from .factory import load_json, save_json
 
     # Load existing rules
     rules_path = Path('config/recommendation_rules.json')

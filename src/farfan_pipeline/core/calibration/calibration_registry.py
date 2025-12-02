@@ -1,21 +1,21 @@
 from typing import Any, Dict
 
 CALIBRATIONS: Dict[str, Dict[str, Any]] = {
-    "farfan_pipeline.analysis.derek_beach.BayesianThresholdsConfig": {
+    "farfan_core.analysis.derek_beach.BayesianThresholdsConfig": {
         "kl_divergence": 0.01,
         "convergence_min_evidence": 2,
         "prior_alpha": 2.0,
         "prior_beta": 2.0,
         "laplace_smoothing": 1.0,
     },
-    "farfan_pipeline.analysis.derek_beach.MechanismTypeConfig": {
+    "farfan_core.analysis.derek_beach.MechanismTypeConfig": {
         "administrativo": 0.30,
         "tecnico": 0.25,
         "financiero": 0.20,
         "politico": 0.15,
         "mixto": 0.10,
     },
-    "farfan_pipeline.analysis.derek_beach.ConfigLoader._load_default_config": {
+    "farfan_core.analysis.derek_beach.ConfigLoader._load_default_config": {
         "kl_divergence": 0.01,
         "convergence_min_evidence": 2,
         "prior_alpha": 2.0,
@@ -28,16 +28,16 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "mixto": 0.10,
         "feedback_weight": 0.1,
     },
-    "farfan_pipeline.analysis.derek_beach.ConfigLoader.get_bayesian_threshold": {
+    "farfan_core.analysis.derek_beach.ConfigLoader.get_bayesian_threshold": {
         "default": 0.01,
     },
-    "farfan_pipeline.analysis.derek_beach.ConfigLoader.get_mechanism_prior": {
+    "farfan_core.analysis.derek_beach.ConfigLoader.get_mechanism_prior": {
         "default": 0.0,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._calculate_semantic_distance": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._calculate_semantic_distance": {
         "default": 0.5,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._calculate_type_transition_prior": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._calculate_type_transition_prior": {
         "('programa', 'producto')": 0.85,
         "('producto', 'resultado')": 0.80,
         "('resultado', 'impacto')": 0.75,
@@ -47,11 +47,11 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "reverse_multiplier": 0.3,
         "default": 0.40,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._extract_causal_links": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._extract_causal_links": {
         "structural_veto_threshold": 0.6,
         "final_kl_default": 0.0,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._calculate_language_specificity": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._calculate_language_specificity": {
         "base_score": 0.6,
         "strong_indicator_score": 0.9,
         "moderate_indicator_score": 0.7,
@@ -60,13 +60,13 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "contextual_specificity_boost": 0.10,
         "final_score_max": 1.0,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._assess_temporal_coherence": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._assess_temporal_coherence": {
         "default": 0.5,
         "in_sequence": 0.85,
         "same_sequence": 0.60,
         "reverse_sequence": 0.30,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._assess_financial_consistency": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._assess_financial_consistency": {
         "default": 0.5,
         "consistent_min": 0.1,
         "consistent_max": 1.0,
@@ -75,10 +75,10 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "slightly_inconsistent_score": 0.60,
         "very_inconsistent_score": 0.30,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._calculate_textual_proximity": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._calculate_textual_proximity": {
         "default": 0.5,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._calculate_composite_likelihood": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._calculate_composite_likelihood": {
         "semantic_distance_weight": 0.25,
         "type_transition_prior_weight": 0.20,
         "language_specificity_weight": 0.20,
@@ -92,10 +92,10 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "enhanced_likelihood_max": 1.0,
         "insufficient_evidence_penalty": 0.85,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._build_type_hierarchy": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._build_type_hierarchy": {
         "inferred_strength": 0.5,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._calculate_confidence": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._calculate_confidence": {
         "confidence": 0.5,
         "quantitative_target_bonus": 0.2,
         "causal_indicator_bonus": 0.15,
@@ -104,24 +104,24 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "max_confidence": 1.0,
         "min_confidence": 0.0,
     },
-    "farfan_pipeline.analysis.derek_beach.CausalExtractor._extract_causal_justifications": {
+    "farfan_core.analysis.derek_beach.CausalExtractor._extract_causal_justifications": {
         "confidence": 0.7,
     },
-    "farfan_pipeline.analysis.derek_beach.MechanismPartExtractor.extract_entity_activity": {
+    "farfan_core.analysis.derek_beach.MechanismPartExtractor.extract_entity_activity": {
         "confidence": 0.85,
     },
-    "farfan_pipeline.analysis.derek_beach.MechanismPartExtractor._calculate_ea_confidence": {
+    "farfan_core.analysis.derek_beach.MechanismPartExtractor._calculate_ea_confidence": {
         "confidence": 0.5,
         "known_entity_bonus": 0.2,
         "strong_verb_bonus": 0.15,
         "grammatical_connection_bonus": 0.15,
         "max_confidence": 1.0,
     },
-    "farfan_pipeline.analysis.derek_beach.FinancialAuditor._match_program_to_node": {
+    "farfan_core.analysis.derek_beach.FinancialAuditor._match_program_to_node": {
         "penalty_factor": 0.85,
         "match_confidence_divisor": 100.0,
     },
-    "farfan_pipeline.analysis.derek_beach.FinancialAuditor._perform_counterfactual_budget_check": {
+    "farfan_core.analysis.derek_beach.FinancialAuditor._perform_counterfactual_budget_check": {
         "necessity_score": 0.0,
         "budget_mechanism_bonus": 0.40,
         "budget_dependency_bonus": 0.30,
@@ -132,23 +132,23 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "sufficient_threshold": 0.50,
         "necessary_threshold": 0.70,
     },
-    "farfan_pipeline.analysis.derek_beach.FinancialAuditor._calculate_sufficiency": {
+    "farfan_core.analysis.derek_beach.FinancialAuditor._calculate_sufficiency": {
         "default": 0.0,
     },
-    "farfan_pipeline.analysis.derek_beach.FinancialAuditor._detect_allocation_gaps": {
+    "farfan_core.analysis.derek_beach.FinancialAuditor._detect_allocation_gaps": {
         "sufficiency_threshold": 0.5,
     },
-    "farfan_pipeline.analysis.derek_beach.FinancialAuditor._match_goal_to_budget": {
+    "farfan_core.analysis.derek_beach.FinancialAuditor._match_goal_to_budget": {
         "score_threshold": 0.3,
     },
-    "farfan_pipeline.analysis.derek_beach.OperationalizationAuditor.audit_evidence_traceability": {
+    "farfan_core.analysis.derek_beach.OperationalizationAuditor.audit_evidence_traceability": {
         "partial_credit": 0.5,
     },
-    "farfan_pipeline.analysis.derek_beach.OperationalizationAuditor.bayesian_counterfactual_audit": {
+    "farfan_core.analysis.derek_beach.OperationalizationAuditor.bayesian_counterfactual_audit": {
         "success_probability_default": 0.0,
         "risk_score_default": 0.0,
     },
-    "farfan_pipeline.analysis.derek_beach.OperationalizationAuditor._get_default_historical_priors": {
+    "farfan_core.analysis.derek_beach.OperationalizationAuditor._get_default_historical_priors": {
         "entity_presence_success_rate": 0.94,
         "baseline_presence_success_rate": 0.89,
         "target_presence_success_rate": 0.92,
@@ -159,7 +159,7 @@ CALIBRATIONS: Dict[str, Dict[str, Any]] = {
         "resultado_success_rate": 0.72,
         "impacto_success_rate": 0.58,
     },
-    "farfan_pipeline.analysis.derek_beach.OperationalizationAuditor._audit_direct_evidence": {
+    "farfan_core.analysis.derek_beach.OperationalizationAuditor._audit_direct_evidence": {
         "unwanted_effects_prior_beta": 10.5,
     },
 }

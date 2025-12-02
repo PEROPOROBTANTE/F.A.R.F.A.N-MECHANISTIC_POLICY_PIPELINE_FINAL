@@ -19,12 +19,12 @@ def run_command(cmd, description):
         # Add farfan_core to PYTHONPATH
         env = os.environ.copy()
         # Assuming we are running from the root of the repo, and the package is in farfan_core/
-        # We need to add "farfan_pipeline" directory to PYTHONPATH so that 'import farfan_core' works.
+        # We need to add 'farfan_core' directory to PYTHONPATH so that 'import farfan_core' works.
         # Structure: ./farfan_core/farfan_core/contracts
         # So we need to add ./farfan_core to path
         
         cwd = os.getcwd()
-        farfan_core_path = os.path.join(cwd, "farfan_pipeline")
+        farfan_core_path = os.path.join(cwd, "farfan_core")
         env["PYTHONPATH"] = f"{farfan_core_path}:{env.get('PYTHONPATH', '')}"
         
         subprocess.check_call(cmd, shell=True, env=env)

@@ -1,10 +1,10 @@
 """SPC to Orchestrator Adapter (Shim).
 
 This module is a shim for backward compatibility. The canonical implementation
-has been moved to `farfan_pipeline.utils.cpp_adapter` to align with the Canon Policy Package (CPP)
+has been moved to `farfan_core.utils.cpp_adapter` to align with the Canon Policy Package (CPP)
 terminology.
 
-Please use `farfan_pipeline.utils.cpp_adapter.CPPAdapter` instead.
+Please use `farfan_core.utils.cpp_adapter.CPPAdapter` instead.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 # Issue deprecation warning when module is imported
 warnings.warn(
-    "farfan_pipeline.utils.spc_adapter is deprecated. Use farfan_pipeline.utils.cpp_adapter instead.",
+    "farfan_core.utils.spc_adapter is deprecated. Use farfan_core.utils.cpp_adapter instead.",
     DeprecationWarning,
     stacklevel=2
 )

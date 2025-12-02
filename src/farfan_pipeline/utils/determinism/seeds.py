@@ -27,7 +27,7 @@ class SeedFactory:
     def __init__(self, salt: bytes | None = None) -> None:
         self._salt = salt or self.DEFAULT_SALT
 
-    @calibrated_method("farfan_pipeline.utils.determinism.seeds.SeedFactory.derive_seed")
+    @calibrated_method("farfan_core.utils.determinism.seeds.SeedFactory.derive_seed")
     def derive_seed(self, components: Iterable[str]) -> int:
         """Derive a deterministic 32-bit seed from ordered components."""
 
@@ -35,13 +35,13 @@ class SeedFactory:
         digest = hashlib.sha256(self._salt + material.encode("utf-8")).digest()
         return int.from_bytes(digest[:4], byteorder="big")
 
-    @calibrated_method("farfan_pipeline.utils.determinism.seeds.SeedFactory.derive_run_seed")
+    @calibrated_method("farfan_core.utils.determinism.seeds.SeedFactory.derive_run_seed")
     def derive_run_seed(self, questionnaire_hash: str, run_id: str) -> int:
         """Derive run-wide seed based on questionnaire hash and run identifier."""
 
         return self.derive_seed([questionnaire_hash, run_id])
 
-    @calibrated_method("farfan_pipeline.utils.determinism.seeds.SeedFactory.configure_environment")
+    @calibrated_method("farfan_core.utils.determinism.seeds.SeedFactory.configure_environment")
     def configure_environment(self, seed: int) -> None:
         """Configure deterministic state for Python and NumPy."""
 
@@ -59,7 +59,7 @@ class DeterministicContext:
     seed: int
     numpy_rng: np.random.Generator | None = None
 
-    @calibrated_method("farfan_pipeline.utils.determinism.seeds.DeterministicContext.apply")
+    @calibrated_method("farfan_core.utils.determinism.seeds.DeterministicContext.apply")
     def apply(self) -> None:
         """Apply deterministic seeding across the runtime environment."""
 

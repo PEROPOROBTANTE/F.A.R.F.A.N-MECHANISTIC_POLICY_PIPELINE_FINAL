@@ -34,7 +34,7 @@ warnings.filterwarnings('ignore')
 
 # ============================================================================= 
 # CANONICAL MODULE INTEGRATION - SOTA Producer APIs
-# Import production-grade canonical components from farfan_pipeline.processing
+# Import production-grade canonical components from farfan_core.processing
 # These replace internal duplicate implementations with frontier SOTA approaches
 # =============================================================================
 
@@ -45,9 +45,9 @@ try:
     from farfan_pipeline.processing.policy_processor import create_policy_processor
 except ImportError:
     # Fallback if script is run from repo root without package install
-    from src.farfan_pipeline.processing.embedding_policy import EmbeddingPolicyProducer
-    from src.farfan_pipeline.processing.semantic_chunking_policy import SemanticChunkingProducer
-    from src.farfan_pipeline.processing.policy_processor import create_policy_processor
+    from src.farfan_core.processing.embedding_policy import EmbeddingPolicyProducer
+    from src.farfan_core.processing.semantic_chunking_policy import SemanticChunkingProducer
+    from src.farfan_core.processing.policy_processor import create_policy_processor
 
 # =============================================================================
 # LOGGING CONFIGURADO

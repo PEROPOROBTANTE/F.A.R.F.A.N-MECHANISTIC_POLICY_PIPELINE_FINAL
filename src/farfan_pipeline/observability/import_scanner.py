@@ -6,7 +6,7 @@ Validates imports against ImportPolicy without executing code.
 
 "Maximum hardness" semantics:
 - Any import that cannot be resolved to:
-    - an internal farfan_pipeline.* module, OR
+    - an internal farfan_core.* module, OR
     - a stdlib module, OR
     - an explicitly allowed third-party module
   is a violation.
@@ -20,7 +20,7 @@ import ast
 from pathlib import Path
 from typing import Iterable, Optional
 
-from farfan_pipeline.observability.path_import_policy import ImportPolicy, PolicyReport, PolicyViolation
+from .path_import_policy import ImportPolicy, PolicyReport, PolicyViolation
 
 
 def _is_stdlib_module(module_name: str, stdlib_modules: frozenset[str]) -> bool:
@@ -104,11 +104,11 @@ def _validate_import(
 def _module_name_from_path(py_file: Path, repo_root: Path) -> Optional[str]:
     """
     Compute fully-qualified module name for a given .py file
-    assuming it lives under farfan_core/farfan_pipeline.
+    assuming it lives under farfan_core/farfan_core.
 
     Example:
         <REPO>/farfan_core/farfan_core/core/foo/bar.py
-        -> farfan_pipeline.core.foo.bar
+        -> farfan_core.core.foo.bar
     """
     try:
         rel = py_file.resolve().relative_to(repo_root)
@@ -116,9 +116,9 @@ def _module_name_from_path(py_file: Path, repo_root: Path) -> Optional[str]:
         return None
 
     parts = rel.with_suffix("").parts  # drop ".py"
-    if len(parts) >= 2 and parts[0] == "farfan_pipeline" and parts[1] == "farfan_pipeline":
-        # ("farfan_pipeline", "farfan_pipeline", "core", "foo") -> "farfan_pipeline.core.foo"
-        return ".".join(("farfan_pipeline",) + parts[2:])
+    if len(parts) >= 2 and parts[0] == "farfan_core" and parts[1] == "farfan_core":
+        # ("farfan_core", "farfan_core", "core", "foo") -> "farfan_core.core.foo"
+        return ".".join(("farfan_core",) + parts[2:])
     return None
 
 

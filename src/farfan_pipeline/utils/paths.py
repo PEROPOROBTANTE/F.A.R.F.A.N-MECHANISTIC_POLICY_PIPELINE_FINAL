@@ -88,7 +88,7 @@ def _detect_project_root() -> Path:
     for parent in [current] + list(current.parents):
         if (parent / "pyproject.toml").exists():
             return parent
-        if (parent / "src" / "farfan_pipeline").exists() and (parent / "setup.py").exists():
+        if (parent / "src" / "farfan_core").exists() and (parent / "setup.py").exists():
             return parent
 
     # Fallback: if we can't find it, assume we're in src/farfan_core/utils
@@ -297,7 +297,7 @@ def resources(package: str, *path_parts: str) -> Path:
     are included in the installed package, whether from source or wheel.
 
     Args:
-        package: Package name (e.g., "farfan_pipeline.core")
+        package: Package name (e.g., "farfan_core.core")
         *path_parts: Path components within the package
 
     Returns:
@@ -307,7 +307,7 @@ def resources(package: str, *path_parts: str) -> Path:
         PathNotFoundError: If resource doesn't exist
 
     Example:
-        >>> resources("farfan_pipeline.core", "config", "default.yaml")
+        >>> resources("farfan_core.core", "config", "default.yaml")
         Path('/path/to/farfan_core/core/config/default.yaml')
     """
     try:

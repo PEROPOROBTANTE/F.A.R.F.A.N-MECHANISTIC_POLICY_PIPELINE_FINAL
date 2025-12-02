@@ -13,7 +13,7 @@ Heavy dependencies include:
 - spacy: NLP processing (200-400ms import time)
 
 Usage:
-    from farfan_pipeline.compat.lazy_deps import get_polars, get_pyarrow
+    from farfan_core.compat.lazy_deps import get_polars, get_pyarrow
 
     def process_dataframe(data):
         pl = get_polars()  # Lazy-loaded on first call
@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from farfan_pipeline.compat.safe_imports import lazy_import
+from .safe_imports import lazy_import
 
 
 def get_polars() -> Any:

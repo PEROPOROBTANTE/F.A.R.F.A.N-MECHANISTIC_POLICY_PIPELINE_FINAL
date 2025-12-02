@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from farfan_pipeline.core.orchestrator.signals import SignalPack
+    from .signals import SignalPack
 
 try:
     import structlog
@@ -300,7 +300,7 @@ class SignalPackCache:
             >>> cache.warm_cache(packs)
         """
         # Import here to avoid circular dependency
-        from farfan_pipeline.core.orchestrator.signal_aliasing import canonicalize_signal_fingerprint
+        from .signal_aliasing import canonicalize_signal_fingerprint
 
         warmed_count = 0
 
@@ -412,7 +412,7 @@ def build_cache_key(policy_area_id: str, signal_pack: SignalPack) -> str:
         >>> print(f"Cache key: {key}")
     """
     # Import here to avoid circular dependency
-    from farfan_pipeline.core.orchestrator.signal_aliasing import canonicalize_signal_fingerprint
+    from .signal_aliasing import canonicalize_signal_fingerprint
 
     canonical_fp = canonicalize_signal_fingerprint(signal_pack)
 
@@ -451,7 +451,7 @@ def validate_cache_integrity(
         >>> assert result["is_valid"], "Cache integrity violation detected!"
     """
     # Import here to avoid circular dependency
-    from farfan_pipeline.core.orchestrator.signal_aliasing import canonicalize_signal_fingerprint
+    from .signal_aliasing import canonicalize_signal_fingerprint
 
     stale_entries = []
     mismatched_entries = []

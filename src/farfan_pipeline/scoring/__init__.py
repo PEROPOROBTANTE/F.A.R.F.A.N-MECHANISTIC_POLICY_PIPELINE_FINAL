@@ -1,7 +1,7 @@
 """Scoring module package.
 
 This package provides backward compatibility for code that imports
-scoring classes from farfan_pipeline.scoring.
+scoring classes from farfan_core.scoring.
 """
 
 from farfan_pipeline.analysis.scoring.scoring import (

@@ -5,7 +5,7 @@ This module provides a deterministic WorkerPool for parallel task execution
 with controlled max_workers, backoff, abortability, and per-task instrumentation.
 """
 
-from farfan_pipeline.concurrency.concurrency import (
+from .concurrency import (
     TaskExecutionError,
     TaskMetrics,
     TaskResult,

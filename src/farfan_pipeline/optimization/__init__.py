@@ -10,7 +10,7 @@ Date: 2025-11-13
 Version: 1.0.0
 """
 
-from farfan_pipeline.optimization.rl_strategy import (
+from .rl_strategy import (
     BanditAlgorithm,
     BanditArm,
     EpsilonGreedyAlgorithm,

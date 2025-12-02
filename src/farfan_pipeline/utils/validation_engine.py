@@ -39,7 +39,7 @@ class ValidationReport:
     warnings: int
     results: list[ValidationResult] = field(default_factory=list)
 
-    @calibrated_method("farfan_pipeline.utils.validation_engine.ValidationReport.add_result")
+    @calibrated_method("farfan_core.utils.validation_engine.ValidationReport.add_result")
     def add_result(self, result: ValidationResult) -> None:
         """Add a validation result to the report."""
         self.results.append(result)
@@ -52,12 +52,12 @@ class ValidationReport:
         elif result.is_valid:
             self.passed += 1
 
-    @calibrated_method("farfan_pipeline.utils.validation_engine.ValidationReport.has_errors")
+    @calibrated_method("farfan_core.utils.validation_engine.ValidationReport.has_errors")
     def has_errors(self) -> bool:
         """Check if report contains any errors."""
         return self.failed > 0
 
-    @calibrated_method("farfan_pipeline.utils.validation_engine.ValidationReport.summary")
+    @calibrated_method("farfan_core.utils.validation_engine.ValidationReport.summary")
     def summary(self) -> str:
         """Generate summary string."""
         return (f"Validation Summary: {self.passed}/{self.total_checks} passed, "
@@ -270,7 +270,7 @@ class ValidationEngine:
 
         return report
 
-    @calibrated_method("farfan_pipeline.utils.validation_engine.ValidationEngine._log_result")
+    @calibrated_method("farfan_core.utils.validation_engine.ValidationEngine._log_result")
     def _log_result(self, result: ValidationResult) -> None:
         """Log validation result with appropriate severity."""
         if result.severity == "ERROR":

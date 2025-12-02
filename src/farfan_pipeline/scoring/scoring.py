@@ -1,7 +1,7 @@
 """Scoring module - re-exports from analysis.scoring.scoring.
 
 This module provides backward compatibility for code that imports
-scoring classes from farfan_pipeline.scoring.scoring.
+scoring classes from farfan_core.scoring.scoring.
 """
 
 from farfan_pipeline.analysis.scoring.scoring import (

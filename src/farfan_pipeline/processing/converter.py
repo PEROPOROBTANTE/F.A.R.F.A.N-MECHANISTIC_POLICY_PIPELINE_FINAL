@@ -28,10 +28,9 @@ import json
 import logging
 from typing import TYPE_CHECKING, Any
 
-# from farfan_core import get_parameter_loader  # CALIBRATION DISABLED
-from farfan_pipeline.core.calibration.decorators import calibrated_method
-
 from farfan_pipeline.processing.cpp_ingestion.models import (
+# from farfan_pipeline import get_parameter_loader  # CALIBRATION DISABLED
+from farfan_pipeline.core.calibration.decorators import calibrated_method
     KPI,
     Budget,
     CanonPolicyPackage,
@@ -209,7 +208,7 @@ class SmartChunkConverter:
         self.logger.info("Successfully converted to CanonPolicyPackage")
         return canon_package
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._convert_smart_chunk_to_chunk")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._convert_smart_chunk_to_chunk")
     def _convert_smart_chunk_to_chunk(self, smart_chunk: Any) -> Chunk:
         """
         Convert a single SmartPolicyChunk to Chunk.
@@ -231,8 +230,8 @@ class SmartChunkConverter:
 
         # Build confidence from SPC metrics
         confidence = Confidence(
-            layout=get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._convert_smart_chunk_to_chunk").get("auto_param_L232_19", 1.0),  # SPC doesn't distinguish these
-            ocr=smart_chunk.confidence_metrics.get('extraction_confidence', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._convert_smart_chunk_to_chunk").get("auto_param_L233_76", 0.95)),
+            layout=get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._convert_smart_chunk_to_chunk").get("auto_param_L232_19", 1.0),  # SPC doesn't distinguish these
+            ocr=smart_chunk.confidence_metrics.get('extraction_confidence', get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._convert_smart_chunk_to_chunk").get("auto_param_L233_76", 0.95)),
             typing=smart_chunk.coherence_score
         )
 
@@ -270,7 +269,7 @@ class SmartChunkConverter:
             entities=entities
         )
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_policy_facets")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_policy_facets")
     def _extract_policy_facets(self, smart_chunk: Any) -> PolicyFacet:
         """Extract policy facets from SPC strategic_context and section_hierarchy."""
         axes = []
@@ -302,7 +301,7 @@ class SmartChunkConverter:
             projects=projects[:5]
         )
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_time_facets")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_time_facets")
     def _extract_time_facets(self, smart_chunk: Any) -> TimeFacet:
         """Extract temporal information from SPC temporal_dynamics."""
         years = []
@@ -331,7 +330,7 @@ class SmartChunkConverter:
             periods=periods[:5]
         )
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_geo_facets")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_geo_facets")
     def _extract_geo_facets(self, smart_chunk: Any) -> GeoFacet:
         """Extract geographic information from SPC strategic_context."""
         territories = []
@@ -348,7 +347,7 @@ class SmartChunkConverter:
             regions=regions[:5]
         )
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._build_provenance")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._build_provenance")
     def _build_provenance(self, smart_chunk: Any) -> ProvenanceMap:
         """Build provenance from SPC metadata."""
         # Extract section info from section_hierarchy
@@ -362,7 +361,7 @@ class SmartChunkConverter:
             extraction_method="smart_policy_chunking_v3.0"
         )
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_entities")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_entities")
     def _extract_entities(self, smart_chunk: Any) -> list[Entity]:
         """Extract entities from SPC policy_entities."""
         entities = []
@@ -372,13 +371,13 @@ class SmartChunkConverter:
                 entity = Entity(
                     text=pe.text if hasattr(pe, 'text') else str(pe),
                     entity_type=pe.entity_type if hasattr(pe, 'entity_type') else 'unknown',
-                    confidence=pe.confidence if hasattr(pe, 'confidence') else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_entities").get("auto_param_L373_79", 0.8)
+                    confidence=pe.confidence if hasattr(pe, 'confidence') else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_entities").get("auto_param_L373_79", 0.8)
                 )
                 entities.append(entity)
 
         return entities
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_budget")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_budget")
     def _extract_budget(self, smart_chunk: Any) -> Budget | None:
         """
         Extract budget with comprehensive error handling and logging (H1.4).
@@ -453,7 +452,7 @@ class SmartChunkConverter:
             currency="COP"
         )
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_budget_year")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_budget_year")
     def _extract_budget_year(self, budget_text: str, smart_chunk: Any) -> int:
         """
         Extract budget year with 4 fallback strategies (H1.4).
@@ -492,7 +491,7 @@ class SmartChunkConverter:
         self.logger.debug("No year found in budget context, defaulting to 2024")
         return 2024
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi")
+    @calibrated_method("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi")
     def _extract_kpi(self, smart_chunk: Any) -> KPI | None:
         """Extract KPI if chunk contains indicator information."""
         # Check if chunk_type suggests this is a metric
@@ -525,31 +524,31 @@ class SmartChunkConverter:
             1 for c in chunk_graph.chunks.values()
             if c.provenance and c.provenance.source_section
         )
-        provenance_completeness = chunks_with_provenance / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L526_110", 0.0)
+        provenance_completeness = chunks_with_provenance / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L526_110", 0.0)
 
         # Average coherence from SPC coherence_score
-        avg_coherence = sum(sc.coherence_score for sc in smart_chunks) / len(smart_chunks) if smart_chunks else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L529_112", 0.0)
+        avg_coherence = sum(sc.coherence_score for sc in smart_chunks) / len(smart_chunks) if smart_chunks else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L529_112", 0.0)
 
         # Average completeness from SPC completeness_index
-        avg_completeness = sum(sc.completeness_index for sc in smart_chunks) / len(smart_chunks) if smart_chunks else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L532_118", 0.0)
+        avg_completeness = sum(sc.completeness_index for sc in smart_chunks) / len(smart_chunks) if smart_chunks else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L532_118", 0.0)
 
         # Budget consistency
         chunks_with_budget = sum(1 for c in chunk_graph.chunks.values() if c.budget)
-        budget_consistency = chunks_with_budget / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L536_101", 0.0)
+        budget_consistency = chunks_with_budget / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L536_101", 0.0)
 
         # Temporal robustness
         chunks_with_time = sum(1 for c in chunk_graph.chunks.values() if c.time_facets.years)
-        temporal_robustness = chunks_with_time / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L540_100", 0.0)
+        temporal_robustness = chunks_with_time / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L540_100", 0.0)
 
         # Chunk context coverage (from edges)
         chunks_with_edges = len({e[0] for e in chunk_graph.edges} | {e[1] for e in chunk_graph.edges})
-        chunk_context_coverage = chunks_with_edges / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L544_104", 0.0)
+        chunk_context_coverage = chunks_with_edges / len(chunk_graph.chunks) if chunk_graph.chunks else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L544_104", 0.0)
 
         return QualityMetrics(
             provenance_completeness=provenance_completeness,
             structural_consistency=avg_coherence,
             boundary_f1=avg_completeness,
-            kpi_linkage_rate=get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L550_29", 0.0),  # Would need KPI analysis
+            kpi_linkage_rate=get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L550_29", 0.0),  # Would need KPI analysis
             budget_consistency_score=budget_consistency,
             temporal_robustness=temporal_robustness,
             chunk_context_coverage=chunk_context_coverage
@@ -650,7 +649,7 @@ class SmartChunkConverter:
                 chunk_data['causal_evidence'] = [
                     {
                         'dimension': ce.dimension if hasattr(ce, 'dimension') else 'unknown',
-                        'confidence': ce.confidence if hasattr(ce, 'confidence') else get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L651_86", 0.0),
+                        'confidence': ce.confidence if hasattr(ce, 'confidence') else get_parameter_loader().get("farfan_core.processing.spc_ingestion.converter.SmartChunkConverter._extract_kpi").get("auto_param_L651_86", 0.0),
                     }
                     for ce in sc.causal_chain[:5]  # Top 5
                 ]

@@ -15,7 +15,7 @@ from typing import List, Optional
 SRC_ROOT = Path("farfan_core/farfan_core/core")
 DEFAULT_OUTPUT = Path("farfan_core/farfan_core/artifacts/calibration/method_inventory.json")
 
-from farfan_pipeline.core.method_inventory_types import (
+from .method_inventory_types import (
     SignatureDescriptor,
     GovernanceFlags,
 )
@@ -186,22 +186,22 @@ def module_path_from_file(path: Path, root: Path) -> str:
     
     # Heuristic 1: farfan_core package structure
     try:
-        # Find the index of "farfan_pipeline"
+        # Find the index of 'farfan_core'
         # We want the path starting from the package name.
-        # If path is .../farfan_core/farfan_core/core/foo.py -> farfan_pipeline.core.foo
-        # If path is .../farfan_core/core/foo.py -> farfan_pipeline.core.foo
+        # If path is .../farfan_core/farfan_core/core/foo.py -> farfan_core.core.foo
+        # If path is .../farfan_core/core/foo.py -> farfan_core.core.foo
         
-        # We iterate backwards to find the last "farfan_pipeline" that acts as a package root?
+        # We iterate backwards to find the last 'farfan_core' that acts as a package root?
         # Actually, if we have farfan_core/farfan_core, the package is the inner one.
         # If we have just farfan_core, it is the package.
         
-        # Let's look for the index of "farfan_pipeline".
-        indices = [i for i, part in enumerate(parts) if part == "farfan_pipeline"]
+        # Let's look for the index of 'farfan_core'.
+        indices = [i for i, part in enumerate(parts) if part == "farfan_core"]
         
         if indices:
             # If multiple, the package usually starts at the last one?
             # No, if path is repo/farfan_core/farfan_core/core/foo.py
-            # The module is farfan_pipeline.core.foo
+            # The module is farfan_core.core.foo
             # So we want parts starting from the *second* farfan_core (index 1 of the slice).
             # Which is the last index in the list of indices.
             
@@ -296,7 +296,7 @@ import argparse
 import json
 from dataclasses import asdict
 
-from farfan_pipeline.core.method_inventory_types import (
+from .method_inventory_types import (
     MethodId,
     MethodDescriptor,
     MethodInventory,

@@ -7,7 +7,7 @@ ensuring zero-tolerance for invalid values at ingestion time.
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from typing_extensions import Self
-from farfan_core import get_parameter_loader
+from farfan_pipeline import get_parameter_loader
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 
@@ -44,11 +44,11 @@ class AggregationWeights(BaseModel):
         return v
 
     @model_validator(mode='after')
-    @calibrated_method("farfan_pipeline.utils.validation.aggregation_models.AggregationWeights.validate_sum")
+    @calibrated_method("farfan_core.utils.validation.aggregation_models.AggregationWeights.validate_sum")
     def validate_sum(self) -> Self:
-        """Ensure weights sum to get_parameter_loader().get("farfan_pipeline.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L48_33", 1.0) within tolerance."""
+        """Ensure weights sum to get_parameter_loader().get("farfan_core.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L48_33", 1.0) within tolerance."""
         weight_sum = sum(self.weights)
-        expected_sum = get_parameter_loader().get("farfan_pipeline.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L52_79", 1.0)
+        expected_sum = get_parameter_loader().get("farfan_core.utils.validation.aggregation_models.AggregationWeights.validate_sum").get("auto_param_L52_79", 1.0)
         diff = abs(weight_sum - expected_sum)
         if diff > self.tolerance:
             raise ValueError(

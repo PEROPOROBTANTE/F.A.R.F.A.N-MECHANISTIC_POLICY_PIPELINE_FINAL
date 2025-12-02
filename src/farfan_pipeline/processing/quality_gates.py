@@ -39,7 +39,7 @@ class SPCQualityGates:
     MIN_BUDGET_CONSISTENCY = 0.95      # Budget data consistency
     MIN_TEMPORAL_ROBUSTNESS = 0.80     # Temporal data quality
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_input")
+    @calibrated_method("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_input")
     def validate_input(self, document_path: Path) -> dict[str, Any]:
         """
         Validate input document before processing.
@@ -74,7 +74,7 @@ class SPCQualityGates:
             "file_size_bytes": file_size,
         }
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_chunks")
+    @calibrated_method("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_chunks")
     def validate_chunks(self, chunks: list[dict[str, Any]]) -> dict[str, Any]:
         """
         Validate processed chunks from phase-one.
@@ -126,7 +126,7 @@ class SPCQualityGates:
             "chunk_count": len(chunks),
         }
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_output_compatibility")
+    @calibrated_method("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_output_compatibility")
     def validate_output_compatibility(self, output: dict[str, Any]) -> dict[str, Any]:
         """
         Validate output structure for compatibility with downstream phases.
@@ -165,7 +165,7 @@ class SPCQualityGates:
             "failures": failures,
         }
 
-    @calibrated_method("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics")
+    @calibrated_method("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics")
     def validate_quality_metrics(self, quality_metrics: Any) -> dict[str, Any]:
         """
         Validate quality metrics from CanonPolicyPackage against MAXIMUM STANDARDS.
@@ -191,20 +191,20 @@ class SPCQualityGates:
         # Extract metrics (handle both object and dict)
         if hasattr(quality_metrics, '__dict__'):
             # It's an object
-            provenance_completeness = getattr(quality_metrics, 'provenance_completeness', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L193_90", 0.0))
-            structural_consistency = getattr(quality_metrics, 'structural_consistency', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L194_88", 0.0))
-            boundary_f1 = getattr(quality_metrics, 'boundary_f1', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L195_66", 0.0))
-            budget_consistency = getattr(quality_metrics, 'budget_consistency_score', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L196_86", 0.0))
-            temporal_robustness = getattr(quality_metrics, 'temporal_robustness', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L197_82", 0.0))
-            chunk_context_coverage = getattr(quality_metrics, 'chunk_context_coverage', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L198_88", 0.0))
+            provenance_completeness = getattr(quality_metrics, 'provenance_completeness', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L193_90", 0.0))
+            structural_consistency = getattr(quality_metrics, 'structural_consistency', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L194_88", 0.0))
+            boundary_f1 = getattr(quality_metrics, 'boundary_f1', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L195_66", 0.0))
+            budget_consistency = getattr(quality_metrics, 'budget_consistency_score', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L196_86", 0.0))
+            temporal_robustness = getattr(quality_metrics, 'temporal_robustness', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L197_82", 0.0))
+            chunk_context_coverage = getattr(quality_metrics, 'chunk_context_coverage', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L198_88", 0.0))
         else:
             # It's a dict
-            provenance_completeness = quality_metrics.get('provenance_completeness', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L201_85", 0.0))
-            structural_consistency = quality_metrics.get('structural_consistency', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L202_83", 0.0))
-            boundary_f1 = quality_metrics.get('boundary_f1', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L203_61", 0.0))
-            budget_consistency = quality_metrics.get('budget_consistency_score', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L204_81", 0.0))
-            temporal_robustness = quality_metrics.get('temporal_robustness', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L205_77", 0.0))
-            chunk_context_coverage = quality_metrics.get('chunk_context_coverage', get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L206_83", 0.0))
+            provenance_completeness = quality_metrics.get('provenance_completeness', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L201_85", 0.0))
+            structural_consistency = quality_metrics.get('structural_consistency', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L202_83", 0.0))
+            boundary_f1 = quality_metrics.get('boundary_f1', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L203_61", 0.0))
+            budget_consistency = quality_metrics.get('budget_consistency_score', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L204_81", 0.0))
+            temporal_robustness = quality_metrics.get('temporal_robustness', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L205_77", 0.0))
+            chunk_context_coverage = quality_metrics.get('chunk_context_coverage', get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L206_83", 0.0))
 
         # Store actual values
         metrics_dict = {
@@ -273,7 +273,7 @@ class SPCQualityGates:
             )
 
         # INFO: Chunk context coverage
-        if chunk_context_coverage < get_parameter_loader().get("farfan_pipeline.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L275_36", 0.5):
+        if chunk_context_coverage < get_parameter_loader().get("farfan_core.processing.spc_ingestion.quality_gates.SPCQualityGates.validate_quality_metrics").get("auto_param_L275_36", 0.5):
             warnings.append(
                 f"ℹ️ Low chunk context coverage: {chunk_context_coverage:.2%}. "
                 f"Few inter-chunk relationships detected."

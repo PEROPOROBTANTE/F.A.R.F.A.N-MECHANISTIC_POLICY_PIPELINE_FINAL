@@ -16,7 +16,7 @@ import os
 from contextlib import contextmanager
 from pathlib import Path
 
-from farfan_pipeline.observability.path_import_policy import ImportPolicy, PathPolicy, PolicyReport, PolicyViolation
+from .path_import_policy import ImportPolicy, PathPolicy, PolicyReport, PolicyViolation
 
 
 def _is_under_prefixes(resolved: Path, prefixes: frozenset[Path]) -> bool:

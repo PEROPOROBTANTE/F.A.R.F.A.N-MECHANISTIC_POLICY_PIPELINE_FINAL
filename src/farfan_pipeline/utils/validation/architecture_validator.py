@@ -51,7 +51,7 @@ class ArchitectureValidationResult:
     per_dimension: Mapping[str, Mapping[str, list[str]]]
     global_methods: tuple[str, ...] = field(default_factory=tuple)
 
-    @calibrated_method("farfan_pipeline.utils.validation.architecture_validator.ArchitectureValidationResult.to_dict")
+    @calibrated_method("farfan_core.utils.validation.architecture_validator.ArchitectureValidationResult.to_dict")
     def to_dict(self) -> dict[str, object]:
         """Serialise the validation result into a JSON-compatible dict."""
 

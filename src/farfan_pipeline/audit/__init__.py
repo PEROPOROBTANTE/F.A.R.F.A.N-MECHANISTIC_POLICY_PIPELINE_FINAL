@@ -10,7 +10,7 @@ Date: 2025-11-13
 Version: 1.0.0
 """
 
-from farfan_pipeline.audit.audit_system import (
+from .audit_system import (
     AuditCategory,
     AuditFinding,
     AuditStatus,

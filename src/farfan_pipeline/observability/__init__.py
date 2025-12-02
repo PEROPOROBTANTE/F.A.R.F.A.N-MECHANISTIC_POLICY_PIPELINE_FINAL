@@ -9,7 +9,7 @@ Date: 2025-11-13
 Version: 1.0.0
 """
 
-from farfan_pipeline.observability.opentelemetry_integration import (
+from .opentelemetry_integration import (
     ExecutorSpanDecorator,
     OpenTelemetryObservability,
     Span,

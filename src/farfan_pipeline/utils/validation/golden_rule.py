@@ -41,13 +41,13 @@ class GoldenRuleValidator:
         if self._hash_sequence(step_catalog) != self._baseline_step_signature:
             raise GoldenRuleViolation("Execution step catalog mutated")
 
-    @calibrated_method("farfan_pipeline.utils.validation.golden_rule.GoldenRuleValidator.reset_atomic_state")
+    @calibrated_method("farfan_core.utils.validation.golden_rule.GoldenRuleValidator.reset_atomic_state")
     def reset_atomic_state(self) -> None:
         """Reset atomic state tracking between phases."""
 
         self._state_ids.clear()
 
-    @calibrated_method("farfan_pipeline.utils.validation.golden_rule.GoldenRuleValidator.assert_atomic_context")
+    @calibrated_method("farfan_core.utils.validation.golden_rule.GoldenRuleValidator.assert_atomic_context")
     def assert_atomic_context(self, state_obj: object) -> None:
         """Ensure copy-on-write semantics for per-step state."""
 
@@ -57,7 +57,7 @@ class GoldenRuleValidator:
 
         self._state_ids.add(obj_id)
 
-    @calibrated_method("farfan_pipeline.utils.validation.golden_rule.GoldenRuleValidator.assert_deterministic_dag")
+    @calibrated_method("farfan_core.utils.validation.golden_rule.GoldenRuleValidator.assert_deterministic_dag")
     def assert_deterministic_dag(self, step_ids: list[str]) -> None:
         """Validate deterministic ordering and absence of cycles."""
 
@@ -73,7 +73,7 @@ class GoldenRuleValidator:
             raise GoldenRuleViolation(f"Step ID '{e.args[0]}' not found in canonical step catalog")
         if indices != sorted(indices):
             raise GoldenRuleViolation("Execution chain deviates from canonical order")
-    @calibrated_method("farfan_pipeline.utils.validation.golden_rule.GoldenRuleValidator.assert_homogeneous_treatment")
+    @calibrated_method("farfan_core.utils.validation.golden_rule.GoldenRuleValidator.assert_homogeneous_treatment")
     def assert_homogeneous_treatment(self, predicate_set: Iterable[str]) -> None:
         """Ensure identical predicate set is applied across all questions."""
 
@@ -87,7 +87,7 @@ class GoldenRuleValidator:
             raise GoldenRuleViolation("Predicate set mismatch detected")
 
     @property
-    @calibrated_method("farfan_pipeline.utils.validation.golden_rule.GoldenRuleValidator.baseline_step_catalog")
+    @calibrated_method("farfan_core.utils.validation.golden_rule.GoldenRuleValidator.baseline_step_catalog")
     def baseline_step_catalog(self) -> list[str]:
         """Expose the baseline step catalog for downstream validation."""
 

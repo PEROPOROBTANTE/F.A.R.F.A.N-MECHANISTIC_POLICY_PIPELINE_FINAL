@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING, Any
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 # Calibration parameters - loaded at runtime if calibration system available
 try:
-    from farfan_core import get_parameter_loader
+    from farfan_pipeline import get_parameter_loader
     _PARAM_LOADER = get_parameter_loader()
 except (ImportError, AttributeError):
     # Fallback: use explicit defaults if calibration system not available
@@ -370,7 +370,7 @@ class AnalysisReport(BaseModel):
         pattern=r"^[a-f0-9]{64}$"
     )
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.AnalysisReport.to_dict")
+    @calibrated_method("farfan_core.analysis.report_assembly.AnalysisReport.to_dict")
     def to_dict(self) -> dict[str, Any]:
         """Convert report to dictionary for JSON serialization."""
         report_dict = {
@@ -383,7 +383,7 @@ class AnalysisReport(BaseModel):
         }
         return report_dict
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.AnalysisReport.compute_digest")
+    @calibrated_method("farfan_core.analysis.report_assembly.AnalysisReport.compute_digest")
     def compute_digest(self) -> str:
         """Compute cryptographic digest of report content."""
         # Create deterministic representation without the digest field
@@ -396,7 +396,7 @@ class AnalysisReport(BaseModel):
         }
         return compute_content_digest(content)
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.AnalysisReport.verify_digest")
+    @calibrated_method("farfan_core.analysis.report_assembly.AnalysisReport.verify_digest")
     def verify_digest(self) -> bool:
         """Verify report digest matches computed hash."""
         if self.report_digest is None:
@@ -513,7 +513,7 @@ class ReportAssembler:
 
         logger.info("ReportAssembler initialized with dependency injection")
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler.assemble_report")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler.assemble_report")
     def assemble_report(
         self,
         plan_name: str,
@@ -687,7 +687,7 @@ class ReportAssembler:
                 recoverable=False
             ) from e
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler._assemble_micro_analyses")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler._assemble_micro_analyses")
     def _assemble_micro_analyses(
         self,
         micro_questions: list[dict[str, Any]],
@@ -759,8 +759,8 @@ class ReportAssembler:
 
         return analyses
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler._assemble_meso_clusters")
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler._assemble_meso_clusters")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler._assemble_meso_clusters")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler._assemble_meso_clusters")
     def _assemble_meso_clusters(
         self,
         execution_results: dict[str, Any]
@@ -817,7 +817,7 @@ class ReportAssembler:
                 
         return validated_clusters
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler._assemble_macro_summary")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler._assemble_macro_summary")
     def _assemble_macro_summary(
         self,
         execution_results: dict[str, Any]
@@ -862,7 +862,7 @@ class ReportAssembler:
             logger.error(f"Failed to validate macro summary: {e}")
             return None
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler.export_report")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler.export_report")
     def export_report(
         self,
         report: AnalysisReport,
@@ -889,7 +889,7 @@ class ReportAssembler:
 
         try:
             # Delegate to factory for I/O
-            from farfan_pipeline.analysis.factory import save_json, write_text_file
+            from .factory import save_json, write_text_file
 
             if format == 'json':
                 save_json(report.to_dict(), str(output_path))
@@ -926,14 +926,14 @@ class ReportAssembler:
                 recoverable=True
             ) from e
 
-    @calibrated_method("farfan_pipeline.analysis.report_assembly.ReportAssembler._format_as_markdown")
+    @calibrated_method("farfan_core.analysis.report_assembly.ReportAssembler._format_as_markdown")
     def _format_as_markdown(self, report: AnalysisReport) -> str:
         """Format report as Markdown with externalized parameters."""
         # Externalized parameters
         # Load from calibration system if available
         if _PARAM_LOADER:
-            preview_count = _PARAM_LOADER.get("farfan_pipeline.analysis.report_assembly.ReportAssembler._format_as_markdown").get("preview_question_count", 10)
-            hash_preview_length = _PARAM_LOADER.get("farfan_pipeline.analysis.report_assembly.ReportAssembler._format_as_markdown").get("hash_preview_length", 16)
+            preview_count = _PARAM_LOADER.get("farfan_core.analysis.report_assembly.ReportAssembler._format_as_markdown").get("preview_question_count", 10)
+            hash_preview_length = _PARAM_LOADER.get("farfan_core.analysis.report_assembly.ReportAssembler._format_as_markdown").get("hash_preview_length", 16)
         else:
             preview_count = 10
             hash_preview_length = 16

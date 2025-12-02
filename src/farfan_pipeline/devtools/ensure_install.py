@@ -2,7 +2,7 @@
 Environment check to ensure the editable install is configured correctly.
 
 Usage:
-    python -m farfan_pipeline.devtools.ensure_install
+    python -m farfan_core.devtools.ensure_install
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import farfan_core
+import farfan_pipeline
 from farfan_pipeline.config.paths import PROJECT_ROOT
 
 
@@ -23,14 +23,19 @@ def _describe_status() -> tuple[bool, str]:
 
     if not package_path.is_relative_to(source_root):
         return False, (
-            "farfan_core was imported from"
+            "farfan_pipeline was imported from"
             f" {package_path}, but expected an editable install rooted at {source_root}"
         )
 
-    # Check if it's an editable install
+    if str(PROJECT_ROOT / "src") not in sys.path:
+        return True, (
+            "Editable install detected via .pth file "
+            f"(import path: {package_path})"
+        )
+
     return True, (
-        "Editable install detected via .pth file "
-        f"(import path: {package_path})"
+        "Editable install detected with direct src/ entry on sys.path. "
+        "Prefer running `pip install -e .` and invoking modules via `python -m ...`."
     )
 
 

@@ -12,7 +12,7 @@ class CategoriaCausal(Enum):
     Jerarquía axiomática de categorías causales en una teoría de cambio.
     El orden numérico impone la secuencia lógica obligatoria.
 
-    Originally from farfan_pipeline.analysis.teoria_cambio, moved here to break
+    Originally from farfan_core.analysis.teoria_cambio, moved here to break
     architectural dependency (core should not import from analysis).
     """
 

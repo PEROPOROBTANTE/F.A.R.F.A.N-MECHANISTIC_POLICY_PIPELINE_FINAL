@@ -32,7 +32,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Final, Optional
 
-from farfan_pipeline.core.contracts import (
+from ..contracts import (
     CDAFFrameworkInputContract,
     ContradictionDetectorInputContract,
     DocumentData,
@@ -43,10 +43,10 @@ from farfan_pipeline.core.contracts import (
     SemanticChunkingInputContract,
     TeoriaCambioInputContract,
 )
-from farfan_pipeline.core.orchestrator.core import MethodExecutor, Orchestrator
-from farfan_pipeline.core.orchestrator.executor_config import ExecutorConfig
-from farfan_pipeline.core.orchestrator.method_registry import MethodRegistry
-from farfan_pipeline.core.orchestrator.method_source_validator import MethodSourceValidator
+from .core import MethodExecutor, Orchestrator
+from .executor_config import ExecutorConfig
+from .method_registry import MethodRegistry
+from .method_source_validator import MethodSourceValidator
 
 logger = logging.getLogger(__name__)
 
