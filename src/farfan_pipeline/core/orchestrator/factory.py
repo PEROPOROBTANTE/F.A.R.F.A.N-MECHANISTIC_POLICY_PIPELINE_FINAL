@@ -88,7 +88,7 @@ class CanonicalQuestionnaire:
     def __post_init__(self) -> None:
         """Validate all invariants on construction."""
         if self.sha256 != EXPECTED_HASH:
-            raise ValueError(f"QUESTIONNAIRE INTEGRITY VIOLATION: Hash mismatch!")
+            raise ValueError("QUESTIONNAIRE INTEGRITY VIOLATION: Hash mismatch!")
         if self.micro_question_count != EXPECTED_MICRO_QUESTION_COUNT:
             raise ValueError(f"Expected {EXPECTED_MICRO_QUESTION_COUNT} micro questions, got {self.micro_question_count}")
         if self.total_question_count != EXPECTED_TOTAL_QUESTION_COUNT:
@@ -144,7 +144,7 @@ def load_questionnaire() -> CanonicalQuestionnaire:
         version=data.get('version', 'unknown'),
         schema_version=data.get('schema_version', 'unknown'),
     )
-    
+
     _questionnaire_cache = canonical_q
     return canonical_q
 
@@ -459,7 +459,7 @@ def build_processor(
     logger.info("Running source-truth validation...")
     validator = MethodSourceValidator()
     source_truth = validator.generate_source_truth_map()
-    
+
     # Note: As per user instruction, executors_methods.json is outdated.
     # The validation should eventually be against the docstrings of the executors.
     # For now, we proceed with the validation against the file to identify discrepancies.
@@ -530,7 +530,7 @@ def build_processor(
     #        signal_registry = None
 
     executor = MethodExecutor(
-        signal_registry=signal_registry, 
+        signal_registry=signal_registry,
         method_registry=method_registry
     )
 
@@ -570,6 +570,76 @@ def migrate_io_from_module(module_name: str, line_numbers: list[int]) -> None:
 # ============================================================================
 # ENRICHED SIGNAL REGISTRY FACTORY (JOBFRONT 2)
 # ============================================================================
+
+def create_cpp_ingestion_pipeline(enable_runtime_validation: bool = True) -> Any:
+    """Create a CPPIngestionPipeline instance with proper dependency injection.
+
+    Args:
+        enable_runtime_validation: Enable runtime validation of SPC contracts
+
+    Returns:
+        Configured CPPIngestionPipeline instance
+
+    Note:
+        This factory method centralizes the creation of the ingestion pipeline,
+        ensuring consistent configuration and avoiding direct imports in API layer.
+    """
+    from ...processing.spc_ingestion import CPPIngestionPipeline
+
+    logger.info(f"Factory creating CPPIngestionPipeline (validation={enable_runtime_validation})")
+    return CPPIngestionPipeline(enable_runtime_validation=enable_runtime_validation)
+
+
+def create_cpp_adapter(enable_runtime_validation: bool = True) -> Any:
+    """Create a CPPAdapter instance with proper dependency injection.
+
+    Args:
+        enable_runtime_validation: Enable runtime validation of adapter contracts
+
+    Returns:
+        Configured CPPAdapter instance
+
+    Note:
+        This factory method centralizes the creation of the adapter,
+        ensuring consistent configuration and avoiding direct imports in API layer.
+    """
+    from ...utils.cpp_adapter import CPPAdapter
+
+    logger.info(f"Factory creating CPPAdapter (validation={enable_runtime_validation})")
+    return CPPAdapter(enable_runtime_validation=enable_runtime_validation)
+
+
+def create_recommendation_engine(
+    questionnaire_path: Path | None = None,
+    catalog_path: Path | None = None,
+    enable_cache: bool = True
+) -> Any:
+    """Create a RecommendationEngine instance with proper dependency injection.
+
+    Args:
+        questionnaire_path: Optional path to questionnaire (uses canonical if None)
+        catalog_path: Optional path to method catalog (uses default if None)
+        enable_cache: Enable caching of recommendation generation
+
+    Returns:
+        Configured RecommendationEngine instance
+
+    Note:
+        This factory method centralizes the creation of the recommendation engine,
+        ensuring it receives proper questionnaire and catalog data through the factory.
+    """
+    from ...analysis.recommendation_engine import load_recommendation_engine
+
+    logger.info("Factory creating RecommendationEngine")
+
+    # Use the loader function from recommendation_engine module
+    # Note: catalog_path and questionnaire_path parameters are ignored here as
+    # load_recommendation_engine loads from canonical paths
+    return load_recommendation_engine(
+        questionnaire_path=questionnaire_path,
+        enable_cache=enable_cache
+    )
+
 
 def create_enriched_signal_registry(
     monolith_path: str | Path | None = None,

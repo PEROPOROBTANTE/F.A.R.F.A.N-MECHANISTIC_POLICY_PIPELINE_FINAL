@@ -13,11 +13,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from farfan_pipeline.core.calibration.decorators import calibrated_method
+
 from ..core.orchestrator.core import Orchestrator
 from ..core.orchestrator.factory import build_processor
 from ..core.orchestrator.questionnaire import load_questionnaire
 from ..core.orchestrator.verification_manifest import write_verification_manifest
-from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -269,7 +270,7 @@ class PipelineConnector:
         Ingest and preprocess the PDF document using canonical SPC pipeline.
 
         This method implements the official ingestion path:
-            CPPIngestionPipeline → SPCAdapter → PreprocessedDocument
+            CPPIngestionPipeline → CPPAdapter → PreprocessedDocument
 
         Args:
             pdf_path: Path to PDF document
@@ -280,17 +281,19 @@ class PipelineConnector:
 
         Raises:
             ValueError: If ingestion fails or produces invalid output
+
+        Note:
+            Uses factory methods for dependency injection instead of direct imports.
         """
         from pathlib import Path
 
-        from farfan_pipeline.processing.spc_ingestion import CPPIngestionPipeline
-        from farfan_pipeline.utils.spc_adapter import SPCAdapter
+        from ..core.orchestrator.factory import create_cpp_adapter, create_cpp_ingestion_pipeline
 
         logger.info(f"Ingesting document via canonical SPC pipeline: {pdf_path}")
 
         try:
-            # Phase 1: CPP Ingestion (15-phase SPC analysis)
-            cpp_pipeline = CPPIngestionPipeline(enable_runtime_validation=True)
+            # Phase 1: CPP Ingestion (15-phase SPC analysis) - via factory
+            cpp_pipeline = create_cpp_ingestion_pipeline(enable_runtime_validation=True)
 
             document_path = Path(pdf_path)
             if not document_path.exists():
@@ -312,8 +315,8 @@ class PipelineConnector:
                 f"CPP Ingestion complete: {len(canon_package.chunk_graph.chunks)} chunks generated"
             )
 
-            # Phase 2: SPC Adapter (convert to PreprocessedDocument)
-            adapter = SPCAdapter(enable_runtime_validation=True)
+            # Phase 2: CPP Adapter (convert to PreprocessedDocument) - via factory
+            adapter = create_cpp_adapter(enable_runtime_validation=True)
 
             logger.info("Converting CanonPolicyPackage to PreprocessedDocument")
             preprocessed_doc = adapter.to_preprocessed_document(

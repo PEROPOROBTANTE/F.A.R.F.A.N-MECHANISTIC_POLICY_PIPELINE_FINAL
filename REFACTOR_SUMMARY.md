@@ -83,6 +83,7 @@ from farfan_pipeline.analysis.Analyzer_one import (
     SemanticAnalyzer,
 )
 
+
 # ADDED
 from farfan_pipeline.core.ports import (
     PortDocumentLoader,
@@ -256,3 +257,129 @@ Successfully refactored the dependency chain by:
 - **Enabling easy testing** via mock injection
 
 The codebase now follows hexagonal architecture with clear layer boundaries and dependency inversion.
+
+---
+
+# API Layer Refactoring: Factory-Based Dependency Injection
+
+## Summary
+
+Successfully refactored the API layer (`api/pipeline_connector.py` and `api/api_server.py`) to eliminate direct imports of `processing.spc_ingestion`, `analysis.recommendation_engine`, and `utils` modules by routing all calls through `orchestrator/factory.py` entry points with proper dependency injection.
+
+## Changes Made
+
+### 1. Added Factory Methods to `src/farfan_pipeline/core/orchestrator/factory.py`
+
+Added three new factory methods to centralize component creation:
+
+#### `create_cpp_ingestion_pipeline(enable_runtime_validation: bool = True) -> Any`
+- Creates a `CPPIngestionPipeline` instance with proper configuration
+- Centralizes creation of the ingestion pipeline
+- Avoids direct imports in API layer
+
+#### `create_cpp_adapter(enable_runtime_validation: bool = True) -> Any`
+- Creates a `CPPAdapter` instance with proper configuration
+- Centralizes creation of the adapter
+- Avoids direct imports in API layer
+
+#### `create_recommendation_engine(questionnaire_path: Path | None = None, catalog_path: Path | None = None, enable_cache: bool = True) -> Any`
+- Creates a `RecommendationEngine` instance with proper configuration
+- Uses canonical questionnaire from factory
+- Avoids direct imports in API layer
+
+### 2. Refactored `src/farfan_pipeline/api/pipeline_connector.py`
+
+**Before:**
+```python
+from farfan_pipeline.processing.spc_ingestion import CPPIngestionPipeline
+from farfan_pipeline.utils.spc_adapter import SPCAdapter
+
+# Direct instantiation
+cpp_pipeline = CPPIngestionPipeline(enable_runtime_validation=True)
+adapter = SPCAdapter(enable_runtime_validation=True)
+```
+
+**After:**
+```python
+from ..core.orchestrator.factory import create_cpp_adapter, create_cpp_ingestion_pipeline
+
+# Factory-based instantiation
+cpp_pipeline = create_cpp_ingestion_pipeline(enable_runtime_validation=True)
+adapter = create_cpp_adapter(enable_runtime_validation=True)
+```
+
+### 3. Refactored `src/farfan_pipeline/api/api_server.py`
+
+**Before:**
+```python
+from farfan_pipeline.analysis.recommendation_engine import load_recommendation_engine
+
+# Direct call
+recommendation_engine = load_recommendation_engine()
+```
+
+**After:**
+```python
+from farfan_pipeline.core.orchestrator.factory import (
+    create_orchestrator,
+    create_recommendation_engine,
+)
+
+# Factory-based call
+recommendation_engine = create_recommendation_engine(enable_cache=True)
+```
+
+## Benefits
+
+1. **Dependency Injection**: All components are now created through the factory, enabling better control and testing
+2. **Layer Separation**: API layer no longer directly imports from processing, analysis, or utils layers
+3. **Centralized Configuration**: Factory methods ensure consistent configuration across the application
+4. **Better Testing**: Factory methods can be mocked or replaced in tests
+5. **Reduced Coupling**: API layer depends only on the orchestrator/factory interface
+
+## Architecture
+
+```
+┌─────────────────────────────┐
+│     API Layer               │
+│  - pipeline_connector.py    │
+│  - api_server.py            │
+└──────────┬──────────────────┘
+           │ imports factory methods
+           ↓
+┌─────────────────────────────┐
+│  orchestrator/factory.py    │
+│  - create_cpp_ingestion_... │
+│  - create_cpp_adapter       │
+│  - create_recommendation... │
+└──────────┬──────────────────┘
+           │ imports actual implementations
+           ↓
+┌─────────────────────────────┐
+│  Lower Layers               │
+│  - processing/spc_ingestion │
+│  - analysis/recommendation  │
+│  - utils/cpp_adapter        │
+└─────────────────────────────┘
+```
+
+## Verification
+
+Created `test_factory_refactor.py` to verify:
+- ✓ No direct imports of processing/analysis/utils in API layer
+- ✓ Factory methods are properly used in API layer
+- ✓ Factory has all new methods
+
+All checks passed successfully.
+
+## Files Modified
+
+1. `src/farfan_pipeline/core/orchestrator/factory.py` - Added 3 factory methods
+2. `src/farfan_pipeline/api/pipeline_connector.py` - Replaced direct imports with factory calls
+3. `src/farfan_pipeline/api/api_server.py` - Replaced direct imports with factory calls
+
+## Testing
+
+- Build: ✓ Successful (`pip install -e .`)
+- Static Analysis: ✓ Passed verification script
+- Import Structure: ✓ No direct imports remain in API layer

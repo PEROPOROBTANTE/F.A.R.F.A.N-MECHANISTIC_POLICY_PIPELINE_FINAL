@@ -27,11 +27,11 @@ Version: 1.0.0
 Python: 3.10+
 """
 
+# Import orchestrator components
 import hashlib
 import json
 import logging
 import os
-import sys
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from pathlib import Path
@@ -43,12 +43,12 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from werkzeug.exceptions import HTTPException
 
-# Import orchestrator components
-import asyncio
-from farfan_pipeline.analysis.recommendation_engine import load_recommendation_engine
-from farfan_pipeline.core.parameters import ParameterLoaderV2
 from farfan_pipeline.core.calibration.decorators import calibrated_method
-from farfan_pipeline.core.orchestrator.factory import create_orchestrator
+from farfan_pipeline.core.orchestrator.factory import (
+    create_orchestrator,
+    create_recommendation_engine,
+)
+from farfan_pipeline.core.parameters import ParameterLoaderV2
 from farfan_pipeline.core.types import PreprocessedDocument
 
 # Configure logging
@@ -576,11 +576,11 @@ class DataService:
 # Initialize data service
 data_service = DataService()
 
-# Initialize recommendation engine
+# Initialize recommendation engine via factory
 recommendation_engine = None
 try:
-    recommendation_engine = load_recommendation_engine()
-    logger.info("Recommendation engine initialized successfully")
+    recommendation_engine = create_recommendation_engine(enable_cache=True)
+    logger.info("Recommendation engine initialized successfully via factory")
 except Exception as e:
     logger.warning(f"Failed to initialize recommendation engine: {e}")
 
