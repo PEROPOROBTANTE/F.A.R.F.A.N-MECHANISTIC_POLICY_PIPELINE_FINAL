@@ -34,7 +34,7 @@ def mock_signal_registry():
     return mock_registry
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_create_enriched_signal_registry_returns_dict(mock_registry_class, mock_signal_registry):
     """Test that create_enriched_signal_registry returns a dict."""
     mock_registry_class.return_value = mock_signal_registry
@@ -47,7 +47,7 @@ def test_create_enriched_signal_registry_returns_dict(mock_registry_class, mock_
     assert len(registry) > 0
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_enriched_packs_are_created_for_each_policy_area(mock_registry_class, mock_signal_registry):
     """Test that EnrichedSignalPack is created for each policy area."""
     mock_registry_class.return_value = mock_signal_registry
@@ -62,7 +62,7 @@ def test_enriched_packs_are_created_for_each_policy_area(mock_registry_class, mo
     assert 'PA03' in registry
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_enriched_packs_are_enriched_signal_pack_instances(mock_registry_class, mock_signal_registry):
     """Test that values in registry are EnrichedSignalPack instances."""
     mock_registry_class.return_value = mock_signal_registry
@@ -76,7 +76,7 @@ def test_enriched_packs_are_enriched_signal_pack_instances(mock_registry_class, 
         assert isinstance(pack, EnrichedSignalPack)
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_semantic_expansion_flag_is_respected(mock_registry_class, mock_signal_registry):
     """Test that enable_semantic_expansion flag is passed correctly."""
     mock_registry_class.return_value = mock_signal_registry
@@ -98,7 +98,7 @@ def test_semantic_expansion_flag_is_respected(mock_registry_class, mock_signal_r
     assert 'PA01' in registry_with_expansion
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_handles_missing_signal_pack_gracefully(mock_registry_class):
     """Test that None signal packs are skipped gracefully."""
     mock_registry = Mock()
@@ -108,7 +108,7 @@ def test_handles_missing_signal_pack_gracefully(mock_registry_class):
     def mock_get(policy_area_id):
         if policy_area_id == 'PA02':
             return None
-        mock_pack = Mock()
+        mock_pack = Mock(spec=['patterns', 'micro_questions'])
         mock_pack.patterns = [{'id': 'PAT001', 'pattern': 'test'}]
         mock_pack.micro_questions = []
         return mock_pack
@@ -127,7 +127,7 @@ def test_handles_missing_signal_pack_gracefully(mock_registry_class):
     assert 'PA03' in registry
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_uses_canonical_path_when_none(mock_registry_class, mock_signal_registry):
     """Test that None monolith_path uses canonical QUESTIONNAIRE_PATH."""
     mock_registry_class.return_value = mock_signal_registry
@@ -142,7 +142,7 @@ def test_uses_canonical_path_when_none(mock_registry_class, mock_signal_registry
     assert isinstance(args[0], str)
 
 
-@patch('farfan_pipeline.core.orchestrator.factory.QuestionnaireSignalRegistry')
+@patch('farfan_pipeline.core.orchestrator.signal_registry.QuestionnaireSignalRegistry')
 def test_base_registry_not_mutated(mock_registry_class, mock_signal_registry):
     """Test that base QuestionnaireSignalRegistry is not mutated."""
     mock_registry_class.return_value = mock_signal_registry

@@ -39,6 +39,7 @@ class BaseExecutorWithContract(ABC):
         config: Any,
         questionnaire_provider: Any,
         calibration_orchestrator: Any | None = None,
+        enriched_packs: dict[str, Any] | None = None,
     ) -> None:
         try:
             from farfan_pipeline.core.orchestrator.core import MethodExecutor as _MethodExecutor
@@ -54,6 +55,9 @@ class BaseExecutorWithContract(ABC):
         self.config = config
         self.questionnaire_provider = questionnaire_provider
         self.calibration_orchestrator = calibration_orchestrator
+        # JOBFRONT 3: Support for enriched signal packs (intelligence layer)
+        self.enriched_packs = enriched_packs or {}
+        self._use_enriched_signals = len(self.enriched_packs) > 0
 
     @classmethod
     @abstractmethod
@@ -276,8 +280,42 @@ class BaseExecutorWithContract(ABC):
         patterns = question_context.get("patterns", [])
         expected_elements = question_context.get("expected_elements", [])
 
+        # JOBFRONT 3: Use enriched signal packs if available
         signal_pack = None
-        if self.signal_registry is not None and hasattr(self.signal_registry, "get") and policy_area_id:
+        enriched_pack = None
+        applicable_patterns = patterns  # Default to contract patterns
+        document_context = {}
+
+        if self._use_enriched_signals and policy_area_id in self.enriched_packs:
+            # Use enriched intelligence layer
+            enriched_pack = self.enriched_packs[policy_area_id]
+            signal_pack = enriched_pack.base_pack  # Maintain compatibility
+
+            # Create document context from available metadata
+            from farfan_pipeline.core.orchestrator.signal_intelligence_layer import create_document_context
+
+            doc_metadata = getattr(document, "metadata", {})
+            document_context = create_document_context(
+                section=doc_metadata.get("section"),
+                chapter=doc_metadata.get("chapter"),
+                page=doc_metadata.get("page"),
+                policy_area=policy_area_id
+            )
+
+            # Get context-filtered patterns (REFACTORING #6: context scoping)
+            applicable_patterns = enriched_pack.get_patterns_for_context(document_context)
+
+            # Expand patterns semantically (REFACTORING #2: semantic expansion)
+            if applicable_patterns and isinstance(applicable_patterns[0], dict):
+                pattern_strings = [p.get('pattern', p) if isinstance(p, dict) else p for p in applicable_patterns]
+            else:
+                pattern_strings = applicable_patterns
+
+            expanded_patterns = enriched_pack.expand_patterns(pattern_strings)
+            applicable_patterns = expanded_patterns
+
+        elif self.signal_registry is not None and hasattr(self.signal_registry, "get") and policy_area_id:
+            # Fallback to legacy signal registry
             signal_pack = self.signal_registry.get(policy_area_id)
 
         common_kwargs: dict[str, Any] = {
@@ -291,7 +329,9 @@ class BaseExecutorWithContract(ABC):
             "dimension_id": identity.get("dimension_id"),
             "cluster_id": identity.get("cluster_id"),
             "signal_pack": signal_pack,
-            "question_patterns": patterns,
+            "enriched_pack": enriched_pack,  # NEW: Pass enriched pack
+            "document_context": document_context,  # NEW: Pass document context
+            "question_patterns": applicable_patterns,  # Use filtered/expanded patterns
             "expected_elements": expected_elements,
         }
 
@@ -333,10 +373,70 @@ class BaseExecutorWithContract(ABC):
         evidence = assembled["evidence"]
         trace = assembled["trace"]
 
+        # JOBFRONT 3: Extract structured evidence if enriched pack available
+        completeness = 1.0
+        missing_elements = []
+        patterns_used = []
+
+        if enriched_pack is not None and expected_elements:
+            # Build signal node for evidence extraction
+            signal_node = {
+                "id": question_id,
+                "expected_elements": expected_elements,
+                "patterns": applicable_patterns,
+                "validations": contract.get("validation_rules", [])
+            }
+
+            # Extract structured evidence (REFACTORING #5: evidence structure)
+            evidence_result = enriched_pack.extract_evidence(
+                text=getattr(document, "raw_text", ""),
+                signal_node=signal_node,
+                document_context=document_context
+            )
+
+            # Merge structured evidence into result
+            for element_type, matches in evidence_result.evidence.items():
+                if element_type not in evidence:
+                    evidence[element_type] = matches
+
+            completeness = evidence_result.completeness
+            missing_elements = evidence_result.missing_required
+
+            # Track patterns used (for confidence calculation)
+            if isinstance(applicable_patterns, list):
+                patterns_used = [p.get('id', p) if isinstance(p, dict) else p
+                               for p in applicable_patterns[:10]]  # Top 10
+
         validation_rules = contract.get("validation_rules", [])
         na_policy = contract.get("na_policy", "abort")
         validation_rules_object = {"rules": validation_rules, "na_policy": na_policy}
         validation = EvidenceValidator.validate(evidence, validation_rules_object)
+
+        # JOBFRONT 3: Add contract validation if enriched pack available
+        if enriched_pack is not None:
+            # Build signal node for contract validation
+            signal_node_for_validation = {
+                "id": question_id,
+                "failure_contract": error_handling.get("failure_contract", {}),
+                "validations": validation_rules
+            }
+
+            # Validate with contracts (REFACTORING #4: contract validation)
+            contract_validation = enriched_pack.validate_result(
+                result=evidence,
+                signal_node=signal_node_for_validation
+            )
+
+            # Merge contract validation into standard validation
+            if not contract_validation.passed:
+                validation["status"] = "failed"
+                validation["errors"] = validation.get("errors", [])
+                validation["errors"].append({
+                    "error_code": contract_validation.error_code,
+                    "condition_violated": contract_validation.condition_violated,
+                    "remediation": contract_validation.remediation
+                })
+                validation["contract_failed"] = True
 
         error_handling = contract.get("error_handling", {})
         if error_handling:
@@ -364,6 +464,11 @@ class BaseExecutorWithContract(ABC):
             "validation": validation,
             "trace": trace,
             "human_answer": human_answer,
+            # JOBFRONT 3: Add intelligence layer metadata
+            "completeness": completeness,
+            "missing_elements": missing_elements,
+            "patterns_used": patterns_used,
+            "enriched_signals_enabled": enriched_pack is not None,
         }
 
         return result

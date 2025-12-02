@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
     from .factory import CanonicalQuestionnaire
 
-from ...analysis.recommendation_engine import RecommendationEngine
+
 from ...config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
 from ...processing.aggregation import (
     AggregationSettings,
@@ -1259,6 +1259,7 @@ class Orchestrator:
         executor_config: "ExecutorConfig",
         calibration_orchestrator: Optional["CalibrationOrchestrator"] = None,
         resource_limits: ResourceLimits | None = None,
+        recommendation_engine: Any | None = None,
         resource_snapshot_interval: int = 10,
     ) -> None:
         """Initialize the orchestrator with all dependencies injected.

@@ -517,7 +517,8 @@ class ReportAssembler:
         self,
         plan_name: str,
         execution_results: dict[str, Any],
-        report_id: str | None = None
+        report_id: str | None = None,
+        enriched_packs: dict[str, Any] | None = None
     ) -> AnalysisReport:
         """
         Assemble complete analysis report.
@@ -631,6 +632,34 @@ class ReportAssembler:
                 records = self.evidence_registry.records
                 if records:
                     evidence_chain_hash = records[-1].entry_hash
+
+            # JOBFRONT 9: Compute signal usage summary if enriched_packs provided
+            if enriched_packs:
+                signal_usage = self._compute_signal_usage_summary(
+                    execution_results,
+                    enriched_packs
+                )
+                # Add to metadata
+                if metadata.metadata is None:
+                    # metadata.metadata is immutable, need to recreate
+                    from dataclasses import replace
+                    new_metadata_dict = {
+                        'signal_version': '1.0.0',
+                        'total_patterns_available': signal_usage['total_patterns_available'],
+                        'total_patterns_used': signal_usage['total_patterns_used'],
+                        'signal_usage_summary': signal_usage
+                    }
+                    metadata = ReportMetadata(
+                        report_id=metadata.report_id,
+                        generated_at=metadata.generated_at,
+                        monolith_version=metadata.monolith_version,
+                        monolith_hash=metadata.monolith_hash,
+                        plan_name=metadata.plan_name,
+                        total_questions=metadata.total_questions,
+                        questions_analyzed=metadata.questions_analyzed,
+                        metadata=new_metadata_dict,
+                        correlation_id=metadata.correlation_id
+                    )
 
             # Create report and compute digest
             report = AnalysisReport(
@@ -983,6 +1012,76 @@ class ReportAssembler:
             lines.append(f"\n**Evidence Chain Hash:** {report.evidence_chain_hash[:hash_preview_length]}...\n")
 
         return "".join(lines)
+
+    def _compute_signal_usage_summary(
+        self,
+        execution_results: dict[str, Any],
+        enriched_packs: dict[str, Any]
+    ) -> dict[str, Any]:
+        """
+        Compute signal usage summary for report provenance (JOBFRONT 9).
+
+        Args:
+            execution_results: Results from orchestrator execution
+            enriched_packs: Dictionary of EnrichedSignalPack by policy_area_id
+
+        Returns:
+            Signal usage summary with patterns, completeness, validation failures
+        """
+        micro_results = execution_results.get("micro_results", {})
+
+        total_patterns_available = sum(len(pack.patterns) for pack in enriched_packs.values())
+        total_patterns_used = 0
+        by_policy_area = {}
+        completeness_scores = []
+        validation_failures = []
+
+        for question_id, result in micro_results.items():
+            policy_area = result.get("policy_area_id")
+            if not policy_area or policy_area not in enriched_packs:
+                continue
+
+            patterns_used = result.get("patterns_used", [])
+            completeness = result.get("completeness", 1.0)
+            validation = result.get("validation", {})
+
+            total_patterns_used += len(patterns_used)
+            completeness_scores.append(completeness)
+
+            # Track validation failures
+            if validation.get("status") == "failed" or validation.get("contract_failed"):
+                validation_failures.append({
+                    "question_id": question_id,
+                    "policy_area": policy_area,
+                    "error_code": validation.get("errors", [{}])[0].get("error_code") if validation.get("errors") else None,
+                    "remediation": validation.get("errors", [{}])[0].get("remediation") if validation.get("errors") else None
+                })
+
+            # Aggregate by policy area
+            if policy_area not in by_policy_area:
+                by_policy_area[policy_area] = {
+                    "patterns_available": len(enriched_packs[policy_area].patterns),
+                    "patterns_used": 0,
+                    "questions_analyzed": 0,
+                    "avg_completeness": 0.0
+                }
+
+            by_policy_area[policy_area]["patterns_used"] += len(patterns_used)
+            by_policy_area[policy_area]["questions_analyzed"] += 1
+
+        # Compute averages
+        for pa_id, summary in by_policy_area.items():
+            pa_results = [r for r in micro_results.values() if r.get("policy_area_id") == pa_id]
+            completeness_values = [r.get("completeness", 1.0) for r in pa_results]
+            summary["avg_completeness"] = sum(completeness_values) / len(completeness_values) if completeness_values else 0.0
+
+        return {
+            "total_patterns_available": total_patterns_available,
+            "total_patterns_used": total_patterns_used,
+            "by_policy_area": by_policy_area,
+            "avg_completeness": sum(completeness_scores) / len(completeness_scores) if completeness_scores else 0.0,
+            "validation_failures": validation_failures
+        }
 
 
 # ============================================================================
