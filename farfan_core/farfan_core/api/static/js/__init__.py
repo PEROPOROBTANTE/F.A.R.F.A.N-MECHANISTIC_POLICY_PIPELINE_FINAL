@@ -1,1 +1,0 @@
-"""API static JavaScript files."""
