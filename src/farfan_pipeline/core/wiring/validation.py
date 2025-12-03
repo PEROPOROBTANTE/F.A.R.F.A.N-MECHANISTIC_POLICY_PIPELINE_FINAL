@@ -12,7 +12,7 @@ import blake3
 import structlog
 from pydantic import BaseModel, ValidationError
 
-from .contracts import (
+from farfan_pipeline.core.wiring.contracts import (
     AdapterExpectation,
     AggregateExpectation,
     ArgRouterExpectation,
@@ -30,7 +30,7 @@ from .contracts import (
     SignalPackDeliverable,
     SignalRegistryExpectation,
 )
-from .errors import WiringContractError
+from farfan_pipeline.core.wiring.errors import WiringContractError
 
 logger = structlog.get_logger(__name__)
 

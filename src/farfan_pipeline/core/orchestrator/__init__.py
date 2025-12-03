@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .questionnaire import CanonicalQuestionnaire
+    from farfan_pipeline.core.orchestrator.questionnaire import CanonicalQuestionnaire
 
-from ..types import ChunkData, PreprocessedDocument, Provenance
-from .core import (
+from farfan_pipeline.core.types import ChunkData, PreprocessedDocument, Provenance
+from farfan_pipeline.core.orchestrator.core import (
     AbortRequested,
     AbortSignal,
     Evidence,
@@ -20,7 +20,7 @@ from .core import (
     ResourceLimits,
     ScoredMicroQuestion,
 )
-from .evidence_registry import (
+from farfan_pipeline.core.orchestrator.evidence_registry import (
     EvidenceRecord,
     EvidenceRegistry,
     ProvenanceDAG,

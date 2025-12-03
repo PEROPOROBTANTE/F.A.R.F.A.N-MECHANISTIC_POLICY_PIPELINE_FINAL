@@ -33,11 +33,11 @@ from typing import TYPE_CHECKING, Any, ParamSpec, TypedDict, TypeVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .factory import CanonicalQuestionnaire
+    from farfan_pipeline.core.orchestrator.factory import CanonicalQuestionnaire
 
-from ..analysis_port import RecommendationEnginePort
-from ...config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
-from ...processing.aggregation import (
+from farfan_pipeline.core.analysis_port import RecommendationEnginePort
+from farfan_pipeline.config.paths import PROJECT_ROOT, RULES_DIR, CONFIG_DIR
+from farfan_pipeline.processing.aggregation import (
     AggregationSettings,
     AreaPolicyAggregator,
     AreaScore,
@@ -51,13 +51,13 @@ from ...processing.aggregation import (
     group_by,
     validate_scored_results,
 )
-from ...utils.paths import safe_join
-from ..dependency_lockdown import get_dependency_lockdown
-from ..types import PreprocessedDocument
-from . import executors_contract as executors
-from .arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
-from .class_registry import ClassRegistryError
-from .executor_config import ExecutorConfig
+from farfan_pipeline.utils.paths import safe_join
+from farfan_pipeline.core.dependency_lockdown import get_dependency_lockdown
+from farfan_pipeline.core.types import PreprocessedDocument
+from farfan_pipeline.core.orchestrator import executors_contract as executors
+from farfan_pipeline.core.orchestrator.arg_router import ArgRouterError, ArgumentValidationError, ExtendedArgRouter
+from farfan_pipeline.core.orchestrator.class_registry import ClassRegistryError
+from farfan_pipeline.core.orchestrator.executor_config import ExecutorConfig
 
 logger = logging.getLogger(__name__)
 _CORE_MODULE_DIR = Path(__file__).resolve().parent

@@ -19,7 +19,7 @@ import json
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from .questionnaire import CanonicalQuestionnaire
+    from farfan_pipeline.core.orchestrator.questionnaire import CanonicalQuestionnaire
 
 try:
     import blake3
@@ -34,8 +34,8 @@ except ImportError:
     import logging
     logger = logging.getLogger(__name__)
 
-from .signal_consumption import SignalManifest, generate_signal_manifests
-from .signals import SignalPack
+from farfan_pipeline.core.orchestrator.signal_consumption import SignalManifest, generate_signal_manifests
+from farfan_pipeline.core.orchestrator.signals import SignalPack
 
 
 def compute_fingerprint(content: str | bytes) -> str:
@@ -232,7 +232,7 @@ def build_signal_pack_from_monolith(
         >>> print(f"Indicators: {len(pack.indicators)}")
     """
     # Import here to avoid circular dependency
-    from .questionnaire import load_questionnaire
+    from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
 
     # Handle legacy monolith parameter
     if monolith is not None:
@@ -353,7 +353,7 @@ def build_all_signal_packs(
         >>> print(f"Built {len(packs)} signal packs")
     """
     # Import here to avoid circular dependency
-    from .questionnaire import load_questionnaire
+    from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
 
     # Handle legacy monolith parameter and ensure questionnaire is loaded only once
     if monolith is not None:
@@ -407,7 +407,7 @@ def build_signal_manifests(
         >>> print(f"Built {len(manifests)} manifests")
     """
     # Import here to avoid circular dependency
-    from .questionnaire import QUESTIONNAIRE_PATH, load_questionnaire
+    from farfan_pipeline.core.orchestrator.questionnaire import QUESTIONNAIRE_PATH, load_questionnaire
 
     # Handle legacy monolith parameter
     if monolith is not None:
