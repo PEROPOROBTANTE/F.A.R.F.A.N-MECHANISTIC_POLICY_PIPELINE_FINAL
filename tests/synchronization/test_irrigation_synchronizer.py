@@ -203,70 +203,55 @@ def test_chunk_matrix_reports_specific_missing_key() -> None:
 
 
 def test_chunk_matrix_rejects_null_policy_area_id() -> None:
-    """ChunkMatrix should reject chunks with null policy_area_id."""
-    doc = create_complete_document()
-    doc.chunks[0] = ChunkData(
-        id=0,
-        text="test",
-        chunk_type="diagnostic",
-        sentences=[],
-        tables=[],
-        start_pos=0,
-        end_pos=4,
-        confidence=0.95,
-        policy_area_id=None,
-        dimension_id="DIM01",
-    )
-
-    with pytest.raises(ValueError, match="Chunk 0 has null policy_area_id"):
-        ChunkMatrix(doc)
+    """ChunkData should reject chunks with null policy_area_id at creation time."""
+    with pytest.raises(ValueError, match="chunk_id is required"):
+        ChunkData(
+            id=0,
+            text="test",
+            chunk_type="diagnostic",
+            sentences=[],
+            tables=[],
+            start_pos=0,
+            end_pos=4,
+            confidence=0.95,
+            policy_area_id=None,
+            dimension_id="DIM01",
+        )
 
 
 def test_chunk_matrix_rejects_null_dimension_id() -> None:
-    """ChunkMatrix should reject chunks with null dimension_id."""
-    doc = create_complete_document()
-    doc.chunks[0] = ChunkData(
-        id=0,
-        text="test",
-        chunk_type="diagnostic",
-        sentences=[],
-        tables=[],
-        start_pos=0,
-        end_pos=4,
-        confidence=0.95,
-        policy_area_id="PA01",
-        dimension_id=None,
-    )
-
-    with pytest.raises(ValueError, match="Chunk 0 has null dimension_id"):
-        ChunkMatrix(doc)
+    """ChunkData should reject chunks with null dimension_id at creation time."""
+    with pytest.raises(ValueError, match="chunk_id is required"):
+        ChunkData(
+            id=0,
+            text="test",
+            chunk_type="diagnostic",
+            sentences=[],
+            tables=[],
+            start_pos=0,
+            end_pos=4,
+            confidence=0.95,
+            policy_area_id="PA01",
+            dimension_id=None,
+        )
 
 
 def test_chunk_matrix_rejects_invalid_chunk_id_format_pa() -> None:
-    """ChunkMatrix should reject invalid policy area format."""
-    doc = create_complete_document()
-    doc.chunks[0] = create_chunk(0, "PA11", "DIM01")
-
-    with pytest.raises(ValueError, match=r"Invalid chunk_id format: 'PA11-DIM01'"):
-        ChunkMatrix(doc)
+    """ChunkData should reject invalid policy area format at creation time."""
+    with pytest.raises(ValueError, match=r"Invalid chunk_id"):
+        create_chunk(0, "PA11", "DIM01")
 
 
 def test_chunk_matrix_rejects_invalid_chunk_id_format_dim() -> None:
-    """ChunkMatrix should reject invalid dimension format."""
-    doc = create_complete_document()
-    doc.chunks[0] = create_chunk(0, "PA01", "DIM07")
-
-    with pytest.raises(ValueError, match=r"Invalid chunk_id format: 'PA01-DIM07'"):
-        ChunkMatrix(doc)
+    """ChunkData should reject invalid dimension format at creation time."""
+    with pytest.raises(ValueError, match=r"Invalid chunk_id"):
+        create_chunk(0, "PA01", "DIM07")
 
 
 def test_chunk_matrix_rejects_malformed_chunk_id() -> None:
-    """ChunkMatrix should reject malformed chunk IDs."""
-    doc = create_complete_document()
-    doc.chunks[0] = create_chunk(0, "P01", "DIM01")
-
-    with pytest.raises(ValueError, match=r"Invalid chunk_id format: 'P01-DIM01'"):
-        ChunkMatrix(doc)
+    """ChunkData should reject malformed chunk IDs at creation time."""
+    with pytest.raises(ValueError, match=r"Invalid chunk_id"):
+        create_chunk(0, "P01", "DIM01")
 
 
 def test_chunk_matrix_get_chunk_success() -> None:
