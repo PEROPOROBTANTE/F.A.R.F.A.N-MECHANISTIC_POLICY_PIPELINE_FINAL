@@ -117,3 +117,6 @@ import_linter_detailed_report.txt
 # Config management system
 system/config/.backup/
 system/config/config_hash_registry.json
+
+# Temporary test files
+test_irrigation_simple.py
