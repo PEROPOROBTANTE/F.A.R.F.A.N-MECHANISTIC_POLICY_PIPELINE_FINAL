@@ -316,6 +316,30 @@ class SmartPolicyChunk:
     extraction_methodology: str = "COMPREHENSIVE_STRATEGIC_ANALYSIS"
     model_versions: Dict[str, str] = field(default_factory=dict) #
 
+    _CHUNK_ID_PATTERN = re.compile(r"^PA(0[1-9]|10)-DIM(0[1-6])$")
+
+    def __post_init__(self) -> None:
+        """Validate canonical identifiers for irrigation compatibility."""
+        if not self.policy_area_id or not self.dimension_id:
+            raise ValueError("policy_area_id and dimension_id are required for SmartPolicyChunk")
+
+        match = self._CHUNK_ID_PATTERN.match(self.chunk_id)
+        if not match:
+            raise ValueError(
+                f"Invalid chunk_id '{self.chunk_id}'. Expected format PA{{01-10}}-DIM{{01-06}}."
+            )
+
+        pa_code = f"PA{match.group(1)}"
+        dim_code = f"DIM{match.group(2)}"
+        if pa_code != self.policy_area_id:
+            raise ValueError(
+                f"chunk_id {self.chunk_id} mismatches policy_area_id {self.policy_area_id}"
+            )
+        if dim_code != self.dimension_id:
+            raise ValueError(
+                f"chunk_id {self.chunk_id} mismatches dimension_id {self.dimension_id}"
+            )
+
 # =============================================================================
 # CONFIGURACIÓN COMPLETA DEL SISTEMA
 # =============================================================================

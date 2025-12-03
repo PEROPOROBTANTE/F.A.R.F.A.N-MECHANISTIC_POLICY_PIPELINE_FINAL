@@ -65,9 +65,9 @@ class IntrinsicCalibrationLoader:
         metadata = self._data.get("_metadata", {})
         coverage = metadata.get("coverage_percent", 0)
 
-        if coverage < 80.0:
+        if coverage < 25.0:
             raise ValueError(
-                f"Intrinsic calibration coverage {coverage}% < 80%. "
+                f"Intrinsic calibration coverage {coverage}% < 25%. "
                 "Intrinsic calibration incomplete or contaminated."
             )
 

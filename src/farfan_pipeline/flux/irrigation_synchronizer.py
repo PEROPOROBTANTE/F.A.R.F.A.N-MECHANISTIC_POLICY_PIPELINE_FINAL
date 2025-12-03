@@ -67,7 +67,8 @@ class Question:
         question_id: Unique question identifier
         policy_area_id: Policy area identifier
         dimension_id: Dimension identifier
-        patterns: List of pattern dictionaries with 'policy_area_id' field
+        patterns: List of pattern dictionaries. The 'policy_area_id' is at the
+                  question level, not within each pattern.
     """
 
     question_id: str
@@ -122,10 +123,8 @@ class IrrigationSynchronizer:
         """
         Filter patterns to only those matching target policy area.
 
-        Iterates question.patterns and validates every pattern has 'policy_area_id'
-        field (raising ValueError if missing). Filters to only patterns matching
-        target_pa_id with tuple return type enforcing immutability. Logs warning
-        when zero patterns match but does not fail.
+        Checks if the question's policy area matches the target. If so, returns
+        all patterns for the question. Otherwise, returns an empty tuple.
 
         Args:
             question: Question containing patterns to filter
@@ -133,26 +132,13 @@ class IrrigationSynchronizer:
 
         Returns:
             Immutable tuple of patterns matching target_pa_id
-
-        Raises:
-            ValueError: If any pattern is missing 'policy_area_id' field
         """
-        filtered: list[dict[str, Any]] = []
+        if question.policy_area_id == target_pa_id:
+            return tuple(question.patterns)
 
-        for idx, pattern in enumerate(question.patterns):
-            if "policy_area_id" not in pattern:
-                raise ValueError(
-                    f"Pattern at index {idx} for question_id='{question.question_id}' "
-                    f"is missing required 'policy_area_id' field"
-                )
-
-            if pattern["policy_area_id"] == target_pa_id:
-                filtered.append(pattern)
-
-        if len(filtered) == 0:
-            logger.warning(
-                f"Zero patterns matched target_pa_id='{target_pa_id}' for "
-                f"question_id='{question.question_id}'"
-            )
-
-        return tuple(filtered)
+        logger.warning(
+            f"Question with id '{question.question_id}' has policy area "
+            f"'{question.policy_area_id}' which does not match target "
+            f"'{target_pa_id}'. Returning no patterns."
+        )
+        return tuple()

@@ -134,7 +134,7 @@ class PreprocessedDocument:
     chunks: list[ChunkData] = field(default_factory=list)
     chunk_index: dict[str, int] = field(default_factory=dict)
     chunk_graph: dict[str, Any] = field(default_factory=dict)
-    processing_mode: Literal["flat", "chunked"] = "flat"
+    processing_mode: Literal["flat", "chunked"] = "chunked"
 
     def __post_init__(self) -> None:
         """Validate document fields after initialization.
@@ -148,6 +148,10 @@ class PreprocessedDocument:
             raise ValueError(
                 "PreprocessedDocument cannot have empty raw_text. "
                 "Use PreprocessedDocument.ensure() to create from SPC pipeline."
+            )
+        if self.processing_mode != "chunked":
+            raise ValueError(
+                f"processing_mode must be 'chunked' for irrigation; got {self.processing_mode!r}"
             )
 
     @staticmethod
