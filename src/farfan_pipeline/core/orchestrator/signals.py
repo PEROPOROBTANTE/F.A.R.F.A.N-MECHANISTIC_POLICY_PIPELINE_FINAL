@@ -24,7 +24,18 @@ import time
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, Protocol
+
+if TYPE_CHECKING:
+    from farfan_pipeline.core.orchestrator.signal_resolution import Signal
+
+
+class ChunkProtocol(Protocol):
+    """Protocol for chunk objects with chunk_id."""
+    @property
+    def chunk_id(self) -> str:
+        """Get the chunk identifier."""
+        ...
 
 # Optional dependency - blake3
 try:
@@ -305,6 +316,7 @@ class SignalRegistry:
         self._hits = 0
         self._misses = 0
         self._evictions = 0
+        self._chunk_cache: dict[str, list[Signal]] = {}
 
         logger.info(
             "signal_registry_initialized",
@@ -452,7 +464,54 @@ class SignalRegistry:
     def clear(self) -> None:
         """Clear all entries from registry."""
         self._cache.clear()
+        self._chunk_cache.clear()
         logger.info("signal_registry_cleared")
+
+    def get_signals_for_chunk(
+        self, chunk: ChunkProtocol, required_types: set[str]
+    ) -> list[Signal]:
+        """
+        Get signals for a chunk with per-chunk caching.
+
+        This method queries available signals for a given chunk and caches
+        the results per chunk to avoid redundant queries. The cache is keyed
+        by chunk identifier to enable fast lookups on subsequent calls.
+
+        Args:
+            chunk: Chunk object with chunk_id attribute
+            required_types: Set of required signal types
+
+        Returns:
+            List of Signal objects available for this chunk
+        """
+        chunk_id = chunk.chunk_id
+
+        if chunk_id in self._chunk_cache:
+            logger.debug(
+                "chunk_cache_hit",
+                chunk_id=chunk_id,
+                signal_count=len(self._chunk_cache[chunk_id]),
+            )
+            return self._chunk_cache[chunk_id]
+
+        from farfan_pipeline.core.orchestrator.signal_resolution import Signal
+
+        signals: list[Signal] = []
+        for signal_type in required_types:
+            pack = self.get(signal_type)
+            if pack is not None:
+                signals.append(Signal(signal_type=signal_type, content=pack))
+
+        self._chunk_cache[chunk_id] = signals
+
+        logger.debug(
+            "chunk_cache_miss",
+            chunk_id=chunk_id,
+            required_count=len(required_types),
+            resolved_count=len(signals),
+        )
+
+        return signals
 
 
 class CircuitBreakerError(Exception):
