@@ -12,7 +12,12 @@ import math
 from pathlib import Path
 from typing import Any
 
-from .data_structures import CalibrationConfigError, ComputationGraph, InterplaySubgraph, MethodRole
+from farfan_pipeline.core.calibration.data_structures import (
+    CalibrationConfigError,
+    ComputationGraph,
+    InterplaySubgraph,
+    MethodRole,
+)
 
 _unit_transforms_config: dict[str, Any] | None = None
 

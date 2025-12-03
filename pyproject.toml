@@ -309,11 +309,19 @@ requirements_files_dev = ["requirements-dev.txt", "requirements-docs.txt", "requ
 
 [tool.importlinter]
 root_package = "farfan_pipeline"
+contract_types = [
+    "no_relative_imports: farfan_pipeline.observability.no_relative_imports_contract.NoRelativeImportsContract",
+]
 
 # POLICY: Absolute imports only
 # All imports within farfan_pipeline must use absolute imports (e.g., from farfan_pipeline.core import x)
 # Relative imports (e.g., from . import x, from .. import y) are forbidden.
-# This is enforced by the CI pipeline via scripts/validate_no_relative_imports.py
+# This is enforced by both import-linter (no_relative_imports contract) and the CI pipeline
+# via scripts/validators/validate_no_relative_imports.py
+
+[[tool.importlinter.contracts]]
+name = "No relative imports in farfan_pipeline"
+type = "no_relative_imports"
 
 [[tool.importlinter.contracts]]
 name = "Core (excluding orchestrator) must not import analysis"

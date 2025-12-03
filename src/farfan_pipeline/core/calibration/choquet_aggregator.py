@@ -11,8 +11,14 @@ Where:
 import logging
 from typing import Dict
 
-from .data_structures import LayerID, LayerScore, InteractionTerm, CalibrationResult, CalibrationSubject
-from .config import ChoquetAggregationConfig
+from farfan_pipeline.core.calibration.data_structures import (
+    CalibrationResult,
+    CalibrationSubject,
+    InteractionTerm,
+    LayerID,
+    LayerScore,
+)
+from farfan_pipeline.core.calibration.config import ChoquetAggregationConfig
 
 logger = logging.getLogger(__name__)
 

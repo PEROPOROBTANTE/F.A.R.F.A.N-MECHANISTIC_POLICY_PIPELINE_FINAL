@@ -198,7 +198,7 @@ def resolve_calibration_with_context(
     
     # Import context module to avoid circular dependency
     try:
-        from .calibration_context import (
+        from farfan_pipeline.core.calibration.calibration_context import (
             CalibrationContext,
             resolve_contextual_calibration,
         )

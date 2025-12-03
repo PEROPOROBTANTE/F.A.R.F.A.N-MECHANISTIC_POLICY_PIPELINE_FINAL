@@ -4,9 +4,9 @@ Unit Layer (@u) - PRODUCTION IMPLEMENTATION.
 Evaluates PDT quality through 4 components: S, M, I, P.
 """
 import logging
-from .config import UnitLayerConfig
-from .pdt_structure import PDTStructure
-from .data_structures import LayerID, LayerScore
+from farfan_pipeline.core.calibration.config import UnitLayerConfig
+from farfan_pipeline.core.calibration.pdt_structure import PDTStructure
+from farfan_pipeline.core.calibration.data_structures import LayerID, LayerScore
 
 logger = logging.getLogger(__name__)
 

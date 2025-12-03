@@ -12,9 +12,9 @@ from pathlib import Path
 from typing import Dict, Any, Set, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .data_structures import CalibrationCertificate
+    from farfan_pipeline.core.calibration.data_structures import CalibrationCertificate
 
-from .data_structures import MethodRole, LayerType, REQUIRED_LAYERS
+from farfan_pipeline.core.calibration.data_structures import MethodRole, LayerType, REQUIRED_LAYERS
 
 
 class CalibrationValidator:

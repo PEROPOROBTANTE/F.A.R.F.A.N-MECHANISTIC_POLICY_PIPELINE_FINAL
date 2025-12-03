@@ -23,7 +23,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any, Callable
 
 if TYPE_CHECKING:
-    from .core import ResourceLimits
+    from farfan_pipeline.core.orchestrator.core import ResourceLimits
 
 logger = logging.getLogger(__name__)
 

@@ -15,7 +15,7 @@ import logging
 from pathlib import Path
 from typing import Dict
 
-from .data_structures import CompatibilityMapping
+from farfan_pipeline.core.calibration.data_structures import CompatibilityMapping
 
 logger = logging.getLogger(__name__)
 

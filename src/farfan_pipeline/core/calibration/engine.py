@@ -13,12 +13,12 @@ import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, Optional
-from .data_structures import (
+from farfan_pipeline.core.calibration.data_structures import (
     CalibrationCertificate, CalibrationSubject, Context, 
     ComputationGraph, EvidenceStore, LayerType, MethodRole, REQUIRED_LAYERS,
     CalibrationConfigError
 )
-from .layer_computers import (
+from farfan_pipeline.core.calibration.layer_computers import (
     compute_base_layer, compute_chain_layer, compute_unit_layer,
     compute_question_layer, compute_dimension_layer, compute_policy_layer,
     compute_interplay_layer, compute_meta_layer

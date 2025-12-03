@@ -16,7 +16,10 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, Callable
 
-from .resource_manager import ResourcePressureEvent, ResourcePressureLevel
+from farfan_pipeline.core.orchestrator.resource_manager import (
+    ResourcePressureEvent,
+    ResourcePressureLevel,
+)
 
 logger = logging.getLogger(__name__)
 

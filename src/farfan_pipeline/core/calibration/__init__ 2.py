@@ -12,7 +12,7 @@ This package implements the 7-layer method calibration framework:
 Final scores are produced via Choquet 2-Additive aggregation.
 """
 
-from .data_structures import (
+from farfan_pipeline.core.calibration.data_structures import (
     LayerID,
     LayerScore,
     ContextTuple,
@@ -22,7 +22,7 @@ from .data_structures import (
     CalibrationResult,
 )
 
-from .config import (
+from farfan_pipeline.core.calibration.config import (
     UnitLayerConfig,
     MetaLayerConfig,
     ChoquetAggregationConfig,
@@ -30,19 +30,19 @@ from .config import (
     DEFAULT_CALIBRATION_CONFIG,
 )
 
-from .pdt_structure import PDTStructure
+from farfan_pipeline.core.calibration.pdt_structure import PDTStructure
 
-from .compatibility import (
+from farfan_pipeline.core.calibration.compatibility import (
     CompatibilityRegistry,
     ContextualLayerEvaluator,
 )
 
-from .unit_layer import UnitLayerEvaluator
-from .congruence_layer import CongruenceLayerEvaluator
-from .chain_layer import ChainLayerEvaluator
-from .meta_layer import MetaLayerEvaluator
-from .choquet_aggregator import ChoquetAggregator
-from .orchestrator import CalibrationOrchestrator
+from farfan_pipeline.core.calibration.unit_layer import UnitLayerEvaluator
+from farfan_pipeline.core.calibration.congruence_layer import CongruenceLayerEvaluator
+from farfan_pipeline.core.calibration.chain_layer import ChainLayerEvaluator
+from farfan_pipeline.core.calibration.meta_layer import MetaLayerEvaluator
+from farfan_pipeline.core.calibration.choquet_aggregator import ChoquetAggregator
+from farfan_pipeline.core.calibration.orchestrator import CalibrationOrchestrator
 
 __all__ = [
     # Data structures

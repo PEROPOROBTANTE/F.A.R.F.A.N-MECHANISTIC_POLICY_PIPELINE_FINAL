@@ -27,7 +27,7 @@ from farfan_pipeline.core.orchestrator.evidence_registry import (
     ProvenanceNode,
     get_global_registry,
 )
-from .resource_manager import (
+from farfan_pipeline.core.orchestrator.resource_manager import (
     AdaptiveResourceManager,
     CircuitBreaker,
     CircuitState,
@@ -36,17 +36,17 @@ from .resource_manager import (
     ResourceAllocationPolicy,
     ResourcePressureLevel,
 )
-from .resource_aware_executor import (
+from farfan_pipeline.core.orchestrator.resource_aware_executor import (
     ResourceAwareExecutor,
     ResourceConstraints,
 )
-from .resource_alerts import (
+from farfan_pipeline.core.orchestrator.resource_alerts import (
     AlertChannel,
     AlertSeverity,
     ResourceAlert,
     ResourceAlertManager,
 )
-from .resource_integration import (
+from farfan_pipeline.core.orchestrator.resource_integration import (
     create_resource_manager,
     integrate_with_orchestrator,
     get_resource_status,

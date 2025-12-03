@@ -6,7 +6,7 @@ x_@m = 0.5·m_transp + 0.4·m_gov + 0.1·m_cost
 """
 import logging
 from typing import Optional
-from .config import MetaLayerConfig
+from farfan_pipeline.core.calibration.config import MetaLayerConfig
 
 logger = logging.getLogger(__name__)
 

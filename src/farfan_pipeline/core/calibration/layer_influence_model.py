@@ -20,7 +20,7 @@ from typing import Dict, List, Set, Optional, Callable, Tuple
 from enum import Enum
 import json
 
-from .layer_coexistence import Layer, LayerScore
+from farfan_pipeline.core.calibration.layer_coexistence import Layer, LayerScore
 
 
 class LayerInfluenceType(Enum):
