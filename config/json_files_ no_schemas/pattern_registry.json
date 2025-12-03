@@ -1,7 +1,7 @@
 [
   {
     "pattern_id": "PAT-0001",
-    "pattern": "2021|2022|2023|vigencia anterior|serie histórica",
+    "pattern": "(?:19|20)\\\\d{2}|vigencia anterior|serie histórica|cuatrienio anterior",
     "match_type": "LITERAL",
     "usage_count": 5
   },
@@ -49,7 +49,7 @@
   },
   {
     "pattern_id": "PAT-0009",
-    "pattern": "Línea Base:|LB:|valor 2023:",
+    "pattern": "Línea Base:|LB:|valor\\\\s+(?:19|20)\\\\d{2}:",
     "match_type": "LITERAL",
     "usage_count": 10
   },
@@ -61,13 +61,13 @@
   },
   {
     "pattern_id": "PAT-0011",
-    "pattern": "Meta Cuatrienio:|Meta 2027:|se espera aumentar a un X%",
+    "pattern": "Meta Cuatrienio:|Meta\\\\s+(?:19|20)\\\\d{2}:|se espera aumentar a un X%",
     "match_type": "LITERAL",
     "usage_count": 2
   },
   {
     "pattern_id": "PAT-0012",
-    "pattern": "Meta Cuatrienio:|Meta 2027:|se espera reducir a",
+    "pattern": "Meta Cuatrienio:|Meta\\\\s+(?:19|20)\\\\d{2}:|se espera reducir a",
     "match_type": "REGEX",
     "usage_count": 4
   },
@@ -127,7 +127,7 @@
   },
   {
     "pattern_id": "PAT-0022",
-    "pattern": "\\$\\s*\\d{1,3}(\\.\\d{3})*(,\\d+)?|COP\\s*\\d{1,3}(\\.\\d{3})*(,\\d+)?|millones de pesos|entre \\d+ y \\d+|de \\d+ a \\d+",
+    "pattern": "(?:\\\\$|COP)?\\\\s*\\\\d{1,3}(?:[\\\\.\\\\s]\\\\d{3})*(?:[\\\\.,]\\\\d{1,2})?|(?:\\\\d+[\\\\.,]\\\\d+|\\\\d+)\\\\s+millones?\\\\s+de\\\\s+pesos|entre\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)\\\\s+y\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)|de\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)\\\\s+a\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)|\\\\b(?:uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieciseis|dieciséis|diecisiete|dieciocho|diecinueve|veinte|treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|ciento|mil|millón|millones)\\\\s+de\\\\s+pesos\\\\b",
     "match_type": "REGEX",
     "usage_count": 9
   },
@@ -217,7 +217,7 @@
   },
   {
     "pattern_id": "PAT-0037",
-    "pattern": "columna cronograma|plazo|vigencia|año 1|trimestre",
+    "pattern": "columna cronograma|plazo|vigencia|año\\\\s+\\\\d+|trimestre",
     "match_type": "LITERAL",
     "usage_count": 10
   },
@@ -631,7 +631,7 @@
   },
   {
     "pattern_id": "PAT-0106",
-    "pattern": "tiempo de maduración|se espera observar en 10-15 años",
+    "pattern": "tiempo de maduración|se espera observar en \\\\d{1,2}(?:-\\\\d{1,2})? años",
     "match_type": "REGEX",
     "usage_count": 2
   },
@@ -655,7 +655,7 @@
   },
   {
     "pattern_id": "PAT-0110",
-    "pattern": "visión 2050|Agenda 2030 de Desarrollo Sostenible",
+    "pattern": "visión\\\\s+(?:20\\\\d{2}|2050)|Agenda\\\\s+2030 de Desarrollo Sostenible",
     "match_type": "REGEX",
     "usage_count": 2
   },

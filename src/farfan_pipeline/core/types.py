@@ -58,7 +58,6 @@ class ChunkData:
     """
 
     id: int
-    chunk_id: str | None = None
     text: str
     chunk_type: Literal[
         "diagnostic", "activity", "indicator", "resource", "temporal", "entity"
@@ -68,6 +67,7 @@ class ChunkData:
     start_pos: int
     end_pos: int
     confidence: float
+    chunk_id: str | None = None
     edges_out: list[int] = field(default_factory=list)
     edges_in: list[int] = field(default_factory=list)
     policy_area_id: str | None = None

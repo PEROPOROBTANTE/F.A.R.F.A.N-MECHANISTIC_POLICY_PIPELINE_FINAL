@@ -34,15 +34,15 @@
       "format": "date-time",
       "description": "ISO 8601 timestamp of generation"
     },
-    "canonical_notation": {
-      "type": "object",
-      "properties": {
-        "dimensions": { "type": "object" },
-        "policy_areas": { "type": "object" }
-      },
-      "additionalProperties": false,
-      "description": "Formal notation system for questionnaire structure"
-    },
+        "canonical_notation": {
+          "type": "object",
+          "properties": {
+            "dimensions": { "type": "object" },
+            "policy_areas": { "type": "object" }
+          },
+          "additionalProperties": false,
+          "description": "Formal notation system for questionnaire structure"
+        },
     "blocks": {
       "type": "object",
       "required": [
@@ -119,18 +119,20 @@
       "additionalProperties": false,
       "description": "Integrity metadata for the monolith"
     },
-    "observability": {
-      "type": "object",
-      "properties": {
-        "trace_id": {
-          "type": "string",
-          "description": "Unique trace identifier for this generation"
+        "observability": {
+          "type": "object",
+          "properties": {
+            "trace_id": {
+              "type": "string",
+              "description": "Unique trace identifier for this generation"
+            },
+            "telemetry_schema": { "type": ["string", "object"] }
+          },
+          "additionalProperties": false,
+          "description": "Observability and tracing metadata"
         }
       },
-      "description": "Observability and tracing metadata"
-    }
-  },
-  "additionalProperties": false,
+      "additionalProperties": false,
   "definitions": {
     "MacroQuestion": {
       "type": "object",

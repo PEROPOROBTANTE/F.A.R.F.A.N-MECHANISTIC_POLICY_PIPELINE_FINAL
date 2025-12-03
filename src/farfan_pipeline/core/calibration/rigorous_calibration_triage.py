@@ -40,15 +40,10 @@ def save_json(path: Path, data: dict) -> None:
 def triage_pass1_requires_calibration(method_info: Dict[str, Any], rubric: Dict[str, Any]) -> Tuple[bool, str, Dict[str, Any]]:
     """
     Pass 1: Does this method require intrinsic calibration?
+    Determine if a method requires calibration based on the 3-question rubric.
     
-    Apply 3-question decision automaton per rubric
-    Q1: Can this method change what is true in the pipeline?
-    Q2: Does it encode assumptions or knobs that matter?
-    Q3: Would a bug/misuse materially mislead an evaluation?
-    
-    Returns: (requires_calibration: bool, reason: str, triage_evidence: dict)
+    Returns: (requires_calibration, reason, evidence_dict)
     """
-    canonical_name = method_info.get('canonical_name', '')
     method_name = method_info.get('method_name', '')
     docstring = method_info.get('docstring', '') or ''
     layer = method_info.get('layer', 'unknown')
@@ -69,28 +64,39 @@ def triage_pass1_requires_calibration(method_info: Dict[str, Any], rubric: Dict[
     
     # Q1: Analytically active?
     q1_config = triggers['questions']['q1_analytically_active']
-    analytical_verbs = q1_config['indicators']['analytical_verbs']
+    primary_verbs = q1_config['indicators'].get('primary_analytical_verbs', [])
+    etl_verbs = q1_config['indicators'].get('generative_etl_verbs', [])
+    all_analytical_verbs = primary_verbs + etl_verbs
     
-    q1_matches_name = [verb for verb in analytical_verbs if verb in method_name.lower()]
-    q1_matches_doc = [verb for verb in analytical_verbs[:10] if verb in docstring.lower()]
+    q1_matches_name = [verb for verb in all_analytical_verbs if verb in method_name.lower()]
+    q1_matches_doc = [verb for verb in all_analytical_verbs[:10] if verb in docstring.lower()]
     q1_analytical = len(q1_matches_name) > 0 or len(q1_matches_doc) > 0
     
     # Q2: Parametric?
     q2_config = triggers['questions']['q2_parametric']
-    parametric_keywords = q2_config['indicators']['parametric_keywords']
-    critical_layers = q2_config['indicators']['check_layer']
+    parametric_keywords = q2_config['indicators'].get('parametric_keywords', [])
+    parametric_verbs = q2_config['indicators'].get('parametric_verbs', [])
+    critical_layers = q2_config['indicators'].get('check_layer', [])
     
-    q2_matches = [kw for kw in parametric_keywords if kw in docstring.lower()]
-    q2_parametric = len(q2_matches) > 0 or layer in critical_layers
+    q2_matches_kw = [kw for kw in parametric_keywords if kw in docstring.lower()]
+    q2_matches_verb = [verb for verb in parametric_verbs if verb in method_name.lower()]
+    q2_parametric = len(q2_matches_kw) > 0 or len(q2_matches_verb) > 0 or layer in critical_layers
     
     # Q3: Safety-critical?
     q3_config = triggers['questions']['q3_safety_critical']
-    safety_layers = q3_config['indicators']['critical_layers']
-    eval_types = q3_config['indicators']['evaluative_return_types']
+    safety_verbs = q3_config['indicators'].get('safety_verbs', [])
+    safety_layers = q3_config['indicators'].get('critical_layers', [])
+    eval_types = q3_config['indicators'].get('evaluative_return_types', [])
     
-    q3_safety_critical = layer in safety_layers or return_type in eval_types
-    if q3_config['indicators']['exclude_simple_getters'] and method_name.startswith('_get_'):
-        q3_safety_critical = False
+    q3_matches_verb = [verb for verb in safety_verbs if verb in method_name.lower()]
+    q3_safety_critical = (len(q3_matches_verb) > 0 or 
+                          layer in safety_layers or 
+                          return_type in eval_types)
+                          
+    if q3_config['indicators'].get('exclude_simple_getters', False) and method_name.startswith('get_'):
+        # Only exclude if it's NOT a safety verb (e.g. 'get_validation_status' might be critical, but 'get_name' is not)
+        if not q3_matches_verb:
+             q3_safety_critical = False
     
     # Additional exclusion rules
     is_private_utility = (method_name.startswith('_') and 
@@ -98,7 +104,7 @@ def triage_pass1_requires_calibration(method_info: Dict[str, Any], rubric: Dict[
                          layer == 'utility')
     is_pure_getter = (method_name.startswith('get_') and 
                       return_type in ['str', 'Path', 'bool'] and 
-                      not q1_analytical)
+                      not q1_analytical and not q3_safety_critical)
     
     # Build machine-readable evidence
     triage_evidence = {
@@ -109,11 +115,13 @@ def triage_pass1_requires_calibration(method_info: Dict[str, Any], rubric: Dict[
         },
         "q2_parametric": {
             "result": q2_parametric,
-            "matched_keywords": q2_matches,
+            "matched_keywords": q2_matches_kw,
+            "matched_verbs": q2_matches_verb,
             "layer_is_critical": layer in critical_layers
         },
         "q3_safety_critical": {
             "result": q3_safety_critical,
+            "matched_safety_verbs": q3_matches_verb,
             "layer_is_critical": layer in safety_layers,
             "return_type_is_evaluative": return_type in eval_types
         },

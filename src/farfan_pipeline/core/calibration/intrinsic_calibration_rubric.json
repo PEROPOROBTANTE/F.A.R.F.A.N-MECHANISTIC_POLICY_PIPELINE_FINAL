@@ -97,7 +97,7 @@
     },
     "rules": {
       "test_coverage": {
-        "description": "Evidence of actual tests running (≥ 80% → 1.0, linear below)",
+        "description": "Evidence of actual tests running (\u2265 80% \u2192 1.0, linear below)",
         "scoring": {
           "has_test_evidence": {
             "description": "Test runs verified or high-quality test suite present",
@@ -116,7 +116,7 @@
         "note": "Conservative scoring until CI/test metrics available"
       },
       "error_handling": {
-        "description": "Error handling and robustness patterns (all paths covered → 1.0)",
+        "description": "Error handling and robustness patterns (all paths covered \u2192 1.0)",
         "scoring": {
           "comprehensive_handling": {
             "description": "Try/except blocks, input validation, defensive checks",
@@ -134,7 +134,7 @@
         }
       },
       "type_annotations": {
-        "description": "Type annotation coverage (complete → 1.0, partial weighted)",
+        "description": "Type annotation coverage (complete \u2192 1.0, partial weighted)",
         "scoring": {
           "complete_annotations": {
             "description": "Full type coverage on parameters and returns",
@@ -154,7 +154,7 @@
         "note": "Type hints are DOCUMENTATION, not runtime enforcement. They score here, not in enforcement."
       },
       "documentation": {
-        "description": "Documentation quality (complete API docs → 1.0)",
+        "description": "Documentation quality (complete API docs \u2192 1.0)",
         "scoring": {
           "formula": "(0.4 if doc_length > 50 else 0.1) + (0.25 if has_params_doc else 0) + (0.25 if has_returns_doc else 0) + (0.1 if has_examples else 0)"
         },
@@ -270,27 +270,19 @@
     }
   },
   "calibration_triggers": {
-    "description": "3-question decision automaton for determining calibration requirement",
+    "description": "Decision automaton mapping empirically observed verb clusters to fundamental calibration questions.",
     "questions": {
       "q1_analytically_active": {
-        "question": "Can this method change what is true in the pipeline?",
+        "question": "Can this method change what is true in the pipeline (transform, derive, or synthesize)?",
+        "rationale": "Methods using these verbs modify data state or generate new insights, directly impacting the analytical chain.",
         "indicators": {
-          "analytical_verbs": [
-            "score",
+          "primary_analytical_verbs": [
             "compute",
             "calculate",
+            "score",
             "evaluate",
+            "analyze",
             "assess",
-            "validate",
-            "verify",
-            "check",
-            "filter",
-            "select",
-            "transform",
-            "aggregate",
-            "detect",
-            "extract",
-            "classify",
             "rank",
             "weight",
             "normalize",
@@ -299,27 +291,17 @@
             "infer",
             "predict",
             "estimate",
-            "measure",
-            "analyze",
-            "process",
-            "build",
-            "construct",
-            "parse",
+            "measure"
+          ],
+          "generative_etl_verbs": [
             "generate",
             "create",
-            "update",
-            "modify",
-            "refine",
-            "optimize",
-            "search",
-            "find",
-            "lookup",
-            "retrieve",
-            "fetch",
-            "load",
-            "store",
-            "compare",
-            "match",
+            "extract",
+            "transform",
+            "build",
+            "construct",
+            "process",
+            "aggregate",
             "merge",
             "split",
             "join",
@@ -331,7 +313,17 @@
       },
       "q2_parametric": {
         "question": "Does it encode assumptions or knobs that matter?",
+        "rationale": "Methods that set boundaries, load configurations, or apply thresholds introduce subjective parameters that must be calibrated.",
         "indicators": {
+          "parametric_verbs": [
+            "configure",
+            "set",
+            "tune",
+            "initialize",
+            "setup",
+            "load",
+            "apply"
+          ],
           "parametric_keywords": [
             "threshold",
             "prior",
@@ -342,7 +334,9 @@
             "rule",
             "heuristic",
             "assumption",
-            "criterion"
+            "criterion",
+            "config",
+            "limit"
           ],
           "check_docstring": true,
           "check_layer": [
@@ -354,7 +348,20 @@
       },
       "q3_safety_critical": {
         "question": "Would a bug/misuse materially mislead an evaluation?",
+        "rationale": "Methods explicitly designed to gate-keep, audit, or verify are the highest risk if they fail silently.",
         "indicators": {
+          "safety_verbs": [
+            "validate",
+            "verify",
+            "check",
+            "audit",
+            "test",
+            "ensure",
+            "assert",
+            "monitor",
+            "log",
+            "record"
+          ],
           "critical_layers": [
             "analyzer",
             "processor",
@@ -364,12 +371,13 @@
             "float",
             "int",
             "dict",
-            "list"
+            "list",
+            "bool"
           ],
           "exclude_simple_getters": true
         }
       }
     },
-    "decision": "If ANY question returns YES and method is NOT explicitly excluded, then calibration is REQUIRED"
+    "decision": "If a method matches a Verb Cluster, the corresponding Question is PRESUMED YES. Calibration is REQUIRED unless explicitly excluded."
   }
 }

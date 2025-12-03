@@ -30,6 +30,7 @@ from jsonschema import Draft7Validator
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MONOLITH = ROOT / "system" / "config" / "questionnaire" / "questionnaire_monolith.json"
 DEFAULT_SCHEMA = ROOT / "system" / "config" / "questionnaire" / "questionnaire_schema.json"
+DEFAULT_REGISTRY = ROOT / "config" / "json_files_ no_schemas" / "pattern_registry.json"
 DEFAULT_REPORT = ROOT / "validation_report.json"
 
 
@@ -83,7 +84,53 @@ def semantic_checks(monolith: dict[str, Any]) -> list[dict[str, Any]]:
     return errors
 
 
-def validate(monolith_path: Path, schema_path: Path) -> dict[str, Any]:
+def validate_pattern_refs(monolith: dict[str, Any], registry_path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Validate that all pattern_ref entries resolve to the registry and find unused patterns."""
+    errors: list[dict[str, Any]] = []
+    warnings: list[dict[str, Any]] = []
+
+    if not registry_path.exists():
+        warnings.append(
+            {
+                "type": "registry",
+                "message": f"Registry file not found at {registry_path}",
+            }
+        )
+        return errors, warnings
+
+    registry = load_json(registry_path)
+    registry_index = {entry.get("pattern_id"): entry for entry in registry}
+    used: set[str] = set()
+
+    for mq in monolith.get("blocks", {}).get("micro_questions", []):
+        for pattern in mq.get("patterns", []) or []:
+            ref = pattern.get("pattern_ref")
+            if ref:
+                if ref not in registry_index:
+                    errors.append(
+                        {
+                            "type": "registry",
+                            "message": f"pattern_ref '{ref}' not found in registry",
+                            "instance_path": ["blocks", "micro_questions", mq.get("question_id"), "patterns"],
+                        }
+                    )
+                else:
+                    used.add(ref)
+
+    unused = sorted(set(registry_index) - used)
+    if unused:
+        warnings.append(
+            {
+                "type": "registry",
+                "message": f"Unused registry patterns: {len(unused)}",
+                "details": unused,
+            }
+        )
+
+    return errors, warnings
+
+
+def validate(monolith_path: Path, schema_path: Path, registry_path: Path) -> dict[str, Any]:
     monolith = load_json(monolith_path)
     schema = load_json(schema_path)
 
@@ -102,12 +149,14 @@ def validate(monolith_path: Path, schema_path: Path) -> dict[str, Any]:
         )
 
     errors.extend(semantic_checks(monolith))
+    registry_errors, registry_warnings = validate_pattern_refs(monolith, registry_path)
+    errors.extend(registry_errors)
 
     validation_passed = len(errors) == 0
     report = {
         "validation_passed": validation_passed,
         "errors": errors,
-        "warnings": [],
+        "warnings": registry_warnings,
         "schema_hash": compute_sha256(schema_path),
     }
     return report
@@ -128,6 +177,12 @@ def main() -> int:
         help=f"Path to JSON Schema (default: {DEFAULT_SCHEMA})",
     )
     parser.add_argument(
+        "--registry",
+        type=Path,
+        default=DEFAULT_REGISTRY,
+        help=f"Path to pattern registry (default: {DEFAULT_REGISTRY})",
+    )
+    parser.add_argument(
         "--report",
         type=Path,
         default=DEFAULT_REPORT,
@@ -135,7 +190,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    report = validate(args.monolith, args.schema)
+    report = validate(args.monolith, args.schema, args.registry)
     args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     if report["validation_passed"]:
