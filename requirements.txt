@@ -33,13 +33,16 @@ sentencepiece==0.2.0
 fastapi==0.118.0
 uvicorn==0.34.0
 sse-starlette==2.2.1
-starlette==0.41.3
+starlette==0.45.0
 httpx==0.28.1
 requests==2.32.4
 flask==2.3.2
 flask-cors==6.0.0
 flask-socketio==5.3.6
 pyjwt==2.8.0
+
+# Memory monitoring
+psutil==6.1.1
 
 # Data Validation & Configuration - Tightly pinned versions
 pydantic==2.10.6

@@ -27,6 +27,12 @@ from dataclasses import dataclass
 from farfan_pipeline.core.canonical_notation import CanonicalDimension, get_dimension_info
 from farfan_pipeline.core.orchestrator.core import MethodExecutor
 from farfan_pipeline.core.orchestrator.factory import build_processor
+from farfan_pipeline.core.orchestrator.memory_safety import (
+    MemorySafetyGuard,
+    MemorySafetyConfig,
+    ExecutorType,
+    create_default_guard,
+)
 from farfan_pipeline.processing.policy_processor import CausalDimension
 
 logger = logging.getLogger(__name__)
@@ -173,6 +179,8 @@ class BaseExecutor(ABC):
     """
     Base class for all executors with standardized execution template.
     All executors must implement execute() and return structured evidence.
+    
+    Includes systematic memory safety guards for processing large objects.
     """
     
     def __init__(self, executor_id: str, config: Dict[str, Any], method_executor: MethodExecutor):
@@ -182,8 +190,33 @@ class BaseExecutor(ABC):
             raise RuntimeError("A valid MethodExecutor instance is required for executor injection.")
         self.method_executor = method_executor
         self.execution_log = []
-        self._dimension_info = None  # Lazy load to avoid redundant fetches
+        self._dimension_info = None
+        
+        memory_config = config.get("memory_safety", {})
+        if isinstance(memory_config, dict):
+            self.memory_guard = MemorySafetyGuard(MemorySafetyConfig(**memory_config))
+        else:
+            self.memory_guard = create_default_guard()
+        
+        self.executor_type = self._determine_executor_type()
 
+    def _determine_executor_type(self) -> ExecutorType:
+        """Determine memory limit type based on executor ID and primary methods."""
+        executor_id_lower = self.executor_id.lower()
+        
+        if "d3-q2" in executor_id_lower or "d3-q3" in executor_id_lower:
+            return ExecutorType.ENTITY
+        elif "d6-q1" in executor_id_lower or "d6-q2" in executor_id_lower:
+            return ExecutorType.DAG
+        elif "d5-q" in executor_id_lower or "d6-q3" in executor_id_lower:
+            return ExecutorType.CAUSAL_EFFECTS
+        elif "d1-q" in executor_id_lower or "d2-q" in executor_id_lower:
+            return ExecutorType.SEMANTIC
+        elif "d3-q" in executor_id_lower or "d4-q" in executor_id_lower:
+            return ExecutorType.FINANCIAL
+        else:
+            return ExecutorType.GENERIC
+    
     @property
     def dimension_info(self):
         """Lazy-loaded dimension information to avoid redundant metadata fetches."""
@@ -195,6 +228,43 @@ class BaseExecutor(ABC):
                 logger.warning(f"Failed to load dimension info for {self.executor_id}: {e}")
                 self._dimension_info = None
         return self._dimension_info
+    
+    def _safe_process_object(self, obj: Any, label: str = "object") -> Any:
+        """Process object with memory safety guards.
+        
+        Args:
+            obj: Object to process (entities, DAG, causal effects, etc.)
+            label: Human-readable label for logging
+            
+        Returns:
+            Memory-safe processed object
+        """
+        processed_obj, metrics = self.memory_guard.check_and_process(
+            obj, self.executor_type, label
+        )
+        
+        if metrics.was_truncated or metrics.was_sampled:
+            logger.info(
+                f"{self.executor_id}: Applied {metrics.fallback_strategy} to {label} - "
+                f"size reduced from {metrics.object_size_bytes / (1024*1024):.2f}MB "
+                f"({metrics.elements_before} elements) to "
+                f"{metrics.json_size_bytes / (1024*1024):.2f}MB "
+                f"({metrics.elements_after} elements)"
+            )
+        
+        return processed_obj
+    
+    def _safe_process_list(self, items: List[Any], label: str = "list") -> List[Any]:
+        """Process list with memory safety guards."""
+        return self._safe_process_object(items, label)
+    
+    def _safe_process_dict(self, data: Dict[str, Any], label: str = "dict") -> Dict[str, Any]:
+        """Process dict with memory safety guards."""
+        return self._safe_process_object(data, label)
+    
+    def _get_memory_metrics_summary(self) -> Dict[str, Any]:
+        """Get summary of memory operations for this executor."""
+        return self.memory_guard.get_metrics_summary()
 
     def _validate_context(self, context: Dict[str, Any]) -> None:
         """
@@ -1787,29 +1857,20 @@ class D3_Q3_TraceabilityValidator(BaseExecutor):
             pattern_specificity=0.5
         )
 
-        # Memory-safe entity processing with bounds checking
-        MAX_ENTITY_SIZE = 1024 * 1024  # 1MB limit per entity
+        consolidated_entities = self._safe_process_list(
+            consolidated_entities, label="consolidated_entities"
+        )
+        
         entity_dicts = []
-        for e in consolidated_entities[:5]:  # Already limited to 5 entities
+        for e in consolidated_entities[:5]:
             if not (isinstance(e, dict) or hasattr(e, "__dict__")):
-                continue
-
-            # Estimate size more efficiently without deep inspection
-            try:
-                entity_json = json.dumps(e if isinstance(e, dict) else e.__dict__, default=str)
-                entity_size = len(entity_json.encode('utf-8'))
-                if entity_size > MAX_ENTITY_SIZE:
-                    logger.warning(f"Entity too large: {entity_size} bytes, skipping")
-                    continue
-            except (TypeError, ValueError, AttributeError):
-                # If we can't serialize/measure, skip it
-                logger.warning("Entity cannot be measured, skipping")
                 continue
 
             try:
                 entity_dict = self._execute_method(
                     "PDETMunicipalPlanAnalyzer", "_entity_to_dict", context, entity=e
                 )
+                entity_dict = self._safe_process_dict(entity_dict, label=f"entity_dict_{len(entity_dicts)}")
                 entity_dicts.append(entity_dict)
             except MemoryError:
                 logger.error("Memory exhausted during entity conversion, stopping")
@@ -2409,10 +2470,13 @@ class D4_Q1_OutcomeMetricsValidator(BaseExecutor):
             "PDETMunicipalPlanAnalyzer", "_extract_entities_syntax", context,
             text=context.get("document_text", "")
         )
+        entities_syntax = self._safe_process_list(entities_syntax, label="entities_syntax")
+        
         entities_ner = self._execute_method(
             "PDETMunicipalPlanAnalyzer", "_extract_entities_ner", context,
             text=context.get("document_text", "")
         )
+        entities_ner = self._safe_process_list(entities_ner, label="entities_ner")
         
         # Step 2: Score temporal consistency
         temporal_consistency = self._execute_method(
@@ -2508,6 +2572,8 @@ class D4_Q1_OutcomeMetricsValidator(BaseExecutor):
             "precedence_check": precedence_check
         }
         
+        memory_metrics = self._get_memory_metrics_summary()
+        
         return {
             "executor_id": self.executor_id,
             "raw_evidence": raw_evidence,
@@ -2522,7 +2588,8 @@ class D4_Q1_OutcomeMetricsValidator(BaseExecutor):
             },
             "execution_metrics": {
                 "methods_count": len(self.execution_log),
-                "all_succeeded": all(log["success"] for log in self.execution_log)
+                "all_succeeded": all(log["success"] for log in self.execution_log),
+                "memory_safety": memory_metrics
             }
         }
 
@@ -3045,6 +3112,8 @@ class D5_Q2_CompositeMeasurementValidator(BaseExecutor):
             document_text=document_text,
             document_metadata=document_metadata
         )
+        processed_chunks = self._safe_process_list(processed_chunks, label="processed_chunks")
+        
         pdq_filter = self._execute_method(
             "PolicyAnalysisEmbedder", "_generate_query_from_pdq", context,
             pdq={"policy": context.get("policy_area"), "dimension": dim_info.code}
@@ -3054,6 +3123,7 @@ class D5_Q2_CompositeMeasurementValidator(BaseExecutor):
             chunks=processed_chunks,
             pdq_filter=pdq_filter
         )
+        filtered_chunks = self._safe_process_list(filtered_chunks, label="filtered_chunks")
         numerical_values = self._execute_method(
             "PolicyAnalysisEmbedder", "_extract_numerical_values", context,
             chunks=processed_chunks
@@ -3194,7 +3264,8 @@ class D5_Q2_CompositeMeasurementValidator(BaseExecutor):
             },
             "execution_metrics": {
                 "methods_count": len(self.execution_log),
-                "all_succeeded": all(log["success"] for log in self.execution_log)
+                "all_succeeded": all(log["success"] for log in self.execution_log),
+                "memory_safety": self._get_memory_metrics_summary()
             }
         }
 
@@ -3481,11 +3552,14 @@ class D6_Q1_ExplicitTheoryBuilder(BaseExecutor):
             graph=causal_graph
         )
         
+        causal_graph = self._safe_process_dict(causal_graph, label="causal_graph")
+        
         # Step 3: Export nodes from Theory of Change
         toc_nodes = self._execute_method(
             "TeoriaCambio", "export_nodes", context,
             graph=causal_graph
         )
+        toc_nodes = self._safe_process_list(toc_nodes, label="toc_nodes")
         
         # Step 4: Generate causal diagram
         diagram = self._execute_method(
@@ -3498,23 +3572,27 @@ class D6_Q1_ExplicitTheoryBuilder(BaseExecutor):
             "ReportingEngine", "generate_causal_model_json", context,
             graph=causal_graph
         )
+        model_json = self._safe_process_dict(model_json, label="causal_model_json")
         
         # Step 6: Export nodes from DAG validator
         dag_nodes = self._execute_method(
             "AdvancedDAGValidator", "export_nodes", context,
             graph=causal_graph
         )
+        dag_nodes = self._safe_process_list(dag_nodes, label="dag_nodes")
         
         # Step 7: Export causal network
         network_export = self._execute_method(
             "PDETMunicipalPlanAnalyzer", "export_causal_network", context,
             graph=causal_graph
         )
+        network_export = self._safe_process_dict(network_export, label="network_export")
         
         # Step 8: Extract causal hierarchy
         hierarchy = self._execute_method(
             "CausalExtractor", "extract_causal_hierarchy", context
         )
+        hierarchy = self._safe_process_dict(hierarchy, label="causal_hierarchy")
         
         raw_evidence = {
             "toc_exists": bool(causal_graph),
@@ -3530,6 +3608,8 @@ class D6_Q1_ExplicitTheoryBuilder(BaseExecutor):
             "validation_results": validation
         }
         
+        memory_metrics = self._get_memory_metrics_summary()
+        
         return {
             "executor_id": self.executor_id,
             "raw_evidence": raw_evidence,
@@ -3540,7 +3620,8 @@ class D6_Q1_ExplicitTheoryBuilder(BaseExecutor):
             },
             "execution_metrics": {
                 "methods_count": len(self.execution_log),
-                "all_succeeded": all(log["success"] for log in self.execution_log)
+                "all_succeeded": all(log["success"] for log in self.execution_log),
+                "memory_safety": memory_metrics
             }
         }
 
