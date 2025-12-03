@@ -1,0 +1,6910 @@
+{
+  "join_table": [
+    {
+      "executor_contract_id": "Q001",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA01_DIM01",
+      "pattern_count": 14,
+      "expected_elements_count": 4,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q001-000",
+        "PAT-Q001-001",
+        "PAT-Q001-002",
+        "PAT-Q001-003",
+        "PAT-Q001-004",
+        "PAT-Q001-005",
+        "PAT-Q001-006",
+        "PAT-Q001-007",
+        "PAT-Q001-008",
+        "PAT-Q001-009",
+        "PAT-Q001-010",
+        "PAT-Q001-011",
+        "PAT-Q001-012",
+        "PAT-Q001-013"
+      ]
+    },
+    {
+      "executor_contract_id": "Q002",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA01_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q002-000",
+        "PAT-Q002-001",
+        "PAT-Q002-002",
+        "PAT-Q002-003",
+        "PAT-Q002-004",
+        "PAT-Q002-005",
+        "PAT-Q002-006",
+        "PAT-Q002-007",
+        "PAT-Q002-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q003",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA01_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q003-000",
+        "PAT-Q003-001",
+        "PAT-Q003-002",
+        "PAT-Q003-003",
+        "PAT-Q003-004",
+        "PAT-Q003-005",
+        "PAT-Q003-006",
+        "PAT-Q003-007",
+        "PAT-Q003-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q004",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA01_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q004-000",
+        "PAT-Q004-001",
+        "PAT-Q004-002",
+        "PAT-Q004-003",
+        "PAT-Q004-004",
+        "PAT-Q004-005",
+        "PAT-Q004-006",
+        "PAT-Q004-007",
+        "PAT-Q004-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q005",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA01_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q005-000",
+        "PAT-Q005-001",
+        "PAT-Q005-002",
+        "PAT-Q005-003",
+        "PAT-Q005-004",
+        "PAT-Q005-005",
+        "PAT-Q005-006",
+        "PAT-Q005-007",
+        "PAT-Q005-008",
+        "PAT-Q005-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q006",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA01_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q006-000",
+        "PAT-Q006-001",
+        "PAT-Q006-002",
+        "PAT-Q006-003",
+        "PAT-Q006-004",
+        "PAT-Q006-005",
+        "PAT-Q006-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q007",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA01_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q007-000",
+        "PAT-Q007-001",
+        "PAT-Q007-002",
+        "PAT-Q007-003",
+        "PAT-Q007-004",
+        "PAT-Q007-005",
+        "PAT-Q007-006",
+        "PAT-Q007-007",
+        "PAT-Q007-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q008",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA01_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q008-000",
+        "PAT-Q008-001",
+        "PAT-Q008-002",
+        "PAT-Q008-003",
+        "PAT-Q008-004",
+        "PAT-Q008-005",
+        "PAT-Q008-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q009",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA01_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q009-000",
+        "PAT-Q009-001",
+        "PAT-Q009-002",
+        "PAT-Q009-003",
+        "PAT-Q009-004",
+        "PAT-Q009-005",
+        "PAT-Q009-006",
+        "PAT-Q009-007",
+        "PAT-Q009-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q010",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA01_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q010-000",
+        "PAT-Q010-001",
+        "PAT-Q010-002",
+        "PAT-Q010-003",
+        "PAT-Q010-004",
+        "PAT-Q010-005",
+        "PAT-Q010-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q011",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA01_DIM03",
+      "pattern_count": 10,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q011-000",
+        "PAT-Q011-001",
+        "PAT-Q011-002",
+        "PAT-Q011-003",
+        "PAT-Q011-004",
+        "PAT-Q011-005",
+        "PAT-Q011-006",
+        "PAT-Q011-007",
+        "PAT-Q011-008",
+        "PAT-Q011-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q012",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA01_DIM03",
+      "pattern_count": 9,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q012-000",
+        "PAT-Q012-001",
+        "PAT-Q012-002",
+        "PAT-Q012-003",
+        "PAT-Q012-004",
+        "PAT-Q012-005",
+        "PAT-Q012-006",
+        "PAT-Q012-007",
+        "PAT-Q012-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q013",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA01_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q013-000",
+        "PAT-Q013-001",
+        "PAT-Q013-002",
+        "PAT-Q013-003",
+        "PAT-Q013-004",
+        "PAT-Q013-005",
+        "PAT-Q013-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q014",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA01_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q014-000",
+        "PAT-Q014-001",
+        "PAT-Q014-002",
+        "PAT-Q014-003",
+        "PAT-Q014-004",
+        "PAT-Q014-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q015",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA01_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q015-000",
+        "PAT-Q015-001",
+        "PAT-Q015-002",
+        "PAT-Q015-003",
+        "PAT-Q015-004",
+        "PAT-Q015-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q016",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA01_DIM04",
+      "pattern_count": 8,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q016-000",
+        "PAT-Q016-001",
+        "PAT-Q016-002",
+        "PAT-Q016-003",
+        "PAT-Q016-004",
+        "PAT-Q016-005",
+        "PAT-Q016-006",
+        "PAT-Q016-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q017",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA01_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q017-000",
+        "PAT-Q017-001",
+        "PAT-Q017-002",
+        "PAT-Q017-003",
+        "PAT-Q017-004",
+        "PAT-Q017-005",
+        "PAT-Q017-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q018",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA01_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q018-000",
+        "PAT-Q018-001",
+        "PAT-Q018-002",
+        "PAT-Q018-003",
+        "PAT-Q018-004",
+        "PAT-Q018-005",
+        "PAT-Q018-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q019",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA01_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q019-000",
+        "PAT-Q019-001",
+        "PAT-Q019-002",
+        "PAT-Q019-003",
+        "PAT-Q019-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q020",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA01_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q020-000",
+        "PAT-Q020-001",
+        "PAT-Q020-002",
+        "PAT-Q020-003",
+        "PAT-Q020-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q021",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA01_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q021-000",
+        "PAT-Q021-001",
+        "PAT-Q021-002",
+        "PAT-Q021-003",
+        "PAT-Q021-004",
+        "PAT-Q021-005",
+        "PAT-Q021-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q022",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA01_DIM05",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q022-000",
+        "PAT-Q022-001",
+        "PAT-Q022-002",
+        "PAT-Q022-003",
+        "PAT-Q022-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q023",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA01_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q023-000",
+        "PAT-Q023-001",
+        "PAT-Q023-002",
+        "PAT-Q023-003",
+        "PAT-Q023-004",
+        "PAT-Q023-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q024",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA01_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q024-000",
+        "PAT-Q024-001",
+        "PAT-Q024-002",
+        "PAT-Q024-003",
+        "PAT-Q024-004",
+        "PAT-Q024-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q025",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA01_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q025-000",
+        "PAT-Q025-001",
+        "PAT-Q025-002",
+        "PAT-Q025-003",
+        "PAT-Q025-004",
+        "PAT-Q025-005",
+        "PAT-Q025-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q026",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA01_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q026-000",
+        "PAT-Q026-001",
+        "PAT-Q026-002",
+        "PAT-Q026-003",
+        "PAT-Q026-004",
+        "PAT-Q026-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q027",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA01_DIM06",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q027-000",
+        "PAT-Q027-001",
+        "PAT-Q027-002",
+        "PAT-Q027-003",
+        "PAT-Q027-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q028",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA01_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q028-000",
+        "PAT-Q028-001",
+        "PAT-Q028-002",
+        "PAT-Q028-003",
+        "PAT-Q028-004",
+        "PAT-Q028-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q029",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA01_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q029-000",
+        "PAT-Q029-001",
+        "PAT-Q029-002",
+        "PAT-Q029-003",
+        "PAT-Q029-004",
+        "PAT-Q029-005",
+        "PAT-Q029-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q030",
+      "policy_area_id": "PA01",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA01_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q030-000",
+        "PAT-Q030-001",
+        "PAT-Q030-002",
+        "PAT-Q030-003",
+        "PAT-Q030-004",
+        "PAT-Q030-005",
+        "PAT-Q030-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q031",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA10_DIM01",
+      "pattern_count": 13,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q031-000",
+        "PAT-Q031-001",
+        "PAT-Q031-002",
+        "PAT-Q031-003",
+        "PAT-Q031-004",
+        "PAT-Q031-005",
+        "PAT-Q031-006",
+        "PAT-Q031-007",
+        "PAT-Q031-008",
+        "PAT-Q031-009",
+        "PAT-Q031-010",
+        "PAT-Q031-011",
+        "PAT-Q031-012"
+      ]
+    },
+    {
+      "executor_contract_id": "Q032",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA10_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q032-000",
+        "PAT-Q032-001",
+        "PAT-Q032-002",
+        "PAT-Q032-003",
+        "PAT-Q032-004",
+        "PAT-Q032-005",
+        "PAT-Q032-006",
+        "PAT-Q032-007",
+        "PAT-Q032-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q033",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA10_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q033-000",
+        "PAT-Q033-001",
+        "PAT-Q033-002",
+        "PAT-Q033-003",
+        "PAT-Q033-004",
+        "PAT-Q033-005",
+        "PAT-Q033-006",
+        "PAT-Q033-007",
+        "PAT-Q033-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q034",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA10_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q034-000",
+        "PAT-Q034-001",
+        "PAT-Q034-002",
+        "PAT-Q034-003",
+        "PAT-Q034-004",
+        "PAT-Q034-005",
+        "PAT-Q034-006",
+        "PAT-Q034-007",
+        "PAT-Q034-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q035",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA10_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q035-000",
+        "PAT-Q035-001",
+        "PAT-Q035-002",
+        "PAT-Q035-003",
+        "PAT-Q035-004",
+        "PAT-Q035-005",
+        "PAT-Q035-006",
+        "PAT-Q035-007",
+        "PAT-Q035-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q036",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA10_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q036-000",
+        "PAT-Q036-001",
+        "PAT-Q036-002",
+        "PAT-Q036-003",
+        "PAT-Q036-004",
+        "PAT-Q036-005",
+        "PAT-Q036-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q037",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA10_DIM02",
+      "pattern_count": 10,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q037-000",
+        "PAT-Q037-001",
+        "PAT-Q037-002",
+        "PAT-Q037-003",
+        "PAT-Q037-004",
+        "PAT-Q037-005",
+        "PAT-Q037-006",
+        "PAT-Q037-007",
+        "PAT-Q037-008",
+        "PAT-Q037-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q038",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA10_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q038-000",
+        "PAT-Q038-001",
+        "PAT-Q038-002",
+        "PAT-Q038-003",
+        "PAT-Q038-004",
+        "PAT-Q038-005",
+        "PAT-Q038-006",
+        "PAT-Q038-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q039",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA10_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q039-000",
+        "PAT-Q039-001",
+        "PAT-Q039-002",
+        "PAT-Q039-003",
+        "PAT-Q039-004",
+        "PAT-Q039-005",
+        "PAT-Q039-006",
+        "PAT-Q039-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q040",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA10_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q040-000",
+        "PAT-Q040-001",
+        "PAT-Q040-002",
+        "PAT-Q040-003",
+        "PAT-Q040-004",
+        "PAT-Q040-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q041",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA10_DIM03",
+      "pattern_count": 10,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q041-000",
+        "PAT-Q041-001",
+        "PAT-Q041-002",
+        "PAT-Q041-003",
+        "PAT-Q041-004",
+        "PAT-Q041-005",
+        "PAT-Q041-006",
+        "PAT-Q041-007",
+        "PAT-Q041-008",
+        "PAT-Q041-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q042",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA10_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q042-000",
+        "PAT-Q042-001",
+        "PAT-Q042-002",
+        "PAT-Q042-003",
+        "PAT-Q042-004",
+        "PAT-Q042-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q043",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA10_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q043-000",
+        "PAT-Q043-001",
+        "PAT-Q043-002",
+        "PAT-Q043-003",
+        "PAT-Q043-004",
+        "PAT-Q043-005",
+        "PAT-Q043-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q044",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA10_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q044-000",
+        "PAT-Q044-001",
+        "PAT-Q044-002",
+        "PAT-Q044-003",
+        "PAT-Q044-004",
+        "PAT-Q044-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q045",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA10_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q045-000",
+        "PAT-Q045-001",
+        "PAT-Q045-002",
+        "PAT-Q045-003",
+        "PAT-Q045-004",
+        "PAT-Q045-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q046",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA10_DIM04",
+      "pattern_count": 10,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q046-000",
+        "PAT-Q046-001",
+        "PAT-Q046-002",
+        "PAT-Q046-003",
+        "PAT-Q046-004",
+        "PAT-Q046-005",
+        "PAT-Q046-006",
+        "PAT-Q046-007",
+        "PAT-Q046-008",
+        "PAT-Q046-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q047",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA10_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q047-000",
+        "PAT-Q047-001",
+        "PAT-Q047-002",
+        "PAT-Q047-003",
+        "PAT-Q047-004",
+        "PAT-Q047-005",
+        "PAT-Q047-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q048",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA10_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q048-000",
+        "PAT-Q048-001",
+        "PAT-Q048-002",
+        "PAT-Q048-003",
+        "PAT-Q048-004",
+        "PAT-Q048-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q049",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA10_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q049-000",
+        "PAT-Q049-001",
+        "PAT-Q049-002",
+        "PAT-Q049-003",
+        "PAT-Q049-004",
+        "PAT-Q049-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q050",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA10_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q050-000",
+        "PAT-Q050-001",
+        "PAT-Q050-002",
+        "PAT-Q050-003",
+        "PAT-Q050-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q051",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA10_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q051-000",
+        "PAT-Q051-001",
+        "PAT-Q051-002",
+        "PAT-Q051-003",
+        "PAT-Q051-004",
+        "PAT-Q051-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q052",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA10_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q052-000",
+        "PAT-Q052-001",
+        "PAT-Q052-002",
+        "PAT-Q052-003",
+        "PAT-Q052-004",
+        "PAT-Q052-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q053",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA10_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q053-000",
+        "PAT-Q053-001",
+        "PAT-Q053-002",
+        "PAT-Q053-003",
+        "PAT-Q053-004",
+        "PAT-Q053-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q054",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA10_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q054-000",
+        "PAT-Q054-001",
+        "PAT-Q054-002",
+        "PAT-Q054-003",
+        "PAT-Q054-004",
+        "PAT-Q054-005",
+        "PAT-Q054-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q055",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA10_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q055-000",
+        "PAT-Q055-001",
+        "PAT-Q055-002",
+        "PAT-Q055-003",
+        "PAT-Q055-004",
+        "PAT-Q055-005",
+        "PAT-Q055-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q056",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA10_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q056-000",
+        "PAT-Q056-001",
+        "PAT-Q056-002",
+        "PAT-Q056-003",
+        "PAT-Q056-004",
+        "PAT-Q056-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q057",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA10_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q057-000",
+        "PAT-Q057-001",
+        "PAT-Q057-002",
+        "PAT-Q057-003",
+        "PAT-Q057-004",
+        "PAT-Q057-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q058",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA10_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q058-000",
+        "PAT-Q058-001",
+        "PAT-Q058-002",
+        "PAT-Q058-003",
+        "PAT-Q058-004",
+        "PAT-Q058-005",
+        "PAT-Q058-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q059",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA10_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q059-000",
+        "PAT-Q059-001",
+        "PAT-Q059-002",
+        "PAT-Q059-003",
+        "PAT-Q059-004",
+        "PAT-Q059-005",
+        "PAT-Q059-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q060",
+      "policy_area_id": "PA10",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA10_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q060-000",
+        "PAT-Q060-001",
+        "PAT-Q060-002",
+        "PAT-Q060-003",
+        "PAT-Q060-004",
+        "PAT-Q060-005",
+        "PAT-Q060-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q061",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA02_DIM01",
+      "pattern_count": 14,
+      "expected_elements_count": 4,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q061-000",
+        "PAT-Q061-001",
+        "PAT-Q061-002",
+        "PAT-Q061-003",
+        "PAT-Q061-004",
+        "PAT-Q061-005",
+        "PAT-Q061-006",
+        "PAT-Q061-007",
+        "PAT-Q061-008",
+        "PAT-Q061-009",
+        "PAT-Q061-010",
+        "PAT-Q061-011",
+        "PAT-Q061-012",
+        "PAT-Q061-013"
+      ]
+    },
+    {
+      "executor_contract_id": "Q062",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA02_DIM01",
+      "pattern_count": 8,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q062-000",
+        "PAT-Q062-001",
+        "PAT-Q062-002",
+        "PAT-Q062-003",
+        "PAT-Q062-004",
+        "PAT-Q062-005",
+        "PAT-Q062-006",
+        "PAT-Q062-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q063",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA02_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q063-000",
+        "PAT-Q063-001",
+        "PAT-Q063-002",
+        "PAT-Q063-003",
+        "PAT-Q063-004",
+        "PAT-Q063-005",
+        "PAT-Q063-006",
+        "PAT-Q063-007",
+        "PAT-Q063-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q064",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA02_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q064-000",
+        "PAT-Q064-001",
+        "PAT-Q064-002",
+        "PAT-Q064-003",
+        "PAT-Q064-004",
+        "PAT-Q064-005",
+        "PAT-Q064-006",
+        "PAT-Q064-007",
+        "PAT-Q064-008",
+        "PAT-Q064-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q065",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA02_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q065-000",
+        "PAT-Q065-001",
+        "PAT-Q065-002",
+        "PAT-Q065-003",
+        "PAT-Q065-004",
+        "PAT-Q065-005",
+        "PAT-Q065-006",
+        "PAT-Q065-007",
+        "PAT-Q065-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q066",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA02_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q066-000",
+        "PAT-Q066-001",
+        "PAT-Q066-002",
+        "PAT-Q066-003",
+        "PAT-Q066-004",
+        "PAT-Q066-005",
+        "PAT-Q066-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q067",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA02_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q067-000",
+        "PAT-Q067-001",
+        "PAT-Q067-002",
+        "PAT-Q067-003",
+        "PAT-Q067-004",
+        "PAT-Q067-005",
+        "PAT-Q067-006",
+        "PAT-Q067-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q068",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA02_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q068-000",
+        "PAT-Q068-001",
+        "PAT-Q068-002",
+        "PAT-Q068-003",
+        "PAT-Q068-004",
+        "PAT-Q068-005",
+        "PAT-Q068-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q069",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA02_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q069-000",
+        "PAT-Q069-001",
+        "PAT-Q069-002",
+        "PAT-Q069-003",
+        "PAT-Q069-004",
+        "PAT-Q069-005",
+        "PAT-Q069-006",
+        "PAT-Q069-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q070",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA02_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q070-000",
+        "PAT-Q070-001",
+        "PAT-Q070-002",
+        "PAT-Q070-003",
+        "PAT-Q070-004",
+        "PAT-Q070-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q071",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA02_DIM03",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q071-000",
+        "PAT-Q071-001",
+        "PAT-Q071-002",
+        "PAT-Q071-003",
+        "PAT-Q071-004",
+        "PAT-Q071-005",
+        "PAT-Q071-006",
+        "PAT-Q071-007",
+        "PAT-Q071-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q072",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA02_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q072-000",
+        "PAT-Q072-001",
+        "PAT-Q072-002",
+        "PAT-Q072-003",
+        "PAT-Q072-004",
+        "PAT-Q072-005",
+        "PAT-Q072-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q073",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA02_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q073-000",
+        "PAT-Q073-001",
+        "PAT-Q073-002",
+        "PAT-Q073-003",
+        "PAT-Q073-004",
+        "PAT-Q073-005",
+        "PAT-Q073-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q074",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA02_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q074-000",
+        "PAT-Q074-001",
+        "PAT-Q074-002",
+        "PAT-Q074-003",
+        "PAT-Q074-004",
+        "PAT-Q074-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q075",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA02_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q075-000",
+        "PAT-Q075-001",
+        "PAT-Q075-002",
+        "PAT-Q075-003",
+        "PAT-Q075-004",
+        "PAT-Q075-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q076",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA02_DIM04",
+      "pattern_count": 8,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q076-000",
+        "PAT-Q076-001",
+        "PAT-Q076-002",
+        "PAT-Q076-003",
+        "PAT-Q076-004",
+        "PAT-Q076-005",
+        "PAT-Q076-006",
+        "PAT-Q076-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q077",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA02_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q077-000",
+        "PAT-Q077-001",
+        "PAT-Q077-002",
+        "PAT-Q077-003",
+        "PAT-Q077-004",
+        "PAT-Q077-005",
+        "PAT-Q077-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q078",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA02_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q078-000",
+        "PAT-Q078-001",
+        "PAT-Q078-002",
+        "PAT-Q078-003",
+        "PAT-Q078-004",
+        "PAT-Q078-005",
+        "PAT-Q078-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q079",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA02_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q079-000",
+        "PAT-Q079-001",
+        "PAT-Q079-002",
+        "PAT-Q079-003",
+        "PAT-Q079-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q080",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA02_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q080-000",
+        "PAT-Q080-001",
+        "PAT-Q080-002",
+        "PAT-Q080-003",
+        "PAT-Q080-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q081",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA02_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q081-000",
+        "PAT-Q081-001",
+        "PAT-Q081-002",
+        "PAT-Q081-003",
+        "PAT-Q081-004",
+        "PAT-Q081-005",
+        "PAT-Q081-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q082",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA02_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q082-000",
+        "PAT-Q082-001",
+        "PAT-Q082-002",
+        "PAT-Q082-003",
+        "PAT-Q082-004",
+        "PAT-Q082-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q083",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA02_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q083-000",
+        "PAT-Q083-001",
+        "PAT-Q083-002",
+        "PAT-Q083-003",
+        "PAT-Q083-004",
+        "PAT-Q083-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q084",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA02_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q084-000",
+        "PAT-Q084-001",
+        "PAT-Q084-002",
+        "PAT-Q084-003",
+        "PAT-Q084-004",
+        "PAT-Q084-005",
+        "PAT-Q084-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q085",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA02_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q085-000",
+        "PAT-Q085-001",
+        "PAT-Q085-002",
+        "PAT-Q085-003",
+        "PAT-Q085-004",
+        "PAT-Q085-005",
+        "PAT-Q085-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q086",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA02_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q086-000",
+        "PAT-Q086-001",
+        "PAT-Q086-002",
+        "PAT-Q086-003",
+        "PAT-Q086-004",
+        "PAT-Q086-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q087",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA02_DIM06",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q087-000",
+        "PAT-Q087-001",
+        "PAT-Q087-002",
+        "PAT-Q087-003",
+        "PAT-Q087-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q088",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA02_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q088-000",
+        "PAT-Q088-001",
+        "PAT-Q088-002",
+        "PAT-Q088-003",
+        "PAT-Q088-004",
+        "PAT-Q088-005",
+        "PAT-Q088-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q089",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA02_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q089-000",
+        "PAT-Q089-001",
+        "PAT-Q089-002",
+        "PAT-Q089-003",
+        "PAT-Q089-004",
+        "PAT-Q089-005",
+        "PAT-Q089-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q090",
+      "policy_area_id": "PA02",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA02_DIM06",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q090-000",
+        "PAT-Q090-001",
+        "PAT-Q090-002",
+        "PAT-Q090-003",
+        "PAT-Q090-004",
+        "PAT-Q090-005",
+        "PAT-Q090-006",
+        "PAT-Q090-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q091",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA03_DIM01",
+      "pattern_count": 13,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q091-000",
+        "PAT-Q091-001",
+        "PAT-Q091-002",
+        "PAT-Q091-003",
+        "PAT-Q091-004",
+        "PAT-Q091-005",
+        "PAT-Q091-006",
+        "PAT-Q091-007",
+        "PAT-Q091-008",
+        "PAT-Q091-009",
+        "PAT-Q091-010",
+        "PAT-Q091-011",
+        "PAT-Q091-012"
+      ]
+    },
+    {
+      "executor_contract_id": "Q092",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA03_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q092-000",
+        "PAT-Q092-001",
+        "PAT-Q092-002",
+        "PAT-Q092-003",
+        "PAT-Q092-004",
+        "PAT-Q092-005",
+        "PAT-Q092-006",
+        "PAT-Q092-007",
+        "PAT-Q092-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q093",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA03_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q093-000",
+        "PAT-Q093-001",
+        "PAT-Q093-002",
+        "PAT-Q093-003",
+        "PAT-Q093-004",
+        "PAT-Q093-005",
+        "PAT-Q093-006",
+        "PAT-Q093-007",
+        "PAT-Q093-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q094",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA03_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q094-000",
+        "PAT-Q094-001",
+        "PAT-Q094-002",
+        "PAT-Q094-003",
+        "PAT-Q094-004",
+        "PAT-Q094-005",
+        "PAT-Q094-006",
+        "PAT-Q094-007",
+        "PAT-Q094-008",
+        "PAT-Q094-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q095",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA03_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q095-000",
+        "PAT-Q095-001",
+        "PAT-Q095-002",
+        "PAT-Q095-003",
+        "PAT-Q095-004",
+        "PAT-Q095-005",
+        "PAT-Q095-006",
+        "PAT-Q095-007",
+        "PAT-Q095-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q096",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA03_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q096-000",
+        "PAT-Q096-001",
+        "PAT-Q096-002",
+        "PAT-Q096-003",
+        "PAT-Q096-004",
+        "PAT-Q096-005",
+        "PAT-Q096-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q097",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA03_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q097-000",
+        "PAT-Q097-001",
+        "PAT-Q097-002",
+        "PAT-Q097-003",
+        "PAT-Q097-004",
+        "PAT-Q097-005",
+        "PAT-Q097-006",
+        "PAT-Q097-007",
+        "PAT-Q097-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q098",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA03_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q098-000",
+        "PAT-Q098-001",
+        "PAT-Q098-002",
+        "PAT-Q098-003",
+        "PAT-Q098-004",
+        "PAT-Q098-005",
+        "PAT-Q098-006",
+        "PAT-Q098-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q099",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA03_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q099-000",
+        "PAT-Q099-001",
+        "PAT-Q099-002",
+        "PAT-Q099-003",
+        "PAT-Q099-004",
+        "PAT-Q099-005",
+        "PAT-Q099-006",
+        "PAT-Q099-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q100",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA03_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q100-000",
+        "PAT-Q100-001",
+        "PAT-Q100-002",
+        "PAT-Q100-003",
+        "PAT-Q100-004",
+        "PAT-Q100-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q101",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA03_DIM03",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q101-000",
+        "PAT-Q101-001",
+        "PAT-Q101-002",
+        "PAT-Q101-003",
+        "PAT-Q101-004",
+        "PAT-Q101-005",
+        "PAT-Q101-006",
+        "PAT-Q101-007",
+        "PAT-Q101-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q102",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA03_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 1,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q102-000",
+        "PAT-Q102-001",
+        "PAT-Q102-002",
+        "PAT-Q102-003",
+        "PAT-Q102-004",
+        "PAT-Q102-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q103",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA03_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q103-000",
+        "PAT-Q103-001",
+        "PAT-Q103-002",
+        "PAT-Q103-003",
+        "PAT-Q103-004",
+        "PAT-Q103-005",
+        "PAT-Q103-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q104",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA03_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q104-000",
+        "PAT-Q104-001",
+        "PAT-Q104-002",
+        "PAT-Q104-003",
+        "PAT-Q104-004",
+        "PAT-Q104-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q105",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA03_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q105-000",
+        "PAT-Q105-001",
+        "PAT-Q105-002",
+        "PAT-Q105-003",
+        "PAT-Q105-004",
+        "PAT-Q105-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q106",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA03_DIM04",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q106-000",
+        "PAT-Q106-001",
+        "PAT-Q106-002",
+        "PAT-Q106-003",
+        "PAT-Q106-004",
+        "PAT-Q106-005",
+        "PAT-Q106-006",
+        "PAT-Q106-007",
+        "PAT-Q106-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q107",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA03_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q107-000",
+        "PAT-Q107-001",
+        "PAT-Q107-002",
+        "PAT-Q107-003",
+        "PAT-Q107-004",
+        "PAT-Q107-005",
+        "PAT-Q107-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q108",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA03_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q108-000",
+        "PAT-Q108-001",
+        "PAT-Q108-002",
+        "PAT-Q108-003",
+        "PAT-Q108-004",
+        "PAT-Q108-005",
+        "PAT-Q108-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q109",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA03_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q109-000",
+        "PAT-Q109-001",
+        "PAT-Q109-002",
+        "PAT-Q109-003",
+        "PAT-Q109-004",
+        "PAT-Q109-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q110",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA03_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q110-000",
+        "PAT-Q110-001",
+        "PAT-Q110-002",
+        "PAT-Q110-003",
+        "PAT-Q110-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q111",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA03_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q111-000",
+        "PAT-Q111-001",
+        "PAT-Q111-002",
+        "PAT-Q111-003",
+        "PAT-Q111-004",
+        "PAT-Q111-005",
+        "PAT-Q111-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q112",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA03_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q112-000",
+        "PAT-Q112-001",
+        "PAT-Q112-002",
+        "PAT-Q112-003",
+        "PAT-Q112-004",
+        "PAT-Q112-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q113",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA03_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q113-000",
+        "PAT-Q113-001",
+        "PAT-Q113-002",
+        "PAT-Q113-003",
+        "PAT-Q113-004",
+        "PAT-Q113-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q114",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA03_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q114-000",
+        "PAT-Q114-001",
+        "PAT-Q114-002",
+        "PAT-Q114-003",
+        "PAT-Q114-004",
+        "PAT-Q114-005",
+        "PAT-Q114-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q115",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA03_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q115-000",
+        "PAT-Q115-001",
+        "PAT-Q115-002",
+        "PAT-Q115-003",
+        "PAT-Q115-004",
+        "PAT-Q115-005",
+        "PAT-Q115-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q116",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA03_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q116-000",
+        "PAT-Q116-001",
+        "PAT-Q116-002",
+        "PAT-Q116-003",
+        "PAT-Q116-004",
+        "PAT-Q116-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q117",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA03_DIM06",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q117-000",
+        "PAT-Q117-001",
+        "PAT-Q117-002",
+        "PAT-Q117-003",
+        "PAT-Q117-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q118",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA03_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q118-000",
+        "PAT-Q118-001",
+        "PAT-Q118-002",
+        "PAT-Q118-003",
+        "PAT-Q118-004",
+        "PAT-Q118-005",
+        "PAT-Q118-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q119",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA03_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q119-000",
+        "PAT-Q119-001",
+        "PAT-Q119-002",
+        "PAT-Q119-003",
+        "PAT-Q119-004",
+        "PAT-Q119-005",
+        "PAT-Q119-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q120",
+      "policy_area_id": "PA03",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA03_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q120-000",
+        "PAT-Q120-001",
+        "PAT-Q120-002",
+        "PAT-Q120-003",
+        "PAT-Q120-004",
+        "PAT-Q120-005",
+        "PAT-Q120-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q121",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA04_DIM01",
+      "pattern_count": 14,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q121-000",
+        "PAT-Q121-001",
+        "PAT-Q121-002",
+        "PAT-Q121-003",
+        "PAT-Q121-004",
+        "PAT-Q121-005",
+        "PAT-Q121-006",
+        "PAT-Q121-007",
+        "PAT-Q121-008",
+        "PAT-Q121-009",
+        "PAT-Q121-010",
+        "PAT-Q121-011",
+        "PAT-Q121-012",
+        "PAT-Q121-013"
+      ]
+    },
+    {
+      "executor_contract_id": "Q122",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA04_DIM01",
+      "pattern_count": 8,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q122-000",
+        "PAT-Q122-001",
+        "PAT-Q122-002",
+        "PAT-Q122-003",
+        "PAT-Q122-004",
+        "PAT-Q122-005",
+        "PAT-Q122-006",
+        "PAT-Q122-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q123",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA04_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q123-000",
+        "PAT-Q123-001",
+        "PAT-Q123-002",
+        "PAT-Q123-003",
+        "PAT-Q123-004",
+        "PAT-Q123-005",
+        "PAT-Q123-006",
+        "PAT-Q123-007",
+        "PAT-Q123-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q124",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA04_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q124-000",
+        "PAT-Q124-001",
+        "PAT-Q124-002",
+        "PAT-Q124-003",
+        "PAT-Q124-004",
+        "PAT-Q124-005",
+        "PAT-Q124-006",
+        "PAT-Q124-007",
+        "PAT-Q124-008",
+        "PAT-Q124-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q125",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA04_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q125-000",
+        "PAT-Q125-001",
+        "PAT-Q125-002",
+        "PAT-Q125-003",
+        "PAT-Q125-004",
+        "PAT-Q125-005",
+        "PAT-Q125-006",
+        "PAT-Q125-007",
+        "PAT-Q125-008",
+        "PAT-Q125-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q126",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA04_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q126-000",
+        "PAT-Q126-001",
+        "PAT-Q126-002",
+        "PAT-Q126-003",
+        "PAT-Q126-004",
+        "PAT-Q126-005",
+        "PAT-Q126-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q127",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA04_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q127-000",
+        "PAT-Q127-001",
+        "PAT-Q127-002",
+        "PAT-Q127-003",
+        "PAT-Q127-004",
+        "PAT-Q127-005",
+        "PAT-Q127-006",
+        "PAT-Q127-007",
+        "PAT-Q127-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q128",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA04_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q128-000",
+        "PAT-Q128-001",
+        "PAT-Q128-002",
+        "PAT-Q128-003",
+        "PAT-Q128-004",
+        "PAT-Q128-005",
+        "PAT-Q128-006",
+        "PAT-Q128-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q129",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA04_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q129-000",
+        "PAT-Q129-001",
+        "PAT-Q129-002",
+        "PAT-Q129-003",
+        "PAT-Q129-004",
+        "PAT-Q129-005",
+        "PAT-Q129-006",
+        "PAT-Q129-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q130",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA04_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q130-000",
+        "PAT-Q130-001",
+        "PAT-Q130-002",
+        "PAT-Q130-003",
+        "PAT-Q130-004",
+        "PAT-Q130-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q131",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA04_DIM03",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q131-000",
+        "PAT-Q131-001",
+        "PAT-Q131-002",
+        "PAT-Q131-003",
+        "PAT-Q131-004",
+        "PAT-Q131-005",
+        "PAT-Q131-006",
+        "PAT-Q131-007",
+        "PAT-Q131-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q132",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA04_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 1,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q132-000",
+        "PAT-Q132-001",
+        "PAT-Q132-002",
+        "PAT-Q132-003",
+        "PAT-Q132-004",
+        "PAT-Q132-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q133",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA04_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q133-000",
+        "PAT-Q133-001",
+        "PAT-Q133-002",
+        "PAT-Q133-003",
+        "PAT-Q133-004",
+        "PAT-Q133-005",
+        "PAT-Q133-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q134",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA04_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q134-000",
+        "PAT-Q134-001",
+        "PAT-Q134-002",
+        "PAT-Q134-003",
+        "PAT-Q134-004",
+        "PAT-Q134-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q135",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA04_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q135-000",
+        "PAT-Q135-001",
+        "PAT-Q135-002",
+        "PAT-Q135-003",
+        "PAT-Q135-004",
+        "PAT-Q135-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q136",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA04_DIM04",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q136-000",
+        "PAT-Q136-001",
+        "PAT-Q136-002",
+        "PAT-Q136-003",
+        "PAT-Q136-004",
+        "PAT-Q136-005",
+        "PAT-Q136-006",
+        "PAT-Q136-007",
+        "PAT-Q136-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q137",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA04_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q137-000",
+        "PAT-Q137-001",
+        "PAT-Q137-002",
+        "PAT-Q137-003",
+        "PAT-Q137-004",
+        "PAT-Q137-005",
+        "PAT-Q137-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q138",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA04_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q138-000",
+        "PAT-Q138-001",
+        "PAT-Q138-002",
+        "PAT-Q138-003",
+        "PAT-Q138-004",
+        "PAT-Q138-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q139",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA04_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q139-000",
+        "PAT-Q139-001",
+        "PAT-Q139-002",
+        "PAT-Q139-003",
+        "PAT-Q139-004",
+        "PAT-Q139-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q140",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA04_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q140-000",
+        "PAT-Q140-001",
+        "PAT-Q140-002",
+        "PAT-Q140-003",
+        "PAT-Q140-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q141",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA04_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q141-000",
+        "PAT-Q141-001",
+        "PAT-Q141-002",
+        "PAT-Q141-003",
+        "PAT-Q141-004",
+        "PAT-Q141-005",
+        "PAT-Q141-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q142",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA04_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q142-000",
+        "PAT-Q142-001",
+        "PAT-Q142-002",
+        "PAT-Q142-003",
+        "PAT-Q142-004",
+        "PAT-Q142-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q143",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA04_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q143-000",
+        "PAT-Q143-001",
+        "PAT-Q143-002",
+        "PAT-Q143-003",
+        "PAT-Q143-004",
+        "PAT-Q143-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q144",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA04_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q144-000",
+        "PAT-Q144-001",
+        "PAT-Q144-002",
+        "PAT-Q144-003",
+        "PAT-Q144-004",
+        "PAT-Q144-005",
+        "PAT-Q144-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q145",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA04_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q145-000",
+        "PAT-Q145-001",
+        "PAT-Q145-002",
+        "PAT-Q145-003",
+        "PAT-Q145-004",
+        "PAT-Q145-005",
+        "PAT-Q145-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q146",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA04_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q146-000",
+        "PAT-Q146-001",
+        "PAT-Q146-002",
+        "PAT-Q146-003",
+        "PAT-Q146-004",
+        "PAT-Q146-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q147",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA04_DIM06",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q147-000",
+        "PAT-Q147-001",
+        "PAT-Q147-002",
+        "PAT-Q147-003",
+        "PAT-Q147-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q148",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA04_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q148-000",
+        "PAT-Q148-001",
+        "PAT-Q148-002",
+        "PAT-Q148-003",
+        "PAT-Q148-004",
+        "PAT-Q148-005",
+        "PAT-Q148-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q149",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA04_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q149-000",
+        "PAT-Q149-001",
+        "PAT-Q149-002",
+        "PAT-Q149-003",
+        "PAT-Q149-004",
+        "PAT-Q149-005",
+        "PAT-Q149-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q150",
+      "policy_area_id": "PA04",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA04_DIM06",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q150-000",
+        "PAT-Q150-001",
+        "PAT-Q150-002",
+        "PAT-Q150-003",
+        "PAT-Q150-004",
+        "PAT-Q150-005",
+        "PAT-Q150-006",
+        "PAT-Q150-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q151",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA05_DIM01",
+      "pattern_count": 12,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q151-000",
+        "PAT-Q151-001",
+        "PAT-Q151-002",
+        "PAT-Q151-003",
+        "PAT-Q151-004",
+        "PAT-Q151-005",
+        "PAT-Q151-006",
+        "PAT-Q151-007",
+        "PAT-Q151-008",
+        "PAT-Q151-009",
+        "PAT-Q151-010",
+        "PAT-Q151-011"
+      ]
+    },
+    {
+      "executor_contract_id": "Q152",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA05_DIM01",
+      "pattern_count": 8,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q152-000",
+        "PAT-Q152-001",
+        "PAT-Q152-002",
+        "PAT-Q152-003",
+        "PAT-Q152-004",
+        "PAT-Q152-005",
+        "PAT-Q152-006",
+        "PAT-Q152-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q153",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA05_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q153-000",
+        "PAT-Q153-001",
+        "PAT-Q153-002",
+        "PAT-Q153-003",
+        "PAT-Q153-004",
+        "PAT-Q153-005",
+        "PAT-Q153-006",
+        "PAT-Q153-007",
+        "PAT-Q153-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q154",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA05_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q154-000",
+        "PAT-Q154-001",
+        "PAT-Q154-002",
+        "PAT-Q154-003",
+        "PAT-Q154-004",
+        "PAT-Q154-005",
+        "PAT-Q154-006",
+        "PAT-Q154-007",
+        "PAT-Q154-008",
+        "PAT-Q154-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q155",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA05_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q155-000",
+        "PAT-Q155-001",
+        "PAT-Q155-002",
+        "PAT-Q155-003",
+        "PAT-Q155-004",
+        "PAT-Q155-005",
+        "PAT-Q155-006",
+        "PAT-Q155-007",
+        "PAT-Q155-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q156",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA05_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q156-000",
+        "PAT-Q156-001",
+        "PAT-Q156-002",
+        "PAT-Q156-003",
+        "PAT-Q156-004",
+        "PAT-Q156-005",
+        "PAT-Q156-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q157",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA05_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q157-000",
+        "PAT-Q157-001",
+        "PAT-Q157-002",
+        "PAT-Q157-003",
+        "PAT-Q157-004",
+        "PAT-Q157-005",
+        "PAT-Q157-006",
+        "PAT-Q157-007",
+        "PAT-Q157-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q158",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA05_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q158-000",
+        "PAT-Q158-001",
+        "PAT-Q158-002",
+        "PAT-Q158-003",
+        "PAT-Q158-004",
+        "PAT-Q158-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q159",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA05_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q159-000",
+        "PAT-Q159-001",
+        "PAT-Q159-002",
+        "PAT-Q159-003",
+        "PAT-Q159-004",
+        "PAT-Q159-005",
+        "PAT-Q159-006",
+        "PAT-Q159-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q160",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA05_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q160-000",
+        "PAT-Q160-001",
+        "PAT-Q160-002",
+        "PAT-Q160-003",
+        "PAT-Q160-004",
+        "PAT-Q160-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q161",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA05_DIM03",
+      "pattern_count": 10,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q161-000",
+        "PAT-Q161-001",
+        "PAT-Q161-002",
+        "PAT-Q161-003",
+        "PAT-Q161-004",
+        "PAT-Q161-005",
+        "PAT-Q161-006",
+        "PAT-Q161-007",
+        "PAT-Q161-008",
+        "PAT-Q161-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q162",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA05_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 1,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q162-000",
+        "PAT-Q162-001",
+        "PAT-Q162-002",
+        "PAT-Q162-003",
+        "PAT-Q162-004",
+        "PAT-Q162-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q163",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA05_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q163-000",
+        "PAT-Q163-001",
+        "PAT-Q163-002",
+        "PAT-Q163-003",
+        "PAT-Q163-004",
+        "PAT-Q163-005",
+        "PAT-Q163-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q164",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA05_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q164-000",
+        "PAT-Q164-001",
+        "PAT-Q164-002",
+        "PAT-Q164-003",
+        "PAT-Q164-004",
+        "PAT-Q164-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q165",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA05_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q165-000",
+        "PAT-Q165-001",
+        "PAT-Q165-002",
+        "PAT-Q165-003",
+        "PAT-Q165-004",
+        "PAT-Q165-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q166",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA05_DIM04",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q166-000",
+        "PAT-Q166-001",
+        "PAT-Q166-002",
+        "PAT-Q166-003",
+        "PAT-Q166-004",
+        "PAT-Q166-005",
+        "PAT-Q166-006",
+        "PAT-Q166-007",
+        "PAT-Q166-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q167",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA05_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q167-000",
+        "PAT-Q167-001",
+        "PAT-Q167-002",
+        "PAT-Q167-003",
+        "PAT-Q167-004",
+        "PAT-Q167-005",
+        "PAT-Q167-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q168",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA05_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q168-000",
+        "PAT-Q168-001",
+        "PAT-Q168-002",
+        "PAT-Q168-003",
+        "PAT-Q168-004",
+        "PAT-Q168-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q169",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA05_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q169-000",
+        "PAT-Q169-001",
+        "PAT-Q169-002",
+        "PAT-Q169-003",
+        "PAT-Q169-004",
+        "PAT-Q169-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q170",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA05_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q170-000",
+        "PAT-Q170-001",
+        "PAT-Q170-002",
+        "PAT-Q170-003",
+        "PAT-Q170-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q171",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA05_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q171-000",
+        "PAT-Q171-001",
+        "PAT-Q171-002",
+        "PAT-Q171-003",
+        "PAT-Q171-004",
+        "PAT-Q171-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q172",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA05_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q172-000",
+        "PAT-Q172-001",
+        "PAT-Q172-002",
+        "PAT-Q172-003",
+        "PAT-Q172-004",
+        "PAT-Q172-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q173",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA05_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q173-000",
+        "PAT-Q173-001",
+        "PAT-Q173-002",
+        "PAT-Q173-003",
+        "PAT-Q173-004",
+        "PAT-Q173-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q174",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA05_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q174-000",
+        "PAT-Q174-001",
+        "PAT-Q174-002",
+        "PAT-Q174-003",
+        "PAT-Q174-004",
+        "PAT-Q174-005",
+        "PAT-Q174-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q175",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA05_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q175-000",
+        "PAT-Q175-001",
+        "PAT-Q175-002",
+        "PAT-Q175-003",
+        "PAT-Q175-004",
+        "PAT-Q175-005",
+        "PAT-Q175-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q176",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA05_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q176-000",
+        "PAT-Q176-001",
+        "PAT-Q176-002",
+        "PAT-Q176-003",
+        "PAT-Q176-004",
+        "PAT-Q176-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q177",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA05_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q177-000",
+        "PAT-Q177-001",
+        "PAT-Q177-002",
+        "PAT-Q177-003",
+        "PAT-Q177-004",
+        "PAT-Q177-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q178",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA05_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q178-000",
+        "PAT-Q178-001",
+        "PAT-Q178-002",
+        "PAT-Q178-003",
+        "PAT-Q178-004",
+        "PAT-Q178-005",
+        "PAT-Q178-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q179",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA05_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q179-000",
+        "PAT-Q179-001",
+        "PAT-Q179-002",
+        "PAT-Q179-003",
+        "PAT-Q179-004",
+        "PAT-Q179-005",
+        "PAT-Q179-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q180",
+      "policy_area_id": "PA05",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA05_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q180-000",
+        "PAT-Q180-001",
+        "PAT-Q180-002",
+        "PAT-Q180-003",
+        "PAT-Q180-004",
+        "PAT-Q180-005",
+        "PAT-Q180-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q181",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA06_DIM01",
+      "pattern_count": 14,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q181-000",
+        "PAT-Q181-001",
+        "PAT-Q181-002",
+        "PAT-Q181-003",
+        "PAT-Q181-004",
+        "PAT-Q181-005",
+        "PAT-Q181-006",
+        "PAT-Q181-007",
+        "PAT-Q181-008",
+        "PAT-Q181-009",
+        "PAT-Q181-010",
+        "PAT-Q181-011",
+        "PAT-Q181-012",
+        "PAT-Q181-013"
+      ]
+    },
+    {
+      "executor_contract_id": "Q182",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA06_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q182-000",
+        "PAT-Q182-001",
+        "PAT-Q182-002",
+        "PAT-Q182-003",
+        "PAT-Q182-004",
+        "PAT-Q182-005",
+        "PAT-Q182-006",
+        "PAT-Q182-007",
+        "PAT-Q182-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q183",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA06_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q183-000",
+        "PAT-Q183-001",
+        "PAT-Q183-002",
+        "PAT-Q183-003",
+        "PAT-Q183-004",
+        "PAT-Q183-005",
+        "PAT-Q183-006",
+        "PAT-Q183-007",
+        "PAT-Q183-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q184",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA06_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q184-000",
+        "PAT-Q184-001",
+        "PAT-Q184-002",
+        "PAT-Q184-003",
+        "PAT-Q184-004",
+        "PAT-Q184-005",
+        "PAT-Q184-006",
+        "PAT-Q184-007",
+        "PAT-Q184-008",
+        "PAT-Q184-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q185",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA06_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q185-000",
+        "PAT-Q185-001",
+        "PAT-Q185-002",
+        "PAT-Q185-003",
+        "PAT-Q185-004",
+        "PAT-Q185-005",
+        "PAT-Q185-006",
+        "PAT-Q185-007",
+        "PAT-Q185-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q186",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA06_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q186-000",
+        "PAT-Q186-001",
+        "PAT-Q186-002",
+        "PAT-Q186-003",
+        "PAT-Q186-004",
+        "PAT-Q186-005",
+        "PAT-Q186-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q187",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA06_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q187-000",
+        "PAT-Q187-001",
+        "PAT-Q187-002",
+        "PAT-Q187-003",
+        "PAT-Q187-004",
+        "PAT-Q187-005",
+        "PAT-Q187-006",
+        "PAT-Q187-007",
+        "PAT-Q187-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q188",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA06_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q188-000",
+        "PAT-Q188-001",
+        "PAT-Q188-002",
+        "PAT-Q188-003",
+        "PAT-Q188-004",
+        "PAT-Q188-005",
+        "PAT-Q188-006",
+        "PAT-Q188-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q189",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA06_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q189-000",
+        "PAT-Q189-001",
+        "PAT-Q189-002",
+        "PAT-Q189-003",
+        "PAT-Q189-004",
+        "PAT-Q189-005",
+        "PAT-Q189-006",
+        "PAT-Q189-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q190",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA06_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q190-000",
+        "PAT-Q190-001",
+        "PAT-Q190-002",
+        "PAT-Q190-003",
+        "PAT-Q190-004",
+        "PAT-Q190-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q191",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA06_DIM03",
+      "pattern_count": 10,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q191-000",
+        "PAT-Q191-001",
+        "PAT-Q191-002",
+        "PAT-Q191-003",
+        "PAT-Q191-004",
+        "PAT-Q191-005",
+        "PAT-Q191-006",
+        "PAT-Q191-007",
+        "PAT-Q191-008",
+        "PAT-Q191-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q192",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA06_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q192-000",
+        "PAT-Q192-001",
+        "PAT-Q192-002",
+        "PAT-Q192-003",
+        "PAT-Q192-004",
+        "PAT-Q192-005",
+        "PAT-Q192-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q193",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA06_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q193-000",
+        "PAT-Q193-001",
+        "PAT-Q193-002",
+        "PAT-Q193-003",
+        "PAT-Q193-004",
+        "PAT-Q193-005",
+        "PAT-Q193-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q194",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA06_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q194-000",
+        "PAT-Q194-001",
+        "PAT-Q194-002",
+        "PAT-Q194-003",
+        "PAT-Q194-004",
+        "PAT-Q194-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q195",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA06_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q195-000",
+        "PAT-Q195-001",
+        "PAT-Q195-002",
+        "PAT-Q195-003",
+        "PAT-Q195-004",
+        "PAT-Q195-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q196",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA06_DIM04",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q196-000",
+        "PAT-Q196-001",
+        "PAT-Q196-002",
+        "PAT-Q196-003",
+        "PAT-Q196-004",
+        "PAT-Q196-005",
+        "PAT-Q196-006",
+        "PAT-Q196-007",
+        "PAT-Q196-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q197",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA06_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q197-000",
+        "PAT-Q197-001",
+        "PAT-Q197-002",
+        "PAT-Q197-003",
+        "PAT-Q197-004",
+        "PAT-Q197-005",
+        "PAT-Q197-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q198",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA06_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q198-000",
+        "PAT-Q198-001",
+        "PAT-Q198-002",
+        "PAT-Q198-003",
+        "PAT-Q198-004",
+        "PAT-Q198-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q199",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA06_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q199-000",
+        "PAT-Q199-001",
+        "PAT-Q199-002",
+        "PAT-Q199-003",
+        "PAT-Q199-004",
+        "PAT-Q199-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q200",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA06_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q200-000",
+        "PAT-Q200-001",
+        "PAT-Q200-002",
+        "PAT-Q200-003",
+        "PAT-Q200-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q201",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA06_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q201-000",
+        "PAT-Q201-001",
+        "PAT-Q201-002",
+        "PAT-Q201-003",
+        "PAT-Q201-004",
+        "PAT-Q201-005",
+        "PAT-Q201-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q202",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA06_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q202-000",
+        "PAT-Q202-001",
+        "PAT-Q202-002",
+        "PAT-Q202-003",
+        "PAT-Q202-004",
+        "PAT-Q202-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q203",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA06_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q203-000",
+        "PAT-Q203-001",
+        "PAT-Q203-002",
+        "PAT-Q203-003",
+        "PAT-Q203-004",
+        "PAT-Q203-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q204",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA06_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q204-000",
+        "PAT-Q204-001",
+        "PAT-Q204-002",
+        "PAT-Q204-003",
+        "PAT-Q204-004",
+        "PAT-Q204-005",
+        "PAT-Q204-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q205",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA06_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q205-000",
+        "PAT-Q205-001",
+        "PAT-Q205-002",
+        "PAT-Q205-003",
+        "PAT-Q205-004",
+        "PAT-Q205-005",
+        "PAT-Q205-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q206",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA06_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q206-000",
+        "PAT-Q206-001",
+        "PAT-Q206-002",
+        "PAT-Q206-003",
+        "PAT-Q206-004",
+        "PAT-Q206-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q207",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA06_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q207-000",
+        "PAT-Q207-001",
+        "PAT-Q207-002",
+        "PAT-Q207-003",
+        "PAT-Q207-004",
+        "PAT-Q207-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q208",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA06_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q208-000",
+        "PAT-Q208-001",
+        "PAT-Q208-002",
+        "PAT-Q208-003",
+        "PAT-Q208-004",
+        "PAT-Q208-005",
+        "PAT-Q208-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q209",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA06_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q209-000",
+        "PAT-Q209-001",
+        "PAT-Q209-002",
+        "PAT-Q209-003",
+        "PAT-Q209-004",
+        "PAT-Q209-005",
+        "PAT-Q209-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q210",
+      "policy_area_id": "PA06",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA06_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q210-000",
+        "PAT-Q210-001",
+        "PAT-Q210-002",
+        "PAT-Q210-003",
+        "PAT-Q210-004",
+        "PAT-Q210-005",
+        "PAT-Q210-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q211",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA07_DIM01",
+      "pattern_count": 14,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q211-000",
+        "PAT-Q211-001",
+        "PAT-Q211-002",
+        "PAT-Q211-003",
+        "PAT-Q211-004",
+        "PAT-Q211-005",
+        "PAT-Q211-006",
+        "PAT-Q211-007",
+        "PAT-Q211-008",
+        "PAT-Q211-009",
+        "PAT-Q211-010",
+        "PAT-Q211-011",
+        "PAT-Q211-012",
+        "PAT-Q211-013"
+      ]
+    },
+    {
+      "executor_contract_id": "Q212",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA07_DIM01",
+      "pattern_count": 8,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q212-000",
+        "PAT-Q212-001",
+        "PAT-Q212-002",
+        "PAT-Q212-003",
+        "PAT-Q212-004",
+        "PAT-Q212-005",
+        "PAT-Q212-006",
+        "PAT-Q212-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q213",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA07_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q213-000",
+        "PAT-Q213-001",
+        "PAT-Q213-002",
+        "PAT-Q213-003",
+        "PAT-Q213-004",
+        "PAT-Q213-005",
+        "PAT-Q213-006",
+        "PAT-Q213-007",
+        "PAT-Q213-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q214",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA07_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q214-000",
+        "PAT-Q214-001",
+        "PAT-Q214-002",
+        "PAT-Q214-003",
+        "PAT-Q214-004",
+        "PAT-Q214-005",
+        "PAT-Q214-006",
+        "PAT-Q214-007",
+        "PAT-Q214-008",
+        "PAT-Q214-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q215",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA07_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q215-000",
+        "PAT-Q215-001",
+        "PAT-Q215-002",
+        "PAT-Q215-003",
+        "PAT-Q215-004",
+        "PAT-Q215-005",
+        "PAT-Q215-006",
+        "PAT-Q215-007",
+        "PAT-Q215-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q216",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA07_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q216-000",
+        "PAT-Q216-001",
+        "PAT-Q216-002",
+        "PAT-Q216-003",
+        "PAT-Q216-004",
+        "PAT-Q216-005",
+        "PAT-Q216-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q217",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA07_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q217-000",
+        "PAT-Q217-001",
+        "PAT-Q217-002",
+        "PAT-Q217-003",
+        "PAT-Q217-004",
+        "PAT-Q217-005",
+        "PAT-Q217-006",
+        "PAT-Q217-007",
+        "PAT-Q217-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q218",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA07_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q218-000",
+        "PAT-Q218-001",
+        "PAT-Q218-002",
+        "PAT-Q218-003",
+        "PAT-Q218-004",
+        "PAT-Q218-005",
+        "PAT-Q218-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q219",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA07_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q219-000",
+        "PAT-Q219-001",
+        "PAT-Q219-002",
+        "PAT-Q219-003",
+        "PAT-Q219-004",
+        "PAT-Q219-005",
+        "PAT-Q219-006",
+        "PAT-Q219-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q220",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA07_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q220-000",
+        "PAT-Q220-001",
+        "PAT-Q220-002",
+        "PAT-Q220-003",
+        "PAT-Q220-004",
+        "PAT-Q220-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q221",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA07_DIM03",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q221-000",
+        "PAT-Q221-001",
+        "PAT-Q221-002",
+        "PAT-Q221-003",
+        "PAT-Q221-004",
+        "PAT-Q221-005",
+        "PAT-Q221-006",
+        "PAT-Q221-007",
+        "PAT-Q221-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q222",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA07_DIM03",
+      "pattern_count": 5,
+      "expected_elements_count": 1,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q222-000",
+        "PAT-Q222-001",
+        "PAT-Q222-002",
+        "PAT-Q222-003",
+        "PAT-Q222-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q223",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA07_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q223-000",
+        "PAT-Q223-001",
+        "PAT-Q223-002",
+        "PAT-Q223-003",
+        "PAT-Q223-004",
+        "PAT-Q223-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q224",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA07_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q224-000",
+        "PAT-Q224-001",
+        "PAT-Q224-002",
+        "PAT-Q224-003",
+        "PAT-Q224-004",
+        "PAT-Q224-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q225",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA07_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q225-000",
+        "PAT-Q225-001",
+        "PAT-Q225-002",
+        "PAT-Q225-003",
+        "PAT-Q225-004",
+        "PAT-Q225-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q226",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA07_DIM04",
+      "pattern_count": 10,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q226-000",
+        "PAT-Q226-001",
+        "PAT-Q226-002",
+        "PAT-Q226-003",
+        "PAT-Q226-004",
+        "PAT-Q226-005",
+        "PAT-Q226-006",
+        "PAT-Q226-007",
+        "PAT-Q226-008",
+        "PAT-Q226-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q227",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA07_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q227-000",
+        "PAT-Q227-001",
+        "PAT-Q227-002",
+        "PAT-Q227-003",
+        "PAT-Q227-004",
+        "PAT-Q227-005",
+        "PAT-Q227-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q228",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA07_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q228-000",
+        "PAT-Q228-001",
+        "PAT-Q228-002",
+        "PAT-Q228-003",
+        "PAT-Q228-004",
+        "PAT-Q228-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q229",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA07_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q229-000",
+        "PAT-Q229-001",
+        "PAT-Q229-002",
+        "PAT-Q229-003",
+        "PAT-Q229-004",
+        "PAT-Q229-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q230",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA07_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q230-000",
+        "PAT-Q230-001",
+        "PAT-Q230-002",
+        "PAT-Q230-003",
+        "PAT-Q230-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q231",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA07_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q231-000",
+        "PAT-Q231-001",
+        "PAT-Q231-002",
+        "PAT-Q231-003",
+        "PAT-Q231-004",
+        "PAT-Q231-005",
+        "PAT-Q231-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q232",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA07_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q232-000",
+        "PAT-Q232-001",
+        "PAT-Q232-002",
+        "PAT-Q232-003",
+        "PAT-Q232-004",
+        "PAT-Q232-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q233",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA07_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q233-000",
+        "PAT-Q233-001",
+        "PAT-Q233-002",
+        "PAT-Q233-003",
+        "PAT-Q233-004",
+        "PAT-Q233-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q234",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA07_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q234-000",
+        "PAT-Q234-001",
+        "PAT-Q234-002",
+        "PAT-Q234-003",
+        "PAT-Q234-004",
+        "PAT-Q234-005",
+        "PAT-Q234-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q235",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA07_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q235-000",
+        "PAT-Q235-001",
+        "PAT-Q235-002",
+        "PAT-Q235-003",
+        "PAT-Q235-004",
+        "PAT-Q235-005",
+        "PAT-Q235-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q236",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA07_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q236-000",
+        "PAT-Q236-001",
+        "PAT-Q236-002",
+        "PAT-Q236-003",
+        "PAT-Q236-004",
+        "PAT-Q236-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q237",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA07_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q237-000",
+        "PAT-Q237-001",
+        "PAT-Q237-002",
+        "PAT-Q237-003",
+        "PAT-Q237-004",
+        "PAT-Q237-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q238",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA07_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q238-000",
+        "PAT-Q238-001",
+        "PAT-Q238-002",
+        "PAT-Q238-003",
+        "PAT-Q238-004",
+        "PAT-Q238-005",
+        "PAT-Q238-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q239",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA07_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q239-000",
+        "PAT-Q239-001",
+        "PAT-Q239-002",
+        "PAT-Q239-003",
+        "PAT-Q239-004",
+        "PAT-Q239-005",
+        "PAT-Q239-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q240",
+      "policy_area_id": "PA07",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA07_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q240-000",
+        "PAT-Q240-001",
+        "PAT-Q240-002",
+        "PAT-Q240-003",
+        "PAT-Q240-004",
+        "PAT-Q240-005",
+        "PAT-Q240-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q241",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA08_DIM01",
+      "pattern_count": 13,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q241-000",
+        "PAT-Q241-001",
+        "PAT-Q241-002",
+        "PAT-Q241-003",
+        "PAT-Q241-004",
+        "PAT-Q241-005",
+        "PAT-Q241-006",
+        "PAT-Q241-007",
+        "PAT-Q241-008",
+        "PAT-Q241-009",
+        "PAT-Q241-010",
+        "PAT-Q241-011",
+        "PAT-Q241-012"
+      ]
+    },
+    {
+      "executor_contract_id": "Q242",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA08_DIM01",
+      "pattern_count": 8,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q242-000",
+        "PAT-Q242-001",
+        "PAT-Q242-002",
+        "PAT-Q242-003",
+        "PAT-Q242-004",
+        "PAT-Q242-005",
+        "PAT-Q242-006",
+        "PAT-Q242-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q243",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA08_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q243-000",
+        "PAT-Q243-001",
+        "PAT-Q243-002",
+        "PAT-Q243-003",
+        "PAT-Q243-004",
+        "PAT-Q243-005",
+        "PAT-Q243-006",
+        "PAT-Q243-007",
+        "PAT-Q243-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q244",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA08_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q244-000",
+        "PAT-Q244-001",
+        "PAT-Q244-002",
+        "PAT-Q244-003",
+        "PAT-Q244-004",
+        "PAT-Q244-005",
+        "PAT-Q244-006",
+        "PAT-Q244-007",
+        "PAT-Q244-008",
+        "PAT-Q244-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q245",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA08_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q245-000",
+        "PAT-Q245-001",
+        "PAT-Q245-002",
+        "PAT-Q245-003",
+        "PAT-Q245-004",
+        "PAT-Q245-005",
+        "PAT-Q245-006",
+        "PAT-Q245-007",
+        "PAT-Q245-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q246",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA08_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q246-000",
+        "PAT-Q246-001",
+        "PAT-Q246-002",
+        "PAT-Q246-003",
+        "PAT-Q246-004",
+        "PAT-Q246-005",
+        "PAT-Q246-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q247",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA08_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q247-000",
+        "PAT-Q247-001",
+        "PAT-Q247-002",
+        "PAT-Q247-003",
+        "PAT-Q247-004",
+        "PAT-Q247-005",
+        "PAT-Q247-006",
+        "PAT-Q247-007",
+        "PAT-Q247-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q248",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA08_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q248-000",
+        "PAT-Q248-001",
+        "PAT-Q248-002",
+        "PAT-Q248-003",
+        "PAT-Q248-004",
+        "PAT-Q248-005",
+        "PAT-Q248-006",
+        "PAT-Q248-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q249",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA08_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q249-000",
+        "PAT-Q249-001",
+        "PAT-Q249-002",
+        "PAT-Q249-003",
+        "PAT-Q249-004",
+        "PAT-Q249-005",
+        "PAT-Q249-006",
+        "PAT-Q249-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q250",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA08_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q250-000",
+        "PAT-Q250-001",
+        "PAT-Q250-002",
+        "PAT-Q250-003",
+        "PAT-Q250-004",
+        "PAT-Q250-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q251",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA08_DIM03",
+      "pattern_count": 10,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q251-000",
+        "PAT-Q251-001",
+        "PAT-Q251-002",
+        "PAT-Q251-003",
+        "PAT-Q251-004",
+        "PAT-Q251-005",
+        "PAT-Q251-006",
+        "PAT-Q251-007",
+        "PAT-Q251-008",
+        "PAT-Q251-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q252",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA08_DIM03",
+      "pattern_count": 5,
+      "expected_elements_count": 1,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q252-000",
+        "PAT-Q252-001",
+        "PAT-Q252-002",
+        "PAT-Q252-003",
+        "PAT-Q252-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q253",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA08_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q253-000",
+        "PAT-Q253-001",
+        "PAT-Q253-002",
+        "PAT-Q253-003",
+        "PAT-Q253-004",
+        "PAT-Q253-005",
+        "PAT-Q253-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q254",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA08_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q254-000",
+        "PAT-Q254-001",
+        "PAT-Q254-002",
+        "PAT-Q254-003",
+        "PAT-Q254-004",
+        "PAT-Q254-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q255",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA08_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q255-000",
+        "PAT-Q255-001",
+        "PAT-Q255-002",
+        "PAT-Q255-003",
+        "PAT-Q255-004",
+        "PAT-Q255-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q256",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA08_DIM04",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q256-000",
+        "PAT-Q256-001",
+        "PAT-Q256-002",
+        "PAT-Q256-003",
+        "PAT-Q256-004",
+        "PAT-Q256-005",
+        "PAT-Q256-006",
+        "PAT-Q256-007",
+        "PAT-Q256-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q257",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA08_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q257-000",
+        "PAT-Q257-001",
+        "PAT-Q257-002",
+        "PAT-Q257-003",
+        "PAT-Q257-004",
+        "PAT-Q257-005",
+        "PAT-Q257-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q258",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA08_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q258-000",
+        "PAT-Q258-001",
+        "PAT-Q258-002",
+        "PAT-Q258-003",
+        "PAT-Q258-004",
+        "PAT-Q258-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q259",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA08_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q259-000",
+        "PAT-Q259-001",
+        "PAT-Q259-002",
+        "PAT-Q259-003",
+        "PAT-Q259-004",
+        "PAT-Q259-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q260",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA08_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q260-000",
+        "PAT-Q260-001",
+        "PAT-Q260-002",
+        "PAT-Q260-003",
+        "PAT-Q260-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q261",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA08_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q261-000",
+        "PAT-Q261-001",
+        "PAT-Q261-002",
+        "PAT-Q261-003",
+        "PAT-Q261-004",
+        "PAT-Q261-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q262",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA08_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q262-000",
+        "PAT-Q262-001",
+        "PAT-Q262-002",
+        "PAT-Q262-003",
+        "PAT-Q262-004",
+        "PAT-Q262-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q263",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA08_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q263-000",
+        "PAT-Q263-001",
+        "PAT-Q263-002",
+        "PAT-Q263-003",
+        "PAT-Q263-004",
+        "PAT-Q263-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q264",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA08_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q264-000",
+        "PAT-Q264-001",
+        "PAT-Q264-002",
+        "PAT-Q264-003",
+        "PAT-Q264-004",
+        "PAT-Q264-005",
+        "PAT-Q264-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q265",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA08_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q265-000",
+        "PAT-Q265-001",
+        "PAT-Q265-002",
+        "PAT-Q265-003",
+        "PAT-Q265-004",
+        "PAT-Q265-005",
+        "PAT-Q265-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q266",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA08_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q266-000",
+        "PAT-Q266-001",
+        "PAT-Q266-002",
+        "PAT-Q266-003",
+        "PAT-Q266-004",
+        "PAT-Q266-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q267",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA08_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q267-000",
+        "PAT-Q267-001",
+        "PAT-Q267-002",
+        "PAT-Q267-003",
+        "PAT-Q267-004",
+        "PAT-Q267-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q268",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA08_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q268-000",
+        "PAT-Q268-001",
+        "PAT-Q268-002",
+        "PAT-Q268-003",
+        "PAT-Q268-004",
+        "PAT-Q268-005",
+        "PAT-Q268-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q269",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA08_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q269-000",
+        "PAT-Q269-001",
+        "PAT-Q269-002",
+        "PAT-Q269-003",
+        "PAT-Q269-004",
+        "PAT-Q269-005",
+        "PAT-Q269-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q270",
+      "policy_area_id": "PA08",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA08_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q270-000",
+        "PAT-Q270-001",
+        "PAT-Q270-002",
+        "PAT-Q270-003",
+        "PAT-Q270-004",
+        "PAT-Q270-005",
+        "PAT-Q270-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q271",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA09_DIM01",
+      "pattern_count": 13,
+      "expected_elements_count": 3,
+      "validation_rules_count": 5,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q271-000",
+        "PAT-Q271-001",
+        "PAT-Q271-002",
+        "PAT-Q271-003",
+        "PAT-Q271-004",
+        "PAT-Q271-005",
+        "PAT-Q271-006",
+        "PAT-Q271-007",
+        "PAT-Q271-008",
+        "PAT-Q271-009",
+        "PAT-Q271-010",
+        "PAT-Q271-011",
+        "PAT-Q271-012"
+      ]
+    },
+    {
+      "executor_contract_id": "Q272",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA09_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q272-000",
+        "PAT-Q272-001",
+        "PAT-Q272-002",
+        "PAT-Q272-003",
+        "PAT-Q272-004",
+        "PAT-Q272-005",
+        "PAT-Q272-006",
+        "PAT-Q272-007",
+        "PAT-Q272-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q273",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA09_DIM01",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q273-000",
+        "PAT-Q273-001",
+        "PAT-Q273-002",
+        "PAT-Q273-003",
+        "PAT-Q273-004",
+        "PAT-Q273-005",
+        "PAT-Q273-006",
+        "PAT-Q273-007",
+        "PAT-Q273-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q274",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA09_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_B",
+      "pattern_ids": [
+        "PAT-Q274-000",
+        "PAT-Q274-001",
+        "PAT-Q274-002",
+        "PAT-Q274-003",
+        "PAT-Q274-004",
+        "PAT-Q274-005",
+        "PAT-Q274-006",
+        "PAT-Q274-007",
+        "PAT-Q274-008",
+        "PAT-Q274-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q275",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM01",
+      "chunk_id": "chunk_PA09_DIM01",
+      "pattern_count": 10,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_E",
+      "pattern_ids": [
+        "PAT-Q275-000",
+        "PAT-Q275-001",
+        "PAT-Q275-002",
+        "PAT-Q275-003",
+        "PAT-Q275-004",
+        "PAT-Q275-005",
+        "PAT-Q275-006",
+        "PAT-Q275-007",
+        "PAT-Q275-008",
+        "PAT-Q275-009"
+      ]
+    },
+    {
+      "executor_contract_id": "Q276",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA09_DIM02",
+      "pattern_count": 7,
+      "expected_elements_count": 5,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q276-000",
+        "PAT-Q276-001",
+        "PAT-Q276-002",
+        "PAT-Q276-003",
+        "PAT-Q276-004",
+        "PAT-Q276-005",
+        "PAT-Q276-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q277",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA09_DIM02",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q277-000",
+        "PAT-Q277-001",
+        "PAT-Q277-002",
+        "PAT-Q277-003",
+        "PAT-Q277-004",
+        "PAT-Q277-005",
+        "PAT-Q277-006",
+        "PAT-Q277-007",
+        "PAT-Q277-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q278",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA09_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q278-000",
+        "PAT-Q278-001",
+        "PAT-Q278-002",
+        "PAT-Q278-003",
+        "PAT-Q278-004",
+        "PAT-Q278-005",
+        "PAT-Q278-006",
+        "PAT-Q278-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q279",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA09_DIM02",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q279-000",
+        "PAT-Q279-001",
+        "PAT-Q279-002",
+        "PAT-Q279-003",
+        "PAT-Q279-004",
+        "PAT-Q279-005",
+        "PAT-Q279-006",
+        "PAT-Q279-007"
+      ]
+    },
+    {
+      "executor_contract_id": "Q280",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM02",
+      "chunk_id": "chunk_PA09_DIM02",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q280-000",
+        "PAT-Q280-001",
+        "PAT-Q280-002",
+        "PAT-Q280-003",
+        "PAT-Q280-004",
+        "PAT-Q280-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q281",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA09_DIM03",
+      "pattern_count": 9,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q281-000",
+        "PAT-Q281-001",
+        "PAT-Q281-002",
+        "PAT-Q281-003",
+        "PAT-Q281-004",
+        "PAT-Q281-005",
+        "PAT-Q281-006",
+        "PAT-Q281-007",
+        "PAT-Q281-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q282",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA09_DIM03",
+      "pattern_count": 5,
+      "expected_elements_count": 1,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q282-000",
+        "PAT-Q282-001",
+        "PAT-Q282-002",
+        "PAT-Q282-003",
+        "PAT-Q282-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q283",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA09_DIM03",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q283-000",
+        "PAT-Q283-001",
+        "PAT-Q283-002",
+        "PAT-Q283-003",
+        "PAT-Q283-004",
+        "PAT-Q283-005",
+        "PAT-Q283-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q284",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA09_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q284-000",
+        "PAT-Q284-001",
+        "PAT-Q284-002",
+        "PAT-Q284-003",
+        "PAT-Q284-004",
+        "PAT-Q284-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q285",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM03",
+      "chunk_id": "chunk_PA09_DIM03",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q285-000",
+        "PAT-Q285-001",
+        "PAT-Q285-002",
+        "PAT-Q285-003",
+        "PAT-Q285-004",
+        "PAT-Q285-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q286",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA09_DIM04",
+      "pattern_count": 9,
+      "expected_elements_count": 4,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q286-000",
+        "PAT-Q286-001",
+        "PAT-Q286-002",
+        "PAT-Q286-003",
+        "PAT-Q286-004",
+        "PAT-Q286-005",
+        "PAT-Q286-006",
+        "PAT-Q286-007",
+        "PAT-Q286-008"
+      ]
+    },
+    {
+      "executor_contract_id": "Q287",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA09_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q287-000",
+        "PAT-Q287-001",
+        "PAT-Q287-002",
+        "PAT-Q287-003",
+        "PAT-Q287-004",
+        "PAT-Q287-005",
+        "PAT-Q287-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q288",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA09_DIM04",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q288-000",
+        "PAT-Q288-001",
+        "PAT-Q288-002",
+        "PAT-Q288-003",
+        "PAT-Q288-004",
+        "PAT-Q288-005",
+        "PAT-Q288-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q289",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA09_DIM04",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q289-000",
+        "PAT-Q289-001",
+        "PAT-Q289-002",
+        "PAT-Q289-003",
+        "PAT-Q289-004",
+        "PAT-Q289-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q290",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM04",
+      "chunk_id": "chunk_PA09_DIM04",
+      "pattern_count": 5,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q290-000",
+        "PAT-Q290-001",
+        "PAT-Q290-002",
+        "PAT-Q290-003",
+        "PAT-Q290-004"
+      ]
+    },
+    {
+      "executor_contract_id": "Q291",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA09_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q291-000",
+        "PAT-Q291-001",
+        "PAT-Q291-002",
+        "PAT-Q291-003",
+        "PAT-Q291-004",
+        "PAT-Q291-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q292",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA09_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q292-000",
+        "PAT-Q292-001",
+        "PAT-Q292-002",
+        "PAT-Q292-003",
+        "PAT-Q292-004",
+        "PAT-Q292-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q293",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA09_DIM05",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q293-000",
+        "PAT-Q293-001",
+        "PAT-Q293-002",
+        "PAT-Q293-003",
+        "PAT-Q293-004",
+        "PAT-Q293-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q294",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA09_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q294-000",
+        "PAT-Q294-001",
+        "PAT-Q294-002",
+        "PAT-Q294-003",
+        "PAT-Q294-004",
+        "PAT-Q294-005",
+        "PAT-Q294-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q295",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM05",
+      "chunk_id": "chunk_PA09_DIM05",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q295-000",
+        "PAT-Q295-001",
+        "PAT-Q295-002",
+        "PAT-Q295-003",
+        "PAT-Q295-004",
+        "PAT-Q295-005",
+        "PAT-Q295-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q296",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA09_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q296-000",
+        "PAT-Q296-001",
+        "PAT-Q296-002",
+        "PAT-Q296-003",
+        "PAT-Q296-004",
+        "PAT-Q296-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q297",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA09_DIM06",
+      "pattern_count": 6,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q297-000",
+        "PAT-Q297-001",
+        "PAT-Q297-002",
+        "PAT-Q297-003",
+        "PAT-Q297-004",
+        "PAT-Q297-005"
+      ]
+    },
+    {
+      "executor_contract_id": "Q298",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA09_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q298-000",
+        "PAT-Q298-001",
+        "PAT-Q298-002",
+        "PAT-Q298-003",
+        "PAT-Q298-004",
+        "PAT-Q298-005",
+        "PAT-Q298-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q299",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA09_DIM06",
+      "pattern_count": 7,
+      "expected_elements_count": 3,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q299-000",
+        "PAT-Q299-001",
+        "PAT-Q299-002",
+        "PAT-Q299-003",
+        "PAT-Q299-004",
+        "PAT-Q299-005",
+        "PAT-Q299-006"
+      ]
+    },
+    {
+      "executor_contract_id": "Q300",
+      "policy_area_id": "PA09",
+      "dimension_id": "DIM06",
+      "chunk_id": "chunk_PA09_DIM06",
+      "pattern_count": 8,
+      "expected_elements_count": 2,
+      "validation_rules_count": 1,
+      "scoring_modality": "TYPE_A",
+      "pattern_ids": [
+        "PAT-Q300-000",
+        "PAT-Q300-001",
+        "PAT-Q300-002",
+        "PAT-Q300-003",
+        "PAT-Q300-004",
+        "PAT-Q300-005",
+        "PAT-Q300-006",
+        "PAT-Q300-007"
+      ]
+    }
+  ],
+  "chunk_aggregations": {
+    "chunk_PA01_DIM01": {
+      "question_ids": [
+        "Q001",
+        "Q002",
+        "Q003",
+        "Q004",
+        "Q005"
+      ],
+      "total_patterns": 51,
+      "unique_patterns": 51,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA01_DIM02": {
+      "question_ids": [
+        "Q006",
+        "Q007",
+        "Q008",
+        "Q009",
+        "Q010"
+      ],
+      "total_patterns": 39,
+      "unique_patterns": 39,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA01_DIM03": {
+      "question_ids": [
+        "Q011",
+        "Q012",
+        "Q013",
+        "Q014",
+        "Q015"
+      ],
+      "total_patterns": 38,
+      "unique_patterns": 38,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA01_DIM04": {
+      "question_ids": [
+        "Q016",
+        "Q017",
+        "Q018",
+        "Q019",
+        "Q020"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA01_DIM05": {
+      "question_ids": [
+        "Q021",
+        "Q022",
+        "Q023",
+        "Q024",
+        "Q025"
+      ],
+      "total_patterns": 31,
+      "unique_patterns": 31,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA01_DIM06": {
+      "question_ids": [
+        "Q026",
+        "Q027",
+        "Q028",
+        "Q029",
+        "Q030"
+      ],
+      "total_patterns": 31,
+      "unique_patterns": 31,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA10_DIM01": {
+      "question_ids": [
+        "Q031",
+        "Q032",
+        "Q033",
+        "Q034",
+        "Q035"
+      ],
+      "total_patterns": 49,
+      "unique_patterns": 49,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA10_DIM02": {
+      "question_ids": [
+        "Q036",
+        "Q037",
+        "Q038",
+        "Q039",
+        "Q040"
+      ],
+      "total_patterns": 39,
+      "unique_patterns": 39,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA10_DIM03": {
+      "question_ids": [
+        "Q041",
+        "Q042",
+        "Q043",
+        "Q044",
+        "Q045"
+      ],
+      "total_patterns": 35,
+      "unique_patterns": 35,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA10_DIM04": {
+      "question_ids": [
+        "Q046",
+        "Q047",
+        "Q048",
+        "Q049",
+        "Q050"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA10_DIM05": {
+      "question_ids": [
+        "Q051",
+        "Q052",
+        "Q053",
+        "Q054",
+        "Q055"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA10_DIM06": {
+      "question_ids": [
+        "Q056",
+        "Q057",
+        "Q058",
+        "Q059",
+        "Q060"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA02_DIM01": {
+      "question_ids": [
+        "Q061",
+        "Q062",
+        "Q063",
+        "Q064",
+        "Q065"
+      ],
+      "total_patterns": 50,
+      "unique_patterns": 50,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA02_DIM02": {
+      "question_ids": [
+        "Q066",
+        "Q067",
+        "Q068",
+        "Q069",
+        "Q070"
+      ],
+      "total_patterns": 36,
+      "unique_patterns": 36,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA02_DIM03": {
+      "question_ids": [
+        "Q071",
+        "Q072",
+        "Q073",
+        "Q074",
+        "Q075"
+      ],
+      "total_patterns": 35,
+      "unique_patterns": 35,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA02_DIM04": {
+      "question_ids": [
+        "Q076",
+        "Q077",
+        "Q078",
+        "Q079",
+        "Q080"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA02_DIM05": {
+      "question_ids": [
+        "Q081",
+        "Q082",
+        "Q083",
+        "Q084",
+        "Q085"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA02_DIM06": {
+      "question_ids": [
+        "Q086",
+        "Q087",
+        "Q088",
+        "Q089",
+        "Q090"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA03_DIM01": {
+      "question_ids": [
+        "Q091",
+        "Q092",
+        "Q093",
+        "Q094",
+        "Q095"
+      ],
+      "total_patterns": 50,
+      "unique_patterns": 50,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA03_DIM02": {
+      "question_ids": [
+        "Q096",
+        "Q097",
+        "Q098",
+        "Q099",
+        "Q100"
+      ],
+      "total_patterns": 38,
+      "unique_patterns": 38,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA03_DIM03": {
+      "question_ids": [
+        "Q101",
+        "Q102",
+        "Q103",
+        "Q104",
+        "Q105"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA03_DIM04": {
+      "question_ids": [
+        "Q106",
+        "Q107",
+        "Q108",
+        "Q109",
+        "Q110"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA03_DIM05": {
+      "question_ids": [
+        "Q111",
+        "Q112",
+        "Q113",
+        "Q114",
+        "Q115"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA03_DIM06": {
+      "question_ids": [
+        "Q116",
+        "Q117",
+        "Q118",
+        "Q119",
+        "Q120"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA04_DIM01": {
+      "question_ids": [
+        "Q121",
+        "Q122",
+        "Q123",
+        "Q124",
+        "Q125"
+      ],
+      "total_patterns": 51,
+      "unique_patterns": 51,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA04_DIM02": {
+      "question_ids": [
+        "Q126",
+        "Q127",
+        "Q128",
+        "Q129",
+        "Q130"
+      ],
+      "total_patterns": 38,
+      "unique_patterns": 38,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA04_DIM03": {
+      "question_ids": [
+        "Q131",
+        "Q132",
+        "Q133",
+        "Q134",
+        "Q135"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA04_DIM04": {
+      "question_ids": [
+        "Q136",
+        "Q137",
+        "Q138",
+        "Q139",
+        "Q140"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA04_DIM05": {
+      "question_ids": [
+        "Q141",
+        "Q142",
+        "Q143",
+        "Q144",
+        "Q145"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA04_DIM06": {
+      "question_ids": [
+        "Q146",
+        "Q147",
+        "Q148",
+        "Q149",
+        "Q150"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA05_DIM01": {
+      "question_ids": [
+        "Q151",
+        "Q152",
+        "Q153",
+        "Q154",
+        "Q155"
+      ],
+      "total_patterns": 48,
+      "unique_patterns": 48,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA05_DIM02": {
+      "question_ids": [
+        "Q156",
+        "Q157",
+        "Q158",
+        "Q159",
+        "Q160"
+      ],
+      "total_patterns": 36,
+      "unique_patterns": 36,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA05_DIM03": {
+      "question_ids": [
+        "Q161",
+        "Q162",
+        "Q163",
+        "Q164",
+        "Q165"
+      ],
+      "total_patterns": 35,
+      "unique_patterns": 35,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA05_DIM04": {
+      "question_ids": [
+        "Q166",
+        "Q167",
+        "Q168",
+        "Q169",
+        "Q170"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA05_DIM05": {
+      "question_ids": [
+        "Q171",
+        "Q172",
+        "Q173",
+        "Q174",
+        "Q175"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA05_DIM06": {
+      "question_ids": [
+        "Q176",
+        "Q177",
+        "Q178",
+        "Q179",
+        "Q180"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA06_DIM01": {
+      "question_ids": [
+        "Q181",
+        "Q182",
+        "Q183",
+        "Q184",
+        "Q185"
+      ],
+      "total_patterns": 51,
+      "unique_patterns": 51,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA06_DIM02": {
+      "question_ids": [
+        "Q186",
+        "Q187",
+        "Q188",
+        "Q189",
+        "Q190"
+      ],
+      "total_patterns": 38,
+      "unique_patterns": 38,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA06_DIM03": {
+      "question_ids": [
+        "Q191",
+        "Q192",
+        "Q193",
+        "Q194",
+        "Q195"
+      ],
+      "total_patterns": 36,
+      "unique_patterns": 36,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA06_DIM04": {
+      "question_ids": [
+        "Q196",
+        "Q197",
+        "Q198",
+        "Q199",
+        "Q200"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA06_DIM05": {
+      "question_ids": [
+        "Q201",
+        "Q202",
+        "Q203",
+        "Q204",
+        "Q205"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA06_DIM06": {
+      "question_ids": [
+        "Q206",
+        "Q207",
+        "Q208",
+        "Q209",
+        "Q210"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA07_DIM01": {
+      "question_ids": [
+        "Q211",
+        "Q212",
+        "Q213",
+        "Q214",
+        "Q215"
+      ],
+      "total_patterns": 50,
+      "unique_patterns": 50,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA07_DIM02": {
+      "question_ids": [
+        "Q216",
+        "Q217",
+        "Q218",
+        "Q219",
+        "Q220"
+      ],
+      "total_patterns": 37,
+      "unique_patterns": 37,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA07_DIM03": {
+      "question_ids": [
+        "Q221",
+        "Q222",
+        "Q223",
+        "Q224",
+        "Q225"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA07_DIM04": {
+      "question_ids": [
+        "Q226",
+        "Q227",
+        "Q228",
+        "Q229",
+        "Q230"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA07_DIM05": {
+      "question_ids": [
+        "Q231",
+        "Q232",
+        "Q233",
+        "Q234",
+        "Q235"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA07_DIM06": {
+      "question_ids": [
+        "Q236",
+        "Q237",
+        "Q238",
+        "Q239",
+        "Q240"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA08_DIM01": {
+      "question_ids": [
+        "Q241",
+        "Q242",
+        "Q243",
+        "Q244",
+        "Q245"
+      ],
+      "total_patterns": 49,
+      "unique_patterns": 49,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA08_DIM02": {
+      "question_ids": [
+        "Q246",
+        "Q247",
+        "Q248",
+        "Q249",
+        "Q250"
+      ],
+      "total_patterns": 38,
+      "unique_patterns": 38,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA08_DIM03": {
+      "question_ids": [
+        "Q251",
+        "Q252",
+        "Q253",
+        "Q254",
+        "Q255"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA08_DIM04": {
+      "question_ids": [
+        "Q256",
+        "Q257",
+        "Q258",
+        "Q259",
+        "Q260"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA08_DIM05": {
+      "question_ids": [
+        "Q261",
+        "Q262",
+        "Q263",
+        "Q264",
+        "Q265"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA08_DIM06": {
+      "question_ids": [
+        "Q266",
+        "Q267",
+        "Q268",
+        "Q269",
+        "Q270"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA09_DIM01": {
+      "question_ids": [
+        "Q271",
+        "Q272",
+        "Q273",
+        "Q274",
+        "Q275"
+      ],
+      "total_patterns": 51,
+      "unique_patterns": 51,
+      "scoring_modalities": [
+        "TYPE_A",
+        "TYPE_B",
+        "TYPE_E"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "buscar_indicadores_cuantitativos",
+        "cobertura",
+        "series_temporales",
+        "verificar_fuentes",
+        "unidades_medicion"
+      ]
+    },
+    "chunk_PA09_DIM02": {
+      "question_ids": [
+        "Q276",
+        "Q277",
+        "Q278",
+        "Q279",
+        "Q280"
+      ],
+      "total_patterns": 38,
+      "unique_patterns": 38,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA09_DIM03": {
+      "question_ids": [
+        "Q281",
+        "Q282",
+        "Q283",
+        "Q284",
+        "Q285"
+      ],
+      "total_patterns": 33,
+      "unique_patterns": 33,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA09_DIM04": {
+      "question_ids": [
+        "Q286",
+        "Q287",
+        "Q288",
+        "Q289",
+        "Q290"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA09_DIM05": {
+      "question_ids": [
+        "Q291",
+        "Q292",
+        "Q293",
+        "Q294",
+        "Q295"
+      ],
+      "total_patterns": 32,
+      "unique_patterns": 32,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check"
+      ]
+    },
+    "chunk_PA09_DIM06": {
+      "question_ids": [
+        "Q296",
+        "Q297",
+        "Q298",
+        "Q299",
+        "Q300"
+      ],
+      "total_patterns": 34,
+      "unique_patterns": 34,
+      "scoring_modalities": [
+        "TYPE_A"
+      ],
+      "validation_rules": [
+        "completeness_check",
+        "monitoring_keywords"
+      ]
+    }
+  },
+  "statistics": {
+    "total_questions": 300,
+    "total_chunks": 60,
+    "avg_questions_per_chunk": 5.0,
+    "unique_pa_dim_combinations": 60
+  }
+}

@@ -231,7 +231,16 @@ def extract_evidence_for_element_type(
                         'confidence': confidence_weight,
                         'pattern_id': pattern_id,
                         'category': category,
-                        'span': match.span()
+                        'span': match.span(),
+                        # Signal lineage tracking
+                        'lineage': {
+                            'pattern_id': pattern_id,
+                            'pattern_text': pattern_str[:50] + '...' if len(pattern_str) > 50 else pattern_str,
+                            'match_type': match_type,
+                            'confidence_weight': confidence_weight,
+                            'element_type': element_type,
+                            'extraction_phase': 'microanswering',
+                        }
                     })
             except re.error as e:
                 logger.warning(

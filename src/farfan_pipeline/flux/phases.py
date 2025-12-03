@@ -743,22 +743,116 @@ def run_signals(
         if correlation_id:
             span.set_attribute("correlation_id", correlation_id)
 
-        # TODO: Implement actual signal enrichment
-        pack = registry_get("default")
+        # Import context filtering utilities
+        try:
+            from farfan_pipeline.core.orchestrator.signal_context_scoper import (
+                filter_patterns_by_context,
+                create_document_context,
+            )
+            context_filtering_available = True
+        except ImportError:
+            context_filtering_available = False
+            logger.warning("signal_context_scoper not available, using basic enrichment")
 
-        if pack is None:
-            enriched = ch.chunks
-            used_signals: dict[str, Any] = {"present": False}
-        else:
-            enriched = [
-                {**c, "patterns_used": len(pack.get("patterns", []))}
-                for c in ch.chunks
-            ]
-            used_signals = {
-                "present": True,
-                "version": pack.get("version", "unknown"),
-                "policy_area": "default",
-            }
+        enriched = []
+        total_patterns_applicable = 0
+        chunks_with_signals = 0
+        
+        for chunk in ch.chunks:
+            # Extract policy area hint from chunk (if available)
+            policy_area_hint = chunk.get("policy_area_hint", "default")
+            
+            # Get signal pack for this chunk's policy area
+            pack = registry_get(policy_area_hint)
+            
+            if pack is None:
+                # No signals available for this chunk
+                enriched.append({
+                    **chunk,
+                    "signal_enriched": False,
+                    "applicable_patterns": [],
+                    "pattern_count": 0,
+                })
+                continue
+            
+            # Extract patterns from pack
+            patterns = pack.get("patterns", [])
+            
+            if context_filtering_available and patterns:
+                # Create document context from chunk metadata
+                doc_context = create_document_context(
+                    section=chunk.get("section"),
+                    chapter=chunk.get("chapter"),
+                    page=chunk.get("page"),
+                    policy_area=policy_area_hint,
+                )
+                
+                # Filter patterns by context (SMART IRRIGATION)
+                applicable_patterns, filtering_stats = filter_patterns_by_context(
+                    patterns, doc_context
+                )
+                
+                # Enrich chunk with context-filtered patterns
+                enriched.append({
+                    **chunk,
+                    "signal_enriched": True,
+                    "applicable_patterns": [
+                        {
+                            "pattern_id": p.get("id"),
+                            "pattern": p.get("pattern"),
+                            "category": p.get("category"),
+                            "confidence_weight": p.get("confidence_weight", 0.5),
+                        }
+                        for p in applicable_patterns[:50]  # Limit to avoid bloat
+                    ],
+                    "pattern_count": len(applicable_patterns),
+                    "filtering_stats": filtering_stats,
+                    "policy_area": policy_area_hint,
+                })
+                
+                total_patterns_applicable += len(applicable_patterns)
+                chunks_with_signals += 1
+                
+                logger.debug(
+                    "chunk_signal_enrichment",
+                    chunk_id=chunk.get("id"),
+                    policy_area=policy_area_hint,
+                    total_patterns=filtering_stats["total_patterns"],
+                    applicable_patterns=len(applicable_patterns),
+                    context_filtered=filtering_stats["context_filtered"],
+                    scope_filtered=filtering_stats["scope_filtered"],
+                )
+            else:
+                # Fallback: no context filtering, include all patterns (limited)
+                enriched.append({
+                    **chunk,
+                    "signal_enriched": True,
+                    "applicable_patterns": [
+                        {
+                            "pattern_id": p.get("id"),
+                            "pattern": p.get("pattern"),
+                            "category": p.get("category"),
+                        }
+                        for p in patterns[:50]  # Limit to first 50
+                    ],
+                    "pattern_count": len(patterns),
+                    "policy_area": policy_area_hint,
+                })
+                total_patterns_applicable += len(patterns)
+                chunks_with_signals += 1
+        
+        used_signals = {
+            "present": chunks_with_signals > 0,
+            "chunks_enriched": chunks_with_signals,
+            "total_chunks": len(ch.chunks),
+            "total_patterns_applicable": total_patterns_applicable,
+            "avg_patterns_per_chunk": (
+                total_patterns_applicable / chunks_with_signals 
+                if chunks_with_signals > 0 
+                else 0
+            ),
+            "context_filtering_enabled": context_filtering_available,
+        }
 
         out = SignalsDeliverable(enriched_chunks=enriched, used_signals=used_signals)
 
@@ -793,12 +887,17 @@ def run_signals(
         phase_counter.add(1, {"phase": "signals"})
 
         logger.info(
-            "phase_complete: phase=%s ok=%s fingerprint=%s duration_ms=%.2f signals_present=%s policy_unit_id=%s",
+            "phase_complete: phase=%s ok=%s fingerprint=%s duration_ms=%.2f signals_present=%s "
+            "chunks_enriched=%d/%d avg_patterns_per_chunk=%.1f context_filtering=%s policy_unit_id=%s",
             "signals",
             True,
             fp,
             duration_ms,
             used_signals["present"],
+            used_signals["chunks_enriched"],
+            used_signals["total_chunks"],
+            used_signals["avg_patterns_per_chunk"],
+            used_signals["context_filtering_enabled"],
             policy_unit_id,
         )
 
@@ -814,7 +913,13 @@ def run_signals(
                 "content_digest": env_out.content_digest,
                 "schema_version": env_out.schema_version,
             },
-            metrics={"duration_ms": duration_ms},
+            metrics={
+                "duration_ms": duration_ms,
+                "chunks_enriched": used_signals["chunks_enriched"],
+                "total_patterns_applicable": used_signals["total_patterns_applicable"],
+                "avg_patterns_per_chunk": used_signals["avg_patterns_per_chunk"],
+                "context_filtering_enabled": used_signals["context_filtering_enabled"],
+            },
         )
 
 
