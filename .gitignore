@@ -113,3 +113,7 @@ IMPORT_HEALTH_REPORT.md
 # Import linter cache
 .import_linter_cache/
 import_linter_detailed_report.txt
+
+# Config management system
+system/config/.backup/
+system/config/config_hash_registry.json
