@@ -242,6 +242,46 @@ def compute_b_theory(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[
     return round(b_theory, 3), evidence
 
 
+def get_method_source(repo_root: Path, file_path: str, start_line: int) -> str:
+    """
+    Attempt to read the source code of a method.
+    This is a heuristic extraction based on indentation.
+    """
+    try:
+        full_path = repo_root / "src" / file_path
+        if not full_path.exists():
+            return ""
+            
+        with open(full_path, 'r') as f:
+            lines = f.readlines()
+            
+        if start_line < 1 or start_line > len(lines):
+            return ""
+            
+        # Adjust for 0-indexing
+        start_idx = start_line - 1
+        method_def = lines[start_idx]
+        
+        # Determine indentation of the def line
+        indentation = len(method_def) - len(method_def.lstrip())
+        
+        source_lines = [method_def]
+        
+        for i in range(start_idx + 1, len(lines)):
+            line = lines[i]
+            if not line.strip(): # Keep empty lines
+                source_lines.append(line)
+                continue
+                
+            current_indent = len(line) - len(line.lstrip())
+            if current_indent <= indentation:
+                break # End of method
+            source_lines.append(line)
+            
+        return "".join(source_lines)
+    except Exception:
+        return ""
+
 def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[str, Any]) -> Tuple[float, Dict]:
     """
     Compute b_impl: implementation quality
@@ -252,7 +292,8 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
     docstring = method_info.get('docstring', '') or ''
     input_params = method_info.get('input_parameters', [])
     return_type = method_info.get('return_type', None)
-    complexity = method_info.get('complexity', 'unknown')
+    file_path = method_info.get('file_path', '')
+    line_number = method_info.get('line_number', 0)
     
     # Load rubric rules
     b_impl_config = rubric['b_impl']
@@ -270,9 +311,19 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
     # Formula: (typed_params / total_params) * 0.7 + (0.3 if has_return_type else 0)
     type_score = (params_with_types / total_params * 0.7) + (0.3 if has_return_type else 0)
     
-    # Component 3: Error handling (conservative default)
+    # Component 3: Error handling (detect try/except)
     error_rules = rules['error_handling']['scoring']
-    error_score = error_rules['minimal_handling']['score']  # Conservative default
+    
+    # Try to read source to find try/except
+    source_code = get_method_source(repo_root, file_path, line_number)
+    has_try_except = "try:" in source_code and "except" in source_code
+    
+    if has_try_except:
+        error_score = error_rules['comprehensive_handling']['score']
+        error_rule = "comprehensive_handling"
+    else:
+        error_score = error_rules['minimal_handling']['score']
+        error_rule = "minimal_handling"
     
     # Component 4: Documentation (use formula from rubric)
     doc_length = len(docstring)
@@ -310,24 +361,28 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
                 "weight": weights['type_annotations'],
                 "score": round(type_score, 3),
                 "formula": "(typed_params / total_params) * 0.7 + (0.3 if has_return_type else 0)",
-                "typed_params": params_with_types,
-                "total_params": total_params,
-                "has_return_type": has_return_type
+                "details": {
+                    "typed_params": params_with_types,
+                    "total_params": total_params,
+                    "has_return_type": has_return_type
+                }
             },
             "error_handling": {
                 "weight": weights['error_handling'],
                 "score": error_score,
-                "rule_applied": "minimal_handling",
-                "note": "Conservative default"
+                "rule_applied": error_rule,
+                "has_try_except": has_try_except
             },
             "documentation": {
                 "weight": weights['documentation'],
                 "score": round(doc_score, 3),
-                "formula": "(0.4 if doc_length > 50 else 0.1) + (0.3 if has_params_doc else 0) + (0.2 if has_returns_doc else 0) + (0.1 if has_examples else 0)",
-                "doc_length": doc_length,
-                "has_params_doc": has_params_doc,
-                "has_returns_doc": has_returns_doc,
-                "has_examples": has_examples
+                "formula": "weighted_sum(desc, params, returns, examples)",
+                "details": {
+                    "doc_length": doc_length,
+                    "has_params": has_params_doc,
+                    "has_returns": has_returns_doc,
+                    "has_examples": has_examples
+                }
             }
         },
         "final_score": round(b_impl, 3),

@@ -278,12 +278,11 @@ class SmartPolicyChunk:
     policy_entities: List[PolicyEntity]
     implicit_assumptions: List[Tuple[str, float]]
     contextual_presuppositions: List[Tuple[str, float]]
-    
-    # SOTA Provenance Tracking
-    provenance: Optional[Provenance] = None
-    
     policy_area_id: str  # PA01-PA10 canonical code
     dimension_id: str    # DIM01-DIM06 canonical code
+    
+    # SOTA Provenance Tracking (optional fields after required)
+    provenance: Optional[Provenance] = None
     argument_structure: Optional[ArgumentStructure] = None
     temporal_dynamics: Optional[TemporalDynamics] = None
     discourse_markers: List[Tuple[str, str]] = field(default_factory=list)

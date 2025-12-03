@@ -30,7 +30,7 @@ from jsonschema import Draft7Validator
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MONOLITH = ROOT / "system" / "config" / "questionnaire" / "questionnaire_monolith.json"
 DEFAULT_SCHEMA = ROOT / "system" / "config" / "questionnaire" / "questionnaire_schema.json"
-DEFAULT_REGISTRY = ROOT / "config" / "json_files_ no_schemas" / "pattern_registry.json"
+DEFAULT_REGISTRY = ROOT / "system" / "config" / "questionnaire" / "pattern_registry.json"
 DEFAULT_REPORT = ROOT / "validation_report.json"
 
 

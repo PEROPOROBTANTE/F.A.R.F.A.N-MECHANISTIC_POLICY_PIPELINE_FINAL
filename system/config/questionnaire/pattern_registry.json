@@ -1,0 +1,668 @@
+[
+  {
+    "pattern_id": "PAT-0001",
+    "pattern": "(?:19|20)\\\\d{2}|vigencia anterior|serie histórica|cuatrienio anterior",
+    "match_type": "LITERAL",
+    "usage_count": 5
+  },
+  {
+    "pattern_id": "PAT-0002",
+    "pattern": "Comité Territorial de Justicia Transicional|CTJT",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0003",
+    "pattern": "Decretos Ley Étnicos 4633, 4634, 4635",
+    "match_type": "LITERAL",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0004",
+    "pattern": "Ficha de Indicador de Resultado (KPT del DNP)",
+    "match_type": "REGEX",
+    "usage_count": 7
+  },
+  {
+    "pattern_id": "PAT-0005",
+    "pattern": "Ficha de Indicador de Resultado (KPT)",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0006",
+    "pattern": "Fuente de verificación:|Medio de verificación:",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0007",
+    "pattern": "Fuente de verificación:|Medio de verificación:|Fuente:",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0008",
+    "pattern": "Línea Base:|LB:|Valor inicial:",
+    "match_type": "LITERAL",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0009",
+    "pattern": "Línea Base:|LB:|valor\\\\s+(?:19|20)\\\\d{2}:",
+    "match_type": "LITERAL",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0010",
+    "pattern": "Mesa de Participación Efectiva de las Víctimas|MPEV",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0011",
+    "pattern": "Meta Cuatrienio:|Meta\\\\s+(?:19|20)\\\\d{2}:|se espera aumentar a un X%",
+    "match_type": "LITERAL",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0012",
+    "pattern": "Meta Cuatrienio:|Meta\\\\s+(?:19|20)\\\\d{2}:|se espera reducir a",
+    "match_type": "REGEX",
+    "usage_count": 4
+  },
+  {
+    "pattern_id": "PAT-0013",
+    "pattern": "Meta Cuatrienio:|Meta:|Valor esperado:",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0014",
+    "pattern": "Personería Municipal|Defensoría del Pueblo Regional",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0015",
+    "pattern": "Plan Indicativo|Anexo de metas",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0016",
+    "pattern": "Plan Plurianual de Inversiones|PPI|Plan Indicativo",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0017",
+    "pattern": "Secretaría de Desarrollo Social|Educación|Salud",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0018",
+    "pattern": "Secretaría de Gobierno|Desarrollo Social|Enlace de Migración",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0019",
+    "pattern": "Secretaría de Gobierno|Enlace de Víctimas|Personería",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0020",
+    "pattern": "Secretaría de Planeación|Infraestructura|UMATA",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0021",
+    "pattern": "Sujetos de Reparación Colectiva|SRC|comunidades étnicas víctimas",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0022",
+    "pattern": "(?:\\\\$|COP)?\\\\s*\\\\d{1,3}(?:[\\\\.\\\\s]\\\\d{3})*(?:[\\\\.,]\\\\d{1,2})?|(?:\\\\d+[\\\\.,]\\\\d+|\\\\d+)\\\\s+millones?\\\\s+de\\\\s+pesos|entre\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)\\\\s+y\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)|de\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)\\\\s+a\\\\s+(?:\\\\d+[\\\\.,]?\\\\d*|\\\\d+)|\\\\b(?:uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieciseis|dieciséis|diecisiete|dieciocho|diecinueve|veinte|treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|ciento|mil|millón|millones)\\\\s+de\\\\s+pesos\\\\b",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0023",
+    "pattern": "alineado con el Plan Nacional de Desarrollo|PND",
+    "match_type": "REGEX",
+    "usage_count": 4
+  },
+  {
+    "pattern_id": "PAT-0024",
+    "pattern": "alineado con el Plan Nacional de Desarrollo|PND|transformación",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0025",
+    "pattern": "análisis de viabilidad de la meta",
+    "match_type": "REGEX",
+    "usage_count": 4
+  },
+  {
+    "pattern_id": "PAT-0026",
+    "pattern": "aprendizaje adaptativo|gestión adaptativa",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0027",
+    "pattern": "aumento de la xenofobia|tensiones con la comunidad de acogida",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0028",
+    "pattern": "cadena causal|lógica de intervención|si... entonces...",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0029",
+    "pattern": "cadena de valor de la protección|ruta de cambio",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0030",
+    "pattern": "cadena de valor|ruta de cambio",
+    "match_type": "REGEX",
+    "usage_count": 5
+  },
+  {
+    "pattern_id": "PAT-0031",
+    "pattern": "causa estructural|factor determinante|nudo crítico",
+    "match_type": "REGEX",
+    "usage_count": 5
+  },
+  {
+    "pattern_id": "PAT-0032",
+    "pattern": "causa raíz del conflicto|determinante estructural de la violencia",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0033",
+    "pattern": "ciclos de aprendizaje|reuniones de revisión estratégica",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0034",
+    "pattern": "coherencia entre metas y la competencia municipal",
+    "match_type": "LITERAL",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0035",
+    "pattern": "coherencia entre metas y recursos disponibles|factibilidad financiera y técnica",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0036",
+    "pattern": "columna costo|presupuesto|valor|recursos|monto",
+    "match_type": "LITERAL",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0037",
+    "pattern": "columna cronograma|plazo|vigencia|año\\\\s+\\\\d+|trimestre",
+    "match_type": "LITERAL",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0038",
+    "pattern": "columna producto|entregable|output|meta de producto",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0039",
+    "pattern": "columna responsable|entidad a cargo|ejecutor",
+    "match_type": "REGEX",
+    "usage_count": 7
+  },
+  {
+    "pattern_id": "PAT-0040",
+    "pattern": "con la inversión de X se espera lograr una reducción de Y",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0041",
+    "pattern": "con la inversión en X se espera lograr una reducción de Y",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0042",
+    "pattern": "con los recursos asignados se puede lograr",
+    "match_type": "REGEX",
+    "usage_count": 6
+  },
+  {
+    "pattern_id": "PAT-0043",
+    "pattern": "condición habilitante|factor crítico|requiere de",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0044",
+    "pattern": "contexto cultural|barreras culturales para la salud sexual",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0045",
+    "pattern": "contradictorio|poco probable|desproporcionado",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0046",
+    "pattern": "contribuye al ODS 16|Paz, Justicia e Instituciones Sólidas",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0047",
+    "pattern": "convenio con|contrato de obra No.",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0048",
+    "pattern": "convenio con|operado por",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0049",
+    "pattern": "corresponsabilidad de|en alianza con",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0050",
+    "pattern": "dado que es difícil medir la reconciliación|para aproximar la medición de",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0051",
+    "pattern": "diagrama causal|gráfico de la teoría de cambio|ruta causal",
+    "match_type": "REGEX",
+    "usage_count": 14
+  },
+  {
+    "pattern_id": "PAT-0052",
+    "pattern": "durante el cuatrienio|plazo de implementación",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0053",
+    "pattern": "efecto no deseado|consecuencia imprevista|externalidad negativa",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0054",
+    "pattern": "el mecanismo causal es vulnerable a|sensible a la situación macroeconómica",
+    "match_type": "LITERAL",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0055",
+    "pattern": "el mecanismo es|la lógica es que",
+    "match_type": "LITERAL",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0056",
+    "pattern": "el resultado es de mayor alcance que el producto",
+    "match_type": "REGEX",
+    "usage_count": 6
+  },
+  {
+    "pattern_id": "PAT-0057",
+    "pattern": "el resultado se logrará siempre y cuando|asumiendo que",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0058",
+    "pattern": "enfoque diferencial|enfoque interseccional",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0059",
+    "pattern": "enfoque diferencial|enfoque territorial",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0060",
+    "pattern": "es realista esperar que|es factible que",
+    "match_type": "LITERAL",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0061",
+    "pattern": "esta actividad ataca el factor de riesgo de",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0062",
+    "pattern": "esto permitirá que|lo cual contribuirá a|generando así",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0063",
+    "pattern": "esto permitirá que|lo cual contribuirá a|generando una reducción de",
+    "match_type": "REGEX",
+    "usage_count": 4
+  },
+  {
+    "pattern_id": "PAT-0064",
+    "pattern": "evaluación de impacto|evaluación de mecanismos",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0065",
+    "pattern": "evaluación de mecanismos|monitoreo de la teoría de cambio",
+    "match_type": "REGEX",
+    "usage_count": 8
+  },
+  {
+    "pattern_id": "PAT-0066",
+    "pattern": "factibilidad|viabilidad|es realista esperar que",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0067",
+    "pattern": "fuente:|según|reportado por|con datos de",
+    "match_type": "REGEX",
+    "usage_count": 8
+  },
+  {
+    "pattern_id": "PAT-0068",
+    "pattern": "horizonte temporal|ventana de maduración|al final del periodo",
+    "match_type": "REGEX",
+    "usage_count": 8
+  },
+  {
+    "pattern_id": "PAT-0069",
+    "pattern": "impacto esperado|visión de largo plazo|transformación social",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0070",
+    "pattern": "impacto esperado|visión de largo plazo|transformación territorial",
+    "match_type": "REGEX",
+    "usage_count": 4
+  },
+  {
+    "pattern_id": "PAT-0071",
+    "pattern": "inconsistencia|debilidad en la teoría|supuesto débil",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0072",
+    "pattern": "indicador compuesto|indicador sintético",
+    "match_type": "REGEX",
+    "usage_count": 8
+  },
+  {
+    "pattern_id": "PAT-0073",
+    "pattern": "indicador de producto|meta de producto",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0074",
+    "pattern": "indicador de resultado|indicador de efecto|outcome",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0075",
+    "pattern": "la dosificación de la ayuda humanitaria sigue los estándares",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0076",
+    "pattern": "la escala de la intervención es coherente con la ambición del resultado",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0077",
+    "pattern": "la suma de los resultados generará el impacto de",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0078",
+    "pattern": "matriz de coherencia|alineación diagnóstico-estrategia",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0079",
+    "pattern": "mecanismo de ajuste|medida correctiva|reorientación de la estrategia",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0080",
+    "pattern": "mediante la activación de|a través de|con la implementación de",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0081",
+    "pattern": "mediante|a través de|con la implementación de",
+    "match_type": "REGEX",
+    "usage_count": 7
+  },
+  {
+    "pattern_id": "PAT-0082",
+    "pattern": "medidas de mitigación|plan de contingencia|para mitigar",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0083",
+    "pattern": "meta ambiciosa pero factible|meta realista dado el presupuesto",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0084",
+    "pattern": "moderador|factor contextual",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0085",
+    "pattern": "para abordar la causa relacionada con|en respuesta al problema de",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0086",
+    "pattern": "población objetivo:|dirigido a|beneficiarios serán",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0087",
+    "pattern": "programa del PPI|línea de inversión en víctimas",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0088",
+    "pattern": "proporcionalidad entre|magnitud del efecto esperado",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0089",
+    "pattern": "recursos para el Plan de Acción Territorial|PAT",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0090",
+    "pattern": "responsable:|dependencia a cargo:|entidad ejecutora",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0091",
+    "pattern": "rezago temporal|efectos de largo aliento",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0092",
+    "pattern": "riesgo sistémico|choque externo",
+    "match_type": "LITERAL",
+    "usage_count": 5
+  },
+  {
+    "pattern_id": "PAT-0093",
+    "pattern": "riesgo sistémico|choque externo|crisis climática",
+    "match_type": "LITERAL",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0094",
+    "pattern": "riesgo sistémico|choque externo|crisis económica|desempleo masivo",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0095",
+    "pattern": "riesgos:|posibles dificultades:|barreras a la implementación",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0096",
+    "pattern": "ruta de transmisión|cadena de impacto",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0097",
+    "pattern": "salto lógico|brecha en la argumentación|milagro de implementación",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0098",
+    "pattern": "se requieren pasos intermedios|el resultado es de mayor alcance que el producto",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0099",
+    "pattern": "se usará como proxy|indicador aproximado",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0100",
+    "pattern": "se utilizará como proxy|medición indirecta",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0101",
+    "pattern": "supuesto clave|premisa fundamental",
+    "match_type": "REGEX",
+    "usage_count": 10
+  },
+  {
+    "pattern_id": "PAT-0102",
+    "pattern": "supuesto crítico para el impacto",
+    "match_type": "LITERAL",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0103",
+    "pattern": "supuesto crítico para el impacto a largo plazo",
+    "match_type": "LITERAL",
+    "usage_count": 8
+  },
+  {
+    "pattern_id": "PAT-0104",
+    "pattern": "supuesto verificable|hipótesis a testear|premisa comprobable",
+    "match_type": "LITERAL",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0105",
+    "pattern": "tabla de actividades|cuadro de seguimiento|matriz de plan de acción",
+    "match_type": "REGEX",
+    "usage_count": 8
+  },
+  {
+    "pattern_id": "PAT-0106",
+    "pattern": "tiempo de maduración|se espera observar en \\\\d{1,2}(?:-\\\\d{1,2})? años",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0107",
+    "pattern": "transformación del PND|eje de convergencia social-regional",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0108",
+    "pattern": "umbral de cumplimiento|mínimo aceptable",
+    "match_type": "REGEX",
+    "usage_count": 9
+  },
+  {
+    "pattern_id": "PAT-0109",
+    "pattern": "variable intermedia|mediador|eslabón causal",
+    "match_type": "REGEX",
+    "usage_count": 3
+  },
+  {
+    "pattern_id": "PAT-0110",
+    "pattern": "visión\\\\s+(?:20\\\\d{2}|2050)|Agenda\\\\s+2030 de Desarrollo Sostenible",
+    "match_type": "REGEX",
+    "usage_count": 2
+  },
+  {
+    "pattern_id": "PAT-0111",
+    "pattern": "visión de Paz Total|Acuerdo de Paz a largo plazo",
+    "match_type": "REGEX",
+    "usage_count": 3
+  }
+]
