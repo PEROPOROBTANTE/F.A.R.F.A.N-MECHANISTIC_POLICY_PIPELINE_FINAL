@@ -1,9 +1,10 @@
 {
   "_metadata": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Machine-readable rubric for computing intrinsic calibration scores",
-    "spec_reference": "canonic_calibration_methods.md",
-    "last_updated": "2025-11-10T18:31:00Z"
+    "spec_reference": "CALIBRATION_CANONICAL_COHERENCE_ANALYSIS.md",
+    "last_updated": "2025-12-03T16:54:00Z",
+    "changelog": "v1.1.0: Aligned b_impl weights and field names with canonical specification"
   },
   "b_theory": {
     "description": "Theoretical foundation quality score",
@@ -17,12 +18,26 @@
         "description": "Statistical grounding based on keywords and method semantics",
         "scoring": {
           "has_bayesian_or_statistical_model": {
-            "keywords": ["bayesian", "statistical", "probability", "distribution", "regression", "coefficient"],
+            "keywords": [
+              "bayesian",
+              "statistical",
+              "probability",
+              "distribution",
+              "regression",
+              "coefficient"
+            ],
             "threshold": 3,
             "score": 1.0
           },
           "has_some_statistical_grounding": {
-            "keywords": ["bayesian", "statistical", "probability", "distribution", "regression", "coefficient"],
+            "keywords": [
+              "bayesian",
+              "statistical",
+              "probability",
+              "distribution",
+              "regression",
+              "coefficient"
+            ],
             "threshold": 1,
             "score": 0.5
           },
@@ -35,11 +50,17 @@
         "description": "Documentation quality and logical structure",
         "scoring": {
           "complete_documentation": {
-            "conditions": ["has_docstring_gt_50_chars", "has_returns_doc", "has_params_doc"],
+            "conditions": [
+              "has_docstring_gt_50_chars",
+              "has_returns_doc",
+              "has_params_doc"
+            ],
             "score": 1.0
           },
           "partial_documentation": {
-            "conditions": ["has_docstring_gt_20_chars"],
+            "conditions": [
+              "has_docstring_gt_20_chars"
+            ],
             "score": 0.5
           },
           "minimal_documentation": {
@@ -51,7 +72,12 @@
         "description": "Explicit assumption documentation",
         "scoring": {
           "assumptions_documented": {
-            "keywords": ["assum", "constraint", "precondition", "requires"],
+            "keywords": [
+              "assum",
+              "constraint",
+              "precondition",
+              "requires"
+            ],
             "score": 0.7
           },
           "implicit_assumptions": {
@@ -62,16 +88,16 @@
     }
   },
   "b_impl": {
-    "description": "Implementation quality score - Type hints are documentation only, NOT enforcement",
+    "description": "Implementation quality score - Canonical specification from CALIBRATION_CANONICAL_COHERENCE_ANALYSIS.md",
     "weights": {
-      "impl_tests": 0.40,
-      "impl_robust": 0.25,
-      "impl_enforce": 0.20,
-      "impl_docs": 0.15
+      "test_coverage": 0.35,
+      "type_annotations": 0.25,
+      "error_handling": 0.25,
+      "documentation": 0.15
     },
     "rules": {
-      "impl_tests": {
-        "description": "Evidence of actual tests running (not just presence of test files)",
+      "test_coverage": {
+        "description": "Evidence of actual tests running (≥ 80% → 1.0, linear below)",
         "scoring": {
           "has_test_evidence": {
             "description": "Test runs verified or high-quality test suite present",
@@ -89,8 +115,8 @@
         },
         "note": "Conservative scoring until CI/test metrics available"
       },
-      "impl_robust": {
-        "description": "Error handling and robustness patterns",
+      "error_handling": {
+        "description": "Error handling and robustness patterns (all paths covered → 1.0)",
         "scoring": {
           "comprehensive_handling": {
             "description": "Try/except blocks, input validation, defensive checks",
@@ -107,32 +133,32 @@
           }
         }
       },
-      "impl_enforce": {
-        "description": "REAL runtime enforcement tools (mypy strict, pydantic, contracts, assertions)",
+      "type_annotations": {
+        "description": "Type annotation coverage (complete → 1.0, partial weighted)",
         "scoring": {
-          "strict_enforcement": {
-            "description": "Runtime validation tools present (pydantic, contracts, assertions)",
-            "score": 0.9
+          "complete_annotations": {
+            "description": "Full type coverage on parameters and returns",
+            "score": 1.0
           },
-          "static_checking": {
-            "description": "mypy/pyright configured but no runtime enforcement",
-            "score": 0.4
+          "partial_annotations": {
+            "description": "Some type annotations present",
+            "formula": "(typed_params / total_params) * 0.7 + (0.3 if has_return_type else 0)",
+            "score": "computed"
           },
-          "no_enforcement": {
-            "description": "No enforcement tools detected",
+          "no_annotations": {
+            "description": "No type annotations",
             "default": true,
             "score": 0.0
           }
         },
-        "note": "Type hints alone score 0.0 here - they are documentation, not enforcement"
+        "note": "Type hints are DOCUMENTATION, not runtime enforcement. They score here, not in enforcement."
       },
-      "impl_docs": {
-        "description": "Documentation quality including type hints AS DOCUMENTATION",
+      "documentation": {
+        "description": "Documentation quality (complete API docs → 1.0)",
         "scoring": {
-          "formula": "(0.3 if doc_length > 50 else 0.1) + (0.2 if has_params_doc else 0) + (0.2 if has_returns_doc else 0) + (0.15 * type_hint_coverage) + (0.15 if has_examples else 0)",
-          "type_hint_coverage_formula": "(typed_params / total_params) * 0.7 + (0.3 if has_return_type else 0)"
+          "formula": "(0.4 if doc_length > 50 else 0.1) + (0.25 if has_params_doc else 0) + (0.25 if has_returns_doc else 0) + (0.1 if has_examples else 0)"
         },
-        "note": "Type hints contribute to documentation score only (15% of impl_docs weight)"
+        "note": "Comprehensive docstrings with parameters, returns, and examples"
       }
     }
   },
@@ -250,10 +276,30 @@
         "question": "Can this method change what is true in the pipeline?",
         "indicators": {
           "analytical_verbs": [
-            "score", "compute", "calculate", "evaluate", "assess", "validate",
-            "filter", "select", "transform", "aggregate", "detect", "extract",
-            "classify", "rank", "weight", "normalize", "calibrate", "adjust",
-            "infer", "predict", "estimate", "measure", "analyze", "process"
+            "score",
+            "compute",
+            "calculate",
+            "evaluate",
+            "assess",
+            "validate",
+            "filter",
+            "select",
+            "transform",
+            "aggregate",
+            "detect",
+            "extract",
+            "classify",
+            "rank",
+            "weight",
+            "normalize",
+            "calibrate",
+            "adjust",
+            "infer",
+            "predict",
+            "estimate",
+            "measure",
+            "analyze",
+            "process"
           ],
           "check_method_name": true,
           "check_docstring": true
@@ -263,18 +309,39 @@
         "question": "Does it encode assumptions or knobs that matter?",
         "indicators": {
           "parametric_keywords": [
-            "threshold", "prior", "weight", "parameter", "coefficient",
-            "model", "rule", "heuristic", "assumption", "criterion"
+            "threshold",
+            "prior",
+            "weight",
+            "parameter",
+            "coefficient",
+            "model",
+            "rule",
+            "heuristic",
+            "assumption",
+            "criterion"
           ],
           "check_docstring": true,
-          "check_layer": ["analyzer", "processor", "executor"]
+          "check_layer": [
+            "analyzer",
+            "processor",
+            "executor"
+          ]
         }
       },
       "q3_safety_critical": {
         "question": "Would a bug/misuse materially mislead an evaluation?",
         "indicators": {
-          "critical_layers": ["analyzer", "processor", "orchestrator"],
-          "evaluative_return_types": ["float", "int", "dict", "list"],
+          "critical_layers": [
+            "analyzer",
+            "processor",
+            "orchestrator"
+          ],
+          "evaluative_return_types": [
+            "float",
+            "int",
+            "dict",
+            "list"
+          ],
           "exclude_simple_getters": true
         }
       }

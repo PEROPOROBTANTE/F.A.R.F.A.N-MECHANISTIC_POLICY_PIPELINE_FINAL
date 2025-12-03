@@ -282,8 +282,8 @@ class SmartPolicyChunk:
     # SOTA Provenance Tracking
     provenance: Optional[Provenance] = None
     
-    policy_area_id: Optional[str] = None  # PA01-PA10 canonical code
-    dimension_id: Optional[str] = None    # DIM01-DIM06 canonical code
+    policy_area_id: str  # PA01-PA10 canonical code
+    dimension_id: str    # DIM01-DIM06 canonical code
     argument_structure: Optional[ArgumentStructure] = None
     temporal_dynamics: Optional[TemporalDynamics] = None
     discourse_markers: List[Tuple[str, str]] = field(default_factory=list)

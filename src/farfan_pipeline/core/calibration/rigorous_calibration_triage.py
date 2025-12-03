@@ -253,7 +253,7 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
     
     # Component 1: Test coverage (conservative default)
     test_rules = rules['test_coverage']['scoring']
-    test_score = test_rules['low_coverage']['score']  # Conservative default
+    test_score = test_rules['no_test_evidence']['score']  # Conservative default
     
     # Component 2: Type annotations (use formula from rubric)
     params_with_types = sum(1 for p in input_params if p.get('type_hint'))
@@ -262,9 +262,9 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
     # Formula: (typed_params / total_params) * 0.7 + (0.3 if has_return_type else 0)
     type_score = (params_with_types / total_params * 0.7) + (0.3 if has_return_type else 0)
     
-    # Component 3: Error handling (based on complexity)
+    # Component 3: Error handling (conservative default)
     error_rules = rules['error_handling']['scoring']
-    error_score = error_rules.get(f'{complexity}_complexity', error_rules['unknown_complexity'])['score']
+    error_score = error_rules['minimal_handling']['score']  # Conservative default
     
     # Component 4: Documentation (use formula from rubric)
     doc_length = len(docstring)
@@ -295,7 +295,7 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
             "test_coverage": {
                 "weight": weights['test_coverage'],
                 "score": test_score,
-                "rule_applied": "low_coverage",
+                "rule_applied": "no_test_evidence",
                 "note": "Conservative default until measured"
             },
             "type_annotations": {
@@ -309,8 +309,8 @@ def compute_b_impl(method_info: Dict[str, Any], repo_root: Path, rubric: Dict[st
             "error_handling": {
                 "weight": weights['error_handling'],
                 "score": error_score,
-                "complexity": complexity,
-                "rule_applied": f"{complexity}_complexity"
+                "rule_applied": "minimal_handling",
+                "note": "Conservative default"
             },
             "documentation": {
                 "weight": weights['documentation'],
@@ -450,24 +450,28 @@ def triage_and_calibrate_method(method_info: Dict[str, Any], repo_root: Path, ru
 
 def main():
     """Execute rigorous method-by-method triage using machine-readable rubric"""
-    repo_root = Path(__file__).parent.parent
-    catalog_path = repo_root / "config" / "canonical_method_catalog.json"
-    intrinsic_path = repo_root / "config" / "intrinsic_calibration.json"
-    rubric_path = repo_root / "config" / "intrinsic_calibration_rubric.json"
+    repo_root = Path(__file__).resolve().parents[4]
+    catalogue_path = repo_root / "config" / "canonical_method_catalogue_v2.json"
+    rubric_path = Path(__file__).resolve().parent / "intrinsic_calibration_rubric.json"  # Same directory as script
+    output_path = repo_root / "config" / "intrinsic_calibration.json"
     
     print("Loading machine-readable rubric...")
     rubric = load_json(rubric_path)
     print(f"  Rubric version: {rubric['_metadata']['version']}")
     
-    print("Loading canonical method catalog...")
-    catalog = load_json(catalog_path)
+    print("Loading canonical method catalogue...")
+    catalogue = load_json(catalogue_path)
+    print(f"  Total methods in catalogue: {len(catalogue)}")
     
     print("Loading current intrinsic calibrations...")
-    intrinsic = load_json(intrinsic_path)
+    if output_path.exists():
+        intrinsic = load_json(output_path)
+    else:
+        intrinsic = {}
     
     # Get existing calibrations (keep manually curated ones)
     existing_methods = {}
-    for method_id, profile in intrinsic.get("methods", {}).items():
+    for method_id, profile in intrinsic.items():
         if not method_id.startswith("_"):
             # Keep if approved_by indicates manual curation
             if "system_architect" in profile.get("approved_by", ""):
@@ -475,13 +479,14 @@ def main():
     
     print(f"Preserving {len(existing_methods)} manually curated calibrations")
     
-    # Process ALL catalog methods
+    #Process ALL catalogue methods (flat array structure)
     all_methods = {}
-    for layer_name, methods in catalog.get("layers", {}).items():
-        for method_info in methods:
-            canonical_name = method_info.get("canonical_name", "")
-            if canonical_name:
-                all_methods[canonical_name] = method_info
+    for method_info in catalogue:
+        unique_id = method_info.get("unique_id", "")
+        if unique_id:
+            # Add method_name field from canonical_name for compatibility
+            method_info['method_name'] = method_info.get('canonical_name', '')
+            all_methods[unique_id] = method_info
     
     print(f"\nProcessing {len(all_methods)} methods with rubric-based triage...")
     print("=" * 80)
@@ -512,21 +517,24 @@ def main():
             print(f"  Processed {processed}/{len(all_methods)} methods...")
     
     # Update intrinsic calibration file
-    intrinsic["methods"] = new_methods
-    intrinsic["_metadata"]["last_triaged"] = datetime.now(timezone.utc).isoformat()
-    intrinsic["_metadata"]["rubric_version"] = rubric['_metadata']['version']
-    intrinsic["_metadata"]["rubric_reference"] = "config/intrinsic_calibration_rubric.json"
-    intrinsic["_metadata"]["triage_summary"] = {
-        "total_methods": len(all_methods),
-        "calibrated": calibrated,
-        "excluded": excluded,
-        "methodology": "Machine-readable rubric with traceable evidence",
-        "reproducibility": "All scores can be regenerated from rubric + catalog",
-        "note": "Each method analyzed individually per canonic_calibration_methods.md rubrics"
+    output_data = {
+        "_metadata": {
+            "version": "2.0.0",
+            "generated": datetime.now(timezone.utc).isoformat(),
+            "total_methods": len(all_methods),
+            "computed_methods": calibrated,
+            "excluded_methods": excluded,
+            "coverage_percent": round((calibrated / len(all_methods)) * 100, 2),
+            "rubric_version": rubric['_metadata']['version'],
+            "rubric_reference": "src/farfan_pipeline/core/calibration/intrinsic_calibration_rubric.json",
+            "methodology": "Machine-readable rubric with traceable evidence",
+            "reproducibility": "All scores can be regenerated from rubric + catalogue"
+        }
     }
+    output_data.update(new_methods)
     
     print(f"\nSaving intrinsic_calibration.json...")
-    save_json(intrinsic_path, intrinsic)
+    save_json(output_path, output_data)
     
     print("\n" + "=" * 80)
     print("RIGOROUS TRIAGE COMPLETE")
