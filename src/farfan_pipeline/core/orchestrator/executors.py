@@ -183,7 +183,7 @@ class BaseExecutor(ABC):
     Includes systematic memory safety guards for processing large objects.
     """
     
-    def __init__(self, executor_id: str, config: Dict[str, Any], method_executor: MethodExecutor):
+    def __init__(self, executor_id: str, config: Dict[str, Any], method_executor: MethodExecutor, profiler: Any | None = None):
         self.executor_id = executor_id
         self.config = config
         if not isinstance(method_executor, MethodExecutor):
@@ -199,6 +199,8 @@ class BaseExecutor(ABC):
             self.memory_guard = create_default_guard()
         
         self.executor_type = self._determine_executor_type()
+        self._profiler = profiler
+        self._profiler_context: Any | None = None
 
     def _determine_executor_type(self) -> ExecutorType:
         """Determine memory limit type based on executor ID and primary methods."""
@@ -311,22 +313,51 @@ class BaseExecutor(ABC):
     def _execute_method(self, class_name: str, method_name: str,
                        context: Dict[str, Any], **kwargs) -> Any:
         """
-        Execute a single method with error handling.
+        Execute a single method with error handling and profiling.
 
         Raises:
             ExecutorFailure: If method execution fails
         """
+        import time
+        start_time = time.perf_counter()
+        start_memory = 0.0
+        
+        if self._profiler and self._profiler.memory_tracking:
+            start_memory = self._profiler._get_memory_usage_mb()
+        
         try:
-            # Method injection happens via factory - placeholder for actual execution
             method = self._get_method(class_name, method_name)
             result = method(context, **kwargs)
+            
+            execution_time = (time.perf_counter() - start_time) * 1000
+            memory_delta = 0.0
+            if self._profiler and self._profiler.memory_tracking:
+                memory_delta = self._profiler._get_memory_usage_mb() - start_memory
+            
             self._log_method_execution(class_name, method_name, True, result)
+            
+            if self._profiler_context:
+                self._profiler_context.add_method_call(
+                    class_name, method_name, execution_time, memory_delta, True
+                )
+            
             return result
         except Exception as e:
+            execution_time = (time.perf_counter() - start_time) * 1000
+            memory_delta = 0.0
+            if self._profiler and self._profiler.memory_tracking:
+                memory_delta = self._profiler._get_memory_usage_mb() - start_memory
+            
             self._log_method_execution(class_name, method_name, False, error=str(e))
+            
+            if self._profiler_context:
+                self._profiler_context.add_method_call(
+                    class_name, method_name, execution_time, memory_delta, False, str(e)
+                )
+            
             raise ExecutorFailure(
                 f"Executor {self.executor_id} failed: {class_name}.{method_name} - {str(e)}"
-            ) from e  # Preserve exception chain for debugging
+            ) from e
     
     def _get_method(self, class_name: str, method_name: str):
         """Retrieve method using MethodExecutor to enforce routed execution."""
@@ -346,6 +377,27 @@ class BaseExecutor(ABC):
             )
 
         return _wrapped
+    
+    def execute_with_profiling(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute with automatic profiling if profiler is attached.
+        
+        Args:
+            context: Canonical package with document, tables, metadata
+            
+        Returns:
+            Dict with raw_evidence, metadata, execution_metrics
+        """
+        if self._profiler:
+            with self._profiler.profile_executor(self.executor_id) as ctx:
+                self._profiler_context = ctx
+                try:
+                    result = self.execute(context)
+                    ctx.set_result(result)
+                    return result
+                finally:
+                    self._profiler_context = None
+        else:
+            return self.execute(context)
 
 
 @dataclass

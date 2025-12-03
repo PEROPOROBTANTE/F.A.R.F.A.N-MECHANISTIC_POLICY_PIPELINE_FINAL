@@ -33,16 +33,13 @@ sentencepiece==0.2.0
 fastapi==0.118.0
 uvicorn==0.34.0
 sse-starlette==2.2.1
-starlette==0.45.0
+starlette==0.48.0 # Pinned for fastapi compatibility.
 httpx==0.28.1
 requests==2.32.4
-flask>=3.0.0
+flask==2.3.2
 flask-cors==6.0.0
 flask-socketio==5.3.6
 pyjwt==2.8.0
-
-# Memory monitoring
-psutil==6.1.1
 
 # Data Validation & Configuration - Tightly pinned versions
 pydantic==2.10.6
@@ -68,11 +65,11 @@ pytest-cov==6.0.0
 hypothesis==6.122.3
 
 # OpenTelemetry - Production Observability Stack
-opentelemetry-api>=1.29.0
-opentelemetry-sdk>=1.29.0
+opentelemetry-api==1.27.0
+opentelemetry-sdk==1.27.0
 opentelemetry-exporter-jaeger==1.21.0
 opentelemetry-exporter-jaeger-thrift==1.21.0
-opentelemetry-exporter-prometheus>=0.50b0
+opentelemetry-exporter-prometheus==0.48b0
 prometheus-client==0.21.0
 
 # Transitive dependencies that need to be pinned for stability
