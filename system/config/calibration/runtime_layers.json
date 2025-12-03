@@ -1,0 +1,50 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "description": "Runtime layer score computation parameters for CalibrationOrchestrator",
+    "last_updated": "2024-12-02",
+    "notes": "Migrated from orchestrator.py hardcoded values (0.65-0.75 range)"
+  },
+  "layers": {
+    "chain": {
+      "description": "Chain of evidence score (@chain)",
+      "base_score": 0.65,
+      "dimension_factor": 0.15,
+      "dimension_max": 10.0,
+      "position_bonus": 0.1,
+      "position_threshold": 0.5
+    },
+    "quality": {
+      "description": "Data quality score (@q)",
+      "base_score": 0.70,
+      "question_factor": 0.08,
+      "question_max": 20.0
+    },
+    "density": {
+      "description": "Data density score (@d)",
+      "base_score": 0.68,
+      "position_factor": 0.15,
+      "optimal_position": 0.5
+    },
+    "provenance": {
+      "description": "Provenance traceability score (@p)",
+      "base_score": 0.75
+    },
+    "coverage": {
+      "description": "Coverage completeness score (@C)",
+      "base_score": 0.72,
+      "bonus_dimensions": [1, 2, 5, 10],
+      "dimension_bonus": 0.1
+    },
+    "uncertainty": {
+      "description": "Uncertainty quantification score (@u)",
+      "base_score": 0.68
+    },
+    "mechanism": {
+      "description": "Mechanistic explanation score (@m)",
+      "base_score": 0.65,
+      "dimension_threshold": 7,
+      "dimension_bonus": 0.15
+    }
+  }
+}

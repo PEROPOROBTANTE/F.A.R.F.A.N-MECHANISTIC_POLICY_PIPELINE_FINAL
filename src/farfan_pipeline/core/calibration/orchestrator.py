@@ -90,8 +90,10 @@ class CalibrationOrchestrator:
 
         self._intrinsic_scores: dict[str, IntrinsicScores] = {}
         self._layer_requirements: dict[str, LayerRequirements] = {}
+        self._runtime_layer_config: dict = {}
         self._load_intrinsic_calibration()
         self._load_layer_requirements()
+        self._load_runtime_layer_config()
 
         CalibrationOrchestrator._initialized = True
         logger.info("CalibrationOrchestrator initialized (singleton)")
@@ -101,25 +103,25 @@ class CalibrationOrchestrator:
         from farfan_pipeline.core.calibration.intrinsic_calibration_loader import get_intrinsic_calibration_loader
         
         loader = get_intrinsic_calibration_loader()
-        
+
         # Get all methods from intrinsic calibration
         # Load the JSON directly to get all method IDs
         import json
         from pathlib import Path
-        
+
         config_path = Path("config/intrinsic_calibration.json")
         if not config_path.exists():
             logger.warning(f"Intrinsic calibration file not found: {config_path}")
             return
-        
+
         try:
             with open(config_path, encoding='utf-8') as f:
                 data = json.load(f)
-            
+
             for method_id in data.keys():
                 if method_id == "_metadata":
                     continue
-                
+
                 calibration = loader.get_calibration(method_id)
                 if calibration is not None:
                     self._intrinsic_scores[method_id] = IntrinsicScores(
@@ -127,9 +129,9 @@ class CalibrationOrchestrator:
                         b_impl=calibration.b_impl,
                         b_deploy=calibration.b_deploy
                     )
-            
+
             logger.info(f"Loaded intrinsic scores for {len(self._intrinsic_scores)} methods")
-        
+
         except Exception as e:
             logger.error(f"Failed to load intrinsic calibration: {e}")
             raise
@@ -142,35 +144,35 @@ class CalibrationOrchestrator:
         for method_id in self._intrinsic_scores.keys():
             # Determine role from method_id or from intrinsic calibration
             role = self._determine_role(method_id)
-            
+
             if role in LAYER_REQUIREMENTS:
                 required_layers = LAYER_REQUIREMENTS[role]
-                
+
                 # Build weights dict
                 weights = {}
                 for layer in required_layers:
                     if layer in CHOQUET_WEIGHTS:
                         weights[layer] = CHOQUET_WEIGHTS[layer]
-                
+
                 # Normalize weights
                 total = sum(weights.values())
                 if total > 0:
                     weights = {k: v/total for k, v in weights.items()}
-                
+
                 self._layer_requirements[method_id] = LayerRequirements(
                     required_layers=required_layers,
                     weights=weights,
                     aggregation_method='weighted_sum'
                 )
-        
+
         logger.info(f"Loaded layer requirements for {len(self._layer_requirements)} methods")
-    
+
     def _determine_role(self, method_id: str) -> str:
         """Determine role from method_id or intrinsic calibration."""
         # If it's an executor (D1Q1, etc), it's 'executor'
         if 'D' in method_id and 'Q' in method_id:
             return 'executor'
-        
+
         # Try to get from intrinsic calibration
         from farfan_pipeline.core.calibration.intrinsic_calibration_loader import get_intrinsic_calibration_loader
         loader = get_intrinsic_calibration_loader()
@@ -179,9 +181,24 @@ class CalibrationOrchestrator:
         from farfan_pipeline.core.calibration.layer_assignment import LAYER_REQUIREMENTS
         if calibration and hasattr(calibration, 'layer') and calibration.layer in LAYER_REQUIREMENTS:
             return calibration.layer
-        
+
         # Default to analyzer (safest - uses all layers)
         return 'analyzer'
+
+    def _load_runtime_layer_config(self) -> None:
+        """Load runtime layer configuration from system/config/calibration/runtime_layers.json."""
+        config_path = Path("system/config/calibration/runtime_layers.json")
+        if not config_path.exists():
+            logger.warning(f"Runtime layer config not found: {config_path}, using defaults")
+            return
+
+        try:
+            with open(config_path, encoding='utf-8') as f:
+                self._runtime_layer_config = json.load(f)
+            logger.info("Loaded runtime layer configuration")
+        except Exception as e:
+            logger.error(f"Failed to load runtime layer config: {e}")
+            raise
 
     def evaluate_runtime_layers(
         self,
@@ -229,48 +246,77 @@ class CalibrationOrchestrator:
 
     def _compute_chain_score(self, context: CalibrationContext) -> float:
         """Compute chain of evidence score (@chain)."""
-        score = 0.65
+        config = self._runtime_layer_config.get('layers', {}).get('chain', {})
+        base_score = config.get('base_score', 0.65)
+        dimension_factor = config.get('dimension_factor', 0.15)
+        dimension_max = config.get('dimension_max', 10.0)
+        position_bonus = config.get('position_bonus', 0.1)
+        position_threshold = config.get('position_threshold', 0.5)
+
+        score = base_score
         if context.dimension > 0:
-            score += 0.15 * min(context.dimension / 10.0, 1.0)
-        if context.method_position < context.total_methods / 2:
-            score += 0.1
+            score += dimension_factor * min(context.dimension / dimension_max, 1.0)
+        if context.method_position < context.total_methods * position_threshold:
+            score += position_bonus
         return min(score, 1.0)
 
     def _compute_quality_score(self, context: CalibrationContext) -> float:
         """Compute data quality score (@q)."""
-        score = 0.70
+        config = self._runtime_layer_config.get('layers', {}).get('quality', {})
+        base_score = config.get('base_score', 0.70)
+        question_factor = config.get('question_factor', 0.08)
+        question_max = config.get('question_max', 20.0)
+
+        score = base_score
         if context.question_num > 0:
-            score += 0.08 * min(context.question_num / 20.0, 1.0)
+            score += question_factor * min(context.question_num / question_max, 1.0)
         return min(score, 1.0)
 
     def _compute_density_score(self, context: CalibrationContext) -> float:
         """Compute data density score (@d)."""
-        score = 0.68
+        config = self._runtime_layer_config.get('layers', {}).get('density', {})
+        base_score = config.get('base_score', 0.68)
+        position_factor = config.get('position_factor', 0.15)
+        optimal_position = config.get('optimal_position', 0.5)
+
+        score = base_score
         if context.total_methods > 0:
             ratio = context.method_position / context.total_methods
-            score += 0.15 * (1.0 - abs(0.5 - ratio))
+            score += position_factor * (1.0 - abs(optimal_position - ratio))
         return min(score, 1.0)
 
     def _compute_provenance_score(self, context: CalibrationContext) -> float:
         """Compute provenance traceability score (@p)."""
-        return 0.75
+        config = self._runtime_layer_config.get('layers', {}).get('provenance', {})
+        return config.get('base_score', 0.75)
 
     def _compute_coverage_score(self, context: CalibrationContext) -> float:
         """Compute coverage completeness score (@C)."""
-        score = 0.72
-        if context.dimension in (1, 2, 5, 10):
-            score += 0.1
+        config = self._runtime_layer_config.get('layers', {}).get('coverage', {})
+        base_score = config.get('base_score', 0.72)
+        bonus_dimensions = config.get('bonus_dimensions', [1, 2, 5, 10])
+        dimension_bonus = config.get('dimension_bonus', 0.1)
+
+        score = base_score
+        if context.dimension in bonus_dimensions:
+            score += dimension_bonus
         return min(score, 1.0)
 
     def _compute_uncertainty_score(self, context: CalibrationContext) -> float:
         """Compute uncertainty quantification score (@u)."""
-        return 0.68
+        config = self._runtime_layer_config.get('layers', {}).get('uncertainty', {})
+        return config.get('base_score', 0.68)
 
     def _compute_mechanism_score(self, context: CalibrationContext) -> float:
         """Compute mechanistic explanation score (@m)."""
-        score = 0.65
-        if context.dimension >= 7:
-            score += 0.15
+        config = self._runtime_layer_config.get('layers', {}).get('mechanism', {})
+        base_score = config.get('base_score', 0.65)
+        dimension_threshold = config.get('dimension_threshold', 7)
+        dimension_bonus = config.get('dimension_bonus', 0.15)
+
+        score = base_score
+        if context.dimension >= dimension_threshold:
+            score += dimension_bonus
         return min(score, 1.0)
 
     def choquet_integral(
