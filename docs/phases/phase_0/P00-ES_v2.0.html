@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. - Fase 0: Validación de Configuración</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A;
+            --atroz-blue-electric: #00D4FF;
+            --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E;
+            --atroz-copper-oxide: #17A589;
+            --atroz-ink: #E5E7EB;
+            --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/eot/JetBrainsMono-Regular.eot') format('embedded-opentype'),
+                 url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            background-color: var(--atroz-bg);
+            color: var(--atroz-ink);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: var(--atroz-red-500);
+            border-bottom: 1px solid var(--atroz-copper-500);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: var(--atroz-ink);
+            margin-top: 40px;
+        }
+
+        h3 {
+            font-size: 14px;
+            color: var(--atroz-copper-500);
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .meta-info {
+            background-color: rgba(17, 169, 137, 0.05);
+            border-left: 3px solid var(--atroz-copper-oxide);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 11px;
+        }
+
+        .meta-info strong {
+            color: var(--atroz-copper-500);
+            text-transform: uppercase;
+        }
+
+        .diagram-container {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        code {
+            background-color: #1a1a1a;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: var(--atroz-blue-electric);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 0: La Inquisición del Plan Maestro</h1>
+
+        <div class="meta-info">
+            <strong>Posición en el Pipeline:</strong> Rojo (Entrada y Validación)<br>
+            <strong>Contrato Principal:</strong> C0-CONFIG-V1.0 (Inferido)<br>
+            <strong>Profundidad de Evidencia:</strong> Estructura Micro, Meso y Macro
+        </div>
+
+        <h2>La Herida: El Caos de un Plan Maestro Corrupto</h2>
+        <p>
+            Un pipeline analítico de escala industrial no puede iniciar su labor sobre cimientos de incertidumbre. El riesgo de proceder con una configuración malformada, inconsistente o estructuralmente defectuosa —el "plan maestro" o monolito del sistema— es absoluto. Tal defecto no solo produciría resultados erróneos, sino que se propagaría en una esquizofrenia sistémica, donde cada fase subsiguiente hereda y amplifica la corrupción inicial. El resultado no es solo un análisis fallido, sino una producción de sinsentidos de alta fidelidad con un costo intensivo de recursos. La Fase 0 existe como un baluarte contra este caos, un guardián de tolerancia cero que asegura que la lógica fundacional del sistema sea criptográfica y estructuralmente sólida antes de que se ingiera un solo byte de datos de políticas.
+        </p>
+
+        <h2>El Instrumento: Un Examen Forense Multi-Vectorial</h2>
+        <p>
+            Esta fase no es una simple carga de archivos; es una interrogación rigurosa y multi-vectorial del monolito. El método <code>_load_configuration</code> del orquestador actúa como el inquisidor principal, desplegando una secuencia de protocolos de validación no negociables. Primero, genera un hash SHA-256 del monolito normalizado, creando una firma forense única e inmutable que garantiza la integridad bit a bit y la reproducibilidad. Segundo, realiza un censo de componentes, verificando los recuentos precisos de preguntas y métodos contra expectativas contractuales y codificadas (<code>EXPECTED_QUESTION_COUNT</code> y <code>EXPECTED_METHOD_COUNT</code>). Cualquier desviación señala un desajuste crítico entre el estado previsto y el real del sistema, provocando una detención inmediata.
+        </p>
+        <p>
+            El examen procede luego a una inspección arquitectónica profunda a través de <code>_validate_contract_structure</code>. Esta función escudriña el cableado lógico del monolito, asegurando que los 30 slots base estén presentes, que todas las modalidades de puntuación requeridas (TIPO_A a F) estén definidas, y que las relaciones jerárquicas entre áreas de política y clústeres sean consistentes y no contradictorias. Finalmente, donde esté disponible, se aplica una validación formal de Esquema JSON, actuando como una verificación gramatical y sintáctica final sobre el lenguaje de la configuración. Solo después de superar cada una de estas puertas, el monolito se considera digno de uso.
+        </p>
+
+        <div class="diagram-container">
+             <svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="redGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#C41E3A; stop-opacity:0.8" />
+                        <stop offset="100%" style="stop-color:#3A0E0E; stop-opacity:0.8" />
+                    </linearGradient>
+                    <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00D4FF; stop-opacity:0.8" />
+                        <stop offset="100%" style="stop-color:#04101A; stop-opacity:0.8" />
+                    </linearGradient>
+                    <linearGradient id="greenGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#39FF14; stop-opacity:0.8" />
+                        <stop offset="100%" style="stop-color:#0B231B; stop-opacity:0.8" />
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <style>
+                    .hex { stroke-width: 1.5; }
+                    .hex-red { fill: url(#redGlow); stroke: #C41E3A; }
+                    .hex-blue { fill: url(#blueGlow); stroke: #00D4FF; }
+                    .hex-green { fill: url(#greenGlow); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .connector { stroke: #B2642E; stroke-width: 1; stroke-dasharray: 3,3; }
+                </style>
+
+                <!-- Input Node -->
+                <path class="hex hex-red" filter="url(#glow)" d="M100 150 L143.3 175 L143.3 225 L100 250 L56.7 225 L56.7 175 Z" />
+                <text x="100" y="205" class="label">MONOLITO</text>
+
+                <!-- Output Node -->
+                <path class="hex hex-green" filter="url(#glow)" d="M700 150 L743.3 175 L743.3 225 L700 250 L656.7 225 L656.7 175 Z" />
+                <text x="700" y="205" class="label">CONFIG</text>
+                 <text x="700" y="220" class="label">CERTIFICADA</text>
+
+                <!-- Validation Nodes -->
+                <g transform="translate(300, 50)">
+                    <path class="hex hex-blue" d="M50 0 L93.3 25 L93.3 75 L50 100 L6.7 75 L6.7 25 Z" />
+                    <text x="50" y="52" class="label">HASH SHA-256</text>
+                    <text x="50" y="75" class="sub-label">Integridad</text>
+                </g>
+                <g transform="translate(450, 50)">
+                    <path class="hex hex-blue" d="M50 0 L93.3 25 L93.3 75 L50 100 L6.7 75 L6.7 25 Z" />
+                    <text x="50" y="52" class="label">VALIDACIÓN CONTEO</text>
+                    <text x="50" y="75" class="sub-label">Censo</text>
+                </g>
+                <g transform="translate(300, 250)">
+                    <path class="hex hex-blue" d="M50 0 L93.3 25 L93.3 75 L50 100 L6.7 75 L6.7 25 Z" />
+                    <text x="50" y="52" class="label">ANÁLISIS ESTRUCTURAL</text>
+                    <text x="50" y="75" class="sub-label">Arquitectura</text>
+                </g>
+                <g transform="translate(450, 250)">
+                    <path class="hex hex-blue" d="M50 0 L93.3 25 L93.3 75 L50 100 L6.7 75 L6.7 25 Z" />
+                    <text x="50" y="52" class="label">CONFORMIDAD ESQUEMA</text>
+                    <text x="50" y="75" class="sub-label">Gramática</text>
+                </g>
+
+                <!-- Connectors -->
+                <path class="connector" d="M144 200 L295 120" />
+                <path class="connector" d="M144 200 L295 280" />
+
+                <path class="connector" d="M403 100 L445 120" />
+                <path class="connector" d="M403 300 L445 280" />
+
+                <path class="connector" d="M548 100 L655 170" />
+                <path class="connector" d="M548 300 L655 230" />
+            </svg>
+        </div>
+
+        <h2>La Cicatriz: La Configuración Certificada</h2>
+        <p>
+            El resultado de la Fase 0 no es simplemente el dato original que ha sido aprobado. Es un nuevo artefacto: el objeto de configuración certificado. Este objeto contiene el monolito original, ahora validado y portando su inmutable "marca de nacimiento" SHA-256, junto con un dossier completo de los resultados de la validación (<code>structure_report</code>, <code>schema_report</code>, etc.). Este objeto representa un estado de certeza criptográfica. El pipeline ahora puede proceder no sobre suposiciones, sino sobre pruebas verificables de su propia coherencia interna. Cualquier componente posterior que reciba este objeto de configuración puede confiar implícitamente en su estructura, permitiendo al sistema enfocar los recursos computacionales en el análisis en lugar de en una continua auto-duda.
+        </p>
+
+        <h3>Rastro de Procedencia</h3>
+        <p>
+            La integridad de esta fase está arraigada en los siguientes componentes centrales de <code>src.farfan_pipeline.core.orchestrator.core</code>:
+            <ul>
+                <li><code>Orchestrator._load_configuration()</code>: El método manejador principal que ejecuta la secuencia de validación.</li>
+                <li><code>Orchestrator._validate_contract_structure()</code>: La función responsable de la inspección profunda de las relaciones lógicas dentro del monolito.</li>
+                <li><code>EXPECTED_QUESTION_COUNT</code>: La constante codificada (305) que define el número contractual de preguntas.</li>
+                <li><code>EXPECTED_METHOD_COUNT</code>: La constante codificada (416) que define el número contractual de métodos.</li>
+                <li><code>AggregationSettings.from_monolith()</code>: El constructor que construye el conjunto de reglas de agregación a partir del monolito validado.</li>
+                <li><code>hashlib.sha256()</code>: La función criptográfica utilizada para generar la firma de integridad del monolito.</li>
+            </ul>
+        </p>
+    </div>
+</body>
+</html>

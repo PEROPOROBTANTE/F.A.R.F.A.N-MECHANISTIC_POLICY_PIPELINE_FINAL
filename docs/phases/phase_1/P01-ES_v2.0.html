@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. - Fase 1: Ingesta de Documento</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A;
+            --atroz-blue-electric: #00D4FF;
+            --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E;
+            --atroz-copper-oxide: #17A589;
+            --atroz-ink: #E5E7EB;
+            --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/eot/JetBrainsMono-Regular.eot') format('embedded-opentype'),
+                 url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            background-color: var(--atroz-bg);
+            color: var(--atroz-ink);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: var(--atroz-blue-electric);
+            border-bottom: 1px solid var(--atroz-copper-500);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: var(--atroz-ink);
+            margin-top: 40px;
+        }
+
+        h3 {
+            font-size: 14px;
+            color: var(--atroz-copper-500);
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .meta-info {
+            background-color: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--atroz-blue-electric);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 11px;
+        }
+
+        .meta-info strong {
+            color: var(--atroz-copper-500);
+            text-transform: uppercase;
+        }
+
+        .diagram-container {
+            margin: 40px 0;
+            text-align: center;
+            background: radial-gradient(circle, rgba(4,16,26,0.5) 0%, transparent 70%);
+            padding: 20px;
+        }
+
+        code {
+            background-color: #1a1a1a;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: var(--atroz-blue-electric);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 1: La Disección del Corpus</h1>
+
+        <div class="meta-info">
+            <strong>Posición en el Pipeline:</strong> Azul (Estructuración y Procesamiento)<br>
+            <strong>Contrato Principal:</strong> Puertas de Validación P01-ES v1.0<br>
+            <strong>Profundidad de Evidencia:</strong> Fragmentos de Política Inteligentes Tematizados (SPCs)
+        </div>
+
+        <h2>La Herida: El Documento Monolítico y Opaco</h2>
+        <p>
+            Los documentos de política en bruto, típicamente en formato PDF, representan un estado de información de alta entropía. Son monolíticos, no estructurados y opacos al análisis directo por máquina. Intentar aplicar consultas analíticas complejas a tal documento es similar a realizar una cirugía con un mazo: burdo, impreciso y destructivo de la información matizada que contienen. El problema central es la falta de direccionabilidad semántica; el documento es una masa única e indiferenciada. Para desbloquear su valor, debe ser diseccionado sistemáticamente en fragmentos coherentes y etiquetados temáticamente que las fases analíticas posteriores puedan abordar con precisión quirúrgica.
+        </p>
+
+        <h2>El Instrumento: El Pipeline de Fragmentación Inteligente de Políticas</h2>
+        <p>
+            El método <code>_ingest_document</code> sirve como punto de entrada a un sofisticado procedimiento quirúrgico: el <code>CPPIngestionPipeline</code>. Aquí es donde el corpus en bruto se transforma de un solo bloque a un artefacto de datos altamente estructurado y validado. La función principal del pipeline es producir exactamente 60 "Fragmentos de Política Inteligentes" (SPCs). Este número no es arbitrario; es un requisito contractual estricto de la <strong>especificación P01-ES v1.0</strong>, que representa la intersección de 10 áreas de política distintas y 6 dimensiones analíticas. Por lo tanto, el pipeline no está simplemente fragmentando texto; está realizando una disección impulsada temáticamente, asegurando que cada fragmento resultante esté imbuido de una identidad específica y direccionable.
+        </p>
+        <p>
+            De manera crucial, esta fase opera bajo una serie de puertas de validación implacables. El orquestador verifica que el recuento final de fragmentos sea precisamente 60. Luego, itera a través de cada uno de los fragmentos para asegurar la presencia obligatoria de las etiquetas de metadatos <code>policy_area_id</code> y <code>dimension_id</code>. La ausencia de estas etiquetas, o una desviación del recuento exacto de fragmentos, constituye una violación fatal del contrato y resulta en un aborto inmediato del pipeline. Esta aplicación rígida garantiza que el resultado no sea solo una colección de fragmentos de texto, sino una matriz de evidencia de 60 partes perfectamente formada, lista para el análisis de micro-preguntas multi-hilo en la Fase 2.
+        </p>
+
+        <div class="diagram-container">
+            <svg width="800" height="300" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="redHex" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#C41E3A;" /><stop offset="100%" style="stop-color:#3A0E0E;" /></linearGradient>
+                    <linearGradient id="blueHex" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00D4FF;" /><stop offset="100%" style="stop-color:#04101A;" /></linearGradient>
+                    <linearGradient id="greenHex" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#39FF14;" /><stop offset="100%" style="stop-color:#0B231B;" /></linearGradient>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E" /></marker>
+                </defs>
+
+                <style>
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .connector { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow); }
+                    .gate-label { fill: #C41E3A; font-size: 10px; font-weight: bold; text-anchor: middle; text-transform:uppercase; }
+                </style>
+
+                <!-- Input Document -->
+                <rect x="50" y="100" width="100" height="100" fill="url(#redHex)" stroke="#C41E3A" stroke-width="1.5" />
+                <text x="100" y="145" class="label">PDF BRUTO</text>
+                <text x="100" y="160" class="sub-label">Corpus Monolítico</text>
+
+                <!-- Processing Pipeline -->
+                <rect x="250" y="125" width="200" height="50" fill="url(#blueHex)" stroke="#00D4FF" stroke-width="1.5" />
+                <text x="350" y="153" class="label">CPPIngestionPipeline</text>
+
+                <!-- Validation Gates -->
+                <path d="M480 100 L480 200" stroke="#C41E3A" stroke-width="2" stroke-dasharray="4,4" />
+                <text x="495" y="95" class="gate-label" transform="rotate(90, 495, 95)">PUERTAS P01-ES v1.0</text>
+                <text x="520" y="145" class="label" fill="#E5E7EB" text-anchor="start">1. Recuento Chunks == 60</text>
+                <text x="520" y="165" class="label" fill="#E5E7EB" text-anchor="start">2. Todos Chunks Etiquetados</text>
+
+
+                <!-- Output Chunks -->
+                <g transform="translate(650, 110)">
+                    <rect x="0" y="0" width="40" height="40" fill="url(#greenHex)" stroke="#39FF14" stroke-width="1" />
+                    <text x="20" y="25" class="label" font-size="9px">SPC-1</text>
+                </g>
+                <g transform="translate(700, 110)">
+                    <rect x="0" y="0" width="40" height="40" fill="url(#greenHex)" stroke="#39FF14" stroke-width="1" />
+                    <text x="20" y="25" class="label" font-size="9px">SPC-2</text>
+                </g>
+                 <g transform="translate(650, 160)">
+                    <rect x="0" y="0" width="40" height="40" fill="url(#greenHex)" stroke="#39FF14" stroke-width="1" />
+                     <text x="20" y="25" class="label" font-size="9px">...</text>
+                </g>
+                <g transform="translate(700, 160)">
+                    <rect x="0" y="0" width="40" height="40" fill="url(#greenHex)" stroke="#39FF14" stroke-width="1" />
+                    <text x="20" y="25" class="label" font-size="9px">SPC-60</text>
+                </g>
+                <text x="695" y="225" class="sub-label">Chunks Validados y Tematizados</text>
+
+
+                <!-- Connectors -->
+                <line class="connector" x1="150" y1="150" x2="250" y2="150" />
+                <line class="connector" x1="450" y1="150" x2="470" y2="150" />
+                <line class="connector" x1="510" y1="150" x2="650" y2="150" />
+            </svg>
+        </div>
+
+        <h2>La Cicatriz: El Artefacto de Documento Preprocesado</h2>
+        <p>
+            El resultado exitoso de esta fase es el objeto <code>PreprocessedDocument</code>. Esto representa una transformación profunda de los datos originales. Ya no es una entidad única, sino un contenedor estructurado que alberga los 60 SPCs validados, el texto completo extraído, los límites de las oraciones y metadatos críticos sobre el propio proceso de ingesta. Este artefacto representa la carne del documento, preparada quirúrgicamente y dispuesta para un análisis de grano fino. Su existencia significa que la parte más riesgosa y ambigua del proceso de preparación de datos está completa. El sistema ahora tiene un sustrato limpio, predecible y semánticamente rico sobre el cual construir todo su edificio analítico.
+        </p>
+
+        <h3>Rastro de Procedencia</h3>
+        <p>
+            La ejecución de esta fase está gobernada por los siguientes componentes clave:
+            <ul>
+                <li><code>Orchestrator._ingest_document()</code>: El método del orquestador que desencadena y valida el proceso de ingesta.</li>
+                <li><code>farfan_pipeline.processing.spc_ingestion.CPPIngestionPipeline</code>: El pipeline externo y dedicado, responsable de la disección canónica del documento.</li>
+                <li><code>PreprocessedDocument.ensure()</code>: El método adaptador que transforma formalmente la salida del pipeline de ingesta en la estructura de datos nativa del orquestador.</li>
+                <li><code>P01_EXPECTED_CHUNK_COUNT</code>: La constante codificada (60) que forma el núcleo de la puerta de validación P01-ES v1.0, asegurando una estructura de salida determinista.</li>
+            </ul>
+        </p>
+    </div>
+</body>
+</html>
