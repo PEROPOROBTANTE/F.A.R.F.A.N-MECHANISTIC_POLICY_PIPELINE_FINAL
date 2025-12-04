@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Fase 1: Ingesta de Documento y Segmentación Estructurada</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 1: Ingesta de Documento y Segmentación Estructurada</h1>
+
+        <h2>1. Propósito</h2>
+        <p>
+            La Fase 1 marca la transición de la configuración abstracta al procesamiento de datos concretos. Su propósito es ingerir un documento de política en bruto y no estructurado (típicamente un PDF) y transformarlo en un artefacto altamente estructurado y semánticamente direccionable conocido como el <code>PreprocessedDocument</code>. Esta transformación está gobernada por la estricta especificación P01-ES v1.0, que exige la creación determinista de exactamente 60 "Fragmentos de Política Inteligentes" (SPCs). Cada fragmento está alineado temáticamente con una intersección única de una de las 10 Áreas de Política canónicas y una de las 6 Dimensiones analíticas. Esta fase disecciona eficazmente el texto fuente monolítico en una matriz precisa de evidencia de 10x6, formando el sustrato fundacional para el análisis granular que se realiza en la Fase 2.
+        </p>
+
+        <h2>2. Definiciones Clave</h2>
+        <ul>
+            <li><strong>CPPIngestionPipeline:</strong> Una clase especializada responsable del proceso de extremo a extremo de extracción de texto de PDF y su transformación en los 60 SPCs estructurados.</li>
+            <li><strong>Fragmento de Política Inteligente (SPC):</strong> Un segmento de texto semánticamente coherente extraído del documento fuente, determinado algorítmicamente como el más relevante para un par específico de Área de Política y Dimensión.</li>
+            <li><strong>Puertas de Validación P01-ES v1.0:</strong> Un conjunto de reglas contractuales no negociables aplicadas por el Orquestador al finalizar la ingesta. Estas puertas requieren que la salida final contenga exactamente 60 fragmentos, y que cada fragmento posea un <code>policy_area_id</code> y un <code>dimension_id</code> válidos.</li>
+            <li><strong>PreprocessedDocument:</strong> La estructura de datos canónica de salida de esta fase. Sirve como contenedor para los 60 SPCs, el texto completo del documento, los límites de las oraciones y otros metadatos críticos.</li>
+        </ul>
+
+        <h2>3. Flujo Operacional Detallado</h2>
+        <p>
+            El proceso de ingesta es iniciado por el método <code>Orchestrator._ingest_document()</code>, que delega la lógica central al <code>CPPIngestionPipeline</code>. Las subfases dentro de este pipeline, orquestadas principalmente por el método <code>_generate_60_structured_segments</code>, son las siguientes:
+        </p>
+        <ol>
+            <li><strong>Tokenización de Oraciones:</strong> El texto completo en bruto del documento es analizado y segmentado en una lista de oraciones individuales utilizando la biblioteca NLTK <code>sent_tokenize</code>. Se registran las posiciones de inicio y fin a nivel de carácter de cada oración para su posterior recuperación.</li>
+            <li><strong>Incrustación (Embedding) de Oraciones a Nivel de Corpus:</strong> Se utiliza un modelo de embedding de lenguaje a gran escala (específicamente, <code>intfloat/multilingual-e5-large</code> a través del <code>SemanticChunkingProducer</code>) para generar una representación vectorial de alta dimensión para cada oración del documento. Esta es una operación computacionalmente intensiva que se realiza una sola vez y que crea un mapa semántico de todo el corpus.</li>
+            <li><strong>Extracción Temática Iterativa (60x):</strong> El sistema entra en un bucle que itera 60 veces, una por cada par único de Área de Política (PA) y Dimensión (DIM). En cada iteración:
+                <ol type="a">
+                    <li><strong>Formulación de Consulta:</strong> Se construye una consulta semántica concatenando las palabras clave predefinidas asociadas con la PA actual (ej. "violencia, conflicto armado") y la DIM (ej. "diagnóstico, recursos").</li>
+                    <li><strong>Incrustación de Consulta:</strong> Se utiliza el mismo modelo de embedding para generar una representación vectorial de la consulta formulada.</li>
+                    <li><strong>Búsqueda de Similitud Semántica:</strong> El sistema calcula la similitud del coseno entre el vector de la consulta y el embedding precalculado de cada oración en el documento. Esto identifica qué oraciones están más alineadas semánticamente con el enfoque temático de la consulta.</li>
+                    <li><strong>Segmentación de Contenido:</strong> Se identifican las 10 oraciones más relevantes. Luego, el sistema determina las posiciones mínimas y máximas de los caracteres de este conjunto de oraciones y expande ligeramente esta ventana para formar un único bloque de texto contiguo. Este bloque se convierte en el contenido del SPC.</li>
+                </ol>
+            </li>
+            <li><strong>Instanciación del Objeto SPC:</strong> El bloque de texto extraído se empaqueta en un objeto <code>SmartPolicyChunk</code>, que se etiqueta con el <code>policy_area_id</code> y <code>dimension_id</code> correspondientes.</li>
+            <li><strong>Ensamblaje del Artefacto Final:</strong> Después de 60 iteraciones, la colección de SPCs se ensambla en el objeto final <code>PreprocessedDocument</code>.</li>
+            <li><strong>Validación por el Orquestador:</strong> El objeto <code>PreprocessedDocument</code> se devuelve al Orquestador, que lo somete inmediatamente a las puertas de validación P01-ES v1.0. Cualquier desviación en el recuento de fragmentos o en la integridad de los metadatos resulta en un error de tiempo de ejecución.</li>
+        </ol>
+
+        <h2>4. Diagrama de Sistema: Proceso de Segmentación Estructurada</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                 <defs>
+                    <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C41E3A"/><stop offset="100%" stop-color="#3A0E0E"/></linearGradient>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-red { fill: url(#grad-red); stroke: #C41E3A; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                    .loop-box { fill: none; stroke: var(--atroz-copper-500); stroke-dasharray: 5,5; rx: 8px; }
+                </style>
+
+                <rect x="20" y="20" width="150" height="50" class="box box-red"/>
+                <text x="95" y="50" class="label">Texto Bruto Documento</text>
+
+                <rect x="220" y="20" width="180" height="50" class="box box-blue"/>
+                <text x="310" y="42" class="label">Tokenización Oraciones</text>
+                <text x="310" y="58" class="sub-label">sent_tokenize()</text>
+
+                <rect x="450" y="20" width="180" height="50" class="box box-blue"/>
+                <text x="540" y="42" class="label">Embedding de Corpus</text>
+                <text x="540" y="58" class="sub-label">embed_batch()</text>
+
+                <rect x="680" y="20" width="200" height="50" class="box box-green"/>
+                <text x="780" y="50" class="label">Matriz de Embeddings</text>
+
+                <path class="flow-line" d="M170 45 h 50"/>
+                <path class="flow-line" d="M400 45 h 50"/>
+                <path class="flow-line" d="M630 45 h 50"/>
+
+                <rect x="50" y="100" width="800" height="480" class="loop-box"/>
+                <text x="450" y="125" class="label" font-size="14" fill="#B2642E">Bucle de Extracción Temática Iterativa (x60)</text>
+
+                <rect x="100" y="160" width="150" height="80" class="box box-blue"/>
+                <text x="175" y="190" class="label">Palabras Clave PA & DIM</text>
+                <text x="175" y="210" class="sub-label">(ej. "género", "diagnóstico")</text>
+
+                <rect x="300" y="180" width="150" height="40" class="box box-blue"/>
+                <text x="375" y="205" class="label">Embedding de Consulta</text>
+
+                <rect x="500" y="180" width="180" height="40" class="box box-blue"/>
+                <text x="590" y="205" class="label">Búsqueda Similitud Semántica</text>
+
+                <path class="flow-line" d="M250 200 h 50"/>
+                <path class="flow-line" d="M450 200 h 50"/>
+                <path class="flow-line" d="M680 200 h 40"/>
+
+                <path class="flow-line" d="M780 70 V 190 H 720"/>
+                <text x="750" y="135" class="sub-label" fill="#B2642E">Matriz de Entrada</text>
+
+                <rect x="300" y="280" width="300" height="50" class="box box-blue"/>
+                <text x="450" y="305" class="label">Identificación Top-10 Oraciones y Segmentación</text>
+
+                <path class="flow-line" d="M450 220 v 60"/>
+
+                <rect x="375" y="380" width="150" height="50" class="box box-green"/>
+                <text x="450" y="405" class="label">Smart Policy Chunk</text>
+
+                <path class="flow-line" d="M450 330 v 50"/>
+
+                <g transform="translate(410, 460)">
+                    <rect x="0" y="0" width="20" height="20" fill="url(#grad-green)" stroke="#39FF14"/>
+                    <rect x="25" y="0" width="20" height="20" fill="url(#grad-green)" stroke="#39FF14"/>
+                    <text x="55" y="15" class="label">...</text>
+                    <rect x="70" y="0" width="20" height="20" fill="url(#grad-green)" stroke="#39FF14"/>
+                </g>
+                <text x="450" y="505" class="sub-label">Colección de 60 SPCs</text>
+                <path class="flow-line" d="M450 430 v 30"/>
+
+                <rect x="350" y="520" width="200" height="50" class="box box-green"/>
+                <text x="450" y="545" class="label">PreprocessedDocument Final</text>
+
+                <path class="flow-line" d="M450 505 v 15"/>
+            </svg>
+        </div>
+
+        <h2>5. Pseudocódigo Ilustrativo</h2>
+        <pre><code>
+FUNCIÓN _generate_60_structured_segments(texto_documento):
+    // Paso 1 & 2: Pre-calcular embeddings de oraciones para todo el corpus
+    oraciones = TOKENIZAR_ORACIONES(texto_documento)
+    embeddings_oraciones = EMBED_BATCH(oraciones)
+
+    // Paso 3: Iterar a través de cada intersección temática
+    segmentos_estructurados = []
+    PARA area_politica EN TODAS_LAS_AREAS_DE_POLITICA:
+        PARA dimension EN TODAS_LAS_DIMENSIONES:
+            // a) Formular y vectorizar una consulta temática
+            texto_consulta = OBTENER_PALABRAS_CLAVE(area_politica) + OBTENER_PALABRAS_CLAVE(dimension)
+            embedding_consulta = EMBED_TEXT(texto_consulta)
+
+            // b) Encontrar las oraciones más relevantes
+            similitudes = SIMILITUD_COSENO(embedding_consulta, embeddings_oraciones)
+            indices_top = OBTENER_INDICES_TOP_K(similitudes, k=10)
+
+            // c) Extraer un segmento de texto contiguo alrededor de las oraciones top
+            segmento_texto = EXTRAER_SEGMENTO_DE_TEXTO(texto_documento, indices_top)
+
+            // d) Crear y etiquetar el segmento
+            segmento = {
+                "text": segmento_texto,
+                "policy_area_id": area_politica.id,
+                "dimension_id": dimension.id
+            }
+            segmentos_estructurados.APILAR(segmento)
+
+    RETORNAR segmentos_estructurados
+        </code></pre>
+
+        <h2>6. Lista de Verificación Operacional para Auditoría</h2>
+        <ul>
+            <li><strong>Verificar Archivo de Entrada:</strong> Asegurar que la ruta <code>pdf_path</code> pasada a <code>_ingest_document</code> apunte a un archivo válido y accesible.</li>
+            <li><strong>Comprobar Recuento de Chunks:</strong> Después de la ejecución, afirmar que la longitud de la lista <code>chunks</code> dentro del objeto <code>PreprocessedDocument</code> devuelto sea exactamente 60.</li>
+            <li><strong>Inspeccionar Metadatos de Chunks:</strong> Iterar a través de cada uno de los 60 fragmentos y verificar que los campos <code>policy_area_id</code> y <code>dimension_id</code> estén presentes, no sean nulos y contengan códigos canónicos válidos.</li>
+            <li><strong>Confirmar Unicidad del Contenido:</strong> Aunque se espera cierta superposición, comparar algunos SPCs para asegurar que el proceso de extracción está generando contenido distinto para diferentes pares PA-DIM.</li>
+            <li><strong>Revisar Puntuaciones de Relevancia:</strong> Si el registro está habilitado, inspeccionar la <code>relevance_score</code> de los segmentos extraídos para asegurar que la búsqueda semántica está discriminando el contenido de manera efectiva.</li>
+        </ul>
+    </div>
+</body>
+</html>

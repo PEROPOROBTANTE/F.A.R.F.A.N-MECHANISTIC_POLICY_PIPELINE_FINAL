@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Fase 0: Validación de Integridad y Contratos de Configuración</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-red-500); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p { margin-bottom: 20px; text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; text-align: justify; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(196, 30, 58, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-red-500); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 0: Validación de Integridad y Contratos de Configuración</h1>
+
+        <h2>1. Propósito</h2>
+        <p>
+            La Fase 0 constituye la puerta de validación fundacional de todo el pipeline F.A.R.F.A.N. Su objetivo principal es asegurar la integridad estructural, semántica y criptográfica del objeto de configuración central, denominado coloquialmente el "monolito". Esta fase opera bajo una política de tolerancia cero; cualquier desviación de los contratos establecidos resulta en una terminación inmediata y fatal del proceso de orquestación. La finalización exitosa de esta fase produce un objeto de configuración certificado, que sirve como la fuente inmutable de verdad para todas las etapas analíticas y de procesamiento posteriores, garantizando así la coherencia sistémica y la reproducibilidad.
+        </p>
+
+        <h2>2. Definiciones Clave</h2>
+        <ul>
+            <li><strong>Monolito:</strong> Un objeto JSON exhaustivo que codifica todo el marco analítico, incluyendo todas las preguntas micro, meso y macro, modalidades de puntuación, relaciones jerárquicas entre áreas de política y clústeres, y reglas de agregación.</li>
+            <li><strong>Hash SHA-256:</strong> Una firma criptográfica del contenido del monolito, que asegura que la configuración no ha sido alterada y proporciona un identificador verificable para el seguimiento de la procedencia.</li>
+            <li><strong>Contrato Estructural:</strong> Un conjunto de reglas implícitas y explícitas que rigen la consistencia interna del monolito, como el recuento exacto de preguntas esperadas, la presencia de todas las modalidades de puntuación requeridas y el mapeo lógico entre áreas de política y clústeres.</li>
+            <li><strong>Objeto de Configuración Certificado:</strong> La salida validada de la Fase 0, que agrupa el monolito original, su hash SHA-256 y los informes de las comprobaciones de validación.</li>
+        </ul>
+
+        <h2>3. Flujo Operacional Detallado</h2>
+        <p>
+            La secuencia operacional de la Fase 0 es ejecutada por el método <code>Orchestrator._load_configuration()</code>. El proceso es estrictamente lineal y cada paso debe ser superado para que el siguiente se inicie.
+        </p>
+        <ol>
+            <li><strong>Normalización del Monolito:</strong> Los datos de entrada del monolito, que pueden existir como un <code>MappingProxyType</code>, se convierten recursivamente en un diccionario estándar. Esto asegura una serialización consistente para el paso de hashing posterior.</li>
+            <li><strong>Hashing Criptográfico:</strong> El monolito normalizado se serializa en una cadena JSON compacta y ordenada. Esta cadena se codifica a UTF-8 y se procesa a través del algoritmo SHA-256 para producir un hash único y direccionable por contenido.</li>
+            <li><strong>Validación del Censo de Componentes:</strong> El sistema realiza una auditoría cuantitativa, comparando el número de preguntas micro, meso y macro encontradas en el monolito con constantes contractuales codificadas (<code>EXPECTED_QUESTION_COUNT</code>). Una comprobación similar se realiza para el número de métodos disponibles. Un desajuste en esta etapa indica una desincronización grave entre el código y su configuración.</li>
+            <li><strong>Validación del Contrato Estructural:</strong> Se invoca el método <code>_validate_contract_structure()</code>. Esta función realiza un análisis profundo de la arquitectura del monolito, verificando:
+                <ul>
+                    <li>La presencia de exactamente 30 "base slots" únicos.</li>
+                    <li>La definición de las seis modalidades de puntuación requeridas (TIPO_A a TIPO_F).</li>
+                    <li>El mapeo consistente y no ambiguo de las áreas de política a sus clústeres padres.</li>
+                </ul>
+            </li>
+            <li><strong>Generación de Ajustes de Agregación:</strong> Tras una validación exitosa, se llama al constructor <code>AggregationSettings.from_monolith()</code>. Esta función parsea el monolito para construir un objeto estructurado que contiene todas las reglas, pesos y parámetros requeridos por la lógica de agregación en las Fases 4, 5, 6 y 7.</li>
+            <li><strong>Ensamblaje del Objeto Certificado:</strong> El paso final es ensamblar el objeto de configuración certificado, que encapsula el monolito validado, su hash SHA-256, los informes de validación estructural y el objeto de ajustes de agregación recién creado. Este objeto queda disponible en el contexto del orquestador para todas las fases subsiguientes.</li>
+        </ol>
+
+        <h2>4. Diagrama de Sistema: Flujo de Validación de Configuración</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C41E3A"/><stop offset="100%" stop-color="#3A0E0E"/></linearGradient>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-red { fill: url(#grad-red); stroke: #C41E3A; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                    .gate { stroke: #C41E3A; stroke-width: 2; stroke-dasharray: 4,4; }
+                </style>
+
+                <!-- Input -->
+                <rect x="50" y="50" width="180" height="60" class="box box-red"/>
+                <text x="140" y="80" class="label">ENTRADA: Datos Monolito</text>
+
+                <!-- Process -->
+                <rect x="360" y="50" width="180" height="60" class="box box-blue"/>
+                <text x="450" y="75" class="label">PROCESO:</text>
+                <text x="450" y="90" class="sub-label">_load_configuration()</text>
+
+                <!-- Output -->
+                <rect x="670" y="50" width="180" height="60" class="box box-green"/>
+                <text x="760" y="80" class="label">SALIDA: Config Certificada</text>
+
+                <path class="flow-line" d="M230 80 H 360"/>
+                <path class="flow-line" d="M540 80 H 670"/>
+
+                <!-- Validation Gates -->
+                <g transform="translate(150, 150)">
+                    <rect x="0" y="0" width="600" height="250" fill="rgba(0, 212, 255, 0.05)" stroke="#00D4FF" stroke-width="1" rx="8"/>
+                    <text x="300" y="25" class="label" font-size="14px">Secuencia de Validación Interna</text>
+
+                    <path class="gate" d="M20 50 H 580"/>
+                    <text x="120" y="80" class="label">1. Hashing SHA-256</text>
+                    <text x="450" y="80" class="label" fill="#17A589">Asegura: Integridad</text>
+
+                    <path class="gate" d="M20 110 H 580"/>
+                    <text x="140" y="140" class="label">2. Censo de Componentes</text>
+                    <text x="450" y="140" class="label" fill="#17A589">Asegura: Completitud</text>
+
+                    <path class="gate" d="M20 170 H 580"/>
+                    <text x="160" y="200" class="label">3. Validación Contrato Estructural</text>
+                    <text x="450" y="200" class="label" fill="#17A589">Asegura: Coherencia</text>
+                </g>
+                 <path class="flow-line" d="M450 110 V 160"/>
+            </svg>
+        </div>
+
+        <h2>5. Pseudocódigo Ilustrativo</h2>
+        <pre><code>
+FUNCIÓN _load_configuration(datos_monolito):
+    // Paso 1 & 2: Normalizar y crear hash criptográfico
+    monolito_normalizado = NORMALIZAR(datos_monolito)
+    hash_monolito = SHA256(SERIALIZAR(monolito_normalizado))
+
+    // Paso 3: Realizar auditoría cuantitativa
+    conteo_preguntas = CONTAR_PREGUNTAS(monolito_normalizado)
+    AFIRMAR conteo_preguntas == CONTEO_PREGUNTAS_ESPERADO
+
+    // Paso 4: Realizar validación estructural y lógica profunda
+    informe_estructura = _validate_contract_structure(monolito_normalizado)
+    AFIRMAR informe_estructura.es_valido
+
+    // Paso 5: Construir conjunto de reglas de agregación
+    reglas_agregacion = AggregationSettings.from_monolith(monolito_normalizado)
+
+    // Paso 6: Ensamblar y devolver el objeto certificado
+    config_certificada = {
+        "monolith": monolito_normalizado,
+        "monolith_sha256": hash_monolito,
+        "structure_report": informe_estructura,
+        "_aggregation_settings": reglas_agregacion
+    }
+    RETORNAR config_certificada
+        </code></pre>
+
+        <h2>6. Lista de Verificación Operacional para Auditoría</h2>
+        <ul>
+            <li><strong>Verificar Entrada:</strong> Confirmar que los datos del monolito se están pasando correctamente al orquestador.</li>
+            <li><strong>Comprobar Hash SHA-256:</strong> Generar independientemente el hash SHA-256 del archivo fuente del monolito y compararlo con el hash almacenado en el objeto de configuración certificado para asegurar la integridad.</li>
+            <li><strong>Auditar Constantes:</strong> Verificar que la constante `EXPECTED_QUESTION_COUNT` se alinea con la última versión de la especificación analítica.</li>
+            <li><strong>Revisar Informe Estructural:</strong> Examinar el `structure_report` dentro de la salida en busca de errores o inconsistencias registradas, particularmente en cuanto a recuentos de base slots y presencia de modalidades.</li>
+            <li><strong>Inspeccionar Ajustes de Agregación:</strong> Confirmar que el objeto `_aggregation_settings` ha sido creado exitosamente y adjuntado al objeto de configuración final.</li>
+        </ul>
+    </div>
+</body>
+</html>

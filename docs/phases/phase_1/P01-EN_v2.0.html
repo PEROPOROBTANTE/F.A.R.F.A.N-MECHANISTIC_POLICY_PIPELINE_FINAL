@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 1: Document Ingestion and Structured Segmentation</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 1: Document Ingestion and Structured Segmentation</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 1 marks the transition from abstract configuration to concrete data processing. Its purpose is to ingest a raw, unstructured policy document (typically a PDF) and transform it into a highly structured, semantically addressable artifact known as the <code>PreprocessedDocument</code>. This transformation is governed by the strict P01-ES v1.0 specification, which mandates the deterministic creation of exactly 60 "Smart Policy Chunks" (SPCs). Each chunk is thematically aligned with a unique intersection of one of the 10 canonical Policy Areas and one of the 6 analytical Dimensions. This phase effectively dissects the monolithic source text into a precise 10x6 matrix of evidence, forming the foundational substrate for the granular analysis performed in Phase 2.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>CPPIngestionPipeline:</strong> A specialized class responsible for the end-to-end process of PDF text extraction and its transformation into the 60 structured SPCs.</li>
+            <li><strong>Smart Policy Chunk (SPC):</strong> A semantically coherent segment of text extracted from the source document, algorithmically determined to be the most relevant for a specific Policy Area and Dimension pair.</li>
+            <li><strong>P01-ES v1.0 Validation Gates:</strong> A set of non-negotiable contractual rules enforced by the Orchestrator upon completion of the ingestion. These gates require the final output to contain exactly 60 chunks, with each chunk possessing a valid <code>policy_area_id</code> and <code>dimension_id</code>.</li>
+            <li><strong>PreprocessedDocument:</strong> The canonical data structure output by this phase. It serves as a container for the 60 SPCs, the full document text, sentence boundaries, and other critical metadata.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The ingestion process is initiated by the <code>Orchestrator._ingest_document()</code> method, which delegates the core logic to the <code>CPPIngestionPipeline</code>. The sub-phases within this pipeline, primarily orchestrated by the <code>_generate_60_structured_segments</code> method, are as follows:
+        </p>
+        <ol>
+            <li><strong>Sentence Tokenization:</strong> The entire raw text of the document is parsed and segmented into a list of individual sentences using the NLTK <code>sent_tokenize</code> library. The character-level start and end positions of each sentence are recorded for later retrieval.</li>
+            <li><strong>Corpus-Wide Sentence Embedding:</strong> A large-language embedding model (specifically, <code>intfloat/multilingual-e5-large</code> via the <code>SemanticChunkingProducer</code>) is used to generate a high-dimensional vector representation for every sentence in the document. This is a computationally intensive, one-time operation that creates a semantic map of the entire corpus.</li>
+            <li><strong>Iterative Thematic Extraction (60x):</strong> The system enters a loop that iterates 60 times, once for each unique pair of Policy Area (PA) and Dimension (DIM). In each iteration:
+                <ol type="a">
+                    <li><strong>Query Formulation:</strong> A semantic query is constructed by concatenating the predefined keywords associated with the current PA (e.g., "violencia, conflicto armado") and DIM (e.g., "diagnóstico, recursos").</li>
+                    <li><strong>Query Embedding:</strong> The same embedding model is used to generate a vector representation of the formulated query.</li>
+                    <li><strong>Semantic Similarity Search:</strong> The system calculates the cosine similarity between the query vector and the pre-computed embedding of every sentence in the document. This identifies which sentences are most semantically aligned with the thematic focus of the query.</li>
+                    <li><strong>Content Segmentation:</strong> The top 10 most relevant sentences are identified. The system then determines the minimum and maximum character positions of this set of sentences and expands this window slightly to form a single, contiguous block of text. This block becomes the content for the SPC.</li>
+                </ol>
+            </li>
+            <li><strong>SPC Object Instantiation:</strong> The extracted text block is packaged into a <code>SmartPolicyChunk</code> object, which is tagged with the corresponding <code>policy_area_id</code> and <code>dimension_id</code>.</li>
+            <li><strong>Final Artifact Assembly:</strong> After 60 iterations, the collection of SPCs is assembled into the final <code>PreprocessedDocument</code> object.</li>
+            <li><strong>Orchestrator Validation:</strong> The <code>PreprocessedDocument</code> object is returned to the Orchestrator, which immediately subjects it to the P01-ES v1.0 validation gates. Any deviation in chunk count or metadata integrity results in a runtime error.</li>
+        </ol>
+
+        <h2>4. System Diagram: Structured Segmentation Process</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                 <defs>
+                    <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C41E3A"/><stop offset="100%" stop-color="#3A0E0E"/></linearGradient>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-red { fill: url(#grad-red); stroke: #C41E3A; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                    .loop-box { fill: none; stroke: var(--atroz-copper-500); stroke-dasharray: 5,5; rx: 8px; }
+                </style>
+
+                <rect x="20" y="20" width="150" height="50" class="box box-red"/>
+                <text x="95" y="50" class="label">Raw Document Text</text>
+
+                <rect x="220" y="20" width="180" height="50" class="box box-blue"/>
+                <text x="310" y="42" class="label">Sentence Tokenization</text>
+                <text x="310" y="58" class="sub-label">sent_tokenize()</text>
+
+                <rect x="450" y="20" width="180" height="50" class="box box-blue"/>
+                <text x="540" y="42" class="label">Corpus Embedding</text>
+                <text x="540" y="58" class="sub-label">embed_batch()</text>
+
+                <rect x="680" y="20" width="200" height="50" class="box box-green"/>
+                <text x="780" y="50" class="label">Sentence Embedding Matrix</text>
+
+                <path class="flow-line" d="M170 45 h 50"/>
+                <path class="flow-line" d="M400 45 h 50"/>
+                <path class="flow-line" d="M630 45 h 50"/>
+
+                <rect x="50" y="100" width="800" height="480" class="loop-box"/>
+                <text x="450" y="125" class="label" font-size="14" fill="#B2642E">Iterative Thematic Extraction Loop (x60)</text>
+
+                <rect x="100" y="160" width="150" height="80" class="box box-blue"/>
+                <text x="175" y="190" class="label">PA & DIM Keywords</text>
+                <text x="175" y="210" class="sub-label">(e.g., "género", "diagnóstico")</text>
+
+                <rect x="300" y="180" width="150" height="40" class="box box-blue"/>
+                <text x="375" y="205" class="label">Query Embedding</text>
+
+                <rect x="500" y="180" width="180" height="40" class="box box-blue"/>
+                <text x="590" y="205" class="label">Semantic Similarity Search</text>
+
+                <path class="flow-line" d="M250 200 h 50"/>
+                <path class="flow-line" d="M450 200 h 50"/>
+                <path class="flow-line" d="M680 200 h 40"/>
+
+                <path class="flow-line" d="M780 70 V 190 H 720"/>
+                <text x="750" y="135" class="sub-label" fill="#B2642E">Input Matrix</text>
+
+
+                <rect x="300" y="280" width="300" height="50" class="box box-blue"/>
+                <text x="450" y="305" class="label">Top-10 Sentence Identification & Segmentation</text>
+
+                <path class="flow-line" d="M450 220 v 60"/>
+
+                <rect x="375" y="380" width="150" height="50" class="box box-green"/>
+                <text x="450" y="405" class="label">Smart Policy Chunk</text>
+
+                <path class="flow-line" d="M450 330 v 50"/>
+
+                <g transform="translate(410, 460)">
+                    <rect x="0" y="0" width="20" height="20" fill="url(#grad-green)" stroke="#39FF14"/>
+                    <rect x="25" y="0" width="20" height="20" fill="url(#grad-green)" stroke="#39FF14"/>
+                    <text x="55" y="15" class="label">...</text>
+                    <rect x="70" y="0" width="20" height="20" fill="url(#grad-green)" stroke="#39FF14"/>
+                </g>
+                <text x="450" y="505" class="sub-label">Collection of 60 SPCs</text>
+                <path class="flow-line" d="M450 430 v 30"/>
+
+                <rect x="350" y="520" width="200" height="50" class="box box-green"/>
+                <text x="450" y="545" class="label">Final PreprocessedDocument</text>
+
+                <path class="flow-line" d="M450 505 v 15"/>
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+FUNCTION _generate_60_structured_segments(document_text):
+    // Step 1 & 2: Pre-compute sentence embeddings for the entire corpus
+    sentences = TOKENIZE_SENTENCES(document_text)
+    sentence_embeddings = EMBED_BATCH(sentences)
+
+    // Step 3: Iterate through each thematic intersection
+    structured_segments = []
+    FOR policy_area IN ALL_POLICY_AREAS:
+        FOR dimension IN ALL_DIMENSIONS:
+            // a) Formulate and embed a thematic query
+            query_text = GET_KEYWORDS(policy_area) + GET_KEYWORDS(dimension)
+            query_embedding = EMBED_TEXT(query_text)
+
+            // b) Find most relevant sentences
+            similarities = COSINE_SIMILARITY(query_embedding, sentence_embeddings)
+            top_indices = GET_TOP_K_INDICES(similarities, k=10)
+
+            // c) Extract a contiguous text segment around the top sentences
+            segment_text = EXTRACT_TEXT_SEGMENT(document_text, top_indices)
+
+            // d) Create and tag the segment
+            segment = {
+                "text": segment_text,
+                "policy_area_id": policy_area.id,
+                "dimension_id": dimension.id
+            }
+            structured_segments.APPEND(segment)
+
+    RETURN structured_segments
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input File:</strong> Ensure the <code>pdf_path</code> passed to <code>_ingest_document</code> points to a valid and accessible file.</li>
+            <li><strong>Check Chunk Count:</strong> After execution, assert that the length of the <code>chunks</code> list within the returned <code>PreprocessedDocument</code> object is exactly 60.</li>
+            <li><strong>Inspect Chunk Metadata:</strong> Iterate through each of the 60 chunks and verify that the <code>policy_area_id</code> and <code>dimension_id</code> fields are present, non-null, and contain valid canonical codes.</li>
+            <li><strong>Confirm Content Uniqueness:</strong> While some overlap is expected, compare a few SPCs to ensure that the extraction process is generating distinct content for different PA-DIM pairs.</li>
+            <li><strong>Review Relevance Scores:</strong> If logging is enabled, inspect the `relevance_score` for extracted segments to ensure the semantic search is effectively discriminating content.</li>
+        </ul>
+    </div>
+</body>
+</html>

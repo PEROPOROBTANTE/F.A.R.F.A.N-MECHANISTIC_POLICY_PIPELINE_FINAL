@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 4: Dimension-Level Aggregation</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-green-toxic); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-green-toxic); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 4: Meso-Level Synthesis via Dimension Aggregation</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 4 initiates the hierarchical synthesis of the granular data produced in the preceding phases. Its primary objective is to aggregate the approximately 300 individual <code>ScoredMicroQuestion</code> results into 60 distinct, meso-level analytical units. Each of these units, represented by a <code>DimensionScore</code> object, corresponds to a unique Policy Area-Dimension intersection. This phase marks a critical shift from individual data point analysis to the evaluation of thematic trends and performance. The aggregation logic is not a simple average; it is a weighted calculation governed by rules and parameters specified in the <code>AggregationSettings</code> object, which was derived from the monolith in Phase 0.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Dimension Aggregation:</strong> The process of grouping and calculating a single, representative score for all micro-questions that belong to the same Policy Area and Dimension.</li>
+            <li><strong>DimensionAggregator:</strong> A specialized class from <code>aggregation.py</code> that contains the business logic for grouping scored results and applying the correct weighting and aggregation algorithms.</li>
+            <li><strong>AggregationSettings:</strong> A configuration object, loaded during Phase 0, that provides all necessary parameters for the aggregation, including weights for different question types and thresholds for quality bands.</li>
+            <li><strong>DimensionScore:</strong> The output artifact of this phase for each of the 60 groups. It encapsulates the aggregated score, a list of the contributing micro-question results, and diagnostic information about the aggregation process.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The process is managed by the <code>Orchestrator._aggregate_dimensions_async()</code> method and executed concurrently for different groups.
+        </p>
+        <ol>
+            <li><strong>Data Validation:</strong> The input list of ~300 <code>ScoredMicroQuestion</code> objects is first passed through a validation function, <code>validate_scored_results</code>, to ensure structural integrity and the presence of necessary metadata (e.g., valid scores, <code>policy_area</code>, <code>dimension</code>).</li>
+            <li><strong>Grouping:</strong> The validated list of scored results is grouped into a dictionary or hash map. The key for each group is a tuple composed of the <code>policy_area</code> and <code>dimension</code> identifiers. This results in 60 distinct groups of micro-question results.</li>
+            <li><strong>Concurrent Aggregation:</strong> The system processes the 60 groups in parallel. For each group, an asynchronous task is initiated.</li>
+            <li><strong>Aggregator Invocation:</strong> Within each task, the <code>DimensionAggregator</code> is invoked. Its <code>aggregate_dimension</code> method is called, receiving the list of scored results for that specific group.</li>
+            <li><strong>Weighted Calculation:</strong> The aggregator applies the logic defined in the <code>AggregationSettings</code>. This typically involves applying different weights to the normalized scores of the micro-questions based on their type or importance, and then computing a weighted average or a more complex statistical measure.</li>
+            <li><strong>DimensionScore Instantiation:</strong> The result of the calculation is encapsulated within a <code>DimensionScore</code> object. This object not only holds the final score but also maintains a link to the underlying micro-question data, ensuring full traceability of the evidence.</li>
+            <li><strong>Result Collection:</strong> The orchestrator collects the 60 <code>DimensionScore</code> objects from the completed asynchronous tasks. This collection forms the complete output of Phase 4 and serves as the direct input for Phase 5.</li>
+        </ol>
+
+        <h2>4. System Diagram: Group-and-Reduce Aggregation</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <rect x="300" y="20" width="300" height="50" class="box box-green"/>
+                <text x="450" y="50" class="label">Input: List of ~300 ScoredMicroQuestions</text>
+
+                <path class="flow-line" d="M450 70 V 110"/>
+
+                <rect x="350" y="110" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="140" class="label">Grouping Stage</text>
+                <text x="450" y="155" class="sub-label">Key: (policy_area, dimension)</text>
+
+                <path class="flow-line" d="M450 170 V 210"/>
+
+                <!-- Groups -->
+                <g id="groups">
+                    <rect x="50" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="125" y="240" class="label" font-size="10px">Group: PA01-DIM01</text>
+                    <text x="125" y="255" class="sub-label">~5 items</text>
+
+                    <rect x="250" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="325" y="240" class="label" font-size="10px">Group: PA01-DIM02</text>
+                    <text x="325" y="255" class="sub-label">~5 items</text>
+
+                    <text x="475" y="245" class="label" font-size="20px">...</text>
+
+                    <rect x="700" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="775" y="240" class="label" font-size="10px">Group: PA10-DIM06</text>
+                    <text x="775" y="255" class="sub-label">~5 items</text>
+                </g>
+
+                <path class="flow-line" d="M125 270 V 310"/>
+                <path class="flow-line" d="M325 270 V 310"/>
+                <path class="flow-line" d="M775 270 V 310"/>
+
+                <!-- Aggregation Logic -->
+                <g id="aggregation">
+                    <rect x="50" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="125" y="340" class="label">DimensionAggregator</text>
+                    <rect x="250" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="325" y="340" class="label">DimensionAggregator</text>
+                    <text x="475" y="340" class="label" font-size="20px">...</text>
+                    <rect x="700" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="775" y="340" class="label">DimensionAggregator</text>
+                </g>
+
+                <path class="flow-line" d="M125 360 V 400"/>
+                <path class="flow-line" d="M325 360 V 400"/>
+                <path class="flow-line" d="M775 360 V 400"/>
+
+                <!-- Aggregated Results -->
+                <g id="results">
+                    <rect x="50" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="125" y="430" class="label">DimensionScore</text>
+                    <rect x="250" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="325" y="430" class="label">DimensionScore</text>
+                    <text x="475" y="430" class="label" font-size="20px">...</text>
+                    <rect x="700" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="775" y="430" class="label">DimensionScore</text>
+                </g>
+
+                <path class="flow-line" d="M125 450 v 40 H 450"/>
+                <path class="flow-line" d="M325 450 v 40 H 450"/>
+                <path class="flow-line" d="M775 450 v 40 H 450"/>
+
+                <path class="flow-line" d="M450 490 V 520"/>
+
+                <rect x="325" y="520" width="250" height="50" class="box box-green"/>
+                <text x="450" y="550" class="label">Output: List of 60 DimensionScores</text>
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+ASYNC FUNCTION _aggregate_dimensions_async(scored_results, config):
+    // Step 1: Validate input data integrity
+    validated_results = validate_scored_results(scored_results)
+
+    // Step 2: Group results by the composite key (policy_area, dimension)
+    grouped_results = GROUP_BY(validated_results, key="policy_area, dimension")
+
+    // Step 3: Concurrently process each of the 60 groups
+    tasks = []
+    FOR group_key, items IN grouped_results.items():
+        task = CREATE_TASK(aggregate_single_dimension(items, config.aggregation_settings))
+        tasks.APPEND(task)
+
+    dimension_scores = AWAIT asyncio.gather(*tasks)
+    RETURN dimension_scores
+
+FUNCTION aggregate_single_dimension(items, settings):
+    // Step 4: Instantiate the aggregation engine
+    aggregator = new DimensionAggregator(settings)
+
+    // Step 5: Perform the weighted calculation
+    // This involves applying specific weights from 'settings' to each item's score
+    aggregated_score = aggregator.aggregate_dimension(items)
+
+    // Step 6: Encapsulate into the canonical output structure
+    RETURN new DimensionScore(
+        score = aggregated_score,
+        contributing_items = items,
+        ...
+    )
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input Count:</strong> Ensure the number of <code>ScoredMicroQuestion</code> objects entering the phase is correct (~300).</li>
+            <li><strong>Verify Output Count:</strong> Assert that the final output is a list containing exactly 60 <code>DimensionScore</code> objects.</li>
+            <li><strong>Audit a Single Aggregation:</strong> Select one PA-DIM group. Manually inspect the scores of its contributing micro-questions and compare them with the final aggregated <code>DimensionScore</code> to verify the calculation's plausibility.</li>
+            <li><strong>Check for Data Loss:</strong> Confirm that the sum of the number of contributing items across all 60 <code>DimensionScore</code> objects equals the total number of valid (non-error) items from the input list.</li>
+            <li><strong>Inspect Aggregation Settings:</strong> Verify that the <code>DimensionAggregator</code> is correctly loading and utilizing the <code>AggregationSettings</code> from the certified configuration object.</li>
+        </ul>
+    </div>
+</body>
+</html>

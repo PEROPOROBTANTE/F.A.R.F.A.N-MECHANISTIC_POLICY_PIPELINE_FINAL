@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 2: Micro-Question Execution</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent: 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 2: Granular Analysis via Micro-Question Execution</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 2 represents the core analytical engine of the F.A.R.F.A.N. pipeline, where the structured data from Phase 1 is subjected to a battery of highly specific, targeted inquiries. The objective of this phase is to perform a granular, evidence-based analysis by executing approximately 300 "micro-questions" defined in the monolith. Each question is designed to probe a specific aspect of the policy document within a tightly-scoped thematic context. This phase operates asynchronously to maximize throughput, distributing the analytical workload across a pool of specialized executors. The output is a collection of <code>MicroQuestionRun</code> objects, each containing the raw evidence extracted in response to a single question.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Micro-Question:</strong> A specific, well-defined analytical query from the monolith, associated with a particular Policy Area and Dimension (e.g., "What financial resources are allocated for gender equality initiatives?").</li>
+            <li><strong>Executor:</strong> A specialized class (e.g., <code>D1Q1_Executor</code>) responsible for the logical execution of a single micro-question. It contains a <code>METHOD_SEQUENCE</code> that defines the series of analytical methods to be called.</li>
+            <li><strong>Scoped Document:</strong> A temporary, in-memory version of the <code>PreprocessedDocument</code> that has been filtered to contain only the one or two Smart Policy Chunks relevant to the specific micro-question being executed.</li>
+            <li><strong>MicroQuestionRun:</strong> The data structure that encapsulates the result of a single micro-question execution, including the extracted evidence, metadata, and any errors encountered.</li>
+            <li><strong>Asynchronous Execution:</strong> The use of Python's <code>asyncio</code> library to run multiple micro-question executions concurrently, managed by a semaphore to control resource utilization.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The execution of this phase is managed by the <code>Orchestrator._execute_micro_questions_async()</code> method. The flow is characterized by a highly parallelized "map-reduce" style pattern.
+        </p>
+        <ol>
+            <li><strong>Strict Question Ordering:</strong> The list of all micro-questions from the monolith is sorted first by <code>dimension_id</code> and then by <code>policy_area_id</code>. This ensures a deterministic and logically grouped execution sequence, processing all questions for Dimension 1 before moving to Dimension 2, and so on.</li>
+            <li><strong>Asynchronous Task Creation:</strong> For each of the ~300 micro-questions, an asynchronous task is created. Each task is responsible for the full lifecycle of a single question's execution.</li>
+            <li><strong>Contextual Filtering:</strong> Within each task, the first critical step is filtering. The system identifies the <code>policy_area_id</code> and <code>dimension_id</code> of the question and filters the 60 SPCs from the <code>PreprocessedDocument</code> to create a <strong>Scoped Document</strong>. This new object contains only the one or two SPCs that are thematically relevant to the question at hand. This step is paramount for efficiency and analytical precision.</li>
+            <li><strong>Executor Instantiation:</strong> Based on the question's "base slot" (e.g., 'D1-Q1'), the corresponding Executor class (e.g., <code>D1Q1_Executor</code> from <code>executors.py</code>) is instantiated.</li>
+            <li><strong>Delegated Execution:</strong> The <code>execute</code> method of the instantiated Executor is called, passing it the Scoped Document. The Executor then proceeds to call the sequence of analytical methods defined in its internal <code>METHOD_SEQUENCE</code>, using the <code>MethodExecutor</code> to resolve and run them.</li>
+            <li><strong>Evidence Aggregation:</strong> The Executor gathers the results from its method sequence and packages them into an <code>Evidence</code> object.</li>
+            <li><strong>Result Encapsulation:</strong> The asynchronous task concludes by creating a <code>MicroQuestionRun</code> object, which stores the generated <code>Evidence</code>, the question's metadata, execution duration, and any potential errors.</li>
+            <li><strong>Result Collection:</strong> The orchestrator collects the results from all ~300 asynchronous tasks as they complete. The phase is finished once all tasks have been executed.</li>
+        </ol>
+
+        <h2>4. System Diagram: Asynchronous Fan-Out/Fan-In Execution</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                     <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <rect x="350" y="20" width="200" height="60" class="box box-green"/>
+                <text x="450" y="50" class="label">PreprocessedDocument</text>
+                <text x="450" y="65" class="sub-label">(60 SPCs)</text>
+
+                <rect x="350" y="120" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="150" class="label">_execute_micro_</text>
+                <text x="450" y="165" class="label">questions_async()</text>
+
+                <path class="flow-line" d="M450 80 V 120"/>
+
+                <path class="flow-line" d="M450 180 V 220"/>
+                <text x="470" y="205" class="sub-label" fill="#B2642E">Fan-Out: ~300 Async Tasks</text>
+
+                <!-- Concurrent Executors -->
+                <g transform="translate(50, 220)">
+                    <rect x="0" y="0" width="180" height="200" fill="rgba(0,212,255,0.05)" stroke="#00D4FF" stroke-dasharray="3,3" rx="4"/>
+                    <text x="90" y="25" class="label" font-size="10px">Task: D1Q1_Executor</text>
+                    <rect x="20" y="45" width="140" height="40" class="box box-blue" opacity="0.7"/>
+                    <text x="90" y="70" class="label" font-size="9px">Filter for PA01, DIM01</text>
+                    <rect x="20" y="105" width="140" height="40" class="box box-blue" opacity="0.7"/>
+                    <text x="90" y="130" class="label" font-size="9px">executor.execute()</text>
+                    <rect x="40" y="165" width="100" height="30" class="box box-green" opacity="0.7"/>
+                    <text x="90" y="185" class="label" font-size="9px">Evidence</text>
+                </g>
+
+                 <g transform="translate(360, 220)">
+                    <rect x="0" y="0" width="180" height="200" fill="rgba(0,212,255,0.05)" stroke="#00D4FF" stroke-dasharray="3,3" rx="4"/>
+                    <text x="90" y="25" class="label" font-size="10px">Task: D1Q2_Executor</text>
+                    <rect x="20" y="45" width="140" height="40" class="box box-blue" opacity="0.7"/>
+                    <text x="90" y="70" class="label" font-size="9px">Filter for PA02, DIM01</text>
+                    <rect x="20" y="105" width="140" height="40" class="box box-blue" opacity="0.7"/>
+                    <text x="90" y="130" class="label" font-size="9px">executor.execute()</text>
+                    <rect x="40" y="165" width="100" height="30" class="box box-green" opacity="0.7"/>
+                    <text x="90" y="185" class="label" font-size="9px">Evidence</text>
+                </g>
+
+                <g transform="translate(670, 220)">
+                    <rect x="0" y="0" width="180" height="200" fill="rgba(0,212,255,0.05)" stroke="#00D4FF" stroke-dasharray="3,3" rx="4"/>
+                    <text x="90" y="25" class="label" font-size="10px">Task: D6Q5_Executor</text>
+                     <rect x="20" y="45" width="140" height="40" class="box box-blue" opacity="0.7"/>
+                    <text x="90" y="70" class="label" font-size="9px">Filter for PA10, DIM06</text>
+                    <rect x="20" y="105" width="140" height="40" class="box box-blue" opacity="0.7"/>
+                    <text x="90" y="130" class="label" font-size="9px">executor.execute()</text>
+                    <rect x="40" y="165" width="100" height="30" class="box box-green" opacity="0.7"/>
+                    <text x="90" y="185" class="label" font-size="9px">Evidence</text>
+                </g>
+
+                <text x="295" y="320" class="label" font-size="20px">...</text>
+                <text x="605" y="320" class="label" font-size="20px">...</text>
+
+                <path class="flow-line" d="M140 420 v 80"/>
+                <path class="flow-line" d="M450 420 v 80"/>
+                <path class="flow-line" d="M760 420 v 80"/>
+
+                <path d="M140 500 h 620" class="flow-line"/>
+                <text x="350" y="460" class="sub-label" fill="#B2642E">Fan-In: Collect Results</text>
+
+                <rect x="350" y="540" width="200" height="60" class="box box-green"/>
+                <text x="450" y="570" class="label">List of ~300</text>
+                <text x="450" y="585" class="label">MicroQuestionRun Objects</text>
+
+                <path class="flow-line" d="M450 500 v 40"/>
+
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+ASYNC FUNCTION _execute_micro_questions_async(document, config):
+    // Step 1: Order all questions deterministically
+    all_questions = SORT(config.micro_questions, BY=['dimension_id', 'policy_area_id'])
+
+    tasks = []
+    // Step 2: Create an async task for each question
+    FOR question IN all_questions:
+        task = CREATE_TASK(process_single_question(document, question))
+        tasks.APPEND(task)
+
+    // Step 8: Collect results as they complete
+    results = AWAIT asyncio.gather(*tasks)
+    RETURN results
+
+ASYNC FUNCTION process_single_question(document, question):
+    // Step 3: Filter SPCs to create a scoped context
+    scoped_chunks = FILTER(document.chunks, WHERE chunk.pa_id == question.pa_id AND chunk.dim_id == question.dim_id)
+    scoped_document = new PreprocessedDocument(chunks=scoped_chunks)
+
+    // Step 4: Instantiate the correct executor
+    ExecutorClass = GET_EXECUTOR_CLASS(question.base_slot)
+    executor = new ExecutorClass(method_executor, ...)
+
+    // Step 5 & 6: Delegate execution and get evidence
+    evidence = AWAIT IN_THREAD(executor.execute(scoped_document))
+
+    // Step 7: Encapsulate the final result
+    RETURN new MicroQuestionRun(question_id, evidence, ...)
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input Artifact:</strong> Confirm that the <code>PreprocessedDocument</code> from Phase 1, containing exactly 60 SPCs, is the input to this phase.</li>
+            <li><strong>Check Output Count:</strong> The final output list must contain a number of <code>MicroQuestionRun</code> objects equal to the number of micro-questions defined in the monolith (~300).</li>
+            <li><strong>Audit Scoped Documents:</strong> For a sample of questions, verify that the Scoped Document passed to the executor contains only the SPCs matching the question's Policy Area and Dimension.</li>
+            <li><strong>Inspect Evidence Objects:</strong> Examine a sample of the resulting <code>Evidence</code> objects to confirm that the executors are successfully populating them with extracted data (e.g., text elements, confidence scores).</li>
+            <li><strong>Monitor for Errors:</strong> Check the <code>error</code> field in the output objects. A high number of errors may indicate issues with specific Executor implementations or the underlying analytical methods.</li>
+        </ul>
+    </div>
+</body>
+</html>

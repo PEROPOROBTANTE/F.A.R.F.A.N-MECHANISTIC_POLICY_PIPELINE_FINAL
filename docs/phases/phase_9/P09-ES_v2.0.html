@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Fase 9: Ensamblado de Reporte</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 9: Ensamblado del Reporte Final</h1>
+
+        <h2>1. Propósito</h2>
+        <p>
+            La Fase 9 es un paso administrativo crucial que consolida los resultados analíticos de las fases precedentes en una única estructura de reporte, coherente y auditable. Ejecutada de forma síncrona por el método <code>_assemble_report</code>, su objetivo principal es empaquetar las recomendaciones de la Fase 8 con metadatos de procedencia esenciales. Esto incluye el hash criptográfico del monolito de configuración utilizado para la ejecución y resúmenes de los métodos analíticos empleados. El objeto de reporte resultante es un artefacto autocontenido que encapsula no solo las conclusiones finales, sino también el contexto verificable de su propia generación.
+        </p>
+
+        <h2>2. Definiciones Clave</h2>
+        <ul>
+            <li><strong>Ensamblado de Reporte:</strong> El proceso de combinar el conjunto final de recomendaciones con metadatos clave del pipeline en una estructura de diccionario unificada.</li>
+            <li><strong>Metadatos de Procedencia:</strong> Datos que aseguran la trazabilidad y reproducibilidad del análisis, especialmente el hash SHA-256 del monolito de la Fase 0.</li>
+            <li><strong>Objeto de Reporte:</strong> El diccionario final producido por esta fase, que contiene el conjunto completo de recomendaciones y los metadatos asociados.</li>
+        </ul>
+
+        <h2>3. Flujo Operacional Detallado</h2>
+        <p>
+            El flujo de esta fase síncrona es directo y se centra en la consolidación de datos.
+        </p>
+        <ol>
+            <li><strong>Recuperación de Entradas:</strong> El método toma el diccionario de recomendaciones generado en la Fase 8 como su entrada principal.</li>
+            <li><strong>Recolección de Metadatos:</strong> Accede al contexto del orquestador para recuperar metadatos críticos generados durante la ejecución del pipeline, específicamente el <code>monolith_sha256</code> de la Fase 0 y el <code>method_summary</code>.</li>
+            <li><strong>Construcción del Objeto:</strong> Se construye un nuevo diccionario para que sirva como el reporte final. Contiene tres claves de nivel superior:
+                <ul>
+                    <li><code>generated_at</code>: Una nueva marca de tiempo UTC que indica el momento de la creación del reporte.</li>
+                    <li><code>recommendations</code>: El diccionario completo y sin cambios de recomendaciones de la Fase 8.</li>
+                    <li><code>metadata</code>: Un objeto que contiene los datos de procedencia recolectados (hash del monolito, etc.).</li>
+                </ul>
+            </li>
+            <li><strong>Salida:</strong> Se devuelve el diccionario del reporte recién construido, que sirve como entrada para la fase final de formateo y exportación.</li>
+        </ol>
+
+        <h2>4. Diagrama de Sistema: Consolidación de Datos</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <!-- Inputs -->
+                <rect x="50" y="50" width="250" height="60" class="box box-green"/>
+                <text x="175" y="80" class="label">Entrada: Dict de Recomendaciones</text>
+                <text x="175" y="95" class="sub-label">(de Fase 8)</text>
+
+                <rect x="600" y="50" width="250" height="60" class="box box-green"/>
+                <text x="725" y="80" class="label">Entrada: Metadatos de Contexto</text>
+                <text x="725" y="95" class="sub-label">(monolith_sha256 de Fase 0)</text>
+
+                <path class="flow-line" d="M175 110 V 180"/>
+                <path class="flow-line" d="M725 110 V 180"/>
+
+                <!-- Process -->
+                <rect x="350" y="180" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="215" class="label">_assemble_report()</text>
+
+                <path class="flow-line" d="M450 240 V 290"/>
+
+                <!-- Output -->
+                <rect x="250" y="290" width="400" height="80" class="box box-green"/>
+                <text x="450" y="320" class="label" font-size="16px">Objeto de Reporte Final</text>
+                <text x="450" y="340" class="sub-label">{ recommendations, metadata, generated_at }</text>
+            </svg>
+        </div>
+
+        <h2>5. Pseudocódigo Ilustrativo</h2>
+        <pre><code>
+FUNCIÓN _assemble_report(recomendaciones, config):
+    // Paso 1 & 2: Recuperar entrada principal y metadatos de procedencia
+    reporte_recomendaciones = recomendaciones
+    metadatos_procedencia = {
+        "monolith_sha256": config.get("monolith_sha256"),
+        "method_summary": config.get("method_summary")
+    }
+
+    // Paso 3: Construir el objeto de reporte final
+    reporte_final = {
+        "generated_at": OBTENER_TIMESTAMP_ACTUAL(),
+        "recommendations": reporte_recomendaciones,
+        "metadata": metadatos_procedencia
+    }
+
+    // Paso 4: Devolver el objeto ensamblado
+    RETORNAR reporte_final
+        </code></pre>
+
+        <h2>6. Lista de Verificación Operacional para Auditoría</h2>
+        <ul>
+            <li><strong>Verificar Entrada:</strong> Confirmar que el diccionario <code>recommendations</code> de la Fase 8 se pasa correctamente.</li>
+            <li><strong>Comprobar Integridad de Metadatos:</strong> Verificar que el campo <code>metadata</code> en el objeto de salida existe y contiene un <code>monolith_sha256</code> no nulo.</li>
+            <li><strong>Validar Marca de Tiempo:</strong> Asegurar que el campo <code>generated_at</code> es una marca de tiempo UTC válida y reciente.</li>
+            <li><strong>Confirmar Paso de Datos:</strong> Afirmar que el objeto <code>recommendations</code> dentro del reporte de salida es idéntico al objeto de recomendaciones de entrada.</li>
+        </ul>
+    </div>
+</body>
+</html>

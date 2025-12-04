@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 9: Report Assembly</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 9: Final Report Assembly</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 9 is a critical administrative step that consolidates the analytical outputs of the preceding phases into a single, coherent, and auditable report structure. Executed synchronously by the <code>_assemble_report</code> method, its primary objective is to package the recommendations from Phase 8 with essential provenance metadata. This includes the cryptographic hash of the configuration monolith used for the run and summaries of the analytical methods employed. The resulting report object is a self-contained artifact that encapsulates not only the final insights but also the verifiable context of its own generation.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Report Assembly:</strong> The process of combining the final recommendation set with key pipeline metadata into a unified dictionary structure.</li>
+            <li><strong>Provenance Metadata:</strong> Data that ensures the traceability and reproducibility of the analysis, most notably the SHA-256 hash of the monolith from Phase 0.</li>
+            <li><strong>Report Object:</strong> The final dictionary produced by this phase, containing the full set of recommendations and the associated metadata.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The flow of this synchronous phase is straightforward and focuses on data consolidation.
+        </p>
+        <ol>
+            <li><strong>Input Retrieval:</strong> The method takes the dictionary of recommendations generated in Phase 8 as its primary input.</li>
+            <li><strong>Metadata Collection:</strong> It accesses the orchestrator's context to retrieve critical metadata generated during the pipeline's execution, specifically the <code>monolith_sha256</code> from Phase 0 and the <code>method_summary</code>.</li>
+            <li><strong>Object Construction:</strong> A new dictionary is constructed to serve as the final report. It contains three top-level keys:
+                <ul>
+                    <li><code>generated_at</code>: A new UTC timestamp marking the time of the report's creation.</li>
+                    <li><code>recommendations</code>: The full, unchanged dictionary of recommendations from Phase 8.</li>
+                    <li><code>metadata</code>: An object containing the collected provenance data (monolith hash, etc.).</li>
+                </ul>
+            </li>
+            <li><strong>Output:</strong> The newly constructed report dictionary is returned, serving as the input for the final formatting and export phase.</li>
+        </ol>
+
+        <h2>4. System Diagram: Data Consolidation</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <!-- Inputs -->
+                <rect x="50" y="50" width="250" height="60" class="box box-green"/>
+                <text x="175" y="80" class="label">Input: Recommendations Dict</text>
+                <text x="175" y="95" class="sub-label">(from Phase 8)</text>
+
+                <rect x="600" y="50" width="250" height="60" class="box box-green"/>
+                <text x="725" y="80" class="label">Input: Context Metadata</text>
+                <text x="725" y="95" class="sub-label">(monolith_sha256 from Phase 0)</text>
+
+                <path class="flow-line" d="M175 110 V 180"/>
+                <path class="flow-line" d="M725 110 V 180"/>
+
+                <!-- Process -->
+                <rect x="350" y="180" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="215" class="label">_assemble_report()</text>
+
+                <path class="flow-line" d="M450 240 V 290"/>
+
+                <!-- Output -->
+                <rect x="250" y="290" width="400" height="80" class="box box-green"/>
+                <text x="450" y="320" class="label" font-size="16px">Final Report Object</text>
+                <text x="450" y="340" class="sub-label">{ recommendations, metadata, generated_at }</text>
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+FUNCTION _assemble_report(recommendations, config):
+    // Step 1 & 2: Retrieve primary input and provenance metadata
+    report_recommendations = recommendations
+    provenance_metadata = {
+        "monolith_sha256": config.get("monolith_sha256"),
+        "method_summary": config.get("method_summary")
+    }
+
+    // Step 3: Construct the final report object
+    final_report = {
+        "generated_at": GET_CURRENT_TIMESTAMP(),
+        "recommendations": report_recommendations,
+        "metadata": provenance_metadata
+    }
+
+    // Step 4: Return the assembled object
+    RETURN final_report
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input:</strong> Confirm that the <code>recommendations</code> dictionary from Phase 8 is passed correctly.</li>
+            <li><strong>Check Metadata Integrity:</strong> Verify that the <code>metadata</code> field in the output object exists and contains a non-null <code>monolith_sha256</code>.</li>
+            <li><strong>Validate Timestamp:</strong> Ensure the <code>generated_at</code> field is a valid and recent UTC timestamp.</li>
+            <li><strong>Confirm Data Passthrough:</strong> Assert that the <code>recommendations</code> object within the output report is identical to the input recommendations object.</li>
+        </ul>
+    </div>
+</body>
+</html>

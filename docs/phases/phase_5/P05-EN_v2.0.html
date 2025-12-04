@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 5: Policy Area Aggregation</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-green-toxic); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-green-toxic); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 5: Thematic Synthesis via Policy Area Aggregation</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 5 constitutes the second tier of the hierarchical aggregation process. The primary objective is to synthesize the 60 <code>DimensionScore</code> objects from the previous phase into 10 higher-level thematic constructs, each representing a complete Policy Area. This phase abstracts away the dimensional-level details to provide a consolidated performance score for each of the 10 canonical policy domains (e.g., "Gender Equality," "Security and Violence"). The resulting <code>AreaScore</code> objects provide a crucial macro-thematic overview, forming the foundational building blocks for the final cluster and macro-level evaluations in subsequent phases.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Policy Area Aggregation:</strong> The process of grouping the 6 <code>DimensionScore</code> objects that correspond to a single Policy Area and calculating a unified score that represents the area's overall performance.</li>
+            <li><strong>AreaPolicyAggregator:</strong> A specialized class from <code>aggregation.py</code> that encapsulates the logic for consolidating dimension-level scores into a single policy area score, using weights and rules from the <code>AggregationSettings</code>.</li>
+            <li><strong>AreaScore:</strong> The canonical output artifact for each of the 10 policy areas. It contains the final aggregated score for the area, a list of the 6 contributing <code>DimensionScore</code> objects, and associated diagnostic information.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            Managed by the <code>Orchestrator._aggregate_policy_areas_async()</code> method, this phase follows a group-and-reduce pattern similar to Phase 4, but at a higher level of abstraction.
+        </p>
+        <ol>
+            <li><strong>Input Grouping:</strong> The list of 60 <code>DimensionScore</code> objects is grouped into a hash map. The key for each group is the <code>policy_area_id</code>. This operation partitions the input data into 10 groups, with each group containing the 6 dimension scores for one policy area.</li>
+            <li><strong>Concurrent Aggregation:</strong> The 10 groups are processed in parallel. An asynchronous task is created for each policy area group.</li>
+            <li><strong>Aggregator Invocation:</strong> Within each task, the <code>AreaPolicyAggregator</code> is invoked. Its <code>aggregate_area</code> method receives the list of 6 <code>DimensionScore</code> objects for its assigned policy area.</li>
+            <li><strong>Weighted Calculation:</strong> The aggregator applies the logic defined in the <code>AggregationSettings</code>. This involves a weighted consolidation of the 6 dimension scores. Certain dimensions may be assigned a higher weight in the final calculation for a given policy area, reflecting their strategic importance as defined in the monolith.</li>
+            <li><strong>AreaScore Instantiation:</strong> The result of the weighted calculation is encapsulated in a new <code>AreaScore</code> object. This object stores the final thematic score and maintains traceability by holding references to the 6 source <code>DimensionScore</code> objects.</li>
+            <li><strong>Result Collection:</strong> The orchestrator gathers the 10 <code>AreaScore</code> objects from the completed asynchronous tasks. This list of 10 scores is the definitive output of Phase 5 and the input for Phase 6.</li>
+        </ol>
+
+        <h2>4. System Diagram: Thematic Consolidation</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <rect x="325" y="20" width="250" height="50" class="box box-green"/>
+                <text x="450" y="50" class="label">Input: List of 60 DimensionScores</text>
+
+                <path class="flow-line" d="M450 70 V 110"/>
+
+                <rect x="350" y="110" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="140" class="label">Grouping Stage</text>
+                <text x="450" y="155" class="sub-label">Key: policy_area_id</text>
+
+                <path class="flow-line" d="M450 170 V 210"/>
+
+                <!-- Groups -->
+                <g id="groups">
+                    <rect x="50" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="125" y="240" class="label" font-size="10px">Group: PA01</text>
+                    <text x="125" y="255" class="sub-label">6 DimensionScores</text>
+
+                    <rect x="250" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="325" y="240" class="label" font-size="10px">Group: PA02</text>
+                    <text x="325" y="255" class="sub-label">6 DimensionScores</text>
+
+                    <text x="475" y="245" class="label" font-size="20px">...</text>
+
+                    <rect x="700" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="775" y="240" class="label" font-size="10px">Group: PA10</text>
+                    <text x="775" y="255" class="sub-label">6 DimensionScores</text>
+                </g>
+
+                <path class="flow-line" d="M125 270 V 310"/>
+                <path class="flow-line" d="M325 270 V 310"/>
+                <path class="flow-line" d="M775 270 V 310"/>
+
+                <!-- Aggregation Logic -->
+                <g id="aggregation">
+                    <rect x="50" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="125" y="340" class="label">AreaPolicyAggregator</text>
+                    <rect x="250" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="325" y="340" class="label">AreaPolicyAggregator</text>
+                    <text x="475" y="340" class="label" font-size="20px">...</text>
+                    <rect x="700" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="775" y="340" class="label">AreaPolicyAggregator</text>
+                </g>
+
+                <path class="flow-line" d="M125 360 V 400"/>
+                <path class="flow-line" d="M325 360 V 400"/>
+                <path class="flow-line" d="M775 360 V 400"/>
+
+                <!-- Aggregated Results -->
+                <g id="results">
+                    <rect x="50" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="125" y="430" class="label">AreaScore</text>
+                    <rect x="250" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="325" y="430" class="label">AreaScore</text>
+                    <text x="475" y="430" class="label" font-size="20px">...</text>
+                    <rect x="700" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="775" y="430" class="label">AreaScore</text>
+                </g>
+
+                <path class="flow-line" d="M125 450 v 40 H 450"/>
+                <path class="flow-line" d="M325 450 v 40 H 450"/>
+                <path class="flow-line" d="M775 450 v 40 H 450"/>
+
+                <path class="flow-line" d="M450 490 V 520"/>
+
+                <rect x="325" y="520" width="250" height="50" class="box box-green"/>
+                <text x="450" y="550" class="label">Output: List of 10 AreaScores</text>
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+ASYNC FUNCTION _aggregate_policy_areas_async(dimension_scores, config):
+    // Step 1: Group the 60 dimension scores by policy_area_id
+    grouped_scores = GROUP_BY(dimension_scores, key="policy_area_id")
+
+    // Step 2: Concurrently process each of the 10 groups
+    tasks = []
+    FOR area_id, items IN grouped_scores.items():
+        task = CREATE_TASK(aggregate_single_area(items, config.aggregation_settings))
+        tasks.APPEND(task)
+
+    area_scores = AWAIT asyncio.gather(*tasks)
+    RETURN area_scores
+
+FUNCTION aggregate_single_area(items, settings):
+    // Step 3: Instantiate the aggregation engine for policy areas
+    aggregator = new AreaPolicyAggregator(settings)
+
+    // Step 4: Perform the weighted calculation across the 6 dimension scores
+    aggregated_score = aggregator.aggregate_area(items)
+
+    // Step 5: Encapsulate into the canonical output structure
+    RETURN new AreaScore(
+        area_id = items[0].area_id,
+        score = aggregated_score,
+        contributing_dimensions = items,
+        ...
+    )
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input Count:</strong> Confirm that the input is a list of exactly 60 <code>DimensionScore</code> objects.</li>
+            <li><strong>Verify Output Count:</strong> Assert that the final output is a list containing exactly 10 <code>AreaScore</code> objects.</li>
+            <li><strong>Audit Grouping Integrity:</strong> Check that each of the 10 output <code>AreaScore</code> objects contains exactly 6 contributing <code>DimensionScore</code> objects.</li>
+            <li><strong>Traceability Check:</strong> Select one output <code>AreaScore</code> and confirm that the <code>policy_area_id</code> of its 6 contributing dimension scores are all identical and match the parent's <code>area_id</code>.</li>
+            <li><strong>Review a Single Aggregation:</strong> For one <code>AreaScore</code>, compare the scores of its 6 dimensions with the final aggregated score to ensure the calculation is plausible and directionally correct.</li>
+        </ul>
+    </div>
+</body>
+</html>

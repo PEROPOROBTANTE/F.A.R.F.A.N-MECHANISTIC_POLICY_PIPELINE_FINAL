@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 7: Macro Evaluation</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-green-toxic); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-green-toxic); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 7: Final Macro Score Evaluation</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 7 represents the apex of the analytical pyramid. Its purpose is to synthesize the handful of high-level <code>ClusterScore</code> objects into a single, definitive macro score that quantifies the overall quality and coherence of the entire policy document. This synchronous phase is not merely an average of its inputs; it involves a final, holistic evaluation that considers cross-cutting coherence, systemic gaps, and strategic alignment. The output, a <code>MacroScoreDict</code>, is the ultimate quantitative judgment of the pipeline, providing a single, top-level metric that encapsulates the document's performance against the F.A.R.F.A.N. framework.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Macro Evaluation:</strong> The final calculation that consolidates all cluster-level scores into a single, comprehensive score for the entire policy.</li>
+            <li><strong>MacroAggregator:</strong> The specialized class from <code>aggregation.py</code> responsible for performing the final macro-level calculation, including the assessment of cross-cutting metrics.</li>
+            <li><strong>MacroScoreDict:</strong> The final output artifact of the aggregation pipeline. It is a dictionary containing the definitive <code>MacroScore</code> object, the normalized macro score, and a collection of high-level analytical metrics such as cross-cutting coherence and systemic gaps.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The <code>Orchestrator._evaluate_macro()</code> method executes this final, synchronous aggregation step.
+        </p>
+        <ol>
+            <li><strong>Input Consolidation:</strong> The method receives the list of <code>ClusterScore</code> objects (typically 3-5) from Phase 6. It also unpacks all of the underlying <code>AreaScore</code> and <code>DimensionScore</code> objects from within the clusters to make them available for calculating cross-cutting metrics.</li>
+            <li><strong>Aggregator Invocation:</strong> The <code>MacroAggregator</code> is instantiated. Its <code>evaluate_macro</code> method is called, passing it the full set of cluster, area, and dimension scores.</li>
+            <li><strong>Final Score Calculation:</strong> The aggregator performs a weighted consolidation of the cluster scores to compute the primary macro score. The weights for each cluster are defined in the <code>AggregationSettings</code> to reflect their strategic priority.</li>
+            <li><strong>Cross-Cutting Analysis:</strong> In addition to the primary score, the aggregator calculates several higher-order metrics. This may include:
+                <ul>
+                    <li><strong>Cross-Cutting Coherence:</strong> Assessing the performance variance between different clusters.</li>
+                    <li><strong>Systemic Gaps:</strong> Identifying dimensions that are consistently weak across multiple policy areas.</li>
+                    <li><strong>Strategic Alignment:</strong> Comparing the document's performance profile against an ideal or benchmark profile.</li>
+                </ul>
+            </li>
+            <li><strong>MacroScore Instantiation:</strong> The results of all calculations—the primary score and the cross-cutting metrics—are encapsulated in a final <code>MacroScore</code> object.</li>
+            <li><strong>Result Dictionary Assembly:</strong> The orchestrator packages the <code>MacroScore</code> object, its normalized value, and other key metrics into the final <code>MacroScoreDict</code>. This dictionary is the definitive output of Phase 7 and the primary input for the recommendation engine in Phase 8.</li>
+        </ol>
+
+        <h2>4. System Diagram: The Final Convergence</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <rect x="350" y="20" width="200" height="50" class="box box-green"/>
+                <text x="450" y="50" class="label">Input: List of ~4 ClusterScores</text>
+
+                <path class="flow-line" d="M150 70 h 200"/>
+                <path class="flow-line" d="M450 70 h 0"/>
+                <path class="flow-line" d="M750 70 h -200"/>
+
+                <rect x="50" y="20" width="200" height="50" class="box box-green" opacity="0.6"/>
+                <text x="150" y="50" class="label">ClusterScore A</text>
+                <rect x="650" y="20" width="200" height="50" class="box box-green" opacity="0.6"/>
+                <text x="750" y="50" class="label">ClusterScore C</text>
+
+                <rect x="350" y="120" width="200" height="80" class="box box-blue"/>
+                <text x="450" y="150" class="label">MacroAggregator</text>
+                <text x="450" y="170" class="sub-label">evaluate_macro()</text>
+                <text x="450" y="185" class="sub-label">Cross-Cutting Analysis</text>
+
+                <path class="flow-line" d="M450 70 V 120"/>
+                <path class="flow-line" d="M450 200 V 250"/>
+
+                <rect x="300" y="250" width="300" height="150" class="box box-green"/>
+                <text x="450" y="280" class="label" font-size="16px">MacroScoreDict</text>
+                <text x="450" y="310" class="label" text-anchor="middle">macro_score: 0.68</text>
+                <text x="450" y="330" class="label" text-anchor="middle">quality_band: "Acceptable"</text>
+                <text x="450" y="350" class="sub-label" text-anchor="middle">cross_cutting_coherence: 0.85</text>
+                <text x="450" y="370" class="sub-label" text-anchor="middle">systemic_gaps: ["DIM02"]</text>
+
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+FUNCTION _evaluate_macro(cluster_scores, config):
+    // Step 1: Consolidate all underlying score objects
+    all_area_scores = FLATTEN([c.area_scores FOR c in cluster_scores])
+    all_dimension_scores = FLATTEN([a.dimension_scores FOR a in all_area_scores])
+
+    // Step 2: Instantiate the final aggregation engine
+    aggregator = new MacroAggregator(config.aggregation_settings)
+
+    // Step 3 & 4: Perform the final evaluation
+    macro_score_object = aggregator.evaluate_macro(
+        cluster_scores,
+        all_area_scores,
+        all_dimension_scores
+    )
+
+    // Step 5 & 6: Assemble and return the final dictionary artifact
+    result_dict = {
+        "macro_score": macro_score_object,
+        "macro_score_normalized": macro_score_object.score,
+        "cluster_scores": cluster_scores,
+        "cross_cutting_coherence": macro_score_object.cross_cutting_coherence,
+        "systemic_gaps": macro_score_object.systemic_gaps,
+        "quality_band": macro_score_object.quality_level
+    }
+    RETURN result_dict
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input Integrity:</strong> Confirm the input is a short list of valid <code>ClusterScore</code> objects from Phase 6.</li>
+            <li><strong>Validate Output Structure:</strong> Ensure the output is a single dictionary conforming to the <code>MacroScoreDict</code> structure, containing a non-null <code>macro_score_normalized</code> value.</li>
+            <li><strong>Audit Final Score:</strong> Manually compare the scores of the input clusters with the final <code>macro_score_normalized</code> to verify that the consolidation is mathematically plausible.</li>
+            <li><strong>Check Traceability:</strong> Confirm that the <code>cluster_scores</code> list within the output dictionary is identical to the input list of cluster scores.</li>
+            <li><strong>Review Cross-Cutting Metrics:</strong> Examine the values for metrics like <code>cross_cutting_coherence</code> and <code>systemic_gaps</code> to ensure they have been calculated and are reasonable given the input data.</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Fase 3: Scoring de Micro-Resultados</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 3: Puntuación Cuantitativa de Evidencia de Micro-Preguntas</h1>
+
+        <h2>1. Propósito</h2>
+        <p>
+            La función principal de la Fase 3 es traducir la evidencia cualitativa y en bruto recopilada en la Fase 2 en una puntuación cuantitativa y normalizada. Esta fase procesa sistemáticamente cada objeto <code>MicroQuestionRun</code>, aplicando una modalidad de puntuación específica a su carga útil de evidencia. La modalidad, definida contractualmente en el monolito para cada pregunta, dicta la heurística o el algoritmo preciso utilizado para la cuantificación. El resultado es un objeto estandarizado <code>ScoredMicroQuestion</code>, que incluye una puntuación bruta, una puntuación normalizada (típicamente de 0.0 a 1.0) y una banda de rendimiento cualitativa. Este acto de cuantificación es el puente crítico entre la extracción de datos en bruto y la agregación jerárquica que comienza en la Fase 4.
+        </p>
+
+        <h2>2. Definiciones Clave</h2>
+        <ul>
+            <li><strong>MicroQuestionScorer:</strong> Una clase dedicada del módulo <code>scoring.py</code> que encapsula la lógica para todas las modalidades de puntuación. Es el motor de procesamiento central de esta fase.</li>
+            <li><strong>Modalidad de Puntuación (Scoring Modality):</strong> Uno de los seis métodos predefinidos (<code>TYPE_A</code> a <code>TYPE_F</code>) para calcular una puntuación a partir de un objeto de evidencia. Cada tipo representa una heurística analítica diferente, como contar elementos de evidencia, promediar puntuaciones de confianza o evaluar la similitud semántica.</li>
+            <li><strong>ScoringEvidence:</strong> Un objeto de datos estructurado que adapta la <code>Evidence</code> en bruto de la Fase 2 a un formato adecuado para las funciones de puntuación, conteniendo campos como <code>elements_found</code> y <code>confidence_scores</code>.</li>
+            <li><strong>ScoredMicroQuestion:</strong> El artefacto de salida final para cada micro-pregunta. Contiene los metadatos y la evidencia originales, aumentados con la puntuación bruta, la puntuación normalizada y el nivel de calidad (ej., "Suficiente", "Insuficiente") recién calculados.</li>
+        </ul>
+
+        <h2>3. Flujo Operacional Detallado</h2>
+        <p>
+            Esta fase, gestionada por <code>Orchestrator._score_micro_results_async()</code>, opera como un pipeline de procesamiento paralelo, aplicando una transformación a cada resultado de la fase anterior.
+        </p>
+        <ol>
+            <li><strong>Distribución de Tareas Asíncronas:</strong> De manera similar a la Fase 2, el sistema procesa los ~300 objetos <code>MicroQuestionRun</code> de forma concurrente. Se crea una tarea asíncrona para cada objeto.</li>
+            <li><strong>Extracción de Evidencia y Modalidad:</strong> Dentro de cada tarea, el sistema primero inspecciona el objeto de entrada. Extrae la carga útil de evidencia en bruto y, de manera crucial, recupera la <code>scoring_modality</code> de los metadatos del objeto, que se originó en el monolito.</li>
+            <li><strong>Manejo de Evidencia Faltante:</strong> Si el objeto de entrada contiene un error o no tiene carga útil de evidencia, el proceso de puntuación se omite. Se genera inmediatamente un <code>ScoredMicroQuestion</code> con puntuaciones nulas y una bandera de error apropiada.</li>
+            <li><strong>Despacho de Lógica de Puntuación:</strong> El núcleo de la fase ocurre aquí. El sistema instancia el <code>MicroQuestionScorer</code> e invoca su método <code>apply_scoring_modality</code>. Este método actúa como un despachador; basado en la modalidad proporcionada (ej., <code>TYPE_A</code>), invoca el método privado correspondiente (ej., <code>_score_modality_A</code>) para realizar el cálculo.
+                <ul>
+                    <li><code>TYPE_A</code> podría calcular una puntuación basada en el número de elementos de evidencia encontrados.</li>
+                    <li><code>TYPE_B</code> podría promediar las puntuaciones de confianza asociadas a cada elemento.</li>
+                    <li>Otros tipos pueden implicar una lógica más compleja basada en la similitud semántica o resultados de coincidencia de patrones.</li>
+                </ul>
+            </li>
+            <li><strong>Estandarización y Encapsulación de Resultados:</strong> El método de puntuación devuelve un resultado estructurado que contiene las puntuaciones brutas y normalizadas. Esto se utiliza para construir el objeto final <code>ScoredMicroQuestion</code>, que es la salida de la tarea.</li>
+            <li><strong>Recolección de Resultados:</strong> El orquestador reúne los ~300 objetos <code>ScoredMicroQuestion</code> de las tareas asíncronas completadas, formando la entrada completa para la Fase 4.</li>
+        </ol>
+
+        <h2>4. Diagrama de Sistema: Despacho de Puntuación Basado en Modalidad</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                    .dispatch-box { fill: rgba(178, 100, 46, 0.1); stroke: var(--atroz-copper-500); stroke-dasharray: 4,4; rx: 8px; }
+                </style>
+
+                <rect x="325" y="20" width="250" height="60" class="box box-green"/>
+                <text x="450" y="50" class="label">Entrada: MicroQuestionRun</text>
+                <text x="450" y="65" class="sub-label">(de Fase 2, con Evidencia bruta)</text>
+
+                <path class="flow-line" d="M450 80 V 120"/>
+
+                <rect x="350" y="120" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="155" class="label">MicroQuestionScorer</text>
+
+                <path class="flow-line" d="M450 180 V 220"/>
+                <text x="520" y="205" class="sub-label" fill="#B2642E">Despacho según Modalidad</text>
+
+                <g id="dispatch-logic">
+                    <rect x="50" y="220" width="800" height="250" class="dispatch-box"/>
+                    <text x="450" y="245" class="label" fill="#B2642E">Lógica de Modalidad de Puntuación (scoring.py)</text>
+
+                    <rect x="80" y="280" width="100" height="50" class="box box-blue" opacity="0.8"/>
+                    <text x="130" y="310" class="label">TIPO_A</text>
+                    <rect x="200" y="280" width="100" height="50" class="box box-blue" opacity="0.8"/>
+                    <text x="250" y="310" class="label">TIPO_B</text>
+                    <rect x="320" y="280" width="100" height="50" class="box box-blue" opacity="0.8"/>
+                    <text x="370" y="310" class="label">TIPO_C</text>
+                    <rect x="480" y="280" width="100" height="50" class="box box-blue" opacity="0.8"/>
+                    <text x="530" y="310" class="label">TIPO_D</text>
+                    <rect x="600" y="280" width="100" height="50" class="box box-blue" opacity="0.8"/>
+                    <text x="650" y="310" class="label">TIPO_E</text>
+                    <rect x="720" y="280" width="100" height="50" class="box box-blue" opacity="0.8"/>
+                    <text x="770" y="310" class="label">TIPO_F</text>
+
+                    <text x="130" y="350" class="sub-label">Basado en conteo</text>
+                    <text x="250" y="350" class="sub-label">Prom. confianza</text>
+                    <text x="370" y="350" class="sub-label">Similitud semántica</text>
+                    <text x="530" y="350" class="sub-label">[Heurística D]</text>
+                    <text x="650" y="350" class="sub-label">[Heurística E]</text>
+                    <text x="770" y="350" class="sub-label">[Heurística F]</text>
+
+                    <path class="flow-line" d="M130 380 V 440"/>
+                    <path class="flow-line" d="M250 380 V 440"/>
+                    <path class="flow-line" d="M370 380 V 440"/>
+                    <path class="flow-line" d="M530 380 V 440"/>
+                    <path class="flow-line" d="M650 380 V 440"/>
+                    <path class="flow-line" d="M770 380 V 440"/>
+                </g>
+
+                <path class="flow-line" d="M130 470 H 450"/>
+                <path class="flow-line" d="M250 470 H 450"/>
+                <path class="flow-line" d="M370 470 H 450"/>
+                <path class="flow-line" d="M770 470 H 450"/>
+                <path class="flow-line" d="M650 470 H 450"/>
+                <path class="flow-line" d="M530 470 H 450"/>
+
+                <text x="450" y="500" class="sub-label" fill="#B2642E">Combinar y Estandarizar</text>
+                <path class="flow-line" d="M450 470 v -10"/>
+                <path class="flow-line" d="M450 510 v 20"/>
+
+                <rect x="325" y="560" width="250" height="60" class="box box-green"/>
+                <text x="450" y="590" class="label">Salida: ScoredMicroQuestion</text>
+                <text x="450" y="605" class="sub-label">(con puntuación normalizada)</text>
+
+            </svg>
+        </div>
+
+        <h2>5. Pseudocódigo Ilustrativo</h2>
+        <pre><code>
+FUNCIÓN ASÍNCRONA _score_micro_results_async(micro_results, config):
+    tareas = []
+    PARA item EN micro_results:
+        tarea = CREAR_TAREA(puntuar_item_individual(item))
+        tareas.APILAR(tarea)
+
+    resultados_puntuados = ESPERAR asyncio.gather(*tareas)
+    RETORNAR resultados_puntuados
+
+FUNCIÓN ASÍNCRONA puntuar_item_individual(item: MicroQuestionRun):
+    // Paso 2: Extraer modalidad y evidencia
+    modalidad = item.metadata.scoring_modality
+    evidencia = item.evidence
+
+    // Paso 3: Manejar casos sin evidencia
+    SI item.error O NO evidencia:
+        RETORNAR nuevo ScoredMicroQuestion(..., score=None, error="missing_evidence")
+
+    // Paso 4: Despachar a la lógica de puntuación apropiada
+    puntuador = nuevo MicroQuestionScorer()
+    datos_puntuados = ESPERAR EN_HILO(
+        puntuador.apply_scoring_modality(modalidad, evidencia)
+    )
+
+    // Paso 5: Encapsular el resultado puntuado final
+    RETORNAR nuevo ScoredMicroQuestion(
+        ...,
+        score = datos_puntuados.raw_score,
+        normalized_score = datos_puntuados.normalized_score,
+        quality_level = datos_puntuados.quality_level
+    )
+        </code></pre>
+
+        <h2>6. Lista de Verificación Operacional para Auditoría</h2>
+        <ul>
+            <li><strong>Verificar Integridad de Entrada:</strong> Confirmar que la lista de objetos <code>MicroQuestionRun</code> de la Fase 2 se pasa correctamente.</li>
+            <li><strong>Comprobar Integridad de Salida:</strong> Asegurar que la salida es una lista de objetos <code>ScoredMicroQuestion</code> de la misma longitud que la lista de entrada.</li>
+            <li><strong>Auditar Normalización de Puntuación:</strong> Para una muestra de resultados, verificar que el <code>normalized_score</code> es un valor flotante, típicamente entre 0.0 y 1.0.</li>
+            <li><strong>Validar Despacho de Modalidad:</strong> Seleccionar una pregunta del monolito, anotar su `scoring_modality` y trazar la ruta del código para confirmar que se está invocando el método `_score_modality_X` correcto dentro de `MicroQuestionScorer` para esa pregunta.</li>
+            <li><strong>Examinar Manejo de Errores:</strong> Comprobar los ítems que tuvieron errores en la Fase 2. Confirmar que se propagan correctamente con puntuaciones nulas en la salida de esta fase.</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Fase 8: Generación de Recomendaciones</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-w: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 8: Generación de Recomendaciones Multi-Nivel</h1>
+
+        <h2>1. Propósito</h2>
+        <p>
+            La Fase 8 transita el pipeline del análisis cuantitativo a la visión cualitativa y accionable. El objetivo es sintetizar las puntuaciones numéricas de los niveles de agregación micro, meso y macro en un conjunto estructurado de recomendaciones textuales. Esta fase aprovecha un componente externo inyectado —el <code>RecommendationEnginePort</code>— para interpretar los datos de rendimiento y generar sugerencias contextualizadas. La salida es un diccionario jerárquico de recomendaciones, categorizadas en niveles MICRO, MESO y MACRO, diseñado para proporcionar una guía específica para la mejora de políticas, desde ajustes tácticos concretos hasta reorientaciones estratégicas amplias.
+        </p>
+
+        <h2>2. Definiciones Clave</h2>
+        <ul>
+            <li><strong>Motor de Recomendaciones (Recommendation Engine):</strong> Un componente externo, accedido a través del <code>recommendation_engine_port</code>, que contiene la lógica para generar recomendaciones textuales basadas en datos de entrada numéricos. Su naturaleza desacoplada permite que su lógica se actualice independientemente del orquestador.</li>
+            <li><strong>Contexto Multi-Nivel:</strong> Los datos de entrada para el motor de recomendaciones, que incluyen puntuaciones a nivel MICRO (de la Fase 3), datos de clústeres a nivel MESO (de la Fase 6) y resultados de evaluación a nivel MACRO (de la Fase 7).</li>
+            <li><strong>RecommendationSet:</strong> El objeto de salida estructurado que contiene una lista de recomendaciones textuales para un nivel específico (MICRO, MESO o MACRO), junto con metadatos asociados.</li>
+        </ul>
+
+        <h2>3. Flujo Operacional Detallado</h2>
+        <p>
+            El método asíncrono <code>Orchestrator._generate_recommendations()</code> orquesta la preparación de los datos y delega la lógica central al motor externo.
+        </p>
+        <ol>
+            <li><strong>Hidratación de Datos:</strong> El método primero recopila los datos de entrada necesarios del contexto del orquestador. Esto implica recuperar la lista completa de objetos <code>ScoredMicroQuestion</code> (Fase 3), la lista de <code>ClusterScore</code> (Fase 6) y el <code>MacroScoreDict</code> final (Fase 7).</li>
+            <li><strong>Transformación de Datos Multi-Nivel:</strong> Los datos brutos se transforman a un formato adecuado para el motor de recomendaciones:
+                <ul>
+                    <li><strong>Contexto MICRO:</strong> Las puntuaciones de las micro-preguntas individuales se promedian por par de Área de Política-Dimensión para identificar las áreas de debilidad más granulares.</li>
+                    <li><strong>Contexto MESO:</strong> Los datos de <code>ClusterScore</code> se procesan para extraer métricas clave para cada clúster, como la puntuación general, la varianza interna y el área de política contribuyente más débil.</li>
+                    <li><strong>Contexto MACRO:</strong> La puntuación macro final se utiliza para determinar una banda de rendimiento general (ej., "Deficiente", "Aceptable"), identificar los clústeres con un rendimiento inferior a un umbral objetivo y calcular la varianza de rendimiento general.</li>
+                </ul>
+            </li>
+            <li><strong>Invocación del Motor:</strong> Los datos de contexto transformados y multi-nivel se pasan al método <code>generate_all_recommendations</code> del <code>recommendation_engine</code> inyectado.</li>
+            <li><strong>Ejecución de Lógica Externa:</strong> El motor externo procesa los datos de entrada, aplicando sus conjuntos de reglas o modelos internos para generar recomendaciones textuales para cada uno de los tres niveles.</li>
+            <li><strong>Empaquetado de Resultados:</strong> El motor de recomendaciones devuelve un diccionario de objetos <code>RecommendationSet</code>. El método del orquestador se asegura de que estén correctamente formateados e incluye la puntuación macro final para el contexto, produciendo la salida definitiva para esta fase. Si el motor no está disponible, se devuelve un resultado vacío estructurado.</li>
+        </ol>
+
+        <h2>4. Diagrama de Sistema: Flujo de Síntesis y Recomendación</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <!-- Inputs -->
+                <rect x="50" y="20" width="200" height="60" class="box box-green"/>
+                <text x="150" y="55" class="label">ScoredMicroQuestions</text>
+                <text x="150" y="70" class="sub-label">(de Fase 3)</text>
+
+                <rect x="350" y="20" width="200" height="60" class="box box-green"/>
+                <text x="450" y="55" class="label">ClusterScores</text>
+                <text x="450" y="70" class="sub-label">(de Fase 6)</text>
+
+                <rect x="650" y="20" width="200" height="60" class="box box-green"/>
+                <text x="750" y="55" class="label">MacroScoreDict</text>
+                <text x="750" y="70" class="sub-label">(de Fase 7)</text>
+
+                <path class="flow-line" d="M150 80 V 150"/>
+                <path class="flow-line" d="M450 80 V 150"/>
+                <path class="flow-line" d="M750 80 V 150"/>
+
+                <rect x="300" y="150" width="300" height="60" class="box box-blue"/>
+                <text x="450" y="180" class="label">Transformación de Datos</text>
+                <text x="450" y="195" class="sub-label">Preparar contextos MICRO, MESO, MACRO</text>
+
+                <path class="flow-line" d="M450 210 V 260"/>
+
+                <rect x="300" y="260" width="300" height="60" class="box box-blue"/>
+                <text x="450" y="290" class="label">RecommendationEnginePort</text>
+                <text x="450" y="305" class="sub-label">generate_all_recommendations()</text>
+
+                <path class="flow-line" d="M450 320 V 370"/>
+                <text x="510" y="350" class="sub-label" fill="#B2642E">Devuelve 3 RecommendationSets</text>
+
+                <!-- Outputs -->
+                <g id="outputs">
+                    <rect x="50" y="370" width="200" height="150" class="box box-green"/>
+                    <text x="150" y="400" class="label">Recomendaciones MICRO</text>
+                    <text x="150" y="420" class="sub-label">"Abordar brecha en PA01-DIM02..."</text>
+
+                    <rect x="350" y="370" width="200" height="150" class="box box-green"/>
+                    <text x="450" y="400" class="label">Recomendaciones MESO</text>
+                    <text x="450" y="420" class="sub-label">"Fortalecer Clúster A enfocándose en PA05..."</text>
+
+                    <rect x="650" y="370" width="200" height="150" class="box box-green"/>
+                    <text x="750" y="400" class="label">Recomendaciones MACRO</text>
+                    <text x="750" y="420" class="sub-label">"La estrategia general requiere más énfasis en..."</text>
+                </g>
+
+                <path class="flow-line" d="M150 520 v 30 H 450"/>
+                <path class="flow-line" d="M450 520 v 30"/>
+                <path class="flow-line" d="M750 520 v 30 H 450"/>
+
+                <rect x="325" y="550" width="250" height="50" class="box box-green"/>
+                <text x="450" y="580" class="label">Salida: Dict de Recomendaciones</text>
+
+            </svg>
+        </div>
+
+        <h2>5. Pseudocódigo Ilustrativo</h2>
+        <pre><code>
+FUNCIÓN ASÍNCRONA _generate_recommendations(macro_result, config):
+    // Paso 1: Hidratar datos del contexto del orquestador
+    resultados_puntuados = self.context.get("scored_results")
+    puntuaciones_cluster = self.context.get("cluster_scores")
+
+    // Paso 2: Transformar puntuaciones brutas en contextos analíticos específicos
+    contexto_micro = PREPARAR_CONTEXTO_MICRO(resultados_puntuados)
+    contexto_meso = PREPARAR_CONTEXTO_MESO(puntuaciones_cluster)
+    contexto_macro = PREPARAR_CONTEXTO_MACRO(macro_result)
+
+    // Comprobar si el motor externo está disponible
+    SI self.recommendation_engine ES NULO:
+        RETORNAR crear_recomendaciones_vacias()
+
+    // Paso 3 & 4: Invocar el motor externo con los contextos preparados
+    conjuntos_recomendacion = self.recommendation_engine.generate_all_recommendations(
+        micro_scores = contexto_micro,
+        cluster_data = contexto_meso,
+        macro_data = contexto_macro
+    )
+
+    // Paso 5: Empaquetar el resultado final
+    salida_final = {
+        "MICRO": conjuntos_recomendacion["MICRO"].to_dict(),
+        "MESO": conjuntos_recomendacion["MESO"].to_dict(),
+        "MACRO": conjuntos_recomendacion["MACRO"].to_dict(),
+        "macro_score": macro_result.get("macro_score")
+    }
+    RETORNAR salida_final
+        </code></pre>
+
+        <h2>6. Lista de Verificación Operacional para Auditoría</h2>
+        <ul>
+            <li><strong>Verificar Consolidación de Entradas:</strong> Confirmar que los datos de las fases 3, 6 y 7 se recuperan correctamente y se pasan al paso de transformación.</li>
+            <li><strong>Auditar Transformación de Contexto:</strong> Para una muestra, calcular manualmente un promedio PA-DIM a nivel micro y verificar que coincide con los datos pasados al motor. Revisar la lógica para determinar la banda macro.</li>
+            <li><strong>Comprobar Salud del Puerto del Motor:</strong> Asegurarse de que el <code>recommendation_engine_port</code> no es nulo y que el orquestador maneja correctamente el caso en que pudiera faltar.</li>
+            <li><strong>Validar Estructura de Salida:</strong> Confirmar que la salida es un diccionario que contiene las claves "MICRO", "MESO" y "MACRO", y que cada una contiene una lista de recomendaciones textuales.</li>
+            <li><strong>Evaluar Coherencia de Recomendaciones:</strong> Leer una muestra de recomendaciones de cada nivel y compararlas con las puntuaciones de entrada para asegurar que son lógicas y contextualmente relevantes (ej., una puntuación baja en un clúster debería llevar a una recomendación que aborde ese clúster).</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Fase 5: Agregación por Área de Política</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-green-toxic); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-green-toxic); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fase 5: Síntesis Temática mediante Agregación por Área de Política</h1>
+
+        <h2>1. Propósito</h2>
+        <p>
+            La Fase 5 constituye el segundo nivel del proceso de agregación jerárquica. El objetivo principal es sintetizar los 60 objetos <code>DimensionScore</code> de la fase anterior en 10 constructos temáticos de nivel superior, cada uno representando un Área de Política completa. Esta fase abstrae los detalles a nivel dimensional para proporcionar una puntuación de rendimiento consolidada para cada uno de los 10 dominios de política canónicos (ej., "Igualdad de Género," "Seguridad y Violencia"). Los objetos <code>AreaScore</code> resultantes proporcionan una visión general macro-temática crucial, formando los bloques de construcción fundamentales para las evaluaciones finales a nivel de clúster y macro en las fases posteriores.
+        </p>
+
+        <h2>2. Definiciones Clave</h2>
+        <ul>
+            <li><strong>Agregación por Área de Política:</strong> El proceso de agrupar los 6 objetos <code>DimensionScore</code> que corresponden a una única Área de Política y calcular una puntuación unificada que representa el rendimiento general del área.</li>
+            <li><strong>AreaPolicyAggregator:</strong> Una clase especializada de <code>aggregation.py</code> que encapsula la lógica para consolidar las puntuaciones a nivel de dimensión en una única puntuación de área de política, utilizando pesos y reglas del <code>AggregationSettings</code>.</li>
+            <li><strong>AreaScore:</strong> El artefacto de salida canónico para cada una de las 10 áreas de política. Contiene la puntuación agregada final para el área, una lista de los 6 objetos <code>DimensionScore</code> contribuyentes y la información de diagnóstico asociada.</li>
+        </ul>
+
+        <h2>3. Flujo Operacional Detallado</h2>
+        <p>
+            Gestionada por el método <code>Orchestrator._aggregate_policy_areas_async()</code>, esta fase sigue un patrón de agrupar y reducir similar al de la Fase 4, pero a un nivel de abstracción superior.
+        </p>
+        <ol>
+            <li><strong>Agrupación de Entradas:</strong> La lista de 60 objetos <code>DimensionScore</code> se agrupa en un mapa hash. La clave para cada grupo es el <code>policy_area_id</code>. Esta operación particiona los datos de entrada en 10 grupos, cada uno conteniendo las 6 puntuaciones de dimensión para un área de política.</li>
+            <li><strong>Agregación Concurrente:</strong> Los 10 grupos se procesan en paralelo. Se crea una tarea asíncrona para cada grupo de área de política.</li>
+            <li><strong>Invocación del Agregador:</strong> Dentro de cada tarea, se invoca el <code>AreaPolicyAggregator</code>. Su método <code>aggregate_area</code> recibe la lista de 6 objetos <code>DimensionScore</code> para su área de política asignada.</li>
+            <li><strong>Cálculo Ponderado:</strong> El agregador aplica la lógica definida en el <code>AggregationSettings</code>. Esto implica una consolidación ponderada de las 6 puntuaciones de dimensión. A ciertas dimensiones se les puede asignar un peso mayor en el cálculo final para un área de política determinada, reflejando su importancia estratégica según se define en el monolito.</li>
+            <li><strong>Instanciación de AreaScore:</strong> El resultado del cálculo ponderado se encapsula en un nuevo objeto <code>AreaScore</code>. Este objeto almacena la puntuación temática final y mantiene la trazabilidad al conservar referencias a los 6 objetos <code>DimensionScore</code> de origen.</li>
+            <li><strong>Recolección de Resultados:</strong> El orquestador reúne los 10 objetos <code>AreaScore</code> de las tareas asíncronas completadas. Esta lista de 10 puntuaciones es la salida definitiva de la Fase 5 y la entrada para la Fase 6.</li>
+        </ol>
+
+        <h2>4. Diagrama de Sistema: Consolidación Temática</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <rect x="325" y="20" width="250" height="50" class="box box-green"/>
+                <text x="450" y="50" class="label">Entrada: Lista de 60 DimensionScores</text>
+
+                <path class="flow-line" d="M450 70 V 110"/>
+
+                <rect x="350" y="110" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="140" class="label">Fase de Agrupación</text>
+                <text x="450" y="155" class="sub-label">Clave: policy_area_id</text>
+
+                <path class="flow-line" d="M450 170 V 210"/>
+
+                <!-- Groups -->
+                <g id="groups">
+                    <rect x="50" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="125" y="240" class="label" font-size="10px">Grupo: PA01</text>
+                    <text x="125" y="255" class="sub-label">6 DimensionScores</text>
+
+                    <rect x="250" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="325" y="240" class="label" font-size="10px">Grupo: PA02</text>
+                    <text x="325" y="255" class="sub-label">6 DimensionScores</text>
+
+                    <text x="475" y="245" class="label" font-size="20px">...</text>
+
+                    <rect x="700" y="210" width="150" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="775" y="240" class="label" font-size="10px">Grupo: PA10</text>
+                    <text x="775" y="255" class="sub-label">6 DimensionScores</text>
+                </g>
+
+                <path class="flow-line" d="M125 270 V 310"/>
+                <path class="flow-line" d="M325 270 V 310"/>
+                <path class="flow-line" d="M775 270 V 310"/>
+
+                <!-- Aggregation Logic -->
+                <g id="aggregation">
+                    <rect x="50" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="125" y="340" class="label">AreaPolicyAggregator</text>
+                    <rect x="250" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="325" y="340" class="label">AreaPolicyAggregator</text>
+                    <text x="475" y="340" class="label" font-size="20px">...</text>
+                    <rect x="700" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="775" y="340" class="label">AreaPolicyAggregator</text>
+                </g>
+
+                <path class="flow-line" d="M125 360 V 400"/>
+                <path class="flow-line" d="M325 360 V 400"/>
+                <path class="flow-line" d="M775 360 V 400"/>
+
+                <!-- Aggregated Results -->
+                <g id="results">
+                    <rect x="50" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="125" y="430" class="label">AreaScore</text>
+                    <rect x="250" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="325" y="430" class="label">AreaScore</text>
+                    <text x="475" y="430" class="label" font-size="20px">...</text>
+                    <rect x="700" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="775" y="430" class="label">AreaScore</text>
+                </g>
+
+                <path class="flow-line" d="M125 450 v 40 H 450"/>
+                <path class="flow-line" d="M325 450 v 40 H 450"/>
+                <path class="flow-line" d="M775 450 v 40 H 450"/>
+
+                <path class="flow-line" d="M450 490 V 520"/>
+
+                <rect x="325" y="520" width="250" height="50" class="box box-green"/>
+                <text x="450" y="550" class="label">Salida: Lista de 10 AreaScores</text>
+            </svg>
+        </div>
+
+        <h2>5. Pseudocódigo Ilustrativo</h2>
+        <pre><code>
+FUNCIÓN ASÍNCRONA _aggregate_policy_areas_async(puntuaciones_dimension, config):
+    // Paso 1: Agrupar las 60 puntuaciones de dimensión por policy_area_id
+    puntuaciones_agrupadas = AGRUPAR_POR(puntuaciones_dimension, clave="policy_area_id")
+
+    // Paso 2: Procesar concurrentemente cada uno de los 10 grupos
+    tareas = []
+    PARA area_id, items EN puntuaciones_agrupadas.items():
+        tarea = CREAR_TAREA(agregar_area_individual(items, config.aggregation_settings))
+        tareas.APILAR(tarea)
+
+    puntuaciones_area = ESPERAR asyncio.gather(*tareas)
+    RETORNAR puntuaciones_area
+
+FUNCIÓN agregar_area_individual(items, settings):
+    // Paso 3: Instanciar el motor de agregación para áreas de política
+    agregador = nuevo AreaPolicyAggregator(settings)
+
+    // Paso 4: Realizar el cálculo ponderado a través de las 6 puntuaciones de dimensión
+    puntuacion_agregada = agregador.aggregate_area(items)
+
+    // Paso 5: Encapsular en la estructura de salida canónica
+    RETORNAR nuevo AreaScore(
+        area_id = items[0].area_id,
+        score = puntuacion_agregada,
+        contributing_dimensions = items,
+        ...
+    )
+        </code></pre>
+
+        <h2>6. Lista de Verificación Operacional para Auditoría</h2>
+        <ul>
+            <li><strong>Verificar Recuento de Entrada:</strong> Confirmar que la entrada es una lista de exactamente 60 objetos <code>DimensionScore</code>.</li>
+            <li><strong>Verificar Recuento de Salida:</strong> Afirmar que la salida final es una lista que contiene exactamente 10 objetos <code>AreaScore</code>.</li>
+            <li><strong>Auditar Integridad de Agrupación:</strong> Comprobar que cada uno de los 10 objetos <code>AreaScore</code> de salida contiene exactamente 6 objetos <code>DimensionScore</code> contribuyentes.</li>
+            <li><strong>Verificar Trazabilidad:</strong> Seleccionar un <code>AreaScore</code> de salida y confirmar que los <code>policy_area_id</code> de sus 6 dimensiones contribuyentes son todos idénticos y coinciden con el <code>area_id</code> del padre.</li>
+            <li><strong>Revisar una Agregación Individual:</strong> Para un <code>AreaScore</code>, comparar las puntuaciones de sus 6 dimensiones con la puntuación agregada final para asegurar que el cálculo es plausible y direccionalmente correcto.</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 6: Cluster Aggregation</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-green-toxic); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-green-toxic); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 6: Strategic Synthesis via Cluster Aggregation</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 6 represents the penultimate and highest level of thematic synthesis within the aggregation hierarchy. Its function is to consolidate the 10 discrete <code>AreaScore</code> objects into a smaller set of strategic "clusters." These clusters, defined within the monolith, represent broad, cross-cutting strategic domains (e.g., "Human Rights," "Governance," "Sustainable Development"). This synchronous phase abstracts the analysis to its highest possible level before the final macro evaluation, producing a handful of <code>ClusterScore</code> objects that provide a concise, strategic overview of the policy document's performance across its core pillars.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Cluster:</strong> A strategic grouping of several Policy Areas as defined in the monolith's <code>niveles_abstraccion</code> block. A cluster represents a major thematic pillar of the policy framework.</li>
+            <li><strong>Cluster Aggregation:</strong> The process of grouping the <code>AreaScore</code> objects according to the monolith's cluster definitions and calculating a single, unified score for each cluster.</li>
+            <li><strong>ClusterAggregator:</strong> The specialized class from <code>aggregation.py</code> that contains the logic for this final tier of aggregation. It is responsible for mapping areas to clusters and applying the appropriate consolidation algorithm.</li>
+            <li><strong>ClusterScore:</strong> The output artifact for each strategic cluster. It contains the final aggregated score for the cluster and maintains full traceability by linking back to its constituent <code>AreaScore</code> objects.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The <code>Orchestrator._aggregate_clusters()</code> method executes this phase in a synchronous manner, as the number of operations is small and data dependencies are direct.
+        </p>
+        <ol>
+            <li><strong>Cluster Mapping Enrichment:</strong> The first step is to enrich the 10 input <code>AreaScore</code> objects with their corresponding <code>cluster_id</code>. The system builds an area-to-cluster mapping by parsing the cluster definitions in the monolith. It then iterates through the <code>AreaScore</code> objects, attaching the correct <code>cluster_id</code> to each one. Areas not mapped to any cluster are logged as a warning and filtered out.</li>
+            <li><strong>Input Grouping:</strong> The enriched list of <code>AreaScore</code> objects is grouped into a hash map, using the newly attached <code>cluster_id</code> as the key. This partitions the 10 area scores into a small number of groups (typically 3-5), one for each defined cluster.</li>
+            <li><strong>Sequential Aggregation:</strong> The system iterates through each cluster group. For each group, it invokes the <code>ClusterAggregator</code>.</li>
+            <li><strong>Aggregator Invocation and Calculation:</strong> The aggregator's <code>aggregate_cluster</code> method is called, receiving the list of <code>AreaScore</code> objects belonging to that cluster. It applies a final weighted calculation, as defined in the <code>AggregationSettings</code>, to consolidate the area scores into a single, strategic cluster score.</li>
+            <li><strong>ClusterScore Instantiation:</strong> The result is encapsulated in a <code>ClusterScore</code> object, which stores the final score and a list of the contributing area scores.</li>
+            <li><strong>Result Collection:</strong> The orchestrator collects the <code>ClusterScore</code> objects created in the loop. This final, small list of high-level scores is the output of Phase 6 and the direct input for the final macro evaluation in Phase 7.</li>
+        </ol>
+
+        <h2>4. System Diagram: Final Strategic Consolidation</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 9px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <rect x="350" y="20" width="200" height="50" class="box box-green"/>
+                <text x="450" y="50" class="label">Input: List of 10 AreaScores</text>
+
+                <path class="flow-line" d="M450 70 V 110"/>
+
+                <rect x="350" y="110" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="140" class="label">Enrichment & Grouping</text>
+                <text x="450" y="155" class="sub-label">Key: cluster_id from Monolith</text>
+
+                <path class="flow-line" d="M450 170 V 210"/>
+
+                <!-- Groups -->
+                <g id="groups">
+                    <rect x="50" y="210" width="200" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="150" y="240" class="label">Cluster A: "Human Rights"</text>
+                    <text x="150" y="255" class="sub-label">PA01, PA04, PA05, PA08</text>
+
+                    <rect x="350" y="210" width="200" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="450" y="240" class="label">Cluster B: "Governance"</text>
+                    <text x="450" y="255" class="sub-label">PA02, PA07, PA09</text>
+
+                    <rect x="650" y="210" width="200" height="60" fill="rgba(0,212,255,0.1)" stroke="#00D4FF" stroke-dasharray="2,2"/>
+                    <text x="750" y="240" class="label">Cluster C: "Development"</text>
+                    <text x="750" y="255" class="sub-label">PA03, PA06, PA10</text>
+                </g>
+
+                <path class="flow-line" d="M150 270 V 310"/>
+                <path class="flow-line" d="M450 270 V 310"/>
+                <path class="flow-line" d="M750 270 V 310"/>
+
+                <!-- Aggregation Logic -->
+                <g id="aggregation">
+                    <rect x="75" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="150" y="340" class="label">ClusterAggregator</text>
+                    <rect x="375" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="450" y="340" class="label">ClusterAggregator</text>
+                    <rect x="675" y="310" width="150" height="50" class="box box-blue"/>
+                    <text x="750" y="340" class="label">ClusterAggregator</text>
+                </g>
+
+                <path class="flow-line" d="M150 360 V 400"/>
+                <path class="flow-line" d="M450 360 V 400"/>
+                <path class="flow-line" d="M750 360 V 400"/>
+
+                <!-- Aggregated Results -->
+                <g id="results">
+                    <rect x="75" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="150" y="430" class="label">ClusterScore A</text>
+                    <rect x="375" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="450" y="430" class="label">ClusterScore B</text>
+                    <rect x="675" y="400" width="150" height="50" class="box box-green"/>
+                    <text x="750" y="430" class="label">ClusterScore C</text>
+                </g>
+
+                <path class="flow-line" d="M150 450 v 40 H 450"/>
+                <path class="flow-line" d="M450 450 v 40"/>
+                <path class="flow-line" d="M750 450 v 40 H 450"/>
+
+                <path class="flow-line" d="M450 490 V 520"/>
+
+                <rect x="325" y="520" width="250" height="50" class="box box-green"/>
+                <text x="450" y="550" class="label">Output: List of ~4 ClusterScores</text>
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+FUNCTION _aggregate_clusters(area_scores, config):
+    // Step 1: Build a map from policy area ID to cluster ID from the monolith
+    area_to_cluster_map = PARSE_CLUSTER_DEFINITIONS(config.monolith)
+
+    enriched_scores = []
+    FOR score IN area_scores:
+        cluster_id = area_to_cluster_map.get(score.area_id)
+        if cluster_id:
+            score.cluster_id = cluster_id
+            enriched_scores.APPEND(score)
+
+    // Step 2: Group the 10 enriched area scores by cluster_id
+    grouped_scores = GROUP_BY(enriched_scores, key="cluster_id")
+
+    // Step 3-6: Sequentially process each cluster group
+    cluster_scores = []
+    aggregator = new ClusterAggregator(config.aggregation_settings)
+    FOR cluster_id, items IN grouped_scores.items():
+        aggregated_score = aggregator.aggregate_cluster(items)
+
+        cluster_score = new ClusterScore(
+            cluster_id = cluster_id,
+            score = aggregated_score,
+            contributing_areas = items
+        )
+        cluster_scores.APPEND(cluster_score)
+
+    RETURN cluster_scores
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input Count:</strong> Confirm that the input is a list of exactly 10 <code>AreaScore</code> objects.</li>
+            <li><strong>Verify Output Count:</strong> Assert that the final output is a list containing a small number of <code>ClusterScore</code> objects (e.g., 3-5), matching the number of clusters defined in the monolith.</li>
+            <li><strong>Audit Cluster Mapping:</strong> Check the monolith's cluster definitions and verify that the <code>AreaScore</code> objects have been correctly grouped under their parent clusters.</li>
+            <li><strong>Check for Data Loss:</strong> Ensure that all 10 input <code>AreaScore</code> objects (provided they are all mapped to a cluster) are present within the `contributing_areas` lists of the output <code>ClusterScore</code> objects.</li>
+            <li><strong>Traceability Check:</strong> Select one output <code>ClusterScore</code> and confirm that all of its `contributing_areas` are thematically aligned with the strategic purpose of the cluster as described in the project's conceptual documentation.</li>
+        </ul>
+    </div>
+</body>
+</html>

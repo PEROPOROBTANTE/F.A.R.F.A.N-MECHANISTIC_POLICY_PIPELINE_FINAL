@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.A.R.F.A.N. | Phase 10: Formatting and Export</title>
+    <style>
+        :root {
+            --atroz-red-500: #C41E3A; --atroz-blue-electric: #00D4FF; --atroz-green-toxic: #39FF14;
+            --atroz-copper-500: #B2642E; --atroz-copper-oxide: #17A589; --atroz-ink: #E5E7EB; --atroz-bg: #0A0A0A;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: 400; font-style: normal;
+        }
+        body { background-color: var(--atroz-bg); color: var(--atroz-ink); font-family: var(--font-main); margin: 0; padding: 0; font-size: 14px; line-height: 1.8; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 28px; color: var(--atroz-blue-electric); border-bottom: 1px solid var(--atroz-copper-500); padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 18px; color: var(--atroz-copper-oxide); margin-top: 50px; border-left: 3px solid var(--atroz-copper-oxide); padding-left: 10px; }
+        h3 { font-size: 16px; color: var(--atroz-copper-500); margin-top: 30px; }
+        p, li { text-align: justify; text-shadow: 0 0 2px rgba(229, 231, 235, 0.1); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code { background-color: #1a1a1a; padding: 3px 6px; border-radius: 4px; font-size: 12px; color: var(--atroz-blue-electric); }
+        .diagram-container { margin: 50px 0; padding: 30px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); border: 1px solid var(--atroz-blue-electric); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 10: Final Payload Formatting and Export</h1>
+
+        <h2>1. Purpose</h2>
+        <p>
+            Phase 10 is the terminal phase of the F.A.R.F.A.N. pipeline, responsible for preparing the final, comprehensive output for external consumption. Executed asynchronously, its objective is to package the final report object from Phase 9 with a complete set of performance and instrumentation metrics gathered throughout the entire pipeline execution. This creates a final, self-contained export payload that includes not only the analytical results but also a detailed record of the pipeline's operational performance, ensuring full auditability and allowing for downstream performance analysis.
+        </p>
+
+        <h2>2. Key Definitions</h2>
+        <ul>
+            <li><strong>Export Payload:</strong> The final and most comprehensive dictionary object produced by the pipeline. It encapsulates the entire analytical report and all operational metrics.</li>
+            <li><strong>Phase Metrics:</strong> A collection of detailed performance data for each of the 11 pipeline phases, including duration, throughput, resource snapshots, and error counts, gathered by the <code>PhaseInstrumentation</code> objects.</li>
+        </ul>
+
+        <h2>3. Step-by-Step Operational Flow</h2>
+        <p>
+            The <code>Orchestrator._format_and_export()</code> method performs the final packaging of all pipeline data.
+        </p>
+        <ol>
+            <li><strong>Input Retrieval:</strong> The method receives the final report object from Phase 9.</li>
+            <li><strong>Metrics Collection:</strong> It calls the orchestrator's internal <code>get_phase_metrics()</code> method. This method iterates through all <code>PhaseInstrumentation</code> objects that were active during the run and compiles their data into a comprehensive dictionary.</li>
+            <li><strong>Payload Construction:</strong> A new dictionary, the "export payload," is created. It contains three top-level keys:
+                <ul>
+                    <li><code>report</code>: The complete, unchanged report object from Phase 9.</li>
+                    <li><code>phase_metrics</code>: The newly collected dictionary of all performance metrics.</li>
+                    <li><code>completed_at</code>: A final UTC timestamp marking the successful completion of the entire pipeline.</li>
+                </ul>
+            </li>
+            <li><strong>Output:</strong> The export payload dictionary is returned as the final product of the orchestration. This object is what is ultimately delivered to the initial caller of the pipeline, ready to be serialized to JSON, sent to an API endpoint, or stored in a database.</li>
+        </ol>
+
+        <h2>4. System Diagram: Final Packaging</h2>
+        <div class="diagram-container">
+            <svg width="100%" viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace" font-size="12px">
+                <defs>
+                    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#04101A"/></linearGradient>
+                    <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#39FF14"/><stop offset="100%" stop-color="#0B231B"/></linearGradient>
+                    <marker id="arrow-copper" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B2642E"/></marker>
+                </defs>
+                <style>
+                    .box { stroke-width: 1.5; rx: 4px; }
+                    .box-blue { fill: url(#grad-blue); stroke: #00D4FF; }
+                    .box-green { fill: url(#grad-green); stroke: #39FF14; }
+                    .label { fill: #E5E7EB; text-anchor: middle; }
+                    .sub-label { fill: #E5E7EB; opacity: 0.7; font-size: 10px; text-anchor: middle; }
+                    .flow-line { stroke: #B2642E; stroke-width: 1.5; marker-end: url(#arrow-copper); }
+                </style>
+
+                <!-- Inputs -->
+                <rect x="50" y="50" width="250" height="60" class="box box-green"/>
+                <text x="175" y="80" class="label">Input: Final Report Object</text>
+                <text x="175" y="95" class="sub-label">(from Phase 9)</text>
+
+                <rect x="600" y="50" width="250" height="60" class="box box-green"/>
+                <text x="725" y="80" class="label">Input: Phase Metrics</text>
+                <text x="725" y="95" class="sub-label">(from Instrumentation)</text>
+
+                <path class="flow-line" d="M175 110 V 180"/>
+                <path class="flow-line" d="M725 110 V 180"/>
+
+                <!-- Process -->
+                <rect x="350" y="180" width="200" height="60" class="box box-blue"/>
+                <text x="450" y="215" class="label">_format_and_export()</text>
+
+                <path class="flow-line" d="M450 240 V 290"/>
+
+                <!-- Output -->
+                <rect x="250" y="290" width="400" height="80" class="box box-green"/>
+                <text x="450" y="320" class="label" font-size="16px">Final Export Payload</text>
+                <text x="450" y="340" class="sub-label">{ report, phase_metrics, completed_at }</text>
+            </svg>
+        </div>
+
+        <h2>5. Illustrative Pseudocode</h2>
+        <pre><code>
+ASYNC FUNCTION _format_and_export(report, config):
+    // Step 1: Receive the final report object
+    final_report = report
+
+    // Step 2: Collect all instrumentation metrics from the orchestrator
+    all_phase_metrics = self.get_phase_metrics()
+
+    // Step 3: Construct the final export payload
+    export_payload = {
+        "report": final_report,
+        "phase_metrics": all_phase_metrics,
+        "completed_at": GET_CURRENT_TIMESTAMP()
+    }
+
+    // Step 4: Return the complete payload
+    RETURN export_payload
+        </code></pre>
+
+        <h2>6. Operational Checklist for Auditing</h2>
+        <ul>
+            <li><strong>Verify Input:</strong> Confirm that the report object from Phase 9 is the primary input.</li>
+            <li><strong>Check Metrics Integrity:</strong> Inspect the <code>phase_metrics</code> object in the output. Confirm that it contains entries for all 11 phases (0-10) and that the data (e.g., `duration_ms`) appears valid.</li>
+            <li><strong>Validate Timestamp:</strong> Ensure the <code>completed_at</code> field is a valid and recent UTC timestamp.</li>
+            <li><strong>Confirm Final Structure:</strong> Verify that the final output is a dictionary containing the expected top-level keys: <code>report</code>, <code>phase_metrics</code>, and <code>completed_at</code>.</li>
+        </ul>
+    </div>
+</body>
+</html>
