@@ -1,8 +1,8 @@
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from types import MappingProxyType, UnionType
-from typing import Any, Protocol, Union, get_type_hints
+from types import MappingProxyType
+from typing import Any, Protocol
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +12,8 @@ class ChunkRoutingResult:
     policy_area_id: str
     chunk_id: str
     expected_elements: list[Any]
-    document_position: int = 0
+    dimension_id: str = ""
+    document_position: tuple[int, int] | None = None
 
 
 EXPECTED_TASKS_PER_CHUNK = 5
@@ -275,7 +276,7 @@ def _construct_task(
         list(expected_elements) if isinstance(expected_elements, list | tuple) else []
     )
 
-    document_position = getattr(routing_result, "document_position", None)
+    document_position = routing_result.document_position
 
     metadata = {
         "document_position": document_position,
@@ -287,13 +288,19 @@ def _construct_task(
 
     creation_timestamp = datetime.now(timezone.utc).isoformat()
 
+    dimension_id = (
+        routing_result.dimension_id
+        if routing_result.dimension_id
+        else question.get("dimension_id", "")
+    )
+
     try:
         task = ExecutableTask(
             task_id=task_id,
             question_id=question.get("question_id", ""),
             question_global=question_global,
             policy_area_id=routing_result.policy_area_id,
-            dimension_id=question.get("dimension_id", ""),
+            dimension_id=dimension_id,
             chunk_id=routing_result.chunk_id,
             patterns=patterns_list,
             signals=signals_dict,
@@ -325,10 +332,12 @@ def _construct_task_legacy(
 ) -> ExecutableTask:
     question_global = question.get("question_global")
 
-    if not isinstance(question_global, int) or not (0 <= question_global <= 999):
+    if not isinstance(question_global, int) or not (
+        0 <= question_global <= MAX_QUESTION_GLOBAL
+    ):
         raise ValueError(
             f"Invalid question_global: {question_global}. "
-            f"Must be an integer in range 0-999."
+            f"Must be an integer in range 0-{MAX_QUESTION_GLOBAL}."
         )
 
     policy_area_id = routing_result.policy_area_id
@@ -341,9 +350,9 @@ def _construct_task_legacy(
             f"question_global must be an integer, got {type(question_global).__name__}"
         )
 
-    if not (0 <= question_global <= 999):
+    if not (0 <= question_global <= MAX_QUESTION_GLOBAL):
         raise ValueError(
-            f"question_global must be between 0 and 999 inclusive, got {question_global}"
+            f"question_global must be between 0 and {MAX_QUESTION_GLOBAL} inclusive, got {question_global}"
         )
 
     task_id = f"MQC-{question_global:03d}_{policy_area_id}"
