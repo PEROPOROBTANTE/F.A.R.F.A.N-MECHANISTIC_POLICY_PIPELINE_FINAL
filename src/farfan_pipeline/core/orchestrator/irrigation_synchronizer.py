@@ -27,7 +27,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
-from farfan_pipeline.core.types import PreprocessedDocument
+from farfan_pipeline.core.types import ChunkData, PreprocessedDocument
 from farfan_pipeline.synchronization import ChunkMatrix
 
 try:
@@ -62,6 +62,11 @@ if PROMETHEUS_AVAILABLE:
         "Total synchronization failures",
         ["error_type"],
     )
+    synchronization_chunk_matches = Counter(
+        "synchronization_chunk_matches_total",
+        "Chunk routing match results",
+        ["dimension", "policy_area", "status"],
+    )
 else:
 
     class DummyMetric:
@@ -90,6 +95,24 @@ else:
     synchronization_duration = DummyMetric()
     tasks_constructed = DummyMetric()
     synchronization_failures = DummyMetric()
+    synchronization_chunk_matches = DummyMetric()
+
+
+@dataclass(frozen=True)
+class ChunkRoutingResult:
+    """Immutable result of Phase 3 chunk routing verification.
+
+    Contains validated chunk reference and extracted metadata for
+    downstream task construction in Phases 4-7.
+    """
+
+    target_chunk: ChunkData
+    chunk_id: str
+    policy_area_id: str
+    dimension_id: str
+    text_content: str
+    expected_elements: list[dict[str, Any]]
+    document_position: tuple[int, int] | None
 
 
 @dataclass(frozen=True)
@@ -245,6 +268,160 @@ class IrrigationSynchronizer:
                     count += 1
 
         return count
+
+    def validate_chunk_routing(self, question: dict[str, Any]) -> ChunkRoutingResult:
+        """Route chunk for question with Phase 3 multi-stage verification.
+
+        This method implements P3.1-P3.10 of the irrigation synchronization
+        specification. It extracts routing keys from the question, queries
+        the chunk matrix, verifies consistency across multiple dimensions,
+        and extracts chunk payload for downstream processing.
+
+        Args:
+            question: Question dictionary from questionnaire with routing keys
+                Required keys: question_id, policy_area_id, dimension_id
+                Optional keys: question_text, expected_elements, patterns, etc.
+
+        Returns:
+            ChunkRoutingResult with validated chunk and extracted metadata
+
+        Raises:
+            ValueError: If question missing required fields
+            ValueError: If no chunk found for routing keys (synchronization failure)
+            ValueError: If chunk routing keys inconsistent (corruption detected)
+            ValueError: If chunk text empty or whitespace-only
+
+        Example:
+            >>> question = {
+            ...     "question_id": "D1-Q01",
+            ...     "policy_area_id": "PA05",
+            ...     "dimension_id": "DIM03"
+            ... }
+            >>> result = synchronizer.validate_chunk_routing(question)
+            >>> print(result.chunk_id)
+            PA05-DIM03
+        """
+        question_id = question.get("question_id")
+        if not question_id:
+            raise ValueError(
+                "Question missing required 'question_id' field. "
+                "Cannot route chunk without question identifier."
+            )
+
+        policy_area_id = question.get("policy_area_id")
+        if not policy_area_id:
+            raise ValueError(
+                f"Question {question_id} missing required 'policy_area_id' field. "
+                "All questions must specify target policy area for chunk routing."
+            )
+
+        dimension_id = question.get("dimension_id")
+        if not dimension_id:
+            raise ValueError(
+                f"Question {question_id} missing required 'dimension_id' field. "
+                "All questions must specify target dimension for chunk routing."
+            )
+
+        lookup_key = (policy_area_id, dimension_id)
+
+        logger.debug(
+            json.dumps(
+                {
+                    "event": "chunk_routing_start",
+                    "question_id": question_id,
+                    "policy_area_id": policy_area_id,
+                    "dimension_id": dimension_id,
+                    "lookup_key": list(lookup_key),
+                    "correlation_id": self.correlation_id,
+                }
+            )
+        )
+
+        try:
+            target_chunk = self.chunk_matrix.get_chunk(policy_area_id, dimension_id)
+        except KeyError as e:
+            synchronization_chunk_matches.labels(
+                dimension=dimension_id, policy_area=policy_area_id, status="failure"
+            ).inc()
+
+            raise ValueError(
+                f"Synchronization Failure for MQC {question_id}: "
+                f"PA={policy_area_id}, DIM={dimension_id}. "
+                f"No corresponding chunk found in matrix. "
+                f"This indicates incomplete chunk coverage - expected all combinations "
+                f"of PA01-PA10 × DIM01-DIM06 to be present."
+            ) from e
+
+        if target_chunk.policy_area_id != policy_area_id:
+            raise ValueError(
+                f"Policy area mismatch for question {question_id}: "
+                f"Routing key specifies PA={policy_area_id} but chunk has PA={target_chunk.policy_area_id}. "
+                f"Chunk ID: {target_chunk.chunk_id}"
+            )
+
+        if target_chunk.dimension_id != dimension_id:
+            raise ValueError(
+                f"Dimension mismatch for question {question_id}: "
+                f"Routing key specifies DIM={dimension_id} but chunk has DIM={target_chunk.dimension_id}. "
+                f"Chunk ID: {target_chunk.chunk_id}"
+            )
+
+        expected_chunk_id = f"{policy_area_id}-{dimension_id}"
+        if target_chunk.chunk_id != expected_chunk_id:
+            raise ValueError(
+                f"Chunk identity inconsistency for question {question_id}: "
+                f"Expected chunk_id={expected_chunk_id} based on routing keys, "
+                f"but chunk has chunk_id={target_chunk.chunk_id}"
+            )
+
+        text_content = target_chunk.text
+        if not text_content or not text_content.strip():
+            raise ValueError(
+                f"Chunk {target_chunk.chunk_id} has empty or whitespace-only text. "
+                f"Cannot process question {question_id} without chunk content."
+            )
+
+        expected_elements = getattr(target_chunk, "expected_elements", [])
+        if expected_elements is None:
+            expected_elements = []
+        expected_elements = list(expected_elements)
+
+        document_position = getattr(target_chunk, "document_position", None)
+        if document_position is None and hasattr(target_chunk, "provenance"):
+            provenance = target_chunk.provenance
+            if provenance and hasattr(provenance, "span_in_page"):
+                document_position = provenance.span_in_page
+
+        synchronization_chunk_matches.labels(
+            dimension=dimension_id, policy_area=policy_area_id, status="success"
+        ).inc()
+
+        logger.debug(
+            json.dumps(
+                {
+                    "event": "chunk_routing_success",
+                    "question_id": question_id,
+                    "chunk_id": target_chunk.chunk_id,
+                    "policy_area_id": policy_area_id,
+                    "dimension_id": dimension_id,
+                    "text_length": len(text_content),
+                    "has_expected_elements": len(expected_elements) > 0,
+                    "has_document_position": document_position is not None,
+                    "correlation_id": self.correlation_id,
+                    "timestamp": time.time(),
+                }
+            )
+        )
+
+        return ChunkRoutingResult(
+            target_chunk=target_chunk,
+            chunk_id=target_chunk.chunk_id,
+            policy_area_id=policy_area_id,
+            dimension_id=dimension_id,
+            text_content=text_content,
+            expected_elements=expected_elements,
+            document_position=document_position,
+        )
 
     def _extract_questions(self) -> list[dict[str, Any]]:
         """Extract all questions from questionnaire in deterministic order."""
@@ -544,4 +721,5 @@ __all__ = [
     "IrrigationSynchronizer",
     "ExecutionPlan",
     "Task",
+    "ChunkRoutingResult",
 ]
