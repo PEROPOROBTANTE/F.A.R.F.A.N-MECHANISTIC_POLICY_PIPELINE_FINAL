@@ -619,56 +619,53 @@ class IrrigationSynchronizer:
         self,
         question: dict[str, Any],
         routing_result: ChunkRoutingResult,
-        correlation_id: str,  # noqa: ARG002
-    ) -> tuple[
-        str,
-        Any | None,
-        Any | None,
-        tuple[str, str],
-    ]:
-        """Phase 6.1: Extract input data and classify schema types.
+        correlation_id: str,
+    ) -> None:
+        """Phase 6: Validate schema compatibility between question and chunk.
 
         Extracts expected_elements from both question and chunk routing result,
-        classifies their types (None, list, dict, or invalid), and prepares
-        data for subsequent validation phases. This is a pure extraction phase
-        with no validation logic beyond type classification.
+        validates type compatibility and structure consistency, and raises
+        exceptions if schema incompatibilities are detected. Acts as a fail-fast
+        gate preventing task construction when schema validation fails.
 
         Args:
             question: Question dictionary from questionnaire
             routing_result: ChunkRoutingResult from Phase 3
             correlation_id: Correlation ID for tracking
 
-        Returns:
-            Tuple of (provisional_task_id, question_schema, chunk_schema, (question_type, chunk_type))
-
         Raises:
-            KeyError: If question["question_global"] is missing (allowed to propagate)
+            TypeError: If either schema has invalid type (not list, dict, or None)
+            ValueError: If schemas have heterogeneous types, list length mismatch,
+                       or dict key set mismatch, or if question["question_global"] is missing
         """
+        question_id = question.get("question_id", "UNKNOWN")
         provisional_task_id = (
             f'MQC-{question["question_global"]:03d}_{routing_result.policy_area_id}'
         )
+        chunk_id = routing_result.chunk_id
 
         question_schema = question.get("expected_elements")
         chunk_schema = routing_result.expected_elements
 
-        def _classify_type(value: Any) -> str:  # noqa: ANN401
-            if value is None:
-                return "none"
-            elif isinstance(value, list):
-                return "list"
-            elif isinstance(value, dict):
-                return "dict"
-            else:
-                return "invalid"
-
-        question_type = _classify_type(question_schema)
-        chunk_type = _classify_type(chunk_schema)
-
-        return (
+        self._validate_expected_elements_types(
             provisional_task_id,
             question_schema,
             chunk_schema,
-            (question_type, chunk_type),
+            question_id,
+            chunk_id,
+            correlation_id,
+        )
+
+        logger.debug(
+            json.dumps(
+                {
+                    "event": "schema_validation_success",
+                    "question_id": question_id,
+                    "chunk_id": chunk_id,
+                    "provisional_task_id": provisional_task_id,
+                    "correlation_id": correlation_id,
+                }
+            )
         )
 
     def _validate_expected_elements_types(
@@ -678,6 +675,7 @@ class IrrigationSynchronizer:
         chunk_schema: Any,  # noqa: ANN401
         question_id: str,
         chunk_id: str,  # noqa: ARG002
+        correlation_id: str,
     ) -> None:
         """Validate expected_elements type compatibility and structure.
 
@@ -692,6 +690,7 @@ class IrrigationSynchronizer:
             chunk_schema: expected_elements from chunk
             question_id: Question identifier for error messages
             chunk_id: Chunk identifier for error messages
+            correlation_id: Correlation ID for distributed tracing
 
         Raises:
             TypeError: If either schema has invalid type (not list, dict, or None)
@@ -716,14 +715,16 @@ class IrrigationSynchronizer:
             raise TypeError(
                 f"Schema validation failure for question {question_id}: "
                 f"expected_elements from question has invalid type "
-                f"{type(question_schema).__name__}, expected list|dict|None"
+                f"{type(question_schema).__name__}, expected list|dict|None "
+                f"[correlation_id={correlation_id}]"
             )
 
         if chunk_type == "invalid":
             raise TypeError(
                 f"Schema validation failure for question {question_id}: "
                 f"expected_elements from chunk has invalid type "
-                f"{type(chunk_schema).__name__}, expected list|dict|None"
+                f"{type(chunk_schema).__name__}, expected list|dict|None "
+                f"[correlation_id={correlation_id}]"
             )
 
         if question_type == "none" and chunk_type == "none":
@@ -736,7 +737,8 @@ class IrrigationSynchronizer:
         ):
             raise ValueError(
                 f"Schema validation failure: heterogeneous types "
-                f"(question has {question_type}, chunk has {chunk_type})"
+                f"(question has {question_type}, chunk has {chunk_type}) "
+                f"[correlation_id={correlation_id}]"
             )
 
         if question_type == "list" and chunk_type == "list":
@@ -746,7 +748,8 @@ class IrrigationSynchronizer:
                 raise ValueError(
                     f"Schema validation failure for question {question_id}: "
                     f"expected_elements list length mismatch "
-                    f"(question has {question_len}, chunk has {chunk_len})"
+                    f"(question has {question_len}, chunk has {chunk_len}) "
+                    f"[correlation_id={correlation_id}]"
                 )
 
         if question_type == "dict" and chunk_type == "dict":
@@ -762,7 +765,8 @@ class IrrigationSynchronizer:
                     details.append(f"extra in chunk: {sorted(extra_in_chunk)}")
                 raise ValueError(
                     f"Schema validation failure for question {question_id}: "
-                    f"expected_elements dict key mismatch ({', '.join(details)})"
+                    f"expected_elements dict key mismatch ({', '.join(details)}) "
+                    f"[correlation_id={correlation_id}]"
                 )
 
         if question_schema is not None and chunk_schema is None:
@@ -962,6 +966,10 @@ class IrrigationSynchronizer:
                         self.signal_registry,
                     )
 
+                    self._validate_schema_compatibility(
+                        question, routing_result, self.correlation_id
+                    )
+
                     task = self._construct_task(
                         question, routing_result, applicable_patterns, resolved_signals
                     )
@@ -982,7 +990,7 @@ class IrrigationSynchronizer:
                             )
                         )
 
-                except ValueError as e:
+                except (ValueError, TypeError) as e:
                     routing_failures += 1
 
                     logger.error(
