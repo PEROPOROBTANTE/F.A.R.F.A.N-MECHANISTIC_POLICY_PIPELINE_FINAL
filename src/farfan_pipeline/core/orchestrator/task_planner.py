@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 class ChunkRoutingResult:
     policy_area_id: str
     chunk_id: str
+    expected_elements: list[Any]
 
 
 EXPECTED_TASKS_PER_CHUNK = 5
@@ -267,20 +268,10 @@ def _construct_task(
 
     generated_task_ids.add(task_id)
 
+    patterns = list(applicable_patterns)
+    signals = {signal.signal_type: signal for signal in resolved_signals}
     creation_timestamp = datetime.now(timezone.utc).isoformat()
-
-    patterns_tuple = (
-        tuple(applicable_patterns)
-        if not isinstance(applicable_patterns, tuple)
-        else applicable_patterns
-    )
-    signals_dict = dict(
-        zip(
-            (f"signal_{i}" for i in range(len(resolved_signals))),
-            resolved_signals,
-            strict=False,
-        )
-    )
+    expected_elements = routing_result.expected_elements
 
     context = MicroQuestionContext(
         task_id=task_id,
@@ -292,17 +283,10 @@ def _construct_task(
         base_slot=question.get("base_slot", ""),
         cluster_id=question.get("cluster_id", ""),
         patterns=applicable_patterns,
-        signals=signals_dict,
-        expected_elements=tuple(question.get("expected_elements", [])),
+        signals=signals,
+        expected_elements=tuple(expected_elements),
         signal_requirements=question.get("signal_requirements", {}),
         creation_timestamp=creation_timestamp,
-    )
-
-    expected_elements = question.get("expected_elements", [])
-    expected_elements_tuple = (
-        tuple(expected_elements)
-        if isinstance(expected_elements, list)
-        else expected_elements
     )
 
     assembled_fields = {
@@ -312,10 +296,10 @@ def _construct_task(
         "policy_area_id": routing_result.policy_area_id,
         "dimension_id": question.get("dimension_id", ""),
         "chunk_id": routing_result.chunk_id,
-        "patterns": patterns_tuple,
-        "signals": MappingProxyType(signals_dict),
+        "patterns": tuple(patterns),
+        "signals": MappingProxyType(signals),
         "creation_timestamp": creation_timestamp,
-        "expected_elements": expected_elements_tuple,
+        "expected_elements": tuple(expected_elements),
         "metadata": MappingProxyType(
             {
                 "base_slot": question.get("base_slot", ""),
