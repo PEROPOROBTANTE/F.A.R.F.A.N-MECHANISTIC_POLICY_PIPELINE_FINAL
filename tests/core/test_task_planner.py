@@ -7,9 +7,13 @@ import pytest
 from farfan_pipeline.core.orchestrator.task_planner import (
     EXPECTED_TASKS_PER_CHUNK,
     ExecutableTask,
+    MicroQuestionContext,
     _construct_task,
     _validate_cross_task,
     _validate_schema,
+    extract_expected_elements,
+    extract_signal_requirements,
+    sort_micro_question_contexts,
 )
 
 
@@ -67,6 +71,7 @@ class TestConstructTask:
             "base_slot": "D1-Q1",
             "cluster_id": "CL01",
             "expected_elements": [{"type": "fuentes_oficiales", "minimum": 2}],
+            "signal_requirements": {"signal1": 0.3},
         }
         chunk = {"id": "chunk_001", "expected_elements": []}
         patterns = [{"type": "pattern1"}]
@@ -87,6 +92,10 @@ class TestConstructTask:
         assert task.metadata["base_slot"] == "D1-Q1"
         assert task.metadata["cluster_id"] == "CL01"
         assert "MQC-001_PA01" in generated_ids
+        assert task.context is not None
+        assert isinstance(task.context, MicroQuestionContext)
+        assert task.context.base_slot == "D1-Q1"
+        assert task.context.cluster_id == "CL01"
 
     def test_construct_task_rejects_duplicate_id(self):
         question = {
@@ -258,3 +267,130 @@ class TestExecutableTask:
         assert task.signals["signal1"] == signal_value
         assert len(task.expected_elements) == 1
         assert task.metadata["key"] == "value"
+
+
+class TestMicroQuestionContext:
+    def test_context_is_frozen(self):
+        context = MicroQuestionContext(
+            task_id="MQC-001_PA01",
+            question_id="D1-Q1",
+            question_global=1,
+            policy_area_id="PA01",
+            dimension_id="DIM01",
+            chunk_id="chunk_001",
+            base_slot="D1-Q1",
+            cluster_id="CL01",
+            patterns=[{"type": "pattern1"}],
+            signals={"signal1": 0.5},
+            expected_elements=[{"type": "test", "minimum": 1}],
+            signal_requirements={"signal1": 0.3},
+            creation_timestamp="2024-01-01T00:00:00Z",
+        )
+
+        assert context.task_id == "MQC-001_PA01"
+        assert context.question_global == 1
+        assert isinstance(context.patterns, tuple)
+        assert isinstance(context.expected_elements, tuple)
+
+        with pytest.raises(AttributeError):
+            context.task_id = "new_id"
+
+    def test_extract_expected_elements(self):
+        context = MicroQuestionContext(
+            task_id="MQC-001_PA01",
+            question_id="D1-Q1",
+            question_global=1,
+            policy_area_id="PA01",
+            dimension_id="DIM01",
+            chunk_id="chunk_001",
+            base_slot="D1-Q1",
+            cluster_id="CL01",
+            patterns=[],
+            signals={},
+            expected_elements=[{"type": "test", "minimum": 1}, {"type": "test2"}],
+            signal_requirements={},
+            creation_timestamp="2024-01-01T00:00:00Z",
+        )
+
+        elements = extract_expected_elements(context)
+        assert isinstance(elements, list)
+        assert len(elements) == 2
+        assert elements[0]["type"] == "test"
+
+    def test_extract_signal_requirements(self):
+        context = MicroQuestionContext(
+            task_id="MQC-001_PA01",
+            question_id="D1-Q1",
+            question_global=1,
+            policy_area_id="PA01",
+            dimension_id="DIM01",
+            chunk_id="chunk_001",
+            base_slot="D1-Q1",
+            cluster_id="CL01",
+            patterns=[],
+            signals={},
+            expected_elements=[],
+            signal_requirements={"signal1": 0.5, "signal2": 0.7},
+            creation_timestamp="2024-01-01T00:00:00Z",
+        )
+
+        requirements = extract_signal_requirements(context)
+        assert isinstance(requirements, dict)
+        assert requirements["signal1"] == 0.5
+        assert requirements["signal2"] == 0.7
+
+    def test_sort_micro_question_contexts(self):
+        contexts = [
+            MicroQuestionContext(
+                task_id="MQC-002_PA02",
+                question_id="D1-Q2",
+                question_global=2,
+                policy_area_id="PA02",
+                dimension_id="DIM01",
+                chunk_id="chunk_002",
+                base_slot="D1-Q2",
+                cluster_id="CL01",
+                patterns=[],
+                signals={},
+                expected_elements=[],
+                signal_requirements={},
+                creation_timestamp="2024-01-01T00:00:00Z",
+            ),
+            MicroQuestionContext(
+                task_id="MQC-051_PA01",
+                question_id="D2-Q1",
+                question_global=51,
+                policy_area_id="PA01",
+                dimension_id="DIM02",
+                chunk_id="chunk_010",
+                base_slot="D2-Q1",
+                cluster_id="CL01",
+                patterns=[],
+                signals={},
+                expected_elements=[],
+                signal_requirements={},
+                creation_timestamp="2024-01-01T00:00:00Z",
+            ),
+            MicroQuestionContext(
+                task_id="MQC-001_PA01",
+                question_id="D1-Q1",
+                question_global=1,
+                policy_area_id="PA01",
+                dimension_id="DIM01",
+                chunk_id="chunk_001",
+                base_slot="D1-Q1",
+                cluster_id="CL01",
+                patterns=[],
+                signals={},
+                expected_elements=[],
+                signal_requirements={},
+                creation_timestamp="2024-01-01T00:00:00Z",
+            ),
+        ]
+
+        sorted_contexts = sort_micro_question_contexts(contexts)
+        assert sorted_contexts[0].question_global == 1
+        assert sorted_contexts[1].question_global == 2
+        assert sorted_contexts[2].question_global == 51
+        assert sorted_contexts[0].dimension_id == "DIM01"
+        assert sorted_contexts[2].dimension_id == "DIM02"
