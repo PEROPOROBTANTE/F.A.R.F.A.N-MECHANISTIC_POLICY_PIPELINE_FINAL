@@ -187,8 +187,8 @@ class IrrigationSynchronizer:
         """
         Filter patterns to only those matching target policy area.
 
-        Checks if the question's policy area matches the target. If so, returns
-        all patterns for the question. Otherwise, returns an empty tuple.
+        Validates that all patterns have a 'policy_area_id' field, then filters
+        to return only patterns matching the target policy area ID.
 
         Args:
             question: Question containing patterns to filter
@@ -196,13 +196,29 @@ class IrrigationSynchronizer:
 
         Returns:
             Immutable tuple of patterns matching target_pa_id
-        """
-        if question.policy_area_id == target_pa_id:
-            return tuple(question.patterns)
 
-        logger.warning(
-            f"Question with id '{question.question_id}' has policy area "
-            f"'{question.policy_area_id}' which does not match target "
-            f"'{target_pa_id}'. Returning no patterns."
-        )
-        return ()
+        Raises:
+            ValueError: If any pattern is missing the 'policy_area_id' field
+        """
+        for idx, pattern in enumerate(question.patterns):
+            if "policy_area_id" not in pattern:
+                raise ValueError(
+                    f"Pattern at index {idx} in question '{question.question_id}' "
+                    f"is missing required 'policy_area_id' field"
+                )
+
+        filtered = [
+            pattern
+            for pattern in question.patterns
+            if pattern.get("policy_area_id") == target_pa_id
+        ]
+
+        if not filtered:
+            logger.warning(
+                f"Zero patterns matched for question '{question.question_id}' "
+                f"with target policy area '{target_pa_id}'. "
+                f"Question has policy_area_id='{question.policy_area_id}' "
+                f"with {len(question.patterns)} total patterns."
+            )
+
+        return tuple(filtered)
