@@ -1127,6 +1127,86 @@ class IrrigationSynchronizer:
         hash_digest = hashlib.sha256(json_bytes).hexdigest()
         return hash_digest
 
+    def _serialize_and_verify_plan(self, plan: ExecutionPlan) -> str:
+        """Serialize ExecutionPlan to deterministic JSON and verify round-trip integrity.
+
+        Checks if ExecutionPlan.to_json() exists and uses it directly, or falls back
+        to dataclasses.asdict() with manual conversion of non-serializable types:
+        - tasks tuple to list
+        - datetime objects to ISO 8601 strings via isoformat()
+        - remaining non-serializable types via str()
+
+        Serializes with json.dumps using sort_keys=True and separators=(',',':')
+        for deterministic output. After serialization, deserializes via json.loads(),
+        validates plan_id equality and task count preservation, and raises ValueError
+        if round-trip verification fails.
+
+        Args:
+            plan: ExecutionPlan to serialize
+
+        Returns:
+            Validated JSON string for storage operations
+
+        Raises:
+            ValueError: If round-trip verification fails (plan_id mismatch or task count changed)
+        """
+        from dataclasses import asdict
+        from datetime import datetime
+
+        if hasattr(plan, "to_json") and callable(plan.to_json):
+            plan_dict = plan.to_json()
+        else:
+            plan_dict = asdict(plan)
+
+            def convert_value(value: Any) -> Any:  # noqa: ANN401, PLR0911
+                if isinstance(value, (tuple, list)):
+                    return [convert_value(item) for item in value]
+                elif isinstance(value, dict):
+                    return {k: convert_value(v) for k, v in value.items()}
+                elif isinstance(value, datetime):
+                    return value.isoformat()
+                elif hasattr(value, "__dict__"):
+                    try:
+                        return asdict(value)
+                    except TypeError:
+                        return str(value)
+                elif isinstance(value, str | int | float | bool | type(None)):
+                    return value
+                else:
+                    return str(value)
+
+            plan_dict = convert_value(plan_dict)
+
+        json_string = json.dumps(plan_dict, sort_keys=True, separators=(",", ":"))
+
+        deserialized = json.loads(json_string)
+
+        original_plan_id = plan.plan_id
+        original_task_count = len(plan.tasks)
+
+        deserialized_plan_id = deserialized.get("plan_id")
+        deserialized_tasks = deserialized.get("tasks")
+
+        if deserialized_plan_id != original_plan_id:
+            raise ValueError(
+                f"Round-trip verification failed: plan_id mismatch "
+                f"(original={original_plan_id}, deserialized={deserialized_plan_id})"
+            )
+
+        if deserialized_tasks is None:
+            raise ValueError(
+                "Round-trip verification failed: tasks field missing in deserialized plan"
+            )
+
+        deserialized_task_count = len(deserialized_tasks)
+        if deserialized_task_count != original_task_count:
+            raise ValueError(
+                f"Round-trip verification failed: task count mismatch "
+                f"(original={original_task_count}, deserialized={deserialized_task_count})"
+            )
+
+        return json_string
+
     @synchronization_duration.time()
     def build_execution_plan(self) -> ExecutionPlan:
         """Build deterministic execution plan mapping questions to chunks.
