@@ -832,6 +832,67 @@ class IrrigationSynchronizer:
 
         return task
 
+    def _assemble_execution_plan(
+        self,
+        executable_tasks: list[ExecutableTask],
+        questions: list[dict[str, Any]],
+        correlation_id: str,  # noqa: ARG002
+    ) -> list[ExecutableTask]:
+        """Phase 8: Assemble execution plan with validation and deterministic ordering.
+
+        Performs three-phase assembly process:
+        - Phase 8.1: Pre-assembly validation (duplicate detection, count validation)
+        - Phase 8.2: Deterministic task ordering (lexicographic by task_id)
+        - Phase 8.3: JSON serialization preparation (delegated to caller)
+
+        Validates that task count matches question count and that no duplicate
+        task identifiers exist. Then sorts tasks lexicographically by task_id to ensure
+        deterministic plan identifier generation across runs.
+
+        Args:
+            executable_tasks: List of constructed ExecutableTask objects
+            questions: List of question dictionaries
+            correlation_id: Correlation ID for tracing
+
+        Returns:
+            Sorted list of ExecutableTask objects in deterministic order
+
+        Raises:
+            ValueError: If task count doesn't match question count or duplicates exist
+            RuntimeError: When sorting operation corrupts task list length
+        """
+        question_count = len(questions)
+        task_count = len(executable_tasks)
+
+        if task_count != question_count:
+            raise ValueError(
+                f"Execution plan assembly failure: expected {question_count} tasks "
+                f"but constructed {task_count}; task construction loop corrupted"
+            )
+
+        task_ids = [t.task_id for t in executable_tasks]
+        unique_count = len(set(task_ids))
+
+        if unique_count != len(task_ids):
+            counter = Counter(task_ids)
+            duplicates = [task_id for task_id, count in counter.items() if count > 1]
+            duplicate_count = len(task_ids) - unique_count
+
+            raise ValueError(
+                f"Execution plan assembly failure: found {duplicate_count} duplicate "
+                f"task identifiers; duplicates are {sorted(duplicates)}"
+            )
+
+        sorted_tasks = sorted(executable_tasks, key=lambda t: t.task_id)
+
+        if len(sorted_tasks) != len(executable_tasks):
+            raise RuntimeError(
+                f"Task ordering corruption detected: sorted task count {len(sorted_tasks)} "
+                f"does not match input task count {len(executable_tasks)}"
+            )
+
+        return sorted_tasks
+
     def _compute_integrity_hash(self, tasks: list[Task]) -> str:
         """Compute Blake3 or SHA256 integrity hash of execution plan."""
         task_data = json.dumps(
@@ -1013,6 +1074,8 @@ class IrrigationSynchronizer:
                     f"but constructed {actual_task_count}. "
                     f"Routing successes: {routing_successes}, failures: {routing_failures}"
                 )
+
+            tasks = self._assemble_execution_plan(tasks, questions, self.correlation_id)
 
             logger.info(
                 json.dumps(
