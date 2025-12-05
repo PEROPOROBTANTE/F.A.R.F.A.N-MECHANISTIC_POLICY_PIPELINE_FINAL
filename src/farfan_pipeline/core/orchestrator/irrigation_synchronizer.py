@@ -462,6 +462,7 @@ class IrrigationSynchronizer:
         self,
         patterns: list[dict[str, Any]] | tuple[dict[str, Any], ...],
         policy_area_id: str,
+        question_id: str | None = None,
     ) -> tuple[dict[str, Any], ...]:
         """Filter patterns by policy_area_id using strict equality.
 
@@ -471,6 +472,7 @@ class IrrigationSynchronizer:
         Args:
             patterns: Iterable of pattern objects (typically dicts with optional policy_area_id)
             policy_area_id: Policy area ID string (e.g., "PA01") to filter by
+            question_id: Optional question ID for enhanced logging
 
         Returns:
             Immutable tuple of filtered pattern dicts. Returns empty tuple if no patterns match.
@@ -480,23 +482,39 @@ class IrrigationSynchronizer:
             - Exclude patterns without policy_area_id attribute
             - Result is immutable (tuple)
         """
+        if not policy_area_id:
+            raise ValueError(
+                f"Pattern filtering failure for question {question_id or 'UNKNOWN'}: "
+                "policy_area_id parameter is empty or None"
+            )
+
         included = []
         excluded = []
         included_ids = []
         excluded_ids = []
 
-        for pattern in patterns:
-            pattern_id = (
-                pattern.get("id", "UNKNOWN") if isinstance(pattern, dict) else "UNKNOWN"
-            )
+        for idx, pattern in enumerate(patterns):
+            if not isinstance(pattern, dict):
+                logger.warning(
+                    f"Pattern at index {idx} for question {question_id or 'UNKNOWN'} "
+                    f"is not a dict (type: {type(pattern).__name__}), excluding from filter"
+                )
+                excluded.append(pattern)
+                excluded_ids.append(f"non_dict_at_index_{idx}")
+                continue
 
-            if isinstance(pattern, dict) and "policy_area_id" in pattern:
-                if pattern["policy_area_id"] == policy_area_id:
-                    included.append(pattern)
-                    included_ids.append(pattern_id)
-                else:
-                    excluded.append(pattern)
-                    excluded_ids.append(pattern_id)
+            pattern_id = pattern.get("id", f"pattern_at_index_{idx}")
+
+            if "policy_area_id" not in pattern:
+                logger.debug(
+                    f"Pattern {pattern_id} at index {idx} for question {question_id or 'UNKNOWN'} "
+                    "lacks policy_area_id field, excluding from filter"
+                )
+                excluded.append(pattern)
+                excluded_ids.append(pattern_id)
+            elif pattern["policy_area_id"] == policy_area_id:
+                included.append(pattern)
+                included_ids.append(pattern_id)
             else:
                 excluded.append(pattern)
                 excluded_ids.append(pattern_id)
@@ -506,13 +524,14 @@ class IrrigationSynchronizer:
         logger.info(
             json.dumps(
                 {
-                    "event": "IrrigationSynchronizer._filter_patterns",
-                    "total": total_count,
-                    "included": len(included),
-                    "excluded": len(excluded),
+                    "event": "pattern_filtering_complete",
+                    "question_id": question_id or "UNKNOWN",
+                    "policy_area_id": policy_area_id,
+                    "total_patterns": total_count,
+                    "included_count": len(included),
+                    "excluded_count": len(excluded),
                     "included_ids": included_ids,
                     "excluded_ids": excluded_ids,
-                    "policy_area_id": policy_area_id,
                     "correlation_id": self.correlation_id,
                 }
             )
@@ -529,9 +548,11 @@ class IrrigationSynchronizer:
         """Phase 6: Validate schema compatibility between question and chunk.
 
         Extracts expected_elements from both question and chunk routing result,
-        validates type compatibility and structure consistency, and raises
-        exceptions if schema incompatibilities are detected. Acts as a fail-fast
-        gate preventing task construction when schema validation fails.
+        validates type compatibility and structure consistency, performs semantic
+        validation including asymmetric required field implication rules and
+        minimum threshold ordering constraints, and raises exceptions if schema
+        incompatibilities are detected. Acts as a fail-fast gate preventing task
+        construction when schema validation fails.
 
         Args:
             question: Question dictionary from questionnaire
@@ -541,21 +562,28 @@ class IrrigationSynchronizer:
         Raises:
             TypeError: If either schema has invalid type (not list, dict, or None)
             ValueError: If schemas have heterogeneous types, list length mismatch,
-                       or dict key set mismatch, or if question["question_global"] is missing
+                       dict key set mismatch, required field implication violation,
+                       or minimum threshold ordering violation,
+                       or if question["question_global"] is missing
         """
         question_id = question.get("question_id", "UNKNOWN")
         question_global = question.get("question_global")
 
         if question_global is None:
-            raise ValueError("question_global is required")
+            raise ValueError(
+                f"Schema validation failure for question {question_id}: "
+                "question_global field is required but missing"
+            )
 
         if not isinstance(question_global, int):
             raise ValueError(
+                f"Schema validation failure for question {question_id}: "
                 f"question_global must be an integer, got {type(question_global).__name__}"
             )
 
         if not (0 <= question_global <= 999):
             raise ValueError(
+                f"Schema validation failure for question {question_id}: "
                 f"question_global must be between 0 and 999 inclusive, got {question_global}"
             )
 
@@ -576,10 +604,130 @@ class IrrigationSynchronizer:
             correlation_id,
         )
 
+        if question_schema is not None and chunk_schema is not None:
+            self._validate_semantic_constraints(
+                provisional_task_id,
+                question_schema,
+                chunk_schema,
+                question_id,
+                chunk_id,
+                correlation_id,
+            )
+
         logger.debug(
             json.dumps(
                 {
                     "event": "schema_validation_success",
+                    "question_id": question_id,
+                    "chunk_id": chunk_id,
+                    "provisional_task_id": provisional_task_id,
+                    "correlation_id": correlation_id,
+                }
+            )
+        )
+
+    def _validate_semantic_constraints(
+        self,
+        provisional_task_id: str,
+        question_schema: Any,  # noqa: ANN401
+        chunk_schema: Any,  # noqa: ANN401
+        question_id: str,
+        chunk_id: str,
+        correlation_id: str,
+    ) -> None:
+        """Validate semantic constraints: required field implication and minimum thresholds.
+
+        Performs element-wise validation of asymmetric required field implication:
+        If question element has required=True, chunk element MUST also have required=True.
+        Also validates minimum threshold ordering: chunk minimum must be >= question minimum.
+
+        Args:
+            provisional_task_id: Task ID for error reporting
+            question_schema: expected_elements from question
+            chunk_schema: expected_elements from chunk
+            question_id: Question identifier for error messages
+            chunk_id: Chunk identifier for error messages
+            correlation_id: Correlation ID for distributed tracing
+
+        Raises:
+            ValueError: If required field implication violated or threshold ordering violated
+        """
+        if isinstance(question_schema, list) and isinstance(chunk_schema, list):
+            if len(question_schema) != len(chunk_schema):
+                return
+
+            for idx, (q_elem, c_elem) in enumerate(
+                zip(question_schema, chunk_schema, strict=False)
+            ):
+                if not isinstance(q_elem, dict) or not isinstance(c_elem, dict):
+                    continue
+
+                q_required = q_elem.get("required", False)
+                c_required = c_elem.get("required", False)
+
+                if q_required and not c_required:
+                    element_type = q_elem.get("type", f"element_at_index_{idx}")
+                    raise ValueError(
+                        f"Task {provisional_task_id}: Required field implication violation at index {idx}: "
+                        f"question requires element type '{element_type}' but chunk marks it optional "
+                        f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
+                    )
+
+                q_minimum = q_elem.get("minimum", 0)
+                c_minimum = c_elem.get("minimum", 0)
+
+                if isinstance(q_minimum, (int, float)) and isinstance(
+                    c_minimum, (int, float)
+                ):
+                    if c_minimum < q_minimum:
+                        element_type = q_elem.get("type", f"element_at_index_{idx}")
+                        raise ValueError(
+                            f"Task {provisional_task_id}: Threshold ordering violation at index {idx}: "
+                            f"element type '{element_type}' has chunk minimum ({c_minimum}) < "
+                            f"question minimum ({q_minimum}) "
+                            f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
+                        )
+
+        elif isinstance(question_schema, dict) and isinstance(chunk_schema, dict):
+            common_keys = set(question_schema.keys()) & set(chunk_schema.keys())
+
+            for key in sorted(common_keys):
+                q_elem = question_schema[key]
+                c_elem = chunk_schema[key]
+
+                if not isinstance(q_elem, dict) or not isinstance(c_elem, dict):
+                    continue
+
+                q_required = q_elem.get("required", False)
+                c_required = c_elem.get("required", False)
+
+                if q_required and not c_required:
+                    element_type = q_elem.get("type", key)
+                    raise ValueError(
+                        f"Task {provisional_task_id}: Required field implication violation for key '{key}': "
+                        f"question requires element type '{element_type}' but chunk marks it optional "
+                        f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
+                    )
+
+                q_minimum = q_elem.get("minimum", 0)
+                c_minimum = c_elem.get("minimum", 0)
+
+                if isinstance(q_minimum, (int, float)) and isinstance(
+                    c_minimum, (int, float)
+                ):
+                    if c_minimum < q_minimum:
+                        element_type = q_elem.get("type", key)
+                        raise ValueError(
+                            f"Task {provisional_task_id}: Threshold ordering violation for key '{key}': "
+                            f"element type '{element_type}' has chunk minimum ({c_minimum}) < "
+                            f"question minimum ({q_minimum}) "
+                            f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
+                        )
+
+        logger.debug(
+            json.dumps(
+                {
+                    "event": "semantic_validation_success",
                     "question_id": question_id,
                     "chunk_id": chunk_id,
                     "provisional_task_id": provisional_task_id,
@@ -733,35 +881,54 @@ class IrrigationSynchronizer:
         Raises:
             ValueError: If duplicate task_id is detected or required fields are missing/invalid
         """
-        # Phase 7.1: Validate and extract question_global
+        question_id = question.get("question_id", "UNKNOWN")
+
         question_global = question.get("question_global")
         if question_global is None:
-            raise ValueError("question_global field is required but missing")
+            raise ValueError(
+                f"Task construction failure for question {question_id}: "
+                "question_global field is required but missing"
+            )
         if not isinstance(question_global, int):
             raise ValueError(
+                f"Task construction failure for question {question_id}: "
                 f"question_global must be an integer, got {type(question_global).__name__}"
             )
+        if not (0 <= question_global <= 999):
+            raise ValueError(
+                f"Task construction failure for question {question_id}: "
+                f"question_global must be in range 0-999, got {question_global}"
+            )
 
-        # Phase 7.1: Construct task_id from validated question_global
         task_id = f"MQC-{question_global:03d}_{routing_result.policy_area_id}"
 
         if task_id in generated_task_ids:
-            raise ValueError(f"Duplicate task_id detected: {task_id}")
+            raise ValueError(
+                f"Task construction failure: Duplicate task_id detected: {task_id} "
+                f"for question {question_id}"
+            )
 
         generated_task_ids.add(task_id)
 
-        # Field extraction in declaration order for validation priority
-        # Extract question_id with bracket notation and KeyError conversion
-        try:
-            question_id = question["question_id"]
-        except KeyError as e:
-            raise ValueError("question_id field is required but missing") from e
-
-        # Assign question_global (already validated above)
-        # Extract routing fields via attribute access (guaranteed by ChunkRoutingResult schema)
         policy_area_id = routing_result.policy_area_id
         dimension_id = routing_result.dimension_id
         chunk_id = routing_result.chunk_id
+
+        if not policy_area_id:
+            raise ValueError(
+                f"Task construction failure for {task_id}: "
+                f"policy_area_id from routing_result is empty"
+            )
+        if not dimension_id:
+            raise ValueError(
+                f"Task construction failure for {task_id}: "
+                f"dimension_id from routing_result is empty"
+            )
+        if not chunk_id:
+            raise ValueError(
+                f"Task construction failure for {task_id}: "
+                f"chunk_id from routing_result is empty"
+            )
 
         expected_elements_list = list(routing_result.expected_elements)
         document_position = routing_result.document_position
@@ -779,32 +946,21 @@ class IrrigationSynchronizer:
 
         creation_timestamp = datetime.now(timezone.utc).isoformat()
 
+        base_slot = question.get("base_slot", "")
+        cluster_id = question.get("cluster_id", "")
+
         metadata = {
+            "base_slot": base_slot if base_slot else "",
+            "cluster_id": cluster_id if cluster_id else "",
             "document_position": document_position,
-            "synchronizer_version": "1.0.0",
+            "synchronizer_version": "2.0.0",
             "correlation_id": self.correlation_id,
             "original_pattern_count": len(applicable_patterns),
             "original_signal_count": len(resolved_signals),
+            "filtered_pattern_count": len(patterns_list),
+            "resolved_signal_count": len(signals_dict),
+            "schema_element_count": len(expected_elements_list),
         }
-
-        if task_id is None or not task_id:
-            raise ValueError("Task construction failure: task_id is None or empty")
-        if question_id is None or not question_id:
-            raise ValueError("Task construction failure: question_id is None or empty")
-        if question_global is None:
-            raise ValueError("Task construction failure: question_global is None")
-        if policy_area_id is None or not policy_area_id:
-            raise ValueError(
-                "Task construction failure: policy_area_id is None or empty"
-            )
-        if dimension_id is None or not dimension_id:
-            raise ValueError("Task construction failure: dimension_id is None or empty")
-        if chunk_id is None or not chunk_id:
-            raise ValueError("Task construction failure: chunk_id is None or empty")
-        if creation_timestamp is None or not creation_timestamp:
-            raise ValueError(
-                "Task construction failure: creation_timestamp is None or empty"
-            )
 
         try:
             task = ExecutableTask(
@@ -1054,7 +1210,7 @@ class IrrigationSynchronizer:
 
                     patterns_raw = question.get("patterns", [])
                     applicable_patterns = self._filter_patterns(
-                        patterns_raw, routing_result.policy_area_id
+                        patterns_raw, routing_result.policy_area_id, question_id
                     )
 
                     # Phase 5 validation: Ensure signal_registry initialized

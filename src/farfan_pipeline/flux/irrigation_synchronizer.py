@@ -114,20 +114,42 @@ class IrrigationSynchronizer:
         for question_ctx in question_contexts:
             pa_id = getattr(question_ctx, "policy_area_id", "")
             dim_id = getattr(question_ctx, "dimension_id", "")
-            question_global = getattr(question_ctx, "question_global", 0)
+            question_global = getattr(question_ctx, "question_global", None)
             question_id = getattr(question_ctx, "question_id", "")
 
+            if not question_id:
+                raise ValueError(
+                    "Executor context preparation failure: question_id is empty or None"
+                )
+
             if question_global is None:
-                raise ValueError("question_global is required")
+                raise ValueError(
+                    f"Executor context preparation failure for question {question_id}: "
+                    "question_global field is required but None"
+                )
 
             if not isinstance(question_global, int):
                 raise ValueError(
+                    f"Executor context preparation failure for question {question_id}: "
                     f"question_global must be an integer, got {type(question_global).__name__}"
                 )
 
             if not (0 <= question_global <= 999):
                 raise ValueError(
+                    f"Executor context preparation failure for question {question_id}: "
                     f"question_global must be between 0 and 999 inclusive, got {question_global}"
+                )
+
+            if not pa_id:
+                raise ValueError(
+                    f"Executor context preparation failure for question {question_id}: "
+                    "policy_area_id is empty or None"
+                )
+
+            if not dim_id:
+                raise ValueError(
+                    f"Executor context preparation failure for question {question_id}: "
+                    "dimension_id is empty or None"
                 )
 
             patterns = list(getattr(question_ctx, "patterns", ()))
@@ -145,10 +167,14 @@ class IrrigationSynchronizer:
                 },
             )
 
+            base_slot = getattr(question_ctx, "base_slot", "")
+            cluster_id = getattr(question_ctx, "cluster_id", "")
+            document_position = getattr(question_ctx, "document_position", None)
+
             metadata = {
-                "base_slot": getattr(question_ctx, "base_slot", ""),
-                "cluster_id": getattr(question_ctx, "cluster_id", ""),
-                "document_position": None,
+                "base_slot": base_slot if base_slot else "",
+                "cluster_id": cluster_id if cluster_id else "",
+                "document_position": document_position,
                 "synchronizer_version": "2.0.0",
                 "correlation_id": "",
                 "original_pattern_count": len(patterns),
@@ -192,16 +218,36 @@ class IrrigationSynchronizer:
             The matched chunk
 
         Raises:
-            ValueError: If no chunk exists for the question's coordinates,
-                       with descriptive message including question_id
+            ValueError: If no chunk exists for the question's coordinates or if
+                       routing keys are missing, with descriptive message including question_id
         """
+        if not question.policy_area_id:
+            raise ValueError(
+                f"Chunk matching failure for question_id='{question.question_id}': "
+                "policy_area_id is empty or None"
+            )
+        if not question.dimension_id:
+            raise ValueError(
+                f"Chunk matching failure for question_id='{question.question_id}': "
+                "dimension_id is empty or None"
+            )
+
         try:
             return chunk_matrix.get_chunk(
                 question.policy_area_id, question.dimension_id
             )
         except ValueError as e:
             raise ValueError(
-                f"Failed to match chunk for question_id='{question.question_id}': {e}"
+                f"Chunk matching failure for question_id='{question.question_id}': "
+                f"No chunk found for policy_area_id='{question.policy_area_id}', "
+                f"dimension_id='{question.dimension_id}'"
+            ) from e
+        except KeyError as e:
+            raise ValueError(
+                f"Chunk matching failure for question_id='{question.question_id}': "
+                f"Matrix lookup failed for coordinates "
+                f"(policy_area_id='{question.policy_area_id}', "
+                f"dimension_id='{question.dimension_id}')"
             ) from e
 
     def _filter_patterns(
@@ -221,9 +267,20 @@ class IrrigationSynchronizer:
             Immutable tuple of patterns matching target_pa_id
 
         Raises:
-            ValueError: If any pattern is missing the 'policy_area_id' field
+            ValueError: If target_pa_id is empty or any pattern is missing 'policy_area_id' field
         """
+        if not target_pa_id:
+            raise ValueError(
+                f"Pattern filtering failure for question '{question.question_id}': "
+                "target_pa_id parameter is empty or None"
+            )
+
         for idx, pattern in enumerate(question.patterns):
+            if not isinstance(pattern, dict):
+                raise ValueError(
+                    f"Pattern at index {idx} in question '{question.question_id}' "
+                    f"is not a dict (type: {type(pattern).__name__})"
+                )
             if "policy_area_id" not in pattern:
                 raise ValueError(
                     f"Pattern at index {idx} in question '{question.question_id}' "
@@ -238,8 +295,8 @@ class IrrigationSynchronizer:
 
         if not filtered:
             logger.warning(
-                f"Zero patterns matched for question '{question.question_id}' "
-                f"with target policy area '{target_pa_id}'. "
+                f"Pattern filtering complete for question '{question.question_id}': "
+                f"zero patterns matched target policy area '{target_pa_id}'. "
                 f"Question has policy_area_id='{question.policy_area_id}' "
                 f"with {len(question.patterns)} total patterns."
             )

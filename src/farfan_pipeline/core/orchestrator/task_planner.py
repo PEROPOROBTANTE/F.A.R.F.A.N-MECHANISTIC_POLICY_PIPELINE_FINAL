@@ -188,12 +188,29 @@ def _validate_element_compatibility(  # noqa: PLR0912
 
 
 def _validate_schema(question: dict[str, Any], chunk: dict[str, Any]) -> None:
+    """Validate schema compatibility between question and chunk expected_elements.
+
+    Performs shallow equality check and validates semantic constraints:
+    - Asymmetric required field implication: if question element is required,
+      chunk element must also be required
+    - Minimum threshold ordering: chunk minimum must be >= question minimum
+
+    Args:
+        question: Question dict with expected_elements field
+        chunk: Chunk dict with expected_elements field
+
+    Raises:
+        ValueError: If schema mismatch, required field implication violation,
+                   or minimum threshold ordering violation detected
+    """
+    question_id = question.get("question_id", "UNKNOWN")
     q_elements = question.get("expected_elements", [])
     c_elements = chunk.get("expected_elements", [])
 
     if q_elements != c_elements:
         raise ValueError(
-            f"Schema mismatch for question {question.get('question_id', 'UNKNOWN')}:\n"
+            f"Schema mismatch for question {question_id}: "
+            f"expected_elements differ between question and chunk.\n"
             f"Question schema: {q_elements}\n"
             f"Chunk schema: {c_elements}"
         )
@@ -204,19 +221,32 @@ def _validate_schema(question: dict[str, Any], chunk: dict[str, Any]) -> None:
     if len(q_elements) != len(c_elements):
         return
 
-    for q_elem, c_elem in zip(q_elements, c_elements, strict=True):
+    for idx, (q_elem, c_elem) in enumerate(zip(q_elements, c_elements, strict=True)):
         if not isinstance(q_elem, dict) or not isinstance(c_elem, dict):
             continue
 
         q_required = q_elem.get("required", False)
         c_required = c_elem.get("required", False)
 
-        if not ((not q_required) or c_required):
-            element_type = q_elem.get("type", "UNKNOWN")
+        if q_required and not c_required:
+            element_type = q_elem.get("type", f"element_at_index_{idx}")
             raise ValueError(
-                f"Required-field implication violation for question {question.get('question_id', 'UNKNOWN')}: "
-                f"element type '{element_type}' is required in question but not in chunk"
+                f"Required-field implication violation for question {question_id}: "
+                f"element type '{element_type}' at index {idx} is required in question "
+                f"but marked as optional in chunk"
             )
+
+        q_minimum = q_elem.get("minimum", 0)
+        c_minimum = c_elem.get("minimum", 0)
+
+        if isinstance(q_minimum, (int, float)) and isinstance(c_minimum, (int, float)):
+            if c_minimum < q_minimum:
+                element_type = q_elem.get("type", f"element_at_index_{idx}")
+                raise ValueError(
+                    f"Minimum threshold ordering violation for question {question_id}: "
+                    f"element type '{element_type}' at index {idx} has "
+                    f"chunk minimum ({c_minimum}) < question minimum ({q_minimum})"
+                )
 
 
 def _construct_task(
