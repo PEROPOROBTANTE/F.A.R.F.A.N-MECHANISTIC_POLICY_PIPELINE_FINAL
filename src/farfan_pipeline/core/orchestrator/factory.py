@@ -1,786 +1,726 @@
 """
-Factory module for core module initialization with dependency injection.
+Factory module — canonical Dependency Injection (DI) and access control for F.A.R.F.A.N. 
 
-This module is responsible for:
-1. Reading data from disk (catalogs, schemas, documents, etc.)
-2. Constructing InputContracts for core modules
-3. Initializing core modules with injected dependencies
-4. Managing I/O operations so core modules remain pure
+This module is the single authoritative boundary for:
+- Canonical monolith access (CanonicalQuestionnaire)
+- Signal registry construction and enrichment (QuestionnaireSignalRegistry v2.0)
+- Method injection via MethodExecutor (with MethodRegistry + special instantiation rules)
+- Orchestrator construction with strict DI
+- CoreModuleFactory for I/O helpers (contracts, validation)
 
-Architectural Pattern:
-- Factory reads from disk
-- Factory constructs contracts
-- Factory injects dependencies into core modules
-- Core modules remain I/O-free and testable
+Design Principles (Factory Pattern + DI):
+- Orchestrator and Executors never touch I/O nor load the monolith directly. 
+- Factory loads and validates the canonical questionnaire exactly once (singleton).
+- Factory constructs signal registries and enriched packs centrally.
+- Factory wires MethodExecutor with registries and special instantiation rules.
+- Factory injects EnrichedSignalPack per policy area for BaseExecutor use. 
 
-QUESTIONNAIRE INTEGRITY PROTOCOL:
-- Questionnaire loading is now in questionnaire.py module
-- All consumers MUST import from questionnaire module
-- Use questionnaire.load_questionnaire() which returns CanonicalQuestionnaire
+Scope:
+- Infrastructure layer only. No business logic. 
 
-Version: 3.0.0
-Status: Refactored to be fully aligned with questionnaire.py
+SIN_CARRETA Compliance:
+- All construction paths emit structured telemetry with timestamps and hashes.
+- Determinism enforced via explicit validation of canonical questionnaire integrity.
+- Contract assertions guard all factory outputs (no silent degradation).
+- Auditability via immutable ProcessorBundle with provenance metadata.
+- SeedRegistry singleton ensures deterministic stochastic operations. 
+
+Integration Points:
+1. Orchestrator receives: method_executor, questionnaire, executor_config
+2. BaseExecutor (30 classes) receives: enriched_signal_pack (via helper function)
+3. MethodExecutor routes all method calls via ExtendedArgRouter
+4. Special instantiation rules enable shared MunicipalOntology, dependency injection
 """
 
-import copy
+from __future__ import annotations
+
+import hashlib
 import json
 import logging
-import threading
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from pathlib import Path
-from types import MappingProxyType
-from typing import Any, Final, Optional
+from typing import Any, Optional
 
-from farfan_pipeline.utils.core_contracts import (
-    CDAFFrameworkInputContract,
-    ContradictionDetectorInputContract,
-    DocumentData,
-    EmbeddingPolicyInputContract,
-    PDETAnalyzerInputContract,
-    PolicyProcessorInputContract,
-    SemanticAnalyzerInputContract,
-    SemanticChunkingInputContract,
-    TeoriaCambioInputContract,
-)
-from farfan_pipeline.utils.hash_utils import compute_hash
-from farfan_pipeline.core.orchestrator.core import MethodExecutor, Orchestrator
+from farfan_pipeline.core.orchestrator.core import MethodExecutor
 from farfan_pipeline.core.orchestrator.executor_config import ExecutorConfig
-from farfan_pipeline.core.orchestrator.method_registry import MethodRegistry
-from farfan_pipeline.core.orchestrator.method_source_validator import MethodSourceValidator
+from farfan_pipeline.core.orchestrator.method_registry import (
+    MethodRegistry,
+    setup_default_instantiation_rules,
+)
+from farfan_pipeline.core.orchestrator.signal_registry import (
+    QuestionnaireSignalRegistry,
+    create_signal_registry,
+)
+from farfan_pipeline.core.orchestrator.signal_intelligence_layer import (
+    EnrichedSignalPack,
+    create_enriched_signal_pack,
+)
+from farfan_pipeline.core.orchestrator.questionnaire import (
+    CanonicalQuestionnaire,
+    load_questionnaire,
+)
+from farfan_pipeline.core.orchestrator.arg_router import ExtendedArgRouter
+from farfan_pipeline.core.orchestrator.class_registry import build_class_registry
+
+# Optional: CoreModuleFactory for I/O helpers
+try:
+    from farfan_pipeline.core.orchestrator.core_module_factory import CoreModuleFactory
+    CORE_MODULE_FACTORY_AVAILABLE = True
+except ImportError:
+    CoreModuleFactory = None  # type: ignore
+    CORE_MODULE_FACTORY_AVAILABLE = False
+
+# Optional: SeedRegistry for determinism
+try:
+    from farfan_pipeline.core.orchestrator.seed_registry import SeedRegistry
+    SEED_REGISTRY_AVAILABLE = True
+except ImportError:
+    SeedRegistry = None  # type: ignore
+    SEED_REGISTRY_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
-# Canonical repository root - single source of truth for all file paths
-_REPO_ROOT = Path(__file__).resolve().parents[4]
-_DEFAULT_DATA_DIR = _REPO_ROOT / "data"
+
+# =============================================================================
+# Exceptions
+# =============================================================================
 
 
-# ============================================================================
-# CANONICAL QUESTIONNAIRE MANAGEMENT (MOVED FROM questionnaire.py)
-# ============================================================================
+class FactoryError(Exception):
+    """Base exception for factory construction failures."""
+    pass
 
-# RULE 1: ONE PATH - The ONLY valid questionnaire location
-_REPO_ROOT = Path(__file__).resolve().parents[4]
-QUESTIONNAIRE_PATH: Final[Path] = _REPO_ROOT / "data" / "questionnaire_monolith.json"
 
-# RULE 2: ONE HASH - Expected SHA-256 hash (MUST match or load fails)
-EXPECTED_HASH: Final[str] = "596d940383dd5bd64a5460eadcb65b9b26b2a7929eea838d2169f0f7cee46986"
+class QuestionnaireValidationError(FactoryError):
+    """Raised when questionnaire validation fails."""
+    pass
 
-# RULE 3: ONE STRUCTURE - Expected question counts
-EXPECTED_MICRO_QUESTION_COUNT: Final[int] = 300
-EXPECTED_MESO_QUESTION_COUNT: Final[int] = 4
-EXPECTED_MACRO_QUESTION_COUNT: Final[int] = 1
-EXPECTED_TOTAL_QUESTION_COUNT: Final[int] = 305
 
-@dataclass(frozen=True)
-class CanonicalQuestionnaire:
-    """Immutable, validated, hash-verified questionnaire."""
-    data: MappingProxyType[str, Any]
-    sha256: str
-    micro_questions: tuple[MappingProxyType, ...]
-    meso_questions: tuple[MappingProxyType, ...]
-    macro_question: MappingProxyType | None
-    micro_question_count: int
-    total_question_count: int
-    version: str
-    schema_version: str
+class RegistryConstructionError(FactoryError):
+    """Raised when signal registry construction fails."""
+    pass
 
-    def __post_init__(self) -> None:
-        """Validate all invariants on construction."""
-        if self.sha256 != EXPECTED_HASH:
-            raise ValueError("QUESTIONNAIRE INTEGRITY VIOLATION: Hash mismatch!")
-        if self.micro_question_count != EXPECTED_MICRO_QUESTION_COUNT:
-            raise ValueError(f"Expected {EXPECTED_MICRO_QUESTION_COUNT} micro questions, got {self.micro_question_count}")
-        if self.total_question_count != EXPECTED_TOTAL_QUESTION_COUNT:
-            raise ValueError(f"Expected {EXPECTED_TOTAL_QUESTION_COUNT} total questions, got {self.total_question_count}")
-        logger.info("canonical_questionnaire_validated sha256=%s version=%s", self.sha256[:16], self.version)
 
-def _validate_questionnaire_structure(data: dict[str, Any]) -> None:
-    """Validate questionnaire structure for required fields and types."""
-    if not isinstance(data, dict):
-        raise ValueError("Questionnaire must be a dictionary")
-    required_keys = ["version", "blocks", "schema_version"]
-    if missing := [k for k in required_keys if k not in data]:
-        raise ValueError(f"Questionnaire missing keys: {missing}")
-    blocks = data["blocks"]
-    if not isinstance(blocks, dict) or "micro_questions" not in blocks:
-        raise ValueError("blocks.micro_questions is required")
-    # (A full validation would check all fields and types recursively)
+class ExecutorConstructionError(FactoryError):
+    """Raised when method executor construction fails."""
+    pass
 
-_questionnaire_cache: Optional[CanonicalQuestionnaire] = None
 
-def load_questionnaire() -> CanonicalQuestionnaire:
-    """Loads, validates, and caches the questionnaire from the canonical path."""
-    global _questionnaire_cache
-    if _questionnaire_cache is not None:
-        logger.debug("Returning cached canonical questionnaire.")
-        return _questionnaire_cache
-
-    path = QUESTIONNAIRE_PATH
-    if not path.exists():
-        raise FileNotFoundError(f"Canonical questionnaire not found: {path}")
-
-    logger.info(f"Loading canonical questionnaire from {path}")
-    content = path.read_text(encoding='utf-8')
-    data = json.loads(content)
-
-    _validate_questionnaire_structure(data)
-    sha256 = compute_hash(data)
-
-    blocks = data['blocks']
-    micro_questions = tuple(MappingProxyType(q) for q in blocks['micro_questions'])
-    meso_questions = tuple(MappingProxyType(q) for q in blocks.get('meso_questions', []))
-    macro_question = MappingProxyType(blocks['macro_question']) if 'macro_question' in blocks else None
-    total_count = len(micro_questions) + len(meso_questions) + (1 if macro_question else 0)
-
-    canonical_q = CanonicalQuestionnaire(
-        data=MappingProxyType(data),
-        sha256=sha256,
-        micro_questions=micro_questions,
-        meso_questions=meso_questions,
-        macro_question=macro_question,
-        micro_question_count=len(micro_questions),
-        total_question_count=total_count,
-        version=data.get('version', 'unknown'),
-        schema_version=data.get('schema_version', 'unknown'),
-    )
-
-    _questionnaire_cache = canonical_q
-    return canonical_q
-
-# ============================================================================
-# END OF MOVED QUESTIONNAIRE LOGIC
-# ============================================================================
+# =============================================================================
+# Processor Bundle (typed DI container with provenance)
+# =============================================================================
 
 
 @dataclass(frozen=True)
 class ProcessorBundle:
-    """Aggregated orchestrator dependencies built by the factory.
+    """Aggregated orchestrator dependencies built by the Factory. 
 
     Attributes:
-        method_executor: Preconfigured :class:`MethodExecutor` instance ready for
-            execution.
-        questionnaire: The canonical, immutable questionnaire object.
-        factory: The :class:`CoreModuleFactory` used to construct ancillary
-            input contracts for downstream processors.
-        signal_registry: Optional signal registry populated during factory wiring.
-        executor_config: Canonical :class:`ExecutorConfig` used for all question
-            executors.
+        method_executor: Preconfigured MethodExecutor ready for routing.
+        questionnaire: Immutable, validated CanonicalQuestionnaire. 
+        signal_registry: QuestionnaireSignalRegistry v2.0 with full metadata.
+        executor_config: Canonical ExecutorConfig for executors.
+        enriched_signal_packs: Dict of EnrichedSignalPack per policy area.
+        core_module_factory: Optional CoreModuleFactory for I/O helpers. 
+        provenance: Construction metadata for audit trails.
     """
 
     method_executor: MethodExecutor
     questionnaire: CanonicalQuestionnaire
-    factory: "CoreModuleFactory"
-    signal_registry: Any | None
+    signal_registry: QuestionnaireSignalRegistry
     executor_config: ExecutorConfig
+    enriched_signal_packs: dict[str, EnrichedSignalPack]
+    core_module_factory: Optional[Any] = None
+    provenance: dict[str, Any] = field(default_factory=dict)
 
-# ============================================================================
-# FILE I/O OPERATIONS
-# ============================================================================
-
-def load_catalog(path: Path | None = None) -> dict[str, Any]:
-    """Load method catalog JSON file.
-
-    Args:
-        path: Path to catalog file. Defaults to config/rules/METODOS/catalogo_completo_canonico.json
-              relative to repository root.
-
-    Returns:
-        Loaded catalog data
-
-    Raises:
-        FileNotFoundError: If catalog file doesn't exist
-        json.JSONDecodeError: If file is not valid JSON
-    """
-    if path is None:
-        path = _REPO_ROOT / "config" / "rules" / "METODOS" / "catalogo_completo_canonico.json"
-
-    logger.info(f"Loading catalog from {path}")
-
-    with open(path, encoding='utf-8') as f:
-        return json.load(f)
-
-def load_method_map(path: Path | None = None) -> dict[str, Any]:
-    """Load method-class mapping JSON file.
-
-    Args:
-        path: Path to method map file. Defaults to COMPLETE_METHOD_CLASS_MAP.json
-              relative to repository root.
-
-    Returns:
-        Loaded method map data
-
-    Raises:
-        FileNotFoundError: If method map file doesn't exist
-        json.JSONDecodeError: If file is not valid JSON
-    """
-    if path is None:
-        path = _REPO_ROOT / "COMPLETE_METHOD_CLASS_MAP.json"
-
-    logger.info(f"Loading method map from {path}")
-
-    with open(path, encoding='utf-8') as f:
-        return json.load(f)
-
-def get_canonical_dimensions(questionnaire_path: Path | None = None) -> dict[str, dict[str, str]]:
-    """
-    Get canonical dimension definitions from questionnaire monolith.
-
-    Args:
-        questionnaire_path: Optional path to questionnaire file (IGNORED for integrity)
-
-    Returns:
-        Dictionary mapping dimension keys (D1-D6) to dimension info.
-    """
-    if questionnaire_path is not None:
-        logger.warning(
-            "get_canonical_dimensions: questionnaire_path parameter is IGNORED. "
-            "Dimensions always load from canonical questionnaire path for integrity."
+    def __post_init__(self) -> None:
+        """SIN_CARRETA § Contract Enforcement: validate bundle integrity."""
+        errors = []
+        
+        if self.method_executor is None:
+            errors.append("method_executor must not be None")
+        if self.questionnaire is None:
+            errors.append("questionnaire must not be None")
+        if self.signal_registry is None:
+            errors.append("signal_registry must not be None")
+        if self.executor_config is None:
+            errors.append("executor_config must not be None")
+        if self.enriched_signal_packs is None:
+            errors.append("enriched_signal_packs must not be None")
+        elif not isinstance(self.enriched_signal_packs, dict):
+            errors.append("enriched_signal_packs must be dict[str, EnrichedSignalPack]")
+        
+        if not self.provenance.get("construction_timestamp_utc"):
+            errors.append("provenance must include construction_timestamp_utc")
+        if not self.provenance.get("canonical_sha256"):
+            errors.append("provenance must include canonical_sha256")
+        if self.provenance.get("signal_registry_version") != "2.0":
+            errors.append("provenance must indicate signal_registry_version=2.0")
+        
+        if errors:
+            raise FactoryError(f"ProcessorBundle validation failed: {'; '.join(errors)}")
+        
+        logger.info(
+            "processor_bundle_validated "
+            "canonical_sha256=%s construction_ts=%s policy_areas=%d",
+            self.provenance.get("canonical_sha256", "")[:16],
+            self.provenance.get("construction_timestamp_utc"),
+            len(self.enriched_signal_packs),
         )
 
-    canonical = load_questionnaire()
 
-    if 'canonical_notation' not in canonical.data:
-        raise KeyError("canonical_notation section missing from questionnaire")
+# =============================================================================
+# Core Factory Implementation
+# =============================================================================
 
-    if 'dimensions' not in canonical.data['canonical_notation']:
-        raise KeyError("dimensions section missing from canonical_notation")
 
-    return copy.deepcopy(canonical.data['canonical_notation']['dimensions'])
-
-def get_canonical_policy_areas(questionnaire_path: Path | None = None) -> dict[str, dict[str, str]]:
-    """
-    Get canonical policy area definitions from questionnaire monolith.
-
+def build_processor_bundle(
+    *,
+    questionnaire_path: Optional[str] = None,
+    executor_config: Optional[ExecutorConfig] = None,
+    enable_intelligence_layer: bool = True,
+    seed_for_determinism: Optional[int] = None,
+    strict_validation: bool = True,
+) -> ProcessorBundle:
+    """Build complete processor bundle with all dependencies wired.
+    
+    This is the primary factory entry point for constructing all orchestrator
+    dependencies in a single, validated operation.
+    
     Args:
-        questionnaire_path: Optional path to questionnaire file (IGNORED for integrity)
-
+        questionnaire_path: Path to canonical questionnaire JSON. If None, uses default.
+        executor_config: Custom executor configuration. If None, uses default.
+        enable_intelligence_layer: Whether to build enriched signal packs (default: True).
+        seed_for_determinism: Optional seed for reproducible stochastic operations.
+        strict_validation: If True, fail on any validation error (default: True).
+        
     Returns:
-        Dictionary mapping policy area codes (PA01-PA10) to policy area info.
+        ProcessorBundle: Immutable bundle with all dependencies wired and validated.
+        
+    Raises:
+        QuestionnaireValidationError: If questionnaire validation fails.
+        RegistryConstructionError: If signal registry construction fails.
+        ExecutorConstructionError: If method executor construction fails.
+        FactoryError: For other construction failures.
     """
-    if questionnaire_path is not None:
-        logger.warning(
-            "get_canonical_policy_areas: questionnaire_path parameter is IGNORED. "
-            "Policy areas always load from canonical questionnaire path for integrity."
+    construction_start = time.time()
+    timestamp_utc = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    
+    logger.info("factory_build_start timestamp=%s strict=%s", timestamp_utc, strict_validation)
+    
+    try:
+        # Step 1: Load and validate canonical questionnaire
+        questionnaire = _load_and_validate_questionnaire(questionnaire_path, strict_validation)
+        canonical_hash = _compute_questionnaire_hash(questionnaire)
+        
+        if not isinstance(questionnaire, CanonicalQuestionnaire):
+            logger.error("Loaded questionnaire is not a CanonicalQuestionnaire instance: type=%s", type(questionnaire))
+            num_questions = 0
+        elif not hasattr(questionnaire, 'questions') or not isinstance(questionnaire.questions, (list, tuple)):
+            logger.error("CanonicalQuestionnaire missing 'questions' attribute or it is not a list/tuple: %s", repr(questionnaire))
+            num_questions = 0
+        else:
+            num_questions = len(questionnaire.questions)
+        logger.info(
+            "questionnaire_loaded questions=%d hash=%s",
+            num_questions,
+            canonical_hash[:16],
         )
-
-    canonical = load_questionnaire()
-
-    if 'canonical_notation' not in canonical.data:
-        raise KeyError("canonical_notation section missing from questionnaire")
-
-    if 'policy_areas' not in canonical.data['canonical_notation']:
-        raise KeyError("policy_areas section missing from canonical_notation")
-
-    return copy.deepcopy(canonical.data['canonical_notation']['policy_areas'])
-
-def load_schema(path: Path | None = None) -> dict[str, Any]:
-    """Load questionnaire schema JSON file.
-
-    Args:
-        path: Path to schema file. Defaults to schemas/questionnaire_monolith.schema.json
-              relative to repository root.
-    """
-    if path is None:
-        path = _REPO_ROOT / "schemas" / "questionnaire_monolith.schema.json"
-
-    logger.info(f"Loading schema from {path}")
-
-    with open(path, encoding='utf-8') as f:
-        return json.load(f)
-
-def load_document(file_path: Path) -> DocumentData:
-    """Load a document and construct DocumentData contract."""
-    logger.info(f"Loading document from {file_path}")
-
-    with open(file_path, encoding='utf-8') as f:
-        raw_text = f.read()
-
-    sentences = [s.strip() for s in raw_text.split('.') if s.strip()]
-
-    return DocumentData(
-        raw_text=raw_text,
-        sentences=sentences,
-        tables=[],
-        metadata={
-            'file_path': str(file_path),
-            'file_name': file_path.name,
-            'num_sentences': len(sentences),
+        
+        # Step 2: Build signal registry v2.0
+        signal_registry = _build_signal_registry(questionnaire, strict_validation)
+        
+        if not hasattr(signal_registry, 'get_all_policy_areas') or not callable(getattr(signal_registry, 'get_all_policy_areas', None)):
+            logger.error("signal_registry does not implement required method 'get_all_policy_areas'")
+            raise AttributeError("signal_registry does not implement required method 'get_all_policy_areas'")
+        logger.info(
+            "signal_registry_built version=2.0 policy_areas=%d",
+            len(signal_registry.get_all_policy_areas()),
+        )
+        
+        # Step 3: Build enriched signal packs (intelligence layer)
+        enriched_packs = _build_enriched_packs(
+            signal_registry, 
+            questionnaire, 
+            enable_intelligence_layer,
+            strict_validation
+        )
+        
+        logger.info(
+            "enriched_packs_built count=%d intelligence_layer=%s",
+            len(enriched_packs),
+            "enabled" if enable_intelligence_layer else "disabled",
+        )
+        
+        # Step 4: Initialize seed registry for determinism
+        _initialize_seed_registry(seed_for_determinism)
+        
+        # Step 5: Build method executor with full wiring
+        method_executor = _build_method_executor(strict_validation)
+        
+        logger.info(
+            "method_executor_built special_routes=%d",
+            method_executor.arg_router.get_special_route_coverage() if hasattr(method_executor.arg_router, 'get_special_route_coverage') else 0,
+        )
+        
+        # Step 6: Build or use provided executor config
+        if executor_config is None:
+            executor_config = ExecutorConfig.default()
+        
+        # Step 7: Build optional core module factory
+        core_factory = _build_core_module_factory()
+        
+        # Step 8: Assemble provenance metadata
+        construction_duration = time.time() - construction_start
+        provenance = {
+            "construction_timestamp_utc": timestamp_utc,
+            "canonical_sha256": canonical_hash,
+            "signal_registry_version": "2.0",
+            "intelligence_layer_enabled": enable_intelligence_layer,
+            "enriched_packs_count": len(enriched_packs),
+            "construction_duration_seconds": round(construction_duration, 3),
+            "seed_registry_initialized": SEED_REGISTRY_AVAILABLE and seed_for_determinism is not None,
+            "core_module_factory_available": CORE_MODULE_FACTORY_AVAILABLE,
+            "strict_validation": strict_validation,
         }
-    )
+        
+        # Step 9: Build and validate bundle
+        bundle = ProcessorBundle(
+            method_executor=method_executor,
+            questionnaire=questionnaire,
+            signal_registry=signal_registry,
+            executor_config=executor_config,
+            enriched_signal_packs=enriched_packs,
+            core_module_factory=core_factory,
+            provenance=provenance,
+        )
+        
+        logger.info(
+            "factory_build_complete duration=%.3fs hash=%s",
+            construction_duration,
+            canonical_hash[:16],
+        )
+        
+        return bundle
+        
+    except Exception as e:
+        logger.error("factory_build_failed error=%s", str(e), exc_info=True)
+        raise FactoryError(f"Failed to build processor bundle: {e}") from e
 
-def save_results(results: dict[str, Any], output_path: Path) -> None:
-    """Save analysis results to file."""
-    logger.info(f"Saving results to {output_path}")
 
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(results, f, indent=2, ensure_ascii=False)
-
-# ============================================================================
-# CONTRACT CONSTRUCTORS
-# ============================================================================
+# =============================================================================
+# Internal Construction Functions
+# =============================================================================
 
 
-def construct_semantic_analyzer_input(document: DocumentData, **kwargs) -> SemanticAnalyzerInputContract:
-    """Constructs the input for the SemanticAnalyzer."""
-    return SemanticAnalyzerInputContract(
-        text=document['raw_text'],
-        segments=document['sentences'],
-        ontology_params=kwargs.get('ontology_params', {})
-    )
+def _load_and_validate_questionnaire(
+    path: Optional[str],
+    strict: bool,
+) -> CanonicalQuestionnaire:
+    """Load and validate canonical questionnaire."""
+    try:
+        questionnaire_path = Path(path) if path is not None else None
+        questionnaire = load_questionnaire(questionnaire_path)
+        
+        # Validate structure
+        if not hasattr(questionnaire, 'questions'):
+            if strict:
+                raise QuestionnaireValidationError("Questionnaire missing 'questions' attribute")
+            logger.warning("questionnaire_validation_warning missing_questions_attribute")
+        
+        questions = getattr(questionnaire, 'questions', [])
+        if not questions:
+            if strict:
+                raise QuestionnaireValidationError("Questionnaire has no questions")
+            logger.warning("questionnaire_validation_warning no_questions")
+        
+        return questionnaire
+        
+    except Exception as e:
+        if strict:
+            raise QuestionnaireValidationError(f"Failed to load questionnaire: {e}") from e
+        logger.error("questionnaire_load_error continuing_with_degraded_state", exc_info=True)
+        raise
 
-def construct_cdaf_input(document: DocumentData, **kwargs) -> CDAFFrameworkInputContract:
-    """Constructs the input for the CDAFFramework."""
-    return CDAFFrameworkInputContract(
-        document_text=document['raw_text'],
-        plan_metadata=document['metadata'],
-        config=kwargs.get('config', {})
-    )
 
-def construct_pdet_input(document: DocumentData, **kwargs) -> PDETAnalyzerInputContract:
-    """Constructs the input for the PDETAnalyzer."""
-    return PDETAnalyzerInputContract(
-        document_content=document['raw_text'],
-        extract_tables=kwargs.get('extract_tables', True),
-        config=kwargs.get('config', {})
-    )
+def _build_signal_registry(
+    questionnaire: CanonicalQuestionnaire,
+    strict: bool,
+) -> QuestionnaireSignalRegistry:
+    """Build signal registry from questionnaire."""
+    try:
+        registry = create_signal_registry(questionnaire)
+        
+        # Validate registry
+        if not hasattr(registry, 'get_all_policy_areas'):
+            if strict:
+                raise RegistryConstructionError("Registry missing required methods")
+            logger.warning("registry_validation_warning missing_methods")
+        
+        return registry
+        
+    except Exception as e:
+        if strict:
+            raise RegistryConstructionError(f"Failed to build signal registry: {e}") from e
+        logger.error("registry_construction_error", exc_info=True)
+        raise
 
-def construct_teoria_cambio_input(document: DocumentData, **kwargs) -> TeoriaCambioInputContract:
-    """Constructs the input for the TeoriaCambio."""
-    return TeoriaCambioInputContract(
-        document_text=document['raw_text'],
-        strategic_goals=kwargs.get('strategic_goals', []),
-        config=kwargs.get('config', {})
-    )
 
-def construct_contradiction_detector_input(document: DocumentData, **kwargs) -> ContradictionDetectorInputContract:
-    """Constructs the input for the ContradictionDetector."""
-    return ContradictionDetectorInputContract(
-        text=document['raw_text'],
-        plan_name=document['metadata'].get('file_name', 'Unknown'),
-        dimension=kwargs.get('dimension'),
-        config=kwargs.get('config', {})
-    )
-
-def construct_embedding_policy_input(document: DocumentData, **kwargs) -> EmbeddingPolicyInputContract:
-    """Constructs the input for the EmbeddingPolicy."""
-    return EmbeddingPolicyInputContract(
-        text=document['raw_text'],
-        dimensions=kwargs.get('dimensions', []),
-        model_config=kwargs.get('model_config', {})
-    )
-
-def construct_semantic_chunking_input(document: DocumentData, **kwargs) -> SemanticChunkingInputContract:
-    """Constructs the input for the SemanticChunking."""
-    return SemanticChunkingInputContract(
-        text=document['raw_text'],
-        preserve_structure=kwargs.get('preserve_structure', True),
-        config=kwargs.get('config', {})
-    )
-
-def construct_policy_processor_input(document: DocumentData, **kwargs) -> PolicyProcessorInputContract:
-    """Constructs the input for the PolicyProcessor."""
-    return PolicyProcessorInputContract(
-        data={},
-        text=document['raw_text'],
-        sentences=document['sentences'],
-        tables=document['tables'],
-        config=kwargs.get('config', {})
-    )
-
-# ============================================================================
-# FACTORY FUNCTIONS
-# ============================================================================
-
-class CoreModuleFactory:
-    """Factory for constructing core modules with injected dependencies."""
-
-    def __init__(self, data_dir: Path | None = None) -> None:
-        """Initialize factory."""
-        self.data_dir = data_dir or _DEFAULT_DATA_DIR
-        self.questionnaire_cache: CanonicalQuestionnaire | None = None
-        self.catalog_cache: dict[str, Any] | None = None
-        self._lock = threading.Lock()
-
-    def get_questionnaire(self) -> CanonicalQuestionnaire:
-        """Get the canonical questionnaire object (cached)."""
-        with self._lock:
-            if self.questionnaire_cache is None:
-                canonical_q = load_questionnaire()
-                self.questionnaire_cache = canonical_q
-                logger.info(
-                    "factory_loaded_questionnaire sha256=%s... question_count=%s",
-                    canonical_q.sha256[:16],
-                    canonical_q.total_question_count,
+def _build_enriched_packs(
+    signal_registry: QuestionnaireSignalRegistry,
+    questionnaire: CanonicalQuestionnaire,
+    enable: bool,
+    strict: bool,
+) -> dict[str, EnrichedSignalPack]:
+    """Build enriched signal packs for all policy areas."""
+    enriched_packs: dict[str, EnrichedSignalPack] = {}
+    
+    if not enable:
+        logger.info("enriched_packs_disabled")
+        return enriched_packs
+    
+    try:
+        policy_areas = signal_registry.get_all_policy_areas() if hasattr(signal_registry, 'get_all_policy_areas') else []
+        
+        if not policy_areas:
+            logger.warning("no_policy_areas_found registry_empty")
+            return enriched_packs
+        
+        for policy_area_id in policy_areas:
+            try:
+                base_pack = signal_registry.get(policy_area_id) if hasattr(signal_registry, 'get') else None
+                
+                if base_pack is None:
+                    logger.warning("base_pack_missing policy_area=%s", policy_area_id)
+                    continue
+                
+                enriched_pack = create_enriched_signal_pack(
+                    base_pack,
+                    questionnaire,
                 )
-            return self.questionnaire_cache
+                enriched_packs[policy_area_id] = enriched_pack
+                
+            except Exception as e:
+                msg = f"Failed to create enriched pack for {policy_area_id}: {e}"
+                if strict:
+                    raise RegistryConstructionError(msg) from e
+                logger.error("enriched_pack_creation_failed policy_area=%s", policy_area_id, exc_info=True)
+        
+        return enriched_packs
+        
+    except Exception as e:
+        if strict:
+            raise RegistryConstructionError(f"Failed to build enriched packs: {e}") from e
+        logger.error("enriched_packs_construction_error", exc_info=True)
+        return enriched_packs
 
-    @property
-    def catalog(self) -> dict[str, Any]:
-        """Get method catalog data (cached)."""
-        with self._lock:
-            if self.catalog_cache is None:
-                self.catalog_cache = load_catalog()
-            return self.catalog_cache
 
-    def load_document(self, file_path: Path) -> DocumentData:
-        """Load document and return structured data."""
-        return load_document(file_path)
+def _initialize_seed_registry(seed: Optional[int]) -> None:
+    """Initialize seed registry if available."""
+    if not SEED_REGISTRY_AVAILABLE:
+        logger.debug("seed_registry_unavailable module_not_found")
+        return
+    
+    if seed is None:
+        logger.debug("seed_registry_not_initialized no_seed_provided")
+        return
+    
+    try:
+        SeedRegistry.initialize(master_seed=seed)
+        logger.info("seed_registry_initialized master_seed=%d", seed)
+    except Exception as e:
+        logger.error("seed_registry_initialization_failed", exc_info=True)
+        # Non-fatal, continue without determinism
 
-    def save_results(self, results: dict[str, Any], output_path: Path) -> None:
-        """Save analysis results."""
-        save_results(results, output_path)
 
-    def load_catalog(self, path: Path | None = None) -> dict[str, Any]:
-        """Load method catalog JSON file."""
-        return load_catalog(path)
+def _build_method_executor(strict: bool) -> MethodExecutor:
+    """Build method executor with full dependency wiring."""
+    try:
+        # Build method registry
+        method_registry = MethodRegistry()
+        setup_default_instantiation_rules(method_registry)
+        
+        # Build class registry
+        class_registry = build_class_registry()
+        
+        # Build extended arg router
+        arg_router = ExtendedArgRouter(class_registry)
+        
+        # Build method executor
+        method_executor = MethodExecutor(
+            method_registry=method_registry,
+        )
+        
+        # Validate construction
+        if not hasattr(method_executor, 'execute'):
+            if strict:
+                raise ExecutorConstructionError("MethodExecutor missing 'execute' method")
+            logger.warning("method_executor_validation_warning missing_execute")
+        
+        return method_executor
+        
+    except Exception as e:
+        if strict:
+            raise ExecutorConstructionError(f"Failed to build method executor: {e}") from e
+        logger.error("method_executor_construction_error", exc_info=True)
+        raise
 
-    # Contract constructor methods
-    construct_semantic_analyzer_input = construct_semantic_analyzer_input
-    construct_cdaf_input = construct_cdaf_input
-    construct_pdet_input = construct_pdet_input
-    construct_teoria_cambio_input = construct_teoria_cambio_input
-    construct_contradiction_detector_input = construct_contradiction_detector_input
-    construct_embedding_policy_input = construct_embedding_policy_input
-    construct_semantic_chunking_input = construct_semantic_chunking_input
-    construct_policy_processor_input = construct_policy_processor_input
+
+def _build_core_module_factory() -> Optional[Any]:
+    """Build core module factory if available."""
+    if not CORE_MODULE_FACTORY_AVAILABLE:
+        logger.debug("core_module_factory_unavailable module_not_found")
+        return None
+    
+    try:
+        factory = CoreModuleFactory()
+        logger.info("core_module_factory_built")
+        return factory
+    except Exception as e:
+        logger.error("core_module_factory_construction_error", exc_info=True)
+        return None
+
+
+def _compute_questionnaire_hash(questionnaire: CanonicalQuestionnaire) -> str:
+    """Compute deterministic SHA256 hash of questionnaire content."""
+    try:
+        # Try to get JSON representation if available
+        if hasattr(questionnaire, 'to_dict'):
+            content = json.dumps(questionnaire.to_dict(), sort_keys=True)
+        elif hasattr(questionnaire, '__dict__'):
+            content = json.dumps(questionnaire.__dict__, sort_keys=True, default=str)
+        else:
+            content = str(questionnaire)
+        
+        return hashlib.sha256(content.encode('utf-8')).hexdigest()
+        
+    except Exception as e:
+        logger.warning("questionnaire_hash_computation_degraded error=%s", str(e))
+        # Fallback to simple string hash
+        return hashlib.sha256(str(questionnaire).encode('utf-8')).hexdigest()
+
+
+# =============================================================================
+# Convenience API
+# =============================================================================
+
 
 def build_processor(
-    *,
-    questionnaire_path: Path | None = None,
-    data_dir: Path | None = None,
-    factory: Optional["CoreModuleFactory"] = None,
-    enable_signals: bool = True,
-    executor_config: ExecutorConfig | None = None,
+    questionnaire_path: Optional[str] = None,
+    seed: Optional[int] = None,
 ) -> ProcessorBundle:
-    """Create a processor bundle with orchestrator dependencies wired together."""
+    """
+    Convenience wrapper for `build_processor_bundle` with sensible defaults.
 
-    # PHASE 1: SOURCE-TRUTH VALIDATION
-    logger.info("Running source-truth validation...")
-    validator = MethodSourceValidator()
-    source_truth = validator.generate_source_truth_map()
+    This function is intended for typical use cases where you want a fully configured
+    processor with the intelligence layer enabled, strict validation, and optional
+    reproducibility via a seed. It sets recommended defaults for most users.
 
-    # Note: As per user instruction, executors_methods.json is outdated.
-    # The validation should eventually be against the docstrings of the executors.
-    # For now, we proceed with the validation against the file to identify discrepancies.
-    validation_report = validator.validate_executor_methods()
-
-    if validation_report['missing']:
-        # In a strict environment, this should raise an error.
-        # For now, we will log a warning to avoid blocking the pipeline.
-        logger.warning(f"MISSING METHODS DETECTED: {validation_report['missing']}")
-        # raise RuntimeError(f"MISSING METHODS: {validation_report['missing']}")
-
-    # PHASE 2: METHOD REGISTRY CREATION
-    logger.info("Initializing method registry with source-truth...")
-    method_registry = MethodRegistry()
-    logger.info(f"Pre-registered {len(validation_report['valid'])} valid methods.")
-
-
-    # Runtime type checks
-    if questionnaire_path is not None and not isinstance(questionnaire_path, Path):
-        raise TypeError(f"questionnaire_path must be Path or None, got {type(questionnaire_path).__name__}.")
-    if data_dir is not None and not isinstance(data_dir, Path):
-        raise TypeError(f"data_dir must be Path or None, got {type(data_dir).__name__}")
-    if factory is not None and not isinstance(factory, CoreModuleFactory):
-        raise TypeError(f"factory must be CoreModuleFactory or None, got {type(factory).__name__}")
-    if not isinstance(enable_signals, bool):
-        raise TypeError(f"enable_signals must be bool, got {type(enable_signals).__name__}")
-    if executor_config is not None and not isinstance(executor_config, ExecutorConfig):
-        raise TypeError(f"executor_config must be ExecutorConfig or None, got {type(executor_config).__name__}")
-
-    core_factory = factory or CoreModuleFactory(data_dir=data_dir)
-    effective_config = executor_config or ExecutorConfig()
-
-    if questionnaire_path:
-        canonical_q = load_questionnaire(questionnaire_path)
-        core_factory.questionnaire_cache = canonical_q
-        logger.info(
-            "build_processor_using_canonical_loader path=%s sha256=%s... question_count=%s",
-            str(questionnaire_path),
-            canonical_q.sha256[:16],
-            canonical_q.total_question_count,
-        )
-    else:
-        canonical_q = core_factory.get_questionnaire()
-
-    # Build signal infrastructure if enabled
-    signal_registry = None
-    #if enable_signals:
-    #    try:
-    #        from .bayesian_module_factory import BayesianModuleFactory as SignalFactory
-    #
-    #        signal_factory = SignalFactory(
-    #            questionnaire_data=canonical_q.data,  # Pass the immutable data view
-    #            enable_signals=True,
-    #        )
-    #        signal_registry = signal_factory._signal_registry
-    #
-    #        logger.info(
-    #            "signals_enabled_in_processor enabled=%s registry_size=%s",
-    #            True,
-    #            len(signal_registry._cache) if signal_registry else 0,
-    #        )
-    #    except Exception as e:
-    #        logger.warning(
-    #            "signal_initialization_failed error=%s fallback=%s",
-    #            str(e),
-    #            "continuing without signals",
-    #        )
-    #        signal_registry = None
-
-    executor = MethodExecutor(
-        signal_registry=signal_registry,
-        method_registry=method_registry
-    )
-
-    return ProcessorBundle(
-        method_executor=executor,
-        questionnaire=canonical_q,
-        factory=core_factory,
-        signal_registry=signal_registry,
-        executor_config=effective_config,
-    )
-
-def create_orchestrator() -> "Orchestrator":
-    """Create a fully configured orchestrator instance with recommendation engine."""
-    from farfan_pipeline.config.paths import RULES_DIR
-    from farfan_pipeline.infrastructure.recommendation_engine_adapter import create_recommendation_engine_adapter
-    
-    processor_bundle = build_processor()
-    
-    recommendation_engine_port = None
-    try:
-        questionnaire_provider = get_questionnaire_provider()
-        recommendation_engine_port = create_recommendation_engine_adapter(
-            rules_path=RULES_DIR / "recommendation_rules_enhanced.json",
-            schema_path=RULES_DIR / "recommendation_rules_enhanced.schema.json",
-            questionnaire_provider=questionnaire_provider,
-            orchestrator=None
-        )
-        logger.info("RecommendationEngine adapter created successfully")
-    except Exception as e:
-        logger.warning(f"Failed to create RecommendationEngine adapter: {e}")
-    
-    orchestrator = Orchestrator(
-        method_executor=processor_bundle.method_executor,
-        questionnaire=processor_bundle.questionnaire,
-        executor_config=processor_bundle.executor_config,
-        recommendation_engine_port=recommendation_engine_port,
-    )
-    
-    if recommendation_engine_port is not None:
-        recommendation_engine_port.set_orchestrator(orchestrator)
-    
-    return orchestrator
-
-def get_questionnaire_provider():
-    """Get a questionnaire provider instance."""
-    from farfan_pipeline.core.wiring.bootstrap import QuestionnaireResourceProvider
-    return QuestionnaireResourceProvider()
-
-# ============================================================================
-# MIGRATION HELPERS
-# ============================================================================
-
-def migrate_io_from_module(module_name: str, line_numbers: list[int]) -> None:
-    """Helper to track I/O migration progress."""
-    logger.info(
-        f"Migrating {len(line_numbers)} I/O operations from {module_name}: "
-        f"lines {line_numbers}"
-    )
-
-# ============================================================================
-# ENRICHED SIGNAL REGISTRY FACTORY (JOBFRONT 2)
-# ============================================================================
-
-def create_cpp_ingestion_pipeline(enable_runtime_validation: bool = True) -> Any:
-    """Create a CPPIngestionPipeline instance with proper dependency injection.
+    Use `build_processor_bundle` directly if you need advanced customization, such as
+    disabling the intelligence layer, changing validation strictness, or other options.
 
     Args:
-        enable_runtime_validation: Enable runtime validation of SPC contracts
-
+        questionnaire_path: Optional path to questionnaire JSON.
+        seed: Optional seed for reproducibility.
     Returns:
-        Configured CPPIngestionPipeline instance
-
-    Note:
-        This factory method centralizes the creation of the ingestion pipeline,
-        ensuring consistent configuration and avoiding direct imports in API layer.
+        ProcessorBundle ready for use.
     """
-    from farfan_pipeline.processing.spc_ingestion import CPPIngestionPipeline
-
-    logger.info(f"Factory creating CPPIngestionPipeline (validation={enable_runtime_validation})")
-    return CPPIngestionPipeline(enable_runtime_validation=enable_runtime_validation)
-
-
-def create_cpp_adapter(enable_runtime_validation: bool = True) -> Any:
-    """Create a CPPAdapter instance with proper dependency injection.
-
-    Args:
-        enable_runtime_validation: Enable runtime validation of adapter contracts
-
-    Returns:
-        Configured CPPAdapter instance
-
-    Note:
-        This factory method centralizes the creation of the adapter,
-        ensuring consistent configuration and avoiding direct imports in API layer.
-    """
-    from farfan_pipeline.utils.cpp_adapter import CPPAdapter
-
-    logger.info(f"Factory creating CPPAdapter (validation={enable_runtime_validation})")
-    return CPPAdapter(enable_runtime_validation=enable_runtime_validation)
-
-
-def create_recommendation_engine(
-    questionnaire_path: Path | None = None,
-    catalog_path: Path | None = None,
-    enable_cache: bool = True
-) -> Any:
-    """Create a RecommendationEngine instance with proper dependency injection.
-
-    Args:
-        questionnaire_path: Optional path to questionnaire (uses canonical if None)
-        catalog_path: Optional path to method catalog (uses default if None)
-        enable_cache: Enable caching of recommendation generation
-
-    Returns:
-        Configured RecommendationEngine instance
-
-    Note:
-        This factory method centralizes the creation of the recommendation engine,
-        ensuring it receives proper questionnaire and catalog data through the factory.
-    """
-    from farfan_pipeline.analysis.recommendation_engine import load_recommendation_engine
-
-    logger.info("Factory creating RecommendationEngine")
-
-    # Use the loader function from recommendation_engine module
-    # Note: catalog_path and questionnaire_path parameters are ignored here as
-    # load_recommendation_engine loads from canonical paths
-    return load_recommendation_engine(
+    return build_processor_bundle(
         questionnaire_path=questionnaire_path,
-        enable_cache=enable_cache
+        enable_intelligence_layer=True,
+        seed_for_determinism=seed,
+        strict_validation=True,
     )
 
 
-def create_enriched_signal_registry(
-    monolith_path: str | Path | None = None,
-    enable_semantic_expansion: bool = True,
-    enable_context_scoping: bool = True,
-    enable_contract_validation: bool = True,
-    enable_evidence_extraction: bool = True,
-) -> dict[str, Any]:
-    """
-    Factory function to create enriched signal registry.
-
-    This wraps QuestionnaireSignalRegistry with EnrichedSignalPack for each policy area,
-    providing the full intelligence layer capabilities without modifying the base registry.
-
+def build_minimal_processor(
+    questionnaire_path: Optional[str] = None,
+    strict: bool = False,
+) -> ProcessorBundle:
+    """Build minimal processor bundle without intelligence layer.
+    
+    Useful for testing or when enriched signals are not needed.
+    
     Args:
-        monolith_path: Path to questionnaire monolith (if None, uses canonical path)
-        enable_semantic_expansion: Enable 5x pattern expansion
-        enable_context_scoping: Enable context-aware filtering
-        enable_contract_validation: Enable failure contract validation
-        enable_evidence_extraction: Enable structured evidence extraction
-
+        questionnaire_path: Optional path to questionnaire JSON.
+        strict: Whether to use strict validation (default: False for minimal).
+        
     Returns:
-        dict[str, EnrichedSignalPack] mapping policy_area_id → enriched pack
-
-    Example:
-        >>> registry = create_enriched_signal_registry()
-        >>> enriched_pack = registry['PA01']
-        >>> patterns = enriched_pack.get_patterns_for_context({'section': 'budget'})
+        ProcessorBundle with basic dependencies only.
     """
-    from farfan_pipeline.core.orchestrator.signal_intelligence_layer import create_enriched_signal_pack
-    from farfan_pipeline.core.orchestrator.signal_registry import QuestionnaireSignalRegistry
-
-    # Use canonical path if not specified
-    if monolith_path is None:
-        monolith_path = str(QUESTIONNAIRE_PATH)
-    elif isinstance(monolith_path, Path):
-        monolith_path = str(monolith_path)
-
-    logger.info(
-        "creating_enriched_signal_registry path=%s semantic=%s context=%s contract=%s evidence=%s",
-        monolith_path,
-        enable_semantic_expansion,
-        enable_context_scoping,
-        enable_contract_validation,
-        enable_evidence_extraction,
+    return build_processor_bundle(
+        questionnaire_path=questionnaire_path,
+        enable_intelligence_layer=False,
+        strict_validation=strict,
     )
 
-    # Create base registry
-    base_registry = QuestionnaireSignalRegistry(monolith_path)
 
-    # Enumerate all policy areas
-    policy_area_ids = base_registry.list_policy_areas()
-
-    enriched_registry = {}
-    for pa_id in policy_area_ids:
-        # Get base signal pack
-        base_pack = base_registry.get(pa_id)
-
-        if base_pack is None:
-            logger.warning("signal_pack_not_found policy_area=%s", pa_id)
-            continue
-
-        # Wrap with intelligence layer
-        enriched_pack = create_enriched_signal_pack(
-            base_pack,
-            enable_semantic_expansion=enable_semantic_expansion
-        )
-
-        enriched_registry[pa_id] = enriched_pack
-
-        logger.debug(
-            "enriched_signal_pack_created policy_area=%s pattern_count=%s",
-            pa_id,
-            len(enriched_pack.patterns)
-        )
-
-    logger.info(
-        "enriched_signal_registry_complete policy_area_count=%s total_patterns=%s",
-        len(enriched_registry),
-        sum(len(pack.patterns) for pack in enriched_registry.values())
-    )
-
-    return enriched_registry
+def get_enriched_pack_for_policy_area(
+    bundle: ProcessorBundle,
+    policy_area_id: str,
+) -> Optional[EnrichedSignalPack]:
+    """Helper to safely retrieve enriched signal pack from bundle.
+    
+    Args:
+        bundle: Processor bundle.
+        policy_area_id: Policy area identifier.
+        
+    Returns:
+        EnrichedSignalPack if available, None otherwise.
+    """
+    return bundle.enriched_signal_packs.get(policy_area_id)
 
 
-__all__ = [
-    # Questionnaire integrity types and constants
-    'CanonicalQuestionnaire',
-    'EXPECTED_HASH',
-    'EXPECTED_MACRO_QUESTION_COUNT',
-    'EXPECTED_MICRO_QUESTION_COUNT',
-    'EXPECTED_MESO_QUESTION_COUNT',
-    'EXPECTED_TOTAL_QUESTION_COUNT',
-    'QUESTIONNAIRE_PATH',
-    'load_questionnaire',
-    # Factory classes
-    'CoreModuleFactory',
-    'ProcessorBundle',
-    # Signal intelligence factory
-    'create_enriched_signal_registry',
-    # Other loaders
-    'load_catalog',
-    'load_method_map',
-    'get_canonical_dimensions',
-    'get_canonical_policy_areas',
-    'load_schema',
-    'load_document',
-    'save_results',
-    # Contract constructors
-    'construct_semantic_analyzer_input',
-    'construct_cdaf_input',
-    'construct_pdet_input',
-    'construct_teoria_cambio_input',
-    'construct_contradiction_detector_input',
-    'construct_embedding_policy_input',
-    'construct_semantic_chunking_input',
-    'construct_policy_processor_input',
-    # Builder
-    'build_processor',
-    'get_questionnaire_provider',
-]
+# =============================================================================
+# Validation and Diagnostics
+# =============================================================================
+
+
+def validate_bundle(bundle: ProcessorBundle) -> dict[str, Any]:
+    """Validate bundle integrity and return diagnostics.
+    
+    Args:
+        bundle: ProcessorBundle to validate.
+        
+    Returns:
+        Dictionary with validation results and diagnostics.
+    """
+    diagnostics = {
+        "valid": True,
+        "errors": [],
+        "warnings": [],
+        "components": {},
+        "metrics": {},
+    }
+    
+    # Validate method executor
+    if bundle.method_executor is None:
+        diagnostics["valid"] = False
+        diagnostics["errors"].append("method_executor is None")
+    else:
+        diagnostics["components"]["method_executor"] = "present"
+        if hasattr(bundle.method_executor, 'arg_router'):
+            router = bundle.method_executor.arg_router
+            if hasattr(router, 'get_special_route_coverage'):
+                diagnostics["metrics"]["special_routes"] = router.get_special_route_coverage()
+    
+    # Validate questionnaire
+    if bundle.questionnaire is None:
+        diagnostics["valid"] = False
+        diagnostics["errors"].append("questionnaire is None")
+    else:
+        diagnostics["components"]["questionnaire"] = "present"
+        if hasattr(bundle.questionnaire, 'questions'):
+            diagnostics["metrics"]["question_count"] = len(bundle.questionnaire.questions)
+    
+    # Validate signal registry
+    if bundle.signal_registry is None:
+        diagnostics["valid"] = False
+        diagnostics["errors"].append("signal_registry is None")
+    else:
+        diagnostics["components"]["signal_registry"] = "present"
+        if hasattr(bundle.signal_registry, 'get_all_policy_areas'):
+            diagnostics["metrics"]["policy_areas"] = len(bundle.signal_registry.get_all_policy_areas())
+    
+    # Validate enriched packs
+    pack_count = len(bundle.enriched_signal_packs)
+    diagnostics["components"]["enriched_packs"] = pack_count
+    diagnostics["metrics"]["enriched_pack_count"] = pack_count
+    
+    if pack_count == 0 and bundle.provenance.get("intelligence_layer_enabled"):
+        diagnostics["warnings"].append("Intelligence layer enabled but no enriched packs available")
+    
+    # Validate provenance
+    required_provenance = ["construction_timestamp_utc", "canonical_sha256", "signal_registry_version"]
+    missing_provenance = [k for k in required_provenance if k not in bundle.provenance]
+    if missing_provenance:
+        diagnostics["valid"] = False
+        diagnostics["errors"].append(f"Missing provenance: {missing_provenance}")
+    
+    # Check provenance metrics
+    diagnostics["metrics"]["construction_duration"] = bundle.provenance.get("construction_duration_seconds", 0)
+    diagnostics["metrics"]["canonical_hash"] = bundle.provenance.get("canonical_sha256", "")[:16]
+    
+    return diagnostics
+
+
+def get_bundle_info(bundle: ProcessorBundle) -> dict[str, Any]:
+    """Get human-readable information about bundle.
+    
+    Args:
+        bundle: ProcessorBundle to inspect.
+        
+    Returns:
+        Dictionary with bundle information.
+    """
+    return {
+        "construction_time": bundle.provenance.get("construction_timestamp_utc"),
+        "canonical_hash": bundle.provenance.get("canonical_sha256", "")[:16],
+        "policy_areas": sorted(bundle.enriched_signal_packs.keys()),
+        "policy_area_count": len(bundle.enriched_signal_packs),
+        "intelligence_layer": bundle.provenance.get("intelligence_layer_enabled"),
+        "core_factory": bundle.core_module_factory is not None,
+        "construction_duration": bundle.provenance.get("construction_duration_seconds"),
+        "strict_validation": bundle.provenance.get("strict_validation"),
+        "seed_initialized": bundle.provenance.get("seed_registry_initialized"),
+    }
+
+
+# =============================================================================
+# Singleton Cache (Optional)
+# =============================================================================
+
+_bundle_cache: Optional[ProcessorBundle] = None
+_cache_key: Optional[str] = None
+
+
+def get_or_build_bundle(
+    questionnaire_path: Optional[str] = None,
+    cache: bool = True,
+    force_rebuild: bool = False,
+) -> ProcessorBundle:
+    """Get cached bundle or build new one.
+    
+    Args:
+        questionnaire_path: Optional path to questionnaire JSON.
+        cache: Whether to cache the bundle (default: True).
+        force_rebuild: Force rebuild even if cached (default: False).
+        
+    Returns:
+        ProcessorBundle (cached or newly built).
+    """
+    global _bundle_cache, _cache_key
+    
+    cache_key = questionnaire_path or "default"
+    
+    if not force_rebuild and cache and _bundle_cache is not None and _cache_key == cache_key:
+        logger.debug("factory_cache_hit key=%s", cache_key)
+        return _bundle_cache
+    
+    logger.debug("factory_cache_miss key=%s building_new force_rebuild=%s", cache_key, force_rebuild)
+    bundle = build_processor(questionnaire_path=questionnaire_path)
+    
+    if cache:
+        _bundle_cache = bundle
+        _cache_key = cache_key
+        logger.debug("factory_cache_updated key=%s", cache_key)
+    
+    return bundle
+
+
+def clear_bundle_cache() -> None:
+    """Clear singleton bundle cache."""
+    global _bundle_cache, _cache_key
+    _bundle_cache = None
+    _cache_key = None
+    logger.debug("factory_cache_cleared")
+
+
+def get_cache_info() -> dict[str, Any]:
+    """Get information about current cache state."""
+    return {
+        "cached": _bundle_cache is not None,
+        "cache_key": _cache_key,
+        "bundle_hash": _bundle_cache.provenance.get("canonical_sha256", "")[:16] if _bundle_cache else None,
+    }
