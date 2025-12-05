@@ -767,6 +767,14 @@ class IrrigationSynchronizer:
                     f"[correlation_id={correlation_id}]"
                 )
 
+            self._validate_element_compatibility(
+                question_schema,
+                chunk_schema,
+                question_id,
+                chunk_id,
+                correlation_id,
+            )
+
         if question_type == "dict" and chunk_type == "dict":
             question_keys = set(question_schema.keys())
             chunk_keys = set(chunk_schema.keys())
@@ -799,6 +807,112 @@ class IrrigationSynchronizer:
                     }
                 )
             )
+
+    def _validate_element_compatibility(
+        self,
+        question_elements: list[dict[str, Any]],
+        chunk_elements: list[dict[str, Any]],
+        question_id: str,
+        chunk_id: str,
+        correlation_id: str,
+    ) -> int:
+        """Phase 6.3: Validate semantic compatibility of expected_elements.
+
+        Performs element-by-element semantic validation with type field equality,
+        asymmetric required field implication (q_required implies c_required),
+        and minimum field threshold ordering (c_min >= q_min).
+
+        Args:
+            question_elements: List of expected element dicts from question
+            chunk_elements: List of expected element dicts from chunk
+            question_id: Question identifier for error messages
+            chunk_id: Chunk identifier for error messages
+            correlation_id: Correlation ID for distributed tracing
+
+        Returns:
+            Count of validated elements
+
+        Raises:
+            ValueError: If type field mismatch, required field implication violated,
+                       or minimum threshold ordering violated
+        """
+        if len(question_elements) != len(chunk_elements):
+            raise ValueError(
+                f"Element count mismatch for question {question_id}: "
+                f"question has {len(question_elements)} elements, "
+                f"chunk has {len(chunk_elements)} elements "
+                f"[correlation_id={correlation_id}]"
+            )
+
+        validated_count = 0
+
+        for idx, (q_elem, c_elem) in enumerate(
+            zip(question_elements, chunk_elements, strict=True)
+        ):
+            if not isinstance(q_elem, dict):
+                raise ValueError(
+                    f"Element at index {idx} in question {question_id} is not a dict "
+                    f"[correlation_id={correlation_id}]"
+                )
+
+            if not isinstance(c_elem, dict):
+                raise ValueError(
+                    f"Element at index {idx} in chunk {chunk_id} is not a dict "
+                    f"[correlation_id={correlation_id}]"
+                )
+
+            q_type = q_elem.get("type")
+            c_type = c_elem.get("type")
+
+            if q_type != c_type:
+                raise ValueError(
+                    f"Type field mismatch at index {idx} for question {question_id}: "
+                    f"question type='{q_type}', chunk type='{c_type}' "
+                    f"[correlation_id={correlation_id}]"
+                )
+
+            q_required = q_elem.get("required", False)
+            c_required = c_elem.get("required", False)
+
+            if q_required and not c_required:
+                raise ValueError(
+                    f"Required field implication violated at index {idx} for question {question_id}: "
+                    f"question requires element type '{q_type}' but chunk does not "
+                    f"[correlation_id={correlation_id}]"
+                )
+
+            q_min = q_elem.get("minimum")
+            c_min = c_elem.get("minimum")
+
+            if q_min is not None and c_min is not None and c_min < q_min:
+                raise ValueError(
+                    f"Minimum threshold ordering violated at index {idx} for question {question_id}: "
+                    f"chunk minimum ({c_min}) < question minimum ({q_min}) for type '{q_type}' "
+                    f"[correlation_id={correlation_id}]"
+                )
+
+            if q_min is not None and c_min is None:
+                raise ValueError(
+                    f"Minimum field asymmetry at index {idx} for question {question_id}: "
+                    f"question specifies minimum={q_min} but chunk has no minimum for type '{q_type}' "
+                    f"[correlation_id={correlation_id}]"
+                )
+
+            validated_count += 1
+
+        logger.debug(
+            json.dumps(
+                {
+                    "event": "element_compatibility_validation_success",
+                    "question_id": question_id,
+                    "chunk_id": chunk_id,
+                    "validated_count": validated_count,
+                    "correlation_id": correlation_id,
+                }
+            )
+        )
+
+        return validated_count
 
     def _construct_task(
         self,
