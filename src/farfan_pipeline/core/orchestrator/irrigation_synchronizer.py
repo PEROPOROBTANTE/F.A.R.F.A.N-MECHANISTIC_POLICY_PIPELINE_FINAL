@@ -1338,6 +1338,29 @@ class IrrigationSynchronizer:
                 correlation_id=self.correlation_id,
             )
 
+            for i in range(len(plan.tasks) - 1):
+                current_task_id = plan.tasks[i].task_id
+                next_task_id = plan.tasks[i + 1].task_id
+                if current_task_id >= next_task_id:
+                    raise ValueError(
+                        f"Task ordering violation detected at indices {i} and {i + 1}: "
+                        f"task_id '{current_task_id}' >= '{next_task_id}' (lexicographic comparison); "
+                        f"tuple conversion may have corrupted deterministic task sequence from Phase 8.2"
+                    )
+
+            logger.info(
+                json.dumps(
+                    {
+                        "event": "execution_plan_assembled",
+                        "plan_id": plan.plan_id,
+                        "task_count": len(plan.tasks),
+                        "chunk_count": plan.chunk_count,
+                        "question_count": plan.question_count,
+                        "correlation_id": plan.correlation_id,
+                    }
+                )
+            )
+
             logger.info(
                 json.dumps(
                     {
@@ -1489,6 +1512,29 @@ class IrrigationSynchronizer:
                 integrity_hash=integrity_hash,
                 created_at=generation_timestamp,
                 correlation_id=self.correlation_id,
+            )
+
+            for i in range(len(plan.tasks) - 1):
+                current_task_id = plan.tasks[i].task_id
+                next_task_id = plan.tasks[i + 1].task_id
+                if current_task_id >= next_task_id:
+                    raise ValueError(
+                        f"Task ordering violation detected at indices {i} and {i + 1}: "
+                        f"task_id '{current_task_id}' >= '{next_task_id}' (lexicographic comparison); "
+                        f"tuple conversion may have corrupted deterministic task sequence from Phase 8.2"
+                    )
+
+            logger.info(
+                json.dumps(
+                    {
+                        "event": "execution_plan_assembled",
+                        "plan_id": plan.plan_id,
+                        "task_count": len(plan.tasks),
+                        "chunk_count": plan.chunk_count,
+                        "question_count": plan.question_count,
+                        "correlation_id": plan.correlation_id,
+                    }
+                )
             )
 
             logger.info(
