@@ -57,6 +57,8 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+SHA256_HEX_DIGEST_LENGTH = 64
+
 
 class SignalRegistry(Protocol):
     """Protocol for signal registry implementations.
@@ -462,7 +464,6 @@ class IrrigationSynchronizer:
         self,
         patterns: list[dict[str, Any]] | tuple[dict[str, Any], ...],
         policy_area_id: str,
-        question_id: str | None = None,
     ) -> tuple[dict[str, Any], ...]:
         """Filter patterns by policy_area_id using strict equality.
 
@@ -472,7 +473,6 @@ class IrrigationSynchronizer:
         Args:
             patterns: Iterable of pattern objects (typically dicts with optional policy_area_id)
             policy_area_id: Policy area ID string (e.g., "PA01") to filter by
-            question_id: Optional question ID for enhanced logging
 
         Returns:
             Immutable tuple of filtered pattern dicts. Returns empty tuple if no patterns match.
@@ -482,39 +482,23 @@ class IrrigationSynchronizer:
             - Exclude patterns without policy_area_id attribute
             - Result is immutable (tuple)
         """
-        if not policy_area_id:
-            raise ValueError(
-                f"Pattern filtering failure for question {question_id or 'UNKNOWN'}: "
-                "policy_area_id parameter is empty or None"
-            )
-
         included = []
         excluded = []
         included_ids = []
         excluded_ids = []
 
-        for idx, pattern in enumerate(patterns):
-            if not isinstance(pattern, dict):
-                logger.warning(
-                    f"Pattern at index {idx} for question {question_id or 'UNKNOWN'} "
-                    f"is not a dict (type: {type(pattern).__name__}), excluding from filter"
-                )
-                excluded.append(pattern)
-                excluded_ids.append(f"non_dict_at_index_{idx}")
-                continue
+        for pattern in patterns:
+            pattern_id = (
+                pattern.get("id", "UNKNOWN") if isinstance(pattern, dict) else "UNKNOWN"
+            )
 
-            pattern_id = pattern.get("id", f"pattern_at_index_{idx}")
-
-            if "policy_area_id" not in pattern:
-                logger.debug(
-                    f"Pattern {pattern_id} at index {idx} for question {question_id or 'UNKNOWN'} "
-                    "lacks policy_area_id field, excluding from filter"
-                )
-                excluded.append(pattern)
-                excluded_ids.append(pattern_id)
-            elif pattern["policy_area_id"] == policy_area_id:
-                included.append(pattern)
-                included_ids.append(pattern_id)
+            if isinstance(pattern, dict) and "policy_area_id" in pattern:
+                if pattern["policy_area_id"] == policy_area_id:
+                    included.append(pattern)
+                    included_ids.append(pattern_id)
+                else:
+                    excluded.append(pattern)
+                    excluded_ids.append(pattern_id)
             else:
                 excluded.append(pattern)
                 excluded_ids.append(pattern_id)
@@ -524,14 +508,13 @@ class IrrigationSynchronizer:
         logger.info(
             json.dumps(
                 {
-                    "event": "pattern_filtering_complete",
-                    "question_id": question_id or "UNKNOWN",
-                    "policy_area_id": policy_area_id,
-                    "total_patterns": total_count,
-                    "included_count": len(included),
-                    "excluded_count": len(excluded),
+                    "event": "IrrigationSynchronizer._filter_patterns",
+                    "total": total_count,
+                    "included": len(included),
+                    "excluded": len(excluded),
                     "included_ids": included_ids,
                     "excluded_ids": excluded_ids,
+                    "policy_area_id": policy_area_id,
                     "correlation_id": self.correlation_id,
                 }
             )
@@ -548,11 +531,9 @@ class IrrigationSynchronizer:
         """Phase 6: Validate schema compatibility between question and chunk.
 
         Extracts expected_elements from both question and chunk routing result,
-        validates type compatibility and structure consistency, performs semantic
-        validation including asymmetric required field implication rules and
-        minimum threshold ordering constraints, and raises exceptions if schema
-        incompatibilities are detected. Acts as a fail-fast gate preventing task
-        construction when schema validation fails.
+        validates type compatibility and structure consistency, and raises
+        exceptions if schema incompatibilities are detected. Acts as a fail-fast
+        gate preventing task construction when schema validation fails.
 
         Args:
             question: Question dictionary from questionnaire
@@ -562,28 +543,21 @@ class IrrigationSynchronizer:
         Raises:
             TypeError: If either schema has invalid type (not list, dict, or None)
             ValueError: If schemas have heterogeneous types, list length mismatch,
-                       dict key set mismatch, required field implication violation,
-                       or minimum threshold ordering violation,
-                       or if question["question_global"] is missing
+                       or dict key set mismatch, or if question["question_global"] is missing
         """
         question_id = question.get("question_id", "UNKNOWN")
         question_global = question.get("question_global")
 
         if question_global is None:
-            raise ValueError(
-                f"Schema validation failure for question {question_id}: "
-                "question_global field is required but missing"
-            )
+            raise ValueError("question_global is required")
 
         if not isinstance(question_global, int):
             raise ValueError(
-                f"Schema validation failure for question {question_id}: "
                 f"question_global must be an integer, got {type(question_global).__name__}"
             )
 
         if not (0 <= question_global <= 999):
             raise ValueError(
-                f"Schema validation failure for question {question_id}: "
                 f"question_global must be between 0 and 999 inclusive, got {question_global}"
             )
 
@@ -604,130 +578,10 @@ class IrrigationSynchronizer:
             correlation_id,
         )
 
-        if question_schema is not None and chunk_schema is not None:
-            self._validate_semantic_constraints(
-                provisional_task_id,
-                question_schema,
-                chunk_schema,
-                question_id,
-                chunk_id,
-                correlation_id,
-            )
-
         logger.debug(
             json.dumps(
                 {
                     "event": "schema_validation_success",
-                    "question_id": question_id,
-                    "chunk_id": chunk_id,
-                    "provisional_task_id": provisional_task_id,
-                    "correlation_id": correlation_id,
-                }
-            )
-        )
-
-    def _validate_semantic_constraints(
-        self,
-        provisional_task_id: str,
-        question_schema: Any,  # noqa: ANN401
-        chunk_schema: Any,  # noqa: ANN401
-        question_id: str,
-        chunk_id: str,
-        correlation_id: str,
-    ) -> None:
-        """Validate semantic constraints: required field implication and minimum thresholds.
-
-        Performs element-wise validation of asymmetric required field implication:
-        If question element has required=True, chunk element MUST also have required=True.
-        Also validates minimum threshold ordering: chunk minimum must be >= question minimum.
-
-        Args:
-            provisional_task_id: Task ID for error reporting
-            question_schema: expected_elements from question
-            chunk_schema: expected_elements from chunk
-            question_id: Question identifier for error messages
-            chunk_id: Chunk identifier for error messages
-            correlation_id: Correlation ID for distributed tracing
-
-        Raises:
-            ValueError: If required field implication violated or threshold ordering violated
-        """
-        if isinstance(question_schema, list) and isinstance(chunk_schema, list):
-            if len(question_schema) != len(chunk_schema):
-                return
-
-            for idx, (q_elem, c_elem) in enumerate(
-                zip(question_schema, chunk_schema, strict=False)
-            ):
-                if not isinstance(q_elem, dict) or not isinstance(c_elem, dict):
-                    continue
-
-                q_required = q_elem.get("required", False)
-                c_required = c_elem.get("required", False)
-
-                if q_required and not c_required:
-                    element_type = q_elem.get("type", f"element_at_index_{idx}")
-                    raise ValueError(
-                        f"Task {provisional_task_id}: Required field implication violation at index {idx}: "
-                        f"question requires element type '{element_type}' but chunk marks it optional "
-                        f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
-                    )
-
-                q_minimum = q_elem.get("minimum", 0)
-                c_minimum = c_elem.get("minimum", 0)
-
-                if isinstance(q_minimum, (int, float)) and isinstance(
-                    c_minimum, (int, float)
-                ):
-                    if c_minimum < q_minimum:
-                        element_type = q_elem.get("type", f"element_at_index_{idx}")
-                        raise ValueError(
-                            f"Task {provisional_task_id}: Threshold ordering violation at index {idx}: "
-                            f"element type '{element_type}' has chunk minimum ({c_minimum}) < "
-                            f"question minimum ({q_minimum}) "
-                            f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
-                        )
-
-        elif isinstance(question_schema, dict) and isinstance(chunk_schema, dict):
-            common_keys = set(question_schema.keys()) & set(chunk_schema.keys())
-
-            for key in sorted(common_keys):
-                q_elem = question_schema[key]
-                c_elem = chunk_schema[key]
-
-                if not isinstance(q_elem, dict) or not isinstance(c_elem, dict):
-                    continue
-
-                q_required = q_elem.get("required", False)
-                c_required = c_elem.get("required", False)
-
-                if q_required and not c_required:
-                    element_type = q_elem.get("type", key)
-                    raise ValueError(
-                        f"Task {provisional_task_id}: Required field implication violation for key '{key}': "
-                        f"question requires element type '{element_type}' but chunk marks it optional "
-                        f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
-                    )
-
-                q_minimum = q_elem.get("minimum", 0)
-                c_minimum = c_elem.get("minimum", 0)
-
-                if isinstance(q_minimum, (int, float)) and isinstance(
-                    c_minimum, (int, float)
-                ):
-                    if c_minimum < q_minimum:
-                        element_type = q_elem.get("type", key)
-                        raise ValueError(
-                            f"Task {provisional_task_id}: Threshold ordering violation for key '{key}': "
-                            f"element type '{element_type}' has chunk minimum ({c_minimum}) < "
-                            f"question minimum ({q_minimum}) "
-                            f"[question_id={question_id}, chunk_id={chunk_id}, correlation_id={correlation_id}]"
-                        )
-
-        logger.debug(
-            json.dumps(
-                {
-                    "event": "semantic_validation_success",
                     "question_id": question_id,
                     "chunk_id": chunk_id,
                     "provisional_task_id": provisional_task_id,
@@ -881,54 +735,35 @@ class IrrigationSynchronizer:
         Raises:
             ValueError: If duplicate task_id is detected or required fields are missing/invalid
         """
-        question_id = question.get("question_id", "UNKNOWN")
-
+        # Phase 7.1: Validate and extract question_global
         question_global = question.get("question_global")
         if question_global is None:
-            raise ValueError(
-                f"Task construction failure for question {question_id}: "
-                "question_global field is required but missing"
-            )
+            raise ValueError("question_global field is required but missing")
         if not isinstance(question_global, int):
             raise ValueError(
-                f"Task construction failure for question {question_id}: "
                 f"question_global must be an integer, got {type(question_global).__name__}"
             )
-        if not (0 <= question_global <= 999):
-            raise ValueError(
-                f"Task construction failure for question {question_id}: "
-                f"question_global must be in range 0-999, got {question_global}"
-            )
 
+        # Phase 7.1: Construct task_id from validated question_global
         task_id = f"MQC-{question_global:03d}_{routing_result.policy_area_id}"
 
         if task_id in generated_task_ids:
-            raise ValueError(
-                f"Task construction failure: Duplicate task_id detected: {task_id} "
-                f"for question {question_id}"
-            )
+            raise ValueError(f"Duplicate task_id detected: {task_id}")
 
         generated_task_ids.add(task_id)
 
+        # Field extraction in declaration order for validation priority
+        # Extract question_id with bracket notation and KeyError conversion
+        try:
+            question_id = question["question_id"]
+        except KeyError as e:
+            raise ValueError("question_id field is required but missing") from e
+
+        # Assign question_global (already validated above)
+        # Extract routing fields via attribute access (guaranteed by ChunkRoutingResult schema)
         policy_area_id = routing_result.policy_area_id
         dimension_id = routing_result.dimension_id
         chunk_id = routing_result.chunk_id
-
-        if not policy_area_id:
-            raise ValueError(
-                f"Task construction failure for {task_id}: "
-                f"policy_area_id from routing_result is empty"
-            )
-        if not dimension_id:
-            raise ValueError(
-                f"Task construction failure for {task_id}: "
-                f"dimension_id from routing_result is empty"
-            )
-        if not chunk_id:
-            raise ValueError(
-                f"Task construction failure for {task_id}: "
-                f"chunk_id from routing_result is empty"
-            )
 
         expected_elements_list = list(routing_result.expected_elements)
         document_position = routing_result.document_position
@@ -946,21 +781,32 @@ class IrrigationSynchronizer:
 
         creation_timestamp = datetime.now(timezone.utc).isoformat()
 
-        base_slot = question.get("base_slot", "")
-        cluster_id = question.get("cluster_id", "")
-
         metadata = {
-            "base_slot": base_slot if base_slot else "",
-            "cluster_id": cluster_id if cluster_id else "",
             "document_position": document_position,
-            "synchronizer_version": "2.0.0",
+            "synchronizer_version": "1.0.0",
             "correlation_id": self.correlation_id,
             "original_pattern_count": len(applicable_patterns),
             "original_signal_count": len(resolved_signals),
-            "filtered_pattern_count": len(patterns_list),
-            "resolved_signal_count": len(signals_dict),
-            "schema_element_count": len(expected_elements_list),
         }
+
+        if task_id is None or not task_id:
+            raise ValueError("Task construction failure: task_id is None or empty")
+        if question_id is None or not question_id:
+            raise ValueError("Task construction failure: question_id is None or empty")
+        if question_global is None:
+            raise ValueError("Task construction failure: question_global is None")
+        if policy_area_id is None or not policy_area_id:
+            raise ValueError(
+                "Task construction failure: policy_area_id is None or empty"
+            )
+        if dimension_id is None or not dimension_id:
+            raise ValueError("Task construction failure: dimension_id is None or empty")
+        if chunk_id is None or not chunk_id:
+            raise ValueError("Task construction failure: chunk_id is None or empty")
+        if creation_timestamp is None or not creation_timestamp:
+            raise ValueError(
+                "Task construction failure: creation_timestamp is None or empty"
+            )
 
         try:
             task = ExecutableTask(
@@ -997,14 +843,18 @@ class IrrigationSynchronizer:
     ) -> tuple[list[ExecutableTask], str]:
         """Phase 8: Assemble execution plan with validation and deterministic ordering.
 
-        Performs three-phase assembly process:
+        Performs four-phase assembly process:
         - Phase 8.1: Pre-assembly validation (duplicate detection, count validation)
         - Phase 8.2: Deterministic task ordering (lexicographic by task_id)
-        - Phase 8.3: Plan identifier computation via SHA256 hash
+        - Phase 8.3: Plan identifier computation (SHA256 of deterministic JSON)
+        - Phase 8.4: Plan identifier validation (format and length checks)
 
         Validates that task count matches question count and that no duplicate
-        task identifiers exist. Then sorts tasks lexicographically by task_id and
-        computes deterministic plan identifier via SHA256 hash of task serialization.
+        task identifiers exist. Then sorts tasks lexicographically by task_id to ensure
+        deterministic plan identifier generation across runs. Computes plan_id by
+        encoding deterministic JSON serialization (sort_keys=True, compact separators)
+        to UTF-8 bytes, computing SHA256 hash, and validating result matches expected
+        64-character lowercase hexadecimal format.
 
         Args:
             executable_tasks: List of constructed ExecutableTask objects
@@ -1012,12 +862,15 @@ class IrrigationSynchronizer:
             correlation_id: Correlation ID for tracing
 
         Returns:
-            Tuple of (sorted tasks, plan_id)
+            Tuple of (sorted list of ExecutableTask objects, plan_id string)
 
         Raises:
-            ValueError: If task count doesn't match question count or duplicates exist
+            ValueError: If task count doesn't match question count, duplicates exist,
+                       or plan_id validation fails
             RuntimeError: When sorting operation corrupts task list length
         """
+        from collections import Counter
+
         question_count = len(questions)
         task_count = len(executable_tasks)
 
@@ -1081,8 +934,8 @@ class IrrigationSynchronizer:
 
         return sorted_tasks, plan_id
 
-    def _compute_plan_hash(self, tasks: list[Task]) -> str:
-        """Compute Blake3 or SHA256 hash for plan_id generation."""
+    def _compute_integrity_hash(self, tasks: list[Task]) -> str:
+        """Compute Blake3 or SHA256 integrity hash of execution plan."""
         task_data = json.dumps(
             [
                 {
@@ -1102,110 +955,99 @@ class IrrigationSynchronizer:
         else:
             return hashlib.sha256(task_data).hexdigest()
 
-    def _compute_integrity_hash(
-        self, plan_id: str, generation_timestamp: str, synchronizer_version: str
-    ) -> str:
-        """Compute SHA256 integrity hash from plan metadata.
+    def _construct_execution_plan_phase_8_4(
+        self,
+        sorted_tasks: list[Task],
+        plan_id: str,
+        chunk_count: int,
+        question_count: int,
+        integrity_hash: str,
+    ) -> ExecutionPlan:
+        """Phase 8.4: ExecutionPlan dataclass construction.
+
+        Constructs the final execution artifact from the sorted task list produced in
+        Phase 8.2, converting sorted_tasks to an immutable tuple, constructing a
+        metadata dictionary with generation_timestamp (UTC ISO 8601),
+        synchronizer_version "2.0.0", chunk_count from the chunk matrix,
+        question_count and task_count, invoking the ExecutionPlan constructor with
+        plan_id from Phase 8.3 and tasks_tuple with metadata_dict as keyword arguments,
+        wrapping the constructor call in try-except to catch TypeError from dataclass
+        validation and re-raise as ValueError with context-specific message, then
+        verifying task order preservation by checking that all adjacent task_id pairs
+        maintain lexicographic ordering and raising ValueError if any violation is
+        detected before emitting an info-level structured log event and returning the
+        constructed ExecutionPlan instance.
 
         Args:
-            plan_id: Plan identifier
-            generation_timestamp: ISO 8601 timestamp of plan generation
-            synchronizer_version: Synchronizer version string
+            sorted_tasks: List of Task objects sorted by task_id (from Phase 8.2)
+            plan_id: Plan identifier string (from Phase 8.3)
+            chunk_count: Number of chunks in the document
+            question_count: Number of questions in the questionnaire
+            integrity_hash: Blake3 or SHA256 hash of the task list
 
         Returns:
-            64-character hexadecimal SHA256 hash string
-        """
-        metadata_dict = {
-            "plan_id": plan_id,
-            "generation_timestamp": generation_timestamp,
-            "synchronizer_version": synchronizer_version,
-        }
-        json_str = json.dumps(
-            metadata_dict, sort_keys=True, separators=(",", ":"), default=str
-        )
-        json_bytes = json_str.encode("utf-8")
-        hash_digest = hashlib.sha256(json_bytes).hexdigest()
-        return hash_digest
-
-    def _serialize_and_verify_plan(self, plan: ExecutionPlan) -> str:
-        """Serialize ExecutionPlan to deterministic JSON and verify round-trip integrity.
-
-        Checks if ExecutionPlan.to_json() exists and uses it directly, or falls back
-        to dataclasses.asdict() with manual conversion of non-serializable types:
-        - tasks tuple to list
-        - datetime objects to ISO 8601 strings via isoformat()
-        - remaining non-serializable types via str()
-
-        Serializes with json.dumps using sort_keys=True and separators=(',',':')
-        for deterministic output. After serialization, deserializes via json.loads(),
-        validates plan_id equality and task count preservation, and raises ValueError
-        if round-trip verification fails.
-
-        Args:
-            plan: ExecutionPlan to serialize
-
-        Returns:
-            Validated JSON string for storage operations
+            ExecutionPlan instance with validated task ordering
 
         Raises:
-            ValueError: If round-trip verification fails (plan_id mismatch or task count changed)
+            ValueError: If dataclass validation fails or task ordering is violated
         """
-        from dataclasses import asdict
-        from datetime import datetime
+        tasks_tuple = tuple(sorted_tasks)
 
-        if hasattr(plan, "to_json") and callable(plan.to_json):
-            plan_dict = plan.to_json()
-        else:
-            plan_dict = asdict(plan)
+        metadata_dict = {
+            "generation_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "synchronizer_version": "2.0.0",
+            "chunk_count": chunk_count,
+            "question_count": question_count,
+            "task_count": len(tasks_tuple),
+        }
 
-            def convert_value(value: Any) -> Any:  # noqa: ANN401, PLR0911
-                if isinstance(value, (tuple, list)):
-                    return [convert_value(item) for item in value]
-                elif isinstance(value, dict):
-                    return {k: convert_value(v) for k, v in value.items()}
-                elif isinstance(value, datetime):
-                    return value.isoformat()
-                elif hasattr(value, "__dict__"):
-                    try:
-                        return asdict(value)
-                    except TypeError:
-                        return str(value)
-                elif isinstance(value, str | int | float | bool | type(None)):
-                    return value
-                else:
-                    return str(value)
-
-            plan_dict = convert_value(plan_dict)
-
-        json_string = json.dumps(plan_dict, sort_keys=True, separators=(",", ":"))
-
-        deserialized = json.loads(json_string)
-
-        original_plan_id = plan.plan_id
-        original_task_count = len(plan.tasks)
-
-        deserialized_plan_id = deserialized.get("plan_id")
-        deserialized_tasks = deserialized.get("tasks")
-
-        if deserialized_plan_id != original_plan_id:
-            raise ValueError(
-                f"Round-trip verification failed: plan_id mismatch "
-                f"(original={original_plan_id}, deserialized={deserialized_plan_id})"
+        try:
+            plan = ExecutionPlan(
+                plan_id=plan_id,
+                tasks=tasks_tuple,
+                chunk_count=metadata_dict["chunk_count"],
+                question_count=metadata_dict["question_count"],
+                integrity_hash=integrity_hash,
+                created_at=metadata_dict["generation_timestamp"],
+                correlation_id=self.correlation_id,
             )
-
-        if deserialized_tasks is None:
+        except TypeError as e:
             raise ValueError(
-                "Round-trip verification failed: tasks field missing in deserialized plan"
-            )
+                f"ExecutionPlan dataclass construction failed: {e}. "
+                f"Constructor validation rejected arguments (plan_id={plan_id}, "
+                f"task_count={len(tasks_tuple)}, chunk_count={chunk_count}, "
+                f"question_count={question_count})"
+            ) from e
 
-        deserialized_task_count = len(deserialized_tasks)
-        if deserialized_task_count != original_task_count:
-            raise ValueError(
-                f"Round-trip verification failed: task count mismatch "
-                f"(original={original_task_count}, deserialized={deserialized_task_count})"
-            )
+        for i in range(len(tasks_tuple) - 1):
+            current_task_id = tasks_tuple[i].task_id
+            next_task_id = tasks_tuple[i + 1].task_id
 
-        return json_string
+            if current_task_id >= next_task_id:
+                raise ValueError(
+                    f"Task order preservation violation detected at index {i}: "
+                    f"task_id '{current_task_id}' >= task_id '{next_task_id}'. "
+                    f"Expected strict lexicographic ordering maintained after Phase 8.2 sort."
+                )
+
+        logger.info(
+            json.dumps(
+                {
+                    "event": "execution_plan_phase_8_4_complete",
+                    "plan_id": plan_id,
+                    "task_count": len(tasks_tuple),
+                    "chunk_count": chunk_count,
+                    "question_count": question_count,
+                    "integrity_hash": integrity_hash,
+                    "synchronizer_version": metadata_dict["synchronizer_version"],
+                    "generation_timestamp": metadata_dict["generation_timestamp"],
+                    "correlation_id": self.correlation_id,
+                    "phase": "execution_plan_construction_phase_8_4",
+                }
+            )
+        )
+
+        return plan
 
     @synchronization_duration.time()
     def build_execution_plan(self) -> ExecutionPlan:
@@ -1290,7 +1132,7 @@ class IrrigationSynchronizer:
 
                     patterns_raw = question.get("patterns", [])
                     applicable_patterns = self._filter_patterns(
-                        patterns_raw, routing_result.policy_area_id, question_id
+                        patterns_raw, routing_result.policy_area_id
                     )
 
                     # Phase 5 validation: Ensure signal_registry initialized
@@ -1401,44 +1243,14 @@ class IrrigationSynchronizer:
                 )
                 legacy_tasks.append(legacy_task)
 
-            generation_timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-            synchronizer_version = "1.0.0"
+            integrity_hash = self._compute_integrity_hash(legacy_tasks)
 
-            integrity_hash = self._compute_integrity_hash(
-                plan_id, generation_timestamp, synchronizer_version
-            )
-
-            plan = ExecutionPlan(
+            plan = self._construct_execution_plan_phase_8_4(
+                sorted_tasks=legacy_tasks,
                 plan_id=plan_id,
-                tasks=tuple(legacy_tasks),
                 chunk_count=self.chunk_count,
                 question_count=len(questions),
                 integrity_hash=integrity_hash,
-                created_at=generation_timestamp,
-                correlation_id=self.correlation_id,
-            )
-
-            for i in range(len(plan.tasks) - 1):
-                current_task_id = plan.tasks[i].task_id
-                next_task_id = plan.tasks[i + 1].task_id
-                if current_task_id >= next_task_id:
-                    raise ValueError(
-                        f"Task ordering violation detected at indices {i} and {i + 1}: "
-                        f"task_id '{current_task_id}' >= '{next_task_id}' (lexicographic comparison); "
-                        f"tuple conversion may have corrupted deterministic task sequence from Phase 8.2"
-                    )
-
-            logger.info(
-                json.dumps(
-                    {
-                        "event": "execution_plan_assembled",
-                        "plan_id": plan.plan_id,
-                        "task_count": len(plan.tasks),
-                        "chunk_count": plan.chunk_count,
-                        "question_count": plan.question_count,
-                        "correlation_id": plan.correlation_id,
-                    }
-                )
             )
 
             logger.info(
@@ -1577,44 +1389,14 @@ class IrrigationSynchronizer:
                     "compromised or monkey-patched"
                 )
 
-            generation_timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-            synchronizer_version = "1.0.0"
+            integrity_hash = self._compute_integrity_hash(sorted_tasks)
 
-            integrity_hash = self._compute_integrity_hash(
-                plan_id, generation_timestamp, synchronizer_version
-            )
-
-            plan = ExecutionPlan(
+            plan = self._construct_execution_plan_phase_8_4(
+                sorted_tasks=sorted_tasks,
                 plan_id=plan_id,
-                tasks=tuple(sorted_tasks),
                 chunk_count=self.chunk_count,
                 question_count=len(questions),
                 integrity_hash=integrity_hash,
-                created_at=generation_timestamp,
-                correlation_id=self.correlation_id,
-            )
-
-            for i in range(len(plan.tasks) - 1):
-                current_task_id = plan.tasks[i].task_id
-                next_task_id = plan.tasks[i + 1].task_id
-                if current_task_id >= next_task_id:
-                    raise ValueError(
-                        f"Task ordering violation detected at indices {i} and {i + 1}: "
-                        f"task_id '{current_task_id}' >= '{next_task_id}' (lexicographic comparison); "
-                        f"tuple conversion may have corrupted deterministic task sequence from Phase 8.2"
-                    )
-
-            logger.info(
-                json.dumps(
-                    {
-                        "event": "execution_plan_assembled",
-                        "plan_id": plan.plan_id,
-                        "task_count": len(plan.tasks),
-                        "chunk_count": plan.chunk_count,
-                        "question_count": plan.question_count,
-                        "correlation_id": plan.correlation_id,
-                    }
-                )
             )
 
             logger.info(
@@ -1648,74 +1430,6 @@ class IrrigationSynchronizer:
                 )
             )
             raise
-
-    def _validate_cross_task_cardinality(
-        self,
-        execution_plan: ExecutionPlan,
-        questions: list[dict[str, Any]],
-        chunk_matrix: ChunkMatrix,  # noqa: ARG002
-    ) -> None:
-        """Validate cross-task chunk reference cardinality.
-
-        Extracts unique chunk_ids from execution plan tasks, computes expected
-        reference count by filtering questions that match chunk routing keys,
-        compares against actual task reference count, and emits warning-level
-        logs when counts differ. Does not raise exceptions since usage skew
-        may reflect legitimate sparse questionnaire coverage.
-
-        Args:
-            execution_plan: ExecutionPlan with constructed tasks
-            questions: List of question dictionaries from questionnaire
-            chunk_matrix: ChunkMatrix for chunk metadata lookup
-
-        Returns:
-            None (validation emits structured logs only)
-        """
-        unique_chunk_ids = {task.chunk_id for task in execution_plan.tasks}
-
-        for chunk_id in unique_chunk_ids:
-            try:
-                policy_area_id, dimension_id = chunk_id.split("-")
-            except ValueError:
-                logger.warning(
-                    json.dumps(
-                        {
-                            "event": "cross_task_cardinality_validation_warning",
-                            "chunk_id": chunk_id,
-                            "error": "Invalid chunk_id format, expected 'PA-DIM' pattern",
-                            "correlation_id": self.correlation_id,
-                        }
-                    )
-                )
-                continue
-
-            expected_count = sum(
-                1
-                for q in questions
-                if q.get("policy_area_id") == policy_area_id
-                and q.get("dimension_id") == dimension_id
-            )
-
-            actual_count = sum(
-                1 for task in execution_plan.tasks if task.chunk_id == chunk_id
-            )
-
-            if actual_count != expected_count:
-                logger.warning(
-                    json.dumps(
-                        {
-                            "event": "cross_task_cardinality_mismatch",
-                            "chunk_id": chunk_id,
-                            "policy_area_id": policy_area_id,
-                            "dimension_id": dimension_id,
-                            "expected_count": expected_count,
-                            "actual_count": actual_count,
-                            "skew": actual_count - expected_count,
-                            "message": "Task reference count differs from expected; may indicate sparse coverage",
-                            "correlation_id": self.correlation_id,
-                        }
-                    )
-                )
 
     def _resolve_signals_for_question(
         self,
