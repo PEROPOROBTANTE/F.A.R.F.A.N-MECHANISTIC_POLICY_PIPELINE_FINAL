@@ -1,19 +1,25 @@
 """
-Questionnaire Signal Registry - SOTA Implementation
-===================================================
+Questionnaire Signal Registry - PRODUCTION IMPLEMENTATION
+=========================================================
 
 Content-addressed, type-safe, observable signal registry with cryptographic
-consumption tracking and lazy loading.
+consumption tracking and lazy loading. This module is the CANONICAL source
+for all signal extraction in the Farfan Pipeline.
 
-Technical Standards:
-- Pydantic v2 for runtime validation
-- OpenTelemetry for distributed tracing
-- BLAKE3 for cryptographic hashing
-- structlog for structured logging
-- Type hints with strict mypy compliance
+Architecture:
+    CanonicalQuestionnaire → QuestionnaireSignalRegistry → SignalPacks → Executors
 
-Version: 1.0.0
+Key Features:
+- Full metadata extraction (100% Intelligence Utilization)
+- Pydantic v2 runtime validation with strict type safety
+- Content-based cache invalidation (BLAKE3/SHA256)
+- OpenTelemetry distributed tracing
+- Lazy loading with LRU caching
+- Immutable signal packs (frozen Pydantic models)
+
+Version: 2.0.0
 Status: Production-ready
+Author: Farfan Pipeline Team
 """
 
 from __future__ import annotations
@@ -21,37 +27,32 @@ from __future__ import annotations
 import hashlib
 import time
 from collections import defaultdict
+from dataclasses import dataclass
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Literal
 
 try:
     import blake3
-
     BLAKE3_AVAILABLE = True
 except ImportError:
     BLAKE3_AVAILABLE = False
 
 try:
     from opentelemetry import trace
-
     tracer = trace.get_tracer(__name__)
     OTEL_AVAILABLE = True
 except ImportError:
     OTEL_AVAILABLE = False
-    # Dummy tracer
+    
     class DummySpan:
         def set_attribute(self, key: str, value: Any) -> None:
             pass
-
         def set_status(self, status: Any) -> None:
             pass
-
         def record_exception(self, exc: Exception) -> None:
             pass
-
         def __enter__(self) -> DummySpan:
             return self
-
         def __exit__(self, *args: Any) -> None:
             pass
 
@@ -65,55 +66,211 @@ except ImportError:
 
 try:
     import structlog
-
     logger = structlog.get_logger(__name__)
 except ImportError:
     import logging
-
     logger = logging.getLogger(__name__)  # type: ignore
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 if TYPE_CHECKING:
     from farfan_pipeline.core.orchestrator.questionnaire import CanonicalQuestionnaire
+
+
+# ============================================================================
+# EXCEPTIONS
+# ============================================================================
+
+
+class SignalRegistryError(Exception):
+    """Base exception for signal registry errors."""
+    pass
+
+
+class QuestionNotFoundError(SignalRegistryError):
+    """Raised when a question ID is not found in the questionnaire."""
+    
+    def __init__(self, question_id: str) -> None:
+        self.question_id = question_id
+        super().__init__(f"Question {question_id} not found in questionnaire")
+
+
+class SignalExtractionError(SignalRegistryError):
+    """Raised when signal extraction fails."""
+    
+    def __init__(self, signal_type: str, reason: str) -> None:
+        self.signal_type = signal_type
+        self.reason = reason
+        super().__init__(f"Failed to extract {signal_type} signals: {reason}")
+
+
+class InvalidLevelError(SignalRegistryError):
+    """Raised when an invalid assembly level is requested."""
+    
+    def __init__(self, level: str, valid_levels: list[str]) -> None:
+        self.level = level
+        self.valid_levels = valid_levels
+        super().__init__(
+            f"Invalid assembly level '{level}'. Valid levels: {', '.join(valid_levels)}"
+        )
+
 
 # ============================================================================
 # TYPE-SAFE SIGNAL PACKS (Pydantic v2)
 # ============================================================================
 
 
-class ChunkingSignalPack(BaseModel):
-    """Type-safe signal pack for Smart Policy Chunking.
-
-    Attributes:
-        section_detection_patterns: Regex patterns per PDM section type
-        section_weights: Calibrated weights per section (0.0-2.0 range)
-        table_patterns: Patterns to detect table boundaries
-        numerical_patterns: Patterns to detect numerical content
-        embedding_config: Semantic embedding configuration
-        version: Signal pack version
-        source_hash: Content hash for cache invalidation
+class PatternItem(BaseModel):
+    """Individual pattern with FULL metadata from Intelligence Layer.
+    
+    This model captures ALL fields from the monolith, including those
+    previously discarded by the legacy loader.
     """
+    model_config = ConfigDict(frozen=True, strict=True)
 
+    id: str = Field(..., pattern=r"^PAT-Q\d{3}-\d{3}$", description="Unique pattern ID")
+    pattern: str = Field(..., min_length=1, description="Pattern string (regex or literal)")
+    match_type: Literal["REGEX", "LITERAL"] = Field(
+        default="REGEX", description="Pattern matching strategy"
+    )
+    confidence_weight: float = Field(
+        ..., ge=0.0, le=1.0, description="Pattern confidence weight (Intelligence Layer)"
+    )
+    category: Literal[
+        "GENERAL",
+        "TEMPORAL",
+        "INDICADOR",
+        "FUENTE_OFICIAL",
+        "TERRITORIAL",
+        "UNIDAD_MEDIDA",
+    ] = Field(default="GENERAL", description="Pattern category")
+    flags: str = Field(
+        default="", pattern=r"^[imsx]*$", description="Regex flags (case-insensitive, etc.)"
+    )
+    
+    # Intelligence Layer fields (previously discarded by legacy loader)
+    semantic_expansion: list[str] = Field(
+        default_factory=list,
+        description="Semantic expansions for fuzzy matching (Intelligence Layer)"
+    )
+    context_requirement: str | None = Field(
+        default=None,
+        description="Required context for pattern match (Intelligence Layer)"
+    )
+    evidence_boost: float = Field(
+        default=1.0,
+        ge=0.0,
+        le=2.0,
+        description="Evidence scoring boost factor (Intelligence Layer)"
+    )
+
+
+class ExpectedElement(BaseModel):
+    """Expected element specification for micro questions."""
+    model_config = ConfigDict(frozen=True)
+
+    type: str = Field(..., min_length=1, description="Element type")
+    required: bool = Field(default=False, description="Is this element required?")
+    minimum: int = Field(default=0, ge=0, description="Minimum count required")
+    description: str = Field(default="", description="Human-readable description")
+
+
+class ValidationCheck(BaseModel):
+    """Validation check specification."""
+    model_config = ConfigDict(frozen=True)
+
+    patterns: list[str] = Field(default_factory=list, description="Validation patterns")
+    minimum_required: int = Field(default=1, ge=0, description="Minimum matches required")
+    minimum_years: int = Field(default=0, ge=0, description="Minimum temporal coverage (years)")
+    specificity: Literal["HIGH", "MEDIUM", "LOW"] = Field(
+        default="MEDIUM", description="Check specificity level"
+    )
+
+
+class FailureContract(BaseModel):
+    """Failure contract specification."""
+    model_config = ConfigDict(frozen=True)
+
+    abort_if: list[str] = Field(..., min_length=1, description="Abort conditions")
+    emit_code: str = Field(
+        ..., pattern=r"^ABORT-Q\d{3}-[A-Z]+$", description="Emitted abort code"
+    )
+    severity: Literal["CRITICAL", "ERROR", "WARNING"] = Field(
+        default="ERROR", description="Failure severity"
+    )
+
+
+class ModalityConfig(BaseModel):
+    """Scoring modality configuration."""
+    model_config = ConfigDict(frozen=True)
+
+    aggregation: Literal[
+        "presence_threshold",
+        "binary_sum",
+        "weighted_sum",
+        "binary_presence",
+        "normalized_continuous",
+    ] = Field(..., description="Aggregation strategy")
+    description: str = Field(..., min_length=5, description="Human-readable description")
+    failure_code: str = Field(
+        ..., pattern=r"^F-[A-F]-[A-Z]+$", description="Failure code"
+    )
+    threshold: float | None = Field(
+        default=None, ge=0.0, le=1.0, description="Threshold value (if applicable)"
+    )
+    max_score: int = Field(default=3, ge=0, le=10, description="Maximum score")
+    weights: list[float] | None = Field(default=None, description="Sub-dimension weights")
+
+    @field_validator("weights")
+    @classmethod
+    def validate_weights_sum(cls, v: list[float] | None) -> list[float] | None:
+        """Validate weights sum to 1.0."""
+        if v is not None:
+            total = sum(v)
+            if not 0.99 <= total <= 1.01:
+                raise ValueError(f"Weights must sum to 1.0, got {total}")
+        return v
+
+
+class QualityLevel(BaseModel):
+    """Quality level specification."""
+    model_config = ConfigDict(frozen=True)
+
+    level: Literal["EXCELENTE", "BUENO", "ACEPTABLE", "INSUFICIENTE"]
+    min_score: float = Field(..., ge=0.0, le=1.0)
+    color: Literal["green", "blue", "yellow", "red"]
+    description: str = Field(default="", description="Level description")
+
+
+# ============================================================================
+# SIGNAL PACK MODELS
+# ============================================================================
+
+
+class ChunkingSignalPack(BaseModel):
+    """Type-safe signal pack for Smart Policy Chunking."""
     model_config = ConfigDict(frozen=True, strict=True, extra="forbid")
 
     section_detection_patterns: dict[str, list[str]] = Field(
-        ..., min_length=1, description="Patterns per PDM section"
+        ..., min_length=1, description="Patterns per PDM section type"
     )
     section_weights: dict[str, float] = Field(
-        ..., description="Calibrated weights per section"
+        ..., description="Calibrated weights per section (0.0-2.0)"
     )
     table_patterns: list[str] = Field(
-        default_factory=list, description="Table boundary patterns"
+        default_factory=list, description="Table boundary detection patterns"
     )
     numerical_patterns: list[str] = Field(
         default_factory=list, description="Numerical content patterns"
     )
     embedding_config: dict[str, Any] = Field(
-        default_factory=dict, description="Embedding strategy config"
+        default_factory=dict, description="Semantic embedding configuration"
     )
-    version: str = Field(default="1.0.0", pattern=r"^\d+\.\d+\.\d+$")
+    version: str = Field(default="2.0.0", pattern=r"^\d+\.\d+\.\d+$")
     source_hash: str = Field(..., min_length=32, max_length=64)
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
     @field_validator("section_weights")
     @classmethod
@@ -125,43 +282,12 @@ class ChunkingSignalPack(BaseModel):
         return v
 
 
-class PatternItem(BaseModel):
-    """Individual pattern with metadata."""
-
-    model_config = ConfigDict(frozen=True)
-
-    id: str = Field(..., pattern=r"^PAT-Q\d{3}-\d{3}$")
-    pattern: str = Field(..., min_length=1)
-    match_type: Literal["REGEX", "LITERAL"]
-    confidence_weight: float = Field(..., ge=0.0, le=1.0)
-    category: Literal[
-        "GENERAL",
-        "TEMPORAL",
-        "INDICADOR",
-        "FUENTE_OFICIAL",
-        "TERRITORIAL",
-        "UNIDAD_MEDIDA",
-    ]
-    flags: str = Field(default="", pattern=r"^[imsx]*$")
-
-
-class ExpectedElement(BaseModel):
-    """Expected element specification."""
-
-    model_config = ConfigDict(frozen=True)
-
-    type: str = Field(..., min_length=1)
-    required: bool = Field(default=False)
-    minimum: int = Field(default=0, ge=0)
-
-
 class MicroAnsweringSignalPack(BaseModel):
-    """Type-safe signal pack for Micro Answering."""
-
+    """Type-safe signal pack for Micro Answering with FULL metadata."""
     model_config = ConfigDict(frozen=True, strict=True, extra="forbid")
 
     question_patterns: dict[str, list[PatternItem]] = Field(
-        ..., description="Patterns per question ID"
+        ..., description="Patterns per question ID (with full metadata)"
     )
     expected_elements: dict[str, list[ExpectedElement]] = Field(
         ..., description="Expected elements per question"
@@ -175,33 +301,30 @@ class MicroAnsweringSignalPack(BaseModel):
     pattern_weights: dict[str, float] = Field(
         default_factory=dict, description="Confidence weights per pattern ID"
     )
-    version: str = Field(default="1.0.0", pattern=r"^\d+\.\d+\.\d+$")
+    
+    # Intelligence Layer metadata
+    semantic_expansions: dict[str, list[str]] = Field(
+        default_factory=dict,
+        description="Semantic expansions per pattern ID (Intelligence Layer)"
+    )
+    context_requirements: dict[str, str] = Field(
+        default_factory=dict,
+        description="Context requirements per pattern ID (Intelligence Layer)"
+    )
+    evidence_boosts: dict[str, float] = Field(
+        default_factory=dict,
+        description="Evidence boost factors per pattern ID (Intelligence Layer)"
+    )
+    
+    version: str = Field(default="2.0.0", pattern=r"^\d+\.\d+\.\d+$")
     source_hash: str = Field(..., min_length=32, max_length=64)
-
-
-class ValidationCheck(BaseModel):
-    """Validation check specification."""
-
-    model_config = ConfigDict(frozen=True)
-
-    patterns: list[str] = Field(default_factory=list)
-    minimum_required: int = Field(default=1, ge=0)
-    minimum_years: int = Field(default=0, ge=0)
-    specificity: Literal["HIGH", "MEDIUM", "LOW"] = Field(default="MEDIUM")
-
-
-class FailureContract(BaseModel):
-    """Failure contract specification."""
-
-    model_config = ConfigDict(frozen=True)
-
-    abort_if: list[str] = Field(..., min_length=1)
-    emit_code: str = Field(..., pattern=r"^ABORT-Q\d{3}-[A-Z]+$")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
 
 class ValidationSignalPack(BaseModel):
     """Type-safe signal pack for Response Validation."""
-
     model_config = ConfigDict(frozen=True, strict=True, extra="forbid")
 
     validation_rules: dict[str, dict[str, ValidationCheck]] = Field(
@@ -219,13 +342,15 @@ class ValidationSignalPack(BaseModel):
     verification_patterns: dict[str, list[str]] = Field(
         default_factory=dict, description="Verification patterns per question"
     )
-    version: str = Field(default="1.0.0", pattern=r"^\d+\.\d+\.\d+$")
+    version: str = Field(default="2.0.0", pattern=r"^\d+\.\d+\.\d+$")
     source_hash: str = Field(..., min_length=32, max_length=64)
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
 
 class AssemblySignalPack(BaseModel):
     """Type-safe signal pack for Response Assembly."""
-
     model_config = ConfigDict(frozen=True, strict=True, extra="forbid")
 
     aggregation_methods: dict[str, str] = Field(
@@ -246,52 +371,15 @@ class AssemblySignalPack(BaseModel):
     fallback_patterns: dict[str, dict[str, Any]] = Field(
         default_factory=dict, description="Fallback patterns per level"
     )
-    version: str = Field(default="1.0.0", pattern=r"^\d+\.\d+\.\d+$")
+    version: str = Field(default="2.0.0", pattern=r"^\d+\.\d+\.\d+$")
     source_hash: str = Field(..., min_length=32, max_length=64)
-
-
-class ModalityConfig(BaseModel):
-    """Scoring modality configuration."""
-
-    model_config = ConfigDict(frozen=True)
-
-    aggregation: Literal[
-        "presence_threshold",
-        "binary_sum",
-        "weighted_sum",
-        "binary_presence",
-        "normalized_continuous",
-    ]
-    description: str = Field(..., min_length=5)
-    failure_code: str = Field(..., pattern=r"^F-[A-F]-[A-Z]+$")
-    threshold: float | None = Field(default=None, ge=0.0, le=1.0)
-    max_score: int = Field(default=3, ge=0, le=10)
-    weights: list[float] | None = Field(default=None)
-
-    @field_validator("weights")
-    @classmethod
-    def validate_weights_sum(cls, v: list[float] | None) -> list[float] | None:
-        """Validate weights sum to 1.0."""
-        if v is not None:
-            total = sum(v)
-            if not 0.99 <= total <= 1.01:  # Allow small floating point error
-                raise ValueError(f"Weights must sum to 1.0, got {total}")
-        return v
-
-
-class QualityLevel(BaseModel):
-    """Quality level specification."""
-
-    model_config = ConfigDict(frozen=True)
-
-    level: Literal["EXCELENTE", "BUENO", "ACEPTABLE", "INSUFICIENTE"]
-    min_score: float = Field(..., ge=0.0, le=1.0)
-    color: Literal["green", "blue", "yellow", "red"]
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
 
 class ScoringSignalPack(BaseModel):
     """Type-safe signal pack for Scoring."""
-
     model_config = ConfigDict(frozen=True, strict=True, extra="forbid")
 
     question_modalities: dict[str, str] = Field(
@@ -312,8 +400,37 @@ class ScoringSignalPack(BaseModel):
     type_d_weights: list[float] = Field(
         default=[0.4, 0.3, 0.3], description="Weights for TYPE_D modality"
     )
-    version: str = Field(default="1.0.0", pattern=r"^\d+\.\d+\.\d+$")
+    version: str = Field(default="2.0.0", pattern=r"^\d+\.\d+\.\d+$")
     source_hash: str = Field(..., min_length=32, max_length=64)
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
+
+
+# ============================================================================
+# METRICS TRACKER
+# ============================================================================
+
+
+@dataclass
+class RegistryMetrics:
+    """Metrics for observability and monitoring."""
+    cache_hits: int = 0
+    cache_misses: int = 0
+    signal_loads: int = 0
+    errors: int = 0
+    last_cache_clear: float = 0.0
+    
+    @property
+    def hit_rate(self) -> float:
+        """Calculate cache hit rate."""
+        total = self.cache_hits + self.cache_misses
+        return self.cache_hits / total if total > 0 else 0.0
+    
+    @property
+    def total_requests(self) -> int:
+        """Total number of requests."""
+        return self.cache_hits + self.cache_misses
 
 
 # ============================================================================
@@ -323,47 +440,60 @@ class ScoringSignalPack(BaseModel):
 
 class QuestionnaireSignalRegistry:
     """Content-addressed, observable signal registry with lazy loading.
-
+    
+    This is the CANONICAL source for all signal extraction in the Farfan
+    Pipeline. It replaces the deprecated signal_loader.py module.
+    
     Features:
+    - Full metadata extraction (100% Intelligence Utilization)
     - Content-based cache invalidation (hash-based)
     - Lazy loading with on-demand materialization
     - OpenTelemetry distributed tracing
     - Structured logging with contextual metadata
     - Type-safe signal packs (Pydantic v2)
     - LRU caching for hot paths
-
+    - Immutable signal packs (frozen models)
+    
     Architecture:
         CanonicalQuestionnaire → Registry → SignalPacks → Components
-
-    Thread Safety: Single-threaded (use locks for multi-threaded)
+    
+    Thread Safety: Single-threaded (use locks for multi-threaded access)
+    
+    Example:
+        >>> from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
+        >>> canonical = load_questionnaire()
+        >>> registry = QuestionnaireSignalRegistry(canonical)
+        >>> signals = registry.get_micro_answering_signals("Q001")
+        >>> print(f"Patterns: {len(signals.question_patterns['Q001'])}")
     """
 
     def __init__(self, questionnaire: CanonicalQuestionnaire) -> None:
         """Initialize signal registry.
-
+        
         Args:
-            questionnaire: Canonical questionnaire instance
+            questionnaire: Canonical questionnaire instance (immutable)
         """
         self._questionnaire = questionnaire
         self._source_hash = self._compute_source_hash()
-        self._initialized = False
-
+        
         # Lazy-loaded caches
         self._chunking_signals: ChunkingSignalPack | None = None
         self._micro_answering_cache: dict[str, MicroAnsweringSignalPack] = {}
         self._validation_cache: dict[str, ValidationSignalPack] = {}
         self._assembly_cache: dict[str, AssemblySignalPack] = {}
         self._scoring_cache: dict[str, ScoringSignalPack] = {}
-
+        
         # Metrics
-        self._cache_hits = 0
-        self._cache_misses = 0
-        self._signal_loads = 0
-
+        self._metrics = RegistryMetrics()
+        
+        # Valid assembly levels (for validation)
+        self._valid_assembly_levels = self._extract_valid_assembly_levels()
+        
         logger.info(
             "signal_registry_initialized",
             source_hash=self._source_hash[:16],
             questionnaire_version=questionnaire.version,
+            questionnaire_sha256=questionnaire.sha256[:16],
         )
 
     def _compute_source_hash(self) -> str:
@@ -374,18 +504,32 @@ class QuestionnaireSignalRegistry:
         else:
             return hashlib.sha256(content.encode()).hexdigest()
 
+    def _extract_valid_assembly_levels(self) -> list[str]:
+        """Extract valid assembly levels from questionnaire."""
+        levels = ["MACRO_1"]  # Always valid
+        
+        blocks = dict(self._questionnaire.data.get("blocks", {}))
+        meso_questions = blocks.get("meso_questions", [])
+        
+        for meso_q in meso_questions:
+            q_id = meso_q.get("question_id", "")
+            if q_id.startswith("MESO"):
+                levels.append(q_id)
+        
+        return levels
+
     # ========================================================================
     # PUBLIC API: Signal Pack Getters
     # ========================================================================
 
     def get_chunking_signals(self) -> ChunkingSignalPack:
         """Get signals for Smart Policy Chunking.
-
+        
         Returns:
             ChunkingSignalPack with section patterns, weights, and config
-
+        
         Raises:
-            ValueError: If signal extraction fails
+            SignalExtractionError: If signal extraction fails
         """
         with tracer.start_as_current_span(
             "signal_registry.get_chunking_signals",
@@ -393,35 +537,49 @@ class QuestionnaireSignalRegistry:
         ) as span:
             try:
                 if self._chunking_signals is None:
-                    self._signal_loads += 1
-                    self._cache_misses += 1
+                    self._metrics.signal_loads += 1
+                    self._metrics.cache_misses += 1
                     self._chunking_signals = self._build_chunking_signals()
                     span.set_attribute("cache_hit", False)
+                    
+                    logger.info(
+                        "chunking_signals_loaded",
+                        pattern_categories=len(self._chunking_signals.section_detection_patterns),
+                        source_hash=self._source_hash[:16],
+                    )
                 else:
-                    self._cache_hits += 1
+                    self._metrics.cache_hits += 1
                     span.set_attribute("cache_hit", True)
 
-                span.set_attribute("pattern_count", len(self._chunking_signals.section_detection_patterns))
+                span.set_attribute(
+                    "pattern_count",
+                    len(self._chunking_signals.section_detection_patterns)
+                )
                 return self._chunking_signals
 
             except Exception as e:
+                self._metrics.errors += 1
                 span.record_exception(e)
-                logger.error("chunking_signals_failed", error=str(e))
-                raise
+                logger.error("chunking_signals_failed", error=str(e), exc_info=True)
+                raise SignalExtractionError("chunking", str(e)) from e
 
     def get_micro_answering_signals(
         self, question_id: str
     ) -> MicroAnsweringSignalPack:
         """Get signals for Micro Answering for specific question.
-
+        
+        This method returns the FULL metadata from the Intelligence Layer,
+        including semantic_expansion, context_requirement, and evidence_boost.
+        
         Args:
             question_id: Question ID (Q001-Q300)
-
+        
         Returns:
-            MicroAnsweringSignalPack with patterns, elements, indicators
-
+            MicroAnsweringSignalPack with full pattern metadata
+        
         Raises:
-            ValueError: If question not found or signal extraction fails
+            QuestionNotFoundError: If question not found
+            SignalExtractionError: If signal extraction fails
         """
         with tracer.start_as_current_span(
             "signal_registry.get_micro_answering_signals",
@@ -429,38 +587,56 @@ class QuestionnaireSignalRegistry:
         ) as span:
             try:
                 if question_id in self._micro_answering_cache:
-                    self._cache_hits += 1
+                    self._metrics.cache_hits += 1
                     span.set_attribute("cache_hit", True)
                     return self._micro_answering_cache[question_id]
 
-                self._signal_loads += 1
-                self._cache_misses += 1
+                self._metrics.signal_loads += 1
+                self._metrics.cache_misses += 1
                 span.set_attribute("cache_hit", False)
 
                 pack = self._build_micro_answering_signals(question_id)
                 self._micro_answering_cache[question_id] = pack
 
-                span.set_attribute("pattern_count", len(pack.question_patterns.get(question_id, [])))
+                patterns = pack.question_patterns.get(question_id, [])
+                span.set_attribute("pattern_count", len(patterns))
+                
+                logger.info(
+                    "micro_answering_signals_loaded",
+                    question_id=question_id,
+                    pattern_count=len(patterns),
+                    has_semantic_expansions=bool(pack.semantic_expansions),
+                    has_context_requirements=bool(pack.context_requirements),
+                )
+                
                 return pack
 
+            except QuestionNotFoundError:
+                self._metrics.errors += 1
+                raise
             except Exception as e:
+                self._metrics.errors += 1
                 span.record_exception(e)
                 logger.error(
-                    "micro_answering_signals_failed", question_id=question_id, error=str(e)
+                    "micro_answering_signals_failed",
+                    question_id=question_id,
+                    error=str(e),
+                    exc_info=True
                 )
-                raise
+                raise SignalExtractionError("micro_answering", str(e)) from e
 
     def get_validation_signals(self, question_id: str) -> ValidationSignalPack:
         """Get signals for Response Validation for specific question.
-
+        
         Args:
             question_id: Question ID (Q001-Q300)
-
+        
         Returns:
             ValidationSignalPack with rules, contracts, thresholds
-
+        
         Raises:
-            ValueError: If question not found or signal extraction fails
+            QuestionNotFoundError: If question not found
+            SignalExtractionError: If signal extraction fails
         """
         with tracer.start_as_current_span(
             "signal_registry.get_validation_signals",
@@ -468,75 +644,109 @@ class QuestionnaireSignalRegistry:
         ) as span:
             try:
                 if question_id in self._validation_cache:
-                    self._cache_hits += 1
+                    self._metrics.cache_hits += 1
                     span.set_attribute("cache_hit", True)
                     return self._validation_cache[question_id]
 
-                self._signal_loads += 1
-                self._cache_misses += 1
+                self._metrics.signal_loads += 1
+                self._metrics.cache_misses += 1
                 span.set_attribute("cache_hit", False)
 
                 pack = self._build_validation_signals(question_id)
                 self._validation_cache[question_id] = pack
 
-                span.set_attribute("rule_count", len(pack.validation_rules.get(question_id, {})))
+                rules = pack.validation_rules.get(question_id, {})
+                span.set_attribute("rule_count", len(rules))
+                
+                logger.info(
+                    "validation_signals_loaded",
+                    question_id=question_id,
+                    rule_count=len(rules),
+                )
+                
                 return pack
 
+            except QuestionNotFoundError:
+                self._metrics.errors += 1
+                raise
             except Exception as e:
+                self._metrics.errors += 1
                 span.record_exception(e)
                 logger.error(
-                    "validation_signals_failed", question_id=question_id, error=str(e)
+                    "validation_signals_failed",
+                    question_id=question_id,
+                    error=str(e),
+                    exc_info=True
                 )
-                raise
+                raise SignalExtractionError("validation", str(e)) from e
 
     def get_assembly_signals(self, level: str) -> AssemblySignalPack:
         """Get signals for Response Assembly at specified level.
-
+        
         Args:
             level: Assembly level (MESO_1, MESO_2, etc. or MACRO_1)
-
+        
         Returns:
             AssemblySignalPack with aggregation methods, clusters, weights
-
+        
         Raises:
-            ValueError: If level not found or signal extraction fails
+            InvalidLevelError: If level not found
+            SignalExtractionError: If signal extraction fails
         """
+        # Validate level
+        if level not in self._valid_assembly_levels:
+            raise InvalidLevelError(level, self._valid_assembly_levels)
+        
         with tracer.start_as_current_span(
             "signal_registry.get_assembly_signals",
             attributes={"signal_type": "assembly", "level": level},
         ) as span:
             try:
                 if level in self._assembly_cache:
-                    self._cache_hits += 1
+                    self._metrics.cache_hits += 1
                     span.set_attribute("cache_hit", True)
                     return self._assembly_cache[level]
 
-                self._signal_loads += 1
-                self._cache_misses += 1
+                self._metrics.signal_loads += 1
+                self._metrics.cache_misses += 1
                 span.set_attribute("cache_hit", False)
 
                 pack = self._build_assembly_signals(level)
                 self._assembly_cache[level] = pack
 
                 span.set_attribute("cluster_count", len(pack.cluster_policy_areas))
+                
+                logger.info(
+                    "assembly_signals_loaded",
+                    level=level,
+                    cluster_count=len(pack.cluster_policy_areas),
+                
+                
                 return pack
 
             except Exception as e:
+                self._metrics.errors += 1
                 span.record_exception(e)
-                logger.error("assembly_signals_failed", level=level, error=str(e))
-                raise
+                logger.error(
+                    "assembly_signals_failed",
+                    level=level,
+                    error=str(e),
+                    exc_info=True
+                )
+                raise SignalExtractionError("assembly", str(e)) from e
 
     def get_scoring_signals(self, question_id: str) -> ScoringSignalPack:
         """Get signals for Scoring for specific question.
-
+        
         Args:
             question_id: Question ID (Q001-Q300)
-
+        
         Returns:
             ScoringSignalPack with modalities, configs, quality levels
-
+        
         Raises:
-            ValueError: If question not found or signal extraction fails
+            QuestionNotFoundError: If question not found
+            SignalExtractionError: If signal extraction fails
         """
         with tracer.start_as_current_span(
             "signal_registry.get_scoring_signals",
@@ -544,12 +754,12 @@ class QuestionnaireSignalRegistry:
         ) as span:
             try:
                 if question_id in self._scoring_cache:
-                    self._cache_hits += 1
+                    self._metrics.cache_hits += 1
                     span.set_attribute("cache_hit", True)
                     return self._scoring_cache[question_id]
 
-                self._signal_loads += 1
-                self._cache_misses += 1
+                self._metrics.signal_loads += 1
+                self._metrics.cache_misses += 1
                 span.set_attribute("cache_hit", False)
 
                 pack = self._build_scoring_signals(question_id)
@@ -557,12 +767,28 @@ class QuestionnaireSignalRegistry:
 
                 modality = pack.question_modalities.get(question_id, "UNKNOWN")
                 span.set_attribute("modality", modality)
+                
+                logger.info(
+                    "scoring_signals_loaded",
+                    question_id=question_id,
+                    modality=modality,
+                )
+                
                 return pack
 
-            except Exception as e:
-                span.record_exception(e)
-                logger.error("scoring_signals_failed", question_id=question_id, error=str(e))
+            except QuestionNotFoundError:
+                self._metrics.errors += 1
                 raise
+            except Exception as e:
+                self._metrics.errors += 1
+                span.record_exception(e)
+                logger.error(
+                    "scoring_signals_failed",
+                    question_id=question_id,
+                    error=str(e),
+                    exc_info=True
+                )
+                raise SignalExtractionError("scoring", str(e)) from e
 
     # ========================================================================
     # PRIVATE: Signal Pack Builders
@@ -587,7 +813,7 @@ class QuestionnaireSignalRegistry:
         # Deduplicate
         section_patterns = {k: list(set(v)) for k, v in section_patterns.items()}
 
-        # Section weights (hardcoded calibrated values for now)
+        # Section weights (calibrated values from PDM structure)
         section_weights = {
             "DIAGNOSTICO": 0.92,
             "PLAN_INVERSIONES": 1.25,
@@ -599,18 +825,20 @@ class QuestionnaireSignalRegistry:
 
         # Table patterns
         table_patterns = [
-            r"\|.*\|.*\|",  # Markdown table
-            r"<table",  # HTML table
-            r"Cuadro \d+",  # Spanish table reference
+            r"\|.*\|.*\|",
+            r"<table",
+            r"Cuadro \d+",
             r"Tabla \d+",
+            r"^\s*\|",
         ]
 
         # Numerical patterns
         numerical_patterns = [
-            r"\d+%",  # Percentage
-            r"\$\s*\d+",  # Currency
-            r"\d+\.\d+",  # Decimal
-            r"\d+,\d+",  # Decimal (Spanish)
+            r"\d+%",
+            r"\$\s*\d+",
+            r"\d+\.\d+",
+            r"\d+,\d+",
+            r"(?i)(millones?|miles?)\s+de\s+pesos",
         ]
 
         return ChunkingSignalPack(
@@ -620,27 +848,38 @@ class QuestionnaireSignalRegistry:
             numerical_patterns=numerical_patterns,
             embedding_config=semantic_layers.get("embedding_strategy", {}),
             source_hash=self._source_hash,
+            metadata={
+                "total_patterns": sum(len(v) for v in section_patterns.values()),
+                "categories": list(section_patterns.keys()),
+            }
         )
 
     def _build_micro_answering_signals(
         self, question_id: str
     ) -> MicroAnsweringSignalPack:
-        """Build micro answering signal pack for question."""
+        """Build micro answering signal pack for question with FULL metadata."""
         question = self._get_question(question_id)
 
-        # Extract patterns
+        # Extract patterns WITH FULL METADATA (Intelligence Layer)
         patterns_raw = question.get("patterns", [])
-        patterns = [
-            PatternItem(
-                id=p.get("id", f"PAT-{question_id}-000"),
-                pattern=p.get("pattern", ""),
-                match_type=p.get("match_type", "REGEX"),
-                confidence_weight=p.get("confidence_weight", 0.85),
-                category=p.get("category", "GENERAL"),
-                flags=p.get("flags", ""),
+        patterns: list[PatternItem] = []
+        
+        for idx, p in enumerate(patterns_raw):
+            pattern_id = p.get("id", f"PAT-{question_id}-{idx:03d}")
+            patterns.append(
+                PatternItem(
+                    id=pattern_id,
+                    pattern=p.get("pattern", ""),
+                    match_type=p.get("match_type", "REGEX"),
+                    confidence_weight=p.get("confidence_weight", 0.85),
+                    category=p.get("category", "GENERAL"),
+                    flags=p.get("flags", ""),
+                    # Intelligence Layer fields (previously discarded!)
+                    semantic_expansion=p.get("semantic_expansion", []),
+                    context_requirement=p.get("context_requirement"),
+                    evidence_boost=p.get("evidence_boost", 1.0),
+                )
             )
-            for p in patterns_raw
-        ]
 
         # Extract expected elements
         elements_raw = question.get("expected_elements", [])
@@ -649,6 +888,7 @@ class QuestionnaireSignalRegistry:
                 type=e.get("type", "unknown"),
                 required=e.get("required", False),
                 minimum=e.get("minimum", 0),
+                description=e.get("description", ""),
             )
             for e in elements_raw
         ]
@@ -660,10 +900,20 @@ class QuestionnaireSignalRegistry:
         # Get official sources
         official_sources = self._extract_official_sources()
 
-        # Pattern weights
-        pattern_weights = {
-            p.id: p.confidence_weight for p in patterns
-        }
+        # Build Intelligence Layer metadata dictionaries
+        pattern_weights = {}
+        semantic_expansions = {}
+        context_requirements = {}
+        evidence_boosts = {}
+        
+        for p in patterns:
+            pattern_weights[p.id] = p.confidence_weight
+            if p.semantic_expansion:
+                semantic_expansions[p.id] = p.semantic_expansion
+            if p.context_requirement:
+                context_requirements[p.id] = p.context_requirement
+            if p.evidence_boost != 1.0:
+                evidence_boosts[p.id] = p.evidence_boost
 
         return MicroAnsweringSignalPack(
             question_patterns={question_id: patterns},
@@ -671,7 +921,21 @@ class QuestionnaireSignalRegistry:
             indicators_by_pa={pa: indicators},
             official_sources=official_sources,
             pattern_weights=pattern_weights,
+            # Intelligence Layer metadata (100% utilization!)
+            semantic_expansions=semantic_expansions,
+            context_requirements=context_requirements,
+            evidence_boosts=evidence_boosts,
             source_hash=self._source_hash,
+            metadata={
+                "question_id": question_id,
+                "policy_area": pa,
+                "pattern_count": len(patterns),
+                "intelligence_fields_captured": {
+                    "semantic_expansions": len(semantic_expansions),
+                    "context_requirements": len(context_requirements),
+                    "evidence_boosts": len(evidence_boosts),
+                },
+            }
         )
 
     def _build_validation_signals(self, question_id: str) -> ValidationSignalPack:
@@ -698,6 +962,7 @@ class QuestionnaireSignalRegistry:
             failure_contract = FailureContract(
                 abort_if=failure_contract_raw.get("abort_if", ["missing_required_element"]),
                 emit_code=failure_contract_raw.get("emit_code", f"ABORT-{question_id}-REQ"),
+                severity=failure_contract_raw.get("severity", "ERROR"),
             )
 
         # Get modality thresholds
@@ -715,6 +980,11 @@ class QuestionnaireSignalRegistry:
             abort_codes={question_id: failure_contract.emit_code} if failure_contract else {},
             verification_patterns={question_id: list(validation_rules.keys())},
             source_hash=self._source_hash,
+            metadata={
+                "question_id": question_id,
+                "rule_count": len(validation_rules),
+                "has_failure_contract": failure_contract is not None,
+            }
         )
 
     def _build_assembly_signals(self, level: str) -> AssemblySignalPack:
@@ -727,10 +997,11 @@ class QuestionnaireSignalRegistry:
         if level.startswith("MESO"):
             meso_questions = blocks.get("meso_questions", [])
             for meso_q in meso_questions:
-                agg_method = meso_q.get("aggregation_method", "weighted_average")
-                q_id = meso_q.get("question_id", "UNKNOWN")
-                aggregation_methods[q_id] = agg_method
-        else:
+                if meso_q.get("question_id") == level:
+                    agg_method = meso_q.get("aggregation_method", "weighted_average")
+                    aggregation_methods[level] = agg_method
+                    break
+        else:  # MACRO
             macro_q = blocks.get("macro_question", {})
             agg_method = macro_q.get("aggregation_method", "holistic_assessment")
             aggregation_methods["MACRO_1"] = agg_method
@@ -775,6 +1046,10 @@ class QuestionnaireSignalRegistry:
             coherence_patterns=coherence_patterns,
             fallback_patterns=fallback_patterns,
             source_hash=self._source_hash,
+            metadata={
+                "level": level,
+                "cluster_count": len(cluster_policy_areas),
+            }
         )
 
     def _build_scoring_signals(self, question_id: str) -> ScoringSignalPack:
@@ -806,6 +1081,7 @@ class QuestionnaireSignalRegistry:
                 level=lvl.get("level", "INSUFICIENTE"),
                 min_score=lvl.get("min_score", 0.0),
                 color=lvl.get("color", "red"),
+                description=lvl.get("description", ""),
             )
             for lvl in micro_levels
         ]
@@ -834,6 +1110,10 @@ class QuestionnaireSignalRegistry:
             thresholds=thresholds,
             type_d_weights=type_d_weights,
             source_hash=self._source_hash,
+            metadata={
+                "question_id": question_id,
+                "modality": modality,
+            }
         )
 
     # ========================================================================
@@ -841,11 +1121,15 @@ class QuestionnaireSignalRegistry:
     # ========================================================================
 
     def _get_question(self, question_id: str) -> dict[str, Any]:
-        """Get question by ID from questionnaire."""
+        """Get question by ID from questionnaire.
+        
+        Raises:
+            QuestionNotFoundError: If question not found
+        """
         for q in self._questionnaire.micro_questions:
             if dict(q).get("question_id") == question_id:
                 return dict(q)
-        raise ValueError(f"Question {question_id} not found in questionnaire")
+        raise QuestionNotFoundError(question_id)
 
     def _extract_indicators_for_pa(self, policy_area: str) -> list[str]:
         """Extract indicator patterns for policy area."""
@@ -877,28 +1161,29 @@ class QuestionnaireSignalRegistry:
         return list(set(sources))
 
     # ========================================================================
-    # OBSERVABILITY
+    # OBSERVABILITY & MANAGEMENT
     # ========================================================================
 
     def get_metrics(self) -> dict[str, Any]:
         """Get registry metrics for observability.
-
+        
         Returns:
-            Dictionary with cache hits, misses, signal loads, etc.
+            Dictionary with cache performance and usage statistics
         """
-        total_requests = self._cache_hits + self._cache_misses
-        hit_rate = self._cache_hits / total_requests if total_requests > 0 else 0.0
-
         return {
-            "cache_hits": self._cache_hits,
-            "cache_misses": self._cache_misses,
-            "hit_rate": hit_rate,
-            "signal_loads": self._signal_loads,
+            "cache_hits": self._metrics.cache_hits,
+            "cache_misses": self._metrics.cache_misses,
+            "hit_rate": self._metrics.hit_rate,
+            "total_requests": self._metrics.total_requests,
+            "signal_loads": self._metrics.signal_loads,
+            "errors": self._metrics.errors,
             "cached_micro_answering": len(self._micro_answering_cache),
             "cached_validation": len(self._validation_cache),
             "cached_assembly": len(self._assembly_cache),
             "cached_scoring": len(self._scoring_cache),
             "source_hash": self._source_hash[:16],
+            "questionnaire_version": self._questionnaire.version,
+            "last_cache_clear": self._metrics.last_cache_clear,
         }
 
     def clear_cache(self) -> None:
@@ -908,8 +1193,71 @@ class QuestionnaireSignalRegistry:
         self._validation_cache.clear()
         self._assembly_cache.clear()
         self._scoring_cache.clear()
+        self._metrics.last_cache_clear = time.time()
 
-        logger.info("signal_registry_cache_cleared")
+        logger.info(
+            "signal_registry_cache_cleared",
+            timestamp=self._metrics.last_cache_clear,
+        )
+
+    def warmup(self, question_ids: list[str] | None = None) -> None:
+        """Warmup cache by pre-loading common signals.
+        
+        Args:
+            question_ids: Optional list of question IDs to warmup.
+                         If None, warmup all questions.
+        """
+        logger.info("signal_registry_warmup_started")
+        
+        # Always warmup chunking
+        self.get_chunking_signals()
+        
+        # Warmup specified questions
+        if question_ids is None:
+            # Get all question IDs
+            blocks = dict(self._questionnaire.data.get("blocks", {}))
+            micro_questions = blocks.get("micro_questions", [])
+            question_ids = [q.get("question_id", "") for q in micro_questions]
+        
+        for q_id in question_ids:
+            if not q_id:
+                continue
+            try:
+                self.get_micro_answering_signals(q_id)
+                self.get_validation_signals(q_id)
+                self.get_scoring_signals(q_id)
+            except Exception as e:
+                logger.warning(
+                    "warmup_failed_for_question",
+                    question_id=q_id,
+                    error=str(e)
+                )
+        
+        # Warmup assembly levels
+        for level in self._valid_assembly_levels:
+            try:
+                self.get_assembly_signals(level)
+            except Exception as e:
+                logger.warning(
+                    "warmup_failed_for_level",
+                    level=level,
+                    error=str(e)
+                )
+        
+        logger.info(
+            "signal_registry_warmup_completed",
+            metrics=self.get_metrics()
+        )
+
+    @property
+    def source_hash(self) -> str:
+        """Get source content hash."""
+        return self._source_hash
+
+    @property
+    def valid_assembly_levels(self) -> list[str]:
+        """Get valid assembly levels."""
+        return self._valid_assembly_levels.copy()
 
 
 # ============================================================================
@@ -921,34 +1269,56 @@ def create_signal_registry(
     questionnaire: CanonicalQuestionnaire,
 ) -> QuestionnaireSignalRegistry:
     """Factory function to create signal registry.
-
+    
+    This is the recommended way to instantiate the registry.
+    
     Args:
         questionnaire: Canonical questionnaire instance
-
+    
     Returns:
         Initialized signal registry
-
+    
     Example:
-        >>> from farfan_core.core.orchestrator.questionnaire import load_questionnaire
+        >>> from farfan_pipeline.core.orchestrator.questionnaire import load_questionnaire
         >>> canonical = load_questionnaire()
         >>> registry = create_signal_registry(canonical)
         >>> signals = registry.get_chunking_signals()
+        >>> print(f"Patterns: {len(signals.section_detection_patterns)}")
     """
     return QuestionnaireSignalRegistry(questionnaire)
 
 
+# ============================================================================
+# EXPORTS
+# ============================================================================
+
+
 __all__ = [
+    # Main registry
     "QuestionnaireSignalRegistry",
+    "create_signal_registry",
+    
+    # Signal pack models
     "ChunkingSignalPack",
     "MicroAnsweringSignalPack",
     "ValidationSignalPack",
     "AssemblySignalPack",
     "ScoringSignalPack",
+    
+    # Component models
     "PatternItem",
     "ExpectedElement",
     "ValidationCheck",
     "FailureContract",
     "ModalityConfig",
     "QualityLevel",
-    "create_signal_registry",
+    
+    # Exceptions
+    "SignalRegistryError",
+    "QuestionNotFoundError",
+    "SignalExtractionError",
+    "InvalidLevelError",
+    
+    # Metrics
+    "RegistryMetrics",
 ]
