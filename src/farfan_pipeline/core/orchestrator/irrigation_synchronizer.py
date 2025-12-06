@@ -139,6 +139,8 @@ else:
     synchronization_failures = DummyMetric()
     synchronization_chunk_matches = DummyMetric()
 
+SHA256_HEX_DIGEST_LENGTH = 64
+
 
 @dataclass(frozen=True)
 class ChunkRoutingResult:
@@ -903,6 +905,128 @@ class IrrigationSynchronizer:
 
         return plan
 
+    def _validate_cross_task_cardinality(
+        self, plan: ExecutionPlan, questions: list[dict[str, Any]]
+    ) -> None:
+        """Validate cross-task cardinality and log task distribution statistics.
+
+        Extracts unique chunk IDs from execution plan tasks, computes expected
+        reference counts by filtering questions for matching policy_area_id and
+        dimension_id (parsed from chunk_id), compares actual task counts per chunk
+        against expected counts, and emits warning-level logs for mismatches.
+
+        Also collects chunk usage statistics (mean, median, min, max) across all
+        unique chunks, policy area task distribution mapping, and dimension coverage
+        validation, culminating in a single info-level log entry with complete
+        observability into task distribution patterns.
+
+        Args:
+            plan: ExecutionPlan containing all constructed tasks
+            questions: List of original question dictionaries
+
+        Raises:
+            None - Discrepancies emit warnings but do not raise exceptions since
+                   they may reflect legitimate sparse coverage rather than errors
+        """
+        unique_chunks: set[str] = set()
+        chunk_task_counts: dict[str, int] = {}
+
+        for task in plan.tasks:
+            chunk_id = task.chunk_id
+            unique_chunks.add(chunk_id)
+            chunk_task_counts[chunk_id] = chunk_task_counts.get(chunk_id, 0) + 1
+
+        for chunk_id, actual_count in chunk_task_counts.items():
+            try:
+                parts = chunk_id.split("-")
+                if len(parts) >= 2:
+                    policy_area_id = parts[0]
+                    dimension_id = parts[1]
+
+                    expected_count = sum(
+                        1
+                        for q in questions
+                        if q.get("policy_area_id") == policy_area_id
+                        and q.get("dimension_id") == dimension_id
+                    )
+
+                    if actual_count != expected_count:
+                        logger.warning(
+                            json.dumps(
+                                {
+                                    "event": "cross_task_cardinality_mismatch",
+                                    "chunk_id": chunk_id,
+                                    "policy_area_id": policy_area_id,
+                                    "dimension_id": dimension_id,
+                                    "expected_count": expected_count,
+                                    "actual_count": actual_count,
+                                    "correlation_id": self.correlation_id,
+                                    "timestamp": time.time(),
+                                }
+                            )
+                        )
+            except (IndexError, ValueError) as e:
+                logger.warning(
+                    json.dumps(
+                        {
+                            "event": "chunk_id_parse_error",
+                            "chunk_id": chunk_id,
+                            "error": str(e),
+                            "correlation_id": self.correlation_id,
+                            "timestamp": time.time(),
+                        }
+                    )
+                )
+
+        chunk_counts = list(chunk_task_counts.values())
+        chunk_usage_stats: dict[str, float] = {}
+
+        if chunk_counts:
+            chunk_usage_stats = {
+                "mean": statistics.mean(chunk_counts),
+                "median": statistics.median(chunk_counts),
+                "min": float(min(chunk_counts)),
+                "max": float(max(chunk_counts)),
+            }
+
+        tasks_per_policy_area: dict[str, int] = {}
+        for task in plan.tasks:
+            try:
+                parts = task.chunk_id.split("-")
+                if len(parts) >= 1:
+                    policy_area_id = parts[0]
+                    tasks_per_policy_area[policy_area_id] = (
+                        tasks_per_policy_area.get(policy_area_id, 0) + 1
+                    )
+            except (IndexError, ValueError):
+                pass
+
+        tasks_per_dimension: dict[str, int] = {}
+        for task in plan.tasks:
+            try:
+                parts = task.chunk_id.split("-")
+                if len(parts) >= 2:
+                    dimension_id = parts[1]
+                    tasks_per_dimension[dimension_id] = (
+                        tasks_per_dimension.get(dimension_id, 0) + 1
+                    )
+            except (IndexError, ValueError):
+                pass
+
+        logger.info(
+            json.dumps(
+                {
+                    "event": "cross_task_cardinality_validation_complete",
+                    "total_unique_chunks": len(unique_chunks),
+                    "tasks_per_policy_area": tasks_per_policy_area,
+                    "tasks_per_dimension": tasks_per_dimension,
+                    "chunk_usage_stats": chunk_usage_stats,
+                    "correlation_id": self.correlation_id,
+                    "timestamp": time.time(),
+                }
+            )
+        )
+
     @synchronization_duration.time()
     def build_execution_plan(self) -> ExecutionPlan:
         """Build deterministic execution plan mapping questions to chunks.
@@ -1114,6 +1238,8 @@ class IrrigationSynchronizer:
                 integrity_hash=integrity_hash,
             )
 
+            self._validate_cross_task_cardinality(plan, questions)
+
             logger.info(
                 json.dumps(
                     {
@@ -1259,6 +1385,8 @@ class IrrigationSynchronizer:
                 question_count=len(questions),
                 integrity_hash=integrity_hash,
             )
+
+            self._validate_cross_task_cardinality(plan, questions)
 
             logger.info(
                 json.dumps(
