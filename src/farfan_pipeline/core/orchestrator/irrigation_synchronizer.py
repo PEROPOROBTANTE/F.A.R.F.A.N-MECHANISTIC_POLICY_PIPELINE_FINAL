@@ -26,7 +26,7 @@ import statistics
 import time
 import uuid
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
@@ -175,7 +175,7 @@ class Task:
     question_text: str
 
 
-@dataclass(frozen=True)
+@dataclass
 class ExecutionPlan:
     """Immutable execution plan with deterministic identifiers.
 
@@ -189,6 +189,7 @@ class ExecutionPlan:
     integrity_hash: str
     created_at: str
     correlation_id: str
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert plan to dictionary for serialization."""
@@ -211,6 +212,7 @@ class ExecutionPlan:
             "integrity_hash": self.integrity_hash,
             "created_at": self.created_at,
             "correlation_id": self.correlation_id,
+            "metadata": self.metadata,
         }
 
     @classmethod
@@ -1420,6 +1422,29 @@ class IrrigationSynchronizer:
                 )
             )
             raise
+
+    def _validate_cross_task_contamination(self, execution_plan: ExecutionPlan) -> None:
+        """Build traceability mappings for task-chunk relationship queries.
+
+        Constructs two bidirectional dictionaries enabling efficient task-chunk
+        relationship queries and stores them in ExecutionPlan metadata:
+        - task_chunk_mapping: Maps each task_id to its chunk_id (one-to-one)
+        - chunk_task_mapping: Maps each chunk_id to list of task_ids (one-to-many)
+
+        Args:
+            execution_plan: ExecutionPlan to enrich with traceability mappings
+
+        Returns:
+            None (modifies execution_plan.metadata in place)
+        """
+        task_chunk_mapping = {t.task_id: t.chunk_id for t in execution_plan.tasks}
+
+        chunk_task_mapping: dict[str, list[str]] = {}
+        for t in execution_plan.tasks:
+            chunk_task_mapping.setdefault(t.chunk_id, []).append(t.task_id)
+
+        execution_plan.metadata["task_chunk_mapping"] = task_chunk_mapping
+        execution_plan.metadata["chunk_task_mapping"] = chunk_task_mapping
 
     def _resolve_signals_for_question(
         self,
