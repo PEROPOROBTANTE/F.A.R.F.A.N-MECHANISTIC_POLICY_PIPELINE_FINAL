@@ -31,11 +31,13 @@ from __future__ import annotations
 
 import logging
 import time
+import warnings
 from collections import defaultdict
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
 import numpy as np
+
 # from farfan_pipeline import get_parameter_loader  # CALIBRATION DISABLED
 from farfan_pipeline.core.calibration.decorators import calibrated_method
 
@@ -107,6 +109,13 @@ class ProvenanceAuditor:
     """
     ROLE: Provenance Auditor [data governance]
     GOAL: Verify QMCM consistency and provenance DAG integrity
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(
@@ -121,6 +130,14 @@ class ProvenanceAuditor:
             p95_latency_threshold: Historical p95 latency for anomaly detection
             method_contracts: Expected output schemas by method
         """
+        warnings.warn(
+            "ProvenanceAuditor is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.p95_threshold = p95_latency_threshold or 1000.0
         self.method_contracts = method_contracts or {}
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -335,6 +352,13 @@ class BayesianPosteriorExplainer:
     """
     ROLE: Probabilistic Explainer [causal inference]
     GOAL: Explain signal contributions to final posterior
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(self, anti_miracle_cap: float = 0.95) -> None:
@@ -344,6 +368,14 @@ class BayesianPosteriorExplainer:
         Args:
             anti_miracle_cap: Maximum posterior probability (anti-miracle constraint)
         """
+        warnings.warn(
+            "BayesianPosteriorExplainer is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.anti_miracle_cap = anti_miracle_cap
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -517,6 +549,13 @@ class AntiMilagroStressTester:
     """
     ROLE: Structural Stress Tester [causal integrity]
     GOAL: Detect dependence on non-proportional jumps
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(self, fragility_threshold: float = 0.3) -> None:
@@ -526,6 +565,14 @@ class AntiMilagroStressTester:
         Args:
             fragility_threshold: Support score drop threshold for fragility
         """
+        warnings.warn(
+            "AntiMilagroStressTester is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.fragility_threshold = fragility_threshold
         self.logger = logging.getLogger(self.__class__.__name__)
 

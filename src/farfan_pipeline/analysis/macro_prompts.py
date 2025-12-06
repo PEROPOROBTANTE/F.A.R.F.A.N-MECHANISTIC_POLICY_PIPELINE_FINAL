@@ -17,13 +17,14 @@ Python: 3.10+
 
 import logging
 import statistics
+import warnings
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from farfan_pipeline.core.parameters import ParameterLoaderV2
+
 # Import runtime error fixes for defensive programming
 from farfan_pipeline.utils.runtime_error_fixes import ensure_list_return
-from farfan_pipeline.core.parameters import ParameterLoaderV2
-from farfan_pipeline.core.calibration.decorators import calibrated_method
 
 logger = logging.getLogger(__name__)
 
@@ -64,21 +65,57 @@ class BayesianPortfolio:
 
 @dataclass
 class ImplementationRoadmap:
-    """Output from Roadmap Optimizer"""
+    """Output from Roadmap Optimizer
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
+    """
     phases: list[dict[str, Any]]  # 0-3m, 3-6m, 6-12m phases
     total_expected_uplift: float  # Total expected improvement
     critical_path: list[str]  # Critical dependency chain
     resource_requirements: dict[str, Any]  # Estimated resources per phase
     metadata: dict[str, Any] = field(default_factory=dict)
 
+    def __post_init__(self) -> None:
+        warnings.warn(
+            "ImplementationRoadmap is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
+
 @dataclass
 class PeerNormalization:
-    """Output from Peer Normalization & Confidence Scaling"""
+    """Output from Peer Normalization & Confidence Scaling
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
+    """
     z_scores: dict[str, float]  # Z-scores by policy area
     adjusted_confidence: float  # Adjusted confidence based on peer comparison
     peer_position: str  # "above_average", "average", "below_average"
     outlier_areas: list[str]  # Policy areas >2 SD from mean
     metadata: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        warnings.warn(
+            "PeerNormalization is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
 
 # ============================================================================
 # MACRO PROMPT 1: COVERAGE & STRUCTURAL GAP STRESSOR
@@ -102,6 +139,13 @@ class CoverageGapStressor:
 
     OUTPUT:
     JSON {coverage_index, degraded_confidence, predictive_uplift}
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(
@@ -118,6 +162,14 @@ class CoverageGapStressor:
             dimension_weights: Weights for each dimension (default: equal)
             coverage_threshold: Minimum acceptable coverage (default: 0.70)
         """
+        warnings.warn(
+            "CoverageGapStressor is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.critical_dimensions = critical_dimensions or ["D3", "D6"]
         self.dimension_weights = dimension_weights or {
             f"D{i}": 1.0/6.0 for i in range(1, 7)
@@ -279,6 +331,13 @@ class ContradictionScanner:
 
     OUTPUT:
     JSON {contradictions[], suggested_actions}
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(
@@ -293,6 +352,14 @@ class ContradictionScanner:
             contradiction_threshold: Min number of micro claims to flag contradiction
             posterior_threshold: Min posterior confidence to consider claim valid
         """
+        warnings.warn(
+            "ContradictionScanner is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.k = contradiction_threshold
         self.theta = posterior_threshold
         logger.info(f"ContradictionScanner initialized (k={self.k}, θ={self.theta})")
@@ -499,6 +566,13 @@ class BayesianPortfolioComposer:
 
     OUTPUT:
     JSON {prior_global, penalties_applied, posterior_global, var_global}
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(
@@ -511,6 +585,14 @@ class BayesianPortfolioComposer:
         Args:
             default_variance: Default variance for uncertain estimates
         """
+        warnings.warn(
+            "BayesianPortfolioComposer is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.default_variance = default_variance
         logger.info("BayesianPortfolioComposer initialized")
 
@@ -679,10 +761,25 @@ class RoadmapOptimizer:
 
     OUTPUT:
     JSON roadmap {phase, actions[], expected_uplift}
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(self) -> None:
         """Initialize Roadmap Optimizer"""
+        warnings.warn(
+            "RoadmapOptimizer is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         logger.info("RoadmapOptimizer initialized")
 
     def optimize(
@@ -958,6 +1055,13 @@ class PeerNormalizer:
 
     OUTPUT:
     JSON {z_scores, adjusted_confidence}
+
+    DEPRECATION WARNING: This class is a candidate for removal in 2025Q2.
+    Metadata:
+        - creation_date: 2024-01-15
+        - last_used_date: null
+        - intended_phase: future_phase_7_9
+        - deprecation_status: candidate_for_removal_2025Q2
     """
 
     def __init__(
@@ -972,6 +1076,14 @@ class PeerNormalizer:
             penalty_threshold: Number of low-performing areas to trigger penalty
             outlier_z_threshold: Z-score threshold for outlier identification
         """
+        warnings.warn(
+            "PeerNormalizer is deprecated and scheduled for removal in 2025Q2. "
+            "No usage detected as of February 2025. Intended for future_phase_7_9. "
+            "Metadata: creation_date=2024-01-15, last_used_date=null, "
+            "intended_phase=future_phase_7_9, deprecation_status=candidate_for_removal_2025Q2",
+            DeprecationWarning,
+            stacklevel=2
+        )
         self.k = penalty_threshold
         self.outlier_z = outlier_z_threshold
         logger.info(f"PeerNormalizer initialized (k={self.k}, z_outlier={self.outlier_z})")

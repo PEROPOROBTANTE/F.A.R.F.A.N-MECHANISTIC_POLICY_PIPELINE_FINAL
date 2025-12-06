@@ -68,9 +68,10 @@ except ImportError:  # pragma: no cover - jsonschema es opcional
 
 # CategoriaCausal moved to farfan_core.core.types to break architectural dependency
 # (core.orchestrator was importing from analysis, which violates layer rules)
-from farfan_pipeline.core.types import CategoriaCausal
-from farfan_pipeline.core.parameters import ParameterLoaderV2
 from farfan_pipeline.core.calibration.decorators import calibrated_method
+from farfan_pipeline.core.parameters import ParameterLoaderV2
+from farfan_pipeline.core.types import CategoriaCausal
+
 
 # --- Configuración de Logging ---
 def configure_logging() -> None:
@@ -81,6 +82,7 @@ def configure_logging() -> None:
         datefmt="%Y-%m-%d %H:%M:%S",
         stream=sys.stdout,
     )
+
 
 configure_logging()
 LOGGER = logging.getLogger(__name__)
@@ -93,6 +95,7 @@ STATUS_PASSED = "✅ PASÓ"
 # 2. ENUMS Y ESTRUCTURAS DE DATOS (DATACLASSES)
 # ============================================================================
 
+
 class GraphType(Enum):
     """Tipología de grafos para la aplicación de análisis especializados."""
 
@@ -100,6 +103,7 @@ class GraphType(Enum):
     BAYESIAN_NETWORK = auto()
     STRUCTURAL_MODEL = auto()
     THEORY_OF_CHANGE = auto()
+
 
 @dataclass
 class ValidacionResultado:
@@ -111,6 +115,7 @@ class ValidacionResultado:
     categorias_faltantes: list[CategoriaCausal] = field(default_factory=list)
     sugerencias: list[str] = field(default_factory=list)
 
+
 @dataclass
 class ValidationMetric:
     """Define una métrica de validación con umbrales y ponderación."""
@@ -121,6 +126,7 @@ class ValidationMetric:
     threshold: float
     status: str
     weight: float = 1.0
+
 
 @dataclass
 class AdvancedGraphNode:
@@ -157,7 +163,9 @@ class AdvancedGraphNode:
         normalized_role = (self.role or "variable").strip().lower()
         if normalized_role not in self.ALLOWED_ROLES:
             raise ValueError(
-                "Invalid role '{}'. Expected one of: {}".format(self.role, ", ".join(sorted(self.ALLOWED_ROLES)))
+                "Invalid role '{}'. Expected one of: {}".format(
+                    self.role, ", ".join(sorted(self.ALLOWED_ROLES))
+                )
             )
         self.role = normalized_role
 
@@ -171,7 +179,11 @@ class AdvancedGraphNode:
         if not base_metadata.get("created"):
             base_metadata["created"] = datetime.now().isoformat()
         if "confidence" not in base_metadata or base_metadata["confidence"] is None:
-            base_metadata["confidence"] = ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__", "auto_param_L174_42", 1.0)
+            base_metadata["confidence"] = ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__",
+                "auto_param_L174_42",
+                1.0,
+            )
 
         normalized: dict[str, Any] = {}
         for key, value in base_metadata.items():
@@ -188,8 +200,26 @@ class AdvancedGraphNode:
         try:
             numeric = float(value)
         except (TypeError, ValueError):
-            numeric = ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__", "numeric", 1.0) # Refactored
-        return max(ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__", "auto_param_L192_19", 0.0), min(ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__", "auto_param_L192_28", 1.0), numeric))
+            numeric = ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__",
+                "numeric",
+                1.0,
+            )  # Refactored
+        return max(
+            ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__",
+                "auto_param_L192_19",
+                0.0,
+            ),
+            min(
+                ParameterLoaderV2.get(
+                    "farfan_core.analysis.teoria_cambio.AdvancedGraphNode.__post_init__",
+                    "auto_param_L192_28",
+                    1.0,
+                ),
+                numeric,
+            ),
+        )
 
     @staticmethod
     def _sanitize_created(value: Any) -> str:
@@ -213,7 +243,9 @@ class AdvancedGraphNode:
                 pass
         return str(value)
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedGraphNode.to_serializable_dict")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedGraphNode.to_serializable_dict"
+    )
     def to_serializable_dict(self) -> dict[str, Any]:
         """Convierte el nodo en un diccionario serializable compatible con JSON Schema."""
 
@@ -224,6 +256,7 @@ class AdvancedGraphNode:
             "metadata": metadata,
             "role": self.role,
         }
+
 
 @dataclass
 class MonteCarloAdvancedResult:
@@ -254,9 +287,11 @@ class MonteCarloAdvancedResult:
     graph_statistics: dict[str, Any]
     test_parameters: dict[str, Any]
 
+
 # ============================================================================
 # 3. MOTOR AXIOMÁTICO DE TEORÍA DE CAMBIO
 # ============================================================================
+
 
 class TeoriaCambio:
     """
@@ -286,7 +321,9 @@ class TeoriaCambio:
         return destino in TeoriaCambio._MATRIZ_VALIDACION.get(origen, frozenset())
 
     @lru_cache(maxsize=128)
-    @calibrated_method("farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_causal")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_causal"
+    )
     def construir_grafo_causal(self) -> nx.DiGraph:
         """Construye y cachea el grafo causal canónico."""
         if self._grafo_cache is not None and self._cache_valido:
@@ -299,7 +336,15 @@ class TeoriaCambio:
         for origen in CategoriaCausal:
             for destino in self._MATRIZ_VALIDACION.get(origen, frozenset()):
                 if origen != destino:
-                    grafo.add_edge(origen.name, destino.name, peso=ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_causal", "auto_param_L302_67", 1.0))
+                    grafo.add_edge(
+                        origen.name,
+                        destino.name,
+                        peso=ParameterLoaderV2.get(
+                            "farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_causal",
+                            "auto_param_L302_67",
+                            1.0,
+                        ),
+                    )
 
         self._grafo_cache = grafo
         self._cache_valido = True
@@ -310,7 +355,53 @@ class TeoriaCambio:
         )
         return grafo
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_from_spc")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_from_cpp"
+    )
+    def construir_grafo_from_cpp(self, cpp) -> nx.DiGraph:
+        """
+        Construir grafo causal desde CanonPolicyPackage (Phase 1 output).
+
+        Este método integra el Phase 1-2 adapter, permitiendo construir grafos
+        causales directamente desde el CanonPolicyPackage para análisis de
+        Teoría de Cambio en dimensiones D4 y D6.
+
+        Args:
+            cpp: CanonPolicyPackage from Phase 1 ingestion
+
+        Returns:
+            NetworkX DiGraph con relaciones causales derivadas de chunk_graph
+
+        Raises:
+            ValueError: If cpp is invalid
+        """
+        try:
+            from farfan_pipeline.analysis.spc_causal_bridge import SPCCausalBridge
+
+            bridge = SPCCausalBridge()
+            causal_graph = bridge.build_causal_graph_from_cpp(cpp)
+
+            if causal_graph is None:
+                self.logger.warning(
+                    "Failed to build causal graph from CPP, using standard graph"
+                )
+                return self.construir_grafo_causal()
+
+            self.logger.info(
+                "Grafo causal construido desde CPP: %d nodos, %d aristas.",
+                causal_graph.number_of_nodes(),
+                causal_graph.number_of_edges(),
+            )
+
+            return causal_graph
+
+        except (ImportError, ValueError) as e:
+            self.logger.error(f"Error building causal graph from CPP: {e}")
+            return self.construir_grafo_causal()
+
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.TeoriaCambio.construir_grafo_from_spc"
+    )
     def construir_grafo_from_spc(self, preprocessed_doc) -> nx.DiGraph:
         """
         Construir grafo causal desde estructura SPC (Smart Policy Chunks).
@@ -326,9 +417,11 @@ class TeoriaCambio:
             NetworkX DiGraph con relaciones causales derivadas de SPC
         """
         # Check if document is in chunked mode
-        if getattr(preprocessed_doc, 'processing_mode', 'flat') != 'chunked':
+        if getattr(preprocessed_doc, "processing_mode", "flat") != "chunked":
             # Fallback to text-based construction for flat mode
-            self.logger.warning("Document not in chunked mode, using standard causal graph")
+            self.logger.warning(
+                "Document not in chunked mode, using standard causal graph"
+            )
             return self.construir_grafo_causal()
 
         try:
@@ -336,20 +429,24 @@ class TeoriaCambio:
 
             # Use SPC bridge to construct base graph
             bridge = SPCCausalBridge()
-            chunk_graph = getattr(preprocessed_doc, 'chunk_graph', {})
+            chunk_graph = getattr(preprocessed_doc, "chunk_graph", {})
 
             if not chunk_graph:
-                self.logger.warning("No chunk graph available, using standard causal graph")
+                self.logger.warning(
+                    "No chunk graph available, using standard causal graph"
+                )
                 return self.construir_grafo_causal()
 
             base_graph = bridge.build_causal_graph_from_spc(chunk_graph)
 
             if base_graph is None:
-                self.logger.warning("Failed to build SPC graph, using standard causal graph")
+                self.logger.warning(
+                    "Failed to build SPC graph, using standard causal graph"
+                )
                 return self.construir_grafo_causal()
 
             # Enhance with content analysis from chunks
-            chunks = getattr(preprocessed_doc, 'chunks', [])
+            chunks = getattr(preprocessed_doc, "chunks", [])
             if chunks:
                 base_graph = bridge.enhance_graph_with_content(base_graph, chunks)
 
@@ -365,7 +462,9 @@ class TeoriaCambio:
             self.logger.error(f"SPCCausalBridge not available: {e}")
             return self.construir_grafo_causal()
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.TeoriaCambio.validacion_completa")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.TeoriaCambio.validacion_completa"
+    )
     def validacion_completa(self, grafo: nx.DiGraph) -> ValidacionResultado:
         """Ejecuta una validación estructural exhaustiva de la teoría de cambio."""
         resultado = ValidacionResultado()
@@ -447,8 +546,12 @@ class TeoriaCambio:
             )
         return sugerencias
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.TeoriaCambio._execute_generar_sugerencias_internas")
-    def _execute_generar_sugerencias_internas(self, validacion: 'ValidacionResultado') -> list[str]:
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.TeoriaCambio._execute_generar_sugerencias_internas"
+    )
+    def _execute_generar_sugerencias_internas(
+        self, validacion: "ValidacionResultado"
+    ) -> list[str]:
         """
         Execute internal suggestion generation (wrapper method).
 
@@ -463,9 +566,11 @@ class TeoriaCambio:
         """
         return self._generar_sugerencias_internas(validacion)
 
+
 # ============================================================================
 # 4. VALIDADOR ESTOCÁSTICO AVANZADO DE DAGs
 # ============================================================================
+
 
 def _create_advanced_seed(plan_name: str, salt: str = "") -> int:
     """
@@ -497,6 +602,7 @@ def _create_advanced_seed(plan_name: str, salt: str = "") -> int:
 
     return seed
 
+
 class AdvancedDAGValidator:
     """
     Motor para la validación estocástica y análisis de sensibilidad de DAGs.
@@ -504,7 +610,12 @@ class AdvancedDAGValidator:
     de modelos causales complejos.
     """
 
-    _NODE_SCHEMA_PATH: Path = Path(__file__).resolve().parent / "schemas" / "teoria_cambio" / "advanced_graph_node.schema.json"
+    _NODE_SCHEMA_PATH: Path = (
+        Path(__file__).resolve().parent
+        / "schemas"
+        / "teoria_cambio"
+        / "advanced_graph_node.schema.json"
+    )
     _NODE_VALIDATOR: Any | None = None
     _NODE_VALIDATION_WARNING_EMITTED: bool = False
 
@@ -514,8 +625,16 @@ class AdvancedDAGValidator:
         self._rng: random.Random | None = None
         self.config: dict[str, Any] = {
             "default_iterations": 10000,
-            "confidence_level": ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.__init__", "auto_param_L517_32", 0.95),
-            "power_threshold": ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.__init__", "auto_param_L518_31", 0.8),
+            "confidence_level": ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.__init__",
+                "auto_param_L517_32",
+                0.95,
+            ),
+            "power_threshold": ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.__init__",
+                "auto_param_L518_31",
+                0.8,
+            ),
             "convergence_threshold": 1e-5,
         }
         self._last_serialized_nodes: list[dict[str, Any]] = []
@@ -532,7 +651,9 @@ class AdvancedDAGValidator:
             name, dependencies or set(), metadata or {}, role
         )
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.add_edge")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.add_edge"
+    )
     def add_edge(self, from_node: str, to_node: str, weight: float = 1.0) -> None:
         """Agrega una arista dirigida con peso opcional."""
         if to_node not in self.graph_nodes:
@@ -542,7 +663,9 @@ class AdvancedDAGValidator:
         self.graph_nodes[to_node].dependencies.add(from_node)
         self.graph_nodes[to_node].metadata[f"edge_{from_node}->{to_node}"] = weight
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._initialize_rng")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._initialize_rng"
+    )
     def _initialize_rng(self, plan_name: str, salt: str = "") -> int:
         """
         Inicializa el generador de números aleatorios con una semilla determinista.
@@ -593,7 +716,9 @@ class AdvancedDAGValidator:
                     queue.append(v)
         return count == len(nodes)
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._generate_subgraph")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._generate_subgraph"
+    )
     def _generate_subgraph(self) -> dict[str, AdvancedGraphNode]:
         """Genera un subgrafo aleatorio del grafo principal."""
         if not self.graph_nodes or self._rng is None:
@@ -630,7 +755,15 @@ class AdvancedDAGValidator:
             1 for _ in range(iterations) if self._is_acyclic(self._generate_subgraph())
         )
 
-        p_value = acyclic_count / iterations if iterations > 0 else ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._generate_subgraph", "auto_param_L633_68", 1.0)
+        p_value = (
+            acyclic_count / iterations
+            if iterations > 0
+            else ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._generate_subgraph",
+                "auto_param_L633_68",
+                1.0,
+            )
+        )
         conf_level = self.config["confidence_level"]
         ci = self._calculate_confidence_interval(acyclic_count, iterations, conf_level)
         power = self._calculate_statistical_power(acyclic_count, iterations)
@@ -665,12 +798,19 @@ class AdvancedDAGValidator:
         )
 
     @property
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes"
+    )
     def last_serialized_nodes(self) -> list[dict[str, Any]]:
         """Obtiene la instantánea más reciente de nodos serializados."""
 
         return [
-            {"name": node["name"], "dependencies": list(node["dependencies"]), "metadata": dict(node["metadata"]), "role": node["role"]}
+            {
+                "name": node["name"],
+                "dependencies": list(node["dependencies"]),
+                "metadata": dict(node["metadata"]),
+                "role": node["role"],
+            }
             for node in self._last_serialized_nodes
         ]
 
@@ -790,7 +930,18 @@ class AdvancedDAGValidator:
     ) -> tuple[float, float]:
         """Calcula el intervalo de confianza de Wilson."""
         if n == 0:
-            return (ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes", "auto_param_L793_20", 0.0), ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes", "auto_param_L793_25", 1.0))
+            return (
+                ParameterLoaderV2.get(
+                    "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes",
+                    "auto_param_L793_20",
+                    0.0,
+                ),
+                ParameterLoaderV2.get(
+                    "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes",
+                    "auto_param_L793_25",
+                    1.0,
+                ),
+            )
         z = stats.norm.ppf(1 - (1 - conf) / 2)
         p_hat = s / n
         den = 1 + z**2 / n
@@ -799,18 +950,48 @@ class AdvancedDAGValidator:
         return (max(0, center - width), min(1, center + width))
 
     @staticmethod
-    def _calculate_statistical_power(s: int, n: int, alpha: float = ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes", "auto_param_L802_68", 0.05)) -> float:
+    def _calculate_statistical_power(
+        s: int,
+        n: int,
+        alpha: float = ParameterLoaderV2.get(
+            "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes",
+            "auto_param_L802_68",
+            0.05,
+        ),
+    ) -> float:
         """Calcula el poder estadístico a posteriori."""
         if n == 0:
-            return ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes", "auto_param_L805_19", 0.0)
+            return ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes",
+                "auto_param_L805_19",
+                0.0,
+            )
         p = s / n
-        effect_size = 2 * (np.arcsin(np.sqrt(p)) - np.arcsin(np.sqrt(ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes", "auto_param_L807_69", 0.5))))
+        effect_size = 2 * (
+            np.arcsin(np.sqrt(p))
+            - np.arcsin(
+                np.sqrt(
+                    ParameterLoaderV2.get(
+                        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes",
+                        "auto_param_L807_69",
+                        0.5,
+                    )
+                )
+            )
+        )
         return stats.norm.sf(
             stats.norm.ppf(1 - alpha) - abs(effect_size) * np.sqrt(n / 2)
         )
 
     @staticmethod
-    def _calculate_bayesian_posterior(likelihood: float, prior: float = ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes", "auto_param_L813_72", 0.5)) -> float:
+    def _calculate_bayesian_posterior(
+        likelihood: float,
+        prior: float = ParameterLoaderV2.get(
+            "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.last_serialized_nodes",
+            "auto_param_L813_72",
+            0.5,
+        ),
+    ) -> float:
         """Calcula la probabilidad posterior Bayesiana simple."""
         if (likelihood * prior + (1 - likelihood) * (1 - prior)) == 0:
             return prior
@@ -818,7 +999,9 @@ class AdvancedDAGValidator:
             likelihood * prior + (1 - likelihood) * (1 - prior)
         )
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._calculate_node_importance")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator._calculate_node_importance"
+    )
     def _calculate_node_importance(self) -> dict[str, float]:
         """Calcula una métrica de importancia para cada nodo."""
         if not self.graph_nodes:
@@ -840,7 +1023,9 @@ class AdvancedDAGValidator:
             for name, node in self.graph_nodes.items()
         }
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats"
+    )
     def get_graph_stats(self) -> dict[str, Any]:
         """Obtiene estadísticas estructurales del grafo."""
         nodes = len(self.graph_nodes)
@@ -861,24 +1046,57 @@ class AdvancedDAGValidator:
             timestamp,
             0,
             0,
-            ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L864_12", 1.0),
-            ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L865_12", 1.0),
-            (ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L866_13", 0.0), ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L866_18", 1.0)),
-            ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L867_12", 0.0),
+            ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                "auto_param_L864_12",
+                1.0,
+            ),
+            ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                "auto_param_L865_12",
+                1.0,
+            ),
+            (
+                ParameterLoaderV2.get(
+                    "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                    "auto_param_L866_13",
+                    0.0,
+                ),
+                ParameterLoaderV2.get(
+                    "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                    "auto_param_L866_18",
+                    1.0,
+                ),
+            ),
+            ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                "auto_param_L867_12",
+                0.0,
+            ),
             {},
             {},
-            ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L870_12", 1.0),
+            ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                "auto_param_L870_12",
+                1.0,
+            ),
             True,
             True,
             False,
-            ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats", "auto_param_L874_12", 0.0),
+            ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.AdvancedDAGValidator.get_graph_stats",
+                "auto_param_L874_12",
+                0.0,
+            ),
             {},
             {},
         )
 
+
 # ============================================================================
 # 5. ORQUESTADOR DE CERTIFICACIÓN INDUSTRIAL
 # ============================================================================
+
 
 class IndustrialGradeValidator:
     """
@@ -889,13 +1107,31 @@ class IndustrialGradeValidator:
         self.logger: logging.Logger = LOGGER
         self.metrics: list[ValidationMetric] = []
         self.performance_benchmarks: dict[str, float] = {
-            "engine_readiness": ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__", "auto_param_L892_32", 0.05),
-            "graph_construction": ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__", "auto_param_L893_34", 0.1),
-            "path_detection": ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__", "auto_param_L894_30", 0.2),
-            "full_validation": ParameterLoaderV2.get("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__", "auto_param_L895_31", 0.3),
+            "engine_readiness": ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__",
+                "auto_param_L892_32",
+                0.05,
+            ),
+            "graph_construction": ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__",
+                "auto_param_L893_34",
+                0.1,
+            ),
+            "path_detection": ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__",
+                "auto_param_L894_30",
+                0.2,
+            ),
+            "full_validation": ParameterLoaderV2.get(
+                "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.__init__",
+                "auto_param_L895_31",
+                0.3,
+            ),
         }
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.execute_suite")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.execute_suite"
+    )
     def execute_suite(self) -> bool:
         """Ejecuta la suite completa de validación industrial."""
         self.logger.info("=" * 80)
@@ -928,7 +1164,9 @@ class IndustrialGradeValidator:
         )
         return meets_standards
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.validate_engine_readiness")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.validate_engine_readiness"
+    )
     def validate_engine_readiness(self) -> bool:
         """Valida la disponibilidad y tiempo de instanciación de los motores de análisis."""
         self.logger.info("  [Capa 1] Validando disponibilidad de motores...")
@@ -948,7 +1186,9 @@ class IndustrialGradeValidator:
             self.logger.error("    ❌ Error crítico al instanciar motores: %s", e)
             return False
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.validate_causal_categories")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.validate_causal_categories"
+    )
     def validate_causal_categories(self) -> bool:
         """Valida la completitud y el orden axiomático de las categorías causales."""
         self.logger.info("  [Capa 2] Validando axiomas de categorías causales...")
@@ -966,7 +1206,9 @@ class IndustrialGradeValidator:
         self.logger.info("    ✅ Axiomas de categorías validados.")
         return True
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.validate_connection_matrix")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.validate_connection_matrix"
+    )
     def validate_connection_matrix(self) -> bool:
         """Valida la matriz de transiciones causales."""
         self.logger.info("  [Capa 3] Validando matriz de transiciones causales...")
@@ -987,7 +1229,9 @@ class IndustrialGradeValidator:
         self.logger.info("    ✅ Matriz de transiciones validada.")
         return True
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.run_performance_benchmarks")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator.run_performance_benchmarks"
+    )
     def run_performance_benchmarks(self) -> bool:
         """Ejecuta benchmarks de rendimiento para las operaciones críticas del motor."""
         self.logger.info("  [Capa 4] Ejecutando benchmarks de rendimiento...")
@@ -1027,7 +1271,9 @@ class IndustrialGradeValidator:
         self._log_metric(operation_name, elapsed, "s", threshold)
         return result
 
-    @calibrated_method("farfan_core.analysis.teoria_cambio.IndustrialGradeValidator._log_metric")
+    @calibrated_method(
+        "farfan_core.analysis.teoria_cambio.IndustrialGradeValidator._log_metric"
+    )
     def _log_metric(self, name: str, value: float, unit: str, threshold: float):
         """Registra y reporta una métrica de validación."""
         status = STATUS_PASSED if value <= threshold else "❌ FALLÓ"
@@ -1039,9 +1285,11 @@ class IndustrialGradeValidator:
         )
         return metric
 
+
 # ============================================================================
 # 6. LÓGICA DE LA CLI Y CONSTRUCTORES DE GRAFOS DE DEMOSTRACIÓN
 # ============================================================================
+
 
 def create_policy_theory_of_change_graph() -> AdvancedDAGValidator:
     """
@@ -1076,6 +1324,7 @@ def create_policy_theory_of_change_graph() -> AdvancedDAGValidator:
 
     LOGGER.info("Grafo de demostración para la política 'P1' construido.")
     return validator
+
 
 def main() -> None:
     """Punto de entrada principal para la interfaz de línea de comandos (CLI)."""
@@ -1142,10 +1391,9 @@ def main() -> None:
         )
         LOGGER.info(f"  - Score de Robustez Estructural: {result.robustness_score:.4f}")
         LOGGER.info(f"  - Tiempo de Cómputo: {result.computation_time:.3f}s")
-        LOGGER.info(
-            "  - Nodos validados contra schema: %d", len(serialized_nodes)
-        )
+        LOGGER.info("  - Nodos validados contra schema: %d", len(serialized_nodes))
         LOGGER.info("=" * 80)
+
 
 # ============================================================================
 # 7. PUNTO DE ENTRADA

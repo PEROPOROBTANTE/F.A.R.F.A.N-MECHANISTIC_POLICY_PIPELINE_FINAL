@@ -66,6 +66,10 @@ from farfan_pipeline.core.phases.phase1_spc_ingestion import (
     Phase1SPCIngestionContract,
 )
 from farfan_pipeline.core.phases.phase2_types import validate_phase2_result
+from farfan_pipeline.core.phases.phase3_chunk_routing import (
+    Phase3ChunkRoutingContract,
+    Phase3Input,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +90,7 @@ class PipelineResult:
     canon_policy_package: Any | None = None  # CanonPolicyPackage
     preprocessed_document: Any | None = None  # PreprocessedDocument
     phase2_result: Any | None = None  # Phase2Result
+    phase3_result: Any | None = None  # Phase3Result
 
     # Execution metadata
     phases_completed: int = 0
@@ -135,6 +140,9 @@ class PhaseOrchestrator:
         # Import and initialize adapter contract
         from farfan_pipeline.core.phases.phase1_to_phase2_adapter import AdapterContract
         self.adapter = AdapterContract()
+
+        # Initialize Phase 3 contract
+        self.phase3 = Phase3ChunkRoutingContract()
 
         # self.phase2 = Phase2Contract()     # To be implemented
 
@@ -374,6 +382,42 @@ class PhaseOrchestrator:
                     result.phases_completed += len(core_results)
                     logger.info(
                         f"Core Orchestrator completed {len(core_results)} phases successfully"
+                    )
+
+                    # ================================================================
+                    # PHASE 3: Chunk Routing
+                    # ================================================================
+                    logger.info("=" * 70)
+                    logger.info("PHASE 3: Chunk Routing")
+                    logger.info("=" * 70)
+
+                    # Phase 3 input is preprocessed document + Phase 2 questions
+                    phase3_input = Phase3Input(
+                        preprocessed_document=preprocessed,
+                        questions=phase2_questions or []
+                    )
+
+                    phase3_result, phase3_metadata = await self.phase3.run(phase3_input)
+
+                    # Record Phase 3 in manifest
+                    self.manifest_builder.record_phase(
+                        phase_name="phase3_chunk_routing",
+                        metadata=phase3_metadata,
+                        input_validation=self.phase3.validate_input(phase3_input),
+                        output_validation=self.phase3.validate_output(phase3_result),
+                        invariants_checked=[inv.name for inv in self.phase3.invariants],
+                        artifacts=[]
+                    )
+
+                    result.phase3_result = phase3_result
+                    result.phases_completed += 1
+                    result.total_duration_ms += phase3_metadata.duration_ms or 0.0
+
+                    logger.info(
+                        f"Phase 3 completed successfully in {phase3_metadata.duration_ms:.0f}ms"
+                    )
+                    logger.info(
+                        f"Routed {phase3_result.successful_routes}/{phase3_result.total_questions} questions"
                     )
 
             else:
