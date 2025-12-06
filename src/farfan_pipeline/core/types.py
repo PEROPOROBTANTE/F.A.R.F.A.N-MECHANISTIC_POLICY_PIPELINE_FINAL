@@ -79,13 +79,29 @@ class ChunkData:
     _CHUNK_ID_PATTERN = re.compile(r"^PA(0[1-9]|10)-DIM(0[1-6])$")
 
     def __post_init__(self) -> None:
-        """Validate chunk_id presence and format (PA{01-10}-DIM{01-06}) and new fields."""
+        """Validate chunk_id presence and format (PA{01-10}-DIM{01-06}) and new fields.
+        
+        Enforces Phase 1 output contract:
+        - Non-empty text content
+        - Valid chunk_id format (PA01-PA10, DIM01-DIM06)
+        - Consistency between chunk_id and policy_area_id/dimension_id
+        - Valid expected_elements structure
+        - Valid document_position range
+        """
         import logging
 
         logger = logging.getLogger(__name__)
 
+        if not isinstance(self.text, str):
+            raise ValueError(
+                f"ChunkData text must be a string, got {type(self.text).__name__}"
+            )
+
         if not self.text or not self.text.strip():
-            raise ValueError("ChunkData text cannot be empty or whitespace-only")
+            raise ValueError(
+                "ChunkData text cannot be empty or whitespace-only. "
+                "Phase 1 must populate all chunks with non-empty text content."
+            )
 
         self._validate_expected_elements()
         self._validate_document_position(logger)
@@ -99,12 +115,14 @@ class ChunkData:
                 raise ValueError(
                     "chunk_id is required and must follow format PA{01-10}-DIM{01-06}. "
                     "Provide chunk_id explicitly or set both policy_area_id and dimension_id "
-                    "to derive it."
+                    "to derive it. Phase 1 must populate these fields for all chunks."
                 )
 
         if not self._CHUNK_ID_PATTERN.match(chunk_id):
             raise ValueError(
-                f"Invalid chunk_id '{chunk_id}'. Expected format PA{{01-10}}-DIM{{01-06}}."
+                f"Invalid chunk_id '{chunk_id}'. Expected format PA{{01-10}}-DIM{{01-06}}. "
+                "Valid examples: 'PA01-DIM01', 'PA10-DIM06'. "
+                "Phase 1 must generate chunk_id values that match this pattern."
             )
 
         match = self._CHUNK_ID_PATTERN.match(chunk_id)
@@ -113,11 +131,15 @@ class ChunkData:
             dim_code = f"DIM{match.group(2)}"
             if self.policy_area_id and self.policy_area_id != pa_code:
                 raise ValueError(
-                    f"chunk_id {chunk_id} mismatches policy_area_id {self.policy_area_id}"
+                    f"chunk_id '{chunk_id}' mismatches policy_area_id '{self.policy_area_id}'. "
+                    f"Expected policy_area_id to be '{pa_code}' based on chunk_id. "
+                    "Phase 1 must ensure consistency between chunk_id and metadata fields."
                 )
             if self.dimension_id and self.dimension_id != dim_code:
                 raise ValueError(
-                    f"chunk_id {chunk_id} mismatches dimension_id {self.dimension_id}"
+                    f"chunk_id '{chunk_id}' mismatches dimension_id '{self.dimension_id}'. "
+                    f"Expected dimension_id to be '{dim_code}' based on chunk_id. "
+                    "Phase 1 must ensure consistency between chunk_id and metadata fields."
                 )
 
     def _validate_expected_elements(self) -> None:
@@ -236,19 +258,35 @@ class PreprocessedDocument:
         """Validate document fields after initialization.
 
         Raises:
-            ValueError: If raw_text is empty or whitespace-only
+            ValueError: If raw_text is empty, chunks are missing, or processing mode is invalid
         """
         if (not self.raw_text or not self.raw_text.strip()) and self.full_text:
             self.raw_text = self.full_text
         if not self.raw_text or not self.raw_text.strip():
             raise ValueError(
                 "PreprocessedDocument cannot have empty raw_text. "
-                "Use PreprocessedDocument.ensure() to create from SPC pipeline."
+                "Use PreprocessedDocument.ensure() to create from SPC pipeline. "
+                "Phase 1 must populate raw_text field."
             )
         if self.processing_mode != "chunked":
             raise ValueError(
-                f"processing_mode must be 'chunked' for irrigation; got {self.processing_mode!r}"
+                f"processing_mode must be 'chunked' for irrigation; got {self.processing_mode!r}. "
+                "Phase 1 must set processing_mode to 'chunked' for chunk-based routing."
             )
+        
+        if not isinstance(self.chunks, list):
+            raise ValueError(
+                f"PreprocessedDocument.chunks must be a list, got {type(self.chunks).__name__}. "
+                "Phase 1 must populate chunks as a list of ChunkData instances."
+            )
+        
+        for idx, chunk in enumerate(self.chunks):
+            if not isinstance(chunk, ChunkData):
+                raise ValueError(
+                    f"PreprocessedDocument.chunks[{idx}] must be ChunkData instance, "
+                    f"got {type(chunk).__name__}. "
+                    "Phase 1 must produce only ChunkData instances."
+                )
 
     @staticmethod
     def _dataclass_to_dict(value: Any) -> Any:
