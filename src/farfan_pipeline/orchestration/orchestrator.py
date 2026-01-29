@@ -169,6 +169,10 @@ class OrchestratorConfig:
     # Execution settings
     strict_mode: bool = False
     phases_to_execute: str = "ALL"
+    start_phase: str = "P00"
+    end_phase: str = "P09"
+    deterministic: bool = True
+    log_level: str = "INFO"
 
     # Resource settings
     seed: int = 42

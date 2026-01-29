@@ -425,49 +425,40 @@ def main(argv: list[str] | None = None) -> int:
         print()
 
     # Create orchestrator
-    orchestrator = PipelineOrchestrator(
-        config=config.to_dict(),
-        strict_mode=config.strict_mode,
-        deterministic=config.deterministic,
-    )
+    orchestrator = PipelineOrchestrator(config=config)
 
     # Execute pipeline
     try:
-        start_phase = PhaseID(config.start_phase)
-        end_phase = PhaseID(config.end_phase)
-
         logger.info(
             "pipeline_execution_start",
-            start_phase=start_phase.value,
-            end_phase=end_phase.value,
+            start_phase=config.start_phase,
+            end_phase=config.end_phase,
         )
 
-        context = orchestrator.execute_pipeline(
-            start_phase=start_phase,
-            end_phase=end_phase,
-        )
+        result = orchestrator.execute()
 
         # Print summary
-        print_execution_summary(context)
+        print_execution_summary(result)
 
         # Write JSON output if requested
         if args.json_output:
-            summary = format_execution_summary(context)
+            summary = format_execution_summary(result)
             with open(args.json_output, "w", encoding="utf-8") as f:
                 json.dump(summary, f, indent=2, ensure_ascii=False)
             print(f"\n✓ Execution summary written to: {args.json_output}")
 
-        # Check for failures
-        summary = context.get_execution_summary()
-        if summary["phases_failed"] > 0:
-            print("\n❌ Pipeline execution completed with failures")
-            return 1
-        elif summary["critical_violations"] > 0:
-            print("\n⚠️  Pipeline execution completed with critical violations")
-            return 1
-        else:
-            print("\n✅ Pipeline execution completed successfully")
-            return 0
+        # Check for failures using result
+        if hasattr(result, 'get_execution_summary'):
+            summary = result.get_execution_summary()
+            if summary.get("phases_failed", 0) > 0:
+                print("\n❌ Pipeline execution completed with failures")
+                return 1
+            elif summary.get("critical_violations", 0) > 0:
+                print("\n⚠️  Pipeline execution completed with critical violations")
+                return 1
+
+        print("\n✅ Pipeline execution completed successfully")
+        return 0
 
     except Exception as e:
         logger.error("pipeline_execution_failed", error=str(e), error_type=type(e).__name__)
