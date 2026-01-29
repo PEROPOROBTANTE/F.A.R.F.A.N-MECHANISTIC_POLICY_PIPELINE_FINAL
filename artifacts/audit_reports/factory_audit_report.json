@@ -5,13 +5,13 @@
   "failed": 0,
   "warnings": 1,
   "pass_rate": 92.3,
-  "timestamp": "2026-01-27T00:19:40.891763+00:00",
+  "timestamp": "2026-01-29T16:39:08.327728+00:00",
   "results": [
     {
       "check_name": "factory_file_exists",
       "passed": true,
       "status": "PASSED",
-      "details": "Factory file exists: /app/src/farfan_pipeline/orchestration/factory.py",
+      "details": "Factory file exists: /home/user/FARFAN_MCDPP/src/farfan_pipeline/orchestration/factory.py",
       "severity": "INFO",
       "evidence": {}
     },

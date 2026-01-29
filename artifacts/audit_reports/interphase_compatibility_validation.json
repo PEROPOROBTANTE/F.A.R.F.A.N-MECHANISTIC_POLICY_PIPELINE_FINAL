@@ -1,36 +1,108 @@
 {
-  "timestamp": "2026-01-23T13:44:06.350884",
+  "timestamp": "2026-01-29T16:38:24.769972",
   "total_bridges_checked": 2,
-  "total_adapters_checked": 2,
+  "total_adapters_checked": 4,
   "total_validators_checked": 1,
-  "issues": [
+  "issues": [],
+  "signatures_analyzed": [
     {
-      "severity": "critical",
-      "category": "import_error",
-      "source_phase": "Phase_00",
-      "target_phase": "Phase_01",
-      "source_function": "bridge_phase0_to_phase1",
-      "target_function": null,
-      "description": "Cannot import bridge module: No module named 'structlog'",
-      "recommendation": "Fix import errors in phase0_to_phase1_bridge.py"
+      "function_name": "bridge_phase0_to_phase1",
+      "module_path": "Phase_01.interphase",
+      "parameters": {
+        "wiring": "typing.Any"
+      },
+      "return_type": "typing.Any",
+      "has_type_hints": true,
+      "signature_string": "(wiring: 'Any') -> 'Any'"
     },
     {
-      "severity": "critical",
-      "category": "import_error",
-      "source_phase": "Phase_01",
-      "target_phase": "Phase_02",
-      "source_function": "adapt_phase1_to_phase2",
-      "target_function": null,
-      "description": "Cannot import adapter module: No module named 'structlog'",
-      "recommendation": "Fix import errors in phase1_phase2_adapter.py"
+      "function_name": "extract_from_wiring_components",
+      "module_path": "Phase_01.interphase",
+      "parameters": {
+        "wiring": "typing.Any"
+      },
+      "return_type": "<class 'farfan_pipeline.phases.Phase_01.interphase.phase0_to_phase1_bridge.Phase0OutputContract'>",
+      "has_type_hints": true,
+      "signature_string": "(wiring: 'Any') -> 'Phase0OutputContract'"
+    },
+    {
+      "function_name": "transform_to_canonical_input",
+      "module_path": "Phase_01.interphase",
+      "parameters": {
+        "phase0_output": "<class 'farfan_pipeline.phases.Phase_01.interphase.phase0_to_phase1_bridge.Phase0OutputContract'>"
+      },
+      "return_type": "typing.Any",
+      "has_type_hints": true,
+      "signature_string": "(phase0_output: 'Phase0OutputContract') -> 'Any'"
+    },
+    {
+      "function_name": "adapt_phase1_to_phase2",
+      "module_path": "Phase_02.interphase",
+      "parameters": {
+        "phase1_output": "typing.Any"
+      },
+      "return_type": "<class 'farfan_pipeline.phases.Phase_02.interphase.phase1_phase2_adapter.Phase2InputBundle'>",
+      "has_type_hints": true,
+      "signature_string": "(phase1_output: 'Any') -> 'Phase2InputBundle'"
+    },
+    {
+      "function_name": "validate_adaptation",
+      "module_path": "Phase_02.interphase",
+      "parameters": {
+        "original": "typing.Any",
+        "adapted": "<class 'farfan_pipeline.phases.Phase_02.interphase.phase1_phase2_adapter.Phase2InputBundle'>"
+      },
+      "return_type": "tuple[bool, list[str]]",
+      "has_type_hints": true,
+      "signature_string": "(original: 'Any', adapted: 'Phase2InputBundle') -> 'tuple[bool, list[str]]'"
+    },
+    {
+      "function_name": "adapt_phase2_to_phase3",
+      "module_path": "Phase_02.interphase",
+      "parameters": {
+        "phase2_output": "typing.Any",
+        "inject_confidence": "<class 'bool'>"
+      },
+      "return_type": "<class 'farfan_pipeline.phases.Phase_02.interphase.phase2_phase3_adapter.AdaptationResult'>",
+      "has_type_hints": true,
+      "signature_string": "(phase2_output: 'Any', inject_confidence: 'bool' = True) -> 'AdaptationResult'"
+    },
+    {
+      "function_name": "validate_phase5_entry",
+      "module_path": "Phase_05.interphase",
+      "parameters": {
+        "dimension_scores": "list[farfan_pipeline.phases.Phase_04.primitives.phase4_00_00_types.DimensionScore]"
+      },
+      "return_type": "tuple[bool, dict[str, typing.Any]]",
+      "has_type_hints": true,
+      "signature_string": "(dimension_scores: 'list[DimensionScore]') -> 'tuple[bool, dict[str, Any]]'"
+    },
+    {
+      "function_name": "validate_phase5_exit",
+      "module_path": "Phase_05.interphase",
+      "parameters": {
+        "area_scores": "list[farfan_pipeline.phases.Phase_05.phase5_00_00_area_score.AreaScore]"
+      },
+      "return_type": "tuple[bool, dict[str, typing.Any]]",
+      "has_type_hints": true,
+      "signature_string": "(area_scores: 'list[AreaScore]') -> 'tuple[bool, dict[str, Any]]'"
+    },
+    {
+      "function_name": "bridge_phase6_to_phase7",
+      "module_path": "Phase_07.interphase",
+      "parameters": {
+        "cluster_scores": "Any"
+      },
+      "return_type": "Any",
+      "has_type_hints": false,
+      "signature_string": "(cluster_scores: \"List['ClusterScore']\") -> \"tuple[List['ClusterScore'], Phase6OutputContract]\""
     }
   ],
-  "signatures_analyzed": [],
   "summary": {
-    "critical": 2,
+    "critical": 0,
     "high": 0,
     "medium": 0,
     "low": 0,
-    "total": 2
+    "total": 0
   }
 }
