@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="F.A.R.F.A.N Development Team",
-    python_requires=">=3.12,<3.14",
+    python_requires=">=3.11,<3.14",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[

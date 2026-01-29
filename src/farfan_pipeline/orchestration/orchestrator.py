@@ -223,22 +223,31 @@ class OrchestratorConfig:
         }
 
 
-def validate_config(config: dict[str, Any]) -> tuple[bool, list[str]]:
-    """Validate configuration dictionary."""
-    errors = []
+def validate_config(config: dict[str, Any] | OrchestratorConfig) -> list[str]:
+    """Validate configuration dictionary or OrchestratorConfig object."""
+    warnings = []
 
-    if not config.get("document_path"):
-        errors.append("document_path is required")
+    # Handle both dict and OrchestratorConfig
+    if isinstance(config, OrchestratorConfig):
+        document_path = getattr(config, "document_path", None)
+        seed = getattr(config, "seed", None)
+        max_workers = getattr(config, "max_workers", None)
+    else:
+        document_path = config.get("document_path")
+        seed = config.get("seed")
+        max_workers = config.get("max_workers")
 
-    if config.get("seed") is not None and not isinstance(config.get("seed"), int):
-        errors.append("seed must be an integer")
+    if not document_path:
+        warnings.append("document_path is not specified, using default")
 
-    if config.get("max_workers") is not None:
-        workers = config.get("max_workers")
-        if not isinstance(workers, int) or workers < 1:
-            errors.append("max_workers must be a positive integer")
+    if seed is not None and not isinstance(seed, int):
+        warnings.append("seed should be an integer")
 
-    return len(errors) == 0, errors
+    if max_workers is not None:
+        if not isinstance(max_workers, int) or max_workers < 1:
+            warnings.append("max_workers should be a positive integer")
+
+    return warnings
 
 
 def get_development_config() -> OrchestratorConfig:

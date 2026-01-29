@@ -159,8 +159,8 @@ WARNING_COUNT=0
 # Log file
 LOG_FILE=""
 
-# Phase constants
-PHASE_0_GATES=("GATE_1" "GATE_2" "GATE_3" "GATE_4" "GATE_5" "GATE_6" "GATE_7")
+# Phase constants (GateOrchestrator uses 4 gates)
+PHASE_0_GATES=("gate_1" "gate_2" "gate_3" "gate_4")
 ALL_PHASES=("P00" "P01" "P02" "P03" "P04" "P05" "P06" "P07" "P08" "P09")
 
 ################################################################################
@@ -450,11 +450,11 @@ check_python_version() {
 
     local python_version
     python_version=$(python --version 2>&1 | awk '{print $2}')
-    local major minor
-    IFS='.' read -r major minor <<< "$python_version"
+    local major minor patch
+    IFS='.' read -r major minor patch <<< "$python_version"
 
-    if [ "$major" -lt 3 ] || ([ "$major" -eq 3 ] && [ "$minor" -lt 12 ]); then
-        error "Python 3.12+ required, found: $python_version"
+    if [ "$major" -lt 3 ] || ([ "$major" -eq 3 ] && [ "$minor" -lt 11 ]); then
+        error "Python 3.11+ required, found: $python_version"
         step_failed
         return 1
     fi
@@ -897,38 +897,28 @@ run_gnea_enforcement() {
 
 # Validate Phase 0 gates
 validate_phase_0_gates() {
-    step "Validating Phase 0 Gates (GATE_1 through GATE_7)"
+    step "Validating Phase 0 Gates (gate_1 through gate_4)"
 
     local gate_validation_failed=0
 
-    for gate in "${PHASE_0_GATES[@]}"; do
-        info "Validating $gate..."
-
-        # Check if gate constant is defined
-        if ! python -c "
-import sys
-sys.path.insert(0, '$SRC_DIR')
-from farfan_pipeline.phases.Phase_00.primitives.phase0_10_00_constants import Phase0Const
-const = Phase0Const()
-print(hasattr(const, '$gate'))
-" 2>/dev/null; then
-            error "$gate is not defined in Phase0Const"
-            gate_validation_failed=1
-        else
-            verbose "$gate is defined"
-        fi
-    done
-
-    # Validate gate orchestrator
+    # Validate gate orchestrator and its gates
     info "Validating Gate Orchestrator..."
     if python -c "
 import sys
 sys.path.insert(0, '$SRC_DIR')
 from farfan_pipeline.orchestration.gates.gate_orchestrator import GateOrchestrator
 go = GateOrchestrator()
-print('GateOrchestrator initialized')
+# Verify gates are initialized
+assert hasattr(go, 'gate_1'), 'gate_1 missing'
+assert hasattr(go, 'gate_2'), 'gate_2 missing'
+assert hasattr(go, 'gate_3'), 'gate_3 missing'
+assert hasattr(go, 'gate_4'), 'gate_4 missing'
+print('GateOrchestrator initialized with all 4 gates')
 " 2>/dev/null; then
         verbose "Gate Orchestrator OK"
+        for gate in "${PHASE_0_GATES[@]}"; do
+            verbose "$gate is defined"
+        done
     else
         error "Gate Orchestrator validation failed"
         gate_validation_failed=1
@@ -1388,13 +1378,13 @@ run_pipeline() {
     if [ -f "$cli_script" ]; then
         info "Using orchestrator CLI"
 
-        local cli_args=(--plan "$PLAN_PDF" --output "$ARTIFACTS_DIR")
+        local cli_args=(--output-dir "$ARTIFACTS_DIR" --preset testing --verbose)
 
         if [ -n "$FROM_PHASE" ]; then
-            cli_args+=(--start-phase "${FROM_PHASE#P}")
+            cli_args+=(--start-phase "$FROM_PHASE")
         fi
         if [ -n "$TO_PHASE" ]; then
-            cli_args+=(--end-phase "${TO_PHASE#P}")
+            cli_args+=(--end-phase "$TO_PHASE")
         fi
 
         python "$cli_script" "${cli_args[@]}" > "$ARTIFACTS_DIR/pipeline_execution.log" 2>&1

@@ -404,11 +404,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"❌ Configuration Error: {e}", file=sys.stderr)
         return 1
 
-    # Configure logging
+    # Configure logging using standard logging levels
+    import logging
+    log_level = getattr(logging, config.log_level, logging.INFO)
     structlog.configure(
-        wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(structlog.stdlib, config.log_level)
-        ),
+        wrapper_class=structlog.make_filtering_bound_logger(log_level),
     )
 
     # Display configuration

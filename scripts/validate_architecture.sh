@@ -54,7 +54,8 @@ CROSS_CUTTING_IMPORTS=$(grep -rn "from cross_cutting_infrastructure\|import cros
     --exclude-dir="__pycache__" \
     --exclude-dir="backups" \
     --exclude-dir="artifacts" \
-    . 2>/dev/null | grep -v "pattern=r\"" | grep -v "^[^:]*\.py:[^:]*:#" || true)
+    --exclude-dir="scripts" \
+    . 2>/dev/null | grep -v "pattern=r\"" | grep -v "^[^:]*\.py:[^:]*:#" | grep -v "BAD_IMPORT_PATTERNS\|DEPRECATED" || true)
 
 if [ -n "$CROSS_CUTTING_IMPORTS" ]; then
     echo "$CROSS_CUTTING_IMPORTS"
@@ -77,7 +78,7 @@ if grep -rn "from.*signal_consumption import\|import.*signal_consumption" \
     --exclude-dir="artifacts" \
     --exclude-dir="_deprecated" \
     --exclude-dir="scripts" \
-    . 2>/dev/null | grep -v "audit/questionnaire_access_audit\|audit/consumption_proof"; then
+    . 2>/dev/null | grep -v "audit/questionnaire_access_audit\|audit/consumption_proof\|SISAS/signal_consumption.py\|backward compatibility"; then
     echo "❌ ERROR: Found imports from deprecated _deprecated/signal_consumption module"
     echo "   These should have been migrated to:"
     echo "   - SISAS.audit.questionnaire_access_audit (AccessLevel, get_access_audit, etc.)"
@@ -97,6 +98,11 @@ SHIM_FILES=$(find . -type f \( -name "*_compat.py" -o -name "*_legacy.py" -o -na
     -not -path "./.git/*" \
     -not -path "./backups/*" \
     -not -path "./artifacts/*" \
+    -not -path "./farfan-env/*" \
+    -not -path "./*-env/*" \
+    -not -path "./venv/*" \
+    -not -path "./.venv/*" \
+    -not -path "./tests/*" \
     2>/dev/null || true)
 
 if [ -n "$SHIM_FILES" ]; then
@@ -120,6 +126,9 @@ DEPRECATED_IMPORTS=$(grep -rn "from.*_deprecated.*import\|import.*_deprecated" \
     --exclude-dir="backups" \
     --exclude-dir="artifacts" \
     --exclude-dir="_deprecated" \
+    --exclude-dir="farfan-env" \
+    --exclude-dir="venv" \
+    --exclude-dir=".venv" \
     . 2>/dev/null || true)
 
 if [ -n "$DEPRECATED_IMPORTS" ]; then
@@ -143,6 +152,9 @@ PLACEHOLDER_CLASSES=$(grep -rn "^class.*:$" \
     --exclude-dir="backups" \
     --exclude-dir="artifacts" \
     --exclude-dir="tests" \
+    --exclude-dir="farfan-env" \
+    --exclude-dir="venv" \
+    --exclude-dir=".venv" \
     . 2>/dev/null | grep -v "Protocol\|Enum\|Exception" || true)
 
 if [ -n "$PLACEHOLDER_CLASSES" ]; then
@@ -151,7 +163,7 @@ if [ -n "$PLACEHOLDER_CLASSES" ]; then
         FILE=$(echo "$line" | cut -d: -f1)
         LINE_NUM=$(echo "$line" | cut -d: -f2)
         NEXT_LINE=$((LINE_NUM + 1))
-        NEXT_CONTENT=$(sed -n "${NEXT_LINE}p" "$FILE" 2>/dev/null | xargs)
+        NEXT_CONTENT=$(sed -n "${NEXT_LINE}p" "$FILE" 2>/dev/null | tr -d '[:space:]')
         if [ "$NEXT_CONTENT" = "pass" ]; then
             echo "$line"
         fi

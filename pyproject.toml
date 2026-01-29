@@ -7,7 +7,7 @@ name = "farfan-mcdpp"
 version = "1.0.0"
 description = "Framework for Advanced Retrieval of Administrative Narratives - Deterministic Policy Analysis Pipeline"
 readme = "README.ES.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 license = {text = "Proprietary"}
 authors = [
     {name = "F.A.R.F.A.N Pipeline Team"}
